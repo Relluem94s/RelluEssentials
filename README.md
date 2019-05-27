@@ -1,7 +1,7 @@
-#Rellu Essentials#
+#Rellu Essentials
 
-##a Spigot Plugin##
+##a Spigot Plugin
 
-###Commands###
+###Commands
 *Fly
 *Gamemode (0,1,2,3)
