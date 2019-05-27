@@ -18,3 +18,6 @@ commands:
     fly:
         description: Toggle your fly mode
         usage: /fly
+    craft:
+        description: Open Craftingbench protable
+        usage: /craft

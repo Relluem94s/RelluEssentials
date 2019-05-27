@@ -29,22 +29,22 @@ public class GameMode implements CommandExecutor {
 	 private boolean gameMode(Command command, Player p) {
 		 if (command.getName().equalsIgnoreCase("0")) {
 			 p.setGameMode(org.bukkit.GameMode.SURVIVAL);
-			 p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getName(), "Survival"));
+			 p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Survival"));
 			 return true;
 		 }
 		 else if (command.getName().equalsIgnoreCase("1")) {
 			 p.setGameMode(org.bukkit.GameMode.CREATIVE);
-			 p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getName(), "Creative"));
+			 p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Creative"));
 			 return true;
 		 }
 		 else if (command.getName().equalsIgnoreCase("2")) {
 			 p.setGameMode(org.bukkit.GameMode.ADVENTURE);
-			 p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getName(), "Adventure"));
+			 p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Adventure"));
 			 return true;
 		 }
 		 else if (command.getName().equalsIgnoreCase("3")) {
 			 p.setGameMode(org.bukkit.GameMode.SPECTATOR);
-			 p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getName(), "Spectator"));
+			 p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Spectator"));
 			 return true;
 		 }
 		 else {
