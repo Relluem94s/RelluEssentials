@@ -21,3 +21,6 @@ commands:
     craft:
         description: Open Craftingbench protable
         usage: /craft
+    cookie:
+        description: Share a Cookie (with your best friend)
+        usage: /cookie

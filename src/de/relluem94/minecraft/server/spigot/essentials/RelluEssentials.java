@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
 import de.relluem94.minecraft.server.spigot.essentials.commands.PortableCraftingBench;
@@ -20,17 +21,17 @@ public class RelluEssentials extends JavaPlugin{
 	
 	@Override
 	public void onEnable() {
+		/*	Commands	*/
 		this.getCommand("0").setExecutor(new GameMode());
 		this.getCommand("1").setExecutor(new GameMode());
 		this.getCommand("2").setExecutor(new GameMode());
 		this.getCommand("3").setExecutor(new GameMode());
-
 		this.getCommand("fly").setExecutor(new Fly());
-		
+		this.getCommand("cookie").setExecutor(new Cookies());
 		this.getCommand("craft").setExecutor(new PortableCraftingBench());
 		
 		
-		
+		/*	Events	*/
 		pm.registerEvents(new BetterChatFormat(), this);
 		pm.registerEvents(new BetterPlayerJoin(), this);
 		pm.registerEvents(new BetterPlayerQuit(), this);
