@@ -1,0 +1,20 @@
+name: RelluEssentials
+main: de.relluem94.minecraft.server.spigot.essentials.RelluEssentials
+version: 1.0
+api-version: 1.13
+commands:
+    0:
+        description: Change your Gamemode with this shorthand to Survival
+        usage: /0
+    1:
+        description: Change your Gamemode with this shorthand to Creative
+        usage: /1
+    2:
+        description: Change your Gamemode with this shorthand to Adventure
+        usage: /2
+    3:
+        description: Change your Gamemode with this shorthand to Spectator
+        usage: /3
+    fly:
+        description: Toggle your fly mode
+        usage: /fly
