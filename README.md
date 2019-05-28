@@ -10,6 +10,8 @@
 * Change Weather to Sun (sun)
 * Change Weather to Rain (rain)
 * Change Weather to Storm (storm)
+* Change time to Day
+* Change time to Night
 * Teleport to Worldspawn (spawn)
 
 ## Events

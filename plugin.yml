@@ -36,3 +36,9 @@ commands:
     spawn:
         description: Teleport to the World Spawn
         usage: /spawn
+    day:
+        description: Change time to Day
+        usage: /day
+    night:
+        description: Change time to Night
+        usage: /night

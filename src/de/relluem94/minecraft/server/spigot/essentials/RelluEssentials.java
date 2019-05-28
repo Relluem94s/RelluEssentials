@@ -4,8 +4,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Day;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Night;
 import de.relluem94.minecraft.server.spigot.essentials.commands.PortableCraftingBench;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rain;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
@@ -25,6 +27,7 @@ public class RelluEssentials extends JavaPlugin{
 	
 	@Override
 	public void onEnable() {
+		
 		/*	Commands	*/
 		this.getCommand("0").setExecutor(new GameMode());
 		this.getCommand("1").setExecutor(new GameMode());
@@ -37,6 +40,8 @@ public class RelluEssentials extends JavaPlugin{
 		this.getCommand("rain").setExecutor(new Rain());
 		this.getCommand("storm").setExecutor(new Storm());
 		this.getCommand("spawn").setExecutor(new Spawn());
+		this.getCommand("day").setExecutor(new Day());
+		this.getCommand("night").setExecutor(new Night());
 		
 		
 		/*	Events	*/
