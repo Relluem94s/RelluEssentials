@@ -3,16 +3,16 @@
 ### a Spigot Plugin compatible upto Spigot 1.14.1
 
 ## Commands
-* Fly (fly)
-* Gamemode (0,1,2,3)
-* Portable Craftingbench (craft)
-* Gift Cookies (cookie)
-* Change Weather to Sun (sun)
-* Change Weather to Rain (rain)
-* Change Weather to Storm (storm)
-* Change time to Day
-* Change time to Night
-* Teleport to Worldspawn (spawn)
+* Flymode (/fly)
+* Gamemode (/0,/1,/2,/3)
+* Portable Craftingbench (/craft)
+* Gift Cookies (/cookie)
+* Change Weather to Sun (/sun)
+* Change Weather to Rain (/rain)
+* Change Weather to Storm (/storm)
+* Change time to Day (/day)
+* Change time to Night (/night)
+* Teleport to Worldspawn (/spawn)
 
 ## Events
 * Better Chat Format (Player >> Message)
