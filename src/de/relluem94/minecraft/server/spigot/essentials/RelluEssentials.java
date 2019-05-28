@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
 import de.relluem94.minecraft.server.spigot.essentials.commands.PortableCraftingBench;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rain;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterBlockDrop;
@@ -35,6 +36,7 @@ public class RelluEssentials extends JavaPlugin{
 		this.getCommand("sun").setExecutor(new Sun());
 		this.getCommand("rain").setExecutor(new Rain());
 		this.getCommand("storm").setExecutor(new Storm());
+		this.getCommand("spawn").setExecutor(new Spawn());
 		
 		
 		/*	Events	*/

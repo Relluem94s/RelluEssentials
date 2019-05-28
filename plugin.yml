@@ -33,3 +33,6 @@ commands:
     storm:
         description: Change the Weather (Call it stormy Monday)
         usage: /storm
+    spawn:
+        description: Teleport to the World Spawn
+        usage: /spawn
