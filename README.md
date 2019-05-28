@@ -13,6 +13,7 @@
 * Change time to Day (/day)
 * Change time to Night (/night)
 * Teleport to Worldspawn (/spawn)
+* Open the Enderchest (/enderchest)
 
 ## Events
 * Better Chat Format (Player >> Message)

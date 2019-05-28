@@ -42,3 +42,6 @@ commands:
     night:
         description: Change time to Night
         usage: /night
+    enderchest:
+        description: Open the Enderchest
+        usage: /enderchest

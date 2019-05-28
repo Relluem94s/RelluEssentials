@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Day;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Enderchest;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Night;
@@ -42,6 +43,7 @@ public class RelluEssentials extends JavaPlugin{
 		this.getCommand("spawn").setExecutor(new Spawn());
 		this.getCommand("day").setExecutor(new Day());
 		this.getCommand("night").setExecutor(new Night());
+		this.getCommand("enderchest").setExecutor(new Enderchest());
 		
 		
 		/*	Events	*/
