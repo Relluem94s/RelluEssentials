@@ -25,8 +25,11 @@ commands:
         description: Share a Cookie (with your best friend)
         usage: /cookie
     sun:
-        description: Change the Weather (Hot Hot Summer Love)
+        description: Change the Weather (Tutti Frutti Summer Love)
         usage: /sun
     rain:
         description: Change the Weather (Rainy Days and Mondays)
         usage: /rain
+    storm:
+        description: Change the Weather (Call it stormy Monday)
+        usage: /storm
