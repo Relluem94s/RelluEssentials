@@ -8,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+
 public class Fly implements CommandExecutor {
 
 	@Override
@@ -15,13 +17,28 @@ public class Fly implements CommandExecutor {
 		 if (args.length == 0) {
 			 if(sender instanceof Player) {
 				 Player p = (Player) sender;
-				 return flyMode(command, p);
+				 if(Permission.isAuthorized(p, 2)) {
+					 return flyMode(command, p);
+				 }
+				 else {
+					 p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+					 return true;
+				 }
 			 }
 		 }
 		 else {
 			 Player target = Bukkit.getPlayer(args[0]);
 			 if(target != null) {
-				 return flyMode(command, target);
+				 if(sender instanceof Player) {
+					 Player p = (Player) sender;
+					 if(Permission.isAuthorized(p, 4)) {
+						 return flyMode(command, target);
+					 }
+					 else {
+						 p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+						 return true;
+					 }
+				 }
 			 }
 		 }
 		 return false;
@@ -31,7 +48,7 @@ public class Fly implements CommandExecutor {
 	 private boolean flyMode(Command command, Player p) {
 		 if (command.getName().equalsIgnoreCase("fly")) {
 			 p.setAllowFlight(!p.getAllowFlight());
-			 p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, p.getCustomName(), p.getAllowFlight()? "aktiviert" : "deaktiviert"));
+			 p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, p.getCustomName(), p.getAllowFlight()? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
 			 return true;
 		 }
 		 else {
