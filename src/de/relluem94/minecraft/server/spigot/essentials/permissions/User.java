@@ -39,7 +39,7 @@ public class User {
 	public void setGroup(Group g) {
 		this.g = g;
 		config.set("player." + p.getUniqueId() + ".group" , g.getName());
-		p.setCustomName(g.getPrefix() +  p.getName());
+		p.setCustomName(g.getPrefix() +  getCustomName(p));
 	}
 	
 	public static Group getGroup(Player p) {
@@ -62,5 +62,17 @@ public class User {
 	
 	public static void removeUser(String name) {
 		users.remove(getUserByPlayerName(name));
+	}
+	
+	private String getCustomName(Player p) {
+		String name = "";
+		if(config.get("player." + p.getUniqueId() + ".customname") != null) {
+			name += config.get("player." + p.getUniqueId() + ".customname");
+		}
+		else {
+			name += p.getName();
+		}
+		
+		return name;
 	}
 }

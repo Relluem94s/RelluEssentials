@@ -48,3 +48,6 @@ commands:
     setGroup:
         description: Set Player Group 
         usage: /setGroup
+    nick:
+        description: Set Player Name 
+        usage: /nick

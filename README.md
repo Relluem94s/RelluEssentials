@@ -14,6 +14,8 @@
 * Change time to Night (/night)
 * Teleport to Worldspawn (/spawn)
 * Open the Enderchest (/enderchest)
+* Set Permission Group (/setGroup)
+* Nick Player (/nick)
 
 ## Events
 * Better Chat Format (Player >> Message)

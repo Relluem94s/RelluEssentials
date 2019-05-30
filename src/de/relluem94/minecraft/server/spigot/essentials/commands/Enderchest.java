@@ -14,37 +14,37 @@ public class Enderchest implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (command.getName().equalsIgnoreCase("enderchest")) {
 			if (args.length == 0) {
-				 if(sender instanceof Player) {
-					 	Player p = (Player) sender;
-					 	if(Permission.isAuthorized(p, 4)) {
-						 	p.openInventory(p.getEnderChest());
-						 	p.sendMessage(PLUGIN_COMMAND_ENDERCHEST);
-					 	    return true;
-					 	}
-					 	else {
-					 		p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-					 		return true;
-					 	}
-				 }
-			 }
-			 else {
-				 Player target = Bukkit.getPlayer(args[0]);
-				 if(target != null) {
-					 if(sender instanceof Player) {
+				if (sender instanceof Player) {
+					Player p = (Player) sender;
+					if (Permission.isAuthorized(p, 2)) {
+						p.openInventory(p.getEnderChest());
+						p.sendMessage(PLUGIN_COMMAND_ENDERCHEST);
+						return true;
+					}
+					else {
+						p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+						return true;
+					}
+				}
+			}
+			else {
+				Player target = Bukkit.getPlayer(args[0]);
+				if (target != null) {
+					if (sender instanceof Player) {
 						Player p = (Player) sender;
-					 	if(Permission.isAuthorized(p, 4)) {
-					 		p.openInventory(target.getEnderChest());
+						if (Permission.isAuthorized(p, 4)) {
+							p.openInventory(target.getEnderChest());
 							p.sendMessage(String.format(PLUGIN_COMMAND_ENDERCHEST_PLAYER, target.getCustomName()));
-					 	    return true;
-					 	}
-					 	else {
-					 		p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-					 		return true;
-					 	}
-					 }
-					 
-				 }
-			 }
+							return true;
+						}
+						else {
+							p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+							return true;
+						}
+					}
+
+				}
+			}
 		}
 		return false;
 	}

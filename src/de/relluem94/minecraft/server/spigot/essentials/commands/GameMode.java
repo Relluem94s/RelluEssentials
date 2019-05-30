@@ -24,7 +24,8 @@ public class GameMode implements CommandExecutor {
 					return true;
 				}
 			}
-		} else {
+		}
+		else {
 			Player target = Bukkit.getPlayer(args[0]);
 			if (target != null) {
 				if (sender instanceof Player) {
@@ -47,19 +48,23 @@ public class GameMode implements CommandExecutor {
 			p.setGameMode(org.bukkit.GameMode.SURVIVAL);
 			p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Survival"));
 			return true;
-		} else if (command.getName().equalsIgnoreCase("1")) {
+		}
+		else if (command.getName().equalsIgnoreCase("1")) {
 			p.setGameMode(org.bukkit.GameMode.CREATIVE);
 			p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Creative"));
 			return true;
-		} else if (command.getName().equalsIgnoreCase("2")) {
+		}
+		else if (command.getName().equalsIgnoreCase("2")) {
 			p.setGameMode(org.bukkit.GameMode.ADVENTURE);
 			p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Adventure"));
 			return true;
-		} else if (command.getName().equalsIgnoreCase("3")) {
+		}
+		else if (command.getName().equalsIgnoreCase("3")) {
 			p.setGameMode(org.bukkit.GameMode.SPECTATOR);
 			p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Spectator"));
 			return true;
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
