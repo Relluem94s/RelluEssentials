@@ -20,6 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterBlockDrop;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterMobs;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerJoin;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerQuit;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
@@ -60,6 +61,7 @@ public class RelluEssentials extends JavaPlugin{
 		pm.registerEvents(new BetterPlayerJoin(), this);
 		pm.registerEvents(new BetterPlayerQuit(), this);
 		pm.registerEvents(new BetterBlockDrop(), this);
+		pm.registerEvents(new BetterMobs(), this);
 		
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			new User(p, User.getGroup(p));

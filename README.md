@@ -22,4 +22,5 @@
 * Better Player Join Message (Shows Custom Join Message)
 * Better Player Quit Message (Shows Custom Leave Message)
 * Better Block Drop (Glass etc.)
+* Better Mobs (Disable Phantom, more Iron Golem)
 
