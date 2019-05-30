@@ -9,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Enderchest;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Night;
+import de.relluem94.minecraft.server.spigot.essentials.commands.PermissionsGroup;
 import de.relluem94.minecraft.server.spigot.essentials.commands.PortableCraftingBench;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rain;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
@@ -28,6 +29,8 @@ public class RelluEssentials extends JavaPlugin{
 	
 	@Override
 	public void onEnable() {
+		/* Config */
+		this.saveDefaultConfig();
 		
 		/*	Commands	*/
 		this.getCommand("0").setExecutor(new GameMode());
@@ -44,6 +47,7 @@ public class RelluEssentials extends JavaPlugin{
 		this.getCommand("day").setExecutor(new Day());
 		this.getCommand("night").setExecutor(new Night());
 		this.getCommand("enderchest").setExecutor(new Enderchest());
+		this.getCommand("setGroup").setExecutor(new PermissionsGroup());
 		
 		
 		/*	Events	*/
@@ -55,6 +59,8 @@ public class RelluEssentials extends JavaPlugin{
 	
 	@Override
 	public void onDisable() {
-		
+		this.saveConfig();
 	}
+	
+
 }

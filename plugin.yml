@@ -45,3 +45,6 @@ commands:
     enderchest:
         description: Open the Enderchest
         usage: /enderchest
+    setGroup:
+        description: Set Player Group 
+        usage: /setGroup
