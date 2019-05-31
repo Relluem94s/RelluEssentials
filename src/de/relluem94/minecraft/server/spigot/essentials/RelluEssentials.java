@@ -17,6 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.PortableCrafting
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rain;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Suicide;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterBlockDrop;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
@@ -57,6 +58,7 @@ public class RelluEssentials extends JavaPlugin{
 		this.getCommand("enderchest").setExecutor(new Enderchest());
 		this.getCommand("setGroup").setExecutor(new PermissionsGroup());
 		this.getCommand("nick").setExecutor(new Nick());
+		this.getCommand("suicide").setExecutor(new Suicide());
 		
 		
 		/*	Events	*/

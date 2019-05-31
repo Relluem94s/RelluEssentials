@@ -8,13 +8,12 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
-/* Better Call Soil */
 public class BetterSavety implements Listener {
 	
 	private String[] strings2block = {"/pl", "/bukkit", "/ver"};
 	
 	@EventHandler
-	public void onSpawn(PlayerCommandPreprocessEvent e) {
+	public void onType(PlayerCommandPreprocessEvent e) {
 		for(String s2b: strings2block) {
 			if(!Permission.isAuthorized(e.getPlayer(), 8)) {
 				if(e.getMessage().toLowerCase().startsWith(s2b)) {

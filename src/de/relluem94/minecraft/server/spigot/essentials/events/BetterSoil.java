@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityInteractEvent;
 public class BetterSoil implements Listener {
 
 	@EventHandler
-	public void onSpawn(EntityInteractEvent e) {
+	public void onChange(EntityInteractEvent e) {
 		if ((e.getEntityType() != EntityType.PLAYER) && (e.getBlock().getType() == Material.FARMLAND)) {
 			e.setCancelled(true);
 		}

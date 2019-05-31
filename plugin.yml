@@ -51,3 +51,6 @@ commands:
     nick:
         description: Set Player Name 
         usage: /nick
+    suicide:
+        description: Kill yourself
+        usage: /suicide

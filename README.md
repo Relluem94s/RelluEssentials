@@ -16,6 +16,7 @@
 * Open the Enderchest (/enderchest)
 * Set Permission Group (/setGroup)
 * Nick Player (/nick)
+* Kill yourself (/suicide)
 
 ## Events
 * Better Chat Format (Player >> Message)
