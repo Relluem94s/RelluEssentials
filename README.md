@@ -23,4 +23,5 @@
 * Better Player Quit Message (Shows Custom Leave Message)
 * Better Block Drop (Glass etc.)
 * Better Mobs (Disable Phantom, more Iron Golem)
+* Better Savety (Auto disable some commands like /pl)
 
