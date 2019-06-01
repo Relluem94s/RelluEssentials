@@ -18,6 +18,11 @@
 * Nick Player (/nick)
 * Kill yourself (/suicide)
 
+## Skills
+* TreeFeller (Fell the whole Tree)
+* Repair (Repair Tools and Armor)
+* Salvage (Salvage Tools and Armor and get back resources and enchantments)
+
 ## Events
 * Better Chat Format (Player >> Message)
 * Better Player Join Message (Shows Custom Join Message)
