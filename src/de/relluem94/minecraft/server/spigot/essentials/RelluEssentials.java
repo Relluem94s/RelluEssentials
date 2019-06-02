@@ -10,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Day;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Enderchest;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Inventory;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Nick;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Night;
 import de.relluem94.minecraft.server.spigot.essentials.commands.PermissionsGroup;
@@ -60,6 +61,7 @@ public class RelluEssentials extends JavaPlugin{
 		this.getCommand("day").setExecutor(new Day());
 		this.getCommand("night").setExecutor(new Night());
 		this.getCommand("enderchest").setExecutor(new Enderchest());
+		this.getCommand("inv").setExecutor(new Inventory());
 		this.getCommand("setGroup").setExecutor(new PermissionsGroup());
 		this.getCommand("nick").setExecutor(new Nick());
 		this.getCommand("suicide").setExecutor(new Suicide());

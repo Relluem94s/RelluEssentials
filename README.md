@@ -14,6 +14,7 @@
 * Change time to Night (/night)
 * Teleport to Worldspawn (/spawn)
 * Open the Enderchest (/enderchest)
+* Open the Inventory (/inv)
 * Set Permission Group (/setGroup)
 * Nick Player (/nick)
 * Kill yourself (/suicide)
