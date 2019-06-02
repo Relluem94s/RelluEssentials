@@ -22,6 +22,7 @@
 * TreeFeller (Fell the whole Tree)
 * Repair (Repair Tools and Armor)
 * Salvage (Salvage Tools and Armor and get back resources and enchantments)
+* Auto Replant Seeds
 
 ## Events
 * Better Chat Format (Player >> Message)

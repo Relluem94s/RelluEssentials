@@ -27,6 +27,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerQuit;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterSavety;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterSoil;
 import de.relluem94.minecraft.server.spigot.essentials.events.NoDeathMessage;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.AutoReplant;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Repair;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Salvage;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.TreeFeller;
@@ -78,6 +79,7 @@ public class RelluEssentials extends JavaPlugin{
 		pm.registerEvents(new Repair(), this);
 		pm.registerEvents(new Salvage(), this);
 		pm.registerEvents(new TreeFeller(), this);
+		pm.registerEvents(new AutoReplant(), this);
 		
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			new User(p, User.getGroup(p));
