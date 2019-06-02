@@ -42,7 +42,7 @@ public class TreeFeller implements Listener{
 				if(e.getBlock().getType().equals(b2d)){
 					int damage = fellTree(e.getBlock());
 					if(((Damageable) im) != null) {
-						((Damageable) im).setDamage(damage);
+						((Damageable) im).setDamage(((Damageable) im).getDamage() + damage);
 					}
 				}
 			}
@@ -52,20 +52,18 @@ public class TreeFeller implements Listener{
 	
 	private int fellTree(Block b) {
 		int blocks_broken = 0;
-		for(int x = -1; x <= 30; x++) {
+		for(int x = 0; x <= 30; x++) {
 			Block b2b = b.getRelative(BlockFace.UP, x);
-			for(int y = 0; y <= x; y++) {
-				Block b2b_w = b2b.getRelative(BlockFace.WEST, y);
-				Block b2b_e = b2b.getRelative(BlockFace.EAST, y);
-				Block b2b_s = b2b.getRelative(BlockFace.SOUTH, y);
-				Block b2b_n = b2b.getRelative(BlockFace.NORTH, y);
-				
-				blocks_broken += checkBlock(b2b_w);
-				blocks_broken += checkBlock(b2b_e);
-				blocks_broken += checkBlock(b2b_s);
-				blocks_broken += checkBlock(b2b_n);
-				blocks_broken += checkBlock(b2b);
-			}
+			Block b2b_w = b2b.getRelative(BlockFace.WEST, 1);
+			Block b2b_e = b2b.getRelative(BlockFace.EAST, 1);
+			Block b2b_s = b2b.getRelative(BlockFace.SOUTH, 1);
+			Block b2b_n = b2b.getRelative(BlockFace.NORTH, 1);
+			
+			blocks_broken += checkBlock(b2b_w);
+			blocks_broken += checkBlock(b2b_e);
+			blocks_broken += checkBlock(b2b_s);
+			blocks_broken += checkBlock(b2b_n);
+			blocks_broken += checkBlock(b2b);
 		}
 		return blocks_broken;
 	}
@@ -77,43 +75,28 @@ public class TreeFeller implements Listener{
 		Block b2b_s = block.getRelative(BlockFace.SOUTH, 1);
 		Block b2b_n = block.getRelative(BlockFace.NORTH, 1);
 		
-		blocks_broken += breakBlocks(logs, block, b2b_w, b2b_e, b2b_s, b2b_n);
-		breakBlocks(leaves, block, b2b_w, b2b_e, b2b_s, b2b_n);
+		blocks_broken += breakBlocks(logs, block);
+		blocks_broken += breakBlocks(logs, b2b_w);
+		blocks_broken += breakBlocks(logs, b2b_e);
+		blocks_broken += breakBlocks(logs, b2b_s);
+		blocks_broken += breakBlocks(logs, b2b_n);
 		
+		breakBlocks(leaves, block);
+		breakBlocks(leaves, b2b_w);
+		breakBlocks(leaves, b2b_e);
+		breakBlocks(leaves, b2b_s);
+		breakBlocks(leaves, b2b_n);
 		return blocks_broken;
 	}
 	
-	private int breakBlocks(Material[] materials, Block block, Block b2b_w, Block b2b_e, Block b2b_s, Block b2b_n) {
+	private int breakBlocks(Material[] materials, Block block) {
 		int blocks_broken = 0;
 		for(Material b2d: materials) {
 			if(block.getType().equals(b2d)){
 				block.breakNaturally();
 				spawnParticle(block);
 				blocks_broken++;
-			}
-			
-			if(b2b_w.getType().equals(b2d)){
-				b2b_w.breakNaturally();
-				spawnParticle(b2b_w);
-				blocks_broken++;
-			}
-			
-			if(b2b_e.getType().equals(b2d)){
-				b2b_e.breakNaturally();
-				spawnParticle(b2b_e);
-				blocks_broken++;
-			}
-			
-			if(b2b_s.getType().equals(b2d)){
-				b2b_s.breakNaturally();
-				spawnParticle(b2b_s);
-				blocks_broken++;
-			}
-			
-			if(b2b_n.getType().equals(b2d)){
-				b2b_n.breakNaturally();
-				spawnParticle(b2b_n);
-				blocks_broken++;
+				blocks_broken += checkBlock(block);
 			}
 		}
 		return blocks_broken;
