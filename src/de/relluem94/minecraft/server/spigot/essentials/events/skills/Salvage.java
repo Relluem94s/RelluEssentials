@@ -49,6 +49,7 @@ public class Salvage implements Listener {
 							i.addItem(book);
 						}
 						p.sendMessage(String.format(PLUGIN_EVENT_SKILL_SALVAGE_DONE, is.getAmount() + "x " + is.getType().toString().replaceAll("_", " ").toLowerCase()));
+						e.setCancelled(true);
 					}
 				}				
 			}		
