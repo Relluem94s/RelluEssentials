@@ -34,7 +34,7 @@ public class Salvage implements Listener {
 				if(((Damageable) im) != null && !((Damageable) im).hasDamage()) {
 					ItemValues iv = ItemValues.getByMaterial(m);
 					if(iv != null) {
-						is.setAmount(0);
+						is.setAmount(is.getAmount() -1);
 						
 						is = new ItemStack(iv.getMaterial(), iv.getValue());
 						i.addItem(is);
