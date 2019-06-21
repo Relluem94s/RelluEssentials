@@ -33,7 +33,7 @@ public class AutoReplant implements Listener{
 	public void onHarvest(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		PlayerInventory i = p.getInventory();
-		if(e.getHand().equals(EquipmentSlot.HAND)) {
+		if(e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
 			if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				for(int x = 0; x < plants.length; x++) {
 					check(e.getClickedBlock(), i, x);
