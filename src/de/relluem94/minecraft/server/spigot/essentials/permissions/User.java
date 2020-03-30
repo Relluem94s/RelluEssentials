@@ -7,11 +7,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
+import de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
+import de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
+import de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
 
 public class User {
 	private Player p;
 	private Group g;
+	
+
+	
+	
+	public RepairSkill repair = new RepairSkill(RelluEssentials.board);
+	public SalvageSkill salvage = new SalvageSkill(RelluEssentials.board);
+	public TreeFellerSkill treeFeller = new TreeFellerSkill(RelluEssentials.board);
+	
 	
 	private static FileConfiguration config = Bukkit.getPluginManager().getPlugin("RelluEssentials").getConfig();
 	public static List<User> users = new ArrayList<User>();
@@ -40,6 +52,8 @@ public class User {
 		this.g = g;
 		config.set("player." + p.getUniqueId() + ".group" , g.getName());
 		p.setCustomName(g.getPrefix() +  getCustomName(p));
+		p.setScoreboard(RelluEssentials.board);
+		g.getTeam().addEntry(p.getName());
 	}
 	
 	public static Group getGroup(Player p) {

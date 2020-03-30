@@ -6,6 +6,7 @@ public class VipGroup extends Group{
 
 	public VipGroup() {
 		super("VIP", 2, "§a");
+		getTeam().setCanSeeFriendlyInvisibles(false);
 	}
 
 }

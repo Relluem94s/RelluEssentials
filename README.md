@@ -34,3 +34,19 @@
 * Better (Call) Soil
 * Better Savety (Auto disable some commands like /pl)
 * No Death Message
+
+
+## TODOS
+* Small / Easy Worldedit & World Guard
+* Netherstar for Selection
+* Manual selection with pos
+* set command (id/material)
+* extend command
+* region protection with permissions for player and groups with flags
+* flags -> build, enter, entry/leave-message, interact, harvest
+* chest / falldoor / door / fence-gate protection with permissions for player and groups with flags
+* flags -> cant-open-message (standard message or custom), open-on-day, open-on-night
+* MCMMO Skill Level System
+* fast pickaxe mode
+* fast shovel mode
+* Stick to Rotate Stairs and convert Upper/lower slaps

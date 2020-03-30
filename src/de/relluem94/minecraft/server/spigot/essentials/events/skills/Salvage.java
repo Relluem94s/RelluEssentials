@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_SALVAGE_DONE;
+
 import java.util.Map;
 
 import org.bukkit.Material;
@@ -14,8 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
+import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
 
 public class Salvage implements Listener {
@@ -48,6 +50,9 @@ public class Salvage implements Listener {
 							book.setItemMeta(im_book);
 							i.addItem(book);
 						}
+						User u = User.getUserByPlayerName(p.getName());
+						int score = u.salvage.getObjective().getScore("Salvage").getScore();
+						u.salvage.getObjective().getScore("Salvage").setScore(score +1);
 						p.sendMessage(String.format(PLUGIN_EVENT_SKILL_SALVAGE_DONE, is.getAmount() + "x " + is.getType().toString().replaceAll("_", " ").toLowerCase()));
 						e.setCancelled(true);
 					}

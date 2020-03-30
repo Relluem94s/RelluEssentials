@@ -1,5 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_REPAIR_DONE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_REPAIR_WARNING;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -12,9 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
-
+import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
 
 
@@ -43,7 +45,9 @@ public class Repair implements Listener{
 								((Damageable) im).setDamage(damage - (45 * iv.getFactor()));
 								p.sendMessage(PLUGIN_EVENT_SKILL_REPAIR_DONE);
 								is.setItemMeta(im);
-							}
+								User u = User.getUserByPlayerName(p.getName());
+								int score = u.repair.getObjective().getScore("Repair").getScore();
+								u.repair.getObjective().getScore("Repair").setScore(score +1);							}
 							else {
 								p.sendMessage(String.format(PLUGIN_EVENT_SKILL_REPAIR_WARNING, iv.getMaterial().toString().replaceAll("_", " ").toLowerCase()));
 							}

@@ -6,6 +6,7 @@ public class ModGroup extends Group{
 
 	public ModGroup() {
 		super("Mod", 4, "§6");
+		getTeam().setCanSeeFriendlyInvisibles(true);
 	}
 
 }

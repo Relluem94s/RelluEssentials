@@ -6,6 +6,6 @@ public class AdminGroup extends Group{
 
 	public AdminGroup() {
 		super("Admin", 8, "§5");
+		getTeam().setCanSeeFriendlyInvisibles(true);
 	}
-
 }

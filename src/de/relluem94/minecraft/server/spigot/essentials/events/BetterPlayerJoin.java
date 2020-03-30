@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_JOIN_MESSAGE;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,7 +20,6 @@ public class BetterPlayerJoin implements Listener{
 	public void onJoin(PlayerJoinEvent e) {
 		e.setJoinMessage(null);
 		Player p = e.getPlayer();
-
 		addPlayer(p);
 		
 		Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));

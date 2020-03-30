@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+
 
 public class TreeFeller implements Listener{
 
@@ -42,6 +44,9 @@ public class TreeFeller implements Listener{
 				if(e.getBlock().getType().equals(b2d)){
 					int damage = fellTree(e.getBlock());
 					if(((Damageable) im) != null) {
+						User u = User.getUserByPlayerName(e.getPlayer().getName());
+						int score = u.treeFeller.getObjective().getScore("Tree Feller").getScore();
+						u.treeFeller.getObjective().getScore("Tree Feller").setScore(score +1);
 						((Damageable) im).setDamage(((Damageable) im).getDamage() + damage);
 					}
 				}

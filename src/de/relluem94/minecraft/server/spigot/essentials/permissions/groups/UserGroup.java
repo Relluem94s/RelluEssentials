@@ -6,6 +6,7 @@ public class UserGroup extends Group{
 
 	public UserGroup() {
 		super("User", 1, "§8");
+		getTeam().setCanSeeFriendlyInvisibles(false);
 	}
 
 }
