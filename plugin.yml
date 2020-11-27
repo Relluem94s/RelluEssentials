@@ -57,3 +57,12 @@ commands:
     suicide:
         description: Kill yourself
         usage: /suicide
+    more:
+        description: Give yourself more of the item in your Mainhand
+        usage: /more
+    repair:
+        description: Repair your Tool in the Mainhand
+        usage: /repair
+
+
+
