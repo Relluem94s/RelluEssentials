@@ -18,6 +18,8 @@
 * Set Permission Group (/setGroup)
 * Nick Player (/nick)
 * Kill yourself (/suicide)
+* Get More Stuff (/more)
+* Repair your favorite Tools (/repair)
 
 ## Skills
 * TreeFeller (Fell the whole Tree)
