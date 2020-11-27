@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.skills.enums;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.skills.enums;
 
 import org.bukkit.Material;
 

@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import org.bukkit.Location;
 

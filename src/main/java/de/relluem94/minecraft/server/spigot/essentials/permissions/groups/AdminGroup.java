@@ -1,6 +1,6 @@
-package de.relluem94.minecraft.server.spigot.essentials.permissions.groups;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.groups;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
 
 public class AdminGroup extends Group{
 

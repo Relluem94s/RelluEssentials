@@ -1,6 +1,6 @@
-package de.relluem94.minecraft.server.spigot.essentials.events.skills;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_SALVAGE_DONE;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_SALVAGE_DONE;
 
 import java.util.Map;
 
@@ -17,8 +17,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-import de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
 
 public class Ev_Salvage implements Listener {
 	

@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.permissions;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,11 +7,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
-import de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
-import de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
-import de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
 
 public class User {
 	private Player p;

@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.events.skills;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;

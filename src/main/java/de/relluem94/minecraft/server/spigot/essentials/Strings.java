@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials;
+package main.java.de.relluem94.minecraft.server.spigot.essentials;
 
 public class Strings {
 	public static final String PLUGIN_PREFIX = "§o§l§4RelluEssentials§r§f";

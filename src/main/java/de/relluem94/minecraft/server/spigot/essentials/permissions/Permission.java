@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.permissions;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import org.bukkit.entity.Player;
 

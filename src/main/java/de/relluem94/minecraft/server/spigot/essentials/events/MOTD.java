@@ -1,9 +1,9 @@
-package de.relluem94.minecraft.server.spigot.essentials.events;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServerListPingEvent;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 public class MOTD implements Listener {
 

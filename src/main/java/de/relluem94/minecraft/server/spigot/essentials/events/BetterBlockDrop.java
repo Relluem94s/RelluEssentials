@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.events;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 
 

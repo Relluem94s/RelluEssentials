@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.skills;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.skills;
 
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;

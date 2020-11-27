@@ -1,6 +1,6 @@
-package de.relluem94.minecraft.server.spigot.essentials.commands;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.WeatherType;
@@ -9,7 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Rain implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

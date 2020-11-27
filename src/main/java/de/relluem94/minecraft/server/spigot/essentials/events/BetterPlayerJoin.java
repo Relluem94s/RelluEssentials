@@ -1,6 +1,6 @@
-package de.relluem94.minecraft.server.spigot.essentials.events;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_JOIN_MESSAGE;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_JOIN_MESSAGE;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,8 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
 
 public class BetterPlayerJoin implements Listener{
 	

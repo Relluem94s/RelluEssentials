@@ -1,13 +1,13 @@
-package de.relluem94.minecraft.server.spigot.essentials.permissions;
+package main.java.de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Team;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.AdminGroup;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.ModGroup;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.VipGroup;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.groups.AdminGroup;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.groups.ModGroup;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.groups.VipGroup;
 
 
 public class Group {
