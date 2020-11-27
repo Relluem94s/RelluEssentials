@@ -18,7 +18,7 @@ public class Home implements CommandExecutor {
 					Player p = (Player) sender;
 					if (Permission.isAuthorized(p, 1)) {
 						p.teleport(p.getBedSpawnLocation());
-						p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
+						p.sendMessage(String.format(PLUGIN_COMMAND_HOME, p.getWorld().getName()));
 						return true;
 					}
 					else {
@@ -34,7 +34,7 @@ public class Home implements CommandExecutor {
 						Player p = (Player) sender;
 						if (Permission.isAuthorized(p, 4)) {
 							target.teleport(target.getBedSpawnLocation());
-							target.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, target.getWorld().getName()));
+							target.sendMessage(String.format(PLUGIN_COMMAND_HOME, target.getWorld().getName()));
 							return true;
 						}
 						else {
