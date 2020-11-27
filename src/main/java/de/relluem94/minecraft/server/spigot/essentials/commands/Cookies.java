@@ -27,8 +27,7 @@ public class Cookies implements CommandExecutor {
                 } else {
                     Player target = Bukkit.getPlayer(args[0]);
                     if (target != null) {
-                       p.sendMessage(String.format(PLUGIN_COMMAND_COOKIES_PLAYER, target.getCustomName()));
-
+                        p.sendMessage(String.format(PLUGIN_COMMAND_COOKIES_PLAYER, target.getCustomName()));
                         return getCookies(command, getCookie(p), target);
                     }
                 }
