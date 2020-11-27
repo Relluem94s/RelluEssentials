@@ -43,6 +43,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.skills.Salvage;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.TreeFeller;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import java.util.Objects;
 
 
 
@@ -83,24 +84,24 @@ public class RelluEssentials extends JavaPlugin{
 	
 	private void commandManager() {
 		/*	Commands	*/
-		this.getCommand("0").setExecutor(new GameMode());
-		this.getCommand("1").setExecutor(new GameMode());
-		this.getCommand("2").setExecutor(new GameMode());
-		this.getCommand("3").setExecutor(new GameMode());
-		this.getCommand("fly").setExecutor(new Fly());
-		this.getCommand("cookie").setExecutor(new Cookies());
-		this.getCommand("craft").setExecutor(new PortableCraftingBench());
-		this.getCommand("sun").setExecutor(new Sun());
-		this.getCommand("rain").setExecutor(new Rain());
-		this.getCommand("storm").setExecutor(new Storm());
-		this.getCommand("spawn").setExecutor(new Spawn());
-		this.getCommand("day").setExecutor(new Day());
-		this.getCommand("night").setExecutor(new Night());
-		this.getCommand("enderchest").setExecutor(new Enderchest());
-		this.getCommand("inv").setExecutor(new Inventory());
-		this.getCommand("setGroup").setExecutor(new PermissionsGroup());
-		this.getCommand("nick").setExecutor(new Nick());
-		this.getCommand("suicide").setExecutor(new Suicide());
+		Objects.requireNonNull(this.getCommand("0")).setExecutor(new GameMode());
+		Objects.requireNonNull(this.getCommand("1")).setExecutor(new GameMode());
+		Objects.requireNonNull(this.getCommand("2")).setExecutor(new GameMode());
+		Objects.requireNonNull(this.getCommand("3")).setExecutor(new GameMode());
+		Objects.requireNonNull(this.getCommand("fly")).setExecutor(new Fly());
+		Objects.requireNonNull(this.getCommand("cookie")).setExecutor(new Cookies());
+		Objects.requireNonNull(this.getCommand("craft")).setExecutor(new PortableCraftingBench());
+		Objects.requireNonNull(this.getCommand("sun")).setExecutor(new Sun());
+		Objects.requireNonNull(this.getCommand("rain")).setExecutor(new Rain());
+		Objects.requireNonNull(this.getCommand("storm")).setExecutor(new Storm());
+		Objects.requireNonNull(this.getCommand("spawn")).setExecutor(new Spawn());
+		Objects.requireNonNull(this.getCommand("day")).setExecutor(new Day());
+		Objects.requireNonNull(this.getCommand("night")).setExecutor(new Night());
+		Objects.requireNonNull(this.getCommand("enderchest")).setExecutor(new Enderchest());
+		Objects.requireNonNull(this.getCommand("inv")).setExecutor(new Inventory());
+		Objects.requireNonNull(this.getCommand("setGroup")).setExecutor(new PermissionsGroup());
+		Objects.requireNonNull(this.getCommand("nick")).setExecutor(new Nick());
+		Objects.requireNonNull(this.getCommand("suicide")).setExecutor(new Suicide());
 	}
 	
 	private void eventManager() {
