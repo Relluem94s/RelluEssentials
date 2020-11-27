@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class Repair implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("more")) {
+        if (command.getName().equalsIgnoreCase("repair")) {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
