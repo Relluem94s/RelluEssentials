@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 
-public class AutoReplant implements Listener{
+public class Ev_AutoReplant implements Listener{
 
 	private Material[] plants = {
 			Material.CARROTS, 

@@ -17,10 +17,12 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Enderchest;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Inventory;
+import de.relluem94.minecraft.server.spigot.essentials.commands.More;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Nick;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Night;
 import de.relluem94.minecraft.server.spigot.essentials.commands.PermissionsGroup;
 import de.relluem94.minecraft.server.spigot.essentials.commands.PortableCraftingBench;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Repair;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rain;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
@@ -37,10 +39,10 @@ import de.relluem94.minecraft.server.spigot.essentials.events.MOTD;
 import de.relluem94.minecraft.server.spigot.essentials.events.NoDeathMessage;
 import de.relluem94.minecraft.server.spigot.essentials.events.features.RotationTool;
 import de.relluem94.minecraft.server.spigot.essentials.events.features.SelectionTool;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.AutoReplant;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Repair;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Salvage;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.TreeFeller;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoReplant;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Repair;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Salvage;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_TreeFeller;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import java.util.Objects;
@@ -97,6 +99,8 @@ public class RelluEssentials extends JavaPlugin{
 		Objects.requireNonNull(this.getCommand("spawn")).setExecutor(new Spawn());
 		Objects.requireNonNull(this.getCommand("day")).setExecutor(new Day());
 		Objects.requireNonNull(this.getCommand("night")).setExecutor(new Night());
+		Objects.requireNonNull(this.getCommand("more")).setExecutor(new More());
+		Objects.requireNonNull(this.getCommand("repair")).setExecutor(new Repair());
 		Objects.requireNonNull(this.getCommand("enderchest")).setExecutor(new Enderchest());
 		Objects.requireNonNull(this.getCommand("inv")).setExecutor(new Inventory());
 		Objects.requireNonNull(this.getCommand("setGroup")).setExecutor(new PermissionsGroup());
@@ -124,10 +128,10 @@ public class RelluEssentials extends JavaPlugin{
 	
 	private void skillManager() {
 		/*  Skill Events */
-		pm.registerEvents(new Repair(), this);
-		pm.registerEvents(new Salvage(), this);
-		pm.registerEvents(new TreeFeller(), this);
-		pm.registerEvents(new AutoReplant(), this);
+		pm.registerEvents(new Ev_Repair(), this);
+		pm.registerEvents(new Ev_Salvage(), this);
+		pm.registerEvents(new Ev_TreeFeller(), this);
+		pm.registerEvents(new Ev_AutoReplant(), this);
 	}
 	
 	private void boardManager() {

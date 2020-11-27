@@ -20,7 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
 
 
-public class Repair implements Listener{
+public class Ev_Repair implements Listener{
 
 	@EventHandler
 	public void onClick(PlayerInteractEvent e) {

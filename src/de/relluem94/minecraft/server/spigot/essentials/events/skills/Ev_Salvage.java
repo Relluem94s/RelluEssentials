@@ -20,7 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
 
-public class Salvage implements Listener {
+public class Ev_Salvage implements Listener {
 	
 	@EventHandler
 	public void onClick(PlayerInteractEvent e) {

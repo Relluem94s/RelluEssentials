@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
 
-public class TreeFeller implements Listener{
+public class Ev_TreeFeller implements Listener{
 
 	private Material[] logs = {
 			Material.OAK_LOG, 
