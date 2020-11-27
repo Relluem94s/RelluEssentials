@@ -63,6 +63,8 @@ commands:
     repair:
         description: Repair your Tool in the Mainhand
         usage: /repair
-
+    home:
+        description: Teleport to your Bedspawn
+        usage: /home
 
 

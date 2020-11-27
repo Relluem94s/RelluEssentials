@@ -46,6 +46,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.E
 import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import java.util.Objects;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 
 
 
@@ -97,6 +98,7 @@ public class RelluEssentials extends JavaPlugin{
 		Objects.requireNonNull(this.getCommand("rain")).setExecutor(new Rain());
 		Objects.requireNonNull(this.getCommand("storm")).setExecutor(new Storm());
 		Objects.requireNonNull(this.getCommand("spawn")).setExecutor(new Spawn());
+		Objects.requireNonNull(this.getCommand("home")).setExecutor(new Home());
 		Objects.requireNonNull(this.getCommand("day")).setExecutor(new Day());
 		Objects.requireNonNull(this.getCommand("night")).setExecutor(new Night());
 		Objects.requireNonNull(this.getCommand("more")).setExecutor(new More());

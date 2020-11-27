@@ -20,6 +20,7 @@
 * Kill yourself (/suicide)
 * Get More Stuff (/more)
 * Repair your favorite Tools (/repair)
+* Teleport to your Bed spawn location (/home)
 
 ## Skills
 * TreeFeller (Fell the whole Tree)
@@ -39,6 +40,7 @@
 
 
 ## TODOS
+* More Homes! Set List tp to homes that get saved in config.yml
 * Small / Easy Worldedit & World Guard
 * Netherstar for Selection
 * Manual selection with pos
