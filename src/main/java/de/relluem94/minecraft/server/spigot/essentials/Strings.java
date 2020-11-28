@@ -1,12 +1,16 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials;
 
 public class Strings {
-	public static final String PLUGIN_PREFIX = "§o§l§4RelluEssentials§r§f";
+	public static final String PLUGIN_NAME = "RelluEssentials";
+	public static final String PLUGIN_PREFIX = "§o§l§4" + PLUGIN_NAME + "§r§f";
 	public static final String PLUGIN_SPACER = "§7 >> §f";
 	public static final String PLUGIN_COMMAND_COLOR = "§f";
 	public static final String PLUGIN_COMMAND_NAME_COLOR = "§b";
 	public static final String PLUGIN_COMMAND_ARG_COLOR = "§b";
 	public static final String PLUGIN_MESSAGE_COLOR = "§f";
+	public static final String PLUGIN_START_MESSAGE = " starts configuring ...";
+	public static final String PLUGIN_STOP_MESSAGE = " shutdown();";
+        
 	
 	public static final String PLUGIN_COMMAND_GAMEMODE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Gamemode von %s" + PLUGIN_COMMAND_COLOR + " wurde zu " + PLUGIN_COMMAND_NAME_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " geändert!";
 	public static final String PLUGIN_COMMAND_FLYMODE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Flugmodus von %s" + PLUGIN_COMMAND_COLOR + " wurde " + PLUGIN_COMMAND_ARG_COLOR + "%s!";

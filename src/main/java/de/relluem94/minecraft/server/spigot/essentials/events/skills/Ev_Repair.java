@@ -28,7 +28,7 @@ public class Ev_Repair implements Listener{
 		Block b = e.getClickedBlock();
 		Player p = e.getPlayer();
 		PlayerInventory i = p.getInventory();
-		if(e.getHand().equals(EquipmentSlot.HAND)) {
+		if(e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
 			if(a.equals(Action.RIGHT_CLICK_BLOCK)) {
 				if(b.getType().equals(Material.IRON_BLOCK)) {
 					ItemStack is = i.getItemInMainHand();				
