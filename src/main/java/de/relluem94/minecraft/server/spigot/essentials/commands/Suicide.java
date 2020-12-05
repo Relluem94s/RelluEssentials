@@ -16,7 +16,7 @@ public class Suicide implements CommandExecutor {
 			if (args.length == 0) {
 				if (sender instanceof Player) {
 					Player p = (Player) sender;
-					if (Permission.isAuthorized(p, 4)) {
+					if (Permission.isAuthorized(p, 1)) {
 						p.setHealth(0);
 						Bukkit.broadcastMessage(String.format(PLUGIN_COMMAND_SUICIDE, p.getCustomName()));
 						return true;
