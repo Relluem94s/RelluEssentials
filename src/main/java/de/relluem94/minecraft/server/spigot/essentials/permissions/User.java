@@ -12,6 +12,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.gro
 import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
+import org.bukkit.OfflinePlayer;
 
 public class User {
 	private Player p;

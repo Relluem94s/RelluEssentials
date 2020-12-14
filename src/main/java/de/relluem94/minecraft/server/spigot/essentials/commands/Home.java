@@ -17,7 +17,13 @@ public class Home implements CommandExecutor {
 				if (sender instanceof Player) {
 					Player p = (Player) sender;
 					if (Permission.isAuthorized(p, 1)) {
-						p.teleport(p.getBedSpawnLocation());
+                                            if(p.getBedSpawnLocation() != null){
+                                                p.teleport(p.getBedSpawnLocation());
+                                            }
+                                            else{
+                                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO, p.getWorld().getName()));
+                                            }
+						
 						p.sendMessage(String.format(PLUGIN_COMMAND_HOME, p.getWorld().getName()));
 						return true;
 					}
@@ -28,7 +34,8 @@ public class Home implements CommandExecutor {
 				}
 			}
 			else {
-				Player target = Bukkit.getPlayer(args[0]);
+				Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
+                                
 				if (target != null) {
 					if (sender instanceof Player) {
 						Player p = (Player) sender;
