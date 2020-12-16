@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.bukkit.OfflinePlayer;
+import static org.bukkit.WorldCreator.name;
 
 public class Home implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -34,13 +36,22 @@ public class Home implements CommandExecutor {
 				}
 			}
 			else {
-				Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
+				Player target = null;
+                                
+                                for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+                                    if (offlinePlayer.getName().equalsIgnoreCase(args[0])) {
+                                        target = offlinePlayer.getPlayer();
+                                    }
+                                }
                                 
 				if (target != null) {
 					if (sender instanceof Player) {
 						Player p = (Player) sender;
 						if (Permission.isAuthorized(p, 4)) {
-							p.teleport(target.getBedSpawnLocation());
+                                                        if(target.getBedSpawnLocation() != null){
+                                                            p.teleport(target.getBedSpawnLocation());
+                                                        }
+							
 							p.sendMessage(String.format(PLUGIN_COMMAND_HOME, target.getWorld().getName()));
 							return true;
 						}
@@ -50,6 +61,9 @@ public class Home implements CommandExecutor {
 						}
 					}
 				}
+                                else{
+                                    return false;
+                                }
 			}
 		}
 		return false;
