@@ -50,7 +50,6 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Enchan
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
 import org.bukkit.NamespacedKey;
