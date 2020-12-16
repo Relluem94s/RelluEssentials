@@ -26,15 +26,14 @@ public class ConfigHelper extends YamlConfiguration{
         
         
         file = new File(RelluEssentials.getInstance().getDataFolder(), name + ".yml");
-            if (!file.exists()) {
-                file.createNewFile();
-                config = new YamlConfiguration();
-                config.options().header("Configuration File - " + name);
-                
-            }
-            else{
-                config = YamlConfiguration.loadConfiguration(file);
-            }		
+        if (!file.exists()) {
+            file.createNewFile();
+            config = new YamlConfiguration();
+            config.options().header("Configuration File - " + name);    
+        }
+        else{
+            config = YamlConfiguration.loadConfiguration(file);
+        }		
     }
 
     public String getConfigName() {

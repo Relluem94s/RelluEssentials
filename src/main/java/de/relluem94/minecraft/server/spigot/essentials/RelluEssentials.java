@@ -106,13 +106,13 @@ public class RelluEssentials extends JavaPlugin {
     @Override
     public void onDisable() {
         System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_STOP_MESSAGE);
-        instance = null;
         try{
              configManager(false);
         }
         catch(IOException e){
             System.out.println(Strings.PLUGIN_NAME + e.getMessage());
         }
+        instance = null;
     }
 
     private void configManager(boolean enable) throws IOException {
