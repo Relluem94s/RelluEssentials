@@ -20,7 +20,8 @@
 * Kill yourself (/suicide)
 * Get More Stuff (/more)
 * Repair your favorite Tools (/repair)
-* Teleport to your Bed spawn location (/home)
+* Teleport to your Bed spawn location or set list tp to homes that get saved in players.yml (/home)
+* Save, Reload your config or more (/rellu)
 
 ## Skills
 * TreeFeller (Fell the whole Tree)
@@ -40,11 +41,10 @@
 
 
 ## TODOS
-* More Homes! Set List tp to homes that get saved in config.yml
 * Small / Easy Worldedit & World Guard
 * Netherstar for Selection
 * Manual selection with pos
-* set command (id/material)
+* set command (material)
 * extend command
 * region protection with permissions for player and groups with flags
 * flags -> build, enter, entry/leave-message, interact, harvest
