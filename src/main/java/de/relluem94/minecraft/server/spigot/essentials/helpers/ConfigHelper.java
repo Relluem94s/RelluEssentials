@@ -16,7 +16,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
  *
  * @author rellu
  */
-public class ConfigHelper extends YamlConfiguration{
+public class ConfigHelper{
     private String name;
     private File file;
     private YamlConfiguration config;
@@ -27,8 +27,8 @@ public class ConfigHelper extends YamlConfiguration{
         
         file = new File(RelluEssentials.dataFolder, name + ".yml");
         if (!file.exists()) {
-            file.createNewFile();
             file.getParentFile().mkdirs();
+            file.createNewFile();
             config = new YamlConfiguration();
             config.options().header("Configuration File - " + name);
         }

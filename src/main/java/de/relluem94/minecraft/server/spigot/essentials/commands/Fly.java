@@ -44,7 +44,7 @@ public class Fly implements CommandExecutor {
 
     private boolean flyMode(Command command, Player p) {
         if (command.getName().equalsIgnoreCase("fly")) {
-            players.set("player." + p.getUniqueId() + ".fly", !p.getAllowFlight());
+            players.getConfig().set("player." + p.getUniqueId() + ".fly", !p.getAllowFlight());
             p.setAllowFlight(!p.getAllowFlight());
             p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, p.getCustomName(), p.getAllowFlight() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
             return true;

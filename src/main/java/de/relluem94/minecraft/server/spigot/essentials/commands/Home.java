@@ -43,16 +43,16 @@ public class Home implements CommandExecutor {
                     } else {
                         if (sender instanceof Player) {
                             Player p = (Player) sender;
-                            if(players.get("player." + p.getUniqueId() + ".home." + args[0]) != null){
+                            if(players.getConfig().get("player." + p.getUniqueId() + ".home." + args[0]) != null){
                                 double x, y, z;
                                 float yaw, pitch;
                                 String world;
-                                x = players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".x");
-                                y = players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".y");
-                                z = players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".z");
-                                yaw = (float) players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".yaw");
-                                pitch = (float) players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".pitch");
-                                world = players.getString("player." + p.getUniqueId() + ".home." + args[0] + ".world");
+                                x = players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".x");
+                                y = players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".y");
+                                z = players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".z");
+                                yaw = (float) players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".yaw");
+                                pitch = (float) players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".pitch");
+                                world = players.getConfig().getString("player." + p.getUniqueId() + ".home." + args[0] + ".world");
 
                                 Location l = new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
 
@@ -70,14 +70,14 @@ public class Home implements CommandExecutor {
                         Player p = (Player) sender;
 
                         if (args[0].equalsIgnoreCase("set")) {
-                            if(players.get("player." + p.getUniqueId() + ".home." + args[1]) == null){
+                            if(players.getConfig().get("player." + p.getUniqueId() + ".home." + args[1]) == null){
                                 Location l = p.getLocation();
-                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".x", l.getX());
-                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".y", l.getBlockY());
-                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".z", l.getBlockZ());
-                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".yaw", l.getYaw());
-                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".pitch", l.getPitch());
-                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".world", l.getWorld().getName());
+                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".x", l.getX());
+                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".y", l.getBlockY());
+                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".z", l.getBlockZ());
+                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".yaw", l.getYaw());
+                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".pitch", l.getPitch());
+                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".world", l.getWorld().getName());
                                 return true;
                             }
                             else{
@@ -85,8 +85,8 @@ public class Home implements CommandExecutor {
                             }
                             
                         } else if (args[0].equalsIgnoreCase("delete")) {
-                            if(players.get("player." + p.getUniqueId() + ".home." + args[1]) != null){
-                                players.set("player." + p.getUniqueId() + ".home" + args[1], null);
+                            if(players.getConfig().get("player." + p.getUniqueId() + ".home." + args[1]) != null){
+                                players.getConfig().set("player." + p.getUniqueId() + ".home" + args[1], null);
                                 return true;
                             }
                             else{

@@ -26,7 +26,7 @@ public class Nick implements CommandExecutor {
                                             if (target != null) {
                                                     target.setCustomName(User.getUserByPlayerName(target.getName()).getGroup().getPrefix() + args[1]);
                                                     p.sendMessage(String.format(PLUGIN_COMMAND_NICK, target.getName()));
-                                                    players.set("player." + target.getUniqueId() + ".customname", args[1]);
+                                                    players.getConfig().set("player." + target.getUniqueId() + ".customname", args[1]);
                                                     return true;
                                             }
                                     }

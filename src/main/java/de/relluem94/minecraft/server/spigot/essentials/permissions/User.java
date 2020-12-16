@@ -41,15 +41,15 @@ public class User {
 
 	public void setGroup(Group g) {
 		this.g = g;
-		players.set("player." + p.getUniqueId() + ".group" , g.getName());
+		players.getConfig().set("player." + p.getUniqueId() + ".group" , g.getName());
 		p.setCustomName(g.getPrefix() +  getCustomName(p));
 		p.setScoreboard(RelluEssentials.board);
 		g.getTeam().addEntry(p.getName());
 	}
 	
 	public static Group getGroup(Player p) {
-		if(players.getString("player." + p.getUniqueId() + ".group") != null) {
-			return  Group.getGroupFromName(players.getString("player." + p.getUniqueId() + ".group"));
+		if(players.getConfig().getString("player." + p.getUniqueId() + ".group") != null) {
+			return  Group.getGroupFromName(players.getConfig().getString("player." + p.getUniqueId() + ".group"));
 		}
 		else {
 			return new UserGroup();
@@ -71,8 +71,8 @@ public class User {
 	
 	private String getCustomName(Player p) {
 		String name = "";
-		if(players.get("player." + p.getUniqueId() + ".customname") != null) {
-			name += players.get("player." + p.getUniqueId() + ".customname");
+		if(players.getConfig().get("player." + p.getUniqueId() + ".customname") != null) {
+			name += players.getConfig().get("player." + p.getUniqueId() + ".customname");
 		}
 		else {
 			name += p.getName();
