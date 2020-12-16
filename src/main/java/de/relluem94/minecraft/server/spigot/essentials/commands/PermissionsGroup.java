@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import org.bukkit.block.CommandBlock;
 import org.bukkit.command.ConsoleCommandSender;
 
 public class PermissionsGroup implements CommandExecutor {
@@ -36,7 +37,7 @@ public class PermissionsGroup implements CommandExecutor {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                             return true;
                         }
-                    } else if (sender instanceof ConsoleCommandSender) {
+                    } else if (sender instanceof ConsoleCommandSender || sender instanceof CommandBlock) {
                         Group g = Group.getGroupFromName(args[1]);
                         User u = User.getUserByPlayerName(target.getName());
 

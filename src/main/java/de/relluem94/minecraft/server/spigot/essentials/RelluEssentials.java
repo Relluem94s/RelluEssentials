@@ -116,15 +116,16 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void configManager(boolean enable) throws IOException {
-        players = new ConfigHelper("players");
-        players.save();
+        if(players == null){
+            players = new ConfigHelper("players");
+        }
         
         /*  Config */
         if (enable) {
             this.saveDefaultConfig();
             
         } else {
-            this.saveConfig();
+            saveConfigs();
         }
     }
     
