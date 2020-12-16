@@ -40,8 +40,8 @@ public class Home implements CommandExecutor {
 					if (sender instanceof Player) {
 						Player p = (Player) sender;
 						if (Permission.isAuthorized(p, 4)) {
-							target.teleport(target.getBedSpawnLocation());
-							target.sendMessage(String.format(PLUGIN_COMMAND_HOME, target.getWorld().getName()));
+							p.teleport(target.getBedSpawnLocation());
+							p.sendMessage(String.format(PLUGIN_COMMAND_HOME, target.getWorld().getName()));
 							return true;
 						}
 						else {
