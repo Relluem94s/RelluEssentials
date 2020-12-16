@@ -103,7 +103,7 @@ public class RelluEssentials extends JavaPlugin {
     @Override
     public void onDisable() {
         System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_STOP_MESSAGE);
-        try{
+        try{ 
              configManager(false);
         }
         catch(IOException e){
@@ -114,16 +114,14 @@ public class RelluEssentials extends JavaPlugin {
 
 
     private void configManager(boolean enable) throws IOException {
-        if(players == null){
-            players = new ConfigHelper("players");
-        }
-        
         /*  Config */
         if (enable) {
             this.saveDefaultConfig();
+            players = new ConfigHelper("players");
             
         } else {
             saveConfigs();
+            players = new ConfigHelper("players");
         }
     }
     
@@ -139,6 +137,7 @@ public class RelluEssentials extends JavaPlugin {
     public static void saveConfigs(){
         ((RelluEssentials)Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
         try{
+            
             players.save();                                        
         }
         catch (IOException e){
