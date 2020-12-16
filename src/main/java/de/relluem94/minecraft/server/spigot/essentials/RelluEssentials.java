@@ -76,11 +76,14 @@ public class RelluEssentials extends JavaPlugin {
     public static ConfigHelper players;
     
     public static List<User> users = new ArrayList<User>();
-    public static File dataFolder = ((RelluEssentials)Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).getDataFolder();;
+    public static File dataFolder;
     
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_START_MESSAGE);
+        
+        dataFolder = this.getDataFolder();
+        
         try{
              configManager(true);
         }
