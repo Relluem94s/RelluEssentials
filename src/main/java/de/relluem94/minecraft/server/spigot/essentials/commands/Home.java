@@ -15,7 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class Home implements CommandExecutor {
 
     private FileConfiguration config = Bukkit.getPluginManager().getPlugin("RelluEssentials").getConfig();
-
+    // Should be the homes.yml would make the sames easier. 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("home")) {     
             switch(args.length){
