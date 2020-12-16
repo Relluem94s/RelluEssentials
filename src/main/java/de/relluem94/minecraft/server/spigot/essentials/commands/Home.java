@@ -1,5 +1,7 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import java.util.Iterator;
+import java.util.Map;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
@@ -11,6 +13,7 @@ import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.Location;
+import org.bukkit.configuration.ConfigurationSection;
 
 
 public class Home implements CommandExecutor {
@@ -26,7 +29,7 @@ public class Home implements CommandExecutor {
                             if (p.getBedSpawnLocation() != null) {
                                 p.teleport(p.getBedSpawnLocation());
                             } else {
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO, p.getWorld().getName()));
+                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO_BED, p.getWorld().getName()));
                             }
 
                             p.sendMessage(String.format(PLUGIN_COMMAND_HOME, p.getWorld().getName()));
@@ -39,7 +42,23 @@ public class Home implements CommandExecutor {
                     break;
                 case 1:
                     if (args[0].equalsIgnoreCase("list")) {
-                        //for each entry print message
+                        if (sender instanceof Player) {
+                            Player p = (Player) sender;
+                            Map<String, Object> map;
+                            ConfigurationSection c = players.getConfig().getConfigurationSection("player." + p.getUniqueId() + ".home");
+                            
+                            if(c != null){
+                                map = c.getValues(false);
+                                p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
+                                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                                    p.sendMessage(PLUGIN_COMMAND_ARG_COLOR + entry.getKey());
+                                }
+                            }
+                            else{
+                                p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
+                            }
+                            return true;
+                        }
                     } else {
                         if (sender instanceof Player) {
                             Player p = (Player) sender;
@@ -57,10 +76,12 @@ public class Home implements CommandExecutor {
                                 Location l = new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
 
                                 p.teleport(l);
+                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_TP, args[0]));
                                 return true;
                             }
                             else{
-                                // home does not exists
+                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[0]));
+                                return true;
                             }
                         }
                     }
@@ -78,19 +99,23 @@ public class Home implements CommandExecutor {
                                 players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".yaw", l.getYaw());
                                 players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".pitch", l.getPitch());
                                 players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".world", l.getWorld().getName());
+                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
                                 return true;
                             }
                             else{
-                                // home exists
+                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
+                                return true;
                             }
                             
                         } else if (args[0].equalsIgnoreCase("delete")) {
                             if(players.getConfig().get("player." + p.getUniqueId() + ".home." + args[1]) != null){
-                                players.getConfig().set("player." + p.getUniqueId() + ".home" + args[1], null);
+                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1], null);
+                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DELETE, args[1]));
                                 return true;
                             }
                             else{
-                                // home does not exists
+                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[1]));
+                                return true;
                             }
                         } 
                     }

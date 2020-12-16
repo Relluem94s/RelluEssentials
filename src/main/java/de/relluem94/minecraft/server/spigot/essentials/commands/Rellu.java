@@ -19,14 +19,17 @@ public class Rellu implements CommandExecutor {
 				if (Permission.isAuthorized(p, 4)) {
                                     if(args[0].equalsIgnoreCase("save")){
                                         RelluEssentials.saveConfigs();
+                                        p.sendMessage(PLUGIN_COMMAND_RELLU_SAVE);
                                         return true;
                                     }
                                     else if(args[0].equalsIgnoreCase("reload")){
                                         RelluEssentials.reloadConfigs();
+                                        p.sendMessage(PLUGIN_COMMAND_RELLU_RELOAD);
                                         return true;
                                     }
                                     else{
-                                        return false;
+                                        p.sendMessage(PLUGIN_COMMAND_RELLU_WRONG_COMMAND);
+                                        return true;
                                     }
 				}
 				else {
@@ -35,6 +38,19 @@ public class Rellu implements CommandExecutor {
 				}
 			}
 		}
+                else{
+                    if (sender instanceof Player) {
+                        Player p = (Player) sender;
+                        if (Permission.isAuthorized(p, 4)) {
+                            p.sendMessage(PLUGIN_COMMAND_RELLU_OPTIONS);
+                            return true;
+                        }
+                        else {
+                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                            return true;
+                        }
+                    }
+                }
 		return false;
 	}
 }
