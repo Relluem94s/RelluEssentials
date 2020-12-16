@@ -130,7 +130,7 @@ public class RelluEssentials extends JavaPlugin {
     public static void reloadConfigs(){
         ((RelluEssentials)Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
         try {
-            RelluEssentials.players.reload();
+            players.reload();
         } catch (IOException | InvalidConfigurationException e) {
             System.out.println(Strings.PLUGIN_NAME + e.getMessage());
         }

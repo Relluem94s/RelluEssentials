@@ -17,9 +17,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * @author rellu
  */
 public class ConfigHelper extends YamlConfiguration{
-    private final String name;
-    private final File file;
-    private final YamlConfiguration config;
+    private String name;
+    private File file;
+    private YamlConfiguration config;
     
     public ConfigHelper(String name) throws IOException {
         this.name = name;
