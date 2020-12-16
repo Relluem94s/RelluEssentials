@@ -51,12 +51,14 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Use
 import java.util.Objects;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Enchanttest;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Home;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Rellu;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 
 public class RelluEssentials extends JavaPlugin {
@@ -125,6 +127,25 @@ public class RelluEssentials extends JavaPlugin {
             this.saveConfig();
         }
     }
+    
+    public static void reloadConfigs(){
+        RelluEssentials.getInstance().reloadConfig();
+        try {
+            RelluEssentials.players.reload();
+        } catch (IOException | InvalidConfigurationException e) {
+            System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+        }
+    }
+    
+    public static void saveConfigs(){
+        RelluEssentials.getInstance().saveConfig();
+        try{
+            RelluEssentials.players.save();                                        
+        }
+        catch (IOException e){
+            System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+        }
+    }
 
     private void commandManager() {
         /*	Commands	*/
@@ -150,6 +171,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("nick")).setExecutor(new Nick());
         Objects.requireNonNull(this.getCommand("suicide")).setExecutor(new Suicide());
         Objects.requireNonNull(this.getCommand("enchanttest")).setExecutor(new Enchanttest());
+        Objects.requireNonNull(this.getCommand("rellu")).setExecutor(new Rellu());
     }
 
     private void enchantmentManager() {
@@ -208,13 +230,14 @@ public class RelluEssentials extends JavaPlugin {
                 Field f = Enchantment.class.getDeclaredField("acceptingNew");
                 f.setAccessible(true);
                 f.set(null, true);
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
+            } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
+                System.out.println(Strings.PLUGIN_NAME + e.getMessage());
             }
             try {
                 Enchantment.registerEnchantment(ench);
                 System.out.println("Registered enchantment " + ench.getName() + " with id " + ench.getKey().toString() + "!");
             } catch (IllegalArgumentException e) {
+                System.out.println(Strings.PLUGIN_NAME + e.getMessage());
                 // Duplicated Namespace 
             }
         } catch (Exception e) {

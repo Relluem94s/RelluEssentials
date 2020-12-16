@@ -6,8 +6,10 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
@@ -27,7 +29,8 @@ public class ConfigHelper extends YamlConfiguration{
             if (!file.exists()) {
                 file.createNewFile();
                 config = new YamlConfiguration();
-                config.options().header("Configuration File - " + getName());
+                config.options().header("Configuration File - " + name);
+                
             }
             else{
                 config = YamlConfiguration.loadConfiguration(file);
@@ -50,4 +53,7 @@ public class ConfigHelper extends YamlConfiguration{
         config.save(file);
     }
     
+    public void reload() throws IOException, FileNotFoundException, InvalidConfigurationException{
+        config.load(file);
+    }
 }

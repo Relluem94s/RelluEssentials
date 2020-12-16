@@ -57,6 +57,7 @@ public class Home implements CommandExecutor {
                                 Location l = new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
 
                                 p.teleport(l);
+                                return true;
                             }
                             else{
                                 // home does not exists
@@ -77,6 +78,7 @@ public class Home implements CommandExecutor {
                                 players.set("player." + p.getUniqueId() + ".home." + args[1] + ".yaw", l.getYaw());
                                 players.set("player." + p.getUniqueId() + ".home." + args[1] + ".pitch", l.getPitch());
                                 players.set("player." + p.getUniqueId() + ".home." + args[1] + ".world", l.getWorld().getName());
+                                return true;
                             }
                             else{
                                 // home exists
@@ -85,6 +87,7 @@ public class Home implements CommandExecutor {
                         } else if (args[0].equalsIgnoreCase("delete")) {
                             if(players.get("player." + p.getUniqueId() + ".home." + args[1]) != null){
                                 players.set("player." + p.getUniqueId() + ".home" + args[1], null);
+                                return true;
                             }
                             else{
                                 // home does not exists

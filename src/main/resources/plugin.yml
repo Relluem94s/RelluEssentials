@@ -69,5 +69,8 @@ commands:
     enchanttest:
         description: Test Echnantments
         usage: /enchanttest
+    rellu:
+        description: plugin config and more
+        usage: /rellu
 
 
