@@ -1,5 +1,6 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.E
 import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import java.util.Objects;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Enchanttest;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Rellu;
@@ -74,19 +76,11 @@ public class RelluEssentials extends JavaPlugin {
     public static ConfigHelper players;
     
     public static List<User> users = new ArrayList<User>();
-      
-    
-    
-    private static RelluEssentials instance;  
-    
-    public static RelluEssentials getInstance() {
-        return instance;
-    }
+    public static File dataFolder = ((RelluEssentials)Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).getDataFolder();;
     
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_START_MESSAGE);
-        instance = this;
         try{
              configManager(true);
         }
@@ -112,8 +106,9 @@ public class RelluEssentials extends JavaPlugin {
         catch(IOException e){
             System.out.println(Strings.PLUGIN_NAME + e.getMessage());
         }
-        instance = null;
     }
+    
+
 
     private void configManager(boolean enable) throws IOException {
         if(players == null){
@@ -130,7 +125,7 @@ public class RelluEssentials extends JavaPlugin {
     }
     
     public static void reloadConfigs(){
-        RelluEssentials.getInstance().reloadConfig();
+        ((RelluEssentials)Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
         try {
             RelluEssentials.players.reload();
         } catch (IOException | InvalidConfigurationException e) {
@@ -139,9 +134,9 @@ public class RelluEssentials extends JavaPlugin {
     }
     
     public static void saveConfigs(){
-        RelluEssentials.getInstance().saveConfig();
+        ((RelluEssentials)Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
         try{
-            RelluEssentials.players.save();                                        
+            players.save();                                        
         }
         catch (IOException e){
             System.out.println(Strings.PLUGIN_NAME + e.getMessage());
