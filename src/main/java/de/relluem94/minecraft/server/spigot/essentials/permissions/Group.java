@@ -12,9 +12,9 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.gro
 
 public class Group {
 	
-	private String name;
-	private long group_id;
-	private String prefix;
+	private final String name;
+	private final long group_id;
+	private final String prefix;
 	private Team team;
 	
 	public Group(String name, long group_id, String prefix) {

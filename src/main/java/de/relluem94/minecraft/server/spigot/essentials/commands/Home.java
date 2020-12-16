@@ -1,5 +1,6 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 import org.bukkit.Bukkit;
@@ -10,11 +11,10 @@ import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
+
 
 public class Home implements CommandExecutor {
 
-    private FileConfiguration config = Bukkit.getPluginManager().getPlugin("RelluEssentials").getConfig();
     // Should be the homes.yml would make the sames easier. 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("home")) {     
@@ -43,16 +43,16 @@ public class Home implements CommandExecutor {
                     } else {
                         if (sender instanceof Player) {
                             Player p = (Player) sender;
-                            if(config.get("player." + p.getUniqueId() + ".home." + args[0]) != null){
+                            if(players.get("player." + p.getUniqueId() + ".home." + args[0]) != null){
                                 double x, y, z;
                                 float yaw, pitch;
                                 String world;
-                                x = config.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".x");
-                                y = config.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".y");
-                                z = config.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".z");
-                                yaw = (float) config.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".yaw");
-                                pitch = (float) config.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".pitch");
-                                world = config.getString("player." + p.getUniqueId() + ".home." + args[0] + ".world");
+                                x = players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".x");
+                                y = players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".y");
+                                z = players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".z");
+                                yaw = (float) players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".yaw");
+                                pitch = (float) players.getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".pitch");
+                                world = players.getString("player." + p.getUniqueId() + ".home." + args[0] + ".world");
 
                                 Location l = new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
 
@@ -69,22 +69,22 @@ public class Home implements CommandExecutor {
                         Player p = (Player) sender;
 
                         if (args[0].equalsIgnoreCase("set")) {
-                            if(config.get("player." + p.getUniqueId() + ".home." + args[1]) == null){
+                            if(players.get("player." + p.getUniqueId() + ".home." + args[1]) == null){
                                 Location l = p.getLocation();
-                                config.set("player." + p.getUniqueId() + ".home." + args[1] + ".x", l.getX());
-                                config.set("player." + p.getUniqueId() + ".home." + args[1] + ".y", l.getBlockY());
-                                config.set("player." + p.getUniqueId() + ".home." + args[1] + ".z", l.getBlockZ());
-                                config.set("player." + p.getUniqueId() + ".home." + args[1] + ".yaw", l.getYaw());
-                                config.set("player." + p.getUniqueId() + ".home." + args[1] + ".pitch", l.getPitch());
-                                config.set("player." + p.getUniqueId() + ".home." + args[1] + ".world", l.getWorld().getName());
+                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".x", l.getX());
+                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".y", l.getBlockY());
+                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".z", l.getBlockZ());
+                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".yaw", l.getYaw());
+                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".pitch", l.getPitch());
+                                players.set("player." + p.getUniqueId() + ".home." + args[1] + ".world", l.getWorld().getName());
                             }
                             else{
                                 // home exists
                             }
                             
                         } else if (args[0].equalsIgnoreCase("delete")) {
-                            if(config.get("player." + p.getUniqueId() + ".home." + args[1]) != null){
-                                config.set("player." + p.getUniqueId() + ".home" + args[1], null);
+                            if(players.get("player." + p.getUniqueId() + ".home." + args[1]) != null){
+                                players.set("player." + p.getUniqueId() + ".home" + args[1], null);
                             }
                             else{
                                 // home does not exists

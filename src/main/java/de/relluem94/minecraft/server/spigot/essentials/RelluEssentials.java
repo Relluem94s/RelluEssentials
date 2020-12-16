@@ -1,7 +1,10 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -52,6 +55,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.Aut
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 
@@ -64,13 +68,30 @@ public class RelluEssentials extends JavaPlugin {
 
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
+
+    public static ConfigHelper players;
+    
+    public static List<User> users = new ArrayList<User>();
+      
     
     
+    private static RelluEssentials instance;  
+    
+    public static RelluEssentials getInstance() {
+        return instance;
+    }
     
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_START_MESSAGE);
-        configManager(true);
+        instance = this;
+        try{
+             configManager(true);
+        }
+        catch(IOException e){
+            System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+        }
+       
         commandManager();
         eventManager();
         featureManager();
@@ -83,13 +104,23 @@ public class RelluEssentials extends JavaPlugin {
     @Override
     public void onDisable() {
         System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_STOP_MESSAGE);
-        configManager(false);
+        instance = null;
+        try{
+             configManager(false);
+        }
+        catch(IOException e){
+            System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+        }
     }
 
-    private void configManager(boolean enable) {
+    private void configManager(boolean enable) throws IOException {
+        players = new ConfigHelper("players");
+        players.save();
+        
         /*  Config */
         if (enable) {
             this.saveDefaultConfig();
+            
         } else {
             this.saveConfig();
         }

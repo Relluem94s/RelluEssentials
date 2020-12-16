@@ -1,10 +1,5 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials.permissions;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -12,33 +7,28 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.gro
 import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
-import org.bukkit.OfflinePlayer;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.users;
 
 public class User {
 	private Player p;
 	private Group g;
 	
-
-	
-	
 	public RepairSkill repair = new RepairSkill(RelluEssentials.board);
 	public SalvageSkill salvage = new SalvageSkill(RelluEssentials.board);
 	public TreeFellerSkill treeFeller = new TreeFellerSkill(RelluEssentials.board);
 	
-	
-	private static FileConfiguration config = Bukkit.getPluginManager().getPlugin("RelluEssentials").getConfig();
-	public static List<User> users = new ArrayList<User>();
-	
 	public User(Player p, Group g) {
 		this.p = p;
 		setGroup(g);
-		users.add(this);
+                users.add(this);
+		
 	}
 	
 	public User(Player p, String g) {
 		this.p = p;
 		setGroup(Group.getGroupFromName(g));
-		users.add(this);
+                users.add(this);
 	}
 
 	public Group getGroup() {
@@ -51,15 +41,15 @@ public class User {
 
 	public void setGroup(Group g) {
 		this.g = g;
-		config.set("player." + p.getUniqueId() + ".group" , g.getName());
+		players.set("player." + p.getUniqueId() + ".group" , g.getName());
 		p.setCustomName(g.getPrefix() +  getCustomName(p));
 		p.setScoreboard(RelluEssentials.board);
 		g.getTeam().addEntry(p.getName());
 	}
 	
 	public static Group getGroup(Player p) {
-		if(config.getString("player." + p.getUniqueId() + ".group") != null) {
-			return  Group.getGroupFromName(config.getString("player." + p.getUniqueId() + ".group"));
+		if(players.getString("player." + p.getUniqueId() + ".group") != null) {
+			return  Group.getGroupFromName(players.getString("player." + p.getUniqueId() + ".group"));
 		}
 		else {
 			return new UserGroup();
@@ -81,8 +71,8 @@ public class User {
 	
 	private String getCustomName(Player p) {
 		String name = "";
-		if(config.get("player." + p.getUniqueId() + ".customname") != null) {
-			name += config.get("player." + p.getUniqueId() + ".customname");
+		if(players.get("player." + p.getUniqueId() + ".customname") != null) {
+			name += players.get("player." + p.getUniqueId() + ".customname");
 		}
 		else {
 			name += p.getName();
