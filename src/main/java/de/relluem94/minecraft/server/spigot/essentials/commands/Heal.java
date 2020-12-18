@@ -11,23 +11,23 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Per
 import org.bukkit.attribute.Attribute;
 
 public class Heal implements CommandExecutor {
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (command.getName().equalsIgnoreCase("heal")) {
-			if (args.length == 0) {
-				if (sender instanceof Player) {
-					Player p = (Player) sender;
-					if (Permission.isAuthorized(p, 3)) {
-						p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
-						p.sendMessage(PLUGIN_COMMAND_DAY);
-						return true;
-					}
-					else {
-						p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
+
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("heal")) {
+            if (args.length == 0) {
+                if (sender instanceof Player) {
+                    Player p = (Player) sender;
+                    if (Permission.isAuthorized(p, 3)) {
+                        p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
+                        p.sendMessage(PLUGIN_COMMAND_DAY);
+                        return true;
+                    } else {
+                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }
