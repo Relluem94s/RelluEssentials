@@ -72,5 +72,11 @@ commands:
     rellu:
         description: plugin config and more
         usage: /rellu
+    god:
+        description: toogle god mode
+        usage: /god
+    heal:
+        description: heal player
+        usage: /heal
 
 
