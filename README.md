@@ -22,6 +22,8 @@
 * Repair your favorite Tools (/repair)
 * Teleport to your Bed spawn location or set list tp to homes that get saved in players.yml (/home)
 * Save, Reload your config or more (/rellu)
+* Play as god (/god)
+* Heal yourself if you low on health (/heal)
 
 ## Skills
 * TreeFeller (Fell the whole Tree)
