@@ -28,11 +28,10 @@ public class Home implements CommandExecutor {
                         if (Permission.isAuthorized(p, 1)) {
                             if (p.getBedSpawnLocation() != null) {
                                 p.teleport(p.getBedSpawnLocation());
+                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME, p.getWorld().getName()));
                             } else {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO_BED, p.getWorld().getName()));
                             }
-
-                            p.sendMessage(String.format(PLUGIN_COMMAND_HOME, p.getWorld().getName()));
                             return true;
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

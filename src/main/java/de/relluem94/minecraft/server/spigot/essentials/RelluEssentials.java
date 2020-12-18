@@ -121,7 +121,6 @@ public class RelluEssentials extends JavaPlugin {
             
         } else {
             saveConfigs();
-            players = new ConfigHelper("players");
         }
     }
     
@@ -137,7 +136,6 @@ public class RelluEssentials extends JavaPlugin {
     public static void saveConfigs(){
         ((RelluEssentials)Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
         try{
-            
             players.save();                                        
         }
         catch (IOException e){
