@@ -9,18 +9,18 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class BetterSavety implements Listener {
-	
-	private String[] strings2block = {"/pl", "/bukkit", "/ver"};
-	
-	@EventHandler
-	public void onType(PlayerCommandPreprocessEvent e) {
-		for(String s2b: strings2block) {
-			if(!Permission.isAuthorized(e.getPlayer(), 8)) {
-				if(e.getMessage().toLowerCase().startsWith(s2b)) {
-					e.setCancelled(true);
-					e.getPlayer().sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-				}
-			}
-		}
-	}
+
+    private String[] strings2block = {"/pl", "/bukkit", "/ver"};
+
+    @EventHandler
+    public void onType(PlayerCommandPreprocessEvent e) {
+        for (String s2b : strings2block) {
+            if (!Permission.isAuthorized(e.getPlayer(), 8)) {
+                if (e.getMessage().toLowerCase().startsWith(s2b)) {
+                    e.setCancelled(true);
+                    e.getPlayer().sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                }
+            }
+        }
+    }
 }

@@ -6,10 +6,10 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class NoDeathMessage implements Listener {
 
-	@EventHandler
-	public void onSpawn(PlayerDeathEvent e) {
-		e.setKeepLevel(true);
-		e.setDroppedExp(0);
-		e.setDeathMessage(null);
-	}
+    @EventHandler
+    public void onSpawn(PlayerDeathEvent e) {
+        e.setKeepLevel(true);
+        e.setDroppedExp(0);
+        e.setDeathMessage(null);
+    }
 }

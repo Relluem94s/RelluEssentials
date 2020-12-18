@@ -26,20 +26,19 @@ public class CustomEnchantment implements Listener {
     public void addCustomEnchantToTable(PrepareItemEnchantEvent e) {
         Enchantment as = Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
         Enchantment ts = Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
-        
+
         if (isTool(e.getItem().getType())) {
-           // e.getOffers()[0] = new EnchantmentOffer(as, 1, 1);
-           // e.getOffers()[1] = new EnchantmentOffer(new EnchantmentWrapper("autosmelt"), 1, 1);
-           // e.getOffers()[2] = new EnchantmentOffer(ts, 1, 1);
+            // e.getOffers()[0] = new EnchantmentOffer(as, 1, 1);
+            // e.getOffers()[1] = new EnchantmentOffer(new EnchantmentWrapper("autosmelt"), 1, 1);
+            // e.getOffers()[2] = new EnchantmentOffer(ts, 1, 1);
 //            System.out.println("===");
 //            for(EnchantmentOffer eo : e.getOffers()){
 //                            System.out.println(eo.getEnchantment().getKey());
 //            }
-            
+
             //e.getOffers()[1] = new EnchantmentOffer(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt")), 1, 0);
             //e.getOffers()[1] = new EnchantmentOffer(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis")), 1, 4);
             //e.getOffers()[2] = new EnchantmentOffer(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis")), 1, 3);
-            
 //            if (random.nextInt((10 - 0) + 1) >= 0) {
 //                if (random.nextInt((10 - 0) + 1) >= 0) {
 //                    e.getOffers()[random.nextInt((2 - 0) + 1)] = new EnchantmentOffer(new EnchantmentWrapper(RelluEssentials.autosmelt.getName().toLowerCase()), 1, 1);

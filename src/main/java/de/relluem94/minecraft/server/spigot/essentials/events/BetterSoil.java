@@ -9,10 +9,10 @@ import org.bukkit.event.entity.EntityInteractEvent;
 /* Better Call Soil */
 public class BetterSoil implements Listener {
 
-	@EventHandler
-	public void onChange(EntityInteractEvent e) {
-		if ((e.getEntityType() != EntityType.PLAYER) && (e.getBlock().getType() == Material.FARMLAND)) {
-			e.setCancelled(true);
-		}
-	}
+    @EventHandler
+    public void onChange(EntityInteractEvent e) {
+        if ((e.getEntityType() != EntityType.PLAYER) && (e.getBlock().getType() == Material.FARMLAND)) {
+            e.setCancelled(true);
+        }
+    }
 }
