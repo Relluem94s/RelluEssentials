@@ -20,8 +20,6 @@ public class AutoSmelt extends Enchantment {
         super(id);
     }
 
-
-
     @Override
     public String getName() {
         return "AutoSmelt";

@@ -9,23 +9,23 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Per
 
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
-public class PortableCraftingBench implements CommandExecutor{
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (command.getName().equalsIgnoreCase("craft")) {
-			if(sender instanceof Player) {
-				Player p = (Player) sender;
-				if(Permission.isAuthorized(p, 1)) {
-					p.openWorkbench(p.getLocation(), true);
-					p.sendMessage(String.format(PLUGIN_COMMAND_CRAFTINGBENCH, p.getCustomName()));
-					return true;
-				}
-				else {
-					p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+public class PortableCraftingBench implements CommandExecutor {
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("craft")) {
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
+                if (Permission.isAuthorized(p, 1)) {
+                    p.openWorkbench(p.getLocation(), true);
+                    p.sendMessage(String.format(PLUGIN_COMMAND_CRAFTINGBENCH, p.getCustomName()));
+                    return true;
+                } else {
+                    p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

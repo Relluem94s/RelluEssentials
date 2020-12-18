@@ -74,23 +74,22 @@ public class RelluEssentials extends JavaPlugin {
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
 
     public static ConfigHelper players;
-    
+
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
-    
+
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_START_MESSAGE);
-        
+
         dataFolder = this.getDataFolder();
-        
-        try{
-             configManager(true);
-        }
-        catch(IOException e){
+
+        try {
+            configManager(true);
+        } catch (IOException e) {
             System.out.println(Strings.PLUGIN_NAME + e.getMessage());
         }
-       
+
         commandManager();
         eventManager();
         featureManager();
@@ -103,42 +102,38 @@ public class RelluEssentials extends JavaPlugin {
     @Override
     public void onDisable() {
         System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_STOP_MESSAGE);
-        try{ 
-             configManager(false);
-        }
-        catch(IOException e){
+        try {
+            configManager(false);
+        } catch (IOException e) {
             System.out.println(Strings.PLUGIN_NAME + e.getMessage());
         }
     }
-    
-
 
     private void configManager(boolean enable) throws IOException {
         /*  Config */
         if (enable) {
             this.saveDefaultConfig();
             players = new ConfigHelper("players");
-            
+
         } else {
             saveConfigs();
         }
     }
-    
-    public static void reloadConfigs(){
-        ((RelluEssentials)Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
+
+    public static void reloadConfigs() {
+        ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
         try {
             players.reload();
         } catch (IOException | InvalidConfigurationException e) {
             System.out.println(Strings.PLUGIN_NAME + e.getMessage());
         }
     }
-    
-    public static void saveConfigs(){
-        ((RelluEssentials)Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
-        try{
-            players.save();                                        
-        }
-        catch (IOException e){
+
+    public static void saveConfigs() {
+        ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
+        try {
+            players.save();
+        } catch (IOException e) {
             System.out.println(Strings.PLUGIN_NAME + e.getMessage());
         }
     }

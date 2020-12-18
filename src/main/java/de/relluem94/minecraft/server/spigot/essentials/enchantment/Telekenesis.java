@@ -10,18 +10,15 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 
-
 /**
  *
  * @author rellu
  */
- public class Telekenesis extends Enchantment {
+public class Telekenesis extends Enchantment {
 
     public Telekenesis(NamespacedKey id) {
         super(id);
     }
-
-
 
     @Override
     public String getName() {
