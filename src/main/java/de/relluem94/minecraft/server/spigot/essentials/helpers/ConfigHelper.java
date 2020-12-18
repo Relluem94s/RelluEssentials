@@ -16,15 +16,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
  *
  * @author rellu
  */
-public class ConfigHelper{
+public class ConfigHelper {
+
     private String name;
     private File file;
     private YamlConfiguration config;
-    
+
     public ConfigHelper(String name) throws IOException {
         this.name = name;
-        
-        
+
         file = new File(RelluEssentials.dataFolder, name + ".yml");
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -32,27 +32,27 @@ public class ConfigHelper{
             config = new YamlConfiguration();
             config.options().header("Configuration File - " + name);
         }
-        
+
         config = YamlConfiguration.loadConfiguration(file);
     }
 
     public String getConfigName() {
         return name;
     }
-    
-    public File getFile(){
+
+    public File getFile() {
         return file;
     }
-    
-    public YamlConfiguration getConfig(){
+
+    public YamlConfiguration getConfig() {
         return config;
     }
-    
+
     public void save() throws IOException {
         config.save(file);
     }
-    
-    public void reload() throws IOException, FileNotFoundException, InvalidConfigurationException{
+
+    public void reload() throws IOException, FileNotFoundException, InvalidConfigurationException {
         config.load(file);
     }
 }

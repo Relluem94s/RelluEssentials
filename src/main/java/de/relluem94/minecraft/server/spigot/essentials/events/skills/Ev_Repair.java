@@ -19,42 +19,41 @@ import org.bukkit.inventory.meta.ItemMeta;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
 
+public class Ev_Repair implements Listener {
 
-public class Ev_Repair implements Listener{
-
-	@EventHandler
-	public void onClick(PlayerInteractEvent e) {
-		Action a = e.getAction();
-		Block b = e.getClickedBlock();
-		Player p = e.getPlayer();
-		PlayerInventory i = p.getInventory();
-		if(e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
-			if(a.equals(Action.RIGHT_CLICK_BLOCK)) {
-				if(b.getType().equals(Material.IRON_BLOCK)) {
-					ItemStack is = i.getItemInMainHand();				
-					ItemMeta im = is.getItemMeta();
-					Material m = is.getType();
-					if(((Damageable) im) != null && ((Damageable) im).hasDamage()) {
-						ItemValues iv = ItemValues.getByMaterial(m);
-						if(iv != null) {
-							Material cost_material =iv.getMaterial();
-							ItemStack cost_itemstack = new ItemStack(cost_material, 1);
-							if(i.contains(cost_material)){
-								p.getInventory().removeItem(cost_itemstack);
-								int damage = ((Damageable) im).getDamage();
-								((Damageable) im).setDamage(damage - (45 * iv.getFactor()));
-								p.sendMessage(PLUGIN_EVENT_SKILL_REPAIR_DONE);
-								is.setItemMeta(im);
-								User u = User.getUserByPlayerName(p.getName());
-								int score = u.repair.getObjective().getScore("Repair").getScore();
-								u.repair.getObjective().getScore("Repair").setScore(score +1);							}
-							else {
-								p.sendMessage(String.format(PLUGIN_EVENT_SKILL_REPAIR_WARNING, iv.getMaterial().toString().replaceAll("_", " ").toLowerCase()));
-							}
-						}
-					}				
-				}		
-			}
-		}
-	}
+    @EventHandler
+    public void onClick(PlayerInteractEvent e) {
+        Action a = e.getAction();
+        Block b = e.getClickedBlock();
+        Player p = e.getPlayer();
+        PlayerInventory i = p.getInventory();
+        if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
+            if (a.equals(Action.RIGHT_CLICK_BLOCK)) {
+                if (b.getType().equals(Material.IRON_BLOCK)) {
+                    ItemStack is = i.getItemInMainHand();
+                    ItemMeta im = is.getItemMeta();
+                    Material m = is.getType();
+                    if (((Damageable) im) != null && ((Damageable) im).hasDamage()) {
+                        ItemValues iv = ItemValues.getByMaterial(m);
+                        if (iv != null) {
+                            Material cost_material = iv.getMaterial();
+                            ItemStack cost_itemstack = new ItemStack(cost_material, 1);
+                            if (i.contains(cost_material)) {
+                                p.getInventory().removeItem(cost_itemstack);
+                                int damage = ((Damageable) im).getDamage();
+                                ((Damageable) im).setDamage(damage - (45 * iv.getFactor()));
+                                p.sendMessage(PLUGIN_EVENT_SKILL_REPAIR_DONE);
+                                is.setItemMeta(im);
+                                User u = User.getUserByPlayerName(p.getName());
+                                int score = u.repair.getObjective().getScore("Repair").getScore();
+                                u.repair.getObjective().getScore("Repair").setScore(score + 1);
+                            } else {
+                                p.sendMessage(String.format(PLUGIN_EVENT_SKILL_REPAIR_WARNING, iv.getMaterial().toString().replaceAll("_", " ").toLowerCase()));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
