@@ -233,7 +233,6 @@ public class RelluEssentials extends JavaPlugin {
                 System.out.println("Registered enchantment " + ench.getName() + " with id " + ench.getKey().toString() + "!");
             } catch (IllegalArgumentException e) {
                 System.out.println(Strings.PLUGIN_NAME + e.getMessage());
-                // Duplicated Namespace 
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());

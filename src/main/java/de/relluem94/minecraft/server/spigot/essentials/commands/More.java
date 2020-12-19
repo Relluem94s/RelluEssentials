@@ -12,6 +12,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Per
 
 public class More implements CommandExecutor {
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("more")) {
             if (args.length == 0) {

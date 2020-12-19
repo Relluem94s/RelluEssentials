@@ -16,6 +16,7 @@ import org.bukkit.command.ConsoleCommandSender;
 
 public class PermissionsGroup implements CommandExecutor {
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("setGroup")) {
             if (args.length == 2) {

@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Repair implements CommandExecutor {
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("repair")) {
             if (args.length == 0) {

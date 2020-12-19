@@ -11,6 +11,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Per
 
 public class God implements CommandExecutor {
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("day")) {
             if (args.length == 0) {

@@ -18,7 +18,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 public class Home implements CommandExecutor {
 
-    // Should be the homes.yml would make the sames easier. 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("home")) {     
             switch(args.length){
