@@ -38,7 +38,7 @@
 * Better Block Drop (Glass etc.)
 * Better Mobs (Disable Phantom, more Iron Golem)
 * Better (Call) Soil
-* Better Savety (Auto disable some commands like /pl)
+* Better Safety (Auto disable some commands like /pl)
 * No Death Message
 
 
