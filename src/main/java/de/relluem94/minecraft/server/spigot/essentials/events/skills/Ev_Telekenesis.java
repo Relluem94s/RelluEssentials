@@ -27,8 +27,9 @@ public class Ev_Telekenesis implements Listener {
                         p.getWorld().dropItem(p.getLocation(), im);
                     }
                 }
+                e.setDropItems(false);
             } else {
-                //HANDLED IN AUTOSMELT EVENT
+                e.setDropItems(false); //HANDLED IN AUTOSMELT EVENT
             }
         }
 
