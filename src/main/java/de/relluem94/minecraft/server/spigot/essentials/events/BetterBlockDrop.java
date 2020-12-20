@@ -8,6 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class BetterBlockDrop implements Listener {
 
@@ -55,7 +56,7 @@ public class BetterBlockDrop implements Listener {
             if (m == b2d) {
                 ItemStack is = new ItemStack(b2d, 1);
                 Player p = (Player) e.getPlayer();
-                if (Permission.isAuthorized(p, 2)) {
+                if (Permission.isAuthorized(p, Groups.USER.getId())) {
                     p.getWorld().dropItem(e.getBlock().getLocation(), is);
                     e.setDropItems(false);
                 }

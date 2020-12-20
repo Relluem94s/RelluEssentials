@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Spawn implements CommandExecutor {
 
@@ -18,7 +19,7 @@ public class Spawn implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 1)) {
+                    if (Permission.isAuthorized(p, Groups.USER.getId())) {
                         p.teleport(p.getWorld().getSpawnLocation());
                         p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
                         return true;
@@ -32,7 +33,7 @@ public class Spawn implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, 4)) {
+                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                             target.teleport(target.getWorld().getSpawnLocation());
                             target.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, target.getWorld().getName()));
                             return true;

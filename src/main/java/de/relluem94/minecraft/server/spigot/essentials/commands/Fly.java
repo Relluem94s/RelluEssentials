@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Fly implements CommandExecutor {
 
@@ -18,7 +19,7 @@ public class Fly implements CommandExecutor {
         if (args.length == 0) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (Permission.isAuthorized(p, 2)) {
+                if (Permission.isAuthorized(p, Groups.VIP.getId())) {
                     return flyMode(command, p);
                 } else {
                     p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -30,7 +31,7 @@ public class Fly implements CommandExecutor {
             if (target != null) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 4)) {
+                    if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                         return flyMode(command, target);
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

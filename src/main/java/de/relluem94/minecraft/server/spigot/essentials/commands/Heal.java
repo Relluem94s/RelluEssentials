@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 import org.bukkit.attribute.Attribute;
 
 public class Heal implements CommandExecutor {
@@ -18,7 +19,7 @@ public class Heal implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 3)) {
+                    if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                         p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
                         p.setFoodLevel(20);
                         p.sendMessage(PLUGIN_COMMAND_HEAL);

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Nick implements CommandExecutor {
 
@@ -20,7 +21,7 @@ public class Nick implements CommandExecutor {
             if (args.length == 2) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 8)) {
+                    if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
                         Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
                         if (target != null) {
                             target.setCustomName(User.getUserByPlayerName(target.getName()).getGroup().getPrefix() + args[1]);

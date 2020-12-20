@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class GameMode implements CommandExecutor {
 
@@ -17,7 +18,7 @@ public class GameMode implements CommandExecutor {
         if (args.length == 0) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (Permission.isAuthorized(p, 4)) {
+                if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                     return gameMode(command, p);
                 } else {
                     p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -29,7 +30,7 @@ public class GameMode implements CommandExecutor {
             if (target != null) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 4)) {
+                    if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                         return gameMode(command, target);
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

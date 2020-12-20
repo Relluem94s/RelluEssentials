@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Rellu implements CommandExecutor {
 
@@ -17,7 +18,7 @@ public class Rellu implements CommandExecutor {
         if (args.length == 1) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (Permission.isAuthorized(p, 4)) {
+                if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
                     if (args[0].equalsIgnoreCase("save")) {
                         RelluEssentials.saveConfigs();
                         p.sendMessage(PLUGIN_COMMAND_RELLU_SAVE);
@@ -38,7 +39,7 @@ public class Rellu implements CommandExecutor {
         } else {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (Permission.isAuthorized(p, 4)) {
+                if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
                     p.sendMessage(PLUGIN_COMMAND_RELLU_OPTIONS);
                     return true;
                 } else {

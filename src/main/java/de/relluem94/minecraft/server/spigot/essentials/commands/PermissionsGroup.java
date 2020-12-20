@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.ConsoleCommandSender;
 
@@ -24,7 +25,7 @@ public class PermissionsGroup implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, 8)) {
+                        if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
                             Group g = Group.getGroupFromName(args[1]);
                             User u = User.getUserByPlayerName(target.getName());
 

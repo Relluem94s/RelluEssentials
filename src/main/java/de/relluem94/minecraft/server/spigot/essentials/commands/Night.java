@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Night implements CommandExecutor {
 
@@ -17,7 +18,7 @@ public class Night implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 4)) {
+                    if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                         p.getWorld().setTime(18000L);
                         p.sendMessage(String.format(PLUGIN_COMMAND_NIGHT, p.getWorld().getName()));
                         return true;

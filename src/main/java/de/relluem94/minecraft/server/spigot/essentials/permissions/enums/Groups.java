@@ -1,0 +1,39 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums;
+
+/**
+ *
+ * @author rellu
+ */
+public enum Groups {
+    USER("User", 1, "§8"),
+    VIP("VIP", 2, "§a"),
+    MOD("Mod", 4, "§6"),    
+    ADMIN("Admin", 8, "§5");
+    
+    private final String name;
+    private final String prefix;
+    private final int id;
+    
+    private Groups(String name, int id, String prefix){
+        this.id = id;
+        this.name = name;
+        this.prefix = prefix;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public int getId() {
+        return id;
+    }
+}

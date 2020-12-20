@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Inventory implements CommandExecutor {
 
@@ -18,7 +19,7 @@ public class Inventory implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 2)) {
+                    if (Permission.isAuthorized(p, Groups.VIP.getId())) {
                         p.openInventory(p.getInventory());
                         p.sendMessage(PLUGIN_COMMAND_INVENTORY);
                         return true;
@@ -32,7 +33,7 @@ public class Inventory implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, 4)) {
+                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                             p.openInventory(target.getInventory());
                             p.sendMessage(String.format(PLUGIN_COMMAND_INVENTORY_PLAYER, target.getCustomName()));
                             return true;

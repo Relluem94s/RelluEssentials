@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class BetterSavety implements Listener {
 
@@ -15,7 +16,7 @@ public class BetterSavety implements Listener {
     @EventHandler
     public void onType(PlayerCommandPreprocessEvent e) {
         for (String s2b : strings2block) {
-            if (!Permission.isAuthorized(e.getPlayer(), 8)) {
+            if (!Permission.isAuthorized(e.getPlayer(), Groups.ADMIN.getId())) {
                 if (e.getMessage().toLowerCase().startsWith(s2b)) {
                     e.setCancelled(true);
                     e.getPlayer().sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

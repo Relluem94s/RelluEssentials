@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
 import org.bukkit.Material;
 
@@ -20,7 +21,7 @@ public class BetterPlayerJoin implements Listener {
         e.setJoinMessage(null);
         Player p = e.getPlayer();
         addPlayer(p);
-        if (User.getGroup(p).getId() >= 2) {
+        if (User.getGroup(p).getId() >= Groups.VIP.getId()) {
             if (players.getConfig().getBoolean("player." + p.getUniqueId() + ".fly")) {
                 p.setAllowFlight(true);
                 if (p.getLocation().getBlock().getRelative(0, -1, 0).getType().equals(Material.AIR)) {

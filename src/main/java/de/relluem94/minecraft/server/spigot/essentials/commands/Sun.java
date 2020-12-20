@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Sun implements CommandExecutor {
 
@@ -19,7 +20,7 @@ public class Sun implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 4)) {
+                    if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                         p.getWorld().setWeatherDuration(0);
                         p.getWorld().setStorm(false);
                         p.getWorld().setWeatherDuration(1000000);
@@ -35,7 +36,7 @@ public class Sun implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, 4)) {
+                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                             target.setPlayerWeather(WeatherType.CLEAR);
                             target.sendMessage(PLUGIN_COMMAND_SUN_PLAYER);
                             return true;

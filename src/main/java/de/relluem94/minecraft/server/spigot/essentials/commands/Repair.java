@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,7 +22,7 @@ public class Repair implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 4)) {
+                    if (Permission.isAuthorized(p, Groups.MOD.getId())) {
 
                         ItemStack item = p.getInventory().getItemInMainHand();
                         ItemMeta im = item.getItemMeta();
@@ -46,7 +47,7 @@ public class Repair implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, 4)) {
+                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
 
                             ItemStack item = target.getInventory().getItemInMainHand();
                             ItemMeta im = item.getItemMeta();

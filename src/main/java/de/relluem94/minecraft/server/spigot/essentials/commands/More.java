@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class More implements CommandExecutor {
 
@@ -18,7 +19,7 @@ public class More implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, 4)) {
+                    if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                         p.getInventory().getItemInMainHand().setAmount(64);
                         p.sendMessage(String.format(PLUGIN_COMMAND_MORE, p.getInventory().getItemInMainHand().getType().toString()));
                         return true;
@@ -32,7 +33,7 @@ public class More implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, 4)) {
+                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                             target.getInventory().getItemInMainHand().setAmount(64);
                             p.sendMessage(String.format(PLUGIN_COMMAND_MORE, target.getInventory().getItemInMainHand().getType().toString()));
                             target.sendMessage(String.format(PLUGIN_COMMAND_MORE_PLAYER, target.getInventory().getItemInMainHand().getType().toString()));

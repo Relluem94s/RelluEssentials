@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class PortableCraftingBench implements CommandExecutor {
 
@@ -16,7 +17,7 @@ public class PortableCraftingBench implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("craft")) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (Permission.isAuthorized(p, 1)) {
+                if (Permission.isAuthorized(p, Groups.VIP.getId())) {
                     p.openWorkbench(p.getLocation(), true);
                     p.sendMessage(String.format(PLUGIN_COMMAND_CRAFTINGBENCH, p.getCustomName()));
                     return true;
