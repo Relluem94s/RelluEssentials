@@ -31,6 +31,7 @@ public class Fly implements CommandExecutor {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, 4)) {
+                        p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, target.getCustomName(), !target.getAllowFlight() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
                         return flyMode(command, target);
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
