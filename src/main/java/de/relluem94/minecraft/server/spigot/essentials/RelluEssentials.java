@@ -51,6 +51,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import java.util.Objects;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_EVENT;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Enchanttest;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.God;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
@@ -230,7 +231,7 @@ public class RelluEssentials extends JavaPlugin {
             }
             try {
                 Enchantment.registerEnchantment(ench);
-                System.out.println("Registered enchantment " + ench.getName() + " with id " + ench.getKey().toString() + "!");
+                System.out.println(String.format(PLUGIN_REGISTER_EVENT, ench.getName(), ench.getKey().toString()));
             } catch (IllegalArgumentException e) {
                 System.out.println(Strings.PLUGIN_NAME + e.getMessage());
             }
