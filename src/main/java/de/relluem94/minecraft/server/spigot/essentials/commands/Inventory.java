@@ -28,7 +28,7 @@ public class Inventory implements CommandExecutor {
                     }
                 }
             } else {
-                Player target = Bukkit.getPlayer(args[0]);
+                Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
