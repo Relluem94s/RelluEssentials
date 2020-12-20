@@ -21,7 +21,7 @@ public class Heal implements CommandExecutor {
                     if (Permission.isAuthorized(p, 3)) {
                         p.setHealth(p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue());
                         p.setFoodLevel(20);
-                        p.sendMessage(PLUGIN_COMMAND_DAY);
+                        p.sendMessage(PLUGIN_COMMAND_HEAL);
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
