@@ -21,7 +21,7 @@ public class Nick implements CommandExecutor {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, 8)) {
-                        Player target = Bukkit.getPlayer(args[0]);
+                        Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
                         if (target != null) {
                             target.setCustomName(User.getUserByPlayerName(target.getName()).getGroup().getPrefix() + args[1]);
                             p.sendMessage(String.format(PLUGIN_COMMAND_NICK, target.getName()));
