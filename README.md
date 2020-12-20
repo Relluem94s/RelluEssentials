@@ -1,6 +1,6 @@
 ![Rellu Essentials](https://raw.githubusercontent.com/Relluem94/RelluEssentials/master/relluessentials.png)
 
-### a Spigot Plugin compatible upto Spigot 1.14.1
+### a Spigot Plugin compatible with Spigot 1.16.4
 
 ## Commands
 * Flymode (/fly)
