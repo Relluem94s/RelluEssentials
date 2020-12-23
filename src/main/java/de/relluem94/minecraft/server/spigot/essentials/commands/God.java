@@ -20,7 +20,7 @@ public class God implements CommandExecutor {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.MOD.getId())) {
                         p.sendMessage(p.isInvisible() ? PLUGIN_COMMAND_GOD_ON : PLUGIN_COMMAND_GOD_OFF);
-                        p.setInvisible(!p.isInvisible());
+                        p.setInvulnerable(!p.isInvulnerable());
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
