@@ -78,5 +78,12 @@ commands:
     heal:
         description: heal player
         usage: /heal
+    afk:
+        description: set player afk
+        usage: /afk
+
+
+
+
 
 
