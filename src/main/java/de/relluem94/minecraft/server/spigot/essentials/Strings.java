@@ -18,7 +18,7 @@ public class Strings {
 
     public static final String PLUGIN_COMMAND_AFK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " ist jetzt %s";
     public static final String PLUGIN_COMMAND_AFK_ACTIVATED = "§cafk";
-    public static final String PLUGIN_COMMAND_AFK_DEACTIVATED = "$awieder da";
+    public static final String PLUGIN_COMMAND_AFK_DEACTIVATED = "§awieder da";
     public static final String PLUGIN_COMMAND_FLYMODE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Flugmodus von %s" + PLUGIN_COMMAND_COLOR + " wurde " + PLUGIN_COMMAND_ARG_COLOR + "%s!";
     public static final String PLUGIN_COMMAND_FLYMODE_ACTIVATED = "aktiviert";
     public static final String PLUGIN_COMMAND_FLYMODE_DEACTIVATED = "deaktiviert";
