@@ -48,7 +48,7 @@ public class AFK implements CommandExecutor {
             boolean isAFK = true;
             
             if(players.getConfig().get("player." + p.getUniqueId() + ".afk") != null){
-                isAFK = !players.getConfig().getBoolean("player." + p.getUniqueId() + ".afk");
+                isAFK = players.getConfig().getBoolean("player." + p.getUniqueId() + ".afk");
             }
             players.getConfig().set("player." + p.getUniqueId() + ".afk", !isAFK);
             p.setInvulnerable(isAFK);
