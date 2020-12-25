@@ -92,14 +92,20 @@ public class Home implements CommandExecutor {
 
                         if (args[0].equalsIgnoreCase("set")) {
                             if(players.getConfig().get("player." + p.getUniqueId() + ".home." + args[1]) == null){
-                                Location l = p.getLocation();
-                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".x", l.getX());
-                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".y", l.getBlockY());
-                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".z", l.getBlockZ());
-                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".yaw", l.getYaw());
-                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".pitch", l.getPitch());
-                                players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".world", l.getWorld().getName());
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
+                                if(!args[1].equals("death")){
+                                    Location l = p.getLocation();
+                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".x", l.getX());
+                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".y", l.getBlockY());
+                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".z", l.getBlockZ());
+                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".yaw", l.getYaw());
+                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".pitch", l.getPitch());
+                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".world", l.getWorld().getName());
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
+                                }
+                                else{
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_RESERVED, args[1]));
+                                }
+                                
                                 return true;
                             }
                             else{
