@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Rellu implements CommandExecutor {
@@ -27,7 +28,10 @@ public class Rellu implements CommandExecutor {
                         RelluEssentials.reloadConfigs();
                         p.sendMessage(PLUGIN_COMMAND_RELLU_RELOAD);
                         return true;
-                    } else {
+                    } else if (args[0].equalsIgnoreCase("tab")){
+                        PlayerHelper.sendTablist(p, "Test Header", "Test footer");
+                    }
+                    else {
                         p.sendMessage(PLUGIN_COMMAND_RELLU_WRONG_COMMAND);
                         return true;
                     }
