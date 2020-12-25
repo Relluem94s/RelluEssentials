@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class GameMode implements CommandExecutor {
@@ -45,6 +46,7 @@ public class GameMode implements CommandExecutor {
     private boolean gameMode(Command command, Player p) {
         if (command.getName().equalsIgnoreCase("0")) {
             p.setGameMode(org.bukkit.GameMode.SURVIVAL);
+            PlayerHelper.setFlying(p);
             p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Survival"));
             return true;
         } else if (command.getName().equalsIgnoreCase("1")) {
