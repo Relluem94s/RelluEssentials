@@ -49,6 +49,10 @@ public class Ev_AutoSmelt implements Listener {
                 amount = (int)(Math.random() * (6 - 2) + 2);
                 im.setAmount(amount);
                 break;
+            case DIAMOND:
+                amount = (int)(Math.random() * (5 - 1) + 1);
+                im.setAmount(amount);
+                break;
             case IRON_ORE:
                 amount = (int)(Math.random() * (3 - 1) + 1);
                 im.setType(Material.IRON_INGOT);
