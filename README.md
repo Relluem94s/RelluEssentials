@@ -24,6 +24,7 @@
 * Save, Reload your config or more (/rellu)
 * Play as god (/god)
 * Heal yourself if you low on health (/heal)
+* Away from Keyboard (afk)
 
 ## Skills
 * TreeFeller (Fell the whole Tree)
