@@ -60,6 +60,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Rellu;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
@@ -187,6 +188,7 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new BetterSoil(), this);
         pm.registerEvents(new BetterSavety(), this);
         pm.registerEvents(new NoDeathMessage(), this);
+        pm.registerEvents(new PlayerMove(), this);
         pm.registerEvents(new MOTD(), this);
         //pm.registerEvents(new CustomEnchantment(), this); // TODO Enchantments not visible and not enchanted
     }
