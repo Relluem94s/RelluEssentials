@@ -44,6 +44,7 @@ public class User {
         this.g = g;
         players.getConfig().set("player." + p.getUniqueId() + ".group", g.getName());
         p.setCustomName(g.getPrefix() + getCustomName(p));
+        p.setPlayerListName(p.getCustomName());
         p.setScoreboard(RelluEssentials.board);
         g.getTeam().addEntry(p.getName());
     }
