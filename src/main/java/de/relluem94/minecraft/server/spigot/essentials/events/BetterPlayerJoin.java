@@ -1,5 +1,6 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
 
+import main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_JOIN_MESSAGE;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -21,6 +22,9 @@ public class BetterPlayerJoin implements Listener {
         Player p = e.getPlayer();
         addPlayer(p);
         PlayerHelper.setFlying(p);
+        String header = RelluEssentials.getPlugin(RelluEssentials.class).getConfig().getString("tab.header");
+        String footer = RelluEssentials.getPlugin(RelluEssentials.class).getConfig().getString("tab.footer");
+        PlayerHelper.sendTablist(p, header, footer);
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
     }
 
