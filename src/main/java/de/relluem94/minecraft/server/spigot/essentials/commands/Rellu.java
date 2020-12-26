@@ -29,7 +29,8 @@ public class Rellu implements CommandExecutor {
                         p.sendMessage(PLUGIN_COMMAND_RELLU_RELOAD);
                         return true;
                     } else if (args[0].equalsIgnoreCase("tab")){
-                        PlayerHelper.sendTablist(p, "Test Header", "Test footer");
+                        PlayerHelper.sendTablist(p, "§aTest §dHeader", "§cTest §5footer");
+                        return true;
                     }
                     else {
                         p.sendMessage(PLUGIN_COMMAND_RELLU_WRONG_COMMAND);
