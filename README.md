@@ -25,6 +25,7 @@
 * Play as god (/god)
 * Heal yourself if you low on health (/heal)
 * Away from Keyboard (/afk)
+* Message other Players (/msg)
 
 ## Skills
 * TreeFeller (Fell the whole Tree)
