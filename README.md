@@ -34,6 +34,7 @@
 
 ## Events
 * Better Chat Format (Player >> Message)
+    * Color Codes for VIP and higher
 * Better Player Join Message (Shows Custom Join Message)
 * Better Player Quit Message (Shows Custom Leave Message)
 * Better Block Drop (Glass etc.)
