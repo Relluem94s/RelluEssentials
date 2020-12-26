@@ -3,3 +3,6 @@
 tab:
     header: §6Relluem94.de
     footer: "§6powered by §4RelluEssentials"
+motd:
+    players: 94
+    message: "§6powered by §4RelluEssentials"
