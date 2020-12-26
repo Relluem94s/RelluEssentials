@@ -5,7 +5,6 @@ public class Strings {
     public static final String PLUGIN_NAME = "RelluEssentials";
     public static final String PLUGIN_PREFIX = "§o§l§4" + PLUGIN_NAME + "§r§f";
     public static final String PLUGIN_SPACER = "§7 >> §f";
-    public static final String PLUGIN_SPACER_MSG = "§7 << §f";
     public static final String PLUGIN_COMMAND_COLOR = "§f";
     public static final String PLUGIN_COMMAND_NAME_COLOR = "§b";
     public static final String PLUGIN_COMMAND_ARG_COLOR = "§b";
@@ -82,6 +81,10 @@ public class Strings {
     public static final String PLUGIN_COMMAND_NICK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du den Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "umbenannt!";
 
     public static final String PLUGIN_COMMAND_SUICIDE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "hat sich umgebracht!";
+    
+    public static final String PLUGIN_COMMAND_MSG_SPACER_IN = "§9 >> §f";
+    public static final String PLUGIN_COMMAND_MSG_SPACER_OUT = "§9 << §f";
+    public static final String PLUGIN_COMMAND_MSG_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/msg " + PLUGIN_COMMAND_COLOR +  "<" + PLUGIN_COMMAND_ARG_COLOR + "spieler" + PLUGIN_COMMAND_COLOR + ">" + "<" + PLUGIN_COMMAND_ARG_COLOR + "nachricht" + PLUGIN_COMMAND_COLOR + ">";
 
     public static final String PLUGIN_COMMAND_PERMISSION_MISSING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Dafür hast du leider keine Rechte!";
 
