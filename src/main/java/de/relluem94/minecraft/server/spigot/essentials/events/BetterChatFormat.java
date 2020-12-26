@@ -7,6 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class BetterChatFormat implements Listener {
 
@@ -14,6 +16,11 @@ public class BetterChatFormat implements Listener {
     public void onChat(AsyncPlayerChatEvent e) {
         e.setCancelled(true);
         Player p = e.getPlayer();
-        Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage());
+        if (Permission.isAuthorized(p, Groups.VIP.getId())) {
+            Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage().replaceAll("&", "§"));
+        }
+        else{
+            Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage());
+        }
     }
 }
