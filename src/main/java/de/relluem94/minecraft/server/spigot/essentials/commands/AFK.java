@@ -52,7 +52,7 @@ public class AFK implements CommandExecutor {
             }
             players.getConfig().set("player." + p.getUniqueId() + ".afk", !isAFK);
             p.setInvulnerable(!isAFK);
-            p.setPlayerListName(!isAFK ? "§c[AFK] " : "" + p.getCustomName());
+            p.setPlayerListName((!isAFK ? "§c[AFK] " : "") + p.getCustomName());
             Bukkit.broadcastMessage(String.format(PLUGIN_COMMAND_AFK, p.getCustomName(), !isAFK ? PLUGIN_COMMAND_AFK_ACTIVATED : PLUGIN_COMMAND_AFK_DEACTIVATED));
             return true;
         } else {
