@@ -81,6 +81,9 @@ commands:
     afk:
         description: set player afk
         usage: /afk
+    msg:
+        description: message other player
+        usage: /msg
 
 
 
