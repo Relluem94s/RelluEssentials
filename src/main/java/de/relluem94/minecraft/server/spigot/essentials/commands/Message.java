@@ -15,7 +15,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enu
 
 public class Message implements CommandExecutor {
 
-    Map<Player, Player> reply = new HashMap<>();
+    public static Map<Player, Player> reply = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
