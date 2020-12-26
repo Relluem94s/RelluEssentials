@@ -23,7 +23,7 @@ public class Message implements CommandExecutor {
             if (args.length > 1) {
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target != null) {
-                    msg(sender, target, args, 1);
+                    return msg(sender, target, args, 1);
                 }
             } else {
                 if (sender instanceof Player) {
@@ -36,8 +36,8 @@ public class Message implements CommandExecutor {
                 Player p = (Player) sender;
                 if (reply.containsKey(p)) {
                     Player target = reply.get(p);
-                    if (args.length > 1) {
-                        msg(sender, target, args, 0);
+                    if (args.length > 0) {
+                        return msg(sender, target, args, 0);
                     }
                 }
             }
