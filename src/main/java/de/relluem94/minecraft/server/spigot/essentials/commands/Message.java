@@ -29,15 +29,18 @@ public class Message implements CommandExecutor {
                                 }
                                 message += args[i] + " ";
                             }
-                            target.sendMessage(p.getCustomName() + PLUGIN_SPACER + message);
-                            p.sendMessage(target.getCustomName() + PLUGIN_SPACER_MSG + message);
+                            target.sendMessage(p.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_IN  + message);
+                            p.sendMessage(target.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_OUT + message);
                             return true;
                         }
                     }
                 }
             }
             else {
-                // How to use
+                if (sender instanceof Player) {
+                        Player p = (Player) sender;
+                        p.sendMessage(PLUGIN_COMMAND_MSG_INFO);
+                }
             }
         }
         return false;
