@@ -5,6 +5,7 @@ public class Strings {
     public static final String PLUGIN_NAME = "RelluEssentials";
     public static final String PLUGIN_PREFIX = "§o§l§4" + PLUGIN_NAME + "§r§f";
     public static final String PLUGIN_SPACER = "§7 >> §f";
+    public static final String PLUGIN_SPACER_MSG = "§7 << §f";
     public static final String PLUGIN_COMMAND_COLOR = "§f";
     public static final String PLUGIN_COMMAND_NAME_COLOR = "§b";
     public static final String PLUGIN_COMMAND_ARG_COLOR = "§b";
