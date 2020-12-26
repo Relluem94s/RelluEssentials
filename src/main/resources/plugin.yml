@@ -84,7 +84,9 @@ commands:
     msg:
         description: message other player
         usage: /msg
-
+    r:
+        description: reply other player
+        usage: /r
 
 
 
