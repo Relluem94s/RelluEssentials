@@ -173,6 +173,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("god")).setExecutor(new God());
         Objects.requireNonNull(this.getCommand("afk")).setExecutor(new AFK());
         Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
+        Objects.requireNonNull(this.getCommand("r")).setExecutor(new Message());
     }
 
     private void enchantmentManager() {
