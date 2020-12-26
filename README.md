@@ -24,7 +24,7 @@
 * Save, Reload your config or more (/rellu)
 * Play as god (/god)
 * Heal yourself if you low on health (/heal)
-* Away from Keyboard (afk)
+* Away from Keyboard (/afk)
 
 ## Skills
 * TreeFeller (Fell the whole Tree)
@@ -35,12 +35,20 @@
 ## Events
 * Better Chat Format (Player >> Message)
 * Better Player Join Message (Shows Custom Join Message)
+  * Sets Custom Tab Header and Footer (defined in config.yml)
+  * Sets Flymode to enabled 
+    * if VIP or higer 
+    * if in air
+    * if flymode enabled in players.yml
 * Better Player Quit Message (Shows Custom Leave Message)
 * Better Block Drop (Glass etc.)
 * Better Mobs (Disable Phantom, more Iron Golem)
-* Better (Call) Soil
+* Better (Call) Soil (disables trampling, sneak to disable)
 * Better Safety (Auto disable some commands like /pl)
+* Player Move is disabled while afk
 * No Death Message
+  * Save Death Location as Home
+  * Show Location in Chat (private)
 
 
 ## TODOS
