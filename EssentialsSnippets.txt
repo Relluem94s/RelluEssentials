@@ -1,0 +1,4478 @@
+
+
+	public void title(Player target, String title, String subtitle){
+		ConsoleCommandSender console;
+		Server server = main.getServer();
+		console = server.getConsoleSender();
+		String Title = "title " + target.getName() + " title " + "[{\"text\":\"" + title + "\"}]";
+		String Subtitle = "title " + target.getName() + " subtitle " + "[{\"text\":\"" + subtitle +"\"}]";
+		server.dispatchCommand(console, Title);
+		server.dispatchCommand(console, Subtitle);
+//		target.sendMessage(Title);
+//		target.sendMessage(Subtitle);
+	}
+	
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+public void setSpeed(Player p, int sp){
+	String speed;
+	switch (sp) {
+	case 0:  speed = "0.0F";
+		 break;
+	case 1:  speed = "0.1F";
+	 break;
+	case 2:  speed = "0.2F";
+	 break;
+	case 3:  speed = "0.3F";
+	 break;
+	case 4:  speed = "0.4F";
+	 break;
+	case 5:  speed = "0.5F";
+	 break;
+	case 6:  speed = "0.6F";
+	 break;
+	case 7:  speed = "0.7F";
+	 break;
+	case 8:  speed = "0.8F";
+	 break;
+	case 9:  speed = "0.9F";
+	 break;
+	case 10: speed = "1.0F";
+	 break;
+	default: speed = "0.1F";
+	 break;
+	}
+	 if (sp >= 11){
+		SendMessage(p, prefix + "§6Maximale Geschwindigkeit ist §c10!");
+	}
+	else{
+		if (p.isFlying()){
+			p.setFlySpeed(Float.parseFloat(speed));
+				SendMessage(p, prefix + "§6Flug-Geschwindigkeit auf §c" + sp + "!");
+			}
+			else {
+				p.setWalkSpeed(Float.parseFloat(speed));
+					SendMessage(p, prefix +"§6Geh-Geschwindigkeit auf §c" + sp + "!");
+			}
+	}	
+}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+public ArrayList<String> WarpsAsArrayList() throws FileNotFoundException, IOException, InvalidConfigurationException{
+		FileConfiguration Warps = getWarps();
+		
+		if(Warps.contains("Warps.")){
+			ArrayList <String> warps = new ArrayList<String>();
+			warps.addAll(Warps.getConfigurationSection("Warps.").getKeys(false));
+			
+			
+			if(warps.isEmpty()){
+				return null;
+			}
+			else{
+				return warps;
+			}
+		}
+		else{
+			return null;
+		}
+		
+	}
+	
+
+
+	public Location getWarp(String warp) throws FileNotFoundException, IOException, InvalidConfigurationException{
+		FileConfiguration Warps = getWarps();
+		if(Warps.contains("Warps" + "." + warp.toLowerCase())){
+			World w = Bukkit.getWorld(Warps.getString("Warps" + "." + warp.toLowerCase() + ".w"));
+			double x = Double.parseDouble(Warps.getString("Warps" + "." + warp.toLowerCase() + ".x"));
+			double y = Double.parseDouble(Warps.getString("Warps" + "." + warp.toLowerCase() + ".y"));
+			double z = Double.parseDouble(Warps.getString("Warps" + "." + warp.toLowerCase() + ".z"));
+			float pitch = Float.parseFloat(Warps.getString("Warps" + "." + warp.toLowerCase() + ".pitch"));
+			float yaw = Float.parseFloat(Warps.getString("Warps" + "." + warp.toLowerCase() + ".yaw"));
+			
+			return new Location(w, x, y, z, yaw, pitch);
+		}
+		else{
+			return null;
+		}
+	}
+	
+	
+	
+	public void setWarp (Player p, String name) throws IOException, InvalidConfigurationException{
+		FileConfiguration Warps = getWarps();
+		
+		if(Warps.contains("Warps." + "." + name.toLowerCase())){
+			SendMessage(p, prefix + "§6Fehler der Warp existiert bereits");
+		}
+		else{
+			if(Funktionen.isInt(name)){
+				SendMessage(p, prefix + "§6Kein Gültiger Name!");
+			}
+			else{
+				String name2 = name.toLowerCase();
+				Location loc = p.getLocation();
+				double x = loc.getX();
+				double y = loc.getY();
+				double z = loc.getZ();
+				
+				float yaw = loc.getYaw();
+				float pitch = loc.getPitch();
+				
+				String w = loc.getWorld().getName();
+				Warps.set("Warps" + "." + name2 + ".x", x);
+				Warps.set("Warps" + "." + name2 + ".y", y);
+				Warps.set("Warps" + "." + name2 + ".z", z);
+				Warps.set("Warps" + "." + name2 + ".w", w);
+				Warps.set("Warps" + "." + name2 + ".pitch", pitch);
+				Warps.set("Warps" + "." + name2 + ".yaw", yaw);
+				saveWarpsFile();
+				SendMessage(p, prefix + "§6Der Warppunkt §a" + name + "§6 wurde gesetzt");
+			}
+		}
+	}
+	
+	
+	
+	public void delWarp (CommandSender sender, String name) throws IOException, InvalidConfigurationException{
+		FileConfiguration Warps = getWarps();
+		if(Warps.contains("Warps." + "." + name)){
+			Warps.set("Warps." + "." + name + ".x", null);
+			Warps.set("Warps." + "." + name + ".y", null);
+			Warps.set("Warps." + "." + name + ".z", null);
+			Warps.set("Warps." + "." + name + ".w", null);
+			Warps.set("Warps." + "." + name + ".yaw", null);
+			Warps.set("Warps." + "." + name + ".pitch", null);
+			Warps.set("Warps." + "." + name , null);
+			ArrayList <String> warps = new ArrayList<String>();
+			warps.addAll(Warps.getConfigurationSection("Warps.").getKeys(false));
+			saveWarpsFile();
+			SendMessage(sender, prefix + "§6Der Warppunkt §a" + name + "§6 wurde gelöscht");
+		}
+		else{
+			SendMessage(sender, prefix + "§6Fehler Warp existiert nicht!");
+		}
+	}
+	
+	
+	
+	
+	
+		
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	
+	
+	
+
+public void kissPlayer(Player p1, Player p2){
+		ParticleEffect.HEART.display(1, 3, 1, 1, 100, p1.getLocation(), 100);
+		
+		ParticleEffect.HEART.display(1, 3, 1, 1, 100, p2.getLocation(), 100);
+	}
+	
+	public void marryPlayerEffect(Player p1, Player p2){
+		
+		ParticleEffect.HEART.display(1, 3, 1, 1, 100, p1.getLocation(), 100);
+		
+		ParticleEffect.HEART.display(1, 3, 1, 1, 100, p2.getLocation(), 100);
+		
+		
+		ParticleEffect.NOTE.display(1, 3, 1, 1, 100, p1.getLocation(), 100);
+		
+		ParticleEffect.NOTE.display(1, 3, 1, 1, 100, p2.getLocation(), 100);
+		
+	}
+	
+	public UUID getmarryPartner(Player p) throws IOException, InvalidConfigurationException{
+		FileConfiguration marry = getMarry();
+		if(marry.contains("Marry." + p.getUniqueId())){
+		String uuid = marry.get("Marry." + p.getUniqueId()).toString();
+			return UUID.fromString(uuid);
+		}
+		else{
+			return null;
+		}
+	}
+	
+	public void marryInfo(Player p1){
+		SendMessage(p1, prefix + "§6Marry Befehle");
+		SendMessage(p1, "");
+		SendMessage(p1, "§6/marry §bhome");
+		SendMessage(p1, "§6/marry §bhome §cset");
+		SendMessage(p1, "§6/marry §bhome §cdel");
+		SendMessage(p1, "");
+		SendMessage(p1, "§6/marry §btp");
+		SendMessage(p1, "§6/marry §bgive");
+		SendMessage(p1, "");
+		SendMessage(p1, "§6/marry §bmarry §c<Spieler> <Spieler>");
+		SendMessage(p1, "§6/marry §bdivorce §c<Spieler> <Spieler>");
+	}
+	
+	public void marryTP(Player p1){
+		try {
+			if(Bukkit.getPlayer(getmarryPartner(p1)) != null){
+				Player p2 = Bukkit.getPlayer(getmarryPartner(p1));
+				Location l = p2.getLocation();
+				p1.teleport(l);
+				SendMessage(p1, prefix + "§6Teleportiere zu deinem Partner...");
+				SendMessage(p2, prefix + "§6Achtung dein Partner kommt");
+			}
+			else{
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
+			}
+			
+		} 
+		catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void marryTPHome(Player p1){
+		try {
+			if(Bukkit.getPlayer(getmarryPartner(p1)) != null){
+				Player p2 = Bukkit.getPlayer(getmarryPartner(p1));
+				if(isMarried(p1, p2) == true && isMarried(p2, p1) == true){
+					String get = "Marry." + p1.getUniqueId();
+					if(marry.getString(get).contains("Home")){
+						double x = Double.parseDouble(marry.getString("Marry." + p1.getUniqueId() + ".Home.x"));
+						double y = Double.parseDouble(marry.getString("Marry." + p1.getUniqueId() + ".Home.y"));
+						double z = Double.parseDouble(marry.getString("Marry." + p1.getUniqueId() + ".Home.z"));
+						World w = Bukkit.getWorld(marry.getString("Marry." + p1.getUniqueId() + ".Home.w"));
+						float pitch = Float.parseFloat(marry.getString("Marry." + p1.getUniqueId() + ".Home.pitch"));
+						float yaw = Float.parseFloat(marry.getString("Marry." + p1.getUniqueId() + ".Home.yaw"));
+						
+						Location l = new Location(w,y,z,x,yaw,pitch);
+						p1.teleport(l);
+						SendMessage(p1, prefix + "§6Willkommen Zuhause");
+					}
+					else{
+						SendMessage(p1, prefix + "§6Ihr habt noch kein Zuhause gesetzt");
+					}
+				}
+				else{
+					SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
+				}
+			}
+			else{
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
+			}
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void marryGive(Player p1){
+		try {
+			Player p2 = Bukkit.getPlayer(getmarryPartner(p1));
+			if(isMarried(p1, p2) == true && isMarried(p2, p1) == true){
+				ItemStack i = p2.getEquipment().getItemInMainHand();
+				if(p2.getInventory().firstEmpty() == -1){
+					SendMessage(p1, prefix + "§6Das Inventar deines Partners ist voll");
+				}
+				else{
+					int a = p2.getInventory().firstEmpty();
+					p1.getInventory().setItem(a, i);
+					SendMessage(p1, prefix + "§6Das Item wurde an dein Partner verschickt");
+					SendMessage(p2, prefix + "§6Dein Partner hat dir ein Geschenk gemacht");
+				}
+			}
+			else{
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
+			}
+		} 
+		catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void divorcePlayers(Player p1, Player p2){
+		try {
+			FileConfiguration marry = getMarry();
+			if(isMarried(p1, p2) == true && isMarried(p2, p1) == true){		
+				if(marryhasHome(p1) == true || marryhasHome(p2) == true){
+					marrydelHome(p1);
+					marrydelHome(p2);
+					
+					saveMarryFile();
+				}
+				marry.set("Marry." + p2.getUniqueId(), null);	
+				marry.set("Marry." + p1.getUniqueId(), null);
+			
+				saveMarryFile();
+			}
+			else{
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
+				SendMessage(p2, prefix + "§6Du bist nicht verheiratet");
+			}
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void marryPlayers(Player p1, Player p2){
+		try {
+			FileConfiguration marry = getMarry();
+			if(isMarried(p1, p2) != true && isMarried(p2, p1) != true){
+				//TODO hier ist noch ein fehler ich muss ja erstmal gucken ob er drinnen steht...
+			marry.set("Marry." + p2.getUniqueId(), p1.getUniqueId());	
+			marry.set("Marry." + p1.getUniqueId(), p2.getUniqueId());
+			
+			BroadCastMessage(prefix + "§6Die Spieler " + p1.getDisplayName() + " §6und " + p2.getDisplayName() + " §6haben geheiratet");
+			
+			marryPlayerEffect(p1, p2);
+			
+			saveMarryFile();
+			}
+			else{
+				SendMessage(p1, prefix + "§6Du bist schon verheiratet");
+			}
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}		
+	}
+	
+	public boolean marryhasHome(Player p) throws IOException, InvalidConfigurationException{
+		FileConfiguration marry = getMarry();
+		if(marry.contains("Marry." + p.getUniqueId())){
+			return true;
+		}
+		else{
+			return false;
+		}		
+	}
+
+	
+	public void marrysetHome(Player p1, Location l){
+		try {
+			if(Bukkit.getPlayer(getmarryPartner(p1)) != null){
+				Player p2 = Bukkit.getPlayer(getmarryPartner(p1));
+				double x = l.getBlockX();
+				double y = l.getBlockY();
+				double z = l.getBlockZ();
+				float yaw = l.getYaw();
+				float pitch = l.getPitch();
+				World w = l.getWorld();
+				FileConfiguration marry = getMarry();
+				if(isMarried(p1, p2) == true && isMarried(p2, p1) == true){
+				marry.set("Marry." + p2.getUniqueId() + ".Home.x", x);
+				marry.set("Marry." + p2.getUniqueId() + ".Home.y", y);
+				marry.set("Marry." + p2.getUniqueId() + ".Home.z", z);
+				marry.set("Marry." + p2.getUniqueId() + ".Home.w", w);
+				marry.set("Marry." + p2.getUniqueId() + ".Home.pitch", pitch);
+				marry.set("Marry." + p2.getUniqueId() + ".Home.yaw", yaw);
+
+				marry.set("Marry." + p1.getUniqueId() + ".Home.x", x);
+				marry.set("Marry." + p1.getUniqueId() + ".Home.y", y);
+				marry.set("Marry." + p1.getUniqueId() + ".Home.z", z);
+				marry.set("Marry." + p1.getUniqueId() + ".Home.w", w);
+				marry.set("Marry." + p1.getUniqueId() + ".Home.pitch", pitch);
+				marry.set("Marry." + p1.getUniqueId() + ".Home.yaw", yaw);
+				
+				saveMarryFile();
+			}
+		}
+			else{
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
+			}
+		} 
+		catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void marrydelHome(Player p1){
+		try {
+			FileConfiguration marry = getMarry();
+			
+			if(Bukkit.getPlayer(getmarryPartner(p1)) != null){
+				Player p2 = Bukkit.getPlayer(getmarryPartner(p1));
+				if(isMarried(p1, p2) == true && isMarried(p2, p1) == true){
+					
+					marry.set("Marry." + p2.getUniqueId() + ".Home.x", null);
+					marry.set("Marry." + p2.getUniqueId() + ".Home.y", null);
+					marry.set("Marry." + p2.getUniqueId() + ".Home.z", null);
+					marry.set("Marry." + p2.getUniqueId() + ".Home.w", null);
+					marry.set("Marry." + p2.getUniqueId() + ".Home.pitch", null);
+					marry.set("Marry." + p2.getUniqueId() + ".Home.yaw", null);
+					marry.set("Marry." + p2.getUniqueId() + ".Home", null);
+					
+					
+					marry.set("Marry." + p1.getUniqueId() + ".Home.x", null);
+					marry.set("Marry." + p1.getUniqueId() + ".Home.y", null);
+					marry.set("Marry." + p1.getUniqueId() + ".Home.z", null);
+					marry.set("Marry." + p1.getUniqueId() + ".Home.w", null);
+					marry.set("Marry." + p1.getUniqueId() + ".Home.pitch", null);
+					marry.set("Marry." + p1.getUniqueId() + ".Home.yaw", null);
+					marry.set("Marry." + p1.getUniqueId() + ".Home", null);
+				
+					
+					saveMarryFile();
+				}
+			}
+			else{
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
+			}
+			
+			
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean isMarried(Player p1, Player p2) throws IOException, InvalidConfigurationException{
+		FileConfiguration marry = getMarry();
+		if(marry.contains("Marry." + p1.getUniqueId())){
+			if(marry.contains("Marry." + p1.getUniqueId() + "." + p2.getUniqueId())){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
+	}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+	public Inventory houseInv(Player p) throws IOException, InvalidConfigurationException{
+		Inventory inv;
+		FileConfiguration Haus = getHomes();
+		ArrayList <String> homes = new ArrayList<String>();
+		if(Haus.contains("Homes." + p.getName())){
+			homes.addAll(Haus.getConfigurationSection("Homes." + p.getName()).getKeys(false));
+		}
+		;
+		int[] sizes = new int[6];
+		sizes[0] = 9;
+		sizes[1] = 18;
+		sizes[2] = 27;
+		sizes[3] = 36;
+		sizes[4] = 45;
+		sizes[5] = 54;
+		String name = prefix + "§aHaus GUI";
+		if(homes.size() < sizes[0]){
+			inv = Bukkit.createInventory(null, sizes[0], name);
+		}
+		else if(homes.size() < sizes[1]){
+			inv = Bukkit.createInventory(null, sizes[1], name);
+		}
+		else if(homes.size() < sizes[2]){
+			inv = Bukkit.createInventory(null, sizes[2], name);
+		}
+		else if(homes.size() < sizes[3]){
+			inv = Bukkit.createInventory(null, sizes[3], name);
+		}
+		else if(homes.size() < sizes[4]){
+			inv = Bukkit.createInventory(null, sizes[4], name);
+		}
+		else if(homes.size() < sizes[5]){
+			inv = Bukkit.createInventory(null, sizes[5], name);
+		}
+		else{
+			inv = Bukkit.createInventory(null, sizes[5], name);
+		}
+		
+		for(int i = 0; i < homes.size(); i++){
+			ItemStack item = new ItemStack(Material.COMPASS, 1);
+			ItemMeta meta = item.getItemMeta();
+			meta.setDisplayName("§a" + homes.get(i));
+			meta.setLore(Arrays.asList("§aKlicken zum schnellreisen"));
+			item.setItemMeta(meta);
+			inv.setItem(i, item);
+		}
+		
+		return inv;
+	}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+ public Firework DoFeuerwerk(Player p){
+			
+			Firework fw = (Firework) p.getWorld().spawnEntity(p.getLocation(), EntityType.FIREWORK);
+			FireworkMeta fwm = fw.getFireworkMeta();
+	        Random r22 =  new Random();
+	        int rt = r22.nextInt(5) + 1;
+	        
+	        Type type = Type.BALL;
+	        if (rt == 1) type = Type.BALL;
+	        if (rt == 2) type = Type.BALL_LARGE;
+	        if (rt == 3) type = Type.BURST;
+	        if (rt == 4) type = Type.CREEPER;
+	        if (rt == 5) type = Type.STAR;
+	        
+	        int r = r22.nextInt(256);
+	        int b = r22.nextInt(256);
+	        int g = r22.nextInt(256);
+	        Color c11 = Color.fromRGB(r, g, b);
+	        r = r22.nextInt(256);
+	        b = r22.nextInt(256);
+	        g = r22.nextInt(256);
+	        Color c21 = Color.fromRGB(r, g, b);
+
+	        FireworkEffect effect = FireworkEffect.builder().flicker(r22.nextBoolean()).withColor(c11).withFade(c21).with(type).trail(r22.nextBoolean()).build();
+	        fwm.addEffect(effect);
+
+	        int rp = r22.nextInt(2) + 1;
+	        fwm.setPower(rp);
+	        fw.setFireworkMeta(fwm);
+			return fw;
+			
+		}
+	 
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+		public String User = "User";
+		public String Vip = "Vip";
+		public String Builder = "Builder";
+		public String SGBuilder = "SGBuilder";
+		public String pMod = "pMod";
+		public String Mod = "Mod";
+		public String sMod = "sMod";
+		public String Geek = "Geek";
+		public String Admin = "Admin";
+		public String Visitor = "Visitor";
+		public String Unknown = "Unknown";
+		
+		
+		 public String getPlayerName(Player p){
+			 return p.getDisplayName();
+		 }
+		
+		 public String getPlayerGroup(Player p){
+			 return main.PlayerGroup.get(p);
+		 }
+		
+		public void setPlayerState(Player p, State string){
+			main.PlayerState.put(p, string);
+		 }
+		
+		
+		 public State getPlayerState(Player p){
+			 return main.PlayerState.get(p);
+		 }
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+	 public void DoPlayerJoinSilence(Player p){
+		 setPlayerGroup(p);
+		 p.setScoreboard(main.sb);
+		 sendTabTitle(p,"         §c--- §aWillkommen auf dem §c---         ","         §c--- §dmc.cloudsailor.de §c---         ");
+		 DoFeuerwerk(p);	 
+
+      	if (p.getName().equals("Stellachen") || p.getName().equals("Relluem94")) {
+      		if(rellu.dotpandclear){
+      			 if (isInWorld(p, worldLobby) == true) {
+    				 p.getInventory().clear(); 
+    				 p.getInventory().addItem(rellu.getById(19));
+    				 p.getInventory().addItem(rellu.getById(21));
+    				 p.getInventory().addItem(rellu.getById(23));
+    				 p.getInventory().addItem(rellu.getById(22));
+    				 DoFeuerwerk(p);
+    				 DoFeuerwerk(p);
+    				 DoFeuerwerk(p);
+    				 DoFeuerwerk(p);
+    				 p.getWorld().spawnEntity(p.getLocation(), EntityType.ENDER_SIGNAL);
+    			 }
+    			 else{
+    				 Location tp = worldLobby.getSpawnLocation();
+    				 p.teleport(tp);
+    				 DoPlayerJoinSilence(p);
+    			 }
+      		}
+      	}
+      	else{
+      		if(rellu.dotpandclear){
+      			 if (isInWorld(p, worldLobby) == true) {
+    				 p.getInventory().clear();     				 
+    				 p.getInventory().addItem(rellu.getById(21));
+    				 p.getInventory().addItem(rellu.getById(22));
+    				 p.getInventory().addItem(rellu.getById(23));
+    				 
+    				 if(getPlayerGroup(p).equals("Mod")){
+    					 p.getInventory().addItem(rellu.getById(19));
+    				 }
+    				 else if(getPlayerGroup(p).equals("sMod")){
+    					 p.getInventory().addItem(rellu.getById(19));
+    				 }
+    				 else if(getPlayerGroup(p).equals("Geek")){
+    					 p.getInventory().addItem(rellu.getById(20));
+    					 p.getInventory().addItem(rellu.getById(19));
+    				 }
+    				 else if(getPlayerGroup(p).equals("Admin")){
+    					 p.getInventory().addItem(rellu.getById(20));
+    					 p.getInventory().addItem(rellu.getById(19));
+    				 }
+    			 }
+             	else{
+    				 Location tp = worldLobby.getSpawnLocation();
+    				 p.teleport(tp);
+    				 DoPlayerJoinSilence(p);
+    			 }
+      		}
+         	
+      	}
+	 }
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+ public static String zensur(String zen)
+	 {	 
+		 zen = zen.replace("Tittensäcke " , " Tintensäcke ");
+		 zen = zen.replace("vür " , "für ");
+		 zen = zen.replace("fom " , "vom ");
+		 zen = zen.replace("linjanen " , "Ranken ");
+		 zen = zen.replace("tittensäcke " , " Tintensäcke ");
+		 zen = zen.replace(" sporn " , " Spawn ");
+		 zen = zen.replace("pissa" , "Pizza ");
+		 zen = zen.replace("Pissa" , "Pizza ");
+		 zen = zen.replace("pisser" , "Pizza ");
+		 zen = zen.replace("Pisser" , "Pizza ");
+		 zen = zen.replace("!!!" , "!");
+		 zen = zen.replace("???" , "?");
+		 zen = zen.replace("wek " , "weg ");
+		 zen = zen.replace("hau ab" , "bitte geh weg ");
+		 zen = zen.replace("schuldigung" , "Entschuldigung ");
+		 zen = zen.replace("sry " , "Entschuldigung ");
+		 zen = zen.replace("Ficken" , "Geschlechtsverkehr ");
+		 zen = zen.replace("ficken" , "Geschlechtsverkehr ");
+		 zen = zen.replace("Sex " , "Geschlechtsverkehr ");
+		 zen = zen.replace("sex " , "Geschlechtsverkehr ");
+		 zen = zen.replace("Schwul" , "Homosexuallität ");
+		 zen = zen.replace("schwul" , "Homosexuallität ");
+		 zen = zen.replace("Gay" , "Homosexuallität ");
+		 zen = zen.replace("gay" , "Homosexuallität ");
+		 zen = zen.replace("Möpse" , "Besonders hässliche Hunderasse ");
+		 zen = zen.replace("möpse" , "Besonders hässliche Hunderasse ");
+		 zen = zen.replace("Pimmel" , "Primäres Geschlechtsorgan des Mannes ");
+		 zen = zen.replace("pimmel" , "Primäres Geschlechtsorgan des Mannes ");
+		 zen = zen.replace("Fotze" , "Primäres Geschlechtsorgan der Frau ");
+		 zen = zen.replace("Br§ste" , "Sekundäres Geschlechtsorgan der Frau ");
+		 zen = zen.replace("br§ste" , "Sekundäres Geschlechtsorgan der Frau ");
+		 zen = zen.replace("titten " , "Sekundäres Geschlechtsorgan der Frau ");
+		 zen = zen.replace("Titten " , "Sekundäres Geschlechtsorgan der Frau ");
+		 zen = zen.replace("vagina" , "Primäres Geschlechtsorgan der Frau ");
+		 zen = zen.replace("penis" , "Primäres Geschlechtsorgan des Mannes ");
+		 zen = zen.replace("Vagina" , "Primäres Geschlechtsorgan der Frau ");
+		 zen = zen.replace("Penis" , "Primäres Geschlechtsorgan des Mannes ");
+		 zen = zen.replace("kool" , "cool ");
+		 zen = zen.replace("www." , "");
+		 zen = zen.replace(".de" , "");
+		 zen = zen.replace(".net" , "");
+		 zen = zen.replace(".com" , "");
+//		 zen = zen.replace("%" , "\u0025\u0025");
+		 return zen;
+	 }
+	 
+	 public static String symbole(String sym)
+	 {	
+	sym = sym.replace("[<3]" , "\u2764");
+	sym = sym.replace("[NINJA]" , "             "); // Abstand von Text zu RelluAPI für Absätze
+	sym = sym.replace("[PFEIL2]" , "\u279c");
+	sym = sym.replace("[TICK]" , "\u2714");
+	sym = sym.replace("[X]" , "\u2716");
+	sym = sym.replace("[STAR]" , "\u2605");
+	sym = sym.replace("[PUNKT]" , "\u25Cf");
+	sym = sym.replace("[BLUME]" , "\u273f");
+	sym = sym.replace("[XD]" , "\u263b");
+	sym = sym.replace("[ACHTUNG]" , "\u26a0");
+	sym = sym.replace("[MAIL]" , "\u2709");
+	sym = sym.replace("[PFEIL]" , "\u27a4");
+	sym = sym.replace("[STERN]" , "\u2730");
+	sym = sym.replace("[SUIT]" , "\u2666");
+	sym = sym.replace("[+]" , "\u2726");
+	sym = sym.replace("[KREIS]" , "\u25CF");
+	sym = sym.replace("[SONNE]" , "\u2739");
+	sym = sym.replace("[RTM]" , "\u00AE");
+	sym = sym.replace("[COPY]" , "\u00A9");
+	sym = sym.replace("[OMEGA]" , "\u03A9");
+	sym = sym.replace("[LAMBDA]" , "\u03BB");
+	sym = sym.replace("[RUND]" , "\u058D");
+	sym = sym.replace("[^^]" , "\u0E05(\u0E4F.\u0E4F)\u0E05");
+	sym = sym.replace("[TM]" , "\u2122");
+	sym = sym.replace("[No]" , "\u2116");
+	sym = sym.replace("[H]" , "\u210B");
+	sym = sym.replace("[h]" , "\u210C");
+	sym = sym.replace("[L]" , "\u2112");
+	sym = sym.replace("[l]" , "\u2113");
+	sym = sym.replace("[R]" , "\u211C");
+	sym = sym.replace("[B]" , "\u212C");
+	sym = sym.replace("[E]" , "\u2130");
+	sym = sym.replace("[e]" , "\u212F");
+	sym = sym.replace("[F]" , "\u2131");
+	sym = sym.replace("[M]" , "\u2133");
+	sym = sym.replace("[1]" , "\u2160");
+	sym = sym.replace("[2]" , "\u2161");
+	sym = sym.replace("[3]" , "\u2162");
+	sym = sym.replace("[4]" , "\u2163");
+	sym = sym.replace("[5]" , "\u2164");
+	sym = sym.replace("[6]" , "\u2165");
+	sym = sym.replace("[7]" , "\u2166");
+	sym = sym.replace("[8]" , "\u2167");
+	sym = sym.replace("[9]" , "\u2168");
+	sym = sym.replace("[10]" , "\u2169");
+	sym = sym.replace("[11]" , "\u216A");
+	sym = sym.replace("[12]" , "\u216B");
+	sym = sym.replace("[RELOAD]" , "\u21BA");	
+	sym = sym.replace("[>]" , "\u00BB");
+	sym = sym.replace("[<]" , "\u00AB");
+	sym = sym.replace("[1/2]" , "\u00BD");
+	sym = sym.replace("[1/4]" , "\u00BC");
+	sym = sym.replace("[B|]" , "\u16D4\u16DA");
+	sym = sym.replace("[xD]" , "\u16DD\u16A6");
+	sym = sym.replace("[CROSS]" , "\u16ED");
+	sym = sym.replace("[CAM]" , "\u1CC0");
+	sym = sym.replace("[:D]" , "\u1CE9");
+	sym = sym.replace("[ATLANTIS]" , "\u212B");
+	sym = sym.replace("[:C]" , "\u2639");
+	sym = sym.replace("[:)]" , "\u263A");
+	sym = sym.replace("[SKULL]" , "\u2620");
+	sym = sym.replace("[HOT]" , "\u2668");
+	sym = sym.replace("[PICKAXE]" , "\u26CF");
+	
+	sym = sym.replace("[STRICHE]", "\u2591");
+	sym = sym.replace("[DICK]", "\u2593");
+	sym = sym.replace("_" , "\u0020");
+	sym = sym.replace("~" , "_");
+//	sym = sym.replace("%" , "\u0025\u0025");
+	return sym;
+ }	 
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+	public void brotkasten(String type, String[] m){
+		String message = ArryToString(m);
+		message = Funktionen.farbe(message);
+		message = Funktionen.symbole(message);
+		if(m[0].contains("#")){
+			message = message.replaceFirst(m[0], "");
+		}
+		if (type.equalsIgnoreCase("chat")) {
+			Bukkit.broadcastMessage("§5  ---- §6\u2726 §5News §6\u2726 §5----  ");
+			Bukkit.broadcastMessage("§9Brotkasten §8>> §r" + message);
+		}
+		else if (type.equalsIgnoreCase("title")) {
+			Collection<? extends Player> onlinePlayers = main.getServer().getOnlinePlayers();
+	          for (Player cp : onlinePlayers) {
+	        	  if ((message != null) && (message.length() != 0)) {
+	        		  title(cp, "§6Brotkasten", message);
+	        	  }
+	          }
+		}
+	 }
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+	public void consoleCMD(String m){
+		ConsoleCommandSender console;
+		console = main.getserver().getConsoleSender();
+		main.server.dispatchCommand(console, m);
+	}
+	 
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+	public void poke(CommandSender sender, Player target, String[] m){
+		String message = ArryToString(m);
+		message = message.replaceFirst(m[0], "");
+		target.getWorld().playSound(target.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 10F, 0F);
+		target.getWorld().playEffect(target.getLocation(), Effect.MOBSPAWNER_FLAMES, 5);
+		target.getWorld().playEffect(target.getLocation(), Effect.VOID_FOG, 5);
+		target.getWorld().playEffect(target.getLocation(), Effect.EXPLOSION_HUGE, 5);
+		ParticleEffect.EXPLOSION_HUGE.display(0, 1, 0, 10, 10, target.getLocation(), 10);
+		ParticleEffect.FLAME.display(0, 1, 0, 1, 1000, target.getLocation(), 1);
+		title(target, "§4Buuuh", message);
+		if(isPlayer(sender) == true){
+			Player p = (Player)sender;
+			target.sendMessage(p.getDisplayName() + "§6 hat dich angestupst!");
+			p.sendMessage(prefix + "§6Du hast " + target.getDisplayName() + "§6 angestupst!");
+		}
+	 } 
+	
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+		List<String> lore = new ArrayList<String>(); 
+		String name = "";
+		for(int i = 0; i < args.length; i++){
+			args[i] = "§r" + farbe(args[i]);
+			args[i] = symbole(args[i]);
+			if(i == 0){
+				name = args[i];
+			}
+			else{
+				lore.add(args[i]);
+			}
+			
+		}
+		
+		
+
+		ItemStack item = p.getEquipment().getItemInMainHand();           
+        ItemMeta itemStackMeta = item.getItemMeta();
+        itemStackMeta.setDisplayName("§r" + name);  
+        itemStackMeta.setLore(lore);
+        lore.clear();
+        item.setItemMeta(itemStackMeta);  
+        SendMessage(p, prefix + "§6Item wurde umbennant");
+	}
+	
+	public void renameItem(Player p, String name){
+
+		
+		name = "§r" + farbe(name);
+		name = symbole(name);
+
+		ItemStack item = p.getEquipment().getItemInMainHand();           
+        ItemMeta itemStackMeta = item.getItemMeta();
+        itemStackMeta.setDisplayName("§r" + name);  
+        item.setItemMeta(itemStackMeta);  
+        SendMessage(p, prefix + "§6Item wurde umbennant");
+	}
+	
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+else if (cmd.getName().equalsIgnoreCase("spielerinfo")) {
+			if (hasPermission(sender, permuser + "spielerinfo") == true){
+				if(isPlayer(sender) == true){
+					if (args.length == 0){
+						SendMessage(sender, prefix + "§6/si <SpielerName>");
+					}
+					else if (args.length == 1){
+						@SuppressWarnings("deprecation")
+						OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[0]);
+						if (!targetPlayer.hasPlayedBefore()){
+							SendMessage(sender, prefix + "§6Keine Spielerinfo vorhanden");
+					        return false;
+					    }
+						long current = System.currentTimeMillis();
+					    long firstjoin = targetPlayer.getFirstPlayed();
+					    long lastjoin = targetPlayer.getLastPlayed();
+					    String playedTime = DurationFormatUtils.formatPeriod(firstjoin, current, "d 'Tagen' H 'Stunden'");
+					    String lastPlayed = DurationFormatUtils.formatPeriod(lastjoin, current, "d 'Tagen' H 'Stunden'");
+					    SendMessage(sender, " ");
+					    if (targetPlayer.isOnline()) {
+					    	SendMessage(sender, ChatColor.GREEN + "---- Profil von: " + ChatColor.GREEN + targetPlayer.getName() + ChatColor.GREEN + ChatColor.GREEN + " ----");
+					    }
+					    else {
+					    	SendMessage(sender, ChatColor.RED + "---- Profil von: " + ChatColor.RED + targetPlayer.getName() + ChatColor.RED + ChatColor.RED + " ----");
+					    }
+					    SendMessage(sender, ChatColor.GOLD + "Dazu gestoßen vor: " + ChatColor.DARK_AQUA + playedTime);
+					    if (targetPlayer.isOnline()) {
+					    	SendMessage(sender, ChatColor.GOLD + "Status: " + ChatColor.GREEN + "Online");
+					    	SendMessage(sender, " ");
+					    }
+					    else {
+					    	SendMessage(sender, ChatColor.GOLD + "Zuletzt gesehen vor: " + ChatColor.DARK_AQUA + lastPlayed);
+					        SendMessage(sender, ChatColor.GOLD + "Status: " + ChatColor.RED + "Offline");
+					    }
+					}
+				}
+				else {
+					consoleSendMessage(prefix, noUser);
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+// MULTI WORLD
+	else if (cmd.getName().equalsIgnoreCase("fb")) {
+			if (hasPermission(sender, permworldFB) == true){
+				Location loc = worldFB.getSpawnLocation();
+				if (args.length == 0) {
+					teleport(sender, loc);
+				}
+				else{
+					if (hasPermission(sender, permworldFB + ".other") == true){
+						if(Target(args[0]) != null) {
+							Player target = Target(args[0]);
+							teleport(target, loc);
+							SendMessage(sender, prefix + "§r" + target.getDisplayName() + " §6wurde Teleportiert");
+						}
+					}
+					else {
+						SendMessage(sender, noPerm);
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("lobby")) {
+			if (hasPermission(sender, permworldLobby) == true){
+				Location loc = worldLobby.getSpawnLocation();
+				if (args.length == 0) {
+					teleport(sender, loc);
+				}
+				else{
+					if (hasPermission(sender, permworldLobby + ".other") == true){
+						if(Target(args[0]) != null) {
+							Player target = Target(args[0]);
+							teleport(target, loc);
+							SendMessage(sender, prefix + "§r" + target.getDisplayName() + " §6wurde Teleportiert");
+						}
+					}
+					else {
+						SendMessage(sender, noPerm);
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+else if (cmd.getName().equalsIgnoreCase("ah")) {
+			if (hasPermission(sender, permuser + "ah") == true){
+				if (args.length == 0) {
+					shuffle();
+					SendMessage(sender, setColors().get(2) + "AH!");
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("oh")) {
+			if (hasPermission(sender, permuser + "oh") == true){
+				if (args.length == 0) {
+					shuffle();
+					SendMessage(sender, setColors().get(3) + "OH!");
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("uh")) {
+			if (hasPermission(sender, permuser + "uh") == true){
+				if (args.length == 0) {
+					shuffle();
+					SendMessage(sender, setColors().get(6) + "UH!");
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("7")) {
+			if (hasPermission(sender, permuser + "7fail") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §csiebenFAIL!");
+				}
+				else{
+					ConsoleCommandSender console;
+					console = r.server.getConsoleSender();
+					
+					r.server.dispatchCommand(console, "say §7>> §csiebenFAIL!");
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("8")) {
+			if (hasPermission(sender, permuser + "palme") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §aGesichtsPALME!");
+				}
+				else{
+					ConsoleCommandSender console;
+					console = r.server.getConsoleSender();
+					
+					r.server.dispatchCommand(console, "say §7>> §aGesichtsPALME!");
+					
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("love")) {
+			if (hasPermission(sender, permuser + "love") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §4\u2764");
+				}
+				else{
+					ConsoleCommandSender console;
+					console = r.server.getConsoleSender();
+					
+					r.server.dispatchCommand(console, "say §7>> §4\u2764");
+					
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+else if (cmd.getName().equalsIgnoreCase("list")) {
+			if (hasPermission(sender, permuser + "list") == true){
+				String Spielerliste = "";
+				
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					Spielerliste = Spielerliste + ", " + getGroupPrefix(p) + "[" + getPlayerGroup(p) + "] " + p.getDisplayName();
+				}
+				SendMessage(sender, prefix + "§6Zurzeit Online");
+				SendMessage(sender, Spielerliste.replaceFirst(", ", ""));
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		
+		
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+else if (cmd.getName().equalsIgnoreCase("rcmd")) {
+			if (hasPermission(sender, permadmin + "cmd") == true){
+				String m = ArryToString(args);
+				consoleCMD(m);
+				SendMessage(sender, prefix + "§6Dein Befehl wurde ausgeführt");
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+if(cmd.getName().equalsIgnoreCase("rellu")) {
+			if (hasPermission(p, permbase + "info") == true) {
+			if (args.length == 0) {
+				SendMessage(p, "§c--------------------------------------");
+				SendMessage(p, prefix + "§6Entwickelt von Relluem94!");
+	            SendMessage(p, "§5Um die Befehle des Plugins zu sehen");
+	            SendMessage(p, "§6/rellu <user>, <vip>, <pmod>, <mod>, <mod2> oder <give>");
+	            SendMessage(p, "§6/rellu <scoreboard> oder <sb> §5um das Plugin Scoreboard angezeigt zu bekommen");
+	            SendMessage(p, "§5Für weitere Funktionen des Plugins");
+	            SendMessage(p, "§6/rellu <channel> oder <msg> ");
+	            SendMessage(p, "§5Allgemeine Befehle und Info");
+	            SendMessage(p, "§6/rellu <ab>, <schilder> oder <info>");
+	            SendMessage(p, "§5Rezepte und Funktionen zum nachmachen");
+	            SendMessage(p, "§6/rellu <ofen>, <kessel> oder <herstellen>");
+	            SendMessage(p, "§c--------------------------------------");
+	            return true;
+			}
+			if (args.length == 1) {
+				if (args[0].equals("scoreboard") || args[0].equals("sb")) {
+					SendMessage(p, prefix + "§6Scoreboard wird angezeigt");
+					p.setScoreboard(main.sb);
+		            return true;
+				}
+				else if (args[0].equals("user")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§8User Befehle");
+					SendMessage(p, "§8/rellu §5\u00BB§8 Info");
+		            SendMessage(p, "§8/uh, /ah, /oh");
+		            SendMessage(p, "§8/7 §5\u00BB§c siebenFAIL!");
+		            SendMessage(p, "§8/8 §5\u00BB§a GesichtsPALME!");
+		            SendMessage(p, "§8/love §5\u00BB §4\u2764");
+		            SendMessage(p, "§8/kevin §5\u00BB§8 Mit Kevin das Leben nehmen");
+		            SendMessage(p, "§8/si §5\u00BB§8 SpielerInfo");
+		            SendMessage(p, "§c--------------------------------------");
+		          //  p.setScoreboard(main.sb);
+		            return true;
+				}
+				else if (args[0].equals("vip")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§aVip Befehle");
+					SendMessage(p, "§a/willkommen");
+		            SendMessage(p, "§a/flug §5\u00BB§a Flugmodus");
+		            SendMessage(p, "§a");
+		            SendMessage(p, "§aChat Symbole");
+		            SendMessage(p, "§8[<3], [PFEIL], [PFEIL2], [PUNKT]");
+		            SendMessage(p, "§8[TICK], [X], [STAR], [BLUME]");
+		            SendMessage(p, "§8[XD], [ACHTUNG], [MAIL], [STERN]");
+		            SendMessage(p, "§8[SUIT], [+], [KREIS], [SONNE]");
+		            // SendMessage(p, "§a");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("pmod")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§bpMod Befehle");
+		            SendMessage(p, "§b/slag /elag §5\u00BB§b Lag Nachricht");
+		            SendMessage(p, "§b/mod §5\u00BB§b ModKit");
+		            SendMessage(p, "§b/werkbank");
+		            SendMessage(p, "§b/swr, /sws, /swn§5\u00BB§b Spieler Wetter");
+		            SendMessage(p, "§b/gott §5\u00BB§b Temporaler Gott Modus");
+		            SendMessage(p, "§b/faway, /fback §5\u00BB§b Fake afk");
+		            SendMessage(p, "§b/b1, /b2 §5\u00BB§b Besch\u00E4ftigt");
+		            SendMessage(p, "§b/a1 §5\u00BB§b Kisten protecten");
+		            SendMessage(p, "§b/a2 §5\u00BB§b GS Protecten");
+		            SendMessage(p, "§b/a3 §5\u00BB§b Farmwelt farmen");
+		            SendMessage(p, "§b/a4 §5\u00BB§b Regeln lesen");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("mod")) {	            
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Mod Befehle");
+					SendMessage(p, "§6/tag, /nacht §5\u00BB§6 Zeit");
+					SendMessage(p, "§6/sturm, /sonne §5\u00BB§6 Wetter");
+					SendMessage(p, "§6/0, /1, /2, /3 §5\u00BB§6 Spiel-Modus");
+					SendMessage(p, "§6/anstupsen §5\u00BB§6 Stupst Spieler an");
+					SendMessage(p, "§6/keks §5\u00BB§6 Gibt ein Keks");
+		            SendMessage(p, "§6/tempo §5\u00BB§6 Geschwindigkeit");
+		            SendMessage(p, "§6/rmob §5\u00BB§6 Monsterspawnen");
+		            SendMessage(p, "§6/wo §5\u00BB§6 Zeigt die Position oder die eines Spielers"); 
+		            SendMessage(p, "§6/heilen §5\u00BB§6 Heilt den Spieler");
+		            SendMessage(p, "§6/chat §5\u00BB§6 Säubert den Chat");
+		            SendMessage(p, "§6/rcmd §5\u00BB§6 Schreibt als Konsole");
+		            SendMessage(p, "§6/nick §5\u00BB§6 Benennt Nutzer Temporär um");
+		            SendMessage(p, "§6/fx §5\u00BB§6 FX Modus");
+		            SendMessage(p, "§6/enderchest §5\u00BB§6 Zeigt die Endertruhe des Spielers");
+		            SendMessage(p, "§6/effekt §5\u00BB§6 Effekt Items für die Lobby");
+		            SendMessage(p, "§6/kopf §5\u00BB§6 Erstellt einen Spieler Kopf");
+		            SendMessage(p, "§6/brotkasten §5\u00BB§6 Veröffentlicht an alle eine Nachricht");
+		            SendMessage(p, "§6/bc /bt §5\u00BB§6 Brotkasten in Kurzform");
+		            SendMessage(p, "§6/inv §5\u00BB§6 Öffnet das Inventar");
+		            SendMessage(p, "§6/exp §5\u00BB§6 Gibt Erfahrungspunkte");
+		            SendMessage(p, "§6/sl §5\u00BB§6 Straßenlampen ");
+		            SendMessage(p, "§6/reparieren §5\u00BB§6 Repariert Items");
+		            SendMessage(p, "§6/mehr §5\u00BB§6 Repliziert Items");
+		            SendMessage(p, "§6/ping §5\u00BB§6 Zeigt den Ping des Spielers");
+		            SendMessage(p, "§6/gott §5\u00BB§6 8 Minuten Gottmodus");
+		            SendMessage(p, "§6/w §5\u00BB§6 Öffnet die Virtuelle Werkbank");
+	            	SendMessage(p, "§6/x §5\u00BB§6 Benennt alle Nutzer auf den Ursprünglichen Namen um");
+//		            SendMessage(p, "§6/ §5\u00BB§6 ");
+		            SendMessage(p, "§c--------------------------------------");
+				}
+				else if (args[0].equals("give")) {
+					SendMessage(p, "§c--------------------------------------");
+					
+					if (!(p.hasPermission("rellu.mod.give"))) {
+						return true;
+					}
+					else {
+							SendMessage(p, "§c--------------------------------------");
+							SendMessage(p, prefix + "§6Alle Custom Items");
+							SendMessage(p, " ");
+							SendMessage(p, "§6Monster Eier");
+							SendMessage(p, "§bKristallEi, CreeperEi, HuehnerEi, KuhEi,");
+							SendMessage(p, "§bSchafEi, SchweineEi, SkelettenEi, SlimeEi,");
+							SendMessage(p, "§bSpinnenEi, TintenFischEi");
+							SendMessage(p, " ");
+							SendMessage(p, "§6Blöcke");
+							SendMessage(p, "§bRahmen, VerstaerkterRahmen,");
+							SendMessage(p, "§bVerstaerkterRahmenII, MonsterSpawner");
+							SendMessage(p, " ");
+							SendMessage(p, "§6Anderes");
+							SendMessage(p, "§bLiebesrute, Donnerknochen, Feder, Schneeball, Feuerstab");
+							// SendMessage(p, "§b ");
+							SendMessage(p, "§c--------------------------------------");
+						}
+				}
+				else if (args[0].equals("version")) {
+						SendMessage(p, "§c--------------------------------------");
+						SendMessage(p, prefix + "§5Version " + Bukkit.getServer().getPluginManager().getPlugin("RelluAPI").getDescription().getVersion() + "!");
+						SendMessage(p, "§6" + updatedate + " §5Relluem94");
+						SendMessage(p, "§c--------------------------------------");
+						// SendMessage(p, "§6");
+				}
+				// Funktionen
+				else if (args[0].equals("channel")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§7Channel");
+					SendMessage(p, "§6Du kannst mit einem §3#Indikator §6am Anfang deiner Nachricht");
+					SendMessage(p, "§6in verschidenen Channeln abschicken, wenn du die entsprechenden Rechte hast.");
+					SendMessage(p, "§6Alle §3#Indikatoren §6im Überblick:");
+					SendMessage(p, "§3#s §5\u00BB §cFSK 18 Chat");
+					SendMessage(p, "§3#v §5\u00BB §aVIP Chat");
+					SendMessage(p, "§3#sg §5\u00BB §dStargate Chat");
+					SendMessage(p, "§3#m §5\u00BB §6Mod Chat");
+					SendMessage(p, "§3#a §5\u00BB §5Admin Chat");
+					SendMessage(p, "§3#e §5\u00BB §eEvent Chat");
+					SendMessage(p, "§3ohne §5\u00BB §7Normaler Chat");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("msg")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§7Private Nachrichten");
+					SendMessage(p, "§6Du kannst einem Spieler eine Private Nachricht schicken ohne einen Befehl nutzen zu müssen.");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Hierzu schreibe:");
+					SendMessage(p, "§b@ <Name> <Nachricht>");
+					SendMessage(p, "§6Achte darauf, dass vor dem §b@ §6kein Zeichen ist und danach ein Leerzeichen und dann erst der §bName §6kommt");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Diesen kannst du Bequem mit der Minecraft Autovervollständigung schreiben.");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Nun wieder ein Leerzeichen und deine Nachricht an den Spieler.");
+					
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("schilder")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§bSchilder");
+					SendMessage(p, "§bDu kannst Schilder Plazieren und damit Funktionen nutzen");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Item Center");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. §aMaterialID");
+					SendMessage(p, "§33. §cAnzahl (max 576 Stück)");
+					SendMessage(p, "§34. §b[r0001]");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Wetter");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. §a ");
+					SendMessage(p, "§33. §a ");
+					SendMessage(p, "§34. §b[r0002]");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Zeit");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. §a");
+					SendMessage(p, "§33. §a");
+					SendMessage(p, "§34. §b[r0003]");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Kommando");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. Befehl");
+					SendMessage(p, "§33. §a");
+					SendMessage(p, "§34. §b[r0004]");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Warps");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. §a");
+					SendMessage(p, "§33. §aWarp Name");
+					SendMessage(p, "§34. §b[r0005]");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				// Allgemein
+				else if (args[0].equals("ab")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Allgemeine Befehle");
+					SendMessage(p, "§6/reiten §5\u00BB§6 Spieler auf den Kopf setzten");
+					SendMessage(p, "§6/rellu §5\u00BB§6 Zeigt die Hilfe über das Plugin");
+					SendMessage(p, "§6/team §5\u00BB§6 Zeigt die Team Mitglieder");
+					SendMessage(p, "§6/hub, /lobby §5\u00BB§6 Teleportiert dich in die Lobby");
+					SendMessage(p, "§6/fb §5\u00BB§6 Teleportiert dich in die Freebuild Welt");
+					SendMessage(p, "§6/cb §5\u00BB§6 Teleportiert dich in den City Build ");
+					SendMessage(p, "§6/nether §5\u00BB§6 Teleportiert dich in die Hölle");
+					SendMessage(p, "§6/farm §5\u00BB§6 Teleportiert dich in die Farmwelt");
+					SendMessage(p, "§6/adv §5\u00BB§6 Teleportiert dich in die ADV Welt");
+					SendMessage(p, "§6/dev, /bau §5\u00BB§6 Teleportiert dich in die Dev und Bauwelt");
+					SendMessage(p, "§6/studio §5\u00BB§6 Teleportiert dich in die Stargate Welt");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("info")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Allgemeine Infos");
+					SendMessage(p, "§6Rechte für den §cFSK Chat,");
+					SendMessage(p, "§6Rechte um Spieler §2Login §6und §4Logout §6sehen zu können");
+					SendMessage(p, "§6bei §5Relluem94 §6melden");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Nutze die §dCloudsailor-Feder §6um durch die Wolken zu schweben");
+					SendMessage(p, "§6Die Pilze im Hub geben dir den nötigen Schwung");
+					SendMessage(p, "§6Nutze die §fSchneebällen§6 im Hub..");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("ofen")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Ofen-Rezepte");
+					SendMessage(p, "§6Nutze den Ofen um mit §cVerottenen Fleisch §aLeder §6herzustellen");
+					// SendMessage(p, "§6");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("kessel")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Kessel-Funktion");
+					SendMessage(p, "§6Nutze den Kessel um §cWolle §6und §cTeppiche§6 zu §aentfärben");
+					SendMessage(p, "§6Unter dem Kessel muss ein Feuer brennen");
+					// SendMessage(p, "§6");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("buch")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Info Buch");
+					SendMessage(p, "§6Du hast dir ein Info Buch gegeben");
+					p.getInventory().addItem(is);
+					// SendMessage(p, "§6");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("herstellen")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Werkbank-Rezepte");
+					SendMessage(p, "§6Um eine §aKettenrüstung §6herzustellen lege das §cRüstungstück §6in die Mitte und lege außenrum §c8 Eisen §6in die Werkbank");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Um §aFäden §6herzustellen fülle die Werkbank mit §cweißer Wolle");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("rellu")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§5www.relluem94.de die Offizielle Webseite!");
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("1994")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§5Wenn du die Rechte hast..");
+					if (!(p.hasPermission("rellu.admin.armor"))) {
+						return true;
+					}
+					else {
+						 p.getInventory().setHelmet(rellu.getById(0));
+						 p.getInventory().setChestplate(rellu.getById(1));
+						 p.getInventory().setLeggings(rellu.getById(2));
+						 p.getInventory().setBoots(rellu.getById(3));
+						 p.getInventory().addItem(rellu.getById(4));
+						 p.getInventory().addItem(rellu.getById(48));
+						 }
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+				}
+				else if (args[0].equals("2001")) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§5Wenn du die Rechte hast..");
+					if (!(p.hasPermission("rellu.admin.equip"))) {
+						return true;
+					}
+					else {
+						 p.getInventory().addItem(rellu.getById(5));
+						 p.getInventory().addItem(rellu.getById(6));
+						 p.getInventory().addItem(rellu.getById(7));
+					}
+		            SendMessage(p, "§c--------------------------------------");
+		            return true;
+
+
+		else {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§5Version " + Bukkit.getServer().getPluginManager().getPlugin("RelluAPI").getDescription().getVersion() + "!");
+					SendMessage(p, "§6" + updatedate + " §5Relluem94");
+					SendMessage(p, "§c--------------------------------------");
+					// SendMessage(p, "§6");
+				}
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+if (cmd.getName().equalsIgnoreCase("i")) {
+			if (hasPermission(p, permbase + "info") == true) {
+				if (args.length == 0) {
+					SendMessage(p, "§5Alle Regeln!");
+					SendMessage(p, "§c/i ag §6(Allgemeine Regeln)");
+					SendMessage(p, "§c/i ab §6(User-Befehle)");
+					SendMessage(p, "§c/i br §6(Bau-Regeln)");
+					SendMessage(p, "§c/i fr §6(Farm-Regeln)");
+					SendMessage(p, "§c/i pr §6(Protection)");
+					SendMessage(p, "§c/i ts §6(Teamspeak)");
+					SendMessage(p, "§c/i mr §6(Mod-Regeln)");
+					SendMessage(p, "§c/team §6(Alle Team Mitglieder)");
+					SendMessage(p, "§c/rang §6(Alle Gruppen)");
+					SendMessage(p, "§c/rellu §6(Infos und Befehle)");
+				}
+				else if (args.length == 1) {
+					if(args[0].equalsIgnoreCase("ab")){
+						SendMessage(p, "§5User-Befehle");
+						SendMessage(p, "§c/support <Nachricht> §6schreibt einen Moderator an");
+						SendMessage(p, "§c/hub §6oder §c/lobby §6bringt dich zum HUB");
+						SendMessage(p, "§c/spawn §6bringt dich zum Welt Spawn");
+						SendMessage(p, "§c/fb §6teleportiert dich zum Freebuild");
+						SendMessage(p, "§c/kevin §6killt dich sofort");
+						SendMessage(p, "§6Setzen eines Homes mit §c/haus set <name>§6 am aktuellen Standort");
+						SendMessage(p, "§6zum Standort Reisen mit §c/haus tp <name>§6");
+					}
+					else if(args[0].equalsIgnoreCase("ag")){
+						SendMessage(p, "§5Allgemeine Regeln");
+						SendMessage(p, "§31. §6Kein Spam");
+						SendMessage(p, "§32. §6Keine Beleidigungen");
+						SendMessage(p, "§33. §6Keine Werbung/Links");
+						SendMessage(p, "§34. §6Kein Griefing (griffen)");
+						SendMessage(p, "§35. §6Den Anweisungen eines Moderators ist Folge zu leisten");
+						SendMessage(p, "§36. §6Killen von Spielern und deren Tieren ist verboten");
+						SendMessage(p, "§37. §6Das Errichten von Spieler-Fallen ist verboten.");
+					}
+					else if(args[0].equalsIgnoreCase("br")){
+						SendMessage(p, "§5Bauregeln!");
+						SendMessage(p, "§3 1. §6Variiert in den Blockarten");
+						SendMessage(p, "§3 2. §6Keine fliegenden Plattformen");
+						SendMessage(p, "§3 3. §6Keine Plattformen auf dem Wasser");
+						SendMessage(p, "§3 4. §6Thematisch passend bauen");
+						SendMessage(p, "§3 5. §6Keine \u00FCberirdischen Mobfarmen");
+						SendMessage(p, "§3 6. §6Redstone deaktivierbar bauen");
+						SendMessage(p, "§3 7. §64 Bl\u00F6cke pro Tier");
+						SendMessage(p, "§3 8. §6Keine 1x1 T\u00FCrme bauen");
+						SendMessage(p, "§3 9. §6Unsch\u00F6ne H\u00E4user werden nach Ermahnung gel\u00F6scht");
+						SendMessage(p, "§310. §6Inaktive H\u00E4user von +1 Monat ebenfalls");
+					}
+					else if(args[0].equalsIgnoreCase("fr")){
+						SendMessage(p, "§5Farmwelt Regeln");
+						SendMessage(p, "§3 1. §6Ausschliesslich in der Farmwelt farmen");
+						SendMessage(p, "§3 2. §6Ausnahme unter dem eigenen GS");
+						SendMessage(p, "§3 3. §6Mods nicht nach Items fragen");
+						SendMessage(p, "§3 4. §6Setzlinge aus den Kisten nicht aus der Farmwelt mitnehmen");
+						SendMessage(p, "§3 5. §6B\u00E4ume nachpflanzen");
+						SendMessage(p, "§3 6. §6Keine tiefen L\u00F6cher und/oder Fallen bauen");
+						SendMessage(p, "§3 7. §6Bauen ist nicht sinnvoll");
+					}
+					else if(args[0].equalsIgnoreCase("mr")){
+						SendMessage(p, "§5Moderator - Regeln");
+						SendMessage(p, "§3 1. §6Usern nichts aus dem Creativemodus geben");
+						SendMessage(p, "§3 2. §6Den Usern nichts wegnehmen");
+						SendMessage(p, "§3 3. §6Kein Schaden an den Usern");
+						SendMessage(p, "§3 4. §6Vorbildliches Verhalten ");
+						SendMessage(p, "§3 5. §6Entscheidung von h\u00F6heren sMods/Admins ist Folge zu leisten");
+						SendMessage(p, "§3 6. §6Kein Diebstahl von vergebenen Grundst\u00FCcken");
+						SendMessage(p, "§3 7. §6Keine User bevorzugen");
+						SendMessage(p, "§3 8. §6Kein Spawnen von Gegnern");
+						SendMessage(p, "§3 9. §6Beachtung der User-Rechte");
+						SendMessage(p, "§310. §6Auf Support muss reagiert werden");
+						SendMessage(p, "§311. §6Bei l\u00E4ngerem AFK - Server verlassen");
+						SendMessage(p, "§312. §6Mods m\u00FCssen TS haben und benutzen");
+					}
+					else if(args[0].equalsIgnoreCase("pr")){
+						SendMessage(p, "§5Protection Regeln");
+						SendMessage(p, "§3 1. §6Sucht euch ein freies Gebiet in der Freebuild");
+						SendMessage(p, "§3 2. §6Markiert mit einem auff\u00E4lligen Block Ecken");
+						SendMessage(p, "§3 3. §6Schreibt via §c/support Bitte mein GS protectet§6 einen Admin oder Moderator an.");
+						SendMessage(p, "§3 4. §6Der Mod/Admin wird euch mitteilen wenn das GS gesichert ist");
+						SendMessage(p, "§3 5. §6Die 1x1 T\u00FCrme wieder entfernen!");
+					}
+					else if(args[0].equalsIgnoreCase("ts")){
+						SendMessage(p, "§5TS - Regeln");
+						SendMessage(p, "§6Unseren Teamspeak findet ihr unter: ts.cloudsailor.de");
+						SendMessage(p, "§3 1. §6Kein Spam");
+						SendMessage(p, "§3 2. §6Keine Beleidigung");
+						SendMessage(p, "§3 3. §6Kein Mobbing");
+						SendMessage(p, "§3 4. §6Keine anst\u00F6ssigen Channel- / Usernamen");
+						SendMessage(p, "§3 5. §6Keine st\u00F6rende Ger\u00E4usche");
+						SendMessage(p, "§3 6. §6Keine Bots");
+					}
+				}
+			}
+			else 
+			{
+				SendMessage(p, noPerm);
+					return true;
+			}
+			return true;
+		}
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("team")) {
+			if (hasPermission(p, permbase + "info") == true) {
+				if (args.length == 0) {
+					SendMessage(p, "§5Das Team von Cloudsailor");
+					SendMessage(p, "§3Probe Mods §7>> §bStellachen, Vettelfrank");
+					SendMessage(p, "§3Mods §7>> §6Morsmorse, AliceNex");
+					SendMessage(p, "§3Super Mods §7>> Nightmare47");
+					SendMessage(p, "§3Geek §7>> §5Relluem94");
+					SendMessage(p, "§3Admin §7>> §5Kaimar1995");
+				}
+			}
+			else 
+			{
+					SendMessage(p, noPerm);
+					return true;
+			}
+			return true;
+		}
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+else if (cmd.getName().equalsIgnoreCase("rang")) {
+			if (hasPermission(p, permbase + "info") == true) {
+				if (args.length == 0) {
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, "§5Alle Ränge");
+					SendMessage(p, "");
+					SendMessage(p, "§8    User und StarGateBuilder");
+					SendMessage(p, "§a    VIP und Builder");
+					SendMessage(p, "§b    Probe Mod");
+					SendMessage(p, "§6    Mod und SuperMod");
+					SendMessage(p, "§f    [V] Visitor (Besucher)");
+					SendMessage(p, "§5    Geek und Admin");
+					SendMessage(p, "");
+					SendMessage(p, "§c--------------------------------------");
+				}
+			}
+			else 
+			{
+					SendMessage(p, noPerm);
+					return true;
+			}
+			return true;
+		}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+// TP and back
+
+else if (cmd.getName().equalsIgnoreCase("back")) {
+			if (hasPermission(sender, permvip + "back") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					if(r.PlayerLastPostition.containsKey(p)){
+						Location l = r.PlayerLastPostition.get(p);
+						
+						SendMessage(sender, prefix + "§6Kehre zurück..");
+						teleport(p, l);
+					}
+					else{
+						SendMessage(sender, prefix + "§6Kein Punkt gesetz..");
+					}
+					
+				}
+				
+			}
+			else {
+				SendMessage(sender, noPerm);
+				
+			}
+		}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+else if (cmd.getName().equalsIgnoreCase("willkommen")) {
+			if (hasPermission(sender, permvip + "willkommen") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					if (args.length == 0) {
+						Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §aWillkommen auf dem Cloudsailor!");
+					}
+					else {
+						if(Target(args[0]) != null) {
+							Player target = Target(args[0]);
+							Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §aWillkommen auf dem Cloudsailor §a"+ target.getDisplayName() + "§a!");
+						}
+					}
+					
+				}
+				else{
+					if (args.length == 0) {
+						if(sender.getName().equals("CONSOLE")){
+							Bukkit.broadcastMessage("§f[Server] §7>> §aWillkommen auf dem Cloudsailor!");
+						}
+						else{
+							Bukkit.broadcastMessage(sender.getName() + " §7>> §aWillkommen auf dem Cloudsailor!");
+						}
+						
+					}
+					else{
+						if(Target(args[0]) != null) {
+							Player target = Target(args[0]);
+							if(sender.getName().equals("CONSOLE")){
+								Bukkit.broadcastMessage("§f[Server] §7>> §aWillkommen auf dem Cloudsailor §a"+ target.getDisplayName() + "§a!");
+							}
+							else{
+								Bukkit.broadcastMessage(sender.getName() + " §7>> §aWillkommen auf dem Cloudsailor §a"+ target.getDisplayName() + "§a!");
+							}
+							
+						}
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+				
+			}
+		}
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("swn")) {
+			if (hasPermission(sender, permvip + "weather") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					p.resetPlayerWeather();
+					SendMessage(sender, prefix + "§6Das Wetter ist wieder Normal!");
+					
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("swr")) {
+			if (hasPermission(sender, permvip + "weather") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					p.setPlayerWeather(WeatherType.DOWNFALL);
+					SendMessage(sender, prefix + "§6Es Regnet nur für dich!");
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("sws")) {
+			if (hasPermission(sender, permvip + "weather") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					p.setPlayerWeather(WeatherType.CLEAR);
+					SendMessage(sender, prefix + "§6Die Sonne scheint nur für Dich!");
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+else if (cmd.getName().equalsIgnoreCase("top")) {
+			if (hasPermission(sender, permvip + "top") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					Location l = p.getWorld().getHighestBlockAt(p.getLocation()).getLocation();
+					SendMessage(p, prefix + "§6Teleportiere zur Oberfläche..");
+					teleport(p, l);
+					
+				}
+			}
+		}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("reiten")) {
+			if (hasPermission(sender, permvip + "reiten") == true){
+				if (args.length == 0) {
+					SendMessage(sender, prefix + "§6Bitte Spielerrnamen eingeben");
+				}
+				else if (args.length == 1) {
+					if(isPlayer(sender)){
+						Player p = (Player)sender;
+						if(Target(args[0]) != null && !(Target(args[0]) == p)) {
+							Player target = Target(args[0]);
+							if (target.getWorld() == p.getWorld()) {
+								if (target.getVehicle() == p) {
+									target.leaveVehicle();
+									p.sendMessage(prefix + "§6Du wirst nicht mehr von §r" + target.getDisplayName() + " §6geritten!");
+									target.sendMessage(prefix + "§6Du reitest nicht mehr §r" + p.getDisplayName() + " §6!");
+								}
+								else {
+									p.setPassenger(target);
+									p.sendMessage(prefix + "§6Du wirst geritten von§r " + target.getDisplayName());
+									target.sendMessage(prefix + "§6Du reitest§r " + p.getDisplayName());
+								}		
+							}
+						}
+						else if(Target(args[0]) == null){
+							SendMessage(sender, prefix + "§6Der Spieler §r" + args[0] + " §6ist nicht Online!");
+						}
+						else if(Target(args[0]) == sender){
+							SendMessage(sender, prefix + "§6Du kannst dich nicht reiten!");
+						}
+					}
+				}
+				else if (args.length == 2) {
+					if(Target(args[0]) != null && Target(args[1]) != null) {
+						Player target = Target(args[0]);
+						Player target2 = Target(args[1]);
+						if (target.getWorld() == target2.getWorld()) {
+							if (target.getVehicle() == target2) {
+								target.leaveVehicle();
+								// p.setPassenger(null);
+								target2.sendMessage(prefix + "§6Du wirst nicht mehr von §r" + target.getDisplayName() + " §6geritten!");
+								target.sendMessage(prefix + "§6Du reitest nicht mehr §r" + target2.getDisplayName() + " §6!");
+								return true;
+							}
+							else {
+								target2.setPassenger(target);
+								target2.sendMessage(prefix + "§6Du wirst geritten von§r " + target.getDisplayName());
+								target.sendMessage(prefix + "§6Du reitest§r " + target2.getDisplayName());
+								return true;
+							}		
+						}
+						
+						
+					}
+					else if(Target(args[0]) == null){
+						SendMessage(sender, prefix + "§6Der Spieler §r" + args[0] + " §6ist nicht Online!");
+					}
+					else if(Target(args[0]) == Target(args[1])){
+						SendMessage(sender, prefix + "§6Du kannst nicht den gleichen Spieler auf einander reiten lassen!");
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+else if (cmd.getName().equalsIgnoreCase("fafk")) {
+			if (hasPermission(sender, permmod + "fafk") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					FakeAFK(p);	
+				}		
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("noob")) {
+			if (hasPermission(sender, permmod + "noob") == true){
+				if (args.length == 0) {
+					SendMessage(sender, prefix + "§6/noob §c<Kisten>, <Protect>, <Farmwelt> oder <Info>");
+				}
+				else if (args.length == 1) {
+					if (args[0].equalsIgnoreCase("Kisten")) {
+						Bukkit.broadcastMessage("§6Um deine Kisten auf andere zu protecten mach §c/cmodify <deinFreund>§6!");
+					}
+					else if (args[0].equalsIgnoreCase("Protect")) {
+						Bukkit.broadcastMessage("§6Wie das Protecten funktioniert findest du unter §c/pr§6 heraus!");
+					}
+					else if (args[0].equalsIgnoreCase("Farmwelt")) {
+						Bukkit.broadcastMessage("§6Bitte nur in der Farmwelt farmen §c/farm§6. Der Freebuild ist nur zum bauen da!");
+					}
+					else if (args[0].equalsIgnoreCase("Info")) {
+						Bukkit.broadcastMessage("§6Lese dir bitte §c/i §6noch einmal aufmerksam durch. Danke!");
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("brotkasten")) {
+			if (hasPermission(sender, permmod + "brotkasten") == true){
+				if (args.length > 0){
+					if(args[0].equalsIgnoreCase("chat") || args[0].equalsIgnoreCase("c") || args[0].equalsIgnoreCase("#c")){
+						brotkasten("chat", args);
+					}
+					else if(args[0].equalsIgnoreCase("title") || args[0].equalsIgnoreCase("t") || args[0].equalsIgnoreCase("#t")){
+						brotkasten("title", args);
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("bc")) {
+			if (hasPermission(sender, permmod + "brotkasten") == true){
+				brotkasten("chat", args);
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("bt")) {
+			if (hasPermission(sender, permmod + "brotkasten") == true){
+				brotkasten("title", args);
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+else if (cmd.getName().equalsIgnoreCase("anstupsen")) {
+			if (hasPermission(sender, permmod + "anstupsen") == true){
+				if (args.length == 0) {
+					SendMessage(sender, prefix + "§6Bitte Spielernamen eingeben");
+				}
+				else {
+					 if(Target(args[0]) != null){
+						 Player target = Target(args[0]);
+						 poke(sender, target, args);
+					 }
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("chat")) {
+			if (hasPermission(sender, permmod + "chat") == true){
+				if (args.length == 0) {
+					for(Player p : Bukkit.getOnlinePlayers()){
+						for (int i = 0; i < 100; i++) {
+							SendMessage(p, "");
+						}
+						if(isPlayer(sender) == true){
+							Player s = (Player)sender;
+							SendMessage(s, prefix + "§6Chat wurde gereinigt von " + p.getDisplayName());
+						}
+						
+					}
+					
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("fx")) {
+			if (hasPermission(sender, permmod + "fx") == true){
+				if(isPlayer(sender)){
+					Player p = (Player)sender;
+					if (args.length == 0) {
+						p.sendMessage(prefix + "§6Nutze §c/fx <sb> / <sc> / <note> / <love> / <spell> / <fw> / <sel> / <id> / <wl> / <st> / <feu> / <midi> / <info>");
+					}
+					else if (args.length == 1) {
+						if (args[0].equals("sb")) {
+							if (getPlayerState(p) == State.SNOWBALL) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist der Schneemann!");
+								setPlayerState(p, State.SNOWBALL);
+							}
+						}
+						else if (args[0].equals("fw")) {
+							if (getPlayerState(p) == State.FIREWORK) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist das Feuerwerk!");
+								setPlayerState(p, State.FIREWORK);
+							}
+						}
+						else if (args[0].equals("note")) {
+							if (getPlayerState(p) == State.NOTES) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist der Mozart!");
+								setPlayerState(p, State.NOTES);
+							}
+						}
+						else if (args[0].equals("feu")) {
+							if (getPlayerState(p) == State.FIRE) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist das Feuer!");
+								setPlayerState(p, State.FIRE);
+							}
+						}
+						else if (args[0].equals("love")) {
+							if (getPlayerState(p) == State.LOVE) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist Verliebt!");
+								setPlayerState(p, State.LOVE);
+							}
+						}
+						else if (args[0].equals("spell")) {
+							if (getPlayerState(p) == State.MAGIC) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist Verhext. Hex Hex!");
+								setPlayerState(p, State.MAGIC);
+							}
+						}
+						//TODO
+						else if (args[0].equals("id")) {
+							if (getPlayerState(p) == State.BLOCKID) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else{
+								p.sendMessage(prefix + "§6Nutze §c/fx id <BlockID>");
+							}
+						}
+						else if (args[0].equals("st")) {
+							if (getPlayerState(p) == State.STACKER) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist der Stecker!");
+								setPlayerState(p, State.STACKER);
+							}
+						}
+						//TODO
+						else if (args[0].equals("sel")) {
+							if (getPlayerState(p) == State.SELECTOR) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else{
+								p.sendMessage(prefix + "§6Nutze §c/fx sel <0-15>");
+							}
+						}
+						else if (args[0].equals("wl")) {
+							if (getPlayerState(p) == State.SANDPIPER) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist der Wasserläufer!");
+								setPlayerState(p, State.SANDPIPER);
+							}
+						}
+						else if (args[0].equalsIgnoreCase("midi")) {
+							p.sendMessage(prefix + "§6Nutze §c/fx midi <Dateinamen>");
+						}
+						else if (args[0].equals("sc")) {
+							if (getPlayerState(p) == State.SIGNPASTE) {
+								p.sendMessage(prefix + "§6Du bist der Gutenberg!");
+								setPlayerState(p, State.SIGNCOPY);
+							}
+							else if (getPlayerState(p) == State.SIGNCOPY) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist der Gutenberg!");
+								setPlayerState(p, State.SIGNCOPY);
+							}
+						}
+						else if (args[0].equals("i") || args[0].equals("info")) {
+							p.sendMessage(prefix + "§6FX Info");
+							p.sendMessage("§c<sb> §fSchneeball Maschienen Pistole");
+							p.sendMessage("§c<fw> §6Feuerwerk");
+							p.sendMessage("§c<sel> §bSelektierung");
+							p.sendMessage("§c<sc> §6SchildKopierer");
+							p.sendMessage("§c<wl> §1Laufe übers Wasser wie Notch!");
+							p.sendMessage("§c<st> §cSetze dich auf alles");
+							p.sendMessage("§c<feu> §6Feuer frei");
+							p.sendMessage("§c<spell> §dSei Bibbi Blocksberg!");
+							p.sendMessage("§c<note> §aSei §cKreativ §bund §dBund");
+							p.sendMessage("§c<love> §4Sei verliebt!");
+							p.sendMessage("§c<id> §aÄndere die Block ID");
+							p.sendMessage("§c<midi> §4Sei die Jukebox!");
+						}
+					}
+					else if (args.length == 2) {
+						if (args[0].equals("sel")) {
+							if (getPlayerState(p) == State.SELECTOR) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist Der Auserwählte!");
+								setPlayerState(p, State.SELECTOR);
+								rellu.blockIDs.put(p, args[1]);
+							}
+						}
+						else 
+							if (args[0].equalsIgnoreCase("midi")) {
+							File file = new File(rellu.getInstance().getDataFolder() + "/midi/" + args[1] + ".mid");
+    						
+							if(file.exists()){
+								MidiFunktionen.playMidi(file, 1, 1, p);
+	    						p.sendMessage(prefix + "§6Du bist die Jukebox!");
+							}
+							else {   						
+	    						p.sendMessage(prefix + "§6Lied nicht gefunden!");
+							}
+
+							
+        				}
+						else if (args[0].equals("id")) {
+							if (getPlayerState(p) == State.BLOCKID) {
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
+								setPlayerState(p, State.DEFAULT);
+							}
+							else {
+								p.sendMessage(prefix + "§6Du bist der Ändermann!");
+								setPlayerState(p, State.BLOCKID);
+								rellu.blockIDs.put(p, args[1]);
+							}
+						}
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("wo")) {
+			if (hasPermission(sender, permmod + "wo") == true){
+				if (args.length == 0) {
+					if(isPlayer(sender) == true){
+						Player p = (Player)sender;
+						
+						Location Loc = p.getLocation();
+						double x = Loc.getX();
+						double y = Loc.getY();
+						double z = Loc.getZ();
+						
+						double yaw = Loc.getYaw();
+						double pitch = Loc.getPitch();
+						
+						String w = p.getWorld().getName();
+						
+						x = round(x, 2);
+						y = round(y, 2);
+						z = round(z, 2);
+						
+						yaw = round(yaw, 2);
+						pitch = round(pitch, 2);
+						
+		                SendMessage(sender, prefix + "§6Du bist bei XYZ §c" + x + "§6, §c" + y + "§6, §c" + z);
+		                SendMessage(sender, "             §6Dein Yaw und Pitch ist: §c" + yaw + " " + pitch);
+		                SendMessage(sender, "             §6In der Welt:§a " + w);
+					}
+				}
+				else if (args.length == 1) {
+					if(Target(args[0]) != null){
+						Player target = Target(args[0]);
+						
+						Location Loc = target.getLocation();
+						double x = Loc.getX();
+						double y = Loc.getY();
+						double z = Loc.getZ();
+						
+						double yaw = Loc.getYaw();
+						double pitch = Loc.getPitch();
+						
+						x = round(x, 2);
+						y = round(y, 2);
+						z = round(z, 2);
+						
+						yaw = round(yaw, 2);
+						pitch = round(pitch, 2);
+						
+						String w = target.getWorld().getName();
+						
+		                SendMessage(sender, prefix + target.getDisplayName() + "§6 ist bei XYZ §c" + x + "§6, §c" + y + "§6, §c" + z);
+		                SendMessage(sender, "             §6Der Yaw und Pitch ist: §c" + yaw + " " + pitch);
+		                SendMessage(sender, "             §6In der Welt:§a " + w);
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("p")) {
+			if (hasPermission(sender, permmod + "p") == true){
+				if (args.length == 0) {
+					SendMessage(sender, prefix + "§6Spieler angeben");
+				}
+				else if (args.length == 1) {
+					if(Target(args[0]) != null){
+						Player target = Target(args[0]);
+						
+						SendMessage(sender, prefix + "§6Der Spieler " + target.getDisplayName() + "§6 hat einen Ping von §c" + getPing(target) + " §6ms");
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+else if (cmd.getName().equalsIgnoreCase("s")) {
+			if (hasPermission(sender, permmod + "say") == true){
+				if(isPlayer(sender)){
+					Player p = (Player)sender;
+					String m = ArryToString(args);
+					m = farbe(m);
+					m = symbole(m);
+					Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §r" + m);
+				}
+				else{
+					String m = ArryToString(args);
+					m = farbe(m);
+					m = symbole(m);
+					Bukkit.broadcastMessage(sender.getName() + " §7>> §r" + m);
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+else if (cmd.getName().equalsIgnoreCase("sl")) {
+			if (hasPermission(sender, permmod + "light") == true){
+				if(isPlayer(sender) == true){
+					Player p = (Player)sender;
+					if (args.length == 2) {
+						if(args[0].equalsIgnoreCase("platte")){
+							if(args[1].equalsIgnoreCase("holz")){
+								setPlayerState(p, State.LIGHTS_WOOD);
+								p.sendMessage(prefix + "§6Du bist im Holz Lampen Modus!");
+							}
+							else if(args[1].equalsIgnoreCase("stein")){
+								setPlayerState(p, State.LIGHTS_STONE);
+								p.sendMessage(prefix + "§6Du bist im Stein Lampen Modus!");
+							}
+							else if(args[1].equalsIgnoreCase("eisen")){
+								setPlayerState(p, State.LIGHTS_IRON);
+								p.sendMessage(prefix + "§6Du bist im Eisen Lampen Modus!");
+							}
+							else if(args[1].equalsIgnoreCase("gold")){
+								setPlayerState(p, State.LIGHTS_GOLD);
+								p.sendMessage(prefix + "§6Du bist im Gold Lampen Modus!");
+							}
+						}
+						else if(args[0].equalsIgnoreCase("knopf")){
+							if(args[1].equalsIgnoreCase("holz")){
+								setPlayerState(p, State.LIGHTS_WOODBUTTON);
+								p.sendMessage(prefix + "§6Du bist im Holz Lampen Modus!");
+							}
+							else if(args[1].equalsIgnoreCase("stein")){
+								setPlayerState(p, State.LIGHTS_STONEBUTTON);
+								p.sendMessage(prefix + "§6Du bist im Stein Lampen Modus!");
+							}
+						}
+					}
+					else if (args.length == 1) {
+						if(args[0].equalsIgnoreCase("stop")){
+							setPlayerState(p, State.DEFAULT);
+							p.sendMessage(prefix + "§6Du hast den Lampen Modus verlassen!");
+						}
+						else if(args[0].equalsIgnoreCase("platte")){
+							p.sendMessage(prefix + "§6Nutze §c/sl platte <holz>, <stein>, <eisen> §6oder §c<gold>§6!");
+						}
+						else if(args[0].equalsIgnoreCase("knopf")){
+							p.sendMessage(prefix + "§6Nutze §c/sl knopf <holz> §6oder §c<stein>§6!");
+						}
+					}
+					else{
+						p.sendMessage(prefix + "§6Nutze §c/sl <knopf>, <platte> oder <stop>!");
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+else if (cmd.getName().equalsIgnoreCase("kick")) {
+			if (hasPermission(sender, permmod + "kick") == true){
+				if (args.length == 0){
+					SendMessage(sender, prefix + "§6Benutze /kick §c<Spieler> <Grund> ");
+				}
+				else if (args.length >= 2){
+					if(OfflineTarget(args[0]) != null){
+						OfflinePlayer p = OfflineTarget(args[0]);
+						if(isPlayer(sender)){
+							Player pl = (Player)sender;
+							BroadCastMessage(prefix + "§6Der Spieler §c" + p.getName() + " §6wurde von " + pl.getCustomName() + "§6 gekickt");
+							String grund = ArryToString(args);
+							grund = farbe(grund);
+					        grund = symbole(grund);
+					        grund = grund.replaceFirst(p.getName(), "");
+					        grund = grund.replaceFirst(" ", "");
+					        BroadCastMessage(prefix + "§6Grund: §r" + grund);
+					        
+					        if(p.isOnline()){
+					        	Player op = (Player)p;
+					        	op.kickPlayer(grund);
+					        }
+					        
+						}
+						else {
+							BroadCastMessage(prefix + "§6Der Spieler §c" + p.getName() + " §6wurde gekickt" );
+					        String grund = ArryToString(args);
+					        grund = farbe(grund);
+					        grund = symbole(grund);
+					        grund = grund.replace(p.getName(), "");
+					        grund = grund.replaceFirst(" ", "");
+					        BroadCastMessage(prefix + "§6Grund: §r" + grund);
+					        
+					        if(p.isOnline()){
+					        	Player op = (Player)p;
+					        	op.kickPlayer(grund);
+					        }
+						}
+					}
+				}
+			}
+		}
+		else if (cmd.getName().equalsIgnoreCase("ban")) {
+			if (hasPermission(sender, permmod + "ban") == true){
+				if (args.length == 0){
+					SendMessage(sender, prefix + "§6Benutze /ban §c<Spieler> <Grund> ");
+				}
+				else if (args.length >= 2){
+					if(OfflineTarget(args[0]) != null){
+						OfflinePlayer p = OfflineTarget(args[0]);
+						if(isPlayer(sender)){
+							Player pl = (Player)sender;
+							BroadCastMessage(prefix + "§6Der Spieler §c" + p.getName() + " §6wurde von " + pl.getCustomName() + "§6 gebannt");
+							String grund = ArryToString(args);
+					        grund = farbe(grund);
+					        grund = symbole(grund);
+					        grund = grund.replaceFirst(p.getName(), "");
+					        grund = grund.replaceFirst(" ", "");
+					        BroadCastMessage(prefix + "§6Grund: §r" + grund);
+					        //p.setBanned(true);
+					        //TODO WORKARROUNDDDDDDDD
+					        if(p.isOnline()){
+					        	Player op = (Player)p;
+					        	op.kickPlayer(grund);
+					        }
+					        
+						}
+						else {
+							BroadCastMessage(prefix + "§6Der Spieler §c" + p.getName() + " §6wurde gebannt" );
+							String grund = ArryToString(args);
+					        grund = farbe(grund);
+					        grund = symbole(grund);
+					        grund = grund.replaceFirst(p.getName(), "");
+					        grund = grund.replaceFirst(" ", "");
+					        BroadCastMessage(prefix + "§6Grund: §r" + grund);
+					        //p.setBanned(true);
+					        //TODO WORKARROUNDDDDDDDD
+					        if(p.isOnline()){
+					        	Player op = (Player)p;
+					        	op.kickPlayer(grund);
+					        }
+						}
+				        
+					}
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+else if (cmd.getName().equalsIgnoreCase("kopf")) {
+			if (hasPermission(sender, permmod + "kopf") == true){
+				if (args.length == 0) {
+					SendMessage(sender, prefix + "§6Nutze /kopf §c<Name> <Spieler>");
+				}
+				else if (args.length == 1) {
+					if(isPlayer(sender)){
+						Player p = (Player)sender;
+						
+						ItemStack is = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+						SkullMeta sm = (SkullMeta) is.getItemMeta();
+						sm.setOwner(args[0]);
+						sm.setLore(Arrays.asList("§6Erstellt von: §r" + p.getDisplayName()));
+						is.setItemMeta(sm);
+						p.getInventory().addItem(is);
+						SendMessage(sender, prefix + "§6Spieler Kopf von: §a" + args[0] + "§6 erzeugt");
+					}
+				}
+				else if (args.length == 2) {
+					if(Target(args[0]) != null){
+						Player p = Target(args[0]);
+						ItemStack is = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+						SkullMeta sm = (SkullMeta) is.getItemMeta();
+						sm.setOwner(args[0]);
+						sm.setLore(Arrays.asList("§6Erstellt von: §r" + p.getDisplayName()));
+						is.setItemMeta(sm);
+						p.getInventory().addItem(is);
+						SendMessage(sender, prefix + "§6Spieler Kopf von: §a" + args[0] + "§6 erzeugt");
+					}						
+				}
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+else if (cmd.getName().equalsIgnoreCase("signedit")) {
+			if (hasPermission(sender, permmod + "signedit") == true){
+				if (args.length == 0){
+					SendMessage(sender, prefix + "§6/signedit §c<Zeile> <Text> §6oder §c<stop>");
+				}
+				else if (args.length == 1){
+					if(args[0].equalsIgnoreCase("stop")){
+						if(isPlayer(sender)){
+							Player p = (Player)sender;
+							setPlayerState(p, State.DEFAULT);
+							SendMessage(sender, prefix + "§6Erfolgreich gestoppt");
+						}
+					}
+				}
+				else if (args.length == 2){
+					if(isPlayer(sender)){
+						Player p = (Player)sender;
+						if(isInt(args[0])){
+							int i = Integer.parseInt(args[0]);
+							if(i >= 0 && i <= 3){
+								rellu.signedit_zeile.put(p, i);
+								rellu.signedit_text.put(p, args[1]);
+								setPlayerState(p, State.SIGNEDIT);
+								SendMessage(sender, prefix + "§6Berühre das Schild");
+							}
+							else{
+								SendMessage(sender, prefix + "§6Möglichkeiten: §c0, 1, 2 und 3");
+							}
+						}
+						else{
+							SendMessage(sender, prefix + "§6Kein Integer!");
+						}
+					}
+				}
+				
+			}
+			else {
+				SendMessage(sender, noPerm);
+			}
+		}
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+ int klicks = 0;
+	 String first = "";
+	 String second = "";
+	 
+
+	 @EventHandler	
+	 public void InteractPlayer(InventoryClickEvent e) throws FileNotFoundException, IOException, InvalidConfigurationException{
+		 try{
+			 if(e.getClickedInventory().getName().equals("§5[RelluAPI] §aHaus GUI")){
+				 if(e.getCurrentItem().getType() == Material.COMPASS){
+					 if(e.getCurrentItem().hasItemMeta()){
+						ItemMeta meta = e.getCurrentItem().getItemMeta();
+						String name = meta.getDisplayName();
+						name = name.replace("§a", "");
+						name = name.toLowerCase();
+						Player p = (Player) e.getWhoClicked();
+						e.setCancelled(true);
+						teleport(p, getHome(p, name));
+						SendMessage(p, prefix + "§6Du bist jetzt im Haus §a" + name);
+						p.closeInventory();
+					 }
+					 
+				 }
+			 }
+			 else if(e.getClickedInventory().getName().equals("§6Welt wechseln")){		
+				 if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Freies Bauen")) {
+	                    e.setCancelled(true);
+						Location loc = worldFB.getSpawnLocation();
+						e.getWhoClicked().teleport(loc);
+	                    e.getWhoClicked().closeInventory();
+	            }
+	            if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Lobby")) {
+	                e.setCancelled(true);
+					Location loc = worldLobby.getSpawnLocation();
+					e.getWhoClicked().teleport(loc);
+	                e.getWhoClicked().closeInventory();
+	            }
+	            if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Dev Welt")) {
+	                    e.setCancelled(true);
+						Location loc = worldBau.getSpawnLocation();
+						e.getWhoClicked().teleport(loc);
+	                    e.getWhoClicked().closeInventory();
+	            }
+	            if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Adventure Welt")) {
+	                    e.setCancelled(true);
+						Location loc = worldADV.getSpawnLocation();
+						e.getWhoClicked().teleport(loc);
+	                    e.getWhoClicked().closeInventory();
+	            }
+	            if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Stargate")) {
+	                e.setCancelled(true);
+	                ((Player) e.getWhoClicked()).performCommand("studio");
+	                e.getWhoClicked().closeInventory();
+	            } 
+			 }
+		}
+		catch(NullPointerException es){
+
+		}
+		 
+		 
+//		 Player p = (Player) e.getWhoClicked();
+//		 p.updateInventory();
+	 }
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+@SuppressWarnings("deprecation")
+	@EventHandler
+		public void onPlayerMove(PlayerMoveEvent ev){
+		 Player p = ev.getPlayer();
+		 
+		 // MushroomJump
+		 
+		 if (p.hasPermission("rellu.lobby.MushroomJump")) {
+			 if (isInWorld(p, worldLobby)){
+				 if (!ev.getFrom().getBlock().getLocation().equals(ev.getTo().getBlock().getLocation())) {
+						if(p.isSneaking()) {
+							Block block = p.getLocation().getBlock().getRelative(BlockFace.DOWN);
+							if(block.getType() == Material.HUGE_MUSHROOM_2) {
+								p.getWorld().playEffect(p.getLocation(), Effect.HAPPY_VILLAGER, 5);
+								p.getWorld().playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1F, 0F);
+							}
+							else if (block.getType() == Material.HUGE_MUSHROOM_1) {
+								p.getWorld().playEffect(p.getLocation(), Effect.HAPPY_VILLAGER, 5);
+								p.getWorld().playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1F, 0F);
+							}
+							else if(block.getType() == Material.MYCEL) {
+								p.getWorld().playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 2F, 0F);
+								p.getWorld().playEffect(p.getLocation(), Effect.HAPPY_VILLAGER, 5);
+							}
+						}
+						else {
+						    Block east = p.getLocation().getBlock().getRelative(BlockFace.EAST);
+						    Block south = p.getLocation().getBlock().getRelative(BlockFace.SOUTH);
+						    Block west = p.getLocation().getBlock().getRelative(BlockFace.WEST);
+						    Block north = p.getLocation().getBlock().getRelative(BlockFace.NORTH);
+							Block block = p.getLocation().getBlock().getRelative(BlockFace.DOWN);
+							if (block.getType() == Material.HUGE_MUSHROOM_1) {
+								Vector dir = p.getLocation().getDirection().multiply(9.75);
+								Vector vec = new Vector(dir.getX(), 2.4D, dir.getZ());
+								p.setVelocity(vec);
+								p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_FLAP, 1F, 0F);
+								p.getWorld().playEffect(p.getLocation(), Effect.HAPPY_VILLAGER, 5);
+							} 
+							else if(block.getType() == Material.HUGE_MUSHROOM_2) {
+								Vector dir = p.getLocation().getDirection().multiply(0.25);
+								Vector vec = new Vector(dir.getX(), 4.0D, dir.getZ());
+								p.setVelocity(vec);
+								p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_FLAP, 1F, 0F);
+								p.getWorld().playEffect(p.getLocation(), Effect.HAPPY_VILLAGER, 5);
+							}
+							else if(block.getType() == Material.MYCEL) {
+								Vector dir = p.getLocation().getDirection().multiply(0.20);
+								Vector vec = new Vector(dir.getX(), 1.0D, dir.getZ());
+								p.setVelocity(vec);
+								p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_FLAP, 2F, 0F);
+								p.getWorld().playEffect(p.getLocation(), Effect.HAPPY_VILLAGER, 5);
+							}
+							// 
+							// Seite
+							//
+							else if (east.getType() == Material.HUGE_MUSHROOM_1 || west.getType() == Material.HUGE_MUSHROOM_1 || north.getType() == Material.HUGE_MUSHROOM_1 || south.getType() == Material.HUGE_MUSHROOM_1) {
+								Vector dir = p.getLocation().getDirection().multiply(2.75);
+								Vector vec = new Vector(dir.getX(), 1.4D, dir.getZ());
+								p.setVelocity(vec);
+								p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_FLAP, 1F, 0F);
+								p.getWorld().playEffect(p.getLocation(), Effect.HAPPY_VILLAGER, 5);
+							} 
+							else if (east.getType() == Material.HUGE_MUSHROOM_2 || west.getType() == Material.HUGE_MUSHROOM_2 || north.getType() == Material.HUGE_MUSHROOM_2 || south.getType() == Material.HUGE_MUSHROOM_2) {
+								Vector dir = p.getLocation().getDirection().multiply(0.75);
+								Vector vec = new Vector(dir.getX(), 2.0D, dir.getZ());
+								p.setVelocity(vec);
+								p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDERDRAGON_FLAP, 1F, 0F);
+								p.getWorld().playEffect(p.getLocation(), Effect.HAPPY_VILLAGER, 5);
+							}
+							else if (east.getType() == Material.MYCEL || west.getType() == Material.MYCEL || north.getType() == Material.MYCEL || south.getType() == Material.MYCEL) {
+								Vector dir = p.getLocation().getDirection().multiply(0.20);
+								Vector vec = new Vector(dir.getX(), 1.0D, dir.getZ());
+								p.setVelocity(vec);
+								p.getWorld().playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 2F, 0F);
+								p.getWorld().playEffect(p.getLocation(), Effect.HAPPY_VILLAGER, 5);
+							}
+						}	
+				}
+			}
+		}
+
+
+
+ @EventHandler
+	 public void onEntityDamage2(EntityDamageEvent ev){
+		 Strings st = new Strings(plugin);
+		 Funktionen f = new Funktionen(plugin);
+		 if(ev.getEntity() instanceof Player) {
+			 Player player = (Player) ev.getEntity();
+			 if(ev.getCause().equals((DamageCause.FALL)) && player.hasPermission("rellu.lobby.MushroomJump")){
+				 if(f.isInWorld(player, st.worldLobby)){
+					 Block b = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+					 if(b.getType() == Material.HUGE_MUSHROOM_1 || b.getType() == Material.HUGE_MUSHROOM_2 || b.getType() == Material.MYCEL || b.getType() == Material.HAY_BLOCK){
+						 ev.setCancelled(true);
+					 } 
+				 } 
+			 }
+		 }
+		 else if (!(ev.getEntity() instanceof Player)) {
+			 if(ev.getCause().equals((DamageCause.FALL))){
+				 Block b = ev.getEntity().getLocation().getBlock().getRelative(BlockFace.DOWN);
+				 if(f.isInWorld(b, st.worldLobby)){
+					 if(b.getType() == Material.HUGE_MUSHROOM_1 || b.getType() == Material.HUGE_MUSHROOM_2 || b.getType() == Material.MYCEL){
+						 ev.setCancelled(true);
+					 }
+				 }
+			 }
+		 }
+	 }
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	 @EventHandler
+	 public void Login(PlayerLoginEvent ev){
+	         int MaxPlayers = slots;
+	         int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
+	        
+	         if(onlinePlayers >= MaxPlayers){
+	                 ev.disallow(null, "§cDer Server ist leider voll");
+	         }
+	        
+	 }
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+	 @EventHandler
+		public void love(PlayerInteractEntityEvent e) {
+		 if( e.getPlayer().getName().contains("Rellu") ||  e.getPlayer().getName().contains("Stella")){
+			 if( e.getRightClicked().getName().contains("Rellu") ||  e.getRightClicked().getName().contains("Stella"))
+				 if (e.getPlayer().isSneaking()){
+					 ParticleEffect.FIREWORKS_SPARK.display(0.5f, 1.0f, 0.5f, 0.1f, 30, e.getPlayer().getLocation().add(0,2,0), 100);
+					 ParticleEffect.FIREWORKS_SPARK.display(0.5f, 1.0f, 0.5f, 0.1f, 30, e.getRightClicked().getLocation().add(0,2,0), 100);
+				 }
+				 else{
+					 ParticleEffect.HEART.display(0.5f, 1.0f, 0.5f, 0.1f, 30, e.getPlayer().getLocation().add(0,2,0), 100);
+					 ParticleEffect.HEART.display(0.5f, 1.0f, 0.5f, 0.1f, 30, e.getRightClicked().getLocation().add(0,2,0), 100); 
+				 }
+			 
+		 }
+		
+	 }
+	 
+	 
+	 @EventHandler
+		public void Kissing(PlayerInteractEntityEvent e) {
+		 if(e.getRightClicked() instanceof Player){
+			 Player p1 = e.getPlayer();
+			 Player p2 = (Player) e.getRightClicked();
+			 try {
+				if(isMarried(p1, p2) == true){
+					 kissPlayer(p1, p2);
+				 }
+			} catch (IOException | InvalidConfigurationException e1) {
+				e1.printStackTrace();
+			}
+			
+		 }
+	 }
+	 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	 @EventHandler
+		public void skullInfo(PlayerInteractEvent e) {
+			Player p = e.getPlayer();
+			if(e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)){
+				if(p.hasPermission("rellu.skull.info")){
+					if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+						BlockState block = e.getClickedBlock().getState();
+			            if (block instanceof Skull) {
+			                Skull sk = (Skull) block;
+			                title(p, "§a" + sk.getOwner(), "§8~~~~~~~~~~~~~~~~~~~~~~~");
+			            }
+					}
+				}
+			}
+			
+	 }
+	 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ @EventHandler
+		public void Schneeball(PlayerInteractEvent e) {
+			Player p = e.getPlayer();
+			if(e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)){
+			if(p.hasPermission("rellu.lobby.snowball")) {
+				ItemStack test = p.getEquipment().getItemInMainHand();
+				if(test.getType() == Material.SNOW_BALL){
+					if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_AIR) {
+						
+						//p.getInventory().addItem(rellu.getById(23));
+						ItemMeta test2 = test.getItemMeta();
+						String test3 = test2.getDisplayName();
+						if (test3 == null) {return;}
+						if (test3.contains("Schneeball")){
+							test.setAmount(94);
+							p.updateInventory();
+							 Vector test231 = p.getEyeLocation().multiply(7.8).getDirection();
+								Vector vec = new Vector(test231.getX(), test231.getY(), test231.getZ());
+							Projectile ball = p.launchProjectile(Snowball.class);
+							ball.setVelocity(vec);
+							if(p.hasPermission("rellu.group.vip") || p.hasPermission("rellu.group.builder") || p.hasPermission("rellu.group.sgbuilder") || p.hasPermission("rellu.group.pMod") || p.hasPermission("rellu.group.Mod") || p.hasPermission("rellu.group.sMod") || p.hasPermission("rellu.group.Geek") || p.hasPermission("rellu.group.Admin")) {
+								if (p.getName().equals("Relluem94")) {
+									shuffle();
+									ball.setCustomName(setColors().get(2) + "R" + setColors().get(1) + "e"+ setColors().get(3) + "l" +setColors().get(4) + "l" + setColors().get(6) + "u");
+									ball.setCustomNameVisible(true);
+									e.setCancelled(true);
+									ball.setFireTicks(1200);
+									ball.setFallDistance(2000);
+								}
+								else {
+								ball.setCustomName(p.getDisplayName());
+								ball.setCustomNameVisible(true);
+								e.setCancelled(true);
+								}
+							}
+							else {
+								e.setCancelled(true);
+							}
+						}
+					}
+					else {
+						//p.getInventory().addItem(rellu.getById(23));
+						test.setAmount(94);
+						p.updateInventory();
+					}
+					}
+				else {}
+					
+			}
+			else {}
+			}
+	 }
+	 
+	 
+	 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+	 @SuppressWarnings("deprecation")
+	@EventHandler
+	  public void onPlayerInteract(PlayerInteractEvent event)
+	  {
+		 if(event.getHand() != null && event.getHand().equals(EquipmentSlot.HAND)){
+	    if ((event.getPlayer().getEquipment().getItemInMainHand().getType() == Material.WOOL) && (event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+	    Block block = event.getClickedBlock();
+	    if (block.getType() == Material.CAULDRON)
+	    {
+	    	if (block.getRelative(BlockFace.DOWN).getType().equals(Material.FIRE)) {
+	      byte waterLevel = block.getData();
+	      if (waterLevel > 0)
+	      {
+	        int size = event.getPlayer().getEquipment().getItemInMainHand().getAmount();
+	        int level = waterLevel - size;
+	        if (level < 0) {
+	          level = 0;
+	        }
+	        // block.setData((byte)level);
+	        event.getPlayer().getEquipment().setItemInMainHand(new ItemStack(Material.WOOL, size));
+	        event.getPlayer().sendMessage(prefix + "§6Deine Wolle wurde entfärbt");
+	        event.setCancelled(true);
+	      }
+	    }
+	    }
+	    }
+	    else if ((event.getPlayer().getEquipment().getItemInMainHand().getType() == Material.CARPET) && (event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+		    Block block2 = event.getClickedBlock();
+		    if (block2.getType() == Material.CAULDRON)
+		    {
+		    //  event.getPlayer().sendMessage("Test22");
+		    	if (block2.getRelative(BlockFace.DOWN).getType().equals(Material.FIRE)) {
+		      byte waterLevel = block2.getData();
+		      if (waterLevel > 0)
+		      {
+		        int size = event.getPlayer().getEquipment().getItemInMainHand().getAmount();
+		        int level = waterLevel - size;
+		        if (level < 0) {
+		          level = 0;
+		        }
+		        // block2.setData((byte)level);
+		        event.getPlayer().setItemInHand(new ItemStack(Material.CARPET, size));
+		       event.getPlayer().sendMessage(prefix + "§6Dein Teppich wurde entfärbt");
+		        event.setCancelled(true);
+		      }
+		    }
+		    }
+	    }
+		 }
+	  }
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+	 @EventHandler
+	  public void onInteract(PlayerInteractEvent e)
+	  {
+		 if(e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)){
+		 if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK)
+		    {
+		 if (e.getClickedBlock().getType().equals(Material.WALL_SIGN) || e.getClickedBlock().getType().equals(Material.SIGN) || e.getClickedBlock().getType().equals(Material.SIGN_POST) && e.getPlayer().hasPermission("rellu.sign.item.use")){
+			 try {
+				BlockState schild = e.getClickedBlock().getState();
+		
+	      final Player p = e.getPlayer();
+	      Sign s = (Sign)e.getClickedBlock().getState();
+	      if ((s.getLine(0).equalsIgnoreCase(prefix)) && (s.getLine(3).equalsIgnoreCase("§6[ItemCenter]"))) {
+	        try
+	        {
+	          ItemStack i;
+	          ItemStack i2;
+	          ItemStack i3;
+	          ItemStack i4;
+	          ItemStack i5;
+	          ItemStack i6;
+	          ItemStack i7;
+	          ItemStack i8;
+	          ItemStack i9;
+	          if (!s.getLine(1).contains(":"))
+	          {
+	            @SuppressWarnings("deprecation")
+				Material mat = Material.getMaterial(Integer.parseInt(ChatColor.stripColor(s.getLine(1))));
+	            int anz = Integer.parseInt(ChatColor.stripColor(s.getLine(2)));
+	            	            
+
+	            
+	            if (anz < 64) {
+	            	i = new ItemStack(mat, anz);
+	            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+	            	inv.setItem(0, i);
+	  	          	p.openInventory(inv);
+	  	          	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+	            }
+	            else {
+	            	
+	            	int anz2 = anz - 64;
+	            	if (anz2 > 64) {
+	            		int anz3 = anz2 - 64;
+		            	if (anz3 > 64) {
+			            	int anz4 = anz3 - 64;
+			            	if (anz4 > 64) {
+			            		int anz5 = anz4 - 64;
+				            	if (anz5 > 64) {
+				            		int anz6 = anz5 - 64;
+					            	if (anz6 > 64) {
+					            		int anz7 = anz6 - 64;
+						            	if (anz7 > 64) {
+						            		int anz8 = anz7 - 64;
+							            	if (anz8 > 64) {
+							            		int anz9 = anz8 - 64;
+							            		i = new ItemStack(mat, 64);
+								            	i2 = new ItemStack(mat, 64);
+								            	i3 = new ItemStack(mat, 64);
+								            	i4 = new ItemStack(mat, 64);
+								            	i5 = new ItemStack(mat, 64);
+								            	i6 = new ItemStack(mat, 64);
+								            	i7 = new ItemStack(mat, 64);
+								            	i8 = new ItemStack(mat, 64);
+								            	i9 = new ItemStack(mat, anz9);
+								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+								            	inv.setItem(0, i);
+								            	inv.setItem(1, i2);
+								            	inv.setItem(2, i3);
+								            	inv.setItem(3, i4);
+								            	inv.setItem(4, i5);
+								            	inv.setItem(5, i6);
+								            	inv.setItem(6, i7);
+								            	inv.setItem(7, i8);
+								            	inv.setItem(8, i9);
+								            	p.openInventory(inv);
+								            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+							            	}
+							            	else {
+							            		i = new ItemStack(mat, 64);
+								            	i2 = new ItemStack(mat, 64);
+								            	i3 = new ItemStack(mat, 64);
+								            	i4 = new ItemStack(mat, 64);
+								            	i5 = new ItemStack(mat, 64);
+								            	i6 = new ItemStack(mat, 64);
+								            	i7 = new ItemStack(mat, 64);
+								            	i8 = new ItemStack(mat, anz8);
+								            	
+								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+								            	inv.setItem(0, i);
+								            	inv.setItem(1, i2);
+								            	inv.setItem(2, i3);
+								            	inv.setItem(3, i4);
+								            	inv.setItem(4, i5);
+								            	inv.setItem(5, i6);
+								            	inv.setItem(6, i7);
+								            	inv.setItem(7, i8);
+								            	p.openInventory(inv);
+								            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+							            	}
+						            	}
+						            	else {
+						            		i = new ItemStack(mat, 64);
+							            	i2 = new ItemStack(mat, 64);
+							            	i3 = new ItemStack(mat, 64);
+							            	i4 = new ItemStack(mat, 64);
+							            	i5 = new ItemStack(mat, 64);
+							            	i6 = new ItemStack(mat, 64);
+							            	i7 = new ItemStack(mat, anz7);
+							            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+							            	inv.setItem(0, i);
+							            	inv.setItem(1, i2);
+							            	inv.setItem(2, i3);
+							            	inv.setItem(3, i4);
+							            	inv.setItem(4, i5);
+							            	inv.setItem(5, i6);
+							            	inv.setItem(6, i7);
+							            	p.openInventory(inv);
+							            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+						            	}
+					            	}
+					            	else {
+					            		i = new ItemStack(mat, 64);
+						            	i2 = new ItemStack(mat, 64);
+						            	i3 = new ItemStack(mat, 64);
+						            	i4 = new ItemStack(mat, 64);
+						            	i5 = new ItemStack(mat, 64);
+						            	i6 = new ItemStack(mat, anz6);
+						            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+						            	inv.setItem(0, i);
+						            	inv.setItem(1, i2);
+						            	inv.setItem(2, i3);
+						            	inv.setItem(3, i4);
+						            	inv.setItem(4, i5);
+						            	inv.setItem(5, i6);
+						            	p.openInventory(inv);
+						            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+					            	}
+				            	}
+				            	else{			            		
+				            		i = new ItemStack(mat, 64);
+					            	i2 = new ItemStack(mat, 64);
+					            	i3 = new ItemStack(mat, 64);
+					            	i4 = new ItemStack(mat, 64);
+					            	i5 = new ItemStack(mat, anz5);
+					            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+					            	inv.setItem(0, i);
+					            	inv.setItem(1, i2);
+					            	inv.setItem(2, i3);
+					            	inv.setItem(3, i4);
+					            	inv.setItem(4, i5);
+					            	p.openInventory(inv);
+					            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+				            	}
+			            	}
+			            	else {
+			            		i = new ItemStack(mat, 64);
+				            	i2 = new ItemStack(mat, 64);
+				            	i3 = new ItemStack(mat, 64);
+				            	i4 = new ItemStack(mat, anz4);
+				            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+				            	inv.setItem(0, i);
+				            	inv.setItem(1, i2);
+				            	inv.setItem(2, i3);
+				            	inv.setItem(3, i4);
+				            	p.openInventory(inv);
+				            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+			            	}   		
+			            }
+		            	else {
+		            		i = new ItemStack(mat, 64);
+			            	i2 = new ItemStack(mat, anz2);
+			            	i3 = new ItemStack(mat, anz3);
+			            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+			            	inv.setItem(0, i);
+			            	inv.setItem(1, i2);
+			            	inv.setItem(2, i3);
+			            	p.openInventory(inv);
+			            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+		            	}  	
+		            }
+	            	else {
+	            		i = new ItemStack(mat, 64);
+		            	i2 = new ItemStack(mat, anz2);
+		            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+		            	inv.setItem(0, i);
+		            	inv.setItem(1, i2);
+		            	p.openInventory(inv);
+		            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);	
+	            	}
+	            }
+	          }
+	          else
+	          {
+	            String[] array = s.getLine(1).split(":");
+	            @SuppressWarnings("deprecation")
+				Material mat = Material.getMaterial(Integer.parseInt(ChatColor.stripColor(array[0])));
+	            int anz = Integer.parseInt(ChatColor.stripColor(s.getLine(2)));
+	            int damage = Integer.parseInt(ChatColor.stripColor(array[1]));
+	            if (anz < 64) {
+	            	i = new ItemStack(mat, anz, (short)damage);
+	            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+	            	inv.setItem(0, i);
+	  	          	p.openInventory(inv);
+	  	          	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+	            }
+	            else {
+	            	int anz2 = anz - 64;
+	            	if (anz2 > 64) {
+	            		int anz3 = anz2 - 64;
+		            	if (anz3 > 64) {
+			            	int anz4 = anz3 - 64;
+			            	if (anz4 > 64) {
+			            		int anz5 = anz4 - 64;
+				            	if (anz5 > 64) {
+				            		int anz6 = anz5 - 64;
+					            	if (anz6 > 64) {
+					            		int anz7 = anz6 - 64;
+						            	if (anz7 > 64) {
+						            		int anz8 = anz7 - 64;
+							            	if (anz8 > 64) {
+							            		int anz9 = anz8 - 64;
+							            		i = new ItemStack(mat, 64, (short)damage);
+								            	i2 = new ItemStack(mat, 64, (short)damage);
+								            	i3 = new ItemStack(mat, 64, (short)damage);
+								            	i4 = new ItemStack(mat, 64, (short)damage);
+								            	i5 = new ItemStack(mat, 64, (short)damage);
+								            	i6 = new ItemStack(mat, 64, (short)damage);
+								            	i7 = new ItemStack(mat, 64, (short)damage);
+								            	i8 = new ItemStack(mat, 64, (short)damage);
+								            	i9 = new ItemStack(mat, anz9, (short)damage);
+								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+								            	inv.setItem(0, i);
+								            	inv.setItem(1, i2);
+								            	inv.setItem(2, i3);
+								            	inv.setItem(3, i4);
+								            	inv.setItem(4, i5);
+								            	inv.setItem(5, i6);
+								            	inv.setItem(6, i7);
+								            	inv.setItem(7, i8);
+								            	inv.setItem(8, i9);
+								            	p.openInventory(inv);
+								            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+							            	}
+							            	else {
+							            		i = new ItemStack(mat, 64, (short)damage);
+								            	i2 = new ItemStack(mat, 64, (short)damage);
+								            	i3 = new ItemStack(mat, 64, (short)damage);
+								            	i4 = new ItemStack(mat, 64, (short)damage);
+								            	i5 = new ItemStack(mat, 64, (short)damage);
+								            	i6 = new ItemStack(mat, 64, (short)damage);
+								            	i7 = new ItemStack(mat, 64, (short)damage);
+								            	i8 = new ItemStack(mat, anz8, (short)damage);
+								            	
+								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+								            	inv.setItem(0, i);
+								            	inv.setItem(1, i2);
+								            	inv.setItem(2, i3);
+								            	inv.setItem(3, i4);
+								            	inv.setItem(4, i5);
+								            	inv.setItem(5, i6);
+								            	inv.setItem(6, i7);
+								            	inv.setItem(7, i8);
+								            	p.openInventory(inv);
+								            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+							            	}
+						            	}
+						            	else {
+						            		i = new ItemStack(mat, 64, (short)damage);
+							            	i2 = new ItemStack(mat, 64, (short)damage);
+							            	i3 = new ItemStack(mat, 64, (short)damage);
+							            	i4 = new ItemStack(mat, 64, (short)damage);
+							            	i5 = new ItemStack(mat, 64, (short)damage);
+							            	i6 = new ItemStack(mat, 64, (short)damage);
+							            	i7 = new ItemStack(mat, anz7, (short)damage);
+							            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+							            	inv.setItem(0, i);
+							            	inv.setItem(1, i2);
+							            	inv.setItem(2, i3);
+							            	inv.setItem(3, i4);
+							            	inv.setItem(4, i5);
+							            	inv.setItem(5, i6);
+							            	inv.setItem(6, i7);
+							            	p.openInventory(inv);
+							            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+						            	}
+					            	}
+					            	else {
+					            		i = new ItemStack(mat, 64, (short)damage);
+						            	i2 = new ItemStack(mat, 64, (short)damage);
+						            	i3 = new ItemStack(mat, 64, (short)damage);
+						            	i4 = new ItemStack(mat, 64, (short)damage);
+						            	i5 = new ItemStack(mat, 64, (short)damage);
+						            	i6 = new ItemStack(mat, anz6, (short)damage);
+						            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+						            	inv.setItem(0, i);
+						            	inv.setItem(1, i2);
+						            	inv.setItem(2, i3);
+						            	inv.setItem(3, i4);
+						            	inv.setItem(4, i5);
+						            	inv.setItem(5, i6);
+						            	p.openInventory(inv);
+						            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+					            	}
+				            	}
+				            	else{			            		
+				            		i = new ItemStack(mat, 64, (short)damage);
+					            	i2 = new ItemStack(mat, 64, (short)damage);
+					            	i3 = new ItemStack(mat, 64, (short)damage);
+					            	i4 = new ItemStack(mat, 64, (short)damage);
+					            	i5 = new ItemStack(mat, anz5, (short)damage);
+					            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+					            	inv.setItem(0, i);
+					            	inv.setItem(1, i2);
+					            	inv.setItem(2, i3);
+					            	inv.setItem(3, i4);
+					            	inv.setItem(4, i5);
+					            	p.openInventory(inv);
+					            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+				            	}
+			            	}
+			            	else {
+			            		i = new ItemStack(mat, 64, (short)damage);
+				            	i2 = new ItemStack(mat, 64, (short)damage);
+				            	i3 = new ItemStack(mat, 64, (short)damage);
+				            	i4 = new ItemStack(mat, anz4, (short)damage);
+				            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+				            	inv.setItem(0, i);
+				            	inv.setItem(1, i2);
+				            	inv.setItem(2, i3);
+				            	inv.setItem(3, i4);
+				            	p.openInventory(inv);
+				            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+			            	}
+			            }
+		            	else {
+		            		
+		            		i = new ItemStack(mat, 64, (short)damage);
+			            	i2 = new ItemStack(mat, anz2, (short)damage);
+			            	i3 = new ItemStack(mat, anz3, (short)damage);
+			            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+			            	inv.setItem(0, i);
+			            	inv.setItem(1, i2);
+			            	inv.setItem(2, i3);
+			            	p.openInventory(inv);
+			            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
+		            	}	
+		            }
+	            	else {
+	            		i = new ItemStack(mat, 64, (short)damage);
+		            	i2 = new ItemStack(mat, anz2, (short)damage);
+		            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
+		            	inv.setItem(0, i);
+		            	inv.setItem(1, i2);
+		            	p.openInventory(inv);
+		            	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);	
+	            	}
+	            }            
+	          }
+	          Bukkit.getScheduler().scheduleSyncDelayedTask((Plugin) this, new Runnable()
+	          {
+	            public void run()
+	            {
+	              p.getEquipment().setItemInMainHand(p.getEquipment().getItemInMainHand());
+	            }
+	          }, 20L);
+	        }
+	        catch (Exception localException) {}
+	      }
+	      
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+    if (e.getPlayer().hasPermission("rellu.sign.weather.use")){
+			 
+		 }
+	    if (((schild instanceof Sign)) && 
+	      (e.getAction() == Action.RIGHT_CLICK_BLOCK))
+	    {
+	     // final Player p = e.getPlayer();
+	     // Sign s = (Sign)e.getClickedBlock().getState();
+	      if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§1[Wetter]"))) {
+	        try
+	        {
+	          if(p.getWorld().hasStorm()) {
+	        	  p.getWorld().setStorm(false);
+	          }
+	          else {
+	        	  p.getWorld().setStorm(true);
+	          }
+	          
+	        }
+	        catch (Exception localException) {}
+	      }
+	    }
+	    
+	    
+	    if (e.getPlayer().hasPermission("rellu.sign.time.use")){
+			 
+		 }
+	    if (((schild instanceof Sign)) && 
+	      (e.getAction() == Action.RIGHT_CLICK_BLOCK))
+	    {
+	     // final Player p = e.getPlayer();
+	    //  Sign s = (Sign)e.getClickedBlock().getState();
+	      if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§6[Zeit]"))) {
+	        try
+	        {
+	          if(p.getWorld().getTime() > 8000L ) {
+	        	  p.getWorld().setTime(0L);
+	          }
+	          else {
+	        	  p.getWorld().setTime(18000L);
+	          }
+	          
+	        }
+	        catch (Exception localException) {}
+	      }
+	    }
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+   
+	    else if (e.getPlayer().hasPermission("rellu.sign.shop.use")){
+
+	    if (((schild instanceof Sign)) && 
+	      (e.getAction() == Action.RIGHT_CLICK_BLOCK)){
+	    	
+	    	
+	    	
+	     // final Player p = e.getPlayer();
+	    //  Sign s = (Sign)e.getClickedBlock().getState();
+	      if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§6[Shop]"))) {
+	        try{
+	         	     String a = s.getLine(1);
+	         	     String b = s.getLine(2);
+	         	     
+	         	     a = a.replaceFirst("" + a.charAt(0), "");
+	         	     a = a.replaceFirst("" + a.charAt(0), "");
+	         	     a = a.replaceAll(" ", "_");
+	         	     a = a.toLowerCase();
+	         	     String[] c = b.split(" / ");
+	         	     
+	         	     String d = c[0];
+	         	     String f = c[1];
+	         	     
+	         	     
+	         	     
+	         	     if(d.contains("D") && f.contains("S")){
+	         	    	 a = a.toUpperCase();
+	         	    	 Material g = Material.getMaterial(a);
+	         	    	 d = d.replace("D", "");
+	         	    	 f = f.replace("S", "");
+	         	    	 
+	         	    	if(e.getItem().getType().equals(g)){
+	         	    		if(isInt(d) == true){
+		         	    		if(isInt(f) == true){
+		         	    			int h = Integer.parseInt(f);
+		         	    			int m = Integer.parseInt(d);
+		 	         	    		Block j = e.getClickedBlock().getRelative(BlockFace.DOWN, 2);
+		 	         	    		if (j.getState() instanceof Chest) {
+		 	         	    			Chest k = (Chest) j.getState();
+		 	         	    			ItemStack i = new ItemStack(g, 64);
+		 	         	    			if(k.getBlockInventory().contains(i, h)){
+		 	         	    				Block o = e.getClickedBlock().getRelative(BlockFace.DOWN, 3);
+		 	         	    				if (j.getState() instanceof Chest) {
+		 	         	    					Chest q = (Chest) o.getState();
+		 	         	    					ItemStack n = new ItemStack(Material.DIAMOND, m);
+		 	         	    					if(q.getBlockInventory().contains(Material.DIAMOND, h)){
+		 	         	    						if(p.getInventory().contains(g, 64)){
+		 	         	    							Inventory r = q.getInventory();
+		 	         	    							Inventory t = k.getInventory();
+		 	         	    							Inventory w = p.getInventory();
+		 	         	    							boolean u = false;
+		 	         	    							boolean v = false;
+		 	         	    							boolean x = false;
+		 	         	    							int z0 = 0;
+		 	         	    							int z1 = 0;
+		 	         	    							int z2 = 0;
+		 	         	    							int y0 = 0;
+		 	         	    							int y1 = 0;
+		 	         	    							int y2 = 0;
+		 	         	    							for (ItemStack stack : r.getContents()) {
+		 	         	    								if (stack == null) {
+		 	         	    									u = true;
+		 	         	    				                    y0 = y0 + 1;
+		 	         	    				                }
+		 	         	    								else{
+		 	         	    				                	if(stack.getType().equals(g)){
+		 	         	    				                		z0 = z0 + stack.getAmount();
+		 	         	    				                	}
+		 	         	    				                }
+		 	         	    				            }
+		 	         	    							for (ItemStack stack : t.getContents()) {
+		 	         	    				                if (stack == null) {
+		 	         	    				                    v = true;
+		 	         	    				                    y1 = y1 + 1;
+		 	         	    				                }
+		 	         	    				              else{
+		 	         	    				                	if(stack.getType().equals(g)){
+		 	         	    				                		z1 = z1 + stack.getAmount();
+		 	         	    				                	}
+		 	         	    				                }
+		 	         	    				            }
+		 	         	    							for (ItemStack stack : w.getContents()) {
+		 	         	    				                if (stack == null) {
+		 	         	    				                    x = true;
+		 	         	    				                    y2 = y2 + 1;
+		 	         	    				                }
+		 	         	    				                else{
+		 	         	    				                	if(stack.getType().equals(g)){
+		 	         	    				                		z2 = z2 + stack.getAmount();
+		 	         	    				                	}
+		 	         	    				                }
+		 	         	    				            }
+		 	         	    							
+		 	         	    							
+		 	         	    								if(v == true && u == true && x == true){
+		 	         	    									if(z2 >= h * 64 && h <= y1){
+		 	         	    										p.getInventory().addItem(n);
+				 	         	    								q.getBlockInventory().removeItem(n);
+				 	         	    								p.sendMessage(prefix + "§6Item wurde verkauft");
+				 	         	    								for (int l = 0; l < h; l++) {
+				 	         	    									p.getInventory().removeItem(i);
+				 	         	    									k.getBlockInventory().addItem(i);
+				 	         	    							 	}
+				 	         	    							}
+		 	         	    									else if(z2 >= h * 64 && h >= y1){
+			 	         	    									p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast voll");
+			 	         	    								}
+			 	         	    								else if(z2 <= h * 64 && h >= y1){
+			 	         	    									int z = h *64 - z2;
+				 	         	    								p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + z);
+			 	         	    								}
+			 	         	    								else if(z2 <= h * 64 && h <= y1){
+			 	         	    									int z = h *64 - z2;
+				 	         	    								p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + z);
+			 	         	    								}
+			 	         	    								else{
+			 	         	    									p.sendMessage(prefix + "§6Shop: Unbekannter Fehler 1");
+			 	         	    								}
+			 	         	    							}	
+			 	         	    							else if(v == true && u == true && x == false){
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von§c dir §6ist voll");
+			 	         	    							}
+			 	         	    							else if(v == true && u == false && x == true){
+			 	         	    								if(z2 >= h * 64 && h <= y1){
+		 	         	    										p.getInventory().addItem(n);
+				 	         	    								q.getBlockInventory().removeItem(n);
+				 	         	    								p.sendMessage(prefix + "§6Item wurde verkauft");
+				 	         	    								for (int l = 0; l < h; l++) {
+				 	         	    									p.getInventory().removeItem(i);
+				 	         	    									k.getBlockInventory().addItem(i);
+				 	         	    							 	}
+				 	         	    							}
+		 	         	    									else if(z2 >= h * 64 && h >= y1){
+			 	         	    									p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast voll");
+			 	         	    								}
+			 	         	    								else if(z2 <= h * 64 && h >= y1){
+			 	         	    									int z = h *64 - z2;
+				 	         	    								p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + z);
+			 	         	    								}
+			 	         	    								else{
+			 	         	    									p.sendMessage(prefix + "§6Shop: Unbekannter Fehler 2");
+			 	         	    								}
+			 	         	    							}
+			 	         	    							else if(v == false && u == true && x == true){
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist voll");
+			 	         	    							}
+			 	         	    							else if(v == false && u == false && x == true){
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste§6 und der §c Ausgabekiste §6ist voll");
+			 	         	    							}
+			 	         	    							else if(v == true && u == false && x == false){
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste§6 und von§c dir §6ist voll");
+			 	         	    							}
+			 	         	    							else if(v == false && u == false && x == false){
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste§6 und von§c dir §6ist voll");
+			 	         	    							}
+			 	         	    							else{
+			 	         	    								p.sendMessage(prefix + "§6Unbekannter Fehler 3");
+			 	         	    							}
+		 	         	    						}
+		 	         	    					}
+			 	         	    			}
+		 	         	    			}	
+		 	         	    		}
+		         	    		}
+		         	    	 }
+	         	    	}
+	         	    	else if(e.getItem().getType().equals(Material.DIAMOND)){
+	         	    		if(isInt(d) == true){
+		         	    		if(isInt(f) == true){
+		         	    			int h = Integer.parseInt(f);
+		         	    			int m = Integer.parseInt(d);
+		 	         	    		Block j = e.getClickedBlock().getRelative(BlockFace.DOWN, 2);
+		 	         	    		if (j.getState() instanceof Chest) {
+		 	         	    			Chest k = (Chest) j.getState();
+		 	         	    			ItemStack i = new ItemStack(g, 64);
+		 	         	    			if(k.getBlockInventory().contains(i, h)){
+		 	         	    				Block o = e.getClickedBlock().getRelative(BlockFace.DOWN, 3);
+		 	         	    				if (j.getState() instanceof Chest) {
+		 	         	    					Chest q = (Chest) o.getState();
+		 	         	    					ItemStack n = new ItemStack(Material.DIAMOND, m);
+		 	         	    					if(p.getInventory().contains(Material.DIAMOND, m)){
+		 	         	    						if(k.getBlockInventory().contains(g, 64)){
+		 	         	    							Inventory r = q.getInventory();
+		 	         	    							Inventory t = k.getInventory();
+		 	         	    							Inventory w = p.getInventory();
+		 	         	    							boolean u = false;
+		 	         	    							boolean v = false;
+		 	         	    							boolean x = false;
+		 	         	    							int z0 = 0;
+		 	         	    							int z1 = 0;
+		 	         	    							int z2 = 0;
+		 	         	    							int y0 = 0;
+		 	         	    							int y1 = 0;
+		 	         	    							int y2 = 0;
+		 	         	    							for (ItemStack stack : r.getContents()) {
+		 	         	    								if (stack == null) {
+		 	         	    									u = true;
+		 	         	    				                    y0 = y0 + 1;
+		 	         	    				                }
+		 	         	    								else{
+		 	         	    				                	if(stack.getType().equals(g)){
+		 	         	    				                		z0 = z0 + stack.getAmount();
+		 	         	    				                	}
+		 	         	    				                }
+		 	         	    				            }
+		 	         	    							for (ItemStack stack : t.getContents()) {
+		 	         	    				                if (stack == null) {
+		 	         	    				                    v = true;
+		 	         	    				                    y1 = y1 + 1;
+		 	         	    				                }
+		 	         	    				              else{
+		 	         	    				                	if(stack.getType().equals(g)){
+		 	         	    				                		z1 = z1 + stack.getAmount();
+		 	         	    				                	}
+		 	         	    				                }
+		 	         	    				            }
+		 	         	    							for (ItemStack stack : w.getContents()) {
+		 	         	    				                if (stack == null) {
+		 	         	    				                    x = true;
+		 	         	    				                    y2 = y2 + 1;
+		 	         	    				                }
+		 	         	    				                else{
+		 	         	    				                	if(stack.getType().equals(g)){
+		 	         	    				                		z2 = z2 + stack.getAmount();
+		 	         	    				                	}
+		 	         	    				                }
+		 	         	    				            }
+		 	         	    							
+		 	         	    							
+		 	         	    							if(v == true && u == true && x == true){
+		 	         	    								if(y2 >= m){
+	 	         	    										p.getInventory().removeItem(n);
+			 	         	    								q.getBlockInventory().addItem(n);
+			 	         	    								p.sendMessage(prefix + "§6Item wurde gekauft");
+			 	         	    								for (int l = 0; l < h; l++) {
+			 	         	    									p.getInventory().addItem(i);
+			 	         	    									k.getBlockInventory().removeItem(i);
+			 	         	    							 	}
+			 	         	    							}
+		 	         	    								else if(y2 >= m){
+		 	         	    									p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast voll");
+		 	         	    								}
+		 	         	    								else if(y2 <= m){
+		 	         	    									int y = m - y2;
+			 	         	    								p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + y);
+		 	         	    								}
+		 	         	    								else{
+		 	         	    									p.sendMessage(prefix + "§6Unbekannter Fehler 4");
+		 	         	    								}
+		 	         	    							}
+		 	         	    							else if(v == true && u == true && x == false){
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von§c dir §6ist voll");
+		 	         	    							}
+		 	         	    							else if(v == true && u == false && x == true){
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste §6ist voll");
+		 	         	    							}
+		 	         	    							else if(v == false && u == true && x == true){
+		 	         	    								if(y2 >= h * 64 && h <= y1){
+	 	         	    										p.getInventory().removeItem(n);
+			 	         	    								q.getBlockInventory().addItem(n);
+			 	         	    								p.sendMessage(prefix + "§6Item wurde gekauft");
+			 	         	    								for (int l = 0; l < h; l++) {
+			 	         	    									p.getInventory().addItem(i);
+			 	         	    									k.getBlockInventory().removeItem(i);
+			 	         	    							 	}
+			 	         	    							}
+		 	         	    								else if(z2 >= h * 64 && h >= y1){
+		 	         	    									p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast voll");
+		 	         	    								}
+		 	         	    								else if(z2 <= h * 64 && h >= y1){
+		 	         	    									
+		 	         	    										p.getInventory().removeItem(n);
+				 	         	    								q.getBlockInventory().addItem(n);
+				 	         	    								p.sendMessage(prefix + "§6Item wurde gekauft");
+				 	         	    								for (int l = 0; l < h; l++) {
+				 	         	    									p.getInventory().addItem(i);
+				 	         	    									k.getBlockInventory().removeItem(i);
+				 	         	    							 	}
+				 	         	    							
+		 	         	    									// int z = h *64 - z2;
+			 	         	    								//p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + z);
+		 	         	    								}
+		 	         	    							}
+		 	         	    							else if(v == false && u == false && x == true){
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste§6 und der §c Ausgabekiste §6ist voll");
+		 	         	    							}
+		 	         	    							else if(v == true && u == false && x == false){
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste§6 und von§c dir §6ist voll");
+		 	         	    							}
+		 	         	    							else if(v == false && u == false && x == false){
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste§6 und von§c dir §6ist voll");
+		 	         	    							}
+		 	         	    							else{
+	 	         	    									p.sendMessage(prefix + "§6Unbekannter Fehler 5");
+	 	         	    								}
+		 	         	    						}
+		 	         	    					}
+			 	         	    			}
+		 	         	    			}
+		 	         	    			else{
+		 	         	    				p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast leer");
+		 	         	    			}
+		 	         	    		}
+		         	    		}
+		         	    	 }
+	         	    	}
+	         	    	else{
+         	    			p.sendMessage(prefix + "§6Dieses Item kannst du hier nicht Handeln");
+         	    		}
+	         	     }   
+	        
+	        }
+	        catch (Exception localException) {}
+	      }
+	    }
+	    }
+	   
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+  
+	    if (e.getPlayer().hasPermission("rellu.sign.warp.use")){
+	    	 if (((schild instanceof Sign)) && (e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+	    		 if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§a[Warps]"))) {
+	    			 try{
+	    				 String cmdpart = s.getLine(2);
+	    				 String cmd = "warp tp " + cmdpart.replace("§c", "");
+	   	              p.performCommand(cmd);
+	    			 }
+	    			 catch (Exception localException) {
+	    				 
+	    			 }
+	    		 }
+	    	 }
+	    }
+	    
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+		
+	    if (((schild instanceof Sign)) && 
+	      (e.getAction() == Action.RIGHT_CLICK_BLOCK))
+	    {
+	   //   final Player p = e.getPlayer();
+	   //   Sign s = (Sign)e.getClickedBlock().getState();
+	      if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§b[Befehl]"))) {
+	        try
+	        {
+	        	  String cmd = s.getLine(1);
+	              p.performCommand(cmd);
+	          
+	        }
+	        catch (Exception localException) {}
+	      }
+	    }
+	    }
+			 } finally {
+				  
+				}
+		 }
+		    }
+		 }
+			 
+			 }
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  public void enterWorld(PlayerChangedWorldEvent e){
+		World w = e.getPlayer().getWorld();
+		Location l = e.getFrom().getSpawnLocation();
+		if(w.equals(worldADV)){
+			if(e.getPlayer().hasPermission(permworldADV)){
+				SendMessage(e.getPlayer(), prefix + "§6Du bist jetzt in der ADV");
+			}
+			else{
+				SendMessage(e.getPlayer(), prefix + "§6Du hast keine Rechte um in die ADV zu gelangen");
+				e.getPlayer().teleport(l);
+			}
+		}
+		else if(w.equals(worldBau)){
+			if(e.getPlayer().hasPermission(permworldBau)){
+				SendMessage(e.getPlayer(), prefix + "§6Du bist jetzt in der Bau Welt");
+			}
+			else{
+				SendMessage(e.getPlayer(), prefix + "§6Du hast keine Rechte um in die Bau Welt zu gelangen");
+				e.getPlayer().teleport(l);
+			}
+		}
+		
+		
+	 }
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+public class PlayerState{
+	public enum State {
+		DEFAULT(""), AFK(""), SIGNCOPY(""), SIGNPASTE(""), SIGNEDIT(""),
+		MIRRORMASTER_X(""), MIRRORMASTER_Z(""),MIRRORMASTER_K(""),
+		LIGHTS_GOLD(""), LIGHTS_WOOD(""), LIGHTS_STONE(""), LIGHTS_IRON(""), LIGHTS_WOODBUTTON(""), LIGHTS_STONEBUTTON(""),
+		SANDPIPER(""), STACKER(""), SELECTOR(""), MAGIC(""), LOVE(""), FIRE(""), NOTES(""), FIREWORK(""), SNOWBALL(""),
+		BLOCKID(""),
+		
+		// CaptureSpleef
+		CAPTURESPLEEF_TEAM_BLAU(""), CAPTURESPLEEF_TEAM_ROT(""), CAPTURESPLEEF_TEAM_LOBBY("");
+		;
+	
+		private String code;
+
+	    private State(String code) {
+	        this.code = code;
+	    }
+	    
+	    public String getValue() {
+	        return code;
+	    }
+	    
+	    public void setValue(String value) {
+	    	code = value;
+	    }
+	}
+	
+	State state;
+	
+	
+}
+
+
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+	 @EventHandler
+		public void SignCreate(SignChangeEvent e)  {
+			
+			 if ((e.getPlayer().hasPermission("rellu.capturespleef.sign.create")) && (e.getLine(0).equalsIgnoreCase("")) && 
+				(e.getLine(3).equalsIgnoreCase("[cs01]")) && (e.getLine(2).equalsIgnoreCase("")) && (e.getLine(1).equalsIgnoreCase(""))) {
+				 e.setLine(0, prefix_captureSpleef);
+			     e.setLine(1, "");
+			     e.setLine(2, "§aSpiel betreten");
+			     e.setLine(3, "");
+			     e.getPlayer().sendMessage(prefix_captureSpleef + schild);
+			     }
+			 else if ((e.getPlayer().hasPermission("rellu.capturespleef.sign.create")) && (e.getLine(0).equalsIgnoreCase("")) &&
+					 (e.getLine(3).equalsIgnoreCase("[cs02]")) && (e.getLine(2).equalsIgnoreCase("")) && (e.getLine(1).equalsIgnoreCase(""))) {
+				 e.setLine(0, prefix_captureSpleef);
+				 e.setLine(1, "");
+			     e.setLine(2, "§aSpiel verlassen");
+			     e.setLine(3, "");
+			     e.getPlayer().sendMessage(prefix_captureSpleef + schild);
+			     }
+		}
+	 
+	 @SuppressWarnings({ "deprecation" })
+	@EventHandler
+	  public void onChangeSign(SignChangeEvent e) throws IndexOutOfBoundsException, FileNotFoundException, IOException, InvalidConfigurationException
+	  {
+	    if (	(e.getPlayer().hasPermission("rellu.sign.item.create")) && 
+	    		(e.getLine(0).equalsIgnoreCase("")) && 
+	    		(!e.getLine(1).equalsIgnoreCase("")) &&
+	    		(e.getLine(3).equalsIgnoreCase("[ItemCenter]")) ||
+	    		(e.getLine(3).equalsIgnoreCase("[r0001]")) &&
+	    		(!e.getLine(2).equalsIgnoreCase("")) ||
+	    		(!e.getLine(2).equalsIgnoreCase("576")) ||
+	    		(!e.getLine(2).equalsIgnoreCase("0")) 
+	    		) {
+	      try
+	      {
+	        Material mat;
+	        if (!e.getLine(1).contains(":"))
+	        {
+	          mat = Material.getMaterial(Integer.valueOf(e.getLine(1)).intValue());
+	        }
+	        else
+	        {
+	          String[] array = e.getLine(1).split(":");
+	          Material Mat = Material.getMaterial(Integer.valueOf(array[0]).intValue());
+	          int i = Integer.parseInt(array[1]);
+	        }
+	        int i = Integer.parseInt(e.getLine(2));
+	        
+	        e.setLine(0, "§5[RelluAPI]");
+	        e.setLine(1, "" + e.getLine(1));
+	        e.setLine(2, "" + e.getLine(2));
+	        e.setLine(3, "§6[ItemCenter]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
+	      }
+	      catch (Exception localException) {}
+	    }
+	  
+	    //
+	    //
+	    //
+	    //
+	    //
+	    if (	(e.getPlayer().hasPermission("rellu.sign.weather.create")) && 
+	    		(e.getLine(0).equalsIgnoreCase("")) && 
+	    		(e.getLine(2).equalsIgnoreCase("")) && 
+	    		(e.getLine(1).equalsIgnoreCase("") &&
+	    		(e.getLine(3).equalsIgnoreCase("[Weather]")) ||
+	    		(e.getLine(3).equalsIgnoreCase("[Wetter]")) ||
+	    		(e.getLine(3).equalsIgnoreCase("[r0002]"))
+	    		)) {
+	    	e.setLine(0, "§5[RelluAPI]");
+	        e.setLine(1, "§bÄndere das Wetter");
+	        e.setLine(2, "§bHier klicken zum wechseln");
+	        e.setLine(3, "§1[Wetter]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
+ 
+	  }
+	   
+	    //
+	    //
+	    //
+	    //
+	    //
+	    else if (	(e.getPlayer().hasPermission("rellu.sign.time.create")) && 
+	    		(e.getLine(0).equalsIgnoreCase("")) && 
+	    		(e.getLine(3).equalsIgnoreCase("[time]")) ||
+	    		(e.getLine(3).equalsIgnoreCase("[Zeit]")) ||
+	    		(e.getLine(3).equalsIgnoreCase("[r0003]")) &&
+	    		(e.getLine(2).equalsIgnoreCase("")) && 
+	    		(e.getLine(1).equalsIgnoreCase(""))) {
+	    	e.setLine(0, "§5[RelluAPI]");
+	        e.setLine(1, "§eÄndere die Zeit");
+	        e.setLine(2, "§eHier klicken zum wechseln");
+	        e.setLine(3, "§6[Zeit]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
+ 
+	  }
+	    //
+	    //
+	    //
+	    //
+	    //
+	    //
+	    //
+	    //
+	    //
+	    //
+	    
+	    
+	    else if (	(e.getPlayer().hasPermission("rellu.sign.command.create")) && 
+	    		(e.getLine(0).equalsIgnoreCase("")) &&
+	    		(e.getLine(3).equalsIgnoreCase("[Befehl]")) ||
+	    		(e.getLine(3).equalsIgnoreCase("[r0004]")) &&
+	    		(!e.getLine(1).equalsIgnoreCase(""))) {
+	    	e.setLine(0, "§5[RelluAPI]");
+	    	e.setLine(1, "" + e.getLine(1));
+	        e.setLine(2, "§bBefehl ausführen");
+	        e.setLine(3, "§b[Befehl]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
+ 
+	  }
+	    else if (	(e.getPlayer().hasPermission("rellu.sign.warp.create")) && 
+	    		(e.getLine(0).equalsIgnoreCase("")) && 
+	    		(e.getLine(3).equalsIgnoreCase("[warps]")) ||
+	    		(e.getLine(3).equalsIgnoreCase("[r0005")) &&
+	    		(!e.getLine(2).equalsIgnoreCase("")) && 
+	    		(e.getLine(1).equalsIgnoreCase(""))) {
+	    	
+	        
+	        for(int i = 0; i < WarpsAsArrayList().size(); i++){
+	        	String name = WarpsAsArrayList().get(i);
+	        	if(e.getLine(2).equalsIgnoreCase(name)){
+	        		e.setLine(0, "§5[RelluAPI]");
+	    	        e.setLine(1, "§aWarp dich zu:");
+	    	        e.setLine(2, "§c" + WarpsAsArrayList().get(i).replaceAll(" ", "").replaceAll(",", ""));
+	    	        e.setLine(3, "§a[Warps]");
+	    	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
+		        }
+	        }
+	        
+	        
+	        
+ 
+	  }
+	    else if (	(e.getPlayer().hasPermission("rellu.sign.shop.create")) &&
+	    		(!e.getLine(2).equalsIgnoreCase("")) &&
+	    		(!e.getLine(1).equalsIgnoreCase("")) &&
+	    		(e.getLine(3).equalsIgnoreCase("[Shop]")) ||
+	    		(e.getLine(3).equalsIgnoreCase("[r0010]"))) {
+	    	e.setLine(0, "§5[RelluAPI]");
+	        e.setLine(1, "" + e.getLine(1));
+	        e.setLine(2, "" + e.getLine(2));
+	        e.setLine(3, "§6[Shop]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
+ 
+	  }
+	    else if (e.getPlayer().hasPermission("rellu.sign.color")){
+	    	String line0 = e.getLine(0);
+	    	String line1 = e.getLine(1);
+	    	String line2 = e.getLine(2);
+	    	String line3 = e.getLine(3);
+	    	
+	    	line0 = Funktionen.farbe(line0);
+	    	line1 = Funktionen.farbe(line1);
+	    	line2 = Funktionen.farbe(line2);
+	    	line3 = Funktionen.farbe(line3);
+	    	
+	    	line0 = Funktionen.symbole(line0);
+	    	line1 = Funktionen.symbole(line1);
+	    	line2 = Funktionen.symbole(line2);
+	    	line3 = Funktionen.symbole(line3);
+	    	
+	    	e.setLine(0, line0);
+	    	e.setLine(1, line1);
+	    	e.setLine(2, line2);
+	    	e.setLine(3, line3);
+	    }
+	  }
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+public void onPlace(BlockPlaceEvent event){
+		Player player = (Player) event.getPlayer();
+		if (isInWorld(player, worldLobby)){
+			 if (player.hasPermission("rellu.build.lobby")){
+				 event.setCancelled(false);
+			 }
+			 else {
+       Block b = event.getBlock();
+       event.setCancelled(true);
+       event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 zu bauen");
+       }
+		 }
+		 else if (isInWorld(player, worldADV1)){
+			 if (player.hasPermission("rellu.build.adv")){
+				 event.setCancelled(false);
+			 }
+			 else {
+       Block b = event.getBlock();
+       event.setCancelled(true);
+       event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 zu bauen");
+       }
+		 }
+		 else if (isInWorld(player, worldADV)){
+			 if (player.hasPermission("rellu.build.adv")){
+				 event.setCancelled(false);
+			 }
+			 else {
+       Block b = event.getBlock();
+       event.setCancelled(true);
+       event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 zu bauen");
+       }
+		 } 
+   }
+
+
+	@SuppressWarnings("deprecation")
+	@EventHandler
+    public void onBlockBreak(BlockBreakEvent event)
+    {
+		Player player = (Player) event.getPlayer();
+		if (isInWorld(player, worldLobby)){
+			 if (player.hasPermission("rellu.build.lobby")){
+				 event.setCancelled(false);
+			 }
+			 else {
+        Block b = event.getBlock();
+        event.setCancelled(true);
+        event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 abzubauen");
+        }
+		 }
+		 else if (isInWorld(player, worldADV)){
+			 if (player.hasPermission("rellu.build.adv")){
+				 event.setCancelled(false);
+			 }
+			 else {
+        Block b = event.getBlock();
+        event.setCancelled(true);
+        event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 abzubauen");
+        }
+		 }
+		 else  if (isInWorld(player, worldADV1)){
+			 if (player.hasPermission("rellu.build.adv")){
+				 event.setCancelled(false);
+			 }
+			 else {
+        Block b = event.getBlock();
+        event.setCancelled(true);
+        event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 abzubauen");
+        }
+		 }
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+@EventHandler
+	public void onPlaceSpawner(BlockPlaceEvent event){
+		Block b = event.getBlock();
+		if(b.getType() == Material.MOB_SPAWNER){
+	    	   ((CreatureSpawner) b.getState()).setSpawnedType(EntityType.ARROW);
+				((CreatureSpawner) b.getState()).setDelay(2);
+				((CreatureSpawner) b.getState()).update();
+				SendMessage(event.getPlayer(), prefix + "§6Spawner wurde plaziert");
+	       }		
+	}
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ 
+	 String Message = "";
+	 
+	 
+	 
+	 
+
+	 @EventHandler(priority = EventPriority.HIGHEST)
+		public void onChat(AsyncPlayerChatEvent event) {
+		 
+		 @SuppressWarnings("deprecation")
+			Score score = main.obj.getScore(event.getPlayer());
+			score.setScore(score.getScore() +1);
+			
+		 
+		 
+		 if (event.getPlayer().hasPermission("rellu.chat.muted")) {
+			  event.setCancelled(true);
+			 
+			 
+//			 String format = "<player> §8>>§r <message>";
+//			 format.replace("<player>", "%1$s");
+//			 format.replace("<message>", "%2$s");
+//			 event.setFormat(format);
+			 
+		 }
+		 else if (event.getPlayer().hasPermission("rellu.chat.user")) {
+			 String test = event.getMessage();
+			 if(getPlayerState(event.getPlayer()) == State.AFK){
+				 event.getPlayer().performCommand("afk");
+			 }
+			 
+			 int counter = 0;
+			  
+			 if(test.length() > 2) {
+			  
+			 for(int i = 2; i<test.length(); i++) {
+			 if(Character.isUpperCase(test.charAt(i)) && Character.isLetter(test.charAt(i))) {
+			 counter++;
+			 }
+			 }
+			  
+			 if(counter > (test.length()*0.20)) {
+			 test = test.toLowerCase();
+			 char[] msg = test.toCharArray();
+			 msg[0] = Character.toUpperCase(msg[0]);
+			 msg.toString();
+			 test = new String(msg);
+			 event.setMessage(test);
+			 }
+			 }
+
+			 
+			 // uheriog
+			 // erhgeh
+			 // rhgrethj
+			 
+			 test = Funktionen.zensur(test);
+			 test = Funktionen.korrektur(test);
+			 
+			 if (test.startsWith("connected with") && test.endsWith("using MineChat")) {event.setCancelled(true);}
+			 if (test.startsWith("Verbunden mit einem") && test.endsWith("via MineChat")) {event.setCancelled(true);}
+			
+			 if(Message == test){
+				 event.getPlayer().sendMessage(prefix + "§6Du wiederhohlst dich...");
+				 event.setCancelled(true);
+			 }
+			 else{
+				 event.setFormat(event.getPlayer().getDisplayName() + ChatColor.GRAY + " >> " + ChatColor.WHITE + test);
+			 }
+			 
+			 Message = test;
+			 
+			
+			 
+			 
+			 if (test.startsWith("#s ")) {
+					event.setCancelled(true);
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						  if (player.hasPermission("rellu.chat.fsk")) {
+						 test = test.replaceFirst("#s " , "");
+						 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.RED + " >> " + ChatColor.WHITE + test);
+						 }
+					}
+			 }		
+			 else if (test.startsWith("@ ")) {
+					event.setCancelled(true);
+					test = test.replaceFirst("@ ", "");
+					String[] words = test.split(" ");
+					String firstword = words[0];
+					Player player = Bukkit.getPlayerExact(firstword);
+					if (player == null)
+					{
+						event.getPlayer().sendMessage(prefix + "§6Spieler nicht Online!");
+						return;
+					}
+					if (firstword.contains(","))
+					{
+						String[] test3 = firstword.split(",");
+						String t0 = test3[0];
+						String t1 = test3[1];
+						test = test.replaceAll(t0 , "");
+						test = test.replaceAll(t1 , "");
+						test = test.replaceFirst(",", "");
+						Player p0 = Bukkit.getPlayerExact(t0);
+						Player p1 = Bukkit.getPlayerExact(t1);
+						p0.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + p0.getName() + " " + p1.getName() + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+						p1.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + p0.getName() + " " + p1.getName()  + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+						event.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + p0.getName() + " " + p1.getName() + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+					}
+					else {
+						test = test.replaceAll(firstword , "");
+						event.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + firstword + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+						 player.sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + firstword + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+					}
+				}
+			 else if (test.startsWith("#e ")) {
+					event.setCancelled(true);
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						  if (player.hasPermission("rellu.chat.event")) {
+						 test = test.replaceFirst("#e " , "");
+						 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.YELLOW + " >> " + ChatColor.WHITE + test);
+						 }
+					}		 	  
+				}
+			}
+		 else if (event.getPlayer().hasPermission("rellu.chat.vip")) {
+			    String test = event.getMessage();
+			    if(getPlayerState(event.getPlayer()) == State.AFK){
+					 event.getPlayer().performCommand("afk");
+				 }
+			    
+			    int counter = 0;
+				  
+				 if(test.length() > 10) {
+				  
+				 for(int i = 2; i<test.length(); i++) {
+				 if(Character.isUpperCase(test.charAt(i)) && Character.isLetter(test.charAt(i))) {
+				 counter++;
+				 }
+				 }
+				  
+				 if(counter > (test.length()*0.20)) {
+				 test = test.toLowerCase();
+				 char[] msg = test.toCharArray();
+				 msg[0] = Character.toUpperCase(msg[0]);
+				 msg.toString();
+				 test = new String(msg);
+				 event.setMessage(test);
+				 }
+				 }
+			    
+			    
+				 test = Funktionen.symbole(test);
+				 test = Funktionen.korrektur(test);
+				
+				
+				
+				
+				if(test.startsWith("connected with an") && test.endsWith("using MineChat")) {event.setCancelled(true);}
+				if(test.startsWith("Verbunden mit einem") && test.endsWith("via MineChat")) {event.setCancelled(true);}
+				event.setFormat(event.getPlayer().getDisplayName() + ChatColor.GRAY + " >> " + ChatColor.WHITE + test);
+				if(test.startsWith("#s ")) {
+					event.setCancelled(true);
+					test = test.replaceFirst("#s " , "");
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						if (player.hasPermission("rellu.chat.fsk")) {
+							player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.RED + " >> " + ChatColor.WHITE + test);
+						}
+					}		 	  
+				}
+				else if (test.startsWith("@ ")) {
+					event.setCancelled(true);
+					test = test.replaceFirst("@ ", "");
+					String[] words = test.split(" ");
+					String firstword = words[0];
+					Player player = Bukkit.getPlayerExact(firstword);
+					if(player == null){
+						event.getPlayer().sendMessage(prefix + "§6Spieler nicht Online!");
+						return;
+					}
+					if (firstword.contains(",")){
+							String[] test3 = firstword.split(",");
+							String t0 = test3[0];
+							String t1 = test3[1];
+							test = test.replaceAll(t0 , "");
+							test = test.replaceAll(t1 , "");
+							test = test.replaceFirst(",", "");
+							Player p0 = Bukkit.getPlayerExact(t0);
+							Player p1 = Bukkit.getPlayerExact(t1);
+							p0.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + p0.getName() + " " + p1.getName() + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+							p1.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + p0.getName() + " " + p1.getName()  + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+							event.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + p0.getName() + " " + p1.getName() + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+						}
+						else {
+							test = test.replaceAll(firstword , "");
+							event.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + firstword + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+							 player.sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + firstword + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+						}
+							 
+					}
+					else if (test.startsWith("#v ")) {
+						event.setCancelled(true);
+						for (Player player : Bukkit.getOnlinePlayers()) {
+							  if (player.hasPermission("rellu.chat.vip") || player.hasPermission("rellu.chat.mod")) {
+							 test = test.replaceFirst("#v " , "");
+							 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.GREEN + " >> " + ChatColor.WHITE + test);
+							 }
+						}		 	  
+					}
+					else if (test.startsWith("#sg ")) {
+						event.setCancelled(true);
+						for (Player player : Bukkit.getOnlinePlayers()) {
+							  if (player.hasPermission("rellu.chat.vip") || player.hasPermission("rellu.chat.mod")) {
+							 test = test.replaceFirst("#sg " , "");
+							 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.LIGHT_PURPLE + " >> " + ChatColor.WHITE + test);
+							 }
+						}		 	  
+					}
+					else if (test.startsWith("#e ")) {
+						event.setCancelled(true);
+						for (Player player : Bukkit.getOnlinePlayers()) {
+							  if (player.hasPermission("rellu.chat.event")) {
+							 test = test.replaceFirst("#e " , "");
+							 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.YELLOW + " >> " + ChatColor.WHITE + test);
+							 }
+						}		 	  
+					}
+		 }
+			 
+			else if (event.getPlayer().hasPermission("rellu.chat.mod")) {
+				
+				String test = event.getMessage();
+				if(getPlayerState(event.getPlayer()) == State.AFK){
+					 event.getPlayer().performCommand("afk");
+				 }
+				if (test.startsWith("#l ")) {
+					test = test.replaceFirst("#l " , "");
+					event.setCancelled(true);
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.WHITE + " >> " + ChatColor.AQUA + "Link: " + test);
+					}
+				}
+				else if (test.startsWith("#m ")) {
+					event.setCancelled(true);
+					test = test.replaceFirst("#m " , "");
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						if (player.hasPermission("rellu.chat.mod")) {
+							 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.GOLD + " >> " + ChatColor.WHITE + test);
+						 }
+					}		 	  
+				}
+				else if (test.startsWith("#a ")) {
+					if (event.getPlayer().hasPermission("rellu.chat.admin")) {
+						event.setCancelled(true);
+						test = test.replaceFirst("#a " , "");
+						for (Player player : Bukkit.getOnlinePlayers()) {
+							if (player.hasPermission("rellu.chat.admin")) {
+								player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.DARK_PURPLE + " >> " + ChatColor.WHITE + test);
+							}
+						}		 	  
+					}
+				}
+				
+				shuffle();
+				
+				if (test.startsWith("&y")) {
+					test = test.replace("&y" , "");
+					String m = "";
+					String[] arrayOfString1;
+					String[] test22 = test.split(" ");
+					int j = (arrayOfString1 = test22).length;
+					for (int i = 0; i < j; i++){
+						String test23 = arrayOfString1[i];
+						
+						m = m + setColors().get(i) + test23 + " ";
+						test = m;
+				}
+				}
+				
+				test = Funktionen.symbole(test);
+				test = Funktionen.korrektur(test);
+				test = Funktionen.farbe(test);
+				
+				 if (test.startsWith("connected with") && test.endsWith("using MineChat")) {event.setCancelled(true);}
+				 if (test.startsWith("Verbunden mit einem") && test.endsWith("via MineChat")) {event.setCancelled(true);}
+				
+				if (test.startsWith("#s ")) {
+					event.setCancelled(true);
+					test = test.replaceFirst("#s " , "");
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						if (player.hasPermission("rellu.chat.fsk")) {
+							player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.RED + " >> " + ChatColor.WHITE + test);
+						}
+					}		 	  
+				}
+				else if (test.startsWith("@ ")) {
+					event.setCancelled(true);
+					test = test.replaceFirst("@ ", "");
+					String[] words = test.split(" ");
+					String firstword = words[0];
+					Player player = Bukkit.getPlayerExact(firstword);
+					if (player == null)
+					{
+						event.getPlayer().sendMessage(prefix + "§6Spieler nicht Online!");
+						return;
+					}
+					if (firstword.contains(","))
+					{
+						String[] test3 = firstword.split(",");
+						String t0 = test3[0];
+						String t1 = test3[1];
+						test = test.replaceAll(t0 , "");
+						test = test.replaceAll(t1 , "");
+						test = test.replaceFirst(",", "");
+						Player p0 = Bukkit.getPlayerExact(t0);
+						Player p1 = Bukkit.getPlayerExact(t1);
+						p0.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + p0.getName() + " " + p1.getName() + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+						p1.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + p0.getName() + " " + p1.getName() + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+						event.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + p0.getName() + " " + p1.getName() + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+					}
+					else {
+						test = test.replaceAll(firstword , "");
+						 event.getPlayer().sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + firstword + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+						 player.sendMessage(ChatColor.AQUA + event.getPlayer().getName() + ChatColor.LIGHT_PURPLE + " >> "+ ChatColor.AQUA + firstword + ChatColor.GRAY + " >>" + ChatColor.WHITE + test);
+					}
+						
+				}
+				else if (test.startsWith("#v ")) {
+					event.setCancelled(true);
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						  if (player.hasPermission("rellu.chat.vip") || player.hasPermission("rellu.chat.mod")) {
+						 test = test.replaceFirst("#v " , "");
+						 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.GREEN + " >> " + ChatColor.WHITE + test);
+						 }
+					}		 	  
+				}
+				else if (test.startsWith("#e ")) {
+					event.setCancelled(true);
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						  if (player.hasPermission("rellu.chat.event")) {
+						 test = test.replaceFirst("#e " , "");
+						 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.YELLOW + " >> " + ChatColor.WHITE + test);
+						 }
+					}		 	  
+				}
+				else if (test.startsWith("#c ")) {
+					event.setCancelled(true);
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						  if (player.hasPermission("rellu.chat.mod")) {
+						 test = test.replaceFirst("#c " , "");
+						 String[] words = test.split(" ");
+							String name = words[0];
+							Player p23 = Bukkit.getPlayer(name);
+							if (p23 != null)
+							{
+								Player p22 = Bukkit.getPlayer(name).getPlayer();
+								test = test.replaceAll(name , "");
+								test = test.replaceFirst(" " , "");
+								Bukkit.broadcastMessage(p22.getDisplayName() + ChatColor.GRAY + " >> " + ChatColor.WHITE + test);
+								return;
+								// 08003502000
+							}
+								else {
+									event.getPlayer().sendMessage(prefix + "§6Spieler nicht Online!");
+
+								}
+								
+						 }
+					}		 	  
+				}
+				else if (test.startsWith("#sg ")) {
+					event.setCancelled(true);
+					for (Player player : Bukkit.getOnlinePlayers()) {
+						  if (player.hasPermission("rellu.chat.vip") || player.hasPermission("rellu.chat.mod")) {
+						 test = test.replaceFirst("#sg " , "");
+						 player.sendMessage(event.getPlayer().getDisplayName() + ChatColor.LIGHT_PURPLE + " >> " + ChatColor.WHITE + test);
+						 }
+					}		 	  
+				}
+					 else {
+						 event.setFormat(event.getPlayer().getDisplayName() + ChatColor.GRAY + " >> " + ChatColor.WHITE + test);
+						 
+					 }
+				}
+			else {
+				// String test = event.getMessage();
+				 event.setFormat(event.getPlayer().getDisplayName() + ChatColor.GRAY + " >> " + ChatColor.WHITE + "%2$s");
+				 }
+		 }
+	 
+	 
+	 
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
