@@ -20,7 +20,7 @@ public class StringHelper {
         initSymbols();
     }
 
-    public String symbole(String sym) {
+    public String replaceSymbols(String sym) {
         for (Map.Entry pair : symbols.entrySet()) {
             sym = sym.replace((String)pair.getKey(), (String)pair.getValue());
         }
