@@ -2127,38 +2127,6 @@ else if (cmd.getName().equalsIgnoreCase("p")) {
 			}
 		}
 
-
-
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-
-else if (cmd.getName().equalsIgnoreCase("s")) {
-			if (hasPermission(sender, permmod + "say") == true){
-				if(isPlayer(sender)){
-					Player p = (Player)sender;
-					String m = ArryToString(args);
-					m = farbe(m);
-					m = symbole(m);
-					Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §r" + m);
-				}
-				else{
-					String m = ArryToString(args);
-					m = farbe(m);
-					m = symbole(m);
-					Bukkit.broadcastMessage(sender.getName() + " §7>> §r" + m);
-				}
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-
-
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
