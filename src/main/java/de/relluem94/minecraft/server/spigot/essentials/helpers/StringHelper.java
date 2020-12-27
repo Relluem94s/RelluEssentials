@@ -7,6 +7,7 @@ package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.Location;
 
 /**
  *
@@ -111,4 +112,12 @@ public class StringHelper {
         return message;
     }
 
+    public static String locationToString(Location l){
+        String location = "";
+        location += "X: " + l.getX() + " ";
+        location += "Y: " + l.getY() + " ";
+        location += "Z: " + l.getZ() + " ";
+        location += "World: " + l.getWorld() + " ";
+        return location;
+    }
 }
