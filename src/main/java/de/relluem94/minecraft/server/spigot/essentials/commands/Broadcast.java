@@ -20,10 +20,9 @@ public class Broadcast implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("broadcast")) {
             if (args.length >= 1) {
-                if(args[0].equalsIgnoreCase("title")){
+                if (args[0].equalsIgnoreCase("title")) {
                     return broadcast(sender, args, 0, false);
-                }
-                else{
+                } else {
                     return broadcast(sender, args, 0, true);
                 }
             } else {
@@ -45,12 +44,11 @@ public class Broadcast implements CommandExecutor {
 
         String message = implode(start, args);
         message = stringHelper.replaceSymbols(replaceColor(message));
-        
-        if(chat){
+
+        if (chat) {
             Bukkit.broadcastMessage(PLUGIN_BROADCAST_NAME + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + message);
-        }
-        else{
-            for(Player p : Bukkit.getOnlinePlayers()){
+        } else {
+            for (Player p : Bukkit.getOnlinePlayers()) {
                 p.sendTitle(PLUGIN_BROADCAST_NAME, message, 5, 80, 5);
             }
         }
