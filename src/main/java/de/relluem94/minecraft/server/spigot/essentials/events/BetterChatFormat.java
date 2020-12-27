@@ -1,5 +1,6 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
 
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.stringHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,9 +15,10 @@ public class BetterChatFormat implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        e.setCancelled(true);
+        e.setCancelled(true);        
         Player p = e.getPlayer();
         if (Permission.isAuthorized(p, Groups.VIP.getId())) {
+            e.setMessage(stringHelper.replaceSymbols(e.getMessage()));
             Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage().replaceAll("&", "§"));
         }
         else{
