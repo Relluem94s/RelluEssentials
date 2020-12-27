@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.stringHelper;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.implode;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -66,13 +68,7 @@ public class Message implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             if (Permission.isAuthorized(p, Groups.USER.getId())) {
-                String message = "";
-                for (int i = start; args.length > i; i++) {
-                    if (args[i] == null) {
-                        break;
-                    }
-                    message += args[i] + " ";
-                }
+                String message = implode(start, args);
 
                 if (reply.containsKey(p)) {
                     reply.remove(p);
@@ -83,8 +79,9 @@ public class Message implements CommandExecutor {
 
                 reply.put(p, target);
                 reply.put(target, p);
-
-                message = stringHelper.replaceSymbols(message);
+                if(Permission.isAuthorized(p, Groups.VIP.getId())){
+                    message = stringHelper.replaceSymbols(replaceColor(message));
+                }
                 
                 target.sendMessage(p.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_IN + message);
                 p.sendMessage(target.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_OUT + message);
