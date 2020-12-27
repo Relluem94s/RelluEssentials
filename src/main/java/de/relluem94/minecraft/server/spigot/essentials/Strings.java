@@ -11,6 +11,7 @@ public class Strings {
     public static final String PLUGIN_MESSAGE_COLOR = "§f";
     public static final String PLUGIN_START_MESSAGE = " starts configuring ...";
     public static final String PLUGIN_STOP_MESSAGE = " shutdown();";
+    public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
     
     public static final String PLUGIN_REGISTER_ENCHANTMENT = " Registered enchantment %s with id %s!";
 
@@ -91,7 +92,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_MSG_SPACER_IN = "§9 >> §f";
     public static final String PLUGIN_COMMAND_MSG_SPACER_OUT = "§9 << §f";
     public static final String PLUGIN_COMMAND_MSG_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/msg " + PLUGIN_COMMAND_COLOR +  "<" + PLUGIN_COMMAND_ARG_COLOR + "spieler" + PLUGIN_COMMAND_COLOR + ">" + " " + "<" + PLUGIN_COMMAND_ARG_COLOR + "nachricht" + PLUGIN_COMMAND_COLOR + ">";
-
+    
     public static final String PLUGIN_COMMAND_PERMISSION_MISSING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Dafür hast du leider keine Rechte!";
     public static final String PLUGIN_COMMAND_NOT_A_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du bist leider kein Spieler!";
     public static final String PLUGIN_COMMAND_TO_LESS_ARGUMENTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Zu wenig Argumente!";
