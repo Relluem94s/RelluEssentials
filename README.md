@@ -26,6 +26,7 @@
 * Heal yourself if you low on health (/heal)
 * Away from Keyboard (/afk)
 * Message other Players (/msg)
+* Send a Title to a Player (/title)
 
 ## Skills
 * TreeFeller (Fell the whole Tree)

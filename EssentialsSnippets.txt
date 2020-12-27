@@ -1,26 +1,4 @@
 
-
-	public void title(Player target, String title, String subtitle){
-		ConsoleCommandSender console;
-		Server server = main.getServer();
-		console = server.getConsoleSender();
-		String Title = "title " + target.getName() + " title " + "[{\"text\":\"" + title + "\"}]";
-		String Subtitle = "title " + target.getName() + " subtitle " + "[{\"text\":\"" + subtitle +"\"}]";
-		server.dispatchCommand(console, Title);
-		server.dispatchCommand(console, Subtitle);
-//		target.sendMessage(Title);
-//		target.sendMessage(Subtitle);
-	}
-	
-
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-
-
 public void setSpeed(Player p, int sp){
 	String speed;
 	switch (sp) {
@@ -660,9 +638,6 @@ public void kissPlayer(Player p1, Player p2){
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
-
  public static String zensur(String zen)
 	 {	 
 		 zen = zen.replace("Tittensäcke " , " Tintensäcke ");
@@ -711,81 +686,6 @@ public void kissPlayer(Player p1, Player p2){
 		 return zen;
 	 }
 	 
-	 public static String symbole(String sym)
-	 {	
-	sym = sym.replace("[<3]" , "\u2764");
-	sym = sym.replace("[NINJA]" , "             "); // Abstand von Text zu RelluAPI für Absätze
-	sym = sym.replace("[PFEIL2]" , "\u279c");
-	sym = sym.replace("[TICK]" , "\u2714");
-	sym = sym.replace("[X]" , "\u2716");
-	sym = sym.replace("[STAR]" , "\u2605");
-	sym = sym.replace("[PUNKT]" , "\u25Cf");
-	sym = sym.replace("[BLUME]" , "\u273f");
-	sym = sym.replace("[XD]" , "\u263b");
-	sym = sym.replace("[ACHTUNG]" , "\u26a0");
-	sym = sym.replace("[MAIL]" , "\u2709");
-	sym = sym.replace("[PFEIL]" , "\u27a4");
-	sym = sym.replace("[STERN]" , "\u2730");
-	sym = sym.replace("[SUIT]" , "\u2666");
-	sym = sym.replace("[+]" , "\u2726");
-	sym = sym.replace("[KREIS]" , "\u25CF");
-	sym = sym.replace("[SONNE]" , "\u2739");
-	sym = sym.replace("[RTM]" , "\u00AE");
-	sym = sym.replace("[COPY]" , "\u00A9");
-	sym = sym.replace("[OMEGA]" , "\u03A9");
-	sym = sym.replace("[LAMBDA]" , "\u03BB");
-	sym = sym.replace("[RUND]" , "\u058D");
-	sym = sym.replace("[^^]" , "\u0E05(\u0E4F.\u0E4F)\u0E05");
-	sym = sym.replace("[TM]" , "\u2122");
-	sym = sym.replace("[No]" , "\u2116");
-	sym = sym.replace("[H]" , "\u210B");
-	sym = sym.replace("[h]" , "\u210C");
-	sym = sym.replace("[L]" , "\u2112");
-	sym = sym.replace("[l]" , "\u2113");
-	sym = sym.replace("[R]" , "\u211C");
-	sym = sym.replace("[B]" , "\u212C");
-	sym = sym.replace("[E]" , "\u2130");
-	sym = sym.replace("[e]" , "\u212F");
-	sym = sym.replace("[F]" , "\u2131");
-	sym = sym.replace("[M]" , "\u2133");
-	sym = sym.replace("[1]" , "\u2160");
-	sym = sym.replace("[2]" , "\u2161");
-	sym = sym.replace("[3]" , "\u2162");
-	sym = sym.replace("[4]" , "\u2163");
-	sym = sym.replace("[5]" , "\u2164");
-	sym = sym.replace("[6]" , "\u2165");
-	sym = sym.replace("[7]" , "\u2166");
-	sym = sym.replace("[8]" , "\u2167");
-	sym = sym.replace("[9]" , "\u2168");
-	sym = sym.replace("[10]" , "\u2169");
-	sym = sym.replace("[11]" , "\u216A");
-	sym = sym.replace("[12]" , "\u216B");
-	sym = sym.replace("[RELOAD]" , "\u21BA");	
-	sym = sym.replace("[>]" , "\u00BB");
-	sym = sym.replace("[<]" , "\u00AB");
-	sym = sym.replace("[1/2]" , "\u00BD");
-	sym = sym.replace("[1/4]" , "\u00BC");
-	sym = sym.replace("[B|]" , "\u16D4\u16DA");
-	sym = sym.replace("[xD]" , "\u16DD\u16A6");
-	sym = sym.replace("[CROSS]" , "\u16ED");
-	sym = sym.replace("[CAM]" , "\u1CC0");
-	sym = sym.replace("[:D]" , "\u1CE9");
-	sym = sym.replace("[ATLANTIS]" , "\u212B");
-	sym = sym.replace("[:C]" , "\u2639");
-	sym = sym.replace("[:)]" , "\u263A");
-	sym = sym.replace("[SKULL]" , "\u2620");
-	sym = sym.replace("[HOT]" , "\u2668");
-	sym = sym.replace("[PICKAXE]" , "\u26CF");
-	
-	sym = sym.replace("[STRICHE]", "\u2591");
-	sym = sym.replace("[DICK]", "\u2593");
-	sym = sym.replace("_" , "\u0020");
-	sym = sym.replace("~" , "_");
-//	sym = sym.replace("%" , "\u0025\u0025");
-	return sym;
- }	 
-
-
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
