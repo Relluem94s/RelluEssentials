@@ -59,6 +59,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Message;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Rellu;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Title;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
@@ -177,6 +178,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("afk")).setExecutor(new AFK());
         Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
         Objects.requireNonNull(this.getCommand("r")).setExecutor(new Message());
+        Objects.requireNonNull(this.getCommand("title")).setExecutor(new Title());
     }
 
     private void enchantmentManager() {
