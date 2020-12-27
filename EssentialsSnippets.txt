@@ -2104,29 +2104,6 @@ else if (cmd.getName().equalsIgnoreCase("fx")) {
 		}
 
 
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-else if (cmd.getName().equalsIgnoreCase("p")) {
-			if (hasPermission(sender, permmod + "p") == true){
-				if (args.length == 0) {
-					SendMessage(sender, prefix + "§6Spieler angeben");
-				}
-				else if (args.length == 1) {
-					if(Target(args[0]) != null){
-						Player target = Target(args[0]);
-						
-						SendMessage(sender, prefix + "§6Der Spieler " + target.getDisplayName() + "§6 hat einen Ping von §c" + getPing(target) + " §6ms");
-					}
-				}
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
