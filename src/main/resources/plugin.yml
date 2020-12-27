@@ -93,6 +93,9 @@ commands:
     where:
         description: shows player location
         usage: /where
+    print:
+        description: sends message from player or commandblock
+        usage: /print
 
 
 
