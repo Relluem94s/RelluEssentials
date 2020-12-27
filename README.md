@@ -27,6 +27,7 @@
 * Away from Keyboard (/afk)
 * Message other Players (/msg)
 * Send a Title to a Player (/title)
+* Show where a Player is (/where)
 
 ## Skills
 * TreeFeller (Fell the whole Tree)
