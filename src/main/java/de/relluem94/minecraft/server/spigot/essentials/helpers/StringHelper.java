@@ -22,7 +22,7 @@ public class StringHelper {
 
     public String replaceSymbols(String sym) {
         for (Map.Entry pair : symbols.entrySet()) {
-            sym = sym.replace((String)pair.getKey(), (String)pair.getValue());
+            sym = sym.replace((String) pair.getKey(), (String) pair.getValue());
         }
         return sym;
     }
@@ -95,4 +95,20 @@ public class StringHelper {
         symbols.put("[B|]", "\u16D4\u16DA");
         symbols.put("[xD]", "\u16DD\u16A6");
     }
+    
+    public static String replaceColor(String message){
+        return message.replaceAll("&", "§");
+    }
+
+    public static String implode(int start, String[] args) {
+        String message = "";
+        for (int i = start; args.length > i; i++) {
+            if (args[i] == null) {
+                break;
+            }
+            message += args[i] + " ";
+        }
+        return message;
+    }
+
 }
