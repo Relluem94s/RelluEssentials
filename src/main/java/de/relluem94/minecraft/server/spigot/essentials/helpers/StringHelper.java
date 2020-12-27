@@ -118,7 +118,7 @@ public class StringHelper {
         location += "X: " + round(l.getX()) + " ";
         location += "Y: " + round(l.getY()) + " ";
         location += "Z: " + round(l.getZ()) + " ";
-        location += "World: " + l.getWorld() + " ";
+        location += "World: " + l.getWorld().getName();
         return location;
     }
 }
