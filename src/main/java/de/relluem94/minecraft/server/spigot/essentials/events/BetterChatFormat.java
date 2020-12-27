@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
@@ -19,7 +20,7 @@ public class BetterChatFormat implements Listener {
         Player p = e.getPlayer();
         if (Permission.isAuthorized(p, Groups.VIP.getId())) {
             e.setMessage(stringHelper.replaceSymbols(e.getMessage()));
-            Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage().replaceAll("&", "§"));
+            Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage()));
         }
         else{
             Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage());
