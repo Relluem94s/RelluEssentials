@@ -53,6 +53,7 @@ import java.util.Objects;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Broadcast;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Enchanttest;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.God;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
@@ -183,6 +184,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("title")).setExecutor(new Title());
         Objects.requireNonNull(this.getCommand("where")).setExecutor(new Where());
         Objects.requireNonNull(this.getCommand("print")).setExecutor(new Print());
+        Objects.requireNonNull(this.getCommand("broadcast")).setExecutor(new Broadcast());
     }
 
     private void enchantmentManager() {
