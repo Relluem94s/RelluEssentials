@@ -8,6 +8,7 @@ package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
 import static java.lang.Math.round;
 import java.util.HashMap;
 import java.util.Map;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WHERE_STRING;
 import org.bukkit.Location;
 
 /**
@@ -114,11 +115,6 @@ public class StringHelper {
     }
 
     public static String locationToString(Location l){
-        String location = "";
-        location += "X: " + round(l.getX()) + " ";
-        location += "Y: " + round(l.getY()) + " ";
-        location += "Z: " + round(l.getZ()) + " ";
-        location += "World: " + l.getWorld().getName();
-        return location;
+        return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), l.getWorld().getName());
     }
 }
