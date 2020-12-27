@@ -21,7 +21,7 @@ public class Where implements CommandExecutor {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.USER.getId())) {
-                        p.sendMessage(PLUGIN_PREFIX + PLUGIN_SPACER + locationToString(p.getLocation()));
+                        p.sendMessage(String.format(PLUGIN_COMMAND_WHERE, p.getCustomName(), locationToString(p.getLocation())));
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -34,7 +34,7 @@ public class Where implements CommandExecutor {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.MOD.getId())) {
-                            p.sendMessage(PLUGIN_PREFIX + PLUGIN_SPACER + locationToString(target.getLocation()));
+                            p.sendMessage(String.format(PLUGIN_COMMAND_WHERE, target.getCustomName(), locationToString(target.getLocation())));
                             return true;
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
