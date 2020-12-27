@@ -87,6 +87,9 @@ commands:
     r:
         description: reply other player
         usage: /r
+    title:
+        description: spawn title for player
+        usage: /title
 
 
 
