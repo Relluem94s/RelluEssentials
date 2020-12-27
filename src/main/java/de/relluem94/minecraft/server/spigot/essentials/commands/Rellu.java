@@ -30,9 +30,6 @@ public class Rellu implements CommandExecutor {
                         RelluEssentials.reloadConfigs();
                         p.sendMessage(PLUGIN_COMMAND_RELLU_RELOAD);
                         return true;
-                    } else if (args[0].equalsIgnoreCase("tab")) {
-                        PlayerHelper.sendTablist(p, "§aTest §dHeader", "§cTest §5footer");
-                        return true;
                     } else if (args[0].equalsIgnoreCase("ping")) {
                         int ping = ((CraftPlayer) p).getHandle().ping;
                         p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING, ping));
