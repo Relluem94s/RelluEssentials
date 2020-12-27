@@ -31,10 +31,10 @@ public class Title implements CommandExecutor {
                             return true;
                         }
                     }
-
                 }
             } else {
-               
+               sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+               return true;
             }
         }
         return false;
