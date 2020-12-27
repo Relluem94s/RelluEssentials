@@ -11,6 +11,8 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Per
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 
 public class Rellu implements CommandExecutor {
 
@@ -28,17 +30,31 @@ public class Rellu implements CommandExecutor {
                         RelluEssentials.reloadConfigs();
                         p.sendMessage(PLUGIN_COMMAND_RELLU_RELOAD);
                         return true;
-                    } else if (args[0].equalsIgnoreCase("tab")){
+                    } else if (args[0].equalsIgnoreCase("tab")) {
                         PlayerHelper.sendTablist(p, "§aTest §dHeader", "§cTest §5footer");
                         return true;
-                    }
-                    else {
+                    } else if (args[0].equalsIgnoreCase("ping")) {
+                        int ping = ((CraftPlayer) p).getHandle().ping;
+                        p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING, ping));
+
+                    } else {
                         p.sendMessage(PLUGIN_COMMAND_RELLU_WRONG_COMMAND);
                         return true;
                     }
                 } else {
                     p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                     return true;
+                }
+            }
+        } else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("ping")) {
+                Player target = Bukkit.getPlayer(args[0]);
+                if (target != null) {
+                    if (sender instanceof Player) {
+                        Player p = (Player) sender;
+                        int ping = ((CraftPlayer) target).getHandle().ping;
+                        p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING_OTHER, target.getCustomName(), ping));
+                    }
                 }
             }
         } else {
