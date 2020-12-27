@@ -2,6 +2,8 @@ package main.java.de.relluem94.minecraft.server.spigot.essentials;
 
 public class Strings {
 
+    //TODO Have to do a Language Pack to load german and english translations via config. Maybe default en and user customizable 
+    
     public static final String PLUGIN_NAME = "RelluEssentials";
     public static final String PLUGIN_PREFIX = "§o§l§4" + PLUGIN_NAME + "§r§f";
     public static final String PLUGIN_SPACER = "§7 >> §f";
@@ -107,4 +109,5 @@ public class Strings {
     public static final String PLUGIN_EVENT_SKILL_REPAIR_DONE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast den Gegenstand repariert!";
     public static final String PLUGIN_EVENT_SKILL_REPAIR_WARNING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du benötigst mehr" + PLUGIN_COMMAND_ARG_COLOR + " %s " + PLUGIN_COMMAND_COLOR + "um diesen Gegenstand zu reparieren!";
     public static final String PLUGIN_EVENT_SKILL_SALVAGE_DONE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast" + PLUGIN_COMMAND_ARG_COLOR + " %s " + PLUGIN_COMMAND_COLOR + "erhalten!";
+    
 }
