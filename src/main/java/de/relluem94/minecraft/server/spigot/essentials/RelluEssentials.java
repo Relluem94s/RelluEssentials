@@ -65,6 +65,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.events.PlayerMo
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
@@ -76,6 +77,8 @@ public class RelluEssentials extends JavaPlugin {
     public static Scoreboard board;
     public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
 
+    public static StringHelper stringHelper = new StringHelper();
+    
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
 
