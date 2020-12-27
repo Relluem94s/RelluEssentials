@@ -58,6 +58,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.God;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Message;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Print;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Rellu;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Title;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Where;
@@ -181,6 +182,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("r")).setExecutor(new Message());
         Objects.requireNonNull(this.getCommand("title")).setExecutor(new Title());
         Objects.requireNonNull(this.getCommand("where")).setExecutor(new Where());
+        Objects.requireNonNull(this.getCommand("print")).setExecutor(new Print());
     }
 
     private void enchantmentManager() {
