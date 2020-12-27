@@ -90,6 +90,9 @@ commands:
     title:
         description: spawn title for player
         usage: /title
+    where:
+        description: shows player location
+        usage: /where
 
 
 
