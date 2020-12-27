@@ -36,6 +36,7 @@ public class Rellu implements CommandExecutor {
                     } else if (args[0].equalsIgnoreCase("ping")) {
                         int ping = ((CraftPlayer) p).getHandle().ping;
                         p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING, ping));
+                        return true;
 
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_RELLU_WRONG_COMMAND);
@@ -54,6 +55,7 @@ public class Rellu implements CommandExecutor {
                         Player p = (Player) sender;
                         int ping = ((CraftPlayer) target).getHandle().ping;
                         p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING_OTHER, target.getCustomName(), ping));
+                        return true;
                     }
                 }
             }
