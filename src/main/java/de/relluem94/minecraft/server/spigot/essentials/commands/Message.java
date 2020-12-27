@@ -2,6 +2,7 @@ package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import java.util.HashMap;
 import java.util.Map;
+import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.stringHelper;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 import org.bukkit.Bukkit;
@@ -83,6 +84,8 @@ public class Message implements CommandExecutor {
                 reply.put(p, target);
                 reply.put(target, p);
 
+                message = stringHelper.replaceSymbols(message);
+                
                 target.sendMessage(p.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_IN + message);
                 p.sendMessage(target.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_OUT + message);
                 return true;
