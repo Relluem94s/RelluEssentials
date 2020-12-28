@@ -31,10 +31,12 @@
 * Print Message in Chat in Player / Commandblock Name (/print)
 
 ## Skills
-* TreeFeller (Fell the whole Tree)
-* Repair (Repair Tools and Armor)
-* Salvage (Salvage Tools and Armor and get back resources and enchantments)
+* TreeFeller (Fell the whole Tree) [he is dead jim]
+* Repair (Repair Tools and Armor) [the lost son]
+* Salvage (Salvage Tools and Armor and get back resources and enchantments) [needs some love]
 * Auto Replant Seeds
+* Auto Smelt  [small tweaks]
+* Telekenesis [half finished]
 
 ## Events
 * Better Chat Format (Player >> Message)
@@ -70,3 +72,8 @@
 * fast pickaxe mode
 * fast shovel mode
 * Stick to Rotate Stairs and convert Upper/lower slaps
+* the rest from the snippet textfile
+* a permission system for external plugins (maybe)
+* Multi Language files
+* Skill System with listener on blockbreak etc.
+* Fix some bugs with the treefeller (activate only sometimes pair with skill system)
