@@ -20,7 +20,17 @@ public class BetterChatFormat implements Listener {
         Player p = e.getPlayer();
         if (Permission.isAuthorized(p, Groups.VIP.getId())) {
             e.setMessage(stringHelper.replaceSymbols(e.getMessage()));
-            Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage()));
+            
+             if(e.getMessage().startsWith("#m ") && Permission.isAuthorized(p, Groups.MOD.getId())){
+                for (Player op : Bukkit.getOnlinePlayers()) {
+                    if(Permission.isAuthorized(op, Groups.MOD.getId())){
+                        op.sendMessage(p.getCustomName() + PLUGIN_SPACER_CHANNEL_MOD + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage()));
+                    }
+                }
+            }
+            else{
+                Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage())); 
+            }
         }
         else{
             Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage());
