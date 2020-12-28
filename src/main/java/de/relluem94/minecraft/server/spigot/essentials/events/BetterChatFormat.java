@@ -15,27 +15,25 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enu
 public class BetterChatFormat implements Listener {
 
     public static final String MOD_CHANNEL = "#m ";
-    
+
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        e.setCancelled(true);        
+        e.setCancelled(true);
         Player p = e.getPlayer();
         if (Permission.isAuthorized(p, Groups.VIP.getId())) {
             e.setMessage(stringHelper.replaceSymbols(e.getMessage()));
-            
-            if(e.getMessage().startsWith(MOD_CHANNEL) && Permission.isAuthorized(p, Groups.MOD.getId())){
+
+            if (e.getMessage().startsWith(MOD_CHANNEL) && Permission.isAuthorized(p, Groups.MOD.getId())) {
                 e.setMessage(e.getMessage().replaceFirst(MOD_CHANNEL, ""));
                 for (Player op : Bukkit.getOnlinePlayers()) {
-                    if(Permission.isAuthorized(op, Groups.MOD.getId())){
+                    if (Permission.isAuthorized(op, Groups.MOD.getId())) {
                         op.sendMessage(p.getCustomName() + PLUGIN_SPACER_CHANNEL_MOD + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage()));
                     }
                 }
+            } else {
+                Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage()));
             }
-            else{
-                Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage())); 
-            }
-        }
-        else{
+        } else {
             Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage());
         }
     }
