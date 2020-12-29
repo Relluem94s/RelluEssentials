@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
-import static net.minecraft.server.v1_16_R3.Items.im;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
