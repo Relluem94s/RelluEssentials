@@ -99,6 +99,9 @@ commands:
     broadcast:
         description: sends message to all players via chat or title
         usage: /broadcast
+    rename:
+        description: rename item in hand
+        usage: /rename
 
 
 
