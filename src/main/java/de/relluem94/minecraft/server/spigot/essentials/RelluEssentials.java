@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -61,6 +60,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Message;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Print;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Rellu;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Rename;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Title;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Where;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
@@ -185,6 +185,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("where")).setExecutor(new Where());
         Objects.requireNonNull(this.getCommand("print")).setExecutor(new Print());
         Objects.requireNonNull(this.getCommand("broadcast")).setExecutor(new Broadcast());
+        Objects.requireNonNull(this.getCommand("rename")).setExecutor(new Rename());
     }
 
     private void enchantmentManager() {
