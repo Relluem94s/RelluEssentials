@@ -16,6 +16,7 @@ public class BetterChatFormat implements Listener {
 
     public static final String VIP_CHANNEL = "#v ";
     public static final String MOD_CHANNEL = "#m ";
+    public static final String ADMIN_CHANNEL = "#a ";
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
