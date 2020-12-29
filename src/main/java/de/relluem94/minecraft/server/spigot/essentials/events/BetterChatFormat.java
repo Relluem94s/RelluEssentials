@@ -25,18 +25,30 @@ public class BetterChatFormat implements Listener {
         if (Permission.isAuthorized(p, Groups.VIP.getId())) {
             e.setMessage(stringHelper.replaceSymbols(e.getMessage()));
 
-            if (e.getMessage().startsWith(MOD_CHANNEL) && Permission.isAuthorized(p, Groups.MOD.getId())) {
-                e.setMessage(e.getMessage().replaceFirst(MOD_CHANNEL, ""));
-                for (Player op : Bukkit.getOnlinePlayers()) {
-                    if (Permission.isAuthorized(op, Groups.MOD.getId())) {
-                        op.sendMessage(p.getCustomName() + PLUGIN_SPACER_CHANNEL_MOD + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage()));
-                    }
-                }
-            } else {
+            
+            if (e.getMessage().startsWith(VIP_CHANNEL)) {
+                channel(e.getMessage(), p, VIP_CHANNEL, Groups.VIP);
+            }
+            else if (e.getMessage().startsWith(MOD_CHANNEL) && Permission.isAuthorized(p, Groups.MOD.getId())) {
+                channel(e.getMessage(), p, MOD_CHANNEL, Groups.MOD);
+            }
+            else if (e.getMessage().startsWith(ADMIN_CHANNEL) && Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                channel(e.getMessage(), p, ADMIN_CHANNEL, Groups.ADMIN);
+            }
+            else {
                 Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage()));
             }
         } else {
             Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage());
+        }
+    }
+
+    private void channel(String message, Player p, String channel, Groups group) {
+        message = message.replaceFirst(channel, "");
+        for (Player op : Bukkit.getOnlinePlayers()) {
+            if (Permission.isAuthorized(op, group.getId())) {
+                op.sendMessage(p.getCustomName() + group.getPrefix() + PLUGIN_SPACER_CHANNEL + PLUGIN_MESSAGE_COLOR + replaceColor(message));
+            }
         }
     }
 }
