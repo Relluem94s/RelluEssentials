@@ -29,6 +29,7 @@
 * Send a Title to a Player (/title)
 * Show where a Player is (/where)
 * Print Message in Chat in Player / Commandblock Name (/print)
+* Rename item in your Hand (/rename)
 
 ## Skills
 * TreeFeller (Fell the whole Tree) [he is dead jim]
