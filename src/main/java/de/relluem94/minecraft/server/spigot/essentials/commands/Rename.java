@@ -47,6 +47,7 @@ public class Rename implements CommandExecutor {
         if(!is.getType().equals(Material.AIR)){
             ItemMeta im = is.getItemMeta();
             im.setDisplayName(message);
+            is.setItemMeta(im);
             p.sendMessage(PLUGIN_COMMAND_RENAME);
             
         }
