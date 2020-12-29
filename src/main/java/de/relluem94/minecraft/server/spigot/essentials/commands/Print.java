@@ -22,7 +22,7 @@ public class Print implements CommandExecutor {
             if (args.length >= 1) {
                 return print(sender, args, 0);
             } else {
-                sender.sendMessage(PLUGIN_COMMAND_MSG_INFO);
+                sender.sendMessage(PLUGIN_COMMAND_PRINT_INFO);
                 return true;
             }
         }
