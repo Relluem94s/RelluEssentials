@@ -233,9 +233,11 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void groupManager() {
-        for (Player p : Bukkit.getOnlinePlayers()) {
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            @SuppressWarnings("unused")
             User u = new User(p, User.getGroup(p));
-        }
+            //TODO Add Array for Users to Access it directly without the other class. (Maybe?)
+        });
     }
 
     private void registerEnchants(Enchantment ench) {
