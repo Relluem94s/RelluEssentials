@@ -14,6 +14,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enu
 
 public class BetterChatFormat implements Listener {
 
+    public static final String VIP_CHANNEL = "#m ";
     public static final String MOD_CHANNEL = "#m ";
 
     @EventHandler
