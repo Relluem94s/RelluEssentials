@@ -38,10 +38,10 @@ public class Speed implements CommandExecutor {
                 sender.sendMessage(PLUGIN_COMMAND_SPEED_INFO);
             }
         }
-
         return false;
     }
 
+    
     private float parseSpeed(String arg) {
         int in = Integer.parseInt(arg);
 
@@ -85,7 +85,6 @@ public class Speed implements CommandExecutor {
                 speed = 0.1F;
                 break;
         }
-
         return speed;
     }
 
