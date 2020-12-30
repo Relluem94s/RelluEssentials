@@ -46,6 +46,10 @@ public class ConfigHelper {
         return file;
     }
 
+    /**
+     * Returns the Config
+     * @return YamlConfiguration
+     */
     public YamlConfiguration getConfig() {
         return config;
     }
@@ -85,7 +89,7 @@ public class ConfigHelper {
     /**
      * 
      * @param path where the Location is saved
-     * @return the Location from the Config Path
+     * @return Location from the Config Path
      */
     public Location getLocation(String path) {
         double x, y, z;
