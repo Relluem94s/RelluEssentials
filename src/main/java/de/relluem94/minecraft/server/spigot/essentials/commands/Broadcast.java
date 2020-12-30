@@ -21,7 +21,7 @@ public class Broadcast implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("broadcast")) {
             if (args.length >= 1) {
                 if (args[0].equalsIgnoreCase("title")) {
-                    return broadcast(sender, args, 0, false);
+                    return broadcast(sender, args, 1, false);
                 } else {
                     return broadcast(sender, args, 0, true);
                 }
