@@ -99,6 +99,11 @@ public class StringHelper {
         symbols.put("[xD]", "\u16DD\u16A6");
     }
     
+    /**
+     * 
+     * @param message String
+     * @return String replaces & with § to trigger the ChatColor codes
+     */
     public static String replaceColor(String message){
         return message.replaceAll("&", "§");
     }
