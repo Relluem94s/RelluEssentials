@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import org.bukkit.Bukkit;
@@ -14,9 +9,14 @@ import org.bukkit.inventory.Inventory;
  */
 public class InventoryHelper {
     
-    public static int inventorySize(int size){
+    /**
+     * 
+     * @param amount of items in the inventory
+     * @return The Size needed for the amount of items.
+     */
+    public static int inventorySize(int amount){
         
-        int[] sizes = new int[7];
+        int[] sizes = new int[6];
         sizes[0] = 9;
         sizes[1] = 18;
         sizes[2] = 27;
@@ -25,7 +25,7 @@ public class InventoryHelper {
         sizes[5] = 54;
         
         int actualSize = 0;
-        for(int i = 5; sizes[i] >= size; i --){
+        for(int i = 5; sizes[i] >= amount; i --){
             actualSize = sizes[i];
         }
         
