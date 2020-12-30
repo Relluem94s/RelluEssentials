@@ -1765,48 +1765,6 @@ else if (cmd.getName().equalsIgnoreCase("noob")) {
 		}
 
 
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-else if (cmd.getName().equalsIgnoreCase("brotkasten")) {
-			if (hasPermission(sender, permmod + "brotkasten") == true){
-				if (args.length > 0){
-					if(args[0].equalsIgnoreCase("chat") || args[0].equalsIgnoreCase("c") || args[0].equalsIgnoreCase("#c")){
-						brotkasten("chat", args);
-					}
-					else if(args[0].equalsIgnoreCase("title") || args[0].equalsIgnoreCase("t") || args[0].equalsIgnoreCase("#t")){
-						brotkasten("title", args);
-					}
-				}
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-		else if (cmd.getName().equalsIgnoreCase("bc")) {
-			if (hasPermission(sender, permmod + "brotkasten") == true){
-				brotkasten("chat", args);
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-		else if (cmd.getName().equalsIgnoreCase("bt")) {
-			if (hasPermission(sender, permmod + "brotkasten") == true){
-				brotkasten("title", args);
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-
-
-
-
-
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
