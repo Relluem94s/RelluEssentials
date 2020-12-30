@@ -63,18 +63,7 @@ public class Home implements CommandExecutor {
                         if (sender instanceof Player) {
                             Player p = (Player) sender;
                             if(players.getConfig().get("player." + p.getUniqueId() + ".home." + args[0]) != null){
-                                double x, y, z;
-                                float yaw, pitch;
-                                String world;
-                                x = players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".x");
-                                y = players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".y");
-                                z = players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".z");
-                                yaw = (float) players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".yaw");
-                                pitch = (float) players.getConfig().getDouble("player." + p.getUniqueId() + ".home." + args[0] + ".pitch");
-                                world = players.getConfig().getString("player." + p.getUniqueId() + ".home." + args[0] + ".world");
-
-                                Location l = new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
-
+                                Location l = players.getLocation("player." + p.getUniqueId() + ".home." + args[0]);
                                 p.teleport(l);
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_TP, args[0]));
                                 return true;
@@ -93,13 +82,7 @@ public class Home implements CommandExecutor {
                         if (args[0].equalsIgnoreCase("set")) {
                             if(players.getConfig().get("player." + p.getUniqueId() + ".home." + args[1]) == null){
                                 if(!args[1].equals("death")){
-                                    Location l = p.getLocation();
-                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".x", l.getX());
-                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".y", l.getBlockY());
-                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".z", l.getBlockZ());
-                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".yaw", l.getYaw());
-                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".pitch", l.getPitch());
-                                    players.getConfig().set("player." + p.getUniqueId() + ".home." + args[1] + ".world", l.getWorld().getName());
+                                    players.setLocation("player." + p.getUniqueId() + ".home." + args[1], p.getLocation());
                                     p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
                                 }
                                 else{
