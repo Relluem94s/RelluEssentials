@@ -5,6 +5,9 @@
  */
 package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
+
 /**
  *
  * @author rellu
@@ -27,6 +30,10 @@ public class InventoryHelper {
         }
         
         return actualSize;
+    }
+    
+    public static Inventory createInventory(int size, String name){
+        return Bukkit.createInventory(null, size, name);
     }
     
 }
