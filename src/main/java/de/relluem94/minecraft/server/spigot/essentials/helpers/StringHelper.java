@@ -19,20 +19,23 @@ public class StringHelper {
 
     Map<String, String> symbols = new HashMap<>();
 
+    /**
+     * create Class for Symbols Usage
+     */
     public StringHelper() {
         initSymbols();
     }
 
     /**
      * 
-     * @param sym String to replace Symbols from
+     * @param message String to replace Symbols from
      * @return String with unicode chars
      */
-    public String replaceSymbols(String sym) {
+    public String replaceSymbols(String message) {
         for (Map.Entry pair : symbols.entrySet()) {
-            sym = sym.replace((String) pair.getKey(), (String) pair.getValue());
+            message = message.replace((String) pair.getKey(), (String) pair.getValue());
         }
-        return sym;
+        return message;
     }
 
     private void initSymbols() {
