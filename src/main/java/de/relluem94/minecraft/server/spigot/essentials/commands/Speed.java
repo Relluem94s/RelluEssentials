@@ -20,29 +20,71 @@ public class Speed implements CommandExecutor {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.MOD.getId())) {
+                        float speed = parseSpeed(args[0]);
+                        if (p.isFlying()) {
+                            p.setFlySpeed(speed);
+                        } else {
+                            p.setWalkSpeed(speed);
+                        }
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                         return true;
                     }
                 }
-            } else {
-                Player target = Bukkit.getPlayer(args[0]);
-                if (target != null) {
-                    if (sender instanceof Player) {
-                        Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
-                            return true;
-                        } else {
-                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                            return true;
-                        }
-                    }
-                }
+            }else {
+
             }
         }
 
         return false;
+    }
+
+    private float parseSpeed(String arg) {
+        int in = Integer.parseInt(arg);
+
+        float speed = 0F;
+
+        switch (in) {
+            case 0:
+                speed = 0.0F;
+                break;
+            case 1:
+                speed = 0.1F;
+                break;
+            case 2:
+                speed = 0.2F;
+                break;
+            case 3:
+                speed = 0.3F;
+                break;
+            case 4:
+                speed = 0.4F;
+                break;
+            case 5:
+                speed = 0.5F;
+                break;
+            case 6:
+                speed = 0.6F;
+                break;
+            case 7:
+                speed = 0.7F;
+                break;
+            case 8:
+                speed = 0.8F;
+                break;
+            case 9:
+                speed = 0.9F;
+                break;
+            case 10:
+                speed = 1.0F;
+                break;
+            default:
+                speed = 0.1F;
+                break;
+        }
+
+        return speed;
     }
 
 }
