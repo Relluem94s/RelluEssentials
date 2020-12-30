@@ -61,6 +61,7 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Messag
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Print;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Rellu;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Rename;
+import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Speed;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Title;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.commands.Where;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
@@ -186,6 +187,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("print")).setExecutor(new Print());
         Objects.requireNonNull(this.getCommand("broadcast")).setExecutor(new Broadcast());
         Objects.requireNonNull(this.getCommand("rename")).setExecutor(new Rename());
+        Objects.requireNonNull(this.getCommand("speed")).setExecutor(new Speed());
     }
 
     private void enchantmentManager() {
