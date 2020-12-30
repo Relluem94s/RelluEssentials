@@ -55,7 +55,7 @@ public class ConfigHelper {
     }
 
     /**
-     * 
+     * Reloads the Config 
      * @throws IOException
      * @throws FileNotFoundException
      * @throws InvalidConfigurationException 
