@@ -634,32 +634,6 @@ public void kissPlayer(Player p1, Player p2){
 	 }
 	 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-	public void brotkasten(String type, String[] m){
-		String message = ArryToString(m);
-		message = Funktionen.farbe(message);
-		message = Funktionen.symbole(message);
-		if(m[0].contains("#")){
-			message = message.replaceFirst(m[0], "");
-		}
-		if (type.equalsIgnoreCase("chat")) {
-			Bukkit.broadcastMessage("§5  ---- §6\u2726 §5News §6\u2726 §5----  ");
-			Bukkit.broadcastMessage("§9Brotkasten §8>> §r" + message);
-		}
-		else if (type.equalsIgnoreCase("title")) {
-			Collection<? extends Player> onlinePlayers = main.getServer().getOnlinePlayers();
-	          for (Player cp : onlinePlayers) {
-	        	  if ((message != null) && (message.length() != 0)) {
-	        		  title(cp, "§6Brotkasten", message);
-	        	  }
-	          }
-		}
-	 }
-
-
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
