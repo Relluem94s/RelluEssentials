@@ -2,7 +2,6 @@ package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,20 +19,23 @@ public class Speed implements CommandExecutor {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.MOD.getId())) {
-                        float speed = parseSpeed(args[0]);
-                        if (p.isFlying()) {
-                            p.setFlySpeed(speed);
+                        if (args[0].matches("^\\d+$")) {
+                            float speed = parseSpeed(args[0]);
+                            if (p.isFlying()) {
+                                p.setFlySpeed(speed);
+                            } else {
+                                p.setWalkSpeed(speed);
+                            }
+                            p.sendMessage(String.format(PLUGIN_COMMAND_SPEED, args[0]));
+                            return true;
                         } else {
-                            p.setWalkSpeed(speed);
+                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                            return true;
                         }
-                        return true;
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
                     }
                 }
-            }else {
-
+            } else {
+                sender.sendMessage(PLUGIN_COMMAND_SPEED_INFO);
             }
         }
 
