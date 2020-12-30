@@ -103,6 +103,12 @@ public class StringHelper {
         return message.replaceAll("&", "§");
     }
 
+    /**
+     * 
+     * @param start int where to start in the args param
+     * @param args String[] array of strings to implode
+     * @return String with all words with offset of start
+     */
     public static String implode(int start, String[] args) {
         String message = "";
         for (int i = start; args.length > i; i++) {
