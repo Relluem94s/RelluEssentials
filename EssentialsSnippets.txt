@@ -393,36 +393,6 @@ public void kissPlayer(Player p1, Player p2){
 		if(Haus.contains("Homes." + p.getName())){
 			homes.addAll(Haus.getConfigurationSection("Homes." + p.getName()).getKeys(false));
 		}
-		;
-		int[] sizes = new int[6];
-		sizes[0] = 9;
-		sizes[1] = 18;
-		sizes[2] = 27;
-		sizes[3] = 36;
-		sizes[4] = 45;
-		sizes[5] = 54;
-		String name = prefix + "§aHaus GUI";
-		if(homes.size() < sizes[0]){
-			inv = Bukkit.createInventory(null, sizes[0], name);
-		}
-		else if(homes.size() < sizes[1]){
-			inv = Bukkit.createInventory(null, sizes[1], name);
-		}
-		else if(homes.size() < sizes[2]){
-			inv = Bukkit.createInventory(null, sizes[2], name);
-		}
-		else if(homes.size() < sizes[3]){
-			inv = Bukkit.createInventory(null, sizes[3], name);
-		}
-		else if(homes.size() < sizes[4]){
-			inv = Bukkit.createInventory(null, sizes[4], name);
-		}
-		else if(homes.size() < sizes[5]){
-			inv = Bukkit.createInventory(null, sizes[5], name);
-		}
-		else{
-			inv = Bukkit.createInventory(null, sizes[5], name);
-		}
 		
 		for(int i = 0; i < homes.size(); i++){
 			ItemStack item = new ItemStack(Material.COMPASS, 1);
