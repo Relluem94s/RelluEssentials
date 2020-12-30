@@ -102,6 +102,9 @@ commands:
     rename:
         description: rename item in hand
         usage: /rename
+    speed:
+        description: set either fly or walk speed of the player
+        usage: /speed
 
 
 
