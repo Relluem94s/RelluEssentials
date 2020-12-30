@@ -32,6 +32,12 @@ public class PlayerHelper {
         }
     }
 
+    /**
+     * 
+     * @param p Player to send TabList
+     * @param header String Header Text
+     * @param footer String Footer Text
+     */
     public static void sendTablist(Player p, String header, String footer) {
         IChatBaseComponent tabHeader = ChatSerializer.a("{\"text\":\"" + header + "\"}");
         IChatBaseComponent tabFooter = ChatSerializer.a("{\"text\":\"" + footer + "\"}");
