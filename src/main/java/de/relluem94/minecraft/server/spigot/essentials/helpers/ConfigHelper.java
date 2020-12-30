@@ -50,6 +50,10 @@ public class ConfigHelper {
         return config;
     }
 
+    /**
+     * Saves the Config
+     * @throws IOException 
+     */
     public void save() throws IOException {
         config.save(file);
     }
