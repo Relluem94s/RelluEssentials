@@ -23,6 +23,11 @@ public class StringHelper {
         initSymbols();
     }
 
+    /**
+     * 
+     * @param sym String to replace Symbols from
+     * @return String with unicode chars
+     */
     public String replaceSymbols(String sym) {
         for (Map.Entry pair : symbols.entrySet()) {
             sym = sym.replace((String) pair.getKey(), (String) pair.getValue());
