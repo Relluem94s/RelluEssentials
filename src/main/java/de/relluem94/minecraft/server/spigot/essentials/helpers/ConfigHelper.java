@@ -38,6 +38,10 @@ public class ConfigHelper {
         config = YamlConfiguration.loadConfiguration(file);
     }
 
+    /**
+     * Returns the Config Name
+     * @return String Config Name
+     */
     public String getConfigName() {
         return name;
     }
