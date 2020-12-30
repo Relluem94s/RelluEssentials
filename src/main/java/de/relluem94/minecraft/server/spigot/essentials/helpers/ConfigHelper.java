@@ -58,6 +58,11 @@ public class ConfigHelper {
         config.load(file);
     }
 
+    /**
+     * 
+     * @param path where the Location gets saved
+     * @param l the Location it self
+     */
     public void setLocation(String path, Location l) {
         config.set(path + ".x", l.getX());
         config.set(path + ".y", l.getBlockY());
