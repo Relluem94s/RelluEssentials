@@ -12,7 +12,7 @@ public class InventoryHelper {
     /**
      * 
      * @param amount of items in the Inventory
-     * @return The Size needed for the amount of items.
+     * @return int The Size needed for the amount of items.
      */
     public static int inventorySize(int amount){
         
@@ -36,7 +36,7 @@ public class InventoryHelper {
      * 
      * @param size real size of the Inventory
      * @param name of the Inventory
-     * @return finished Inventory
+     * @return Inventory
      */
     public static Inventory createInventory(int size, String name){
         return Bukkit.createInventory(null, size, name);
