@@ -114,6 +114,11 @@ public class StringHelper {
         return message;
     }
 
+    /**
+     * 
+     * @param l Location
+     * @return String with Location
+     */
     public static String locationToString(Location l){
         return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), l.getWorld().getName());
     }
