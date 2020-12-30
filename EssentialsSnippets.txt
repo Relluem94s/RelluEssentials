@@ -582,60 +582,6 @@ public void kissPlayer(Player p1, Player p2){
 	 }
 
 
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- public static String zensur(String zen)
-	 {	 
-		 zen = zen.replace("Tittensäcke " , " Tintensäcke ");
-		 zen = zen.replace("vür " , "für ");
-		 zen = zen.replace("fom " , "vom ");
-		 zen = zen.replace("linjanen " , "Ranken ");
-		 zen = zen.replace("tittensäcke " , " Tintensäcke ");
-		 zen = zen.replace(" sporn " , " Spawn ");
-		 zen = zen.replace("pissa" , "Pizza ");
-		 zen = zen.replace("Pissa" , "Pizza ");
-		 zen = zen.replace("pisser" , "Pizza ");
-		 zen = zen.replace("Pisser" , "Pizza ");
-		 zen = zen.replace("!!!" , "!");
-		 zen = zen.replace("???" , "?");
-		 zen = zen.replace("wek " , "weg ");
-		 zen = zen.replace("hau ab" , "bitte geh weg ");
-		 zen = zen.replace("schuldigung" , "Entschuldigung ");
-		 zen = zen.replace("sry " , "Entschuldigung ");
-		 zen = zen.replace("Ficken" , "Geschlechtsverkehr ");
-		 zen = zen.replace("ficken" , "Geschlechtsverkehr ");
-		 zen = zen.replace("Sex " , "Geschlechtsverkehr ");
-		 zen = zen.replace("sex " , "Geschlechtsverkehr ");
-		 zen = zen.replace("Schwul" , "Homosexuallität ");
-		 zen = zen.replace("schwul" , "Homosexuallität ");
-		 zen = zen.replace("Gay" , "Homosexuallität ");
-		 zen = zen.replace("gay" , "Homosexuallität ");
-		 zen = zen.replace("Möpse" , "Besonders hässliche Hunderasse ");
-		 zen = zen.replace("möpse" , "Besonders hässliche Hunderasse ");
-		 zen = zen.replace("Pimmel" , "Primäres Geschlechtsorgan des Mannes ");
-		 zen = zen.replace("pimmel" , "Primäres Geschlechtsorgan des Mannes ");
-		 zen = zen.replace("Fotze" , "Primäres Geschlechtsorgan der Frau ");
-		 zen = zen.replace("Br§ste" , "Sekundäres Geschlechtsorgan der Frau ");
-		 zen = zen.replace("br§ste" , "Sekundäres Geschlechtsorgan der Frau ");
-		 zen = zen.replace("titten " , "Sekundäres Geschlechtsorgan der Frau ");
-		 zen = zen.replace("Titten " , "Sekundäres Geschlechtsorgan der Frau ");
-		 zen = zen.replace("vagina" , "Primäres Geschlechtsorgan der Frau ");
-		 zen = zen.replace("penis" , "Primäres Geschlechtsorgan des Mannes ");
-		 zen = zen.replace("Vagina" , "Primäres Geschlechtsorgan der Frau ");
-		 zen = zen.replace("Penis" , "Primäres Geschlechtsorgan des Mannes ");
-		 zen = zen.replace("kool" , "cool ");
-		 zen = zen.replace("www." , "");
-		 zen = zen.replace(".de" , "");
-		 zen = zen.replace(".net" , "");
-		 zen = zen.replace(".com" , "");
-//		 zen = zen.replace("%" , "\u0025\u0025");
-		 return zen;
-	 }
-	 
-
-
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
