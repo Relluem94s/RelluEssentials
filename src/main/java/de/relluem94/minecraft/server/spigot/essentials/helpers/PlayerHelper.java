@@ -21,6 +21,10 @@ import org.bukkit.entity.Player;
  */
 public class PlayerHelper {
 
+    /**
+     * 
+     * @param p Player to set Flying
+     */
     public static void setFlying(Player p) {
         if (User.getGroup(p).getId() >= Groups.VIP.getId()) {
             if (players.getConfig().getBoolean("player." + p.getUniqueId() + ".fly")) {
