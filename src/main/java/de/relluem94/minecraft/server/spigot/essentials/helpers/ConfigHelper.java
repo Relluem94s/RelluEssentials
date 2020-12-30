@@ -42,6 +42,10 @@ public class ConfigHelper {
         return name;
     }
 
+    /**
+     * Returns the File
+     * @return File
+     */
     public File getFile() {
         return file;
     }
