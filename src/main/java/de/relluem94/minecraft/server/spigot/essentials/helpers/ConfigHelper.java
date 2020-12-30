@@ -72,6 +72,11 @@ public class ConfigHelper {
         config.set(path + ".world", l.getWorld().getName());
     }
 
+    /**
+     * 
+     * @param path where the Location is saved
+     * @return the Location from the Config Path
+     */
     public Location getLocation(String path) {
         double x, y, z;
         float yaw, pitch;
