@@ -54,6 +54,12 @@ public class ConfigHelper {
         config.save(file);
     }
 
+    /**
+     * 
+     * @throws IOException
+     * @throws FileNotFoundException
+     * @throws InvalidConfigurationException 
+     */
     public void reload() throws IOException, FileNotFoundException, InvalidConfigurationException {
         config.load(file);
     }
