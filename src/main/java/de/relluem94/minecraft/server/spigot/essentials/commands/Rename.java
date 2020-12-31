@@ -1,8 +1,7 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.stringHelper;
+import static de.relluem94.rellulib.utils.StringUtils.*;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.implode;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
 import org.bukkit.command.Command;
@@ -42,7 +41,7 @@ public class Rename implements CommandExecutor {
         
 
         String message = implode(0, args);
-        message = stringHelper.replaceSymbols(replaceColor(message));
+        message = replaceSymbols(replaceColor(message));
         ItemStack is = p.getInventory().getItemInMainHand();
         if(!is.getType().equals(Material.AIR)){
             ItemMeta im = is.getItemMeta();

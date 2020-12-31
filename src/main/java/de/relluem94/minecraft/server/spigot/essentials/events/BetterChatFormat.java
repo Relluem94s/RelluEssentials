@@ -1,6 +1,6 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.stringHelper;
+import de.relluem94.rellulib.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,7 +23,7 @@ public class BetterChatFormat implements Listener {
         e.setCancelled(true);
         Player p = e.getPlayer();
         if (Permission.isAuthorized(p, Groups.VIP.getId())) {
-            e.setMessage(stringHelper.replaceSymbols(e.getMessage()));
+            e.setMessage(StringUtils.replaceSymbols(e.getMessage()));
 
             
             if (e.getMessage().startsWith(VIP_CHANNEL)) {

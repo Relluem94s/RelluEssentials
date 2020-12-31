@@ -1,8 +1,7 @@
 package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.stringHelper;
+import static de.relluem94.rellulib.utils.StringUtils.*;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.implode;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
 import org.bukkit.Bukkit;
@@ -43,7 +42,7 @@ public class Broadcast implements CommandExecutor {
         }
 
         String message = implode(start, args);
-        message = stringHelper.replaceSymbols(replaceColor(message));
+        message = replaceSymbols(replaceColor(message));
 
         if (chat) {
             Bukkit.broadcastMessage(PLUGIN_BROADCAST_NAME + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + message);
