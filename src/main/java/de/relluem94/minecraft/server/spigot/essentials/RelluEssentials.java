@@ -70,7 +70,6 @@ import main.java.de.relluem94.minecraft.server.spigot.essentials.events.PlayerMo
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
 import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
@@ -81,8 +80,6 @@ public class RelluEssentials extends JavaPlugin {
     public static ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
     public static Scoreboard board;
     public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
-
-    public static StringHelper stringHelper = new StringHelper();
     
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
@@ -94,14 +91,14 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_START_MESSAGE);
+        System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_START_MESSAGE);
 
         dataFolder = this.getDataFolder();
 
         try {
             configManager(true);
         } catch (IOException e) {
-            System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
 
         commandManager();
@@ -115,11 +112,11 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        System.out.println(Strings.PLUGIN_NAME + Strings.PLUGIN_STOP_MESSAGE);
+        System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_STOP_MESSAGE);
         try {
             configManager(false);
         } catch (IOException e) {
-            System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
     }
 
@@ -139,7 +136,7 @@ public class RelluEssentials extends JavaPlugin {
         try {
             players.reload();
         } catch (IOException | InvalidConfigurationException e) {
-            System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
     }
 
@@ -148,7 +145,7 @@ public class RelluEssentials extends JavaPlugin {
         try {
             players.save();
         } catch (IOException e) {
-            System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
     }
 
@@ -250,16 +247,16 @@ public class RelluEssentials extends JavaPlugin {
                 f.setAccessible(true);
                 f.set(null, true);
             } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
-                System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+                System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
             }
             try {
                 Enchantment.registerEnchantment(ench);
                 System.out.println(String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
             } catch (IllegalArgumentException e) {
-                System.out.println(Strings.PLUGIN_NAME + e.getMessage());
+                System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
             }
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            System.err.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
     }
 }
