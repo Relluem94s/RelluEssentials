@@ -3,6 +3,7 @@
     <groupId>de.relluem94</groupId>
     <artifactId>RelluEssentials</artifactId>
     <version>1.4</version>
+    <url>https://github.com/Relluem94/RelluEssentials</url>
     <repositories>
         <repository>
             <id>spigotmc-repo</id>
