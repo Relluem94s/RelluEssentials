@@ -5,6 +5,7 @@ public class Strings {
     //TODO Have to do a Language Pack to load german and english translations via config. Maybe default en and user customizable 
     
     public static final String PLUGIN_NAME = "RelluEssentials";
+    public static final String PLUGIN_NAME_CONSOLE = "[" + PLUGIN_NAME + "] ";
     public static final String PLUGIN_PREFIX = "§o§l§4" + PLUGIN_NAME + "§r§f";
     public static final String PLUGIN_SPACER = "§7 >> §f";
     public static final String PLUGIN_SPACER_CHANNEL = " >> §f";
@@ -12,8 +13,8 @@ public class Strings {
     public static final String PLUGIN_COMMAND_NAME_COLOR = "§b";
     public static final String PLUGIN_COMMAND_ARG_COLOR = "§b";
     public static final String PLUGIN_MESSAGE_COLOR = "§f";
-    public static final String PLUGIN_START_MESSAGE = " starts configuring ...";
-    public static final String PLUGIN_STOP_MESSAGE = " shutdown();";
+    public static final String PLUGIN_START_MESSAGE = "starts configuring ...";
+    public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
     
     public static final String PLUGIN_REGISTER_ENCHANTMENT = " Registered enchantment %s with id %s!";
