@@ -2,9 +2,8 @@ package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import java.util.HashMap;
 import java.util.Map;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.stringHelper;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.implode;
+import static de.relluem94.rellulib.utils.StringUtils.*;
 import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
 import org.bukkit.Bukkit;
@@ -80,7 +79,7 @@ public class Message implements CommandExecutor {
                 reply.put(p, target);
                 reply.put(target, p);
                 if(Permission.isAuthorized(p, Groups.VIP.getId())){
-                    message = stringHelper.replaceSymbols(replaceColor(message));
+                    message = replaceSymbols(replaceColor(message));
                 }
                 
                 target.sendMessage(p.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_IN + message);
