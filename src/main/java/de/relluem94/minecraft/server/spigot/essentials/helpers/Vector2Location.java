@@ -6,6 +6,10 @@ public class Vector2Location {
 
     private Location x, y;
 
+    public Vector2Location(){
+        
+    }
+    
     public Vector2Location(Location x, Location y) {
         this.x = x;
         this.y = y;
