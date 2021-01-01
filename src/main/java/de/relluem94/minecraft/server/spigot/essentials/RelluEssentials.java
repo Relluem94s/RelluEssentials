@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -14,6 +15,9 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.enchantments.Enchantment;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Day;
@@ -48,9 +52,6 @@ import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Repair;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Salvage;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-import java.util.Objects;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Broadcast;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Enchanttest;
@@ -70,9 +71,9 @@ import de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.enchantments.Enchantment;
+
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 
 public class RelluEssentials extends JavaPlugin {
 
