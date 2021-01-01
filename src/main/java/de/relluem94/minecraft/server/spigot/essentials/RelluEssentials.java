@@ -193,6 +193,8 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("broadcast")).setExecutor(new Broadcast());
         Objects.requireNonNull(this.getCommand("rename")).setExecutor(new Rename());
         Objects.requireNonNull(this.getCommand("speed")).setExecutor(new Speed());
+        //TODO add Warps
+        //TODO add Marriage
     }
 
     private void enchantmentManager() {
