@@ -2,10 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.relluem94</groupId>
-  <artifactId>RelluEssentials</artifactId>
+  <artifactId>relluessentials</artifactId>
+  <name>RelluEssentials</name>
   <version>1.4</version>
+  <url>https://github.com/Relluem94/RelluEssentials</url>
+  <scm>
+    <connection>scm:git:git@github.com:Relluem94/RelluEssentials.git</connection>
+    <developerConnection>scm:git:git@github.com:Relluem94/RelluEssentials.git</developerConnection>
+    <url>https://github.com/Relluem94/RelluEssentials</url>
+  </scm>
   <build>
-    <sourceDirectory>src</sourceDirectory>
+    <sourceDirectory>src/main/java</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -48,4 +55,11 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Relluem94 Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/Relluem94/RelluEssentials</url>
+    </repository>
+  </distributionManagement>
 </project>
