@@ -1,9 +1,9 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
+package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import java.util.Iterator;
 import java.util.Map;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -11,8 +11,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 

@@ -1,11 +1,11 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import java.io.IOException;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;

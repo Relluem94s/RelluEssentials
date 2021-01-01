@@ -1,6 +1,6 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills;
+package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
-import main.java.de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;

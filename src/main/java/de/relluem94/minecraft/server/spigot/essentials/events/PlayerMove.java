@@ -1,6 +1,6 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
+package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

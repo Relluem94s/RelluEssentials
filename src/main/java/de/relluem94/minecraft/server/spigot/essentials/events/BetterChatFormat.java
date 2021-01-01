@@ -1,4 +1,4 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
+package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.rellulib.utils.StringUtils;
 import org.bukkit.Bukkit;
@@ -7,10 +7,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class BetterChatFormat implements Listener {
 

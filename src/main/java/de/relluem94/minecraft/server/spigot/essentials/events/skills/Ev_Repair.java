@@ -1,7 +1,7 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.events.skills;
+package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_REPAIR_DONE;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_REPAIR_WARNING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_REPAIR_DONE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_REPAIR_WARNING;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,8 +16,8 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
 
 public class Ev_Repair implements Listener {
 

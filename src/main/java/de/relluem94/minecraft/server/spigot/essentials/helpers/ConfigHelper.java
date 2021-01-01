@@ -1,9 +1,9 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;

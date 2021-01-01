@@ -1,14 +1,14 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.permissions;
+package de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import org.bukkit.entity.Player;
 
-import main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.users;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
+import de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
+import de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
+import de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.users;
 
 public class User {
 

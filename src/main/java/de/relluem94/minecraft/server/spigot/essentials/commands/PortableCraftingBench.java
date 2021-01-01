@@ -1,14 +1,14 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
+package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class PortableCraftingBench implements CommandExecutor {
 

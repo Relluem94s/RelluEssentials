@@ -1,4 +1,4 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials;
+package de.relluem94.minecraft.server.spigot.essentials;
 
 public class Strings {
 

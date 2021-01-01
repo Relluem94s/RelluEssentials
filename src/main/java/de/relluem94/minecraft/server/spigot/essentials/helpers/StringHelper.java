@@ -1,7 +1,7 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static java.lang.Math.round;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WHERE_STRING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WHERE_STRING;
 import org.bukkit.Location;
 
 /**

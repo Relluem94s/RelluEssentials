@@ -1,4 +1,4 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;

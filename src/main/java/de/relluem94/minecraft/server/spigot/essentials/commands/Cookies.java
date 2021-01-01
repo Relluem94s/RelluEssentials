@@ -1,6 +1,6 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.commands;
+package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 import java.util.Arrays;
 
@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Cookies implements CommandExecutor {
 

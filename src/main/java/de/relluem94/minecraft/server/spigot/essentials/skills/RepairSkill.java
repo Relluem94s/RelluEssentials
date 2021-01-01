@@ -1,4 +1,4 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.skills;
+package de.relluem94.minecraft.server.spigot.essentials.skills;
 
 import org.bukkit.scoreboard.Scoreboard;
 

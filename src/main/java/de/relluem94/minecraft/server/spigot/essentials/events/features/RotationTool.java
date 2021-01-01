@@ -1,4 +1,4 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.events.features;
+package de.relluem94.minecraft.server.spigot.essentials.events.features;
 
 import org.bukkit.event.Listener;
 

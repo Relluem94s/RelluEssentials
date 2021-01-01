@@ -1,7 +1,7 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
+package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_DEATH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_DEATH;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

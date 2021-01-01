@@ -1,6 +1,6 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
+package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static main.java.de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,7 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
 public class BetterPlayerQuit implements Listener {
 

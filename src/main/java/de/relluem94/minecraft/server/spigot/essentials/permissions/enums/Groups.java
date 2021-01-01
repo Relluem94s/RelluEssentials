@@ -1,4 +1,4 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums;
+package de.relluem94.minecraft.server.spigot.essentials.permissions.enums;
 
 /**
  *

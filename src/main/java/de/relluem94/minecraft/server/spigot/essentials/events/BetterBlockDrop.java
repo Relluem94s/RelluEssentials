@@ -1,4 +1,4 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.events;
+package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -7,8 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import main.java.de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class BetterBlockDrop implements Listener {
 

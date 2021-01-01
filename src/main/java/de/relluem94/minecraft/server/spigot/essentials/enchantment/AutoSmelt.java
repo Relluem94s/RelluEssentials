@@ -1,4 +1,4 @@
-package main.java.de.relluem94.minecraft.server.spigot.essentials.enchantment;
+package de.relluem94.minecraft.server.spigot.essentials.enchantment;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
