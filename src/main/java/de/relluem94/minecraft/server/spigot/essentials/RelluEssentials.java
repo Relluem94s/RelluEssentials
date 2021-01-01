@@ -87,6 +87,7 @@ public class RelluEssentials extends JavaPlugin {
 
     public static ConfigHelper players;
     public static ConfigHelper warps;
+    public static ConfigHelper marriage;
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
@@ -128,6 +129,7 @@ public class RelluEssentials extends JavaPlugin {
             this.saveDefaultConfig();
             players = new ConfigHelper("players");
             warps = new ConfigHelper("warps");
+            marriage = new ConfigHelper("marriage");
         } else {
             saveConfigs();
         }
@@ -138,6 +140,7 @@ public class RelluEssentials extends JavaPlugin {
         try {
             players.reload();
             warps.reload();
+            marriage.reload();
         } catch (IOException | InvalidConfigurationException e) {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
@@ -148,6 +151,7 @@ public class RelluEssentials extends JavaPlugin {
         try {
             players.save();
             warps.save();
+            marriage.save();
         } catch (IOException e) {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
