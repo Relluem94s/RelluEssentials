@@ -86,6 +86,7 @@ public class RelluEssentials extends JavaPlugin {
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
 
     public static ConfigHelper players;
+    public static ConfigHelper warps;
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
@@ -126,7 +127,7 @@ public class RelluEssentials extends JavaPlugin {
         if (enable) {
             this.saveDefaultConfig();
             players = new ConfigHelper("players");
-
+            warps = new ConfigHelper("warps");
         } else {
             saveConfigs();
         }
@@ -136,6 +137,7 @@ public class RelluEssentials extends JavaPlugin {
         ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
         try {
             players.reload();
+            warps.reload();
         } catch (IOException | InvalidConfigurationException e) {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
@@ -145,6 +147,7 @@ public class RelluEssentials extends JavaPlugin {
         ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
         try {
             players.save();
+            warps.save();
         } catch (IOException e) {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
