@@ -4,6 +4,11 @@
     <artifactId>RelluEssentials</artifactId>
     <version>1.4</version>
     <url>https://github.com/Relluem94/RelluEssentials</url>
+    <scm>
+        <connection>scm:git:git@github.com:Relluem94/RelluEssentials.git</connection>
+        <developerConnection>scm:git:git@github.com:Relluem94/RelluEssentials.git</developerConnection>
+        <url>https://github.com/Relluem94/RelluEssentials</url>
+    </scm>
     <repositories>
         <repository>
             <id>spigotmc-repo</id>
