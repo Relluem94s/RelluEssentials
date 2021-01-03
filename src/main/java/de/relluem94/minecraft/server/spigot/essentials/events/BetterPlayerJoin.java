@@ -22,6 +22,7 @@ public class BetterPlayerJoin implements Listener {
         Player p = e.getPlayer();
         addPlayer(p);
         PlayerHelper.setFlying(p);
+        PlayerHelper.setAFK(p, true);
         String header = RelluEssentials.getPlugin(RelluEssentials.class).getConfig().getString("tab.header");
         String footer = RelluEssentials.getPlugin(RelluEssentials.class).getConfig().getString("tab.footer");
         PlayerHelper.sendTablist(p, header, footer);
