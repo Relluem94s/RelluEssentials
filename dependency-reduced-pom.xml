@@ -37,6 +37,16 @@
   </build>
   <repositories>
     <repository>
+      <id>central</id>
+      <name>central</name>
+      <url>https://repo.maven.apache.org/maven2/</url>
+    </repository>
+    <repository>
+      <id>rellulib</id>
+      <name>rellulib</name>
+      <url>https://maven.pkg.github.com/Relluem94/RelluLib/</url>
+    </repository>
+    <repository>
       <id>spigotmc-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
