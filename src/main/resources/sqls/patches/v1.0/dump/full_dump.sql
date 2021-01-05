@@ -45,13 +45,11 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`player` (
   `fly` TINYINT NULL DEFAULT 0,
   `customname` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_player_group_1_idx` (`group_fk` ASC) VISIBLE,
-  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC) VISIBLE,
+  INDEX `fk_player_group_1_idx` (`group_fk` ASC),
+  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC),
   CONSTRAINT `fk_player_group_1`
     FOREIGN KEY (`group_fk`)
-    REFERENCES `rellu_essentials`.`group` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `rellu_essentials`.`group` (`id`))
 ENGINE = InnoDB;
 
 
@@ -80,18 +78,14 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`location` (
   `location_type_fk` INT NOT NULL,
   `player_fk` INT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_location_type_1_idx` (`location_type_fk` ASC) VISIBLE,
-  INDEX `fk_location_player_1_idx` (`player_fk` ASC) VISIBLE,
+  INDEX `fk_location_type_1_idx` (`location_type_fk` ASC),
+  INDEX `fk_location_player_1_idx` (`player_fk` ASC),
   CONSTRAINT `fk_location_type_1`
     FOREIGN KEY (`location_type_fk`)
-    REFERENCES `rellu_essentials`.`location_type` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    REFERENCES `rellu_essentials`.`location_type` (`id`),
   CONSTRAINT `fk_location_player_1`
     FOREIGN KEY (`player_fk`)
-    REFERENCES `rellu_essentials`.`player` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `rellu_essentials`.`player` (`id`))
 ENGINE = InnoDB;
 
 
@@ -110,18 +104,14 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`block_history` (
   `player_fk` INT NOT NULL,
   `material` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`ID`, `location_fk`, `player_fk`, `material`),
-  INDEX `fk_block_history_1_idx` (`location_fk` ASC) VISIBLE,
-  INDEX `fk_block_history_2_idx` (`player_fk` ASC) VISIBLE,
+  INDEX `fk_block_history_1_idx` (`location_fk` ASC),
+  INDEX `fk_block_history_2_idx` (`player_fk` ASC),
   CONSTRAINT `fk_block_history_1`
     FOREIGN KEY (`location_fk`)
-    REFERENCES `rellu_essentials`.`location` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    REFERENCES `rellu_essentials`.`location` (`id`),
   CONSTRAINT `fk_block_history_2`
     FOREIGN KEY (`player_fk`)
-    REFERENCES `rellu_essentials`.`player` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    REFERENCES `rellu_essentials`.`player` (`id`));
 
 
 -- -----------------------------------------------------
