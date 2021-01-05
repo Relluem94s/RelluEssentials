@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`player` (
   `fly` TINYINT NULL DEFAULT 0,
   `customname` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_player_group_1_idx` (`group_fk` ASC) VISIBLE,
-  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC) VISIBLE,
+  INDEX `fk_player_group_1_idx` (`group_fk` ASC),
+  UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC),
   CONSTRAINT `fk_player_group_1`
     FOREIGN KEY (`group_fk`)
     REFERENCES `rellu_essentials`.`group` (`id`))
