@@ -59,22 +59,16 @@
   * Show Location in Chat (private)
 
 
+
+
+![Database Model](https://raw.githubusercontent.com/Relluem94/RelluEssentials/RE-14/db_model.png)
+
 ## TODOS
-* Small / Easy Worldedit & World Guard
-* Netherstar for Selection
-* Manual selection with pos
-* set command (material)
-* extend command
-* region protection with permissions for player and groups with flags
-* flags -> build, enter, entry/leave-message, interact, harvest
-* chest / falldoor / door / fence-gate protection with permissions for player and groups with flags
-* flags -> cant-open-message (standard message or custom), open-on-day, open-on-night
-* MCMMO Skill Level System
-* fast pickaxe mode
-* fast shovel mode
-* Stick to Rotate Stairs and convert Upper/lower slaps
-* the rest from the snippet textfile
-* a permission system for external plugins (maybe)
-* Multi Language files
-* Skill System with listener on blockbreak etc.
-* Fix some bugs with the treefeller (activate only sometimes pair with skill system)
+* Use DB instead of yml files (maybe as a option)
+* BlockHistory save materials into DB
+* Add Homes to DB
+* Add Death Location to DB
+* Add Nickname to DB
+* Add AFK and FLY to DB
+* Add Scripts to insert, Update and Select data
+* Add Pojos
