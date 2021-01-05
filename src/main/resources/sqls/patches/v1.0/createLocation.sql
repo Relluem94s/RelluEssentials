@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`location` (
   `yaw` FLOAT NOT NULL,
   `pitch` FLOAT NOT NULL,
   `world` VARCHAR(45) NOT NULL,
-  `name` VARCHAR(45) NOT NULL,
+  `location_name` VARCHAR(45) NULL,
   `location_type_fk` INT NOT NULL,
   `player_fk` INT NULL,
   PRIMARY KEY (`id`),
@@ -22,12 +22,8 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`location` (
   INDEX `fk_location_player_1_idx` (`player_fk` ASC) VISIBLE,
   CONSTRAINT `fk_location_type_1`
     FOREIGN KEY (`location_type_fk`)
-    REFERENCES `rellu_essentials`.`location_type` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    REFERENCES `rellu_essentials`.`location_type` (`id`),
   CONSTRAINT `fk_location_player_1`
     FOREIGN KEY (`player_fk`)
-    REFERENCES `rellu_essentials`.`player` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `rellu_essentials`.`player` (`id`))
 ENGINE = InnoDB;

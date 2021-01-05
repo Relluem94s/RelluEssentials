@@ -24,7 +24,5 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`player` (
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC) VISIBLE,
   CONSTRAINT `fk_player_group_1`
     FOREIGN KEY (`group_fk`)
-    REFERENCES `rellu_essentials`.`group` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `rellu_essentials`.`group` (`id`))
 ENGINE = InnoDB;
