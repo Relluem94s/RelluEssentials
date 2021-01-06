@@ -47,15 +47,13 @@ public class Home implements CommandExecutor {
                     if (args[0].equalsIgnoreCase("list")) {
                         if (sender instanceof Player) {
                             Player p = (Player) sender;
-                            Map<String, Object> map;
-                            ConfigurationSection c = players.getConfig().getConfigurationSection("player." + p.getUniqueId() + ".home");
-
-                            if (c != null) {
-                                map = c.getValues(false);
+                            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+                                                        
+                            if (hasHomes(pe)) {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
-                                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                                    p.sendMessage(PLUGIN_COMMAND_ARG_COLOR + entry.getKey());
-                                }
+                                locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationType().getId() == 1)).forEachOrdered(fle -> {
+                                    p.sendMessage(PLUGIN_COMMAND_ARG_COLOR + fle.getLocationName());
+                                });
                             } else {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
                             }
@@ -129,12 +127,11 @@ public class Home implements CommandExecutor {
     }
     
     private boolean homeExists(PlayerEntry pe, LocationEntry le){
-        for (LocationEntry fle : locationEntryList) {
-            if (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && fle.getLocationType().getId() == 1) {
-                return true;
-            }
-        }
-        return false;
+        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && fle.getLocationType().getId() == 1));
+    }
+    
+    private boolean hasHomes(PlayerEntry pe){
+        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationType().getId() == 1));
     }
         
     private LocationEntry getLocationEntry(PlayerEntry pe, LocationEntry le){
