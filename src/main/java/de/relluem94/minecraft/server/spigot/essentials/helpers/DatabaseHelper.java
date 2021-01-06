@@ -272,15 +272,17 @@ public class DatabaseHelper {
             Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertLocation.sql", Charsets.UTF_8));
             Location l = le.getLocation();
-            ps.setFloat(1, (float)l.getX());
-            ps.setFloat(2, (float)l.getY());
-            ps.setFloat(3, (float)l.getZ());
-            ps.setFloat(4, (float)l.getYaw());
-            ps.setFloat(5, (float)l.getPitch());
-            ps.setString(6, l.getWorld().getName());
-            ps.setString(7, le.getLocationName());
-            ps.setInt(8, le.getLocationType().getId());
-            ps.setInt(9, le.getPlayerId());
+            
+            ps.setInt(1, le.getPlayerId());
+            ps.setFloat(2, (float)l.getX());
+            ps.setFloat(3, (float)l.getY());
+            ps.setFloat(4, (float)l.getZ());
+            ps.setFloat(5, (float)l.getYaw());
+            ps.setFloat(6, (float)l.getPitch());
+            ps.setString(7, l.getWorld().getName());
+            ps.setString(8, le.getLocationName());
+            ps.setInt(9, le.getLocationType().getId());
+            ps.setInt(10, le.getPlayerId());
             
             ps.execute();
         } catch (SQLException | IOException ex) {
