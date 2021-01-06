@@ -74,6 +74,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 
 public class RelluEssentials extends JavaPlugin {
 
@@ -92,12 +93,15 @@ public class RelluEssentials extends JavaPlugin {
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
 
+    public static DatabaseHelper dBH;
+    
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_START_MESSAGE);
 
         dataFolder = this.getDataFolder();
-
+        dBH = new DatabaseHelper();
+        dBH.init();
         try {
             configManager(true);
         } catch (IOException e) {

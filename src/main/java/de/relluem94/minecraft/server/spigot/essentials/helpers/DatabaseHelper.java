@@ -56,13 +56,13 @@ public class DatabaseHelper {
     }
 
     
-    public void insertPlayer(int createdby, Player p) {
+    public void insertPlayer(int createdby, Player p, Group g) {
         try (
             Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", Charsets.UTF_8));
             ps.setInt(1, createdby);
             ps.setString(2, p.getUniqueId().toString());
-            ps.setInt(3, Group.getGroupFromName(p.getName()).getId());
+            ps.setInt(3, g.getId());
 
             ps.execute();
         } catch (SQLException | IOException ex) {
@@ -78,7 +78,7 @@ public class DatabaseHelper {
         return Resources.toString(Resources.getResource(fileName), charset);
     }
     
-    private void applyPatches(int version){
+    private void applyPatch(int version){
         switch(version){
             case 1:
                 executeScript("createSchema.sql");
@@ -99,7 +99,7 @@ public class DatabaseHelper {
     }
     
     public void init(){
-        applyPatches(1);
+        applyPatch(1);
     }
     
     
