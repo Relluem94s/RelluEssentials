@@ -12,7 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 
 public class Nick implements CommandExecutor {
@@ -30,9 +29,9 @@ public class Nick implements CommandExecutor {
                             pe.setCustomname(args[1]);
                             pe.setUpdatedby(playerEntryList.get(p.getUniqueId()).getId());
                             dBH.updatePlayer(pe);
-                            target.setCustomName(User.getUserByPlayerName(target.getName()).getGroup().getPrefix() + args[1]);
-                            target.setPlayerListName(User.getUserByPlayerName(target.getName()).getGroup().getPrefix() + args[1]);
-                            p.sendMessage(String.format(PLUGIN_COMMAND_NICK, target.getName()));
+                            target.setCustomName(pe.getGroup().getPrefix() + args[1]);
+                            target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);
+                            p.sendMessage(String.format(PLUGIN_COMMAND_NICK, pe.getGroup().getPrefix() + target.getName()));
                             
                             return true;
                         }
