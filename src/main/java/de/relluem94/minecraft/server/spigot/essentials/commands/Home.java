@@ -66,7 +66,7 @@ public class Home implements CommandExecutor {
                             Player p = (Player) sender;
                             PlayerEntry pe = playerEntryList.get(p.getUniqueId());
                             LocationEntry le = new LocationEntry();
-                            le.setLocationName(args[1]);
+                            le.setLocationName(args[0]);
                             le.setLocationType(locationTypeEntryList.get(0));
                             le.setPlayerId(pe.getId());
                             
