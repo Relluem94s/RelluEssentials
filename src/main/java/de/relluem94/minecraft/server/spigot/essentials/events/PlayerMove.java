@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 public class PlayerMove implements Listener {
     
      @EventHandler
-    public void onSpawn(PlayerMoveEvent e) {
+    public void onMove(PlayerMoveEvent e) {
         e.setCancelled(playerEntryList.get(e.getPlayer().getUniqueId()).isAfk());
     }
 }

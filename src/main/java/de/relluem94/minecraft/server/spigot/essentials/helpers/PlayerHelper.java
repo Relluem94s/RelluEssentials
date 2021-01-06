@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_AFK;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_AFK_ACTIVATED;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_AFK_DEACTIVATED;

@@ -7,7 +7,7 @@
 -- Data for table `rellu_essentials`.`location_type`
 -- -----------------------------------------------------
 
-INSERT IGNORE INTO `rellu_essentials`.`location_type` (`id`, `location_type`) 
+INSERT INTO `rellu_essentials`.`location_type` (`id`, `location_type`) 
 VALUES 
 (1, 'home'), 
 (2, 'death'), 

@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_JOIN_MESSAGE;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -27,9 +27,7 @@ public class BetterPlayerJoin implements Listener {
         addPlayer(p);
         PlayerHelper.setFlying(p);
         PlayerHelper.setAFK(p, true);
-        String header = RelluEssentials.getPlugin(RelluEssentials.class).getConfig().getString("tab.header");
-        String footer = RelluEssentials.getPlugin(RelluEssentials.class).getConfig().getString("tab.footer");
-        PlayerHelper.sendTablist(p, header, footer);
+        PlayerHelper.sendTablist(p, pie.getTabheader(), pie.getTabfooter());
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
     }
 
