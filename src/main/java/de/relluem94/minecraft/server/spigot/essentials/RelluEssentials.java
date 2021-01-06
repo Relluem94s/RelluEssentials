@@ -75,6 +75,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
@@ -87,7 +88,8 @@ public class RelluEssentials extends JavaPlugin {
     public static Scoreboard board;
     public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
     public static HashMap<UUID, PlayerEntry> playerEntryList = new HashMap<>();
-    public static List<LocationTypeEntry> locationTypes = new ArrayList<>();
+    public static List<LocationEntry> locationEntryList = new ArrayList<>();
+    public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
@@ -282,7 +284,8 @@ public class RelluEssentials extends JavaPlugin {
     private void databaseManager() {
         dBH = new DatabaseHelper();
         pie = dBH.getPluginInformation();
-        locationTypes.addAll(dBH.getLocationTypes());
         dBH.init();
+        locationTypeEntryList.addAll(dBH.getLocationTypes());
+        locationEntryList.addAll(dBH.getLocations());
     }
 }

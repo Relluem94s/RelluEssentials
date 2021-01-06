@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_DATABASE_NAME;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
@@ -24,7 +25,10 @@ import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 
 /**
  *
@@ -58,6 +62,12 @@ public class DatabaseHelper {
         return enabled;
     }
 
+    //*****************************************************************************************************************************************//
+    //                                                                                                                                         //
+    //                                                DUMMY                                                                                    //
+    //                                                                                                                                         //
+    //*****************************************************************************************************************************************//
+    
     //DUMMY 
     public void select() {
         try (
@@ -69,6 +79,36 @@ public class DatabaseHelper {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+        
+    //DUMMY
+    public LocationEntry getLocation(PlayerEntry pe, int type) {
+        try (
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationsByPlayer.sql", Charsets.UTF_8));
+            ps.setInt(1, pe.getId());
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    LocationEntry p = new LocationEntry();
+                    p.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    p.setLocationType(locationTypeEntryList.get(type)); //TODO WRONG
+                    return p;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    //*****************************************************************************************************************************************//
+    //                                                                                                                                         //
+    //                                               DUMMY END                                                                                 //
+    //                                                                                                                                         //
+    //*****************************************************************************************************************************************//
+    
+    
     
     public PluginInformationEntry getPluginInformation() {
         try (
@@ -199,7 +239,7 @@ public class DatabaseHelper {
     }
     
     
-     public List<LocationTypeEntry> getLocationTypes() {
+    public List<LocationTypeEntry> getLocationTypes() {
         List<LocationTypeEntry> ll = new ArrayList<>();   
         try (   
             Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
@@ -219,9 +259,27 @@ public class DatabaseHelper {
         return ll;
     }
     
-    
-    
-    
+     public List<LocationEntry> getLocations() {
+        List<LocationEntry> ll = new ArrayList<>();   
+        try (
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocations.sql", Charsets.UTF_8));
+ 
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    LocationEntry p = new LocationEntry();
+                    p.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    p.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk")));
+                    p.setPlayerId(rs.getInt("player_fk"));
+                    ll.add(p);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ll;
+    }
     
     
     
