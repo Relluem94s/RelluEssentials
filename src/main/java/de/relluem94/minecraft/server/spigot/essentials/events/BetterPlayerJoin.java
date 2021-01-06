@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_JOIN_MESSAGE;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -32,6 +33,7 @@ public class BetterPlayerJoin implements Listener {
     private void addPlayer(Player p) {
         if (players.getConfig().getString("player." + p.getUniqueId() + ".group") == null) {
             User u = new User(p, new UserGroup());
+            dBH.insertPlayer(1, p, u.getGroup());
         } else {
             String groupName = players.getConfig().getString("player." + p.getUniqueId() + ".group");
             User u = new User(p, groupName);
