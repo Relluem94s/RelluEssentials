@@ -75,6 +75,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import java.util.UUID;
@@ -86,6 +87,7 @@ public class RelluEssentials extends JavaPlugin {
     public static Scoreboard board;
     public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
     public static HashMap<UUID, PlayerEntry> playerEntryList = new HashMap<>();
+    public static List<LocationTypeEntry> locationTypes = new ArrayList<>();
     
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
@@ -102,18 +104,15 @@ public class RelluEssentials extends JavaPlugin {
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_START_MESSAGE);
-        
         dataFolder = this.getDataFolder();
-        dBH = new DatabaseHelper();
-        pie = dBH.getPluginInformation();
-        dBH.init();
-        
+
         try {
             configManager(true);
         } catch (IOException e) {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
-
+        
+        databaseManager();
         commandManager();
         eventManager();
         featureManager();
@@ -277,5 +276,12 @@ public class RelluEssentials extends JavaPlugin {
         } catch (Exception e) {
             System.err.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
+    }
+
+    private void databaseManager() {
+        dBH = new DatabaseHelper();
+        pie = dBH.getPluginInformation();
+        locationTypes.addAll(dBH.getLocationTypes());
+        dBH.init();
     }
 }

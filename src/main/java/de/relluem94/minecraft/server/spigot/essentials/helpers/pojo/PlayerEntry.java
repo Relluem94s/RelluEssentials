@@ -20,7 +20,7 @@ public class PlayerEntry {
     private boolean afk;
     private boolean fly;
     private String customname;
-    private HomeEntry[] homes;
+    private LocationEntry[] homes;
     
     public int getId() {
         return id;
@@ -110,11 +110,11 @@ public class PlayerEntry {
         this.customname = customname;
     }
 
-    public HomeEntry[] getHomes() {
+    public LocationEntry[] getHomes() {
         return homes;
     }
 
-    public void setHomes(HomeEntry[] homes) {
+    public void setHomes(LocationEntry[] homes) {
         this.homes = homes;
     }
 }

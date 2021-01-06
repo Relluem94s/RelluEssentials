@@ -24,8 +24,7 @@ public class BetterPlayerJoin implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage(null);
         Player p = e.getPlayer();
-        boolean firstplayed = addPlayer(p);
-        
+        addPlayer(p);
         PlayerHelper.setFlying(p);
         PlayerHelper.setAFK(p, true);
         PlayerHelper.sendTablist(p, pie.getTabheader(), pie.getTabfooter());
@@ -33,9 +32,7 @@ public class BetterPlayerJoin implements Listener {
     }
 
     private void addPlayer(Player p) {
-        
         PlayerEntry pe = dBH.getPlayer(p.getUniqueId().toString());
-        
         if (pe == null) {
             pe = new PlayerEntry();
             pe.setCreatedby(1);

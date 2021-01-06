@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_DATABASE_NAME;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
@@ -60,7 +61,7 @@ public class DatabaseHelper {
     //DUMMY 
     public void select() {
         try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", Charsets.UTF_8));
 
             ps.execute();
@@ -71,7 +72,7 @@ public class DatabaseHelper {
     
     public PluginInformationEntry getPluginInformation() {
         try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port , user, password)) {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port , user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPluginInformation.sql", Charsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -99,7 +100,7 @@ public class DatabaseHelper {
     
     public PlayerEntry getPlayer(String UUID) {
         try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayer.sql", Charsets.UTF_8));
             ps.setString(1, UUID);
             ps.execute();
@@ -124,11 +125,9 @@ public class DatabaseHelper {
         return null;
     }
     
-     public List<PlayerEntry> getPlayers() {
+    public List<PlayerEntry> getPlayers() {
         List<PlayerEntry> pel = new ArrayList<>();   
-        try (
-             
-                
+        try (   
             Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayers.sql", Charsets.UTF_8));
             ps.execute();
@@ -153,11 +152,11 @@ public class DatabaseHelper {
         }
         return pel;
     }
-
-
+    
+    
     public void insertPlayer(PlayerEntry pe) {
         try (
-                Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", Charsets.UTF_8));
             ps.setInt(1, pe.getCreatedby());
             ps.setString(2, pe.getUUID());
@@ -198,6 +197,40 @@ public class DatabaseHelper {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+     public List<LocationTypeEntry> getLocationTypes() {
+        List<LocationTypeEntry> ll = new ArrayList<>();   
+        try (   
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationTypes.sql", Charsets.UTF_8));
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    LocationTypeEntry lte = new LocationTypeEntry();
+                    lte.setId(rs.getInt("id"));
+                    lte.setType(rs.getString("location_type"));
+                    ll.add(lte);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ll;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     private void applyPatch(int version) {
         String v;
