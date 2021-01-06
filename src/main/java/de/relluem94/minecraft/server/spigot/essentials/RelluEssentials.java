@@ -76,6 +76,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAM
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import java.util.UUID;
 
 public class RelluEssentials extends JavaPlugin {
@@ -96,6 +97,7 @@ public class RelluEssentials extends JavaPlugin {
     public static File dataFolder;
 
     public static DatabaseHelper dBH;
+    public static PluginInformationEntry pie;
     
     @Override
     public void onEnable() {
@@ -103,6 +105,7 @@ public class RelluEssentials extends JavaPlugin {
         
         dataFolder = this.getDataFolder();
         dBH = new DatabaseHelper();
+        pie = dBH.getPluginInformation();
         dBH.init();
         
         try {

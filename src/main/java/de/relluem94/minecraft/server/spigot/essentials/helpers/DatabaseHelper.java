@@ -11,9 +11,11 @@ import java.util.logging.Logger;
 import com.google.common.base.Charsets;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_DATABASE_NAME;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -65,6 +67,34 @@ public class DatabaseHelper {
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public PluginInformationEntry getPluginInformation() {
+        try (
+                Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port , user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPluginInformation.sql", Charsets.UTF_8));
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    PluginInformationEntry pie = new PluginInformationEntry();
+                    
+                    pie.setId(rs.getInt("id"));
+                    pie.setCreated(rs.getString("created"));
+                    pie.setCreatedby(rs.getInt("createdby"));
+                    pie.setTabheader(rs.getString("tab_header"));
+                    pie.setTabfooter(rs.getString("tab_footer"));
+                    pie.setMotdMessage(rs.getString("motd_message"));
+                    pie.setMotdPlayers(rs.getInt("motd_players"));
+                    pie.setDbVersion(rs.getInt("db_version"));
+                    return pie;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            PluginInformationEntry pie = new PluginInformationEntry(); // standard pie if no Database version was found
+            pie.setDbVersion(0);
+            return pie;
+        }
+        return null;
     }
     
     public PlayerEntry getPlayer(String UUID) {
@@ -172,7 +202,7 @@ public class DatabaseHelper {
     private void applyPatch(int version) {
         String v;
         switch (version) {
-            case 1:
+            case 0:
                 v = "patches/v1.0/";
                 executeScriptNoSchema(v + "createSchema.sql");
                 executeScript(v + "createGroup.sql");
@@ -192,7 +222,7 @@ public class DatabaseHelper {
     }
 
     public void init() {
-        applyPatch(1);
+        applyPatch(pie.getDbVersion());
     }
 
     private void executeScript(String script) {
