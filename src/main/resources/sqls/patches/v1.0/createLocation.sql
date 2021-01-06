@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`location` (
   `location_type_fk` INT NOT NULL,
   `player_fk` INT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_location_type_1_idx` (`location_type_fk` ASC) VISIBLE,
-  INDEX `fk_location_player_1_idx` (`player_fk` ASC) VISIBLE,
+  INDEX `fk_location_type_1_idx` (`location_type_fk` ASC),
+  INDEX `fk_location_player_1_idx` (`player_fk` ASC),
   CONSTRAINT `fk_location_type_1`
     FOREIGN KEY (`location_type_fk`)
     REFERENCES `rellu_essentials`.`location_type` (`id`),

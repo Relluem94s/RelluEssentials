@@ -3,4 +3,4 @@
  * Created: 05.01.2021
  */
 
-SELECT pi.db_version from `rellu_essentials`.`plugin_informations` pi where pi.deletedby is null;
+SELECT * from `rellu_essentials`.`player` p where p.id = ? and p.deletedby is null;
