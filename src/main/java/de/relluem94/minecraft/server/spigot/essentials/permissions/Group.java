@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Team;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.AdminGroup;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.ModGroup;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
@@ -58,6 +59,28 @@ public class Group {
         return g;
     }
 
+    public static Group getGroupFromId(int groupId) {
+        Group g;
+        switch(groupId) {
+            case 1: 
+                g = new UserGroup(); 
+                break;
+            case 2:
+                g = new VipGroup(); 
+                break;
+            case 4: 
+                g = new ModGroup(); 
+                break;
+            case 8: 
+                g = new AdminGroup(); 
+                break;
+            default: 
+                g = new UserGroup(); 
+                break;
+        }
+        return g;
+    }
+    
     private void addGroup() {
         if(RelluEssentials.board.getTeam(name) == null) {
             team = RelluEssentials.board.registerNewTeam(name);

@@ -8,17 +8,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.google.common.io.Resources;
 import com.google.common.base.Charsets;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_DATABASE_NAME;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 
 /**
  *
@@ -63,14 +62,42 @@ public class DatabaseHelper {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public PlayerEntry getPlayer(String UUID) {
+        try (
+                Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayer.sql", Charsets.UTF_8));
 
-    public void insertPlayer(int createdby, Player p, Group g) {
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    PlayerEntry p = new PlayerEntry();
+                    p.setCreated(rs.getString("created"));
+                    p.setCreatedby(rs.getInt("createdby"));
+                    p.setCustomname(rs.getString("customname"));
+                    p.setDeletedby(rs.getInt("deletedby"));
+                    p.setFly(rs.getBoolean("fly"));
+                    p.setAfk(rs.getBoolean("afk"));
+                    p.setGroupID(rs.getInt("group_fk"));
+                    p.setId(rs.getInt("id"));
+                    p.setUuid(rs.getString("uuid"));
+                    return p;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new PlayerEntry();
+    }
+
+
+    public void insertPlayer(PlayerEntry pe) {
         try (
                 Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", Charsets.UTF_8));
-            ps.setInt(1, createdby);
-            ps.setString(2, p.getUniqueId().toString());
-            ps.setInt(3, g.getId());
+            ps.setInt(1, pe.getCreatedby());
+            ps.setString(2, pe.getUUID());
+            ps.setInt(3, pe.getGroupID());
 
             ps.execute();
         } catch (SQLException | IOException ex) {

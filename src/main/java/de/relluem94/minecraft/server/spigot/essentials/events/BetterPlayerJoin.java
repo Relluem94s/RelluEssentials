@@ -2,9 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_JOIN_MESSAGE;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -31,12 +33,19 @@ public class BetterPlayerJoin implements Listener {
     }
 
     private void addPlayer(Player p) {
-        if (players.getConfig().getString("player." + p.getUniqueId() + ".group") == null) {
+        
+        PlayerEntry pe = dBH.getPlayer(p.getUniqueId().toString());
+        
+        if (dBH.getPlayer(p.getUniqueId().toString()).getUUID() == null ) {
             User u = new User(p, new UserGroup());
-            dBH.insertPlayer(1, p, u.getGroup());
+            pe = new PlayerEntry();
+            pe.setCreatedby(1);
+            pe.setGroupID(u.getGroup().getId());
+            pe.setUuid(p.getUniqueId().toString());
+            dBH.insertPlayer(pe);
         } else {
-            String groupName = players.getConfig().getString("player." + p.getUniqueId() + ".group");
-            User u = new User(p, groupName);
+            User u = new User(p, Group.getGroupFromId(pe.getGroupID()));
         }
+        playerEntryList.put(p.getUniqueId(), pe);
     }
 }
