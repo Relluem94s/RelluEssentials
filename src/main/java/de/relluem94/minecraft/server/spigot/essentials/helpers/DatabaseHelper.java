@@ -329,6 +329,7 @@ public class DatabaseHelper {
                 executeScript(v + "insertPlayers.sql");
                 executeScript(v + "insertLocationTypes.sql");
                 executeScript(v + "insertPluginInformation.sql");
+                //TODO Make an migrator from config files to db (call here ConfigHelper)
                 break;
             default:
                 break;

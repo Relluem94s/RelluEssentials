@@ -18,7 +18,8 @@ public class ConfigHelper {
     private String name;
     private File file;
     private YamlConfiguration config;
-
+    
+    //TODO Make an migrator from config files to db
     public ConfigHelper(String name) throws IOException {
         this.name = name;
 

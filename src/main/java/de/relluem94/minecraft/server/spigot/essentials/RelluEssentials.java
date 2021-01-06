@@ -16,7 +16,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
@@ -70,7 +69,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
 import de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
@@ -94,8 +92,6 @@ public class RelluEssentials extends JavaPlugin {
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
 
-    @Deprecated
-    public static ConfigHelper players;
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
@@ -138,7 +134,6 @@ public class RelluEssentials extends JavaPlugin {
         /*  Config */
         if (enable) {
             this.saveDefaultConfig();
-            players = new ConfigHelper("players");
         } else {
             saveConfigs();
         }
@@ -146,20 +141,10 @@ public class RelluEssentials extends JavaPlugin {
 
     public static void reloadConfigs() {
         ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
-        try {
-            players.reload();
-        } catch (IOException | InvalidConfigurationException e) {
-            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
-        }
     }
 
     public static void saveConfigs() {
         ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
-        try {
-            players.save();
-        } catch (IOException e) {
-            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
-        }
     }
 
     private void commandManager() {
