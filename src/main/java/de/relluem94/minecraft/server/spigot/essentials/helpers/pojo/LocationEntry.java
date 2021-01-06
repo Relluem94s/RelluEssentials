@@ -10,6 +10,7 @@ public class LocationEntry {
     private int id;
     private Location location;
     private int player_fk;
+    private String location_name;
     private LocationTypeEntry locationType;
 
     public LocationEntry() {}
@@ -41,4 +42,14 @@ public class LocationEntry {
     public void setLocationType(LocationTypeEntry locationType) {
         this.locationType = locationType;
     }
+
+    public String getLocationName() {
+        return location_name;
+    }
+
+    public void setLocationName(String locationName) {
+        this.location_name = locationName;
+    }
+    
+    
 }

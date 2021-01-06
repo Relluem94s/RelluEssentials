@@ -224,21 +224,6 @@ public class DatabaseHelper {
         }
     }
     
-    public void updatePlayerCustomName(int updatedby, int player_id, String name) {
-        try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayerCustomName.sql", Charsets.UTF_8));
-            ps.setInt(1, updatedby);
-            ps.setString(2, name);
-            ps.setInt(3, player_id);
-
-            ps.execute();
-        } catch (SQLException | IOException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    
     public List<LocationTypeEntry> getLocationTypes() {
         List<LocationTypeEntry> ll = new ArrayList<>();   
         try (   
@@ -272,6 +257,7 @@ public class DatabaseHelper {
                     p.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
                     p.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk")));
                     p.setPlayerId(rs.getInt("player_fk"));
+                    p.setLocationName(rs.getString("location_name"));
                     ll.add(p);
                 }
             }
@@ -280,6 +266,41 @@ public class DatabaseHelper {
         }
         return ll;
     }
+    
+    public void insertLocation(LocationEntry le) {
+        try (
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertLocation.sql", Charsets.UTF_8));
+            Location l = le.getLocation();
+            ps.setFloat(1, (float)l.getX());
+            ps.setFloat(2, (float)l.getY());
+            ps.setFloat(3, (float)l.getZ());
+            ps.setFloat(4, (float)l.getYaw());
+            ps.setFloat(5, (float)l.getPitch());
+            ps.setString(6, l.getWorld().getName());
+            ps.setString(7, le.getLocationName());
+            ps.setInt(8, le.getLocationType().getId());
+            ps.setInt(9, le.getPlayerId());
+            
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void deleteLocation(LocationEntry le) {
+        try (
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteLocation.sql", Charsets.UTF_8));
+            ps.setInt(1, le.getPlayerId());
+            ps.setInt(2, le.getId());
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     
     
     
