@@ -16,7 +16,6 @@ import net.minecraft.server.v1_16_R3.PacketDataSerializer;
 import net.minecraft.server.v1_16_R3.PacketPlayOutPlayerListHeaderFooter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.Command;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -43,7 +42,7 @@ public class PlayerHelper {
 
     public static boolean setAFK(Player p, boolean join) {
 
-        boolean isAFK = true;
+        boolean isAFK = false;
 
         if (players.getConfig().get("player." + p.getUniqueId() + ".afk") != null) {
             isAFK = players.getConfig().getBoolean("player." + p.getUniqueId() + ".afk");

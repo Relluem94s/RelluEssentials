@@ -20,21 +20,28 @@ public class BetterPlayerJoin implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage(null);
         Player p = e.getPlayer();
-        addPlayer(p);
+        boolean firstplayed = addPlayer(p);
+        
         PlayerHelper.setFlying(p);
-        PlayerHelper.setAFK(p, true);
+        
+        if(!firstplayed){
+            PlayerHelper.setAFK(p, true);
+        }
+        
         String header = RelluEssentials.getPlugin(RelluEssentials.class).getConfig().getString("tab.header");
         String footer = RelluEssentials.getPlugin(RelluEssentials.class).getConfig().getString("tab.footer");
         PlayerHelper.sendTablist(p, header, footer);
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
     }
 
-    private void addPlayer(Player p) {
+    private boolean addPlayer(Player p) {
         if (players.getConfig().getString("player." + p.getUniqueId() + ".group") == null) {
             User u = new User(p, new UserGroup());
+            return true;
         } else {
             String groupName = players.getConfig().getString("player." + p.getUniqueId() + ".group");
             User u = new User(p, groupName);
+            return false;
         }
     }
 }
