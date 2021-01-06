@@ -64,9 +64,15 @@ public class Home implements CommandExecutor {
                     } else {
                         if (sender instanceof Player) {
                             Player p = (Player) sender;
-                            if (players.getConfig().get("player." + p.getUniqueId() + ".home." + args[0]) != null) {
-                                Location l = players.getLocation("player." + p.getUniqueId() + ".home." + args[0]);
-                                p.teleport(l);
+                            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+                            LocationEntry le = new LocationEntry();
+                            le.setLocationName(args[1]);
+                            le.setLocationType(locationTypeEntryList.get(0));
+                            le.setPlayerId(pe.getId());
+                            
+                            if(homeExists(pe, le)){
+                                le = getLocationEntry(pe, le);
+                                p.teleport(le.getLocation());
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_TP, args[0]));
                                 return true;
                             } else {
@@ -89,13 +95,6 @@ public class Home implements CommandExecutor {
                             le.setLocationName(args[1]);
                             le.setLocationType(locationTypeEntryList.get(0));
                             le.setPlayerId(pe.getId());
-
-                            for (LocationEntry fle : locationEntryList) {
-                                if (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName())) {
-                                    
-                                    return true;
-                                }
-                            }
 
                             if(homeExists(pe, le)){
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
