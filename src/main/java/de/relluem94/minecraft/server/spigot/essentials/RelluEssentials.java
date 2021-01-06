@@ -255,6 +255,7 @@ public class RelluEssentials extends JavaPlugin {
             @SuppressWarnings("unused")
             User u = new User(p, User.getGroup(p));
             //TODO Add Array for Users to Access it directly without the other class. (Maybe?)
+            //TODO Remove Todo above. Also (Maybe?) remove User thing. could be replaced by the pojo stuff we have.
         });
     }
 
