@@ -37,16 +37,14 @@ public class BetterPlayerJoin implements Listener {
         
         PlayerEntry pe = dBH.getPlayer(p.getUniqueId().toString());
         
-        if (dBH.getPlayer(p.getUniqueId().toString()).getUUID() == null ) {
-            User u = new User(p, new UserGroup());
+        if (pe == null) {
             pe = new PlayerEntry();
             pe.setCreatedby(1);
-            pe.setGroup(new GroupEntry(u.getGroup()));
+            pe.setGroup(new GroupEntry(new UserGroup()));
             pe.setUuid(p.getUniqueId().toString());
             dBH.insertPlayer(pe);
-        } else {
-            User u = new User(p, Group.getGroupFromId(pe.getGroup().getId()));
         }
         playerEntryList.put(p.getUniqueId(), pe);
+        User u = new User(p, Group.getGroupFromId(pe.getGroup().getId()));
     }
 }

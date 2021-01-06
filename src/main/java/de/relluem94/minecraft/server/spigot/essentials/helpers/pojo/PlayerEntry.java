@@ -90,7 +90,7 @@ public class PlayerEntry {
         return afk;
     }
 
-    public void setAfk(boolean afk) {
+    public void setAFK(boolean afk) {
         this.afk = afk;
     }
 

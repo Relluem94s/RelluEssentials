@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
-import org.bukkit.entity.Player;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -14,11 +13,6 @@ public class PlayerMove implements Listener {
     
      @EventHandler
     public void onSpawn(PlayerMoveEvent e) {
-        boolean isAFK = false;
-        Player p = e.getPlayer();
-        if(players.getConfig().get("player." + p.getUniqueId() + ".afk") != null){
-            isAFK = players.getConfig().getBoolean("player." + p.getUniqueId() + ".afk");
-        }
-        e.setCancelled(isAFK);
+        e.setCancelled(playerEntryList.get(e.getPlayer().getUniqueId()).isAfk());
     }
 }

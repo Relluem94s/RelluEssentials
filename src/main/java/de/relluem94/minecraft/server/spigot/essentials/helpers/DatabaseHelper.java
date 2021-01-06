@@ -81,7 +81,7 @@ public class DatabaseHelper {
                     p.setCustomname(rs.getString("customname"));
                     p.setDeletedby(rs.getInt("deletedby"));
                     p.setFly(rs.getBoolean("fly"));
-                    p.setAfk(rs.getBoolean("afk"));
+                    p.setAFK(rs.getBoolean("afk"));
                     p.setGroup(new GroupEntry(Group.getGroupFromId(rs.getInt("group_fk"))));
                     p.setId(rs.getInt("id"));
                     p.setUuid(rs.getString("uuid"));
@@ -91,7 +91,7 @@ public class DatabaseHelper {
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return new PlayerEntry();
+        return null;
     }
     
      public List<PlayerEntry> getPlayers() {
@@ -110,7 +110,7 @@ public class DatabaseHelper {
                     p.setCustomname(rs.getString("customname"));
                     p.setDeletedby(rs.getInt("deletedby"));
                     p.setFly(rs.getBoolean("fly"));
-                    p.setAfk(rs.getBoolean("afk"));
+                    p.setAFK(rs.getBoolean("afk"));
                     p.setGroup(new GroupEntry(Group.getGroupFromId(rs.getInt("group_fk"))));
                     p.setId(rs.getInt("id"));
                     p.setUuid(rs.getString("uuid"));

@@ -118,12 +118,6 @@ public class RelluEssentials extends JavaPlugin {
         boardManager();
         groupManager();
         enchantmentManager();
-        
-        
-        List<PlayerEntry> pel = dBH.getPlayers();
-        pel.forEach(p -> {
-            playerEntryList.put(UUID.fromString(p.getUUID()), p);
-        });
     }
 
     @Override
@@ -250,6 +244,11 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void groupManager() {
+        List<PlayerEntry> pel = dBH.getPlayers();
+        pel.forEach(p -> {
+            playerEntryList.put(UUID.fromString(p.getUUID()), p);
+        });
+        
         Bukkit.getOnlinePlayers().forEach(p -> {
             @SuppressWarnings("unused")
             User u = new User(p, User.getGroup(p));
