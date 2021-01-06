@@ -18,6 +18,10 @@ public class LocationEntry {
     public int getId() {
         return id;
     }
+    
+    public void setId(int id){
+        this.id = id;
+    }
 
     public Location getLocation() {
         return location;

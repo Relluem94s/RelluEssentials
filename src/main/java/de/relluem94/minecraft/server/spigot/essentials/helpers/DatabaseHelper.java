@@ -258,6 +258,7 @@ public class DatabaseHelper {
                     p.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk")-1));
                     p.setPlayerId(rs.getInt("player_fk"));
                     p.setLocationName(rs.getString("location_name"));
+                    p.setId(rs.getInt("id"));
                     ll.add(p);
                 }
             }
@@ -296,7 +297,6 @@ public class DatabaseHelper {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteLocation.sql", Charsets.UTF_8));
             ps.setInt(1, le.getPlayerId());
             ps.setInt(2, le.getId());
-
             ps.execute();
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
