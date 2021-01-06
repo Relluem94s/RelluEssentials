@@ -1,11 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import java.util.Iterator;
 import java.util.Map;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -88,7 +86,6 @@ public class Home implements CommandExecutor {
                                 else{
                                     p.sendMessage(String.format(PLUGIN_COMMAND_HOME_RESERVED, args[1]));
                                 }
-                                
                                 return true;
                             }
                             else{
