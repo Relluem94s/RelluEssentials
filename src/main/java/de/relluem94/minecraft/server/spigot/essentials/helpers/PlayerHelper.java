@@ -34,7 +34,8 @@ public class PlayerHelper {
      */
     public static void setFlying(Player p) {
         if (User.getGroup(p).getId() >= Groups.VIP.getId()) {
-            if (players.getConfig().getBoolean("player." + p.getUniqueId() + ".fly")) {
+            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+            if (pe.isFlying()) {
                 p.setAllowFlight(true);
                 if (p.getLocation().getBlock().getRelative(0, -1, 0).getType().equals(Material.AIR)) {
                     p.setFlying(true);
