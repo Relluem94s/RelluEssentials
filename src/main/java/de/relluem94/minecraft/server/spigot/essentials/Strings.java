@@ -9,7 +9,7 @@ public class Strings {
     
     public static final String PLUGIN_NAME = "RelluEssentials";
     public static final String PLUGIN_NAME_CONSOLE = "[" + PLUGIN_NAME + "] ";
-    public static final String PLUGIN_PREFIX = "§o§l§4" + PLUGIN_NAME + "§r§f";
+    public static final String PLUGIN_PREFIX = "§o§l§4§8Rellu§cEssentials§r§f";
     public static final String PLUGIN_SPACER = "§7 >> §f";
     public static final String PLUGIN_SPACER_CHANNEL = " >> §f";
     public static final String PLUGIN_COMMAND_COLOR = "§f";

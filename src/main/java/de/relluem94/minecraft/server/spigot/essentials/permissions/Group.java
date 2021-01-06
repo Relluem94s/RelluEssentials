@@ -13,11 +13,11 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.VipGro
 public class Group {
 	
     private final String name;
-    private final long group_id;
+    private final int group_id;
     private final String prefix;
     private Team team;
 
-    public Group(String name, long group_id, String prefix) {
+    public Group(String name, int group_id, String prefix) {
         this.name = name;
         this.group_id = group_id;
         this.prefix = prefix;
@@ -28,7 +28,7 @@ public class Group {
         return name;
     }
 
-    public long getId() {
+    public int getId() {
         return group_id;
     }
 

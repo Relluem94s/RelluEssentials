@@ -8,7 +8,7 @@
 -- Table `rellu_essentials`.`block_history`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `rellu_essentials`.`block_history` (
-  `ID` INT NOT NULL,
+  `ID` INT NOT NULL AUTO_INCREMENT,
   `CREATED` DATETIME NOT NULL,
   `CREATEDBY` INT NOT NULL,
   `UPDATED` DATETIME NULL,

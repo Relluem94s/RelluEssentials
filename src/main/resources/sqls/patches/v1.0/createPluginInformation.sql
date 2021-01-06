@@ -7,7 +7,7 @@
 -- Table `rellu_essentials`.`plugin_informations`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `rellu_essentials`.`plugin_informations` (
-  `ID` INT NOT NULL,
+  `ID` INT NOT NULL AUTO_INCREMENT,
   `CREATED` DATETIME NOT NULL,
   `CREATEDBY` INT NOT NULL,
   `UPDATED` DATETIME NULL,
@@ -18,5 +18,5 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`plugin_informations` (
   `tab_footer` VARCHAR(255) NOT NULL,
   `motd_message` VARCHAR(255) NOT NULL,
   `motd_players` INT NOT NULL,
-  `db_version` VARCHAR(10) NOT NULL,
+  `db_version` INT NOT NULL,
   PRIMARY KEY (`ID`));

@@ -6,7 +6,7 @@
 -- -----------------------------------------------------
 -- Data for table `rellu_essentials`.`group`
 -- -----------------------------------------------------
-INSERT INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) 
+INSERT IGNORE INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) 
 VALUES 
 (1, 'User', '§8'), 
 (2, 'VIP', '§a'), 
