@@ -140,6 +140,7 @@ public class Home implements CommandExecutor {
     
     private boolean homeExists(PlayerEntry pe, LocationEntry le){
         for (LocationEntry fle : locationEntryList) {
+            System.out.println(le.getPlayerId() + " " + pe.getId() + " || " + fle.getLocationName() + " " + le.getLocationName() + " || " + fle.getLocationType().getId());
             if (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && fle.getLocationType().getId() == 1) {
                 return true;
             }

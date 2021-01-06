@@ -8,6 +8,10 @@
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `rellu_essentials`.`location` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `created` DATETIME NOT NULL,
+  `createdby` INT NOT NULL,
+  `deleted` DATETIME NULL,
+  `deletedby` INT NULL,
   `x` FLOAT NOT NULL,
   `y` FLOAT NOT NULL,
   `z` FLOAT NOT NULL,

@@ -7,6 +7,6 @@ UPDATE
     `rellu_essentials`.`location` 
 SET 
     `deleted` = now(), 
-    `deletedby` = ?, 
+    `deletedby` = ?
 WHERE 
     id = ?

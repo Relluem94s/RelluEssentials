@@ -255,7 +255,7 @@ public class DatabaseHelper {
                 while(rs.next()){
                     LocationEntry p = new LocationEntry();
                     p.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                    p.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk")));
+                    p.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk")-1));
                     p.setPlayerId(rs.getInt("player_fk"));
                     p.setLocationName(rs.getString("location_name"));
                     ll.add(p);
