@@ -12,11 +12,15 @@ import com.google.common.base.Charsets;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_DATABASE_NAME;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -67,7 +71,7 @@ public class DatabaseHelper {
         try (
                 Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayer.sql", Charsets.UTF_8));
-
+            ps.setString(1, UUID);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while(rs.next()){
@@ -78,7 +82,7 @@ public class DatabaseHelper {
                     p.setDeletedby(rs.getInt("deletedby"));
                     p.setFly(rs.getBoolean("fly"));
                     p.setAfk(rs.getBoolean("afk"));
-                    p.setGroupID(rs.getInt("group_fk"));
+                    p.setGroup(new GroupEntry(Group.getGroupFromId(rs.getInt("group_fk"))));
                     p.setId(rs.getInt("id"));
                     p.setUuid(rs.getString("uuid"));
                     return p;
@@ -89,6 +93,36 @@ public class DatabaseHelper {
         }
         return new PlayerEntry();
     }
+    
+     public List<PlayerEntry> getPlayers() {
+        List<PlayerEntry> pel = new ArrayList<>();   
+        try (
+             
+                
+            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayers.sql", Charsets.UTF_8));
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    PlayerEntry p = new PlayerEntry();
+                    p.setCreated(rs.getString("created"));
+                    p.setCreatedby(rs.getInt("createdby"));
+                    p.setCustomname(rs.getString("customname"));
+                    p.setDeletedby(rs.getInt("deletedby"));
+                    p.setFly(rs.getBoolean("fly"));
+                    p.setAfk(rs.getBoolean("afk"));
+                    p.setGroup(new GroupEntry(Group.getGroupFromId(rs.getInt("group_fk"))));
+                    p.setId(rs.getInt("id"));
+                    p.setUuid(rs.getString("uuid"));
+                    
+                    pel.add(p);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pel;
+    }
 
 
     public void insertPlayer(PlayerEntry pe) {
@@ -97,7 +131,7 @@ public class DatabaseHelper {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", Charsets.UTF_8));
             ps.setInt(1, pe.getCreatedby());
             ps.setString(2, pe.getUUID());
-            ps.setInt(3, pe.getGroupID());
+            ps.setInt(3, pe.getGroup().getId());
 
             ps.execute();
         } catch (SQLException | IOException ex) {
@@ -105,14 +139,16 @@ public class DatabaseHelper {
         }
     }
     
-    public void updatePlayerAFK(int updatedby, int player_id, boolean afk) {
+    public void updatePlayer(PlayerEntry pe) {
         try (
             Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayerAFK.sql", Charsets.UTF_8));
-            ps.setInt(1, updatedby);
-            ps.setBoolean(2, afk);
-            ps.setInt(3, player_id);
-
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayer.sql", Charsets.UTF_8));
+            ps.setInt(1, pe.getId());
+            ps.setInt(2, pe.getGroup().getId());
+            ps.setBoolean(3, pe.isAfk());
+            ps.setBoolean(4, pe.isFlying());
+            ps.setString(5, pe.getCustomname());
+            ps.setString(6, pe.getUUID());
             ps.execute();
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);

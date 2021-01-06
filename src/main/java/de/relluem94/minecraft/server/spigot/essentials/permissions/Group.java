@@ -4,7 +4,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Team;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.AdminGroup;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.ModGroup;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;

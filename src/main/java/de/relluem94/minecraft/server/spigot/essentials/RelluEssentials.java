@@ -89,9 +89,8 @@ public class RelluEssentials extends JavaPlugin {
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
 
+    @Deprecated
     public static ConfigHelper players;
-    public static ConfigHelper warps;
-    public static ConfigHelper marriage;
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
@@ -101,10 +100,11 @@ public class RelluEssentials extends JavaPlugin {
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_START_MESSAGE);
-
+        
         dataFolder = this.getDataFolder();
         dBH = new DatabaseHelper();
         dBH.init();
+        
         try {
             configManager(true);
         } catch (IOException e) {
@@ -118,6 +118,12 @@ public class RelluEssentials extends JavaPlugin {
         boardManager();
         groupManager();
         enchantmentManager();
+        
+        
+        List<PlayerEntry> pel = dBH.getPlayers();
+        pel.forEach(p -> {
+            playerEntryList.put(UUID.fromString(p.getUUID()), p);
+        });
     }
 
     @Override
@@ -135,8 +141,6 @@ public class RelluEssentials extends JavaPlugin {
         if (enable) {
             this.saveDefaultConfig();
             players = new ConfigHelper("players");
-            warps = new ConfigHelper("warps");
-            marriage = new ConfigHelper("marriage");
         } else {
             saveConfigs();
         }
@@ -146,8 +150,6 @@ public class RelluEssentials extends JavaPlugin {
         ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
         try {
             players.reload();
-            warps.reload();
-            marriage.reload();
         } catch (IOException | InvalidConfigurationException e) {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
@@ -157,8 +159,6 @@ public class RelluEssentials extends JavaPlugin {
         ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
         try {
             players.save();
-            warps.save();
-            marriage.save();
         } catch (IOException e) {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }

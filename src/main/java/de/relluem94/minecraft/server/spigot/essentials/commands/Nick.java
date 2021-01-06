@@ -1,7 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -24,9 +26,12 @@ public class Nick implements CommandExecutor {
                     if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
                         Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
                         if (target != null) {
+                            PlayerEntry pe = playerEntryList.get(target.getUniqueId());
+                            pe.setCustomname(args[1]);
+                            pe.setUpdatedby(playerEntryList.get(p.getUniqueId()).getId());
                             target.setCustomName(User.getUserByPlayerName(target.getName()).getGroup().getPrefix() + args[1]);
                             p.sendMessage(String.format(PLUGIN_COMMAND_NICK, target.getName()));
-                            players.getConfig().set("player." + target.getUniqueId() + ".customname", args[1]);
+                            dBH.updatePlayer(pe);
                             return true;
                         }
                     } else {

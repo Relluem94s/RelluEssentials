@@ -16,7 +16,7 @@ public class PlayerEntry {
     private String deleted;
     private int deletedby;
     private String uuid;
-    private int groupID;
+    private GroupEntry group;
     private boolean afk;
     private boolean fly;
     private String customname;
@@ -78,12 +78,12 @@ public class PlayerEntry {
         this.uuid = uuid;
     }
 
-    public int getGroupID() {
-        return groupID;
+    public GroupEntry getGroup() {
+        return group;
     }
 
-    public void setGroupID(int group_id) {
-        this.groupID = group_id;
+    public void setGroup(GroupEntry group) {
+        this.group = group;
     }
 
     public boolean isAfk() {
@@ -94,7 +94,7 @@ public class PlayerEntry {
         this.afk = afk;
     }
 
-    public boolean isFly() {
+    public boolean isFlying() {
         return fly;
     }
 
