@@ -9,4 +9,4 @@ SET
     `deleted` = now(), 
     `deletedby` = ?
 WHERE 
-    id = ?
+    `location`.`id` = ?;

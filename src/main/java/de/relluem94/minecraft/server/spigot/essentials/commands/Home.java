@@ -87,15 +87,13 @@ public class Home implements CommandExecutor {
                         Player p = (Player) sender;
                         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
                         
+                        LocationEntry le = new LocationEntry();
+                        le.setLocation(p.getLocation());
+                        le.setLocationName(args[1]);
+                        le.setLocationType(locationTypeEntryList.get(0));
+                        le.setPlayerId(pe.getId());
+                        
                         if (args[0].equalsIgnoreCase("set")) {
-                            
-                            LocationEntry le = new LocationEntry();
-
-                            le.setLocation(p.getLocation());
-                            le.setLocationName(args[1]);
-                            le.setLocationType(locationTypeEntryList.get(0));
-                            le.setPlayerId(pe.getId());
-
                             if(homeExists(pe, le)){
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
                             }
@@ -109,14 +107,6 @@ public class Home implements CommandExecutor {
                             }
                             return true;
                         } else if (args[0].equalsIgnoreCase("delete")) {
-                            
-                            LocationEntry le = new LocationEntry();
-
-                            le.setLocation(p.getLocation());
-                            le.setLocationName(args[1]);
-                            
-                            
-                            
                             if(homeExists(pe, le)){
                                 le = getLocationEntry(pe, le);
                                 dBH.deleteLocation(le);
@@ -140,7 +130,6 @@ public class Home implements CommandExecutor {
     
     private boolean homeExists(PlayerEntry pe, LocationEntry le){
         for (LocationEntry fle : locationEntryList) {
-            System.out.println(le.getPlayerId() + " " + pe.getId() + " || " + fle.getLocationName() + " " + le.getLocationName() + " || " + fle.getLocationType().getId());
             if (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && fle.getLocationType().getId() == 1) {
                 return true;
             }
