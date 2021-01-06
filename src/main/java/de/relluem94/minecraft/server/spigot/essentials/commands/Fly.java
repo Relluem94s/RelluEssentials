@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -49,6 +50,7 @@ public class Fly implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("fly")) {
             PlayerEntry pe = playerEntryList.get(p.getUniqueId());
             pe.setFly(!pe.isFlying());
+            dBH.updatePlayer(pe);
             p.setAllowFlight(pe.isFlying());
             p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, p.getCustomName(), pe.isFlying() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
             return true;
