@@ -24,7 +24,8 @@ public class BetterPlayerJoin implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage(null);
         Player p = e.getPlayer();
-        addPlayer(p);
+        boolean firstplayed = addPlayer(p);
+        
         PlayerHelper.setFlying(p);
         PlayerHelper.setAFK(p, true);
         PlayerHelper.sendTablist(p, pie.getTabheader(), pie.getTabfooter());
