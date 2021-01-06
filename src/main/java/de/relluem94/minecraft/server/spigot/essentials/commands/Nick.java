@@ -31,6 +31,7 @@ public class Nick implements CommandExecutor {
                             pe.setUpdatedby(playerEntryList.get(p.getUniqueId()).getId());
                             dBH.updatePlayer(pe);
                             target.setCustomName(User.getUserByPlayerName(target.getName()).getGroup().getPrefix() + args[1]);
+                            target.setPlayerListName(User.getUserByPlayerName(target.getName()).getGroup().getPrefix() + args[1]);
                             p.sendMessage(String.format(PLUGIN_COMMAND_NICK, target.getName()));
                             
                             return true;
