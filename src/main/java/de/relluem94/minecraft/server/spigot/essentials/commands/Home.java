@@ -136,7 +136,7 @@ public class Home implements CommandExecutor {
         
     private LocationEntry getLocationEntry(PlayerEntry pe, LocationEntry le){
         for (LocationEntry fle : locationEntryList) {
-            if (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && fle.getLocationType().getId() == 1) {
+            if (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)) {
                 return fle;
             }
         }
