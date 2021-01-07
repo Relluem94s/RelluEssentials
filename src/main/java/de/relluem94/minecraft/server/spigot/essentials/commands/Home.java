@@ -51,6 +51,9 @@ public class Home implements CommandExecutor {
                                 locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationType().getId() == 1)).forEachOrdered(fle -> {
                                     p.sendMessage(PLUGIN_COMMAND_COLOR + "Name: " + PLUGIN_COMMAND_ARG_COLOR + fle.getLocationName() +  " §7(" + locationToString(fle.getLocation()) + "§7)");
                                 });
+                                locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationType().getId() == 2)).forEachOrdered(fle -> {
+                                    p.sendMessage(PLUGIN_COMMAND_COLOR + "Todespunkt: " + PLUGIN_COMMAND_ARG_COLOR + fle.getLocationName() +  " §7(" + locationToString(fle.getLocation()) + "§7)");
+                                });
                             } else {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
                             }
