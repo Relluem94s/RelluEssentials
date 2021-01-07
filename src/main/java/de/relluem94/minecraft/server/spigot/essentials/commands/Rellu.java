@@ -21,13 +21,7 @@ public class Rellu implements CommandExecutor {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
-                        if (args[0].equalsIgnoreCase("save")) { //TODO REMOVE
-                            p.sendMessage(PLUGIN_COMMAND_RELLU_SAVE);
-                            return true;
-                        } else if (args[0].equalsIgnoreCase("reload")) { //TODO REMOVE
-                            p.sendMessage(PLUGIN_COMMAND_RELLU_RELOAD);
-                            return true;
-                        } else if (args[0].equalsIgnoreCase("ping")) {
+                        if (args[0].equalsIgnoreCase("ping")) {
                             int ping = ((CraftPlayer) p).getHandle().ping;
                             p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING, ping));
                             return true;
