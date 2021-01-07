@@ -1,8 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationEntryList;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_DEATH;
-import org.bukkit.Location;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,11 +18,16 @@ public class NoDeathMessage implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         Player p = e.getEntity().getPlayer();
         
-        Location l = p.getLocation();
-        players.setLocation("player." + p.getUniqueId() + ".home.death", l);
-        //TODO add location save.
-        
-        String loc = l.getX() + " " + l.getY() + " " + l.getZ();
+        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        LocationEntry le = new LocationEntry();
+        le.setLocation(p.getLocation());
+        le.setLocationName("death");
+        le.setLocationType(locationTypeEntryList.get(1));
+        le.setPlayerId(pe.getId());
+        dBH.insertLocation(le);
+        locationEntryList.add(le);
+
+        String loc = le.getLocation().getX() + " " + le.getLocation().getY() + " " + le.getLocation().getZ();
         p.sendMessage(String.format(PLUGIN_EVENT_DEATH, loc));
         e.setKeepLevel(true);
         e.setDroppedExp(0);

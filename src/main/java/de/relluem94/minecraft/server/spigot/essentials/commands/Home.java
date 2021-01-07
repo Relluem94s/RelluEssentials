@@ -124,11 +124,11 @@ public class Home implements CommandExecutor {
     }
     
     private boolean homeExists(PlayerEntry pe, LocationEntry le){
-        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && fle.getLocationType().getId() == 1));
+        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)));
     }
     
     private boolean hasHomes(PlayerEntry pe){
-        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationType().getId() == 1));
+        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getId() && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)));
     }
         
     private LocationEntry getLocationEntry(PlayerEntry pe, LocationEntry le){

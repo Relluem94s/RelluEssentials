@@ -10,7 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.google.common.base.Charsets;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_DATABASE_NAME;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 
 /**
@@ -36,30 +34,18 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.lo
  */
 public class DatabaseHelper {
 
-    private String host;
-    private String user;
-    private String password;
-    private int port;
-    private final boolean enabled;
+    private final String host;
+    private final String user;
+    private final String password;
+    private final int port;
 
-    private String connector = "jdbc:mariadb";
+    private final String connector = "jdbc:mysql";
 
-    public DatabaseHelper() {
-        FileConfiguration c = RelluEssentials.getPlugin(RelluEssentials.class).getConfig();
-        connector = "jdbc:mysql";
-
-        enabled = c.getBoolean("database.enabled");
-        if (enabled) {
-            host = c.getString("database.host") + "";
-            user = c.getString("database.user") + "";
-            password = c.getString("database.password") + "";
-            port = c.getInt("database.port");
-        }
-
-    }
-
-    public boolean enabled() {
-        return enabled;
+    public DatabaseHelper(String host, String user, String password, int port) {
+        this.host = host;
+        this.user = user;
+        this.password = password;
+        this.port = port;
     }
 
     //*****************************************************************************************************************************************//
@@ -71,7 +57,7 @@ public class DatabaseHelper {
     //DUMMY 
     public void select() {
         try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", Charsets.UTF_8));
 
             ps.execute();
@@ -84,7 +70,7 @@ public class DatabaseHelper {
     //DUMMY
     public LocationEntry getLocation(PlayerEntry pe, int type) {
         try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationsByPlayer.sql", Charsets.UTF_8));
             ps.setInt(1, pe.getId());
             ps.execute();
@@ -112,7 +98,7 @@ public class DatabaseHelper {
     
     public PluginInformationEntry getPluginInformation() {
         try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port , user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port , user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPluginInformation.sql", Charsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -140,7 +126,7 @@ public class DatabaseHelper {
     
     public PlayerEntry getPlayer(String UUID) {
         try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayer.sql", Charsets.UTF_8));
             ps.setString(1, UUID);
             ps.execute();
@@ -168,7 +154,7 @@ public class DatabaseHelper {
     public List<PlayerEntry> getPlayers() {
         List<PlayerEntry> pel = new ArrayList<>();   
         try (   
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayers.sql", Charsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -196,7 +182,7 @@ public class DatabaseHelper {
     
     public void insertPlayer(PlayerEntry pe) {
         try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", Charsets.UTF_8));
             ps.setInt(1, pe.getCreatedby());
             ps.setString(2, pe.getUUID());
@@ -210,7 +196,7 @@ public class DatabaseHelper {
     
     public void updatePlayer(PlayerEntry pe) {
         try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayer.sql", Charsets.UTF_8));
             ps.setInt(1, pe.getId());
             ps.setInt(2, pe.getGroup().getId());
@@ -227,7 +213,7 @@ public class DatabaseHelper {
     public List<LocationTypeEntry> getLocationTypes() {
         List<LocationTypeEntry> ll = new ArrayList<>();   
         try (   
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationTypes.sql", Charsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -247,7 +233,7 @@ public class DatabaseHelper {
      public List<LocationEntry> getLocations() {
         List<LocationEntry> ll = new ArrayList<>();   
         try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocations.sql", Charsets.UTF_8));
  
             ps.execute();
@@ -270,7 +256,7 @@ public class DatabaseHelper {
     
     public void insertLocation(LocationEntry le) {
         try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertLocation.sql", Charsets.UTF_8));
             Location l = le.getLocation();
             
@@ -293,7 +279,7 @@ public class DatabaseHelper {
     
     public void deleteLocation(LocationEntry le) {
         try (
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteLocation.sql", Charsets.UTF_8));
             ps.setInt(1, le.getPlayerId());
             ps.setInt(2, le.getId());

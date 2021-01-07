@@ -135,7 +135,8 @@ public class RelluEssentials extends JavaPlugin {
         if (enable) {
             this.saveDefaultConfig();
         } else {
-            saveConfigs();
+            //saveConfigs();
+            this.saveConfig();
         }
     }
 
@@ -143,9 +144,6 @@ public class RelluEssentials extends JavaPlugin {
         ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
     }
 
-    public static void saveConfigs() {
-        ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
-    }
 
     private void commandManager() {
         /*	Commands	*/
@@ -267,7 +265,7 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void databaseManager() {
-        dBH = new DatabaseHelper();
+        dBH = new DatabaseHelper(this.getConfig().getString("database.host"), this.getConfig().getString("database.user"), this.getConfig().getString("database.password"), this.getConfig().getInt("database.port"));
         pie = dBH.getPluginInformation();
         dBH.init();
         locationTypeEntryList.addAll(dBH.getLocationTypes());
