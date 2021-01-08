@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.google.common.base.Charsets;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_DATABASE_NAME;
@@ -27,6 +26,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -58,7 +58,7 @@ public class DatabaseHelper {
     public void select() {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", StandardCharsets.UTF_8));
 
             ps.execute();
         } catch (SQLException | IOException ex) {
@@ -71,7 +71,7 @@ public class DatabaseHelper {
     public LocationEntry getLocation(PlayerEntry pe, int type) {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationsByPlayer.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationsByPlayer.sql", StandardCharsets.UTF_8));
             ps.setInt(1, pe.getId());
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -99,7 +99,7 @@ public class DatabaseHelper {
     public PluginInformationEntry getPluginInformation() {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port , user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPluginInformation.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPluginInformation.sql", StandardCharsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while(rs.next()){
@@ -127,7 +127,7 @@ public class DatabaseHelper {
     public PlayerEntry getPlayer(String UUID) {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayer.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayer.sql", StandardCharsets.UTF_8));
             ps.setString(1, UUID);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -155,7 +155,7 @@ public class DatabaseHelper {
         List<PlayerEntry> pel = new ArrayList<>();   
         try (   
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayers.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayers.sql", StandardCharsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while(rs.next()){
@@ -183,7 +183,7 @@ public class DatabaseHelper {
     public void insertPlayer(PlayerEntry pe) {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", StandardCharsets.UTF_8));
             ps.setInt(1, pe.getCreatedby());
             ps.setString(2, pe.getUUID());
             ps.setInt(3, pe.getGroup().getId());
@@ -197,7 +197,7 @@ public class DatabaseHelper {
     public void updatePlayer(PlayerEntry pe) {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayer.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayer.sql", StandardCharsets.UTF_8));
             ps.setInt(1, pe.getId());
             ps.setInt(2, pe.getGroup().getId());
             ps.setBoolean(3, pe.isAfk());
@@ -214,7 +214,7 @@ public class DatabaseHelper {
         List<LocationTypeEntry> ll = new ArrayList<>();   
         try (   
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationTypes.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationTypes.sql", StandardCharsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while(rs.next()){
@@ -234,7 +234,7 @@ public class DatabaseHelper {
         List<LocationEntry> ll = new ArrayList<>();   
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocations.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocations.sql", StandardCharsets.UTF_8));
  
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -257,7 +257,7 @@ public class DatabaseHelper {
     public void insertLocation(LocationEntry le) {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertLocation.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertLocation.sql", StandardCharsets.UTF_8));
             Location l = le.getLocation();
             
             ps.setInt(1, le.getPlayerId());
@@ -280,7 +280,7 @@ public class DatabaseHelper {
     public void deleteLocation(LocationEntry le) {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteLocation.sql", Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteLocation.sql", StandardCharsets.UTF_8));
             ps.setInt(1, le.getPlayerId());
             ps.setInt(2, le.getId());
             ps.execute();
@@ -329,7 +329,7 @@ public class DatabaseHelper {
     private void executeScript(String script) {
         try (
                 Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, StandardCharsets.UTF_8));
 
             ps.execute();
         } catch (SQLException | IOException ex) {
@@ -341,7 +341,7 @@ public class DatabaseHelper {
 
         try (
                 Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, Charsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, StandardCharsets.UTF_8));
 
             ps.execute();
         } catch (SQLException | IOException ex) {
