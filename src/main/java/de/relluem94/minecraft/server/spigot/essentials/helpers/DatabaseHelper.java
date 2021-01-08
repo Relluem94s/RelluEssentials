@@ -322,10 +322,10 @@ public class DatabaseHelper {
                 
                 ConfigHelper ch = new ConfigHelper("players");
                 List<PlayerEntry> pe = ch.getPlayers();
-                for(PlayerEntry p : pe){
+                pe.forEach(p -> {
                     insertPlayer(p);
-                    
-                }
+                });
+                
                 List<PlayerEntry> pel = getPlayers();
                 pel.forEach(p -> {
                     playerEntryList.put(UUID.fromString(p.getUUID()), p);
@@ -340,11 +340,12 @@ public class DatabaseHelper {
                     updatePlayer(pu);
                     
                     List<LocationEntry> lel = ch.getHomes(pu);
-                    for(LocationEntry le : lel){
+                    lel.forEach(le -> {
                         insertLocation(le);
-                    }
+                    });
                 }
                 break;
+
             default:
                 break;
         }
