@@ -110,14 +110,14 @@ public class RelluEssentials extends JavaPlugin {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
         
-        databaseManager();
+        boardManager();
         commandManager();
+        databaseManager();
+        enchantmentManager();
         eventManager();
         featureManager();
-        skillManager();
-        boardManager();
         groupManager();
-        enchantmentManager();
+        skillManager();
     }
 
     @Override

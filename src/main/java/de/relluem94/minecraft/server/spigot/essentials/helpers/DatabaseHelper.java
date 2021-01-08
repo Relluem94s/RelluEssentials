@@ -26,7 +26,9 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 /**
  *
@@ -315,11 +317,35 @@ public class DatabaseHelper {
                 executeScript(v + "insertPlayers.sql");
                 executeScript(v + "insertLocationTypes.sql");
                 executeScript(v + "insertPluginInformation.sql");
-                //TODO Make an migrator from config files to db (call here ConfigHelper)
+                
+                pie = getPluginInformation();
+                
+                ConfigHelper ch = new ConfigHelper("players");
+                List<PlayerEntry> pe = ch.getPlayers();
+                for(PlayerEntry p : pe){
+                    insertPlayer(p);
+                    
+                }
+                List<PlayerEntry> pel = getPlayers();
+                pel.forEach(p -> {
+                    playerEntryList.put(UUID.fromString(p.getUUID()), p);
+                });
+                
+                for(PlayerEntry p : pe){
+                    PlayerEntry pu = playerEntryList.get(UUID.fromString(p.getUUID()));
+                    pu.setAFK(p.isAfk());
+                    pu.setFly(p.isFlying());
+                    pu.setCustomname(p.getCustomname());
+                    pu.setUpdatedby(1);
+                    updatePlayer(pu);
+                    
+                    List<LocationEntry> lel = ch.getHomes(pu);
+                    for(LocationEntry le : lel){
+                        insertLocation(le);
+                    }
+                }
                 break;
             default:
-                ConfigHelper ch = new ConfigHelper("players");
-                ch.migratePlayers(); // here to test >> goes to case 0 for production
                 break;
         }
     }
