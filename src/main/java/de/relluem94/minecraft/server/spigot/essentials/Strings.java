@@ -20,7 +20,7 @@ public class Strings {
     public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
     
-    public static final String PLUGIN_REGISTER_ENCHANTMENT = " Registered enchantment %s with id %s!";
+    public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
 
     
     
