@@ -5,8 +5,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.lo
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_DEATH;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_DEATH_TP;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,9 +28,10 @@ public class NoDeathMessage implements Listener {
         le.setPlayerId(pe.getId());
         dBH.insertLocation(le);
         locationEntryList.add(le);
+        p.sendMessage(String.format(PLUGIN_EVENT_DEATH, le.getLocationName(), (int)le.getLocation().getX(), (int)le.getLocation().getY(), (int)le.getLocation().getZ(), le.getLocation().getWorld().getName()));
+        Bukkit.getConsoleSender().getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + p.getName() + " [\"\",{\"text\":\"" + PLUGIN_EVENT_DEATH_TP + "\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/home " + le.getLocationName() + "\"}}]");
 
-        String loc = le.getLocation().getX() + " " + le.getLocation().getY() + " " + le.getLocation().getZ();
-        p.sendMessage(String.format(PLUGIN_EVENT_DEATH, loc));
+        
         e.setKeepLevel(true);
         e.setDroppedExp(0);
         e.setDeathMessage(null);
