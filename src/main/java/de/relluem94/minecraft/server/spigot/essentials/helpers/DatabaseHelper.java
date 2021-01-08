@@ -318,6 +318,8 @@ public class DatabaseHelper {
                 //TODO Make an migrator from config files to db (call here ConfigHelper)
                 break;
             default:
+                ConfigHelper ch = new ConfigHelper("players");
+                ch.migratePlayers(); // here to test >> goes to case 0 for production
                 break;
         }
     }
