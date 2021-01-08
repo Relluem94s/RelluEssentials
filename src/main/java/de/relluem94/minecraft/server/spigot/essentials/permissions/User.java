@@ -3,12 +3,15 @@ package de.relluem94.minecraft.server.spigot.essentials.permissions;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
 import de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
 import de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
 import de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.users;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 public class User {
 
@@ -42,16 +45,20 @@ public class User {
 
     public void setGroup(Group g) {
         this.g = g;
-        players.getConfig().set("player." + p.getUniqueId() + ".group", g.getName());
+        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        pe.setGroup(new GroupEntry(g));
+        dBH.updatePlayer(pe);
         p.setCustomName(g.getPrefix() + getCustomName(p));
         p.setPlayerListName(p.getCustomName());
         p.setScoreboard(RelluEssentials.board);
-        g.getTeam().addEntry(p.getName());
+        g.getTeam().addEntry(p.getName() + "");
     }
 
     public static Group getGroup(Player p) {
-        if (players.getConfig().getString("player." + p.getUniqueId() + ".group") != null) {
-            return Group.getGroupFromName(players.getConfig().getString("player." + p.getUniqueId() + ".group"));
+        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+       
+        if (pe != null) {
+            return Group.getGroupFromId(pe.getGroup().getId());
         } else {
             return new UserGroup();
         }
@@ -59,7 +66,7 @@ public class User {
 
     public static User getUserByPlayerName(String name) {
         for (User u : users) {
-            if (u.getPlayer().getName().equalsIgnoreCase(name)) {
+            if ((u.getPlayer().getName() + "").equalsIgnoreCase(name)) {
                 return u;
             }
         }
@@ -71,11 +78,12 @@ public class User {
     }
 
     private String getCustomName(Player p) {
-        String name = "";
-        if (players.getConfig().get("player." + p.getUniqueId() + ".customname") != null) {
-            name += players.getConfig().get("player." + p.getUniqueId() + ".customname");
+        String name;
+        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        if (pe.getCustomname() != null) {
+            name = pe.getCustomname();
         } else {
-            name += p.getName();
+            name = p.getName();
         }
 
         return name;

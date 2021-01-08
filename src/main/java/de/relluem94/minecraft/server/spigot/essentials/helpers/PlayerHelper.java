@@ -1,9 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_AFK;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_AFK_ACTIVATED;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_AFK_DEACTIVATED;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import java.io.IOException;
@@ -31,7 +33,8 @@ public class PlayerHelper {
      */
     public static void setFlying(Player p) {
         if (User.getGroup(p).getId() >= Groups.VIP.getId()) {
-            if (players.getConfig().getBoolean("player." + p.getUniqueId() + ".fly")) {
+            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+            if (pe.isFlying()) {
                 p.setAllowFlight(true);
                 if (p.getLocation().getBlock().getRelative(0, -1, 0).getType().equals(Material.AIR)) {
                     p.setFlying(true);
@@ -41,22 +44,20 @@ public class PlayerHelper {
     }
 
     public static boolean setAFK(Player p, boolean join) {
-
-        boolean isAFK = false;
-
-        if (players.getConfig().get("player." + p.getUniqueId() + ".afk") != null) {
-            isAFK = players.getConfig().getBoolean("player." + p.getUniqueId() + ".afk");
-        }
+        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        boolean isAFK = pe.isAfk();
 
         if (!join) {
-            players.getConfig().set("player." + p.getUniqueId() + ".afk", !isAFK);
             Bukkit.broadcastMessage(String.format(PLUGIN_COMMAND_AFK, p.getCustomName(), !isAFK ? PLUGIN_COMMAND_AFK_ACTIVATED : PLUGIN_COMMAND_AFK_DEACTIVATED));
-        } else {
-            isAFK = !isAFK; // Invert for double invertion ^_^
+            isAFK = !isAFK; // Invert for single invertion ^_^
         }
+        
+        pe.setUpdatedby(playerEntryList.get(p.getUniqueId()).getId());
+        pe.setAFK(isAFK);
+        dBH.updatePlayer(pe);
 
-        p.setInvulnerable(!isAFK);
-        p.setPlayerListName((!isAFK ? "§c[AFK] " : "") + p.getCustomName());
+        p.setInvulnerable(isAFK);
+        p.setPlayerListName((isAFK ? "§c[AFK] " : "") + p.getCustomName());
         return true;
     }
 

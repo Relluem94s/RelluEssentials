@@ -1,7 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.players;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -46,9 +48,11 @@ public class Fly implements CommandExecutor {
 
     private boolean flyMode(Command command, Player p) {
         if (command.getName().equalsIgnoreCase("fly")) {
-            players.getConfig().set("player." + p.getUniqueId() + ".fly", !p.getAllowFlight());
-            p.setAllowFlight(!p.getAllowFlight());
-            p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, p.getCustomName(), p.getAllowFlight() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
+            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+            pe.setFly(!pe.isFlying());
+            dBH.updatePlayer(pe);
+            p.setAllowFlight(pe.isFlying());
+            p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, p.getCustomName(), pe.isFlying() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
             return true;
         } else {
             return false;

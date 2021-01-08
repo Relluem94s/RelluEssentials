@@ -16,7 +16,6 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
@@ -70,10 +69,15 @@ import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
 import de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+import java.util.UUID;
 
 public class RelluEssentials extends JavaPlugin {
 
@@ -81,21 +85,23 @@ public class RelluEssentials extends JavaPlugin {
     public static ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
     public static Scoreboard board;
     public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
+    public static HashMap<UUID, PlayerEntry> playerEntryList = new HashMap<>();
+    public static List<LocationEntry> locationEntryList = new ArrayList<>();
+    public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
 
-    public static ConfigHelper players;
-    public static ConfigHelper warps;
-    public static ConfigHelper marriage;
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
 
+    public static DatabaseHelper dBH;
+    public static PluginInformationEntry pie;
+    
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_START_MESSAGE);
-
         dataFolder = this.getDataFolder();
 
         try {
@@ -103,14 +109,15 @@ public class RelluEssentials extends JavaPlugin {
         } catch (IOException e) {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
-
+        
+        boardManager();
         commandManager();
+        databaseManager();
+        enchantmentManager();
         eventManager();
         featureManager();
-        skillManager();
-        boardManager();
         groupManager();
-        enchantmentManager();
+        skillManager();
     }
 
     @Override
@@ -127,35 +134,16 @@ public class RelluEssentials extends JavaPlugin {
         /*  Config */
         if (enable) {
             this.saveDefaultConfig();
-            players = new ConfigHelper("players");
-            warps = new ConfigHelper("warps");
-            marriage = new ConfigHelper("marriage");
         } else {
-            saveConfigs();
+            //saveConfigs();
+            this.saveConfig();
         }
     }
 
     public static void reloadConfigs() {
         ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
-        try {
-            players.reload();
-            warps.reload();
-            marriage.reload();
-        } catch (IOException | InvalidConfigurationException e) {
-            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
-        }
     }
 
-    public static void saveConfigs() {
-        ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).saveConfig();
-        try {
-            players.save();
-            warps.save();
-            marriage.save();
-        } catch (IOException e) {
-            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
-        }
-    }
 
     private void commandManager() {
         /*	Commands	*/
@@ -243,10 +231,16 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void groupManager() {
+        List<PlayerEntry> pel = dBH.getPlayers();
+        pel.forEach(p -> {
+            playerEntryList.put(UUID.fromString(p.getUUID()), p);
+        });
+        
         Bukkit.getOnlinePlayers().forEach(p -> {
             @SuppressWarnings("unused")
             User u = new User(p, User.getGroup(p));
             //TODO Add Array for Users to Access it directly without the other class. (Maybe?)
+            //TODO Remove Todo above. Also (Maybe?) remove User thing. could be replaced by the pojo stuff we have.
         });
     }
 
@@ -268,5 +262,13 @@ public class RelluEssentials extends JavaPlugin {
         } catch (Exception e) {
             System.err.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
+    }
+
+    private void databaseManager() {
+        dBH = new DatabaseHelper(this.getConfig().getString("database.host"), this.getConfig().getString("database.user"), this.getConfig().getString("database.password"), this.getConfig().getInt("database.port"));
+        pie = dBH.getPluginInformation();
+        dBH.init();
+        locationTypeEntryList.addAll(dBH.getLocationTypes());
+        locationEntryList.addAll(dBH.getLocations());
     }
 }

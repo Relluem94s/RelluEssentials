@@ -13,11 +13,11 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.VipGro
 public class Group {
 	
     private final String name;
-    private final long group_id;
+    private final int group_id;
     private final String prefix;
     private Team team;
 
-    public Group(String name, long group_id, String prefix) {
+    public Group(String name, int group_id, String prefix) {
         this.name = name;
         this.group_id = group_id;
         this.prefix = prefix;
@@ -28,7 +28,7 @@ public class Group {
         return name;
     }
 
-    public long getId() {
+    public int getId() {
         return group_id;
     }
 
@@ -58,6 +58,28 @@ public class Group {
         return g;
     }
 
+    public static Group getGroupFromId(int groupId) {
+        Group g;
+        switch(groupId) {
+            case 1: 
+                g = new UserGroup(); 
+                break;
+            case 2:
+                g = new VipGroup(); 
+                break;
+            case 4: 
+                g = new ModGroup(); 
+                break;
+            case 8: 
+                g = new AdminGroup(); 
+                break;
+            default: 
+                g = new UserGroup(); 
+                break;
+        }
+        return g;
+    }
+    
     private void addGroup() {
         if(RelluEssentials.board.getTeam(name) == null) {
             team = RelluEssentials.board.registerNewTeam(name);

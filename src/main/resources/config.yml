@@ -1,8 +1,7 @@
 # Rellu Essentials
 
-tab:
-    header: §6Relluem94.de
-    footer: "§6powered by §4RelluEssentials"
-motd:
-    players: 94
-    message: "§6powered by §4RelluEssentials"
+database:
+    host: "localhost"
+    port: 3306
+    user: "username"
+    password: "password"

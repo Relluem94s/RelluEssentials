@@ -2,6 +2,7 @@
 
 ### a Spigot Plugin compatible with Spigot 1.16.4
 
+
 ## Commands
 * Flymode (/fly)
 * Gamemode (/0,/1,/2,/3)
@@ -31,6 +32,7 @@
 * Print Message in Chat in Player / Commandblock Name (/print)
 * Rename item in your Hand (/rename)
 
+
 ## Skills
 * TreeFeller (Fell the whole Tree) [he is dead jim]
 * Repair (Repair Tools and Armor) [the lost son]
@@ -38,6 +40,7 @@
 * Auto Replant Seeds
 * Auto Smelt  [small tweaks]
 * Telekenesis [half finished]
+
 
 ## Events
 * Better Chat Format (Player >> Message)
@@ -59,7 +62,12 @@
   * Show Location in Chat (private)
 
 
+## Databse Model
+![Database Model](https://raw.githubusercontent.com/Relluem94/RelluEssentials/RE-14/db_model.png)
+
+
 ## TODOS
+* BlockHistory save materials into DB
 * Small / Easy Worldedit & World Guard
 * Netherstar for Selection
 * Manual selection with pos
@@ -73,8 +81,9 @@
 * fast pickaxe mode
 * fast shovel mode
 * Stick to Rotate Stairs and convert Upper/lower slaps
-* the rest from the snippet textfile
 * a permission system for external plugins (maybe)
-* Multi Language files
+* Multi Language ressources (from Database)
 * Skill System with listener on blockbreak etc.
 * Fix some bugs with the treefeller (activate only sometimes pair with skill system)
+* the rest from the snippet textfile
+
