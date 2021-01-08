@@ -2,6 +2,16 @@
 
 ### a Spigot Plugin compatible with Spigot 1.16.4
 
+## Development / Build
+1. ```git clone https://github.com/Relluem94/RelluEssentials.git```
+1. ```mvn clean install```
+
+## First Steps
+1. Copy the jar into the plugin Directory
+1. Start and Stop the Server
+1. Set User and Password of your MySQL Server in the config.yml
+1. Start your Server again
+1. Enjoy
 
 ## Commands
 * Flymode (/fly)
@@ -62,9 +72,8 @@
   * Show Location in Chat (private)
 
 
-## Databse Model
+## Database Model
 ![Database Model](https://raw.githubusercontent.com/Relluem94/RelluEssentials/RE-14/db_model.png)
-
 
 ## TODOS
 * BlockHistory save materials into DB
