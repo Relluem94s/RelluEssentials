@@ -95,7 +95,7 @@ public class Home implements CommandExecutor {
                             if(homeExists(pe, le)){
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
                             }
-                            else if (!args[1].equals("death")) {
+                            else if (!args[1].startsWith("death_")) {
                                 dBH.insertLocation(le);
                                 locationEntryList.add(le);
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
