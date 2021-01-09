@@ -91,7 +91,7 @@
 * fast shovel mode
 * Stick to Rotate Stairs and convert Upper/lower slaps
 * a permission system for external plugins (maybe)
-* Multi Language ressources (from Database)
+* Multi Language resources (from Database)
 * Skill System with listener on blockbreak etc.
 * Fix some bugs with the treefeller (activate only sometimes pair with skill system)
 * the rest from the snippet textfile
