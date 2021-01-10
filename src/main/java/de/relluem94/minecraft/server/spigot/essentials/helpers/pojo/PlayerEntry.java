@@ -46,6 +46,10 @@ public class PlayerEntry {
         this.createdby = createdby;
     }
 
+    public void setUpdated(String updated) {
+        this.updated = updated;
+    }
+
     public String getUpdated() {
         return updated;
     }
@@ -58,6 +62,10 @@ public class PlayerEntry {
         this.updatedby = updatedby;
     }
 
+    public void setDeleted(String deleted) {
+        this.deleted = deleted;
+    }
+    
     public String getDeleted() {
         return deleted;
     }
