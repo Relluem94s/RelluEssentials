@@ -137,6 +137,8 @@ public class DatabaseHelper {
                     PlayerEntry p = new PlayerEntry();
                     p.setCreated(rs.getString("created"));
                     p.setCreatedby(rs.getInt("createdby"));
+                    p.setUpdated(rs.getString("updated"));
+                    p.setUpdatedby(rs.getInt("updatedby"));
                     p.setCustomname(rs.getString("customname"));
                     p.setDeletedby(rs.getInt("deletedby"));
                     p.setFly(rs.getBoolean("fly"));
@@ -164,8 +166,11 @@ public class DatabaseHelper {
                     PlayerEntry p = new PlayerEntry();
                     p.setCreated(rs.getString("created"));
                     p.setCreatedby(rs.getInt("createdby"));
-                    p.setCustomname(rs.getString("customname"));
+                     p.setUpdated(rs.getString("updated"));
+                    p.setUpdatedby(rs.getInt("updatedby"));
+                    p.setDeleted(rs.getString("deleted"));
                     p.setDeletedby(rs.getInt("deletedby"));
+                    p.setCustomname(rs.getString("customname"));
                     p.setFly(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
                     p.setGroup(new GroupEntry(Group.getGroupFromId(rs.getInt("group_fk"))));
