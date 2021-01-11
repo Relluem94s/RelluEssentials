@@ -72,12 +72,17 @@ import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekene
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
+import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import java.util.UUID;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class RelluEssentials extends JavaPlugin {
 
@@ -88,6 +93,7 @@ public class RelluEssentials extends JavaPlugin {
     public static HashMap<UUID, PlayerEntry> playerEntryList = new HashMap<>();
     public static List<LocationEntry> locationEntryList = new ArrayList<>();
     public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
+    public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
     
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
@@ -118,6 +124,7 @@ public class RelluEssentials extends JavaPlugin {
         featureManager();
         groupManager();
         skillManager();
+        blockHistoryManager();
     }
 
     @Override
@@ -181,6 +188,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("broadcast")).setExecutor(new Broadcast());
         Objects.requireNonNull(this.getCommand("rename")).setExecutor(new Rename());
         Objects.requireNonNull(this.getCommand("speed")).setExecutor(new Speed());
+        Objects.requireNonNull(this.getCommand("rollback")).setExecutor(new Rollback());
         //TODO add Warps
         //TODO add Marriage
     }
@@ -196,6 +204,7 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new BetterPlayerJoin(), this);
         pm.registerEvents(new BetterPlayerQuit(), this);
         pm.registerEvents(new BetterBlockDrop(), this);
+        pm.registerEvents(new BlockPlace(), this);
         pm.registerEvents(new BetterMobs(), this);
         pm.registerEvents(new BetterSoil(), this);
         pm.registerEvents(new BetterSavety(), this);
@@ -271,4 +280,17 @@ public class RelluEssentials extends JavaPlugin {
         locationTypeEntryList.addAll(dBH.getLocationTypes());
         locationEntryList.addAll(dBH.getLocations());
     }
+
+    private void blockHistoryManager() {
+        BukkitScheduler scheduler = getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(this, () -> {
+            if(!blockHistoryList.isEmpty()){
+                BlockHistoryEntry bh = blockHistoryList.get(0);
+                BlockHelper.setBlock(bh);
+                dBH.deleteBlockHistory(bh);
+                blockHistoryList.remove(0);
+            }
+        }, 0L, 2L);
+    }
 }
+
