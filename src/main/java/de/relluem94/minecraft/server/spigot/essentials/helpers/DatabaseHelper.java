@@ -27,6 +27,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -68,8 +70,6 @@ public class DatabaseHelper {
         }
     }
     
-        
-    //DUMMY
     public LocationEntry getLocation(PlayerEntry pe, int type) {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
@@ -78,10 +78,12 @@ public class DatabaseHelper {
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while(rs.next()){
-                    LocationEntry p = new LocationEntry();
-                    p.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                    p.setLocationType(locationTypeEntryList.get(type)); //TODO WRONG
-                    return p;
+                    LocationEntry le = new LocationEntry();
+                    le.setId(rs.getInt("id"));
+                    le.setLocationName(rs.getString("location_name"));
+                    le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    le.setLocationType(locationTypeEntryList.get(type-1)); //TODO WRONG
+                    return le;
                 }
             }
         } catch (SQLException | IOException ex) {
@@ -97,6 +99,29 @@ public class DatabaseHelper {
     //*****************************************************************************************************************************************//
     
     
+    
+    public LocationEntry getLocation(Location l, int type) {
+        try (
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationByLocation.sql", StandardCharsets.UTF_8));
+            ps.setFloat(1, (float)l.getX());
+            ps.setFloat(2, (float)l.getY());
+            ps.setFloat(3, (float)l.getZ());
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    LocationEntry le = new LocationEntry();
+                    le.setId(rs.getInt("id"));
+                    le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    le.setLocationType(locationTypeEntryList.get(type-1)); 
+                    return le;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     
     public PluginInformationEntry getPluginInformation() {
         try (
@@ -166,7 +191,7 @@ public class DatabaseHelper {
                     PlayerEntry p = new PlayerEntry();
                     p.setCreated(rs.getString("created"));
                     p.setCreatedby(rs.getInt("createdby"));
-                     p.setUpdated(rs.getString("updated"));
+                    p.setUpdated(rs.getString("updated"));
                     p.setUpdatedby(rs.getInt("updatedby"));
                     p.setDeleted(rs.getString("deleted"));
                     p.setDeletedby(rs.getInt("deletedby"));
@@ -296,6 +321,112 @@ public class DatabaseHelper {
         }
     }
     
+    public BlockHistoryEntry getBlockHistoryByLocation(Location l){
+        try (
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBlockHistoryByLocation.sql", StandardCharsets.UTF_8));
+            ps.setFloat(1, l.getBlockX());
+            ps.setFloat(2, l.getBlockY());
+            ps.setFloat(3, l.getBlockZ());
+
+            ps.execute();
+            
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    BlockHistoryEntry bh = new BlockHistoryEntry();
+                    bh.setId(rs.getInt("id"));
+                    bh.setCreated(rs.getString("created"));
+                    bh.setCreatedby(rs.getInt("createdby"));
+                    bh.setDeleted(rs.getString("deleted"));
+                    bh.setDeletedby(rs.getInt("deletedby"));
+                    
+                    LocationEntry le = new LocationEntry();
+                    le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    le.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk")-1));
+                    le.setPlayerId(rs.getInt("player_fk"));
+                    le.setLocationName(rs.getString("location_name"));
+                    le.setId(rs.getInt("l.id"));
+                    
+                    bh.setLocation(le);
+                    bh.setMaterial(rs.getString("material"));
+                    return bh;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        return null;
+    }
+    
+    public void insertBlockHistory(BlockHistoryEntry bh) {
+        try (
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertBlockHistory.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, bh.getCreatedby());
+            ps.setInt(2, bh.getLocation().getId());
+            ps.setString(3, bh.getMaterial());            
+            
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public List<BlockHistoryEntry> getBlockHistoryByPlayer(PlayerEntry p){
+        List<BlockHistoryEntry> bhe = new ArrayList<>();
+        try (
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBlockHistoryByPlayer.sql", StandardCharsets.UTF_8));
+            ps.setFloat(1, p.getId());
+
+            ps.execute();
+            
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    BlockHistoryEntry bh = new BlockHistoryEntry();
+                    bh.setId(rs.getInt("id"));
+                    bh.setCreated(rs.getString("created"));
+                    bh.setCreatedby(rs.getInt("createdby"));
+                    bh.setDeleted(rs.getString("deleted"));
+                    bh.setDeletedby(rs.getInt("deletedby"));
+                    
+                    LocationEntry le = new LocationEntry();
+                    le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    le.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk")-1));
+                    le.setPlayerId(rs.getInt("player_fk"));
+                    le.setLocationName(rs.getString("location_name"));
+                    le.setId(rs.getInt("l.id"));
+                    
+                    bh.setLocation(le);
+                    bh.setMaterial(rs.getString("material"));
+                    bhe.add(bh);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        return bhe;
+    }
+    
+    
+    public void deleteBlockHistory(BlockHistoryEntry bh) {
+        try (
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteBlockHistory.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, bh.getDeletedby());
+            ps.setInt(2, bh.getLocation().getId());
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
     
     
     
@@ -307,53 +438,69 @@ public class DatabaseHelper {
     
 
     private void applyPatch(int version) {
-        String v;
         switch (version) {
             case 0:
-                v = "patches/v1.0/";
-                executeScriptNoSchema(v + "createSchema.sql");
-                executeScript(v + "createGroup.sql");
-                executeScript(v + "createPlayer.sql");
-                executeScript(v + "createLocationType.sql");
-                executeScript(v + "createLocation.sql");
-                executeScript(v + "createBlockHistory.sql");
-                executeScript(v + "createPluginInformation.sql");
-                executeScript(v + "insertGroups.sql");
-                executeScript(v + "insertPlayers.sql");
-                executeScript(v + "insertLocationTypes.sql");
-                executeScript(v + "insertPluginInformation.sql");
-                
-                pie = getPluginInformation();
-                
-                ConfigHelper ch = new ConfigHelper("players");
-                List<PlayerEntry> pe = ch.getPlayers();
-                pe.forEach(p -> {
-                    insertPlayer(p);
-                });
-                
-                List<PlayerEntry> pel = getPlayers();
-                pel.forEach(p -> {
-                    playerEntryList.put(UUID.fromString(p.getUUID()), p);
-                });
-                
-                for(PlayerEntry p : pe){
-                    PlayerEntry pu = playerEntryList.get(UUID.fromString(p.getUUID()));
-                    pu.setAFK(p.isAfk());
-                    pu.setFly(p.isFlying());
-                    pu.setCustomname(p.getCustomname());
-                    pu.setUpdatedby(1);
-                    updatePlayer(pu);
-                    
-                    List<LocationEntry> lel = ch.getHomes(pu);
-                    lel.forEach(le -> {
-                        insertLocation(le);
-                    });
-                }
+                patch1();
+                patch2();
                 break;
-
+            case 1:
+                patch2();
+                break;
             default:
                 break;
         }
+    }
+    
+    private void patch1(){
+        String v = "patches/v1.0/";
+        System.out.println(Strings.PLUGIN_NAME_CONSOLE + "applying " +  v);
+        executeScriptNoSchema(v + "createSchema.sql");
+        executeScript(v + "createGroup.sql");
+        executeScript(v + "createPlayer.sql");
+        executeScript(v + "createLocationType.sql");
+        executeScript(v + "createLocation.sql");
+        executeScript(v + "createBlockHistory.sql");
+        executeScript(v + "createPluginInformation.sql");
+        executeScript(v + "insertGroups.sql");
+        executeScript(v + "insertPlayers.sql");
+        executeScript(v + "insertLocationTypes.sql");
+        executeScript(v + "insertPluginInformation.sql");
+
+        pie = getPluginInformation();
+
+        ConfigHelper ch = new ConfigHelper("players");
+        List<PlayerEntry> pe = ch.getPlayers();
+        pe.forEach(p -> {
+            insertPlayer(p);
+        });
+
+        List<PlayerEntry> pel = getPlayers();
+        pel.forEach(p -> {
+            playerEntryList.put(UUID.fromString(p.getUUID()), p);
+        });
+
+        for(PlayerEntry p : pe){
+            PlayerEntry pu = playerEntryList.get(UUID.fromString(p.getUUID()));
+            pu.setAFK(p.isAfk());
+            pu.setFly(p.isFlying());
+            pu.setCustomname(p.getCustomname());
+            pu.setUpdatedby(1);
+            updatePlayer(pu);
+
+            List<LocationEntry> lel = ch.getHomes(pu);
+            lel.forEach(le -> {
+                insertLocation(le);
+            });
+        }
+    }
+    
+    private void patch2(){
+        String v = "patches/v2.0/";
+        System.out.println(Strings.PLUGIN_NAME_CONSOLE + "applying " +  v);
+        executeScript(v + "dropBlockHistory.sql");
+        executeScript(v + "createBlockHistory.sql");
+        executeScript(v + "insertNewDBVersion.sql");
+        executeScript(v + "updateOldPluginInformation.sql");
     }
 
     public void init() {
