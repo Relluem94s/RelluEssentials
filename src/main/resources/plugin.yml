@@ -105,7 +105,10 @@ commands:
     speed:
         description: set either fly or walk speed of the player
         usage: /speed
-
+    rollback:
+        description: rollbacks changes in the world by the player x
+        usage: /rollback
+        
 
 
 
