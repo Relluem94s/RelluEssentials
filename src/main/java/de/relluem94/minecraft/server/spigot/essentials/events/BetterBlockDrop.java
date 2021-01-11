@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,6 +11,10 @@ import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 public class BetterBlockDrop implements Listener {
 
@@ -62,5 +68,23 @@ public class BetterBlockDrop implements Listener {
                 }
             }
         }
+        PlayerEntry p = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
+        BlockHistoryEntry bh = new BlockHistoryEntry();
+            
+        LocationEntry l = new LocationEntry();
+        l.setLocation(e.getBlock().getLocation());
+        LocationTypeEntry lt = new LocationTypeEntry();
+        lt.setId(4);
+        l.setLocationType(lt);
+        l.setPlayerId(1);
+
+        dBH.insertLocation(l);
+        l = dBH.getLocation(e.getBlock().getLocation(), 4);
+
+        bh.setCreatedby(p.getId());
+        bh.setMaterial(e.getBlock().getType().name());
+
+        bh.setLocation(l);
+        dBH.insertBlockHistory(bh);
     }
 }
