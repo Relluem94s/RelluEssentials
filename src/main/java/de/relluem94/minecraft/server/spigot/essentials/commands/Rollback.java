@@ -20,6 +20,28 @@ import org.bukkit.Bukkit;
 
 public class Rollback implements CommandExecutor {
 
+    /*
+    
+    /rollback -> Info
+    /rollback player <Player> --> Rolls back Player last to first block.
+    /rollback player <Player> <Time> --> Rolls back Player last to first block in the last 2Y 8M 60d 10h 30m etc
+  * /rollback location (or pos) (needs selected Area) next update or so..
+    /rollback undo player <Player> --> Undos rollback Player first to last  block.
+    /rollback undo player <Player> <Time> --> Undos rollback Player first to last block in the last 2Y 8M 60d 10h 30m etc
+  * /rollback undo location (needs selected Area)
+    /rollback preview player <Player> --> Shows 
+    /rollback preview player <Player> <Time> 
+  * /rollback preview location (needs selected Area)
+    /rollback preview undo player <Player>
+    /rollback preview undo player <Player> <Time> 
+  * /rollback preview undo location (needs selected Area)
+    
+    */
+    
+    
+    
+    
+    
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("rollback")) {
@@ -47,7 +69,7 @@ public class Rollback implements CommandExecutor {
                 }
             }
             else if(args.length == 2){
-                // Player Rollback with 2Y 8M 60d 10h 30m 
+                
             }
         }
         return false;
