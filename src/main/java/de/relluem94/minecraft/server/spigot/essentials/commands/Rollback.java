@@ -36,6 +36,13 @@ public class Rollback implements CommandExecutor {
     /rollback preview undo player <Player> <Time> 
   * /rollback preview undo location (needs selected Area)
     
+    
+        
+    
+    Maybe also as an Inventory Menu.
+    Undo reverts last action. (looks for timeframe but ignores the deleted)
+    Preview sends blockchange to player and reverts after 60 seconds (if possible else no preview)    
+    
     */
     
     
