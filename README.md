@@ -67,7 +67,7 @@
 
 
 ## TODOS
-* BlockHistory save materials into DB
+* BlockHistory save materials into DB (50%)
 * Small / Easy Worldedit & World Guard
 * Netherstar for Selection
 * Manual selection with pos
@@ -85,5 +85,9 @@
 * Multi Language ressources (from Database)
 * Skill System with listener on blockbreak etc.
 * Fix some bugs with the treefeller (activate only sometimes pair with skill system)
+* sudo command and sudo chat player 
+* log Playtime of Players
+* statistics command to show player stats like playtime, first and last played, avg playtime or others
+* check inv for incomplete stack of item for telekenesis event (drops item if no space is left)
 * the rest from the snippet textfile
 
