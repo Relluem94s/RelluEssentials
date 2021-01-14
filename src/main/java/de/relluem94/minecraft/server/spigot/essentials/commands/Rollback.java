@@ -52,31 +52,38 @@ public class Rollback implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("rollback")) {
-            if (args.length == 1) {
-                if (sender instanceof Player) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
-                        UUID targetUUID = Bukkit.getOfflinePlayer(args[0]).getUniqueId();
-                        PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
-
-                        if (pe != null) {
-                            int id = playerEntryList.get(p.getUniqueId()).getId();
-                            List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayer(pe);
-                            for(BlockHistoryEntry bh : list){
-                                bh.setDeletedby(id);
-                                blockHistoryList.add(bh);
+            switch (args.length) {
+                case 2:
+                    if (sender instanceof Player) {
+                        Player p = (Player) sender;
+                        if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                            UUID targetUUID = Bukkit.getOfflinePlayer(args[0]).getUniqueId();
+                            PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
+                            
+                            if (pe != null) {
+                                int id = playerEntryList.get(p.getUniqueId()).getId();
+                                List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayer(pe);
+                                for(BlockHistoryEntry bh : list){
+                                    bh.setDeletedby(id);
+                                    blockHistoryList.add(bh);
+                                }
+                                p.sendMessage("Added: " + list.size());
                             }
-                            p.sendMessage("Added: " + list.size());
+                            return true;
+                        } else {
+                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                            return true;
                         }
-                        return true;
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-            }
-            else if(args.length == 2){
-                
+                    }   break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                default:
+                    // INFO
+                    break;
             }
         }
         return false;
