@@ -24,10 +24,10 @@ public class Rollback implements CommandExecutor {
     
     /rollback -> Info
     /rollback player <Player> --> Rolls back Player last to first block.
-    /rollback player <Player> <Time> --> Rolls back Player last to first block in the last 2Y 8M 60d 10h 30m etc
+    /rollback player <Player> <Time> --> Rolls back Player last to first block in the last 2Y8M60d10h30m etc
   * /rollback location (or pos) (needs selected Area) next update or so..
     /rollback undo player <Player> --> Undos rollback Player first to last  block.
-    /rollback undo player <Player> <Time> --> Undos rollback Player first to last block in the last 2Y 8M 60d 10h 30m etc
+    /rollback undo player <Player> <Time> --> Undos rollback Player first to last block in the last 2Y8M60D10h30m etc
   * /rollback undo location (needs selected Area)
     /rollback preview player <Player> --> Shows 
     /rollback preview player <Player> <Time> 
@@ -57,10 +57,9 @@ public class Rollback implements CommandExecutor {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
-                            UUID targetUUID = Bukkit.getOfflinePlayer(args[0]).getUniqueId();
+                            UUID targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
                             PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
-                            
-                            if (pe != null) {
+                            if (pe != null && args[0].equalsIgnoreCase("player")) {
                                 int id = playerEntryList.get(p.getUniqueId()).getId();
                                 List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayer(pe);
                                 for(BlockHistoryEntry bh : list){
@@ -74,8 +73,34 @@ public class Rollback implements CommandExecutor {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                             return true;
                         }
-                    }   break;
+                    }
+                    break;
                 case 3:
+                    if (sender instanceof Player) {
+                        Player p = (Player) sender;
+                        if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                            if(args[0].equalsIgnoreCase("player")){
+                                UUID targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
+                                PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
+
+                                if (pe != null) {
+                                    int id = playerEntryList.get(p.getUniqueId()).getId();
+                                    List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayerAndTime(pe, args[2]);
+                                    for(BlockHistoryEntry bh : list){
+                                        bh.setDeletedby(id);
+                                        blockHistoryList.add(bh);
+                                    }
+                                    p.sendMessage("Added: " + list.size());
+                                }
+                            }
+                            
+                            
+                            return true;
+                        } else {
+                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                            return true;
+                        }
+                    }
                     break;
                 case 4:
                     break;
