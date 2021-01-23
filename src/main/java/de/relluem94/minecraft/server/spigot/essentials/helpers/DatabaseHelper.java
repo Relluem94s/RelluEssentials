@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.DEBUG;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
@@ -29,6 +30,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.lo
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
+import de.relluem94.rellulib.utils.LogUtils;
+import de.relluem94.rellulib.utils.TypeUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -409,6 +412,72 @@ public class DatabaseHelper {
         }
         
         
+        return bhe;
+    }
+    
+    public List<BlockHistoryEntry> getBlockHistoryByPlayerAndTime(PlayerEntry p, String time){
+        List<BlockHistoryEntry> bhe = new ArrayList<>();
+        int year = 0, month = 0, day = 0, hour = 0, minute = 0;
+        
+        try (
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME + "?useSSL=false", user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBlockHistoryByPlayerAndTime.sql", StandardCharsets.UTF_8));
+            String[] times = time.split("(?<![0-9]){1,6}");
+            
+            for(String t : times){
+                if(t.endsWith("Y") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))){
+                    year += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
+                }
+                else if(t.endsWith("M") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))){
+                    month += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
+                }
+                else if(t.endsWith("D") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))){
+                    day += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
+                }
+                else if(t.endsWith("h") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))){
+                    hour += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
+                }
+                else if(t.endsWith("m") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))){
+                    minute += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
+                }
+            }
+            
+            
+            
+            ps.setFloat(1, p.getId());
+            ps.setInt(2, minute);
+            ps.setInt(3, hour);
+            ps.setInt(4, day);
+            ps.setInt(5, month);
+            ps.setInt(6, year);
+
+            ps.execute();
+            
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    BlockHistoryEntry bh = new BlockHistoryEntry();
+                    bh.setId(rs.getInt("id"));
+                    bh.setCreated(rs.getString("created"));
+                    bh.setCreatedby(rs.getInt("createdby"));
+                    bh.setDeleted(rs.getString("deleted"));
+                    bh.setDeletedby(rs.getInt("deletedby"));
+                    
+                    LocationEntry le = new LocationEntry();
+                    le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    le.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk")-1));
+                    le.setPlayerId(rs.getInt("player_fk"));
+                    le.setLocationName(rs.getString("location_name"));
+                    le.setId(rs.getInt("l.id"));
+                    
+                    bh.setLocation(le);
+                    bh.setMaterial(rs.getString("material"));
+                    bhe.add(bh);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        LogUtils.debug("Amount: " + bhe.size() + " Years: " + year + " Months: " + month + " Days: " + day + " Hours: " + hour + " Minutes: " + minute + " UUID: " + p.getUUID(), DEBUG);        
         return bhe;
     }
     
