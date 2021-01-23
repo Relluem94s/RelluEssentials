@@ -105,6 +105,8 @@ public class RelluEssentials extends JavaPlugin {
     public static DatabaseHelper dBH;
     public static PluginInformationEntry pie;
     
+    public static final boolean DEBUG = true;
+    
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_START_MESSAGE);
