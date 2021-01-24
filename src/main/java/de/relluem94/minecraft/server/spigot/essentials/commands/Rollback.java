@@ -23,8 +23,8 @@ public class Rollback implements CommandExecutor {
     /*
     
     /rollback -> Info
-    /rollback player <Player> --> Rolls back Player last to first block.
-    /rollback player <Player> <Time> --> Rolls back Player last to first block in the last 2Y8M60d10h30m etc
+    /rollback player <Player> --> Rolls back Player last to first block.                                                    // DONE
+    /rollback player <Player> <Time> --> Rolls back Player last to first block in the last 2Y8M60d10h30m etc                // DONE
   * /rollback location (or pos) (needs selected Area) next update or so..
     /rollback undo player <Player> --> Undos rollback Player first to last  block.
     /rollback undo player <Player> <Time> --> Undos rollback Player first to last block in the last 2Y8M60D10h30m etc
@@ -85,13 +85,16 @@ public class Rollback implements CommandExecutor {
 
                                 if (pe != null) {
                                     int id = playerEntryList.get(p.getUniqueId()).getId();
-                                    List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayerAndTime(pe, args[2]);
+                                    List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayerAndTime(pe, args[2], false);
                                     for(BlockHistoryEntry bh : list){
                                         bh.setDeletedby(id);
                                         blockHistoryList.add(bh);
                                     }
                                     p.sendMessage("Added: " + list.size());
                                 }
+                            }
+                            else if(args[0].equalsIgnoreCase("undo") && args[1].equalsIgnoreCase("player")){
+                                
                             }
                             
                             
@@ -103,6 +106,30 @@ public class Rollback implements CommandExecutor {
                     }
                     break;
                 case 4:
+                    if (sender instanceof Player) {
+                        Player p = (Player) sender;
+                        if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                            if(args[0].equalsIgnoreCase("undo") && args[1].equalsIgnoreCase("player")){
+                                UUID targetUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId();
+                                PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
+
+                                if (pe != null) {
+                                    int id = playerEntryList.get(p.getUniqueId()).getId();
+                                    List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayerAndTime(pe, args[3], true);
+                                    for(BlockHistoryEntry bh : list){
+                                        bh.setDeletedby(id);
+                                        blockHistoryList.add(bh);
+                                    }
+                                    p.sendMessage("Added: " + list.size());
+                                }
+                            }                          
+                            
+                            return true;
+                        } else {
+                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                            return true;
+                        }
+                    }
                     break;
                 case 5:
                     break;
