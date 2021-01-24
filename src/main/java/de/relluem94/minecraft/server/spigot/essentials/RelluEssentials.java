@@ -289,7 +289,13 @@ public class RelluEssentials extends JavaPlugin {
             if(!blockHistoryList.isEmpty()){
                 BlockHistoryEntry bh = blockHistoryList.get(0);
                 BlockHelper.setBlock(bh);
-                dBH.deleteBlockHistory(bh);
+                if(bh.getDeleted() == null){
+                    dBH.insertBlockHistory(bh);
+                }
+                else {
+                    dBH.deleteBlockHistory(bh);
+                }
+
                 blockHistoryList.remove(0);
             }
         }, 0L, 2L);
