@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.blockHistoryList;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -85,6 +86,6 @@ public class BetterBlockDrop implements Listener {
         bh.setMaterial(e.getBlock().getType().name());
 
         bh.setLocation(l);
-        dBH.insertBlockHistory(bh);
+        blockHistoryList.add(bh);
     }
 }
