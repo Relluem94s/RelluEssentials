@@ -415,13 +415,13 @@ public class DatabaseHelper {
         return bhe;
     }
     
-    public List<BlockHistoryEntry> getBlockHistoryByPlayerAndTime(PlayerEntry p, String time){
+    public List<BlockHistoryEntry> getBlockHistoryByPlayerAndTime(PlayerEntry p, String time, boolean deleted){
         List<BlockHistoryEntry> bhe = new ArrayList<>();
         int year = 0, month = 0, day = 0, hour = 0, minute = 0;
         
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME + "?useSSL=false", user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBlockHistoryByPlayerAndTime.sql", StandardCharsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource(deleted ? "sqls/getBlockHistoryByPlayerAndTimeIsDeleted.sql" : "sqls/getBlockHistoryByPlayerAndTime.sql", StandardCharsets.UTF_8));
             String[] times = time.split("(?<![0-9]){1,6}");
             
             for(String t : times){
@@ -459,8 +459,10 @@ public class DatabaseHelper {
                     bh.setId(rs.getInt("id"));
                     bh.setCreated(rs.getString("created"));
                     bh.setCreatedby(rs.getInt("createdby"));
-                    bh.setDeleted(rs.getString("deleted"));
-                    bh.setDeletedby(rs.getInt("deletedby"));
+                    if(!deleted){
+                        bh.setDeleted(rs.getString("deleted"));
+                        bh.setDeletedby(rs.getInt("deletedby"));
+                    }
                     
                     LocationEntry le = new LocationEntry();
                     le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
