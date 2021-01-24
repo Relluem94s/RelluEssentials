@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.blockHistoryList;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
@@ -36,6 +37,6 @@ public class BlockPlace implements Listener{
         bh.setMaterial(Material.AIR.name());
 
         bh.setLocation(l);
-        dBH.insertBlockHistory(bh);
+        blockHistoryList.add(bh);
     }
 }
