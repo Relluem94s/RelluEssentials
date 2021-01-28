@@ -3,7 +3,7 @@
 ### a Spigot Plugin compatible with Spigot 1.16.4
 
 ## Development / Build
-1. ```git clone https://github.com/Relluem94/RelluEssentials.git```
+1. ```git clone https://github.com/Relluem94s/RelluEssentials.git```
 1. ```mvn clean install```
 
 ## First Steps
