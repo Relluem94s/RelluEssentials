@@ -14,7 +14,8 @@ public class BlockHelper {
         if(m == null){
             m = Material.AIR;
         }
-        bh.getLocation().getLocation().getBlock().setType(m);
+        if(bh.getLocation() != null && bh.getLocation().getLocation() != null){
+            bh.getLocation().getLocation().getBlock().setType(m);
+        }
     }
-    
 }

@@ -3,44 +3,51 @@
 ### a Spigot Plugin compatible with Spigot 1.16.4
 
 ## Development / Build
-1. ```git clone https://github.com/Relluem94/RelluEssentials.git```
-1. ```mvn clean install```
+1. ```shell
+   git clone https://github.com/Relluem94/RelluEssentials.git
+   ```
+
+1. ```shell
+   mvn clean install
+   ```
+
+   
 
 ## First Steps
-1. Copy the jar into the plugin Directory
+1. Copy the jar into the `plugin` Directory
 1. Start and Stop the Server
 1. Set User and Password of your MySQL Server in the config.yml
 1. Start your Server again
 1. Enjoy
 
 ## Commands
-* Flymode (/fly)
-* Gamemode (/0,/1,/2,/3)
-* Portable Craftingbench (/craft)
-* Gift Cookies (/cookie)
-* Change Weather to Sun (/sun)
-* Change Weather to Rain (/rain)
-* Change Weather to Storm (/storm)
-* Change time to Day (/day)
-* Change time to Night (/night)
-* Teleport to Worldspawn (/spawn)
-* Open the Enderchest (/enderchest)
-* Open the Inventory (/inv)
-* Set Permission Group (/setGroup)
-* Nick Player (/nick)
-* Kill yourself (/suicide)
-* Get More Stuff (/more)
-* Repair your favorite Tools (/repair)
-* Teleport to your Bed spawn location or set list tp to homes that get saved in players.yml (/home)
-* Save, Reload your config or more (/rellu)
-* Play as god (/god)
-* Heal yourself if you low on health (/heal)
-* Away from Keyboard (/afk)
-* Message other Players (/msg)
-* Send a Title to a Player (/title)
-* Show where a Player is (/where)
-* Print Message in Chat in Player / Commandblock Name (/print)
-* Rename item in your Hand (/rename)
+* Flymode (`/fly`)
+* Gamemode (`/0` `/1 `/`2` `/3`)
+* Portable Craftingbench (`/craft`)
+* Gift Cookies (`/cookie`)
+* Change Weather to Sun (`/sun`)
+* Change Weather to Rain (`/rain`)
+* Change Weather to Storm (`/storm`)
+* Change time to Day (`/day`)
+* Change time to Night (`/night`)
+* Teleport to Worldspawn (`/spawn`)
+* Open the Enderchest (`/enderchest`)
+* Open the Inventory (`/inv`)
+* Set Permission Group (`/setGroup`)
+* Nick Player (`/nick`)
+* Kill yourself (`/suicide`)
+* Get More Stuff (`/more`)
+* Repair your favorite Tools (`/repair`)
+* Teleport to your Bed spawn location or set list tp to homes that get saved in players.yml (`/home`)
+* Save, Reload your config or more (`/rellu`)
+* Play as god (`/god`)
+* Heal yourself if you low on health (`/heal`)
+* Away from Keyboard (`/afk`)
+* Message other Players (`/msg`)
+* Send a Title to a Player (`/title`)
+* Show where a Player is (`/where`)
+* Print Message in Chat in Player / Commandblock Name (`/print`)
+* Rename item in your Hand (`/rename`)
 
 
 ## Skills
