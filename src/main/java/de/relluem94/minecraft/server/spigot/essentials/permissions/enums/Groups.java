@@ -7,7 +7,7 @@ package de.relluem94.minecraft.server.spigot.essentials.permissions.enums;
 public enum Groups {
     USER("User", 1, "§8"),
     VIP("VIP", 2, "§a"),
-    MOD("Mod", 4, "§6"),    
+    MOD("Mod", 268435456, "§6"),    
     ADMIN("Admin", 1073741824, "§5");
     
     private final String name;
