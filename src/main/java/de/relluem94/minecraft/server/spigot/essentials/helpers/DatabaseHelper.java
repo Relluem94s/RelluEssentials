@@ -513,6 +513,7 @@ public class DatabaseHelper {
             case 0:
                 patch1();
                 patch2();
+                patch2_1();
                 break;
             case 1:
                 patch2();
