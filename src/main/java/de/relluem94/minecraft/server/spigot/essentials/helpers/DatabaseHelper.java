@@ -517,6 +517,9 @@ public class DatabaseHelper {
             case 1:
                 patch2();
                 break;
+            case 2:
+                patch2_1();
+                break;
             default:
                 break;
         }
@@ -572,10 +575,18 @@ public class DatabaseHelper {
         executeScript(v + "createBlockHistory.sql");
         executeScript(v + "insertNewDBVersion.sql");
         executeScript(v + "updateOldPluginInformation.sql");
+    }
+    
+    private void patch2_1(){
+        String v = "patches/v2.1/";
+        executeScript(v + "dropPlayerConstraint.sql"); 
         executeScript(v + "updateAdminGroup.sql"); // changed id of Admin
         executeScript(v + "updateModGroup.sql"); // changed id of Mod
         executeScript(v + "updateAdminGroupPlayer.sql"); // changed id of Admin
         executeScript(v + "updateModGroupPlayer.sql"); // changed id of Mod
+        executeScript(v + "addPlayerConstraint.sql"); 
+        executeScript(v + "insertNewDBVersion.sql");
+        executeScript(v + "updateOldPluginInformation.sql");
     }
 
     public void init() {
