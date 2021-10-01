@@ -1,3 +1,3 @@
-update `rellu_essentials`.`player` 
-set group_fk = 268435456
-where group_fk = 4;
+update `rellu_essentials`.`group` 
+set id = 268435456
+where id = 4;

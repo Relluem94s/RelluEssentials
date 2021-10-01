@@ -574,6 +574,8 @@ public class DatabaseHelper {
         executeScript(v + "updateOldPluginInformation.sql");
         executeScript(v + "updateAdminGroup.sql"); // changed id of Admin
         executeScript(v + "updateModGroup.sql"); // changed id of Mod
+        executeScript(v + "updateAdminGroupPlayer.sql"); // changed id of Admin
+        executeScript(v + "updateModGroupPlayer.sql"); // changed id of Mod
     }
 
     public void init() {

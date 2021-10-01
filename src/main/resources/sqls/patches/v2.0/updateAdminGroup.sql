@@ -1,3 +1,3 @@
-update `rellu_essentials`.`player` 
-set group_fk = 1073741824
-where group_fk = 8;
+update `rellu_essentials`.`group` 
+set id = 1073741824
+where id = 8;
