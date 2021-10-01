@@ -572,6 +572,7 @@ public class DatabaseHelper {
         executeScript(v + "createBlockHistory.sql");
         executeScript(v + "insertNewDBVersion.sql");
         executeScript(v + "updateOldPluginInformation.sql");
+        executeScript(v + "updatePlayerGroups.sql"); // changed id of Admin
     }
 
     public void init() {
