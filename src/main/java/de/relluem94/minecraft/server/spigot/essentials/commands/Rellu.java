@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 
@@ -20,7 +20,7 @@ public class Rellu implements CommandExecutor {
             case 1:
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                    if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         if (args[0].equalsIgnoreCase("ping")) {
                             int ping = ((CraftPlayer) p).getHandle().ping;
                             p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING, ping));
@@ -50,7 +50,7 @@ public class Rellu implements CommandExecutor {
             default:
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                    if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         p.sendMessage(PLUGIN_COMMAND_RELLU_OPTIONS);
                         return true;
                     } else {

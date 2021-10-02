@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class Suicide implements CommandExecutor {
 
@@ -19,7 +19,7 @@ public class Suicide implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.USER.getId())) {
+                    if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                         p.setHealth(0);
                         Bukkit.broadcastMessage(String.format(PLUGIN_COMMAND_SUICIDE, p.getCustomName()));
                         return true;
@@ -33,7 +33,7 @@ public class Suicide implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
+                        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                             target.setHealth(0);
                             Bukkit.broadcastMessage(String.format(PLUGIN_COMMAND_SUICIDE, target.getCustomName()));
                             return true;

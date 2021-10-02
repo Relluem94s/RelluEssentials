@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -56,7 +56,7 @@ public class Rollback implements CommandExecutor {
                 case 2:
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                        if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             UUID targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
                             PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
                             if (pe != null && args[0].equalsIgnoreCase("player")) {
@@ -78,7 +78,7 @@ public class Rollback implements CommandExecutor {
                 case 3:
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                        if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             if(args[0].equalsIgnoreCase("player")){
                                 UUID targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
                                 PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
@@ -108,7 +108,7 @@ public class Rollback implements CommandExecutor {
                 case 4:
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                        if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             if(args[0].equalsIgnoreCase("undo") && args[1].equalsIgnoreCase("player")){
                                 UUID targetUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId();
                                 PlayerEntry pe = dBH.getPlayer(targetUUID.toString());

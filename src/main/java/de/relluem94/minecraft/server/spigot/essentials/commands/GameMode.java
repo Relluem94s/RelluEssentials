@@ -10,7 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class GameMode implements CommandExecutor {
 
@@ -19,7 +19,7 @@ public class GameMode implements CommandExecutor {
         if (args.length == 0) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (Permission.isAuthorized(p, Groups.MOD.getId())) {
+                if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                     return gameMode(command, p);
                 } else {
                     p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -31,7 +31,7 @@ public class GameMode implements CommandExecutor {
             if (target != null) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.MOD.getId())) {
+                    if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         return gameMode(command, target);
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

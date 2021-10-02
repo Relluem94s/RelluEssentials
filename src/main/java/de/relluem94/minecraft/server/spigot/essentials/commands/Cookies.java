@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class Cookies implements CommandExecutor {
 
@@ -22,7 +22,7 @@ public class Cookies implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            if (Permission.isAuthorized(p, Groups.VIP.getId())) {
+            if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
                 if (args.length == 0) {
                     return getCookies(command, getCookie(p), p);
                 } else {

@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import static de.relluem94.rellulib.utils.StringUtils.*;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class Title implements CommandExecutor {
 
@@ -24,7 +24,7 @@ public class Title implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
+                        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                             target.sendTitle(replaceColor(args[1]), replaceColor(implode(2, args)), 5, 80, 5);
                             return true;
                         } else {

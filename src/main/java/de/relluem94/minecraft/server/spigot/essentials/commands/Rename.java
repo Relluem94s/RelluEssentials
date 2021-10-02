@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -34,7 +34,7 @@ public class Rename implements CommandExecutor {
 
     private boolean rename(Player p, String[] args) {
       
-        if (!Permission.isAuthorized(p, Groups.MOD.getId())) {
+        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         }

@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -8,10 +9,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.ConsoleCommandSender;
 
@@ -25,14 +25,15 @@ public class PermissionsGroup implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
-                            Group g = Group.getGroupFromName(args[1]);
+                        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+                            GroupEntry g = Groups.getGroup(args[1]);
                             User u = User.getUserByPlayerName(target.getName());
 
                             if (u != null) {
                                 u.setGroup(g);
                             } else {
-                                u = new User(target, User.getGroup(target));
+                                u = new User(target);
+                                u.setGroup(g);
                             }
                             return true;
                         } else {
@@ -40,13 +41,14 @@ public class PermissionsGroup implements CommandExecutor {
                             return true;
                         }
                     } else if (sender instanceof ConsoleCommandSender || sender instanceof CommandBlock) {
-                        Group g = Group.getGroupFromName(args[1]);
+                        GroupEntry g = Groups.getGroup(args[1]);
                         User u = User.getUserByPlayerName(target.getName());
 
                         if (u != null) {
                             u.setGroup(g);
                         } else {
-                            u = new User(target, User.getGroup(target));
+                            u = new User(target);
+                            u.setGroup(g);
                         }
                         return true;
                     }

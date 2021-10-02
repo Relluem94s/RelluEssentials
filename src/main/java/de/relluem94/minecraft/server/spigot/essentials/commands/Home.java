@@ -15,7 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class Home implements CommandExecutor {
 
@@ -26,7 +26,7 @@ public class Home implements CommandExecutor {
                 case 0:
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.USER.getId())) {
+                        if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                             if (p.getBedSpawnLocation() != null) {
                                 p.teleport(p.getBedSpawnLocation());
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME, p.getWorld().getName()));

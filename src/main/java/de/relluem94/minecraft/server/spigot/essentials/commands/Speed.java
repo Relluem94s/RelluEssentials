@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class Speed implements CommandExecutor {
 
@@ -18,7 +18,7 @@ public class Speed implements CommandExecutor {
             if (args.length == 1) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.MOD.getId())) {
+                    if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         if (args[0].matches("^\\d+$")) {
                             float speed = parseSpeed(args[0]);
                             if (p.isFlying()) {

@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.command.ConsoleCommandSender;
 
 public class Message implements CommandExecutor {
@@ -66,7 +66,7 @@ public class Message implements CommandExecutor {
     private boolean msg(CommandSender sender, Player target, String[] args, int start) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            if (Permission.isAuthorized(p, Groups.USER.getId())) {
+            if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                 String message = implode(start, args);
 
                 if (reply.containsKey(p)) {
@@ -78,7 +78,7 @@ public class Message implements CommandExecutor {
 
                 reply.put(p, target);
                 reply.put(target, p);
-                if(Permission.isAuthorized(p, Groups.VIP.getId())){
+                if(Permission.isAuthorized(p, Groups.getGroup("vip").getId())){
                     message = replaceSymbols(replaceColor(message));
                 }
                 

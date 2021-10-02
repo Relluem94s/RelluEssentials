@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class Enderchest implements CommandExecutor {
 
@@ -19,7 +19,7 @@ public class Enderchest implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.VIP.getId())) {
+                    if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
                         p.openInventory(p.getEnderChest());
                         p.sendMessage(PLUGIN_COMMAND_ENDERCHEST);
                         return true;
@@ -33,7 +33,7 @@ public class Enderchest implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
+                        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                             p.openInventory(target.getEnderChest());
                             p.sendMessage(String.format(PLUGIN_COMMAND_ENDERCHEST_PLAYER, target.getCustomName()));
                             return true;

@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class AFK implements CommandExecutor {
 
@@ -20,7 +20,7 @@ public class AFK implements CommandExecutor {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.USER.getId())) {
+                    if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                         return PlayerHelper.setAFK(p, false);
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -32,7 +32,7 @@ public class AFK implements CommandExecutor {
                 if (target != null) {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.MOD.getId())) {
+                        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                             return PlayerHelper.setAFK(target, false);
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

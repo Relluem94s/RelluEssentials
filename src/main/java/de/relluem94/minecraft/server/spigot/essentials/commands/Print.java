@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class Print implements CommandExecutor {
 
@@ -31,7 +31,7 @@ public class Print implements CommandExecutor {
     private boolean print(CommandSender sender, String[] args, int start) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            if (!Permission.isAuthorized(p, Groups.MOD.getId())) {
+            if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                 p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                 return true;
             }

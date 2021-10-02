@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class Nick implements CommandExecutor {
 
@@ -22,7 +22,7 @@ public class Nick implements CommandExecutor {
             if (args.length == 2) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.ADMIN.getId())) {
+                    if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
                         if (target != null) {
                             PlayerEntry pe = playerEntryList.get(target.getUniqueId());
