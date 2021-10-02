@@ -229,6 +229,20 @@ public class DatabaseHelper {
         }
     }
     
+    public void insertGroup(GroupEntry ge) {
+        try (
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME + "?useSSL=false", user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertGroup.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, ge.getId());
+            ps.setString(2, ge.getName());
+            ps.setString(3, ge.getPrefix());
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void updatePlayer(PlayerEntry pe) {
         try (
             Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME + "?useSSL=false", user, password)) {
@@ -583,8 +597,10 @@ public class DatabaseHelper {
         executeScript(v + "dropPlayerConstraint.sql"); 
         executeScript(v + "updateAdminGroup.sql"); // changed id of Admin
         executeScript(v + "updateModGroup.sql"); // changed id of Mod
+        executeScript(v + "updateVipGroup.sql"); // changed id of Vip
         executeScript(v + "updateAdminGroupPlayer.sql"); // changed id of Admin
         executeScript(v + "updateModGroupPlayer.sql"); // changed id of Mod
+        executeScript(v + "updateVipGroupPlayer.sql"); // changed id of Vip
         executeScript(v + "addPlayerConstraint.sql"); 
         executeScript(v + "insertNewDBVersion.sql");
         executeScript(v + "updateOldPluginInformation.sql");
