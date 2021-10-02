@@ -1,6 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.groupEntryList;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 
 /**
@@ -24,5 +26,16 @@ public class Groups {
            }
        }
        return null;
+   }
+   
+   public static boolean addGroup(GroupEntry g){
+       if(getGroup(g.getName()) == null){
+           dBH.insertGroup(g);
+           groupEntryList.addAll(dBH.getGroups());
+           return true;
+       }
+       else{
+          return false; 
+       }
    }
 }
