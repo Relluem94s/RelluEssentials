@@ -17,7 +17,7 @@ public class BetterPlayerQuit implements Listener {
         e.setQuitMessage(null);
         Player p = e.getPlayer();
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
-        User.getUserByPlayerName(p.getName()).getGroup().getTeam().removeEntry(p.getName());
+        User.getUserByPlayerName(p.getName());
         User.removeUser(p.getName());
     }
 }
