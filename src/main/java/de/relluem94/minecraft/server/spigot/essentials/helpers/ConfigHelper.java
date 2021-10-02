@@ -8,7 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
@@ -49,7 +49,7 @@ public class ConfigHelper {
             ConfigurationSection player = cs.getConfigurationSection(uuid);
             
             String group_name = player.getString("group").toLowerCase();
-            int group_fk = Group.getGroupFromName(group_name).getId();
+            int group_fk = Groups.getGroup(group_name).getId();
             boolean fly = player.getBoolean("fly");
             boolean afk = player.getBoolean("afk");
             String customname = player.getString("customname");
@@ -57,7 +57,7 @@ public class ConfigHelper {
             System.out.println("Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly + " group id:" + group_fk + " group:" + group_name);
             
             PlayerEntry p = new PlayerEntry();
-            p.setGroup(new GroupEntry(Group.getGroupFromName(group_name)));
+            p.setGroup(Groups.getGroup(group_name));
             p.setAFK(afk);
             p.setFly(fly);
             p.setCreatedby(1);

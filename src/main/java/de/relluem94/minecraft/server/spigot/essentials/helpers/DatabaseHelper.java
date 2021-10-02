@@ -17,7 +17,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntr
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,6 +29,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.lo
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.rellulib.utils.LogUtils;
 import de.relluem94.rellulib.utils.TypeUtils;
 import java.nio.charset.StandardCharsets;
@@ -171,7 +171,7 @@ public class DatabaseHelper {
                     p.setDeletedby(rs.getInt("deletedby"));
                     p.setFly(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
-                    p.setGroup(new GroupEntry(Group.getGroupFromId(rs.getInt("group_fk"))));
+                    p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
                     p.setId(rs.getInt("id"));
                     p.setUuid(rs.getString("uuid"));
                     return p;
@@ -201,7 +201,7 @@ public class DatabaseHelper {
                     p.setCustomname(rs.getString("customname"));
                     p.setFly(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
-                    p.setGroup(new GroupEntry(Group.getGroupFromId(rs.getInt("group_fk"))));
+                    p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
                     p.setId(rs.getInt("id"));
                     p.setUuid(rs.getString("uuid"));
                     
@@ -636,5 +636,26 @@ public class DatabaseHelper {
         }
 
         return out;
+    }
+
+    public  List<GroupEntry> getGroups() {
+        List<GroupEntry> gel = new ArrayList<>();   
+        try (   
+            Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME + "?useSSL=false", user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getGroups.sql", StandardCharsets.UTF_8));
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while(rs.next()){
+                    GroupEntry g = new GroupEntry();
+                    g.setId(rs.getInt("id"));
+                    g.setName(rs.getString("name"));
+                    g.setPrefix(rs.getString("prefix"));
+                    gel.add(g);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return gel;
     }
 }

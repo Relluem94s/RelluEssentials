@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import java.io.IOException;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.enums.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;
@@ -32,7 +32,7 @@ public class PlayerHelper {
      * @param p Player to set Flying
      */
     public static void setFlying(Player p) {
-        if (User.getGroup(p).getId() >= Groups.VIP.getId()) {
+        if (User.getGroup(p).getId() >= Groups.getGroup("vip").getId()) {
             PlayerEntry pe = playerEntryList.get(p.getUniqueId());
             if (pe.isFlying()) {
                 p.setAllowFlight(true);
