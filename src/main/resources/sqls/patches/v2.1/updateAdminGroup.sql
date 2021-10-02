@@ -1,3 +1,8 @@
-update `rellu_essentials`.`group` 
-set id = 1073741824
-where id = 8;
+/**
+ * Author:  rellu
+ * Created: 02.10.2021
+ */
+
+UPDATE `rellu_essentials`.`group` 
+SET id = 1073741824
+WHERE id = 8;
