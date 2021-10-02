@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.groups.UserGroup;
 import de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
 import de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
 import de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
@@ -16,51 +15,38 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 public class User {
 
     private Player p;
-    private Group g;
 
     public RepairSkill repair = new RepairSkill(RelluEssentials.board);
     public SalvageSkill salvage = new SalvageSkill(RelluEssentials.board);
     public TreeFellerSkill treeFeller = new TreeFellerSkill(RelluEssentials.board);
 
-    public User(Player p, Group g) {
+    public User(Player p) {
         this.p = p;
-        setGroup(g);
         users.add(this);
 
     }
 
-    public User(Player p, String g) {
-        this.p = p;
-        setGroup(Group.getGroupFromName(g));
-        users.add(this);
-    }
-
-    public Group getGroup() {
-        return g;
-    }
 
     public Player getPlayer() {
         return p;
     }
 
-    public void setGroup(Group g) {
-        this.g = g;
+    public void setGroup(GroupEntry g) {
         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
-        pe.setGroup(new GroupEntry(g));
+        pe.setGroup(g);
         dBH.updatePlayer(pe);
         p.setCustomName(g.getPrefix() + getCustomName(p));
         p.setPlayerListName(p.getCustomName());
         p.setScoreboard(RelluEssentials.board);
-        g.getTeam().addEntry(p.getName() + "");
     }
 
-    public static Group getGroup(Player p) {
+    public static GroupEntry getGroup(Player p) {
         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
        
         if (pe != null) {
-            return Group.getGroupFromId(pe.getGroup().getId());
+            return pe.getGroup();
         } else {
-            return new UserGroup();
+            return Groups.getGroup(1);
         }
     }
 
