@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Group;
-
 /**
  *
  * @author rellu
@@ -11,9 +9,7 @@ public class GroupEntry {
     private String name;
     private String prefix;
     
-    public GroupEntry(Group group){
-        setGroup(group);
-    }
+    public GroupEntry(){}
     
     public GroupEntry(int id, String name, String prefix){
         this.id = id;
@@ -32,11 +28,16 @@ public class GroupEntry {
     public String getPrefix() {
         return prefix;
     }
-    
-    private void setGroup(Group g){
-        this.id = g.getId();
-        this.name = g.getName();
-        this.prefix = g.getPrefix();
+
+    public void setId(int id) {
+        this.id = id;
     }
-    
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }    
 }
