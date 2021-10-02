@@ -22,21 +22,26 @@ public class BlockPlace implements Listener{
     public void placeBlocks(BlockPlaceEvent e){
         PlayerEntry p = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
         BlockHistoryEntry bh = new BlockHistoryEntry();
-            
-        LocationEntry l = new LocationEntry();
-        l.setLocation(e.getBlock().getLocation());
-        LocationTypeEntry lt = new LocationTypeEntry();
-        lt.setId(4);
-        l.setLocationType(lt);
-        l.setPlayerId(1);
+        
+        
+        
+        LocationEntry l = dBH.getLocation(e.getBlock().getLocation(), 4);
 
-        dBH.insertLocation(l);
-        l = dBH.getLocation(e.getBlock().getLocation(), 4);
+        if(l == null){
+            l = new LocationEntry();
+            l.setLocation(e.getBlock().getLocation());
+            LocationTypeEntry lt = new LocationTypeEntry();
+            lt.setId(4);
+            l.setLocationType(lt);
+            l.setPlayerId(1);
+            dBH.insertLocation(l);
+            l = dBH.getLocation(e.getBlock().getLocation(), 4);
+        }        
 
         bh.setCreatedby(p.getId());
         bh.setMaterial(Material.AIR.name());
 
         bh.setLocation(l);
-        blockHistoryList.add(bh);
+        dBH.insertBlockHistory(bh);
     }
 }
