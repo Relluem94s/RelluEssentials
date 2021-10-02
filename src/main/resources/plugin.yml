@@ -1,6 +1,6 @@
 name: RelluEssentials
 main: de.relluem94.minecraft.server.spigot.essentials.RelluEssentials
-version: 1.6
+version: 1.7
 api-version: 1.13
 commands:
     0:
