@@ -1,3 +1,8 @@
-update `rellu_essentials`.`player` 
-set group_fk = 1073741824
-where group_fk = 8;
+/**
+ * Author:  rellu
+ * Created: 02.10.2021
+ */
+
+UPDATE `rellu_essentials`.`player` 
+SET group_fk = 1073741824
+WHERE group_fk = 8;
