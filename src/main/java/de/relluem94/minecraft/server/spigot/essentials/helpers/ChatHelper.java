@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -10,15 +11,26 @@ import org.bukkit.entity.Player;
  * @author rellu
  */
 public class ChatHelper {
-    public static void sendMessage(CommandSender sender, String m) {
-        if (sender instanceof Player) {
+    
+    /**
+     * 
+     * @param sender CommandSender
+     * @param message Message to send
+     */
+    public static void sendMessage(CommandSender sender, String message) {
+        if (isPlayer(sender)) {
             Player p = (Player) sender;
-            p.sendMessage(m);
+            p.sendMessage(message);
         } else {
-            consoleSendMessage(m, "");
+            consoleSendMessage(message, "");
         }
     }
 
+    /**
+     * 
+     * @param type Prefix to add before message
+     * @param message Message to send
+     */
     public static void consoleSendMessage(String type, String message) {
         ConsoleCommandSender console = Bukkit.getConsoleSender();
         console.sendMessage(type + " " + message);
