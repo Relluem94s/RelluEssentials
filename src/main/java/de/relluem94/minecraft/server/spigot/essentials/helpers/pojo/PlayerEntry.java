@@ -26,7 +26,7 @@ public class PlayerEntry {
         return id;
     }
 
-    public void setId(int id) {
+    public void setID(int id) {
         this.id = id;
     }
 
@@ -82,7 +82,7 @@ public class PlayerEntry {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUUID(String uuid) {
         this.uuid = uuid;
     }
 
@@ -94,7 +94,7 @@ public class PlayerEntry {
         this.group = group;
     }
 
-    public boolean isAfk() {
+    public boolean isAFK() {
         return afk;
     }
 
@@ -106,7 +106,7 @@ public class PlayerEntry {
         return fly;
     }
 
-    public void setFly(boolean fly) {
+    public void setFlying(boolean fly) {
         this.fly = fly;
     }
 
