@@ -13,6 +13,6 @@ public class PlayerMove implements Listener {
     
      @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        e.setCancelled(playerEntryList.get(e.getPlayer().getUniqueId()).isAfk());
+        e.setCancelled(playerEntryList.get(e.getPlayer().getUniqueId()).isAFK());
     }
 }

@@ -169,11 +169,11 @@ public class DatabaseHelper {
                     p.setUpdatedby(rs.getInt("updatedby"));
                     p.setCustomname(rs.getString("customname"));
                     p.setDeletedby(rs.getInt("deletedby"));
-                    p.setFly(rs.getBoolean("fly"));
+                    p.setFlying(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
                     p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
-                    p.setId(rs.getInt("id"));
-                    p.setUuid(rs.getString("uuid"));
+                    p.setID(rs.getInt("id"));
+                    p.setUUID(rs.getString("uuid"));
                     return p;
                 }
             }
@@ -199,11 +199,11 @@ public class DatabaseHelper {
                     p.setDeleted(rs.getString("deleted"));
                     p.setDeletedby(rs.getInt("deletedby"));
                     p.setCustomname(rs.getString("customname"));
-                    p.setFly(rs.getBoolean("fly"));
+                    p.setFlying(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
                     p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
-                    p.setId(rs.getInt("id"));
-                    p.setUuid(rs.getString("uuid"));
+                    p.setID(rs.getInt("id"));
+                    p.setUUID(rs.getString("uuid"));
                     
                     pel.add(p);
                 }
@@ -249,7 +249,7 @@ public class DatabaseHelper {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayer.sql", StandardCharsets.UTF_8));
             ps.setInt(1, pe.getId());
             ps.setInt(2, pe.getGroup().getId());
-            ps.setBoolean(3, pe.isAfk());
+            ps.setBoolean(3, pe.isAFK());
             ps.setBoolean(4, pe.isFlying());
             ps.setString(5, pe.getCustomname());
             ps.setString(6, pe.getUUID());
@@ -570,8 +570,8 @@ public class DatabaseHelper {
 
         for(PlayerEntry p : pe){
             PlayerEntry pu = playerEntryList.get(UUID.fromString(p.getUUID()));
-            pu.setAFK(p.isAfk());
-            pu.setFly(p.isFlying());
+            pu.setAFK(p.isAFK());
+            pu.setFlying(p.isFlying());
             pu.setCustomname(p.getCustomname());
             pu.setUpdatedby(1);
             updatePlayer(pu);

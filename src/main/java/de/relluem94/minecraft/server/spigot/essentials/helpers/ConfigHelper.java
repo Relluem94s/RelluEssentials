@@ -62,10 +62,10 @@ public class ConfigHelper {
             PlayerEntry p = new PlayerEntry();
             p.setGroup(Groups.getGroup(group_name));
             p.setAFK(afk);
-            p.setFly(fly);
+            p.setFlying(fly);
             p.setCreatedby(1);
             p.setCustomname(customname);
-            p.setUuid(uuid);
+            p.setUUID(uuid);
             
             list.add(p);
         }
