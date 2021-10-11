@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -41,6 +40,10 @@ public class ConfigHelper {
         }
     }
     
+    /**
+     * 
+     * @return Returns List of all Players from config file
+     */
     public List<PlayerEntry> getPlayers(){
         List<PlayerEntry> list = new ArrayList();
         ConfigurationSection cs = config.getConfigurationSection("player");
@@ -69,6 +72,11 @@ public class ConfigHelper {
         return list;
     }
     
+    /**
+     * 
+     * @param p Player
+     * @return List of Homes as LocationEntry
+     */
     public List<LocationEntry> getHomes(PlayerEntry p){
         List<LocationEntry> list = new ArrayList();
         ConfigurationSection homes = config.getConfigurationSection("player." + p.getUUID() + ".home");
