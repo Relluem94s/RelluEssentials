@@ -43,9 +43,15 @@ public class PlayerHelper {
         }
     }
 
+    /**
+     * 
+     * @param p Player
+     * @param join Boolean
+     * @return Boolean
+     */
     public static boolean setAFK(Player p, boolean join) {
         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
-        boolean isAFK = pe.isAfk();
+        boolean isAFK = pe.isAFK();
 
         if (!join) {
             Bukkit.broadcastMessage(String.format(PLUGIN_COMMAND_AFK, p.getCustomName(), !isAFK ? PLUGIN_COMMAND_AFK_ACTIVATED : PLUGIN_COMMAND_AFK_DEACTIVATED));
