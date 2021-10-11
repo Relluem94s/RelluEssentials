@@ -5,11 +5,11 @@
   <artifactId>relluessentials</artifactId>
   <name>RelluEssentials</name>
   <version>1.7</version>
-  <url>https://github.com/Relluem94/RelluEssentials</url>
+  <url>https://github.com/Relluem94s/RelluEssentials</url>
   <scm>
-    <connection>scm:git:git@github.com:Relluem94/RelluEssentials.git</connection>
-    <developerConnection>scm:git:git@github.com:Relluem94/RelluEssentials.git</developerConnection>
-    <url>https://github.com/Relluem94/RelluEssentials</url>
+    <connection>scm:git:git@github.com:Relluem94s/RelluEssentials.git</connection>
+    <developerConnection>scm:git:git@github.com:Relluem94s/RelluEssentials.git</developerConnection>
+    <url>https://github.com/Relluem94s/RelluEssentials</url>
   </scm>
   <build>
     <sourceDirectory>src/main/java</sourceDirectory>
@@ -48,7 +48,7 @@
     <repository>
       <id>rellulib</id>
       <name>rellulib</name>
-      <url>https://maven.pkg.github.com/Relluem94/RelluLib/</url>
+      <url>https://maven.pkg.github.com/Relluem94s/RelluLib/</url>
     </repository>
     <repository>
       <id>spigotmc-repo</id>
@@ -73,7 +73,7 @@
     <repository>
       <id>github</id>
       <name>GitHub Relluem94 Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/Relluem94/RelluEssentials</url>
+      <url>https://maven.pkg.github.com/Relluem94s/RelluEssentials</url>
     </repository>
   </distributionManagement>
 </project>
