@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.blockHistoryList;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,7 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 public class BetterBlockDrop implements Listener {
 
-    private Material[] blocks2Drop = {
+    private final Material[] blocks2Drop = {
         Material.GLASS,
         Material.GLASS_PANE,
         Material.BLACK_STAINED_GLASS,
