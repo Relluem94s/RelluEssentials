@@ -4,6 +4,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 import java.util.Objects;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +21,7 @@ public class Enchanttest implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
+        if (isPlayer(sender)) {
             Player p = (Player) sender;
             if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                 if (args.length == 0) {
@@ -35,7 +37,7 @@ public class Enchanttest implements CommandExecutor {
                     }
                 }
             } else {
-                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
                 return true;
             }
         }
