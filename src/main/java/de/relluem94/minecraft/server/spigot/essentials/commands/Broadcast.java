@@ -2,7 +2,9 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.rellulib.utils.StringUtils.*;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -25,7 +27,7 @@ public class Broadcast implements CommandExecutor {
                     return broadcast(sender, args, 0, true);
                 }
             } else {
-                sender.sendMessage(PLUGIN_COMMAND_BROADCAST_INFO);
+                sendMessage(sender, PLUGIN_COMMAND_BROADCAST_INFO);
                 return true;
             }
         }
@@ -33,10 +35,10 @@ public class Broadcast implements CommandExecutor {
     }
 
     private boolean broadcast(CommandSender sender, String[] args, int start, boolean chat) {
-        if (sender instanceof Player) {
+        if (isPlayer(sender)) {
             Player p = (Player) sender;
             if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
                 return true;
             }
         }
