@@ -1,6 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,14 +18,14 @@ public class Day implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("day")) {
             if (args.length == 0) {
-                if (sender instanceof Player) {
+                if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         p.getWorld().setTime(0L);
-                        p.sendMessage(String.format(PLUGIN_COMMAND_DAY, p.getWorld().getName()));
+                        sendMessage(p, String.format(PLUGIN_COMMAND_DAY, p.getWorld().getName()));
                         return true;
                     } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                        sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
                         return true;
                     }
                 }
