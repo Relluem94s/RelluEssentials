@@ -32,7 +32,7 @@ public class Nick implements CommandExecutor {
                             target.setCustomName(pe.getGroup().getPrefix() + args[1]);
                             target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);
                             p.sendMessage(String.format(PLUGIN_COMMAND_NICK, pe.getGroup().getPrefix() + target.getName()));
-                            
+
                             return true;
                         }
                     } else {
