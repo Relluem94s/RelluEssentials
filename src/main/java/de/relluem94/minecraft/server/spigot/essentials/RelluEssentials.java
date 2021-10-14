@@ -96,19 +96,18 @@ public class RelluEssentials extends JavaPlugin {
     public static List<GroupEntry> groupEntryList = new ArrayList<>();
     public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
-    
+
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
     public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
-
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
 
     public static DatabaseHelper dBH;
     public static PluginInformationEntry pie;
-    
+
     public static final boolean DEBUG = true;
-    
+
     @Override
     public void onEnable() {
         System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_START_MESSAGE);
@@ -119,7 +118,7 @@ public class RelluEssentials extends JavaPlugin {
         } catch (IOException e) {
             System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
         }
-        
+
         boardManager();
         commandManager();
         databaseManager();
@@ -154,7 +153,6 @@ public class RelluEssentials extends JavaPlugin {
     public static void reloadConfigs() {
         ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
     }
-
 
     private void commandManager() {
         /*	Commands	*/
@@ -248,7 +246,7 @@ public class RelluEssentials extends JavaPlugin {
         pel.forEach(p -> {
             playerEntryList.put(UUID.fromString(p.getUUID()), p);
         });
-        
+
         Bukkit.getOnlinePlayers().forEach(p -> {
             @SuppressWarnings("unused")
             User u = new User(p);
@@ -289,13 +287,12 @@ public class RelluEssentials extends JavaPlugin {
     private void blockHistoryManager() {
         BukkitScheduler scheduler = getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(this, () -> {
-            if(!blockHistoryList.isEmpty()){
+            if (!blockHistoryList.isEmpty()) {
                 BlockHistoryEntry bh = blockHistoryList.get(0);
                 BlockHelper.setBlock(bh);
-                if(bh.getDeleted() == null){
+                if (bh.getDeleted() == null) {
                     dBH.insertBlockHistory(bh);
-                }
-                else {
+                } else {
                     dBH.deleteBlockHistory(bh);
                 }
 
@@ -304,4 +301,3 @@ public class RelluEssentials extends JavaPlugin {
         }, 0L, 2L);
     }
 }
-
