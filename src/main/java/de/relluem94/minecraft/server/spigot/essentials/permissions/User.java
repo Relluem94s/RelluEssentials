@@ -26,7 +26,6 @@ public class User {
 
     }
 
-
     public Player getPlayer() {
         return p;
     }
@@ -42,7 +41,7 @@ public class User {
 
     public static GroupEntry getGroup(Player p) {
         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
-       
+
         if (pe != null) {
             return pe.getGroup();
         } else {

@@ -11,20 +11,17 @@ public class Permission {
         long id = User.getGroup(p).getId();
         return id >= group;
     }
-    
+
     public static boolean isAuthorized(CommandSender sender, long group) {
-         if (sender instanceof Player) {
-            Player p = (Player) sender; 
+        if (sender instanceof Player) {
+            Player p = (Player) sender;
             return isAuthorized(p, group);
-         }
-         else if(sender instanceof BlockCommandSender){
-             return true;
-         }
-         else if(sender instanceof ConsoleCommandSender){
-             return true;
-         }
-         else{
-             return false;
-         }
+        } else if (sender instanceof BlockCommandSender) {
+            return true;
+        } else if (sender instanceof ConsoleCommandSender) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
