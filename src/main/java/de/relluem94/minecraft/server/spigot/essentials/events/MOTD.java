@@ -9,7 +9,7 @@ public class MOTD implements Listener {
 
     @EventHandler
     public void onPing(ServerListPingEvent e) {
-        e.setMotd(pie.getMotdMessage() );
+        e.setMotd(pie.getMotdMessage());
         e.setMaxPlayers(pie.getMotdPlayers());
     }
 }

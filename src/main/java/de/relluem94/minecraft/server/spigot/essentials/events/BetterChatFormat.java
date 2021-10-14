@@ -26,17 +26,14 @@ public class BetterChatFormat implements Listener {
         Player p = e.getPlayer();
         if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
             e.setMessage(StringUtils.replaceSymbols(e.getMessage()));
-            
+
             if (e.getMessage().startsWith(VIP_CHANNEL)) {
                 channel(e.getMessage(), p, VIP_CHANNEL, Groups.getGroup("vip"));
-            }
-            else if (e.getMessage().startsWith(MOD_CHANNEL) && Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            } else if (e.getMessage().startsWith(MOD_CHANNEL) && Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                 channel(e.getMessage(), p, MOD_CHANNEL, Groups.getGroup("mod"));
-            }
-            else if (e.getMessage().startsWith(ADMIN_CHANNEL) && Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
+            } else if (e.getMessage().startsWith(ADMIN_CHANNEL) && Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                 channel(e.getMessage(), p, ADMIN_CHANNEL, Groups.getGroup("admin"));
-            }
-            else {
+            } else {
                 Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage()));
             }
         } else {

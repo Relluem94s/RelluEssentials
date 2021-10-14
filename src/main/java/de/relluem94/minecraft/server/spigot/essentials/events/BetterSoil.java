@@ -13,10 +13,10 @@ public class BetterSoil implements Listener {
 
     @EventHandler
     public void onChange(PlayerInteractEvent e) {
-        if(e.getAction() == Action.PHYSICAL){
+        if (e.getAction() == Action.PHYSICAL) {
             Block b = e.getClickedBlock();
-            if(b.getType().equals(Material.FARMLAND)){
-                if(!e.getPlayer().isSneaking()){
+            if (b.getType().equals(Material.FARMLAND)) {
+                if (!e.getPlayer().isSneaking()) {
                     e.setUseInteractedBlock(Event.Result.DENY);
                     e.setCancelled(true);
                 }

@@ -10,8 +10,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
  * @author rellu
  */
 public class PlayerMove implements Listener {
-    
-     @EventHandler
+
+    @EventHandler
     public void onMove(PlayerMoveEvent e) {
         e.setCancelled(playerEntryList.get(e.getPlayer().getUniqueId()).isAFK());
     }

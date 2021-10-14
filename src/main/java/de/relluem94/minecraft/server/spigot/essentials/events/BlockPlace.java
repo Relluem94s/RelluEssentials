@@ -16,18 +16,16 @@ import org.bukkit.event.block.BlockPlaceEvent;
  *
  * @author rellu
  */
-public class BlockPlace implements Listener{
-        
+public class BlockPlace implements Listener {
+
     @EventHandler
-    public void placeBlocks(BlockPlaceEvent e){
+    public void placeBlocks(BlockPlaceEvent e) {
         PlayerEntry p = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
         BlockHistoryEntry bh = new BlockHistoryEntry();
-        
-        
-        
+
         LocationEntry l = dBH.getLocation(e.getBlock().getLocation(), 4);
 
-        if(l == null){
+        if (l == null) {
             l = new LocationEntry();
             l.setLocation(e.getBlock().getLocation());
             LocationTypeEntry lt = new LocationTypeEntry();
@@ -36,7 +34,7 @@ public class BlockPlace implements Listener{
             l.setPlayerId(1);
             dBH.insertLocation(l);
             l = dBH.getLocation(e.getBlock().getLocation(), 4);
-        }        
+        }
 
         bh.setCreatedby(p.getId());
         bh.setMaterial(Material.AIR.name());
