@@ -5,6 +5,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  * @author rellu
  */
 public class LocationTypeEntry {
+
     private int id;
     private String type;
 
@@ -23,6 +24,5 @@ public class LocationTypeEntry {
     public void setType(String type) {
         this.type = type;
     }
-    
-    
+
 }

@@ -4,10 +4,11 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  *
  * @author rellu
  */
-
 public class PlayerEntry {
-    public PlayerEntry(){}
-    
+
+    public PlayerEntry() {
+    }
+
     private int id;
     private String created;
     private int createdby;
@@ -21,7 +22,7 @@ public class PlayerEntry {
     private boolean fly;
     private String customname;
     private LocationEntry[] homes;
-    
+
     public int getId() {
         return id;
     }
@@ -65,7 +66,7 @@ public class PlayerEntry {
     public void setDeleted(String deleted) {
         this.deleted = deleted;
     }
-    
+
     public String getDeleted() {
         return deleted;
     }

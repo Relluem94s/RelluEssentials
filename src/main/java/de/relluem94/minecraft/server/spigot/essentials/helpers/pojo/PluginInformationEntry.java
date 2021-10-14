@@ -5,6 +5,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  * @author rellu
  */
 public class PluginInformationEntry {
+
     private int id;
     private String created;
     private int createdby;
@@ -17,8 +18,9 @@ public class PluginInformationEntry {
     private String motd_message;
     private int motd_players;
     private int db_version;
-    
-    public PluginInformationEntry(){}
+
+    public PluginInformationEntry() {
+    }
 
     public int getId() {
         return id;
@@ -107,6 +109,5 @@ public class PluginInformationEntry {
     public void setDbVersion(int db_version) {
         this.db_version = db_version;
     }
-    
-    
+
 }

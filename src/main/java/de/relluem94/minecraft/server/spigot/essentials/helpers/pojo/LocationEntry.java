@@ -7,19 +7,21 @@ import org.bukkit.Location;
  * @author rellu
  */
 public class LocationEntry {
+
     private int id;
     private Location location;
     private int player_fk;
     private String location_name;
     private LocationTypeEntry locationType;
 
-    public LocationEntry() {}
+    public LocationEntry() {
+    }
 
     public int getId() {
         return id;
     }
-    
-    public void setId(int id){
+
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -54,6 +56,5 @@ public class LocationEntry {
     public void setLocationName(String locationName) {
         this.location_name = locationName;
     }
-    
-    
+
 }

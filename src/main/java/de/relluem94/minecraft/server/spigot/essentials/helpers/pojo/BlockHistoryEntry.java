@@ -5,6 +5,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  * @author rellu
  */
 public class BlockHistoryEntry {
+
     private int id;
     private LocationEntry location;
     private String material;
@@ -15,13 +16,14 @@ public class BlockHistoryEntry {
     private String deleted;
     private int deletedby;
 
-    public BlockHistoryEntry() {}
+    public BlockHistoryEntry() {
+    }
 
     public int getId() {
         return id;
     }
-    
-    public void setId(int id){
+
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -33,7 +35,7 @@ public class BlockHistoryEntry {
         this.location = location;
     }
 
-     public String getCreated() {
+    public String getCreated() {
         return created;
     }
 
@@ -52,7 +54,7 @@ public class BlockHistoryEntry {
     public void setDeleted(String deleted) {
         this.deleted = deleted;
     }
-    
+
     public String getDeleted() {
         return deleted;
     }
@@ -73,6 +75,4 @@ public class BlockHistoryEntry {
         this.material = material;
     }
 
-    
-    
 }
