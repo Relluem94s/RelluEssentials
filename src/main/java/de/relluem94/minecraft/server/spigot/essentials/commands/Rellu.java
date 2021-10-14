@@ -25,7 +25,7 @@ public class Rellu implements CommandExecutor {
                             int ping = ((CraftPlayer) p).getHandle().ping;
                             p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING, ping));
                             return true;
-                            
+
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_RELLU_WRONG_COMMAND);
                             return true;
@@ -34,7 +34,8 @@ public class Rellu implements CommandExecutor {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                         return true;
                     }
-                }   break;
+                }
+                break;
             case 2:
                 if (args[0].equalsIgnoreCase("ping")) {
                     Player target = Bukkit.getPlayer(args[0]);
@@ -46,7 +47,8 @@ public class Rellu implements CommandExecutor {
                             return true;
                         }
                     }
-                }   break;
+                }
+                break;
             default:
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
@@ -57,7 +59,8 @@ public class Rellu implements CommandExecutor {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                         return true;
                     }
-                }   break;
+                }
+                break;
         }
         return false;
     }
