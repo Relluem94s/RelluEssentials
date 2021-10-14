@@ -19,7 +19,7 @@ public class Rename implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("rename")) { 
+        if (command.getName().equalsIgnoreCase("rename")) {
             if (args.length >= 1) {
                 if (sender instanceof Player) {
                     return rename((Player) sender, args);
@@ -33,24 +33,22 @@ public class Rename implements CommandExecutor {
     }
 
     private boolean rename(Player p, String[] args) {
-      
+
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         }
-        
 
         String message = implode(0, args);
         message = replaceSymbols(replaceColor(message));
         ItemStack is = p.getInventory().getItemInMainHand();
-        if(!is.getType().equals(Material.AIR)){
+        if (!is.getType().equals(Material.AIR)) {
             ItemMeta im = is.getItemMeta();
             im.setDisplayName(message);
             is.setItemMeta(im);
             p.sendMessage(PLUGIN_COMMAND_RENAME);
-            
-        }
-        else{
+
+        } else {
             p.sendMessage(PLUGIN_COMMAND_RENAME_AIR);
         }
         return true;
