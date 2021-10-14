@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials;
 
 public class Strings {
     
-    
     /*******************************************************************************/
     /*                             PLUGIN   STUFF                                  */
     /*******************************************************************************/
@@ -22,20 +21,13 @@ public class Strings {
     
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
 
-    
-    
-    
-        
     /*******************************************************************************/
     /*                           DATABASE   STUFF                                  */
     /*******************************************************************************/
     
     public static final String PLUGIN_DATABASE_VERSION = "";
     public static final String PLUGIN_DATABASE_NAME = "rellu_essentials";
-    
-    
-    
-    
+
     /*******************************************************************************/
     /*                            COMMAND   STUFF                                  */
     /*******************************************************************************/
@@ -135,7 +127,6 @@ public class Strings {
     public static final String PLUGIN_COMMAND_PERMISSION_MISSING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Dafür hast du leider keine Rechte!";
     public static final String PLUGIN_COMMAND_NOT_A_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du bist leider kein Spieler!";
     public static final String PLUGIN_COMMAND_TO_LESS_ARGUMENTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Zu wenig Argumente!";
-
 
     /*******************************************************************************/
     /*                             EVENT   STUFF                                   */
