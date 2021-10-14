@@ -39,8 +39,8 @@ public class Print implements CommandExecutor {
 
         String message = implode(start, args);
         message = replaceSymbols(replaceColor(message));
-        
-        Bukkit.broadcastMessage((sender instanceof Player ? ((Player)sender).getCustomName() : sender.getName()) + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + message);
+
+        Bukkit.broadcastMessage((sender instanceof Player ? ((Player) sender).getCustomName() : sender.getName()) + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + message);
         return true;
     }
 }
