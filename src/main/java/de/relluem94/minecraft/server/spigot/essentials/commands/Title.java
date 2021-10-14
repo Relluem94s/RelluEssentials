@@ -34,8 +34,8 @@ public class Title implements CommandExecutor {
                     }
                 }
             } else {
-               sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
-               return true;
+                sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+                return true;
             }
         }
         return false;
