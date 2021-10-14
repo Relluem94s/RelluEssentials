@@ -38,23 +38,23 @@ public class Ev_AutoSmelt implements Listener {
             }
             e.setDropItems(false);
         } else {
-                e.setDropItems(true);
+            e.setDropItems(true);
         }
     }
-    
+
     private ItemStack smelt(ItemStack im) {
-        int amount = (int )(Math.random() * (4 - 1) + 1);
+        int amount = (int) (Math.random() * (4 - 1) + 1);
         switch (im.getType()) {
             case COAL:
-                amount = (int)(Math.random() * (6 - 2) + 2);
+                amount = (int) (Math.random() * (6 - 2) + 2);
                 im.setAmount(amount);
                 break;
             case DIAMOND:
-                amount = (int)(Math.random() * (5 - 1) + 1);
+                amount = (int) (Math.random() * (5 - 1) + 1);
                 im.setAmount(amount);
                 break;
             case IRON_ORE:
-                amount = (int)(Math.random() * (3 - 1) + 1);
+                amount = (int) (Math.random() * (3 - 1) + 1);
                 im.setType(Material.IRON_INGOT);
                 im.setAmount(amount);
                 break;
