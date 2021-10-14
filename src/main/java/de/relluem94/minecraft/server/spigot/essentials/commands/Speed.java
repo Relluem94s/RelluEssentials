@@ -41,7 +41,6 @@ public class Speed implements CommandExecutor {
         return false;
     }
 
-    
     private float parseSpeed(String arg) {
         int in = Integer.parseInt(arg);
 
