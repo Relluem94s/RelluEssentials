@@ -43,12 +43,7 @@ public class Rollback implements CommandExecutor {
     Undo reverts last action. (looks for timeframe but ignores the deleted)
     Preview sends blockchange to player and reverts after 60 seconds (if possible else no preview)    
     
-    */
-    
-    
-    
-    
-    
+     */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("rollback")) {
@@ -62,7 +57,7 @@ public class Rollback implements CommandExecutor {
                             if (pe != null && args[0].equalsIgnoreCase("player")) {
                                 int id = playerEntryList.get(p.getUniqueId()).getId();
                                 List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayer(pe);
-                                for(BlockHistoryEntry bh : list){
+                                for (BlockHistoryEntry bh : list) {
                                     bh.setDeletedby(id);
                                     blockHistoryList.add(bh);
                                 }
@@ -79,25 +74,23 @@ public class Rollback implements CommandExecutor {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                            if(args[0].equalsIgnoreCase("player")){
+                            if (args[0].equalsIgnoreCase("player")) {
                                 UUID targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
                                 PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
                                     int id = playerEntryList.get(p.getUniqueId()).getId();
                                     List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayerAndTime(pe, args[2], false);
-                                    for(BlockHistoryEntry bh : list){
+                                    for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);
                                         blockHistoryList.add(bh);
                                     }
                                     p.sendMessage("Added: " + list.size());
                                 }
+                            } else if (args[0].equalsIgnoreCase("undo") && args[1].equalsIgnoreCase("player")) {
+
                             }
-                            else if(args[0].equalsIgnoreCase("undo") && args[1].equalsIgnoreCase("player")){
-                                
-                            }
-                            
-                            
+
                             return true;
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -109,21 +102,21 @@ public class Rollback implements CommandExecutor {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                            if(args[0].equalsIgnoreCase("undo") && args[1].equalsIgnoreCase("player")){
+                            if (args[0].equalsIgnoreCase("undo") && args[1].equalsIgnoreCase("player")) {
                                 UUID targetUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId();
                                 PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
                                     int id = playerEntryList.get(p.getUniqueId()).getId();
                                     List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayerAndTime(pe, args[3], true);
-                                    for(BlockHistoryEntry bh : list){
+                                    for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);
                                         blockHistoryList.add(bh);
                                     }
                                     p.sendMessage("Added: " + list.size());
                                 }
-                            }                          
-                            
+                            }
+
                             return true;
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -140,6 +133,5 @@ public class Rollback implements CommandExecutor {
         }
         return false;
     }
-    
-    
+
 }
