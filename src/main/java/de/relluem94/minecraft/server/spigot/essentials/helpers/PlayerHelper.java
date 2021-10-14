@@ -44,7 +44,7 @@ public class PlayerHelper {
     }
 
     /**
-     * 
+     *
      * @param p Player
      * @param join Boolean
      * @return Boolean
@@ -57,7 +57,7 @@ public class PlayerHelper {
             Bukkit.broadcastMessage(String.format(PLUGIN_COMMAND_AFK, p.getCustomName(), !isAFK ? PLUGIN_COMMAND_AFK_ACTIVATED : PLUGIN_COMMAND_AFK_DEACTIVATED));
             isAFK = !isAFK; // Invert for single invertion ^_^
         }
-        
+
         pe.setUpdatedby(playerEntryList.get(p.getUniqueId()).getId());
         pe.setAFK(isAFK);
         dBH.updatePlayer(pe);

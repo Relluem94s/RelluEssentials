@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
  * @author rellu
  */
 public class TypeHelper {
+
     public static boolean isInt(String s) {
         try {
             @SuppressWarnings("unused")
@@ -39,8 +40,8 @@ public class TypeHelper {
             return false;
         }
     }
-    
-     public static boolean isPlayer(CommandSender sender) {
+
+    public static boolean isPlayer(CommandSender sender) {
         return sender instanceof Player;
     }
 

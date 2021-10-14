@@ -26,7 +26,7 @@ public class ConfigHelper {
     private String name;
     private File file;
     private YamlConfiguration config;
-    
+
     //TODO Make an migrator from config files to db
     public ConfigHelper(String name) {
         this.name = name;
@@ -34,23 +34,22 @@ public class ConfigHelper {
         file = new File(RelluEssentials.dataFolder, name + ".yml");
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
-        }
-        else{
-            
+        } else {
+
         }
     }
-    
+
     /**
-     * 
+     *
      * @return Returns List of all Players from config file
      */
-    public List<PlayerEntry> getPlayers(){
+    public List<PlayerEntry> getPlayers() {
         List<PlayerEntry> list = new ArrayList();
         ConfigurationSection cs = config.getConfigurationSection("player");
-        
-        for(String uuid : cs.getKeys(false)){
+
+        for (String uuid : cs.getKeys(false)) {
             ConfigurationSection player = cs.getConfigurationSection(uuid);
-            
+
             String group_name = player.getString("group").toLowerCase();
             int group_fk = Groups.getGroup(group_name).getId();
             boolean fly = player.getBoolean("fly");
@@ -58,7 +57,7 @@ public class ConfigHelper {
             String customname = player.getString("customname");
 
             System.out.println("Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly + " group id:" + group_fk + " group:" + group_name);
-            
+
             PlayerEntry p = new PlayerEntry();
             p.setGroup(Groups.getGroup(group_name));
             p.setAFK(afk);
@@ -66,52 +65,52 @@ public class ConfigHelper {
             p.setCreatedby(1);
             p.setCustomname(customname);
             p.setUUID(uuid);
-            
+
             list.add(p);
         }
         return list;
     }
-    
+
     /**
-     * 
+     *
      * @param p Player
      * @return List of Homes as LocationEntry
      */
-    public List<LocationEntry> getHomes(PlayerEntry p){
+    public List<LocationEntry> getHomes(PlayerEntry p) {
         List<LocationEntry> list = new ArrayList();
         ConfigurationSection homes = config.getConfigurationSection("player." + p.getUUID() + ".home");
-        for(String home : homes.getKeys(false)){
+        for (String home : homes.getKeys(false)) {
             ConfigurationSection h = homes.getConfigurationSection(home);
 
-            float x,y,z,yaw,pitch;
-            x = (float)h.getDouble("x");
-            y = (float)h.getDouble("y");
-            z = (float)h.getDouble("z");
-            yaw = (float)h.getDouble("yaw");
-            pitch = (float)h.getDouble("pitch");
+            float x, y, z, yaw, pitch;
+            x = (float) h.getDouble("x");
+            y = (float) h.getDouble("y");
+            z = (float) h.getDouble("z");
+            yaw = (float) h.getDouble("yaw");
+            pitch = (float) h.getDouble("pitch");
             int type = home.equals("death") ? 2 : 1;
             String world_name = h.getString("world");
-            
+
             World world = Bukkit.getServer().getWorld(world_name);
-            
+
             System.out.println("Found Home: " + home + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
 
             LocationEntry l = new LocationEntry();
-            l.setLocation(new Location(world, x,y,z,yaw,pitch));
+            l.setLocation(new Location(world, x, y, z, yaw, pitch));
             l.setLocationName(home);
             l.setPlayerId(p.getId());
             LocationTypeEntry lt = new LocationTypeEntry();
             lt.setId(type);
             l.setLocationType(lt);
-            
+
             list.add(l);
         }
         return list;
     }
-    
 
     /**
      * Returns the Config Name
+     *
      * @return String Config Name
      */
     public String getConfigName() {
@@ -120,6 +119,7 @@ public class ConfigHelper {
 
     /**
      * Returns the File
+     *
      * @return File
      */
     public File getFile() {
@@ -128,6 +128,7 @@ public class ConfigHelper {
 
     /**
      * Returns the Config
+     *
      * @return YamlConfiguration
      */
     public YamlConfiguration getConfig() {
@@ -136,24 +137,26 @@ public class ConfigHelper {
 
     /**
      * Saves the Config
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     public void save() throws IOException {
         config.save(file);
     }
 
     /**
-     * Reloads the Config 
+     * Reloads the Config
+     *
      * @throws IOException
      * @throws FileNotFoundException
-     * @throws InvalidConfigurationException 
+     * @throws InvalidConfigurationException
      */
     public void reload() throws IOException, FileNotFoundException, InvalidConfigurationException {
         config.load(file);
     }
 
     /**
-     * 
+     *
      * @param path where the Location gets saved
      * @param l the Location it self
      */
@@ -167,7 +170,7 @@ public class ConfigHelper {
     }
 
     /**
-     * 
+     *
      * @param path where the Location is saved
      * @return Location from the Config Path
      */

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
  * @author rellu
  */
 public class WorldHelper {
+
     public static boolean isInWorld(CommandSender sender, String m) {
         if (TypeHelper.isPlayer(sender)) {
             Player p = (Player) sender;
@@ -19,7 +20,7 @@ public class WorldHelper {
             return true;
         }
     }
-    
+
     public static boolean isInWorld(Player p, String m) {
         return p.getWorld().getName().equalsIgnoreCase(m);
     }

@@ -17,12 +17,11 @@ public class ItemHelper {
     private final int amount;
     private final String displayName;
     private final ItemType it;
-    
+
     private List<String> lore;
 
-    
     /**
-     * 
+     *
      * @param material Bukkit Material
      * @param amount Integer
      * @param displayName String
@@ -41,7 +40,7 @@ public class ItemHelper {
     }
 
     /**
-     * 
+     *
      * @param material Bukkit Material
      * @param amount Integer
      * @param displayName String
@@ -63,7 +62,7 @@ public class ItemHelper {
     }
 
     /**
-     * 
+     *
      * @return Bukkit ItemStack
      */
     public ItemStack getCustomItem() {
@@ -71,7 +70,7 @@ public class ItemHelper {
     }
 
     /**
-     * 
+     *
      * @return Amount of ItemHelper
      */
     public int getAmount() {
@@ -79,7 +78,7 @@ public class ItemHelper {
     }
 
     /**
-     * 
+     *
      * @return DisplayName of ItemHelper
      */
     public String getDisplayName() {
@@ -87,7 +86,7 @@ public class ItemHelper {
     }
 
     /**
-     * 
+     *
      * @return Lore (String List) of ItemHelper
      */
     public List<String> getLore() {
@@ -95,7 +94,7 @@ public class ItemHelper {
     }
 
     /**
-     * 
+     *
      * @return Bukkit Material of ItemHelper
      */
     public Material getMaterial() {

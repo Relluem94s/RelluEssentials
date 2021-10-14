@@ -11,9 +11,9 @@ import org.bukkit.entity.Player;
  * @author rellu
  */
 public class ChatHelper {
-    
+
     /**
-     * 
+     *
      * @param sender CommandSender
      * @param message Message to send
      */
@@ -27,7 +27,7 @@ public class ChatHelper {
     }
 
     /**
-     * 
+     *
      * @param type Prefix to add before message
      * @param message Message to send
      */
