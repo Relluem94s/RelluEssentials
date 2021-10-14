@@ -78,10 +78,10 @@ public class Message implements CommandExecutor {
 
                 reply.put(p, target);
                 reply.put(target, p);
-                if(Permission.isAuthorized(p, Groups.getGroup("vip").getId())){
+                if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
                     message = replaceSymbols(replaceColor(message));
                 }
-                
+
                 target.sendMessage(p.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_IN + message);
                 p.sendMessage(target.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_OUT + message);
                 return true;
