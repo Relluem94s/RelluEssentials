@@ -5,6 +5,12 @@
     <name>RelluEssentials</name>
     <version>1.7</version>
     <url>https://github.com/Relluem94s/RelluEssentials</url>
+    <properties>
+        <plugin.apiVersion>1.16</plugin.apiVersion>
+        <plugin.author>Relluem94</plugin.author>
+        <plugin.website>http://www.relluem94.de</plugin.website>
+        <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
+    </properties>
     <distributionManagement>
         <repository>
             <id>github</id>
@@ -59,6 +65,12 @@
         </dependency>
     </dependencies>
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
