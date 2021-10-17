@@ -107,3 +107,14 @@
 * check inv for incomplete stack of item for telekenesis event (drops item if no space is left)
 * the rest from the snippet textfile
 
+
+
+
+
+
+
+
+
+
+
+[![Build Status](https://build.relluem94.de/buildStatus/icon?job=RelluEssentials)](https://build.relluem94.de/view/Minecraft%20Stuff/job/RelluEssentials/)
