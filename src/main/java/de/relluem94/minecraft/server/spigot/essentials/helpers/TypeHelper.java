@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import java.util.List;
+import org.bukkit.Material;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -51,5 +53,9 @@ public class TypeHelper {
 
     public static boolean isConsole(CommandSender sender) {
         return sender instanceof ConsoleCommandSender;
+    }
+    
+    public static boolean isMaterialInList(Material material, List<Material> materialList){
+        return materialList.contains(material);
     }
 }
