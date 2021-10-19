@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.command.BlockCommandSender;
@@ -57,5 +58,9 @@ public class TypeHelper {
     
     public static boolean isMaterialInList(Material material, List<Material> materialList){
         return materialList.contains(material);
+    }
+    
+    public static boolean isMaterialInArray(Material material, Material[] materialArray){
+        return isMaterialInList(material, Arrays.asList(materialArray));
     }
 }
