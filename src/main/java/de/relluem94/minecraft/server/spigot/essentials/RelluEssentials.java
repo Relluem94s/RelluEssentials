@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_PREFIX;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -72,6 +71,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmel
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
@@ -122,7 +122,6 @@ public class RelluEssentials extends JavaPlugin {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
        
-
         boardManager();
         commandManager();
         databaseManager();
@@ -271,7 +270,7 @@ public class RelluEssentials extends JavaPlugin {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
         Enchantment.registerEnchantment(ench);
-        consoleSendMessage(PLUGIN_PREFIX, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
     }
 
     private void databaseManager() {
