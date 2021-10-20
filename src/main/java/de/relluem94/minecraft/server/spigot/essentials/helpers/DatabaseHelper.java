@@ -28,6 +28,7 @@ import org.bukkit.Location;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.rellulib.utils.LogUtils;
@@ -517,7 +518,7 @@ public class DatabaseHelper {
 
     private void patch1() {
         String v = "patches/v1.0/";
-        System.out.println(Strings.PLUGIN_NAME_CONSOLE + "applying " + v);
+        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScriptNoSchema(v + "createSchema.sql");
         executeScript(v + "createGroup.sql");
         executeScript(v + "createPlayer.sql");
@@ -560,7 +561,7 @@ public class DatabaseHelper {
 
     private void patch2() {
         String v = "patches/v2.0/";
-        System.out.println(Strings.PLUGIN_NAME_CONSOLE + "applying " + v);
+        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "dropBlockHistory.sql");
         executeScript(v + "createBlockHistory.sql");
         executeScript(v + "insertNewDBVersion.sql");
