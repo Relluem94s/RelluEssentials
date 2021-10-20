@@ -70,7 +70,6 @@ import de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
@@ -151,7 +150,7 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     public static void reloadConfigs() {
-        ((RelluEssentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME)).reloadConfig();
+        RelluEssentials.reloadConfigs();
     }
 
     private void commandManager() {
