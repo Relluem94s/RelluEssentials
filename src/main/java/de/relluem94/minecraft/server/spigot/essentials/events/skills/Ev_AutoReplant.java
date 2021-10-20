@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -51,7 +53,7 @@ public class Ev_AutoReplant implements Listener {
                         try {
                             i.removeItem(seed);
                         } catch (AssertionError e) {
-                            System.out.println(e.getMessage());
+                            Logger.getLogger(Ev_AutoReplant.class.getName()).log(Level.SEVERE, null, e);
                         }
                         b.breakNaturally();
                         b.setType(plants[x]);
