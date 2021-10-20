@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -56,7 +58,7 @@ public class ConfigHelper {
             boolean afk = player.getBoolean("afk");
             String customname = player.getString("customname");
 
-            System.out.println("Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly + " group id:" + group_fk + " group:" + group_name);
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, "Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly + " group id:" + group_fk + " group:" + group_name);
 
             PlayerEntry p = new PlayerEntry();
             p.setGroup(Groups.getGroup(group_name));
@@ -93,7 +95,7 @@ public class ConfigHelper {
 
             World world = Bukkit.getServer().getWorld(world_name);
 
-            System.out.println("Found Home: " + home + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, "Found Home: " + home + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
 
             LocationEntry l = new LocationEntry();
             l.setLocation(new Location(world, x, y, z, yaw, pitch));
