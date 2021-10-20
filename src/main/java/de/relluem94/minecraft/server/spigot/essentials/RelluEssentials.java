@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_PREFIX;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -74,6 +75,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REG
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -82,6 +84,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationType
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class RelluEssentials extends JavaPlugin {
@@ -109,14 +113,15 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_START_MESSAGE);
+        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, Strings.PLUGIN_START_MESSAGE);
         dataFolder = this.getDataFolder();
 
         try {
             configManager(true);
-        } catch (IOException e) {
-            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
+       
 
         boardManager();
         commandManager();
@@ -131,12 +136,14 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        System.out.println(Strings.PLUGIN_NAME_CONSOLE + Strings.PLUGIN_STOP_MESSAGE);
+        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, Strings.PLUGIN_STOP_MESSAGE);
+        
         try {
             configManager(false);
-        } catch (IOException e) {
-            System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
     private void configManager(boolean enable) throws IOException {
@@ -254,24 +261,17 @@ public class RelluEssentials extends JavaPlugin {
         });
     }
 
-    private void registerEnchants(Enchantment ench) {
+    private void registerEnchants(Enchantment ench) {          
         try {
-            try {
-                Field f = Enchantment.class.getDeclaredField("acceptingNew");
-                f.setAccessible(true);
-                f.set(null, true);
-            } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException e) {
-                System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
-            }
-            try {
-                Enchantment.registerEnchantment(ench);
-                System.out.println(String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
-            } catch (IllegalArgumentException e) {
-                System.out.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
-            }
-        } catch (Exception e) {
-            System.err.println(Strings.PLUGIN_NAME_CONSOLE + e.getMessage());
+            Field f;
+            f = Enchantment.class.getDeclaredField("acceptingNew");
+            f.setAccessible(true);
+            f.set(null, true);
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+            Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Enchantment.registerEnchantment(ench);
+        consoleSendMessage(PLUGIN_PREFIX, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
     }
 
     private void databaseManager() {
