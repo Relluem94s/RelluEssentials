@@ -11,6 +11,8 @@ import io.netty.buffer.ByteBufAllocator;
 import java.io.IOException;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.minecraft.server.v1_16_R3.EntityPlayer;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent;
 import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;
@@ -80,13 +82,15 @@ public class PlayerHelper {
         ByteBuf bB = ByteBufAllocator.DEFAULT.buffer();
         PacketDataSerializer pDA = new PacketDataSerializer(bB);
         PacketPlayOutPlayerListHeaderFooter pPOPLHF = new PacketPlayOutPlayerListHeaderFooter();
+
+        pDA.a(IChatBaseComponent.ChatSerializer.a(tabHeader));
+        pDA.a(IChatBaseComponent.ChatSerializer.a(tabFooter));
         try {
-            pDA.a(IChatBaseComponent.ChatSerializer.a(tabHeader));
-            pDA.a(IChatBaseComponent.ChatSerializer.a(tabFooter));
             pPOPLHF.a(pDA);
-            eP.playerConnection.sendPacket(pPOPLHF);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(PlayerHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
+        eP.playerConnection.sendPacket(pPOPLHF);
+
     }
 }
