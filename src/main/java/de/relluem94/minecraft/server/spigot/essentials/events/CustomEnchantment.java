@@ -26,9 +26,9 @@ public class CustomEnchantment implements Listener {
             // e.getOffers()[0] = new EnchantmentOffer(as, 1, 1);
             // e.getOffers()[1] = new EnchantmentOffer(new EnchantmentWrapper("autosmelt"), 1, 1);
             // e.getOffers()[2] = new EnchantmentOffer(ts, 1, 1);
-//            System.out.println("===");
+//            consoleSendMessage("", "===");
 //            for(EnchantmentOffer eo : e.getOffers()){
-//                            System.out.println(eo.getEnchantment().getKey());
+//                            consoleSendMessage("", eo.getEnchantment().getKey());
 //            }
 
             //e.getOffers()[1] = new EnchantmentOffer(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt")), 1, 0);
