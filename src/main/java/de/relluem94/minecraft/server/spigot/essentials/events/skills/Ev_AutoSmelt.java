@@ -17,8 +17,8 @@ public class Ev_AutoSmelt implements Listener {
     public void onBreakSmelt(BlockBreakEvent e) {
         Player p = e.getPlayer();
 
-        Block b = e.getBlock();
-
+        Block b = e.getBlock(); //TODO Check blockfaces for items like torches.
+        
         if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt")))) {
             if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis")))) {
                 if (p.getInventory().firstEmpty() >= 0) {
