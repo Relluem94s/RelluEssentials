@@ -122,7 +122,7 @@ public class RelluEssentials extends JavaPlugin {
         } catch (IOException ex) {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
         boardManager();
         commandManager();
         databaseManager();
@@ -137,13 +137,13 @@ public class RelluEssentials extends JavaPlugin {
     @Override
     public void onDisable() {
         consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, Strings.PLUGIN_STOP_MESSAGE);
-        
+
         try {
             configManager(false);
         } catch (IOException ex) {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     private void configManager(boolean enable) throws IOException {
@@ -262,7 +262,7 @@ public class RelluEssentials extends JavaPlugin {
         });
     }
 
-    private void registerEnchants(Enchantment ench) {          
+    private void registerEnchants(Enchantment ench) {
         try {
             Field f;
             f = Enchantment.class.getDeclaredField("acceptingNew");
@@ -273,7 +273,7 @@ public class RelluEssentials extends JavaPlugin {
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             consoleSendMessage(PLUGIN_NAME_CONSOLE, ex.getMessage());
         }
-        
+
     }
 
     private void databaseManager() {
