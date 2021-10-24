@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-
 public class TestCommand implements CommandExecutor {
 
     @Override
@@ -21,10 +20,9 @@ public class TestCommand implements CommandExecutor {
                     MobHelper mh = new MobHelper(p.getLocation(), EntityType.ZOGLIN, 40, "X Æ A-12", true);
                     mh.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1000000, 1));
                     mh.setCanPickupItems(true);
-                    
+
                     mh.spawn();
-                }
-                else{
+                } else {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 10, 1));
                 }
             }
