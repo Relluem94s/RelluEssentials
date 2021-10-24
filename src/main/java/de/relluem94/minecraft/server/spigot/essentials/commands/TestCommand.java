@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.MobHelper;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -19,19 +20,30 @@ public class TestCommand implements CommandExecutor {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
                 if (p.getName().equalsIgnoreCase("Relluem94")) {
-                    MobHelper mh = new MobHelper(p.getLocation(), EntityType.ZOMBIE, "§aX Æ A-XII", true);
-                    mh.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1000000, 1));
-                    mh.setCanPickupItems(true);
+                    if(args.length == 1){
+                        if(args[0].equals("cm")){
+                            MobHelper mh = new MobHelper(p.getLocation(), EntityType.ZOMBIE, "§aX Æ A-XII", true);
+                            mh.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1000000, 1));
+                            mh.setCanPickupItems(true);
+
+                            mh.spawn(
+                                    new ItemStack(Material.WOODEN_SWORD,1),
+                                    new ItemStack(Material.SHIELD,1),
+
+                                    new ItemStack(Material.LEATHER_HELMET,1),
+                                    new ItemStack(Material.LEATHER_CHESTPLATE,1),
+                                    new ItemStack(Material.LEATHER_LEGGINGS,1),
+                                    new ItemStack(Material.LEATHER_BOOTS,1)
+                            );
+                        }
+                        else if(args[0].equals("cs")){
+                            p.getInventory().addItem(CustomItems.cloudSailor.getCustomItem());
+                            p.getInventory().addItem(CustomItems.cloudBoots.getCustomItem());
+                        }
+                    }
                     
-                    mh.spawn(
-                            new ItemStack(Material.WOODEN_SWORD,1),
-                            new ItemStack(Material.SHIELD,1),
-                            
-                            new ItemStack(Material.LEATHER_HELMET,1),
-                            new ItemStack(Material.LEATHER_CHESTPLATE,1),
-                            new ItemStack(Material.LEATHER_LEGGINGS,1),
-                            new ItemStack(Material.LEATHER_BOOTS,1)
-                    );
+                    
+                    
                     return true;
                 } else {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 10, 1));
