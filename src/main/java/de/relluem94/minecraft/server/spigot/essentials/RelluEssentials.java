@@ -72,6 +72,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekene
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Head;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
 import de.relluem94.minecraft.server.spigot.essentials.commands.TestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
@@ -187,6 +188,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("rellu")).setExecutor(new Rellu());
         Objects.requireNonNull(this.getCommand("heal")).setExecutor(new Heal());
         Objects.requireNonNull(this.getCommand("god")).setExecutor(new God());
+        Objects.requireNonNull(this.getCommand("head")).setExecutor(new Head());
         Objects.requireNonNull(this.getCommand("afk")).setExecutor(new AFK());
         Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
         Objects.requireNonNull(this.getCommand("r")).setExecutor(new Message());

@@ -78,6 +78,9 @@ commands:
     god:
         description: toogle god mode
         usage: /god
+    head:
+        description: gives you a player head
+        usage: /head
     heal:
         description: heal player
         usage: /heal
