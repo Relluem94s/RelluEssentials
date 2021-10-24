@@ -268,11 +268,12 @@ public class RelluEssentials extends JavaPlugin {
             f = Enchantment.class.getDeclaredField("acceptingNew");
             f.setAccessible(true);
             f.set(null, true);
+            Enchantment.registerEnchantment(ench);
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, ex.getMessage());
         }
-        Enchantment.registerEnchantment(ench);
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
+        
     }
 
     private void databaseManager() {
