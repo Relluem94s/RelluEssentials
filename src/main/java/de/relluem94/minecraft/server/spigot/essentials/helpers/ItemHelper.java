@@ -111,10 +111,18 @@ public class ItemHelper implements IItemHelper {
         return it;
     }
     
+    /**
+     * 
+     * @return ItemMeta of ItemStack
+     */
     public ItemMeta getItemMeta(){
         return is.getItemMeta();
     }
     
+    /**
+     * 
+     * @param itemmeta ItemMeta sets ItemMeta of ItemStack
+     */
     public void setItemMeta(ItemMeta itemmeta){
         is.setItemMeta(itemmeta);
     }
