@@ -81,8 +81,12 @@ commands:
     head:
         description: gives you a player head
         usage: /head
+    vanish:
+        description: vanishes player
+        usage: /vanish
+        aliases: v
     cc:
-        description: gives you a player head
+        description: clears chat
         usage: /cc
         aliases: clearchat
     heal:

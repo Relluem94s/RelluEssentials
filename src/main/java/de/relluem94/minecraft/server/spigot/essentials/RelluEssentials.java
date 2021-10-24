@@ -76,6 +76,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.ClearChat;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Head;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
 import de.relluem94.minecraft.server.spigot.essentials.commands.TestCommand;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
@@ -190,6 +191,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("heal")).setExecutor(new Heal());
         Objects.requireNonNull(this.getCommand("god")).setExecutor(new God());
         Objects.requireNonNull(this.getCommand("head")).setExecutor(new Head());
+        Objects.requireNonNull(this.getCommand("vanish")).setExecutor(new Vanish());
         Objects.requireNonNull(this.getCommand("cc")).setExecutor(new ClearChat());
         Objects.requireNonNull(this.getCommand("afk")).setExecutor(new AFK());
         Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
