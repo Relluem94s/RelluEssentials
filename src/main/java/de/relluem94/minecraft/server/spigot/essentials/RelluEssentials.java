@@ -78,6 +78,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
 import de.relluem94.minecraft.server.spigot.essentials.commands.TestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
+import de.relluem94.minecraft.server.spigot.essentials.events.CloudSailor;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
@@ -90,6 +91,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInform
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Material;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class RelluEssentials extends JavaPlugin {
@@ -134,6 +137,7 @@ public class RelluEssentials extends JavaPlugin {
         featureManager();
         groupManager();
         skillManager();
+        addRecipes();
         blockHistoryManager();
     }
 
@@ -226,6 +230,7 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new NoDeathMessage(), this);
         pm.registerEvents(new PlayerMove(), this);
         pm.registerEvents(new MOTD(), this);
+        pm.registerEvents(new CloudSailor(), this);
         //pm.registerEvents(new CustomEnchantment(), this); // TODO Enchantments not visible and not enchanted
     }
 
@@ -306,5 +311,14 @@ public class RelluEssentials extends JavaPlugin {
                 blockHistoryList.remove(0);
             }
         }, 0L, 2L);
+    }
+    
+    private void addRecipes(){
+        NamespacedKey key = new NamespacedKey(this, "cloud_boots");
+        ShapedRecipe recipe = new ShapedRecipe(key, CustomItems.cloudBoots.getCustomItem());
+        recipe.shape("F F", "F F");
+        recipe.setIngredient('F', Material.FEATHER);
+        Bukkit.addRecipe(recipe);
+
     }
 }
