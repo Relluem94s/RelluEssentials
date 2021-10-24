@@ -111,7 +111,8 @@ commands:
     rollback:
         description: rollbacks changes in the world by the player x
         usage: /rollback
-        
-
+    AQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj:            
+        description: not a command
+        usage: /AQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj
 
 
