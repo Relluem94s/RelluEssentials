@@ -17,8 +17,7 @@ public class TypeHelper {
 
     public static boolean isInt(String s) {
         try {
-            @SuppressWarnings("unused")
-            int i = Integer.parseInt(s);
+            Integer.parseInt(s);
             return true;
         } catch (NumberFormatException er) {
             return false;
@@ -27,8 +26,7 @@ public class TypeHelper {
 
     public static boolean isDouble(String s) {
         try {
-            @SuppressWarnings("unused")
-            double i = Double.parseDouble(s);
+            Double.parseDouble(s);
             return true;
         } catch (NumberFormatException er) {
             return false;
@@ -37,8 +35,7 @@ public class TypeHelper {
 
     public static boolean isFloat(String s) {
         try {
-            @SuppressWarnings("unused")
-            double i = Float.parseFloat(s);
+            Float.parseFloat(s);
             return true;
         } catch (NumberFormatException er) {
             return false;
