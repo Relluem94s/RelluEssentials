@@ -20,6 +20,18 @@ public class Strings {
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
     
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
+    
+    /*******************************************************************************/
+    /*                              ITEM   STUFF                                   */
+    /*******************************************************************************/
+    
+    public static final String PLUGIN_ITEM_CLOUDBOOTS = "§bCloud Boots";
+    public static final String PLUGIN_ITEM_CLOUDBOOTS_LORE1 = "§bGrants gliding abillity if worn.";
+    public static final String PLUGIN_ITEM_CLOUDBOOTS_LORE2 = "§bAlso reduces Fall Damage by 100%";
+    public static final String PLUGIN_ITEM_CLOUDSAILOR = "§bCloud Sailor";
+    public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE1 = "§bHeld in Off Hand grants gliding abillity.";
+    public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE2 = "§bAlso reduces Fall Damage by 50%";
+    
 
     /*******************************************************************************/
     /*                           DATABASE   STUFF                                  */
