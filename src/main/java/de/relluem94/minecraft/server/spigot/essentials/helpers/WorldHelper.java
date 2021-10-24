@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import java.util.List;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -24,11 +25,15 @@ public class WorldHelper {
     public static boolean isInWorld(Player p, String m) {
         return p.getWorld().getName().equalsIgnoreCase(m);
     }
+    
+    public static boolean isInWorld(Player p, List<String> worlds) {
+        return worlds.contains(p.getWorld().getName());
+    }
 
     public static boolean isInWorld(CommandSender sender, World w) {
         if (TypeHelper.isPlayer(sender)) {
             Player p = (Player) sender;
-            return p.getWorld().equals(w);
+            return isInWorld(p, w);
         } else {
             return true;
         }
