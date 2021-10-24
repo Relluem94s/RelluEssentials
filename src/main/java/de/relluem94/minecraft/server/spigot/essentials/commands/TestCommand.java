@@ -18,7 +18,7 @@ public class TestCommand implements CommandExecutor {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
                 if (p.getName().equalsIgnoreCase("Relluem94")) {
-                    MobHelper mh = new MobHelper(p.getLocation(), EntityType.ZOGLIN, 400, "X Æ A-12", true);
+                    MobHelper mh = new MobHelper(p.getLocation(), EntityType.ZOGLIN, 40, "X Æ A-12", true);
                     mh.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1000000, 1));
                     mh.setCanPickupItems(true);
                     
