@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -42,6 +43,16 @@ public class TypeHelper {
         } catch (NumberFormatException er) {
             return false;
         }
+    }
+    
+    public static boolean areBlocksMaterial(List<Block> blocks, Material material){
+        boolean isMat = true;
+        for(Block b: blocks){
+            if(!b.getType().equals(material)){
+                isMat = false;
+            }
+        }
+        return isMat;
     }
 
     public static boolean isPlayer(CommandSender sender) {
