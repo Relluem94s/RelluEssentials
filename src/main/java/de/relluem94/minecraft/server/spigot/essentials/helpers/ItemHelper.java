@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemType;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -10,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  *
  * @author rellu
  */
-public class ItemHelper {
+public class ItemHelper implements IItemHelper {
 
     private final ItemStack is;
     private final Material material;
@@ -66,6 +67,7 @@ public class ItemHelper {
      * @return Bukkit ItemStack
      */
     public ItemStack getCustomItem() {
+        init();
         return is;
     }
 
@@ -108,4 +110,35 @@ public class ItemHelper {
     public ItemType getItemType() {
         return it;
     }
+    
+    public ItemMeta getItemMeta(){
+        return is.getItemMeta();
+    }
+    
+    public void setItemMeta(ItemMeta itemmeta){
+        is.setItemMeta(itemmeta);
+    }
+    
+    public boolean equals(ItemStack compare){
+    if(is == null || compare == null){
+        return false;
+    }
+
+    if(is.getType() != compare.getType()){
+        return false;
+    }
+        
+    if(is.hasItemMeta() != compare.hasItemMeta()){
+        return false;
+    }
+ 
+    if(is.hasItemMeta() && !is.getItemMeta().equals(compare.getItemMeta())){
+        return false;
+    }
+    
+    return true;
+}
+
+    @Override
+    public void init() {}
 }
