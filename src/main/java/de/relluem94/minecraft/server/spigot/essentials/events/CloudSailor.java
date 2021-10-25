@@ -6,16 +6,20 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelpe
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +29,22 @@ public class CloudSailor implements Listener {
 
     private final String[] worlds = new String[]{"world", "world_nether", "world_the_end", "lobby"};
 
+    @EventHandler
+    public void mobDeath(EntityDeathEvent event) {
+        LivingEntity e = event.getEntity();
+        if (e instanceof Chicken) {
+            Random r = new Random();
+            
+            int i = r.nextInt(150);
+            
+            if( i == 19 || i == 94){
+                event.getDrops().clear();
+                event.setDroppedExp(30);
+                event.getDrops().add(CustomItems.cloudSailor.getCustomItem());
+            }
+        }
+    }
+    
     @EventHandler
     public void cloudBootsCrafting(PrepareItemCraftEvent e) {
         if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.cloudBoots.equals(e.getRecipe().getResult())) {
