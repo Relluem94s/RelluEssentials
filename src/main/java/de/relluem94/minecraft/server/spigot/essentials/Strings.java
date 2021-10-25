@@ -25,6 +25,12 @@ public class Strings {
     /*                              ITEM   STUFF                                   */
     /*******************************************************************************/
     
+    public static final String PLUGIN_ITEM_RELLU_HELMET = "§6Rellu's Helmet";
+    public static final String PLUGIN_ITEM_RELLU_CHESTPLATE = "§3Rellu's Chestplate";
+    public static final String PLUGIN_ITEM_RELLU_LEGGINGS = "§aRellu's Leggings";
+    public static final String PLUGIN_ITEM_RELLU_BOOTS = "§cRellu's Boots";
+    public static final String PLUGIN_ITEM_RELLU_SHIELD = "§5Rellu's Shield";
+    
     public static final String PLUGIN_ITEM_CLOUDBOOTS = "§bCloud Boots";
     public static final String PLUGIN_ITEM_CLOUDBOOTS_LORE1 = "§bGrants gliding abillity if worn.";
     public static final String PLUGIN_ITEM_CLOUDBOOTS_LORE2 = "§bAlso reduces Fall Damage by 100%";
