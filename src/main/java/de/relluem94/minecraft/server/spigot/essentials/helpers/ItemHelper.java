@@ -149,7 +149,7 @@ public class ItemHelper implements IItemHelper {
 
     @Override
     public void init() {
-        throw new UnsupportedOperationException("Please override this method in order to use it!"); 
+        
     }
 
 }
