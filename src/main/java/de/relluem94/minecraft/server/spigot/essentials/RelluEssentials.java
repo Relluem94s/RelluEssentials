@@ -207,7 +207,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("rename")).setExecutor(new Rename());
         Objects.requireNonNull(this.getCommand("speed")).setExecutor(new Speed());
         Objects.requireNonNull(this.getCommand("rollback")).setExecutor(new Rollback());
-        Objects.requireNonNull(this.getCommand("AQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")).setExecutor(new TestCommand());
+        Objects.requireNonNull(this.getCommand("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")).setExecutor(new TestCommand());
         //TODO add Warps
         //TODO add Marriage
     }
