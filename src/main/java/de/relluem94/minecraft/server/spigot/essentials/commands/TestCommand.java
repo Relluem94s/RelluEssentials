@@ -16,7 +16,7 @@ public class TestCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("AQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")) {
+        if (command.getName().equalsIgnoreCase("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
                 if (p.getName().equalsIgnoreCase("Relluem94")) {
@@ -39,6 +39,13 @@ public class TestCommand implements CommandExecutor {
                         else if(args[0].equals("cs")){
                             p.getInventory().addItem(CustomItems.cloudSailor.getCustomItem());
                             p.getInventory().addItem(CustomItems.cloudBoots.getCustomItem());
+                        }
+                        else if(args[0].equals("rellu")){
+                            p.getInventory().addItem(CustomItems.relluHelmet.getCustomItem());
+                            p.getInventory().addItem(CustomItems.relluChestPlate.getCustomItem());
+                            p.getInventory().addItem(CustomItems.relluLeggings.getCustomItem());
+                            p.getInventory().addItem(CustomItems.relluBoots.getCustomItem());
+                            p.getInventory().addItem(CustomItems.relluShield.getCustomItem());
                         }
                     }
                     
