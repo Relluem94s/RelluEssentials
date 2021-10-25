@@ -8,6 +8,7 @@ public enum ItemType {
     TOOL,
     DECORATION,
     BUILDING,
+    RPG,
     HUB,
     NONE
 }
