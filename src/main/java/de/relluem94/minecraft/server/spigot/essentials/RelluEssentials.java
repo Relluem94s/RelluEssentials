@@ -7,7 +7,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.bukkit.Material;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,22 +41,6 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Suicide;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterBlockDrop;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterMobs;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerJoin;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerQuit;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterSavety;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterSoil;
-import de.relluem94.minecraft.server.spigot.essentials.events.MOTD;
-import de.relluem94.minecraft.server.spigot.essentials.events.NoDeathMessage;
-import de.relluem94.minecraft.server.spigot.essentials.events.features.RotationTool;
-import de.relluem94.minecraft.server.spigot.essentials.events.features.SelectionTool;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoReplant;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Repair;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Salvage;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Broadcast;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Enchanttest;
@@ -64,23 +54,45 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Rename;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Speed;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Title;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Where;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
-import de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
 import de.relluem94.minecraft.server.spigot.essentials.commands.ClearChat;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Head;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
 import de.relluem94.minecraft.server.spigot.essentials.commands.TestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
+
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterBlockDrop;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterMobs;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerJoin;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerQuit;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterSavety;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterSoil;
+import de.relluem94.minecraft.server.spigot.essentials.events.MOTD;
+import de.relluem94.minecraft.server.spigot.essentials.events.NoDeathMessage;
+import de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
 import de.relluem94.minecraft.server.spigot.essentials.events.CloudSailor;
+
+import de.relluem94.minecraft.server.spigot.essentials.events.features.RotationTool;
+import de.relluem94.minecraft.server.spigot.essentials.events.features.SelectionTool;
+
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoReplant;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Repair;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Salvage;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
+
+import de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
+import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
+
+import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
+
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -88,12 +100,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntr
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.bukkit.Material;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.scheduler.BukkitScheduler;
 
 public class RelluEssentials extends JavaPlugin {
 
@@ -120,7 +126,7 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, Strings.PLUGIN_START_MESSAGE);
+        ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, Strings.PLUGIN_START_MESSAGE);
         dataFolder = this.getDataFolder();
 
         try {
@@ -143,14 +149,12 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, Strings.PLUGIN_STOP_MESSAGE);
-
+        ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, Strings.PLUGIN_STOP_MESSAGE);
         try {
             configManager(false);
         } catch (IOException ex) {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private void configManager(boolean enable) throws IOException {
@@ -158,7 +162,6 @@ public class RelluEssentials extends JavaPlugin {
         if (enable) {
             this.saveDefaultConfig();
         } else {
-            //saveConfigs();
             this.saveConfig();
         }
     }
@@ -190,7 +193,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("setGroup")).setExecutor(new PermissionsGroup());
         Objects.requireNonNull(this.getCommand("nick")).setExecutor(new Nick());
         Objects.requireNonNull(this.getCommand("suicide")).setExecutor(new Suicide());
-        Objects.requireNonNull(this.getCommand("enchanttest")).setExecutor(new Enchanttest());
+        Objects.requireNonNull(this.getCommand("enchanttest")).setExecutor(new Enchanttest()); // @TODO Remove enchantest and add it to ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj
         Objects.requireNonNull(this.getCommand("rellu")).setExecutor(new Rellu());
         Objects.requireNonNull(this.getCommand("heal")).setExecutor(new Heal());
         Objects.requireNonNull(this.getCommand("god")).setExecutor(new God());
@@ -208,8 +211,9 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("speed")).setExecutor(new Speed());
         Objects.requireNonNull(this.getCommand("rollback")).setExecutor(new Rollback());
         Objects.requireNonNull(this.getCommand("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")).setExecutor(new TestCommand());
-        //TODO add Warps
-        //TODO add Marriage
+        // @TODO add Warps
+        // @TODO add Marriage
+        // @TODO Fix Command execution for command Blocks
     }
 
     private void enchantmentManager() {
@@ -266,7 +270,6 @@ public class RelluEssentials extends JavaPlugin {
         });
 
         Bukkit.getOnlinePlayers().forEach(p -> {
-            @SuppressWarnings("unused")
             User u = new User(p);
             //TODO Add Array for Users to Access it directly without the other class. (Maybe?)
             //TODO Remove Todo above. Also (Maybe?) remove User thing. could be replaced by the pojo stuff we have.
@@ -280,11 +283,10 @@ public class RelluEssentials extends JavaPlugin {
             f.setAccessible(true);
             f.set(null, true);
             Enchantment.registerEnchantment(ench);
-            consoleSendMessage(PLUGIN_NAME_CONSOLE, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
+            ChatHelper.consoleSendMessage(PLUGIN_NAME_CONSOLE, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            consoleSendMessage(PLUGIN_NAME_CONSOLE, ex.getMessage());
+            ChatHelper.consoleSendMessage(PLUGIN_NAME_CONSOLE, ex.getMessage());
         }
-
     }
 
     private void databaseManager() {
@@ -307,7 +309,6 @@ public class RelluEssentials extends JavaPlugin {
                 } else {
                     dBH.deleteBlockHistory(bh);
                 }
-
                 blockHistoryList.remove(0);
             }
         }, 0L, 2L);
@@ -319,6 +320,5 @@ public class RelluEssentials extends JavaPlugin {
         recipe.shape("F F", "F F");
         recipe.setIngredient('F', Material.FEATHER);
         Bukkit.addRecipe(recipe);
-
     }
 }
