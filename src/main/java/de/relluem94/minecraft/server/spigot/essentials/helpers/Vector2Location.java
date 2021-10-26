@@ -1,33 +1,27 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
 
-public class Vector2Location {
+public class Vector2Location extends DoubleStore {
 
-    private Location x, y;
-
-    public Vector2Location() {
-
-    }
-
-    public Vector2Location(Location x, Location y) {
-        this.x = x;
-        this.y = y;
+    public Vector2Location(Location first, Location second) {
+        super(first, second);
     }
 
     public Location getX() {
-        return x;
+        return (Location) getValue();
     }
 
     public void setX(Location x) {
-        this.x = x;
+        setValue(x);
     }
 
     public Location getY() {
-        return y;
+        return (Location) getSecondValue();
     }
 
     public void setY(Location y) {
-        this.y = y;
+        setSecondValue(y);
     }
 }
