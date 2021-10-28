@@ -1,14 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.enums;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemType;
+
 /**
  *
  * @author rellu
  */
-public enum ItemType {
+public enum ItemType implements IItemType {
     TOOL,
-    DECORATION,
-    BUILDING,
-    RPG,
+    GADGET,
+    ARMOR,
+    WEAPON,
     HUB,
-    NONE
+    NONE;
 }
