@@ -22,14 +22,26 @@ public enum ItemRarity {
         this.level = level;
     }
 
+    /**
+     * Returns Displayname of Rarity
+     * @return String displayName
+     */
     public String getDisplayName() {
         return displayName;
     }
 
+    /**
+     * Returns Prefix of Rarity (Color and Bold)
+     * @return String prefix
+     */
     public String getPrefix() {
         return prefix;
     }
 
+    /**
+     * Returns Level of Rarity
+     * @return int level
+     */
     public int getLevel(){
         return level;
     }
