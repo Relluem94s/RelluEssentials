@@ -6,11 +6,11 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.enums;
  */
 public enum ItemRarity {
     
-    COMMON      ("Common",      "§f",   0),
-    UNCOMMON    ("Uncommon",    "§a",   1),
-    RARE        ("Rare",        "§9",   2),
-    EPIC        ("Epic",        "§5",   3),
-    LEGENDARY   ("Legendary",   "§6",   4);
+    COMMON      ("Common",      "§l§f",   0),
+    UNCOMMON    ("Uncommon",    "§l§a",   1),
+    RARE        ("Rare",        "§l§9",   2),
+    EPIC        ("Epic",        "§l§5",   3),
+    LEGENDARY   ("Legendary",   "§l§6",   4);
 
     private final String displayName;
     private final String prefix;
