@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Banner;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 /**
@@ -25,18 +26,23 @@ public class CustomItems {
             LeatherArmorMeta cloudBootsMeta = (LeatherArmorMeta) getItemMeta();
             cloudBootsMeta.setColor(Color.SILVER);
             cloudBootsMeta.setUnbreakable(true);
+            cloudBootsMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3, true);
             setItemMeta(cloudBootsMeta);
         }
     };
-    
-    
-    
+      
+
+    /**
+     * 
+     * Internal Testing Stuff
+     * 
+     *     
+     */
     public static ItemHelper relluHelmet = new ItemHelper(Material.LEATHER_HELMET, 1, PLUGIN_ITEM_RELLU_HELMET, ItemType.ARMOR, ItemRarity.LEGENDARY){
         @Override
         public void init(){
             LeatherArmorMeta lam = (LeatherArmorMeta) getItemMeta();
             lam.setColor(Color.fromRGB(243, 125, 0));
-            lam.addEnchant(Enchantment.DAMAGE_ALL, 94, true);
             lam.addEnchant(Enchantment.THORNS, 94, true);
             lam.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
             lam.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 94, true);
@@ -50,7 +56,6 @@ public class CustomItems {
         public void init(){
             LeatherArmorMeta lam = (LeatherArmorMeta) getItemMeta();
             lam.setColor(Color.fromRGB(72, 179, 177));
-            lam.addEnchant(Enchantment.DAMAGE_ALL, 94, true);
             lam.addEnchant(Enchantment.THORNS, 94, true);
             lam.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
             lam.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 94, true);
@@ -64,7 +69,6 @@ public class CustomItems {
         public void init(){
             LeatherArmorMeta lam = (LeatherArmorMeta) getItemMeta();
             lam.setColor(Color.fromRGB(152, 216, 1));
-            lam.addEnchant(Enchantment.DAMAGE_ALL, 94, true);
             lam.addEnchant(Enchantment.THORNS, 94, true);
             lam.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
             lam.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 94, true);
@@ -78,12 +82,25 @@ public class CustomItems {
         public void init(){
             LeatherArmorMeta lam = (LeatherArmorMeta) getItemMeta();
             lam.setColor(Color.fromRGB(227, 59, 46));
-            lam.addEnchant(Enchantment.DAMAGE_ALL, 94, true);
             lam.addEnchant(Enchantment.THORNS, 94, true);
             lam.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
             lam.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 94, true);
             lam.setUnbreakable(true);
             setItemMeta(lam);
+        }
+    };
+    
+    public static ItemHelper relluSword = new ItemHelper(Material.DIAMOND_SWORD, 1, PLUGIN_ITEM_RELLU_SWORD, ItemType.WEAPON, ItemRarity.LEGENDARY){
+        @Override
+        public void init(){
+            ItemMeta im = getItemMeta();
+            im.addEnchant(Enchantment.FIRE_ASPECT, 94, true);
+            im.addEnchant(Enchantment.DAMAGE_ALL, 94, true);
+            im.addEnchant(Enchantment.SWEEPING_EDGE, 94, true);
+            im.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
+            im.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 94, true);
+            im.setUnbreakable(true);
+            setItemMeta(im);
         }
     };
     
