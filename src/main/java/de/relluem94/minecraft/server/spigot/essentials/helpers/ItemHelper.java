@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemType;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
 import java.util.List;
@@ -18,6 +19,7 @@ public class ItemHelper implements IItemHelper {
     private final int amount;
     private final String displayName;
     private final ItemType it;
+    private final ItemRarity ir;
 
     private List<String> lore;
 
@@ -27,13 +29,15 @@ public class ItemHelper implements IItemHelper {
      * @param amount Integer
      * @param displayName String
      * @param itemType ItemType
+     * @param itemRarity ItemRarity
      */
-    public ItemHelper(Material material, int amount, String displayName, ItemType itemType) {
+    public ItemHelper(Material material, int amount, String displayName, ItemType itemType, ItemRarity itemRarity) {
         this.amount = amount;
         this.material = material;
         this.displayName = displayName;
         this.it = itemType;
-
+        this.ir = itemRarity;
+        
         is = new ItemStack(this.material, this.amount);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(this.displayName);
@@ -46,14 +50,16 @@ public class ItemHelper implements IItemHelper {
      * @param amount Integer
      * @param displayName String
      * @param itemType ItemType
+     * @param itemRarity ItemRarity
      * @param lore List String
      */
-    public ItemHelper(Material material, int amount, String displayName, ItemType itemType, List<String> lore) {
+    public ItemHelper(Material material, int amount, String displayName, ItemType itemType, ItemRarity itemRarity, List<String> lore) {
         this.amount = amount;
         this.material = material;
         this.displayName = displayName;
         this.lore = lore;
         this.it = itemType;
+        this.ir = itemRarity;
 
         is = new ItemStack(this.material, this.amount);
         ItemMeta im = is.getItemMeta();
@@ -68,6 +74,7 @@ public class ItemHelper implements IItemHelper {
      */
     public ItemStack getCustomItem() {
         init();
+        addItemRarity();
         return is;
     }
 
@@ -150,6 +157,17 @@ public class ItemHelper implements IItemHelper {
     @Override
     public void init() {
         
+    }
+    
+    private void addItemRarity(){
+        ItemMeta im = is.getItemMeta();
+        List<String> loc_lore = im.getLore();
+        if(loc_lore == null || !loc_lore.get(loc_lore.size()-1).equalsIgnoreCase(ir.getPrefix() + "" + ir.getDisplayName())){
+            loc_lore.add(ir.getPrefix() + "" + ir.getDisplayName());
+        }
+        
+        im.setLore(loc_lore);
+        is.setItemMeta(im);
     }
 
 }
