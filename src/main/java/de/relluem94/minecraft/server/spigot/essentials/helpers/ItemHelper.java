@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemType;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
+import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -37,7 +38,7 @@ public class ItemHelper implements IItemHelper {
         this.displayName = displayName;
         this.it = itemType;
         this.ir = itemRarity;
-        
+
         is = new ItemStack(this.material, this.amount);
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(this.displayName);
@@ -117,57 +118,67 @@ public class ItemHelper implements IItemHelper {
     public ItemType getItemType() {
         return it;
     }
-    
+
     /**
-     * 
+     *
      * @return ItemMeta of ItemStack
      */
-    public ItemMeta getItemMeta(){
+    public ItemMeta getItemMeta() {
         return is.getItemMeta();
     }
-    
+
     /**
-     * 
+     *
      * @param itemmeta ItemMeta sets ItemMeta of ItemStack
      */
-    public void setItemMeta(ItemMeta itemmeta){
+    public void setItemMeta(ItemMeta itemmeta) {
         is.setItemMeta(itemmeta);
     }
-    
-    public boolean equals(ItemStack compare){
-    if(is == null || compare == null){
-        return false;
-    }
 
-    if(is.getType() != compare.getType()){
-        return false;
+    public boolean equals(ItemStack compare) {
+        if (is == null || compare == null) {
+            return false;
+        }
+
+        if (is.getType() != compare.getType()) {
+            return false;
+        }
+
+        if (is.hasItemMeta() != compare.hasItemMeta()) {
+            return false;
+        }
+
+        if (is.hasItemMeta() && !is.getItemMeta().equals(compare.getItemMeta())) {
+            return false;
+        }
+
+        return true;
     }
-        
-    if(is.hasItemMeta() != compare.hasItemMeta()){
-        return false;
-    }
- 
-    if(is.hasItemMeta() && !is.getItemMeta().equals(compare.getItemMeta())){
-        return false;
-    }
-    
-    return true;
-}
 
     @Override
     public void init() {
-        
+
     }
-    
-    private void addItemRarity(){
-        ItemMeta im = is.getItemMeta();
-        List<String> loc_lore = im.getLore();
-        if(loc_lore == null || !loc_lore.get(loc_lore.size()-1).equalsIgnoreCase(ir.getPrefix() + "" + ir.getDisplayName())){
-            loc_lore.add(ir.getPrefix() + "" + ir.getDisplayName());
+
+    private void addItemRarity() {
+        ItemMeta im;
+        if (is.hasItemMeta()) {
+            im = is.getItemMeta();
+            List<String> loc_lore;
+            if (im.getLore() != null) {
+                loc_lore = im.getLore();
+            } else {
+                loc_lore = new ArrayList();
+            }
+
+            if (loc_lore.isEmpty() || !loc_lore.get(loc_lore.size() - 1).equalsIgnoreCase(ir.getPrefix() + "" + ir.getDisplayName())) {
+                loc_lore.add(ir.getPrefix() + "" + ir.getDisplayName());
+            }
+
+            im.setLore(loc_lore);
+            is.setItemMeta(im);
         }
-        
-        im.setLore(loc_lore);
-        is.setItemMeta(im);
+
     }
 
 }
