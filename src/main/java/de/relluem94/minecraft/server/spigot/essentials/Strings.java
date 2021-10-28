@@ -29,6 +29,7 @@ public class Strings {
     public static final String PLUGIN_ITEM_RELLU_CHESTPLATE = "§3Rellu's Chestplate";
     public static final String PLUGIN_ITEM_RELLU_LEGGINGS = "§aRellu's Leggings";
     public static final String PLUGIN_ITEM_RELLU_BOOTS = "§cRellu's Boots";
+    public static final String PLUGIN_ITEM_RELLU_SWORD = "§eRellu's Sword";
     public static final String PLUGIN_ITEM_RELLU_SHIELD = "§5Rellu's Shield";
     
     public static final String PLUGIN_ITEM_CLOUDBOOTS = "§bCloud Boots";
