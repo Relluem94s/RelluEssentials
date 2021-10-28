@@ -43,7 +43,6 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Suicide;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
 import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Broadcast;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Enchanttest;
 import de.relluem94.minecraft.server.spigot.essentials.commands.God;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
@@ -193,7 +192,6 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("setGroup")).setExecutor(new PermissionsGroup());
         Objects.requireNonNull(this.getCommand("nick")).setExecutor(new Nick());
         Objects.requireNonNull(this.getCommand("suicide")).setExecutor(new Suicide());
-        Objects.requireNonNull(this.getCommand("enchanttest")).setExecutor(new Enchanttest()); // @TODO Remove enchantest and add it to ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj
         Objects.requireNonNull(this.getCommand("rellu")).setExecutor(new Rellu());
         Objects.requireNonNull(this.getCommand("heal")).setExecutor(new Heal());
         Objects.requireNonNull(this.getCommand("god")).setExecutor(new God());
