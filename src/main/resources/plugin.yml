@@ -69,9 +69,6 @@ commands:
     home:
         description: Teleport to your Bedspawn
         usage: /home
-    enchanttest:
-        description: Test Echnantments
-        usage: /enchanttest
     rellu:
         description: plugin config and more
         usage: /rellu
