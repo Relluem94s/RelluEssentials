@@ -46,6 +46,7 @@ public class TestCommand implements CommandExecutor {
                             p.getInventory().addItem(CustomItems.relluLeggings.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluBoots.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluShield.getCustomItem());
+                            p.getInventory().addItem(CustomItems.relluSword.getCustomItem());
                         }
                     }
                     
