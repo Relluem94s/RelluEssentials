@@ -1,14 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,7 +21,7 @@ public class Ev_Telekenesis implements Listener {
     public void onDeathCollect(EntityDeathEvent e) {
         if (e.getEntity().getKiller() instanceof Player) {
             Player p = (Player) e.getEntity().getKiller();
-            if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis")))) {
+            if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekenesis)) {
                 e.getDrops().forEach(im -> {
                     if (p.getInventory().firstEmpty() >= 0) {
                         p.getInventory().addItem(im);
@@ -41,8 +39,8 @@ public class Ev_Telekenesis implements Listener {
         Player p = e.getPlayer();
         Block b = e.getBlock();
 
-        if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis")))) {
-            if (!p.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt")))) {
+        if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekenesis)) {
+            if (!p.getInventory().getItemInMainHand().getEnchantments().containsKey(autosmelt)) {
                 Block bl = b.getRelative(BlockFace.UP);
 
                 List<ItemStack> lis = new ArrayList();
