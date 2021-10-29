@@ -82,4 +82,14 @@ public class AutoSmelt extends Enchantment implements IEnchantment {
         
         i.setItemMeta(im);
     }
+    
+    @Override
+    public void removeFrom(ItemStack i) {
+        i.removeEnchantment(this);
+        ItemMeta im = i.getItemMeta();
+        List<String> lore = im.getLore();
+        lore.remove(PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
+        im.setLore(lore);
+        i.setItemMeta(im);
+    }
 }
