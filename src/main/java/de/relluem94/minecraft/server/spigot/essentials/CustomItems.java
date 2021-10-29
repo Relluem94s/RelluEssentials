@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
@@ -30,6 +31,19 @@ public class CustomItems {
             setItemMeta(cloudBootsMeta);
         }
     };
+    
+    public static ItemHelper autoSmeltNetheritePickAxe = new ItemHelper(Material.NETHERITE_PICKAXE, 1, PLUGIN_ITEM_AUTOSMELTER, ItemType.TOOL,  ItemRarity.LEGENDARY){
+        @Override
+        public void init(){
+            ItemMeta im = getItemMeta();
+            im.setUnbreakable(true);     
+            setItemMeta(im);
+            autosmelt.addTo(getItemStack());
+        }
+    };
+    
+     public static ItemHelper autoSmeltTank = new ItemHelper(Material.GLASS_BOTTLE, 1, PLUGIN_ITEM_AUTOSMELTER_TANK, ItemType.INGREDIENT,  ItemRarity.RARE, Arrays.asList(new String[] {PLUGIN_ITEM_INGREDIENT})); 
+     public static ItemHelper autoSmeltFurnace = new ItemHelper(Material.FURNACE, 1, PLUGIN_ITEM_AUTOSMELTER_FURNACE, ItemType.INGREDIENT,  ItemRarity.RARE, Arrays.asList(new String[] {PLUGIN_ITEM_INGREDIENT})); 
       
 
     /**
