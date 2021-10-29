@@ -76,6 +76,7 @@ public class ItemHelper implements IItemHelper {
     public ItemStack getCustomItem() {
         init();
         addItemRarity();
+        postInit();
         return is;
     }
     
@@ -173,6 +174,11 @@ public class ItemHelper implements IItemHelper {
     public void init() {
 
     }
+    
+    @Override
+    public void postInit() {
+        
+    }
 
     private void addItemRarity() {
         ItemMeta im;
@@ -192,7 +198,5 @@ public class ItemHelper implements IItemHelper {
             im.setLore(loc_lore);
             is.setItemMeta(im);
         }
-
     }
-
 }
