@@ -2,6 +2,10 @@ package de.relluem94.minecraft.server.spigot.essentials;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_TANK;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -102,6 +106,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntr
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+import org.bukkit.inventory.ShapelessRecipe;
 
 public class RelluEssentials extends JavaPlugin {
 
@@ -317,10 +322,36 @@ public class RelluEssentials extends JavaPlugin {
     }
     
     private void addRecipes(){
-        NamespacedKey key = new NamespacedKey(this, "cloud_boots");
-        ShapedRecipe recipe = new ShapedRecipe(key, CustomItems.cloudBoots.getCustomItem());
-        recipe.shape("F F", "F F");
-        recipe.setIngredient('F', Material.FEATHER);
-        Bukkit.addRecipe(recipe);
+        NamespacedKey cloudBootsKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS);
+        
+        ShapedRecipe cloudBootsRecipe = new ShapedRecipe(cloudBootsKey, CustomItems.cloudBoots.getCustomItem());
+        cloudBootsRecipe.shape("F F", "F F");
+        cloudBootsRecipe.setIngredient('F', Material.FEATHER);
+        
+        NamespacedKey k1 = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE);
+        ShapedRecipe r1 = new ShapedRecipe(k1, CustomItems.autoSmeltFurnace.getCustomItem());
+        r1.shape("OOO", "CFC", "OGO");
+        r1.setIngredient('O', Material.OBSIDIAN);
+        r1.setIngredient('F', Material.FURNACE);
+        r1.setIngredient('C', Material.COMPARATOR);
+        r1.setIngredient('G', Material.GLASS);
+        
+        NamespacedKey k2 = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_TANK);
+        ShapedRecipe r2 = new ShapedRecipe(k2, CustomItems.autoSmeltTank.getCustomItem());
+        r2.shape("GGG", "GCG", "GGG");
+        r2.setIngredient('G', Material.GLASS);
+        r2.setIngredient('C', Material.CAULDRON);
+        
+        NamespacedKey k3 = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE);
+        ShapelessRecipe r3 = new ShapelessRecipe(k3, CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
+        r3.addIngredient(Material.NETHERITE_PICKAXE);
+        r3.addIngredient(Material.GLASS_BOTTLE);
+        r3.addIngredient(Material.FURNACE);
+        
+        
+        Bukkit.addRecipe(r1);
+        Bukkit.addRecipe(r2);
+        Bukkit.addRecipe(r3);
+        Bukkit.addRecipe(cloudBootsRecipe);
     }
 }
