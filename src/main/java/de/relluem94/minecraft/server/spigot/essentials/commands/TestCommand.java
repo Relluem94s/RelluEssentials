@@ -1,18 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.MobHelper;
-import java.util.Objects;
+import java.util.List;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -49,10 +49,32 @@ public class TestCommand implements CommandExecutor {
                             p.getInventory().addItem(CustomItems.relluShield.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluSword.getCustomItem());
                         } else if (args[0].equals("smelt")) {
-                            p.getInventory().getItemInMainHand().addUnsafeEnchantment(Objects.requireNonNull(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"))), 1);
-
+                            autosmelt.addTo(p.getInventory().getItemInMainHand());
                         } else if (args[0].equals("tele")) {
-                            p.getInventory().getItemInMainHand().addUnsafeEnchantment(Objects.requireNonNull(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"))), 1);
+                            telekenesis.addTo(p.getInventory().getItemInMainHand());
+                        } else if (args[0].equals("noenchant")) {
+                            autosmelt.removeFrom(p.getInventory().getItemInMainHand());
+                            telekenesis.removeFrom(p.getInventory().getItemInMainHand());
+                            
+                            
+                            //////////////////////////////////////////////////////////////
+                            //FOR TEST WITH LORE ACTIVATE THIS BLOCK                    //
+                            //                                                          //
+                            boolean isDebugged = false;                                 //
+                            //                                                          //
+                            if(isDebugged){                                             //
+                                ItemStack i = p.getInventory().getItemInMainHand();     //
+                                ItemMeta im = i.getItemMeta();                          //
+                                List<String> lore = im.getLore();                       //
+                                String rarity = lore.get(lore.size()-1);                //
+                                lore.clear();                                           //
+                                lore.add(rarity);                                       //
+                                im.setLore(lore);                                       //
+                                i.setItemMeta(im);                                      //
+                            }                                                           //
+                            //                                                          //
+                            //FOR TEST FINISHED                                         //
+                            //////////////////////////////////////////////////////////////
                         }
                     }
                     return true;
