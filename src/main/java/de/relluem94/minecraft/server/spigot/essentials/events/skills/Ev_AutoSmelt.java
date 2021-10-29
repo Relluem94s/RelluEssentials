@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
 import org.bukkit.Material;
@@ -8,9 +9,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class Ev_AutoSmelt implements Listener {
+    
+    @EventHandler
+    public void preventPlacementOfFurnace(PlayerInteractEvent e) {
+        if(e.getPlayer().getInventory().getItemInMainHand().equals(CustomItems.autoSmeltFurnace.getCustomItem()) || e.getPlayer().getInventory().getItemInOffHand().equals(CustomItems.autoSmeltFurnace.getCustomItem())){
+            e.setCancelled(true);
+        }
+    }
     
     @EventHandler
     public void onBreakSmelt(BlockBreakEvent e) {
