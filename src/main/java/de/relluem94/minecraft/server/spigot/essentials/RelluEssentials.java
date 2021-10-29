@@ -323,10 +323,9 @@ public class RelluEssentials extends JavaPlugin {
     
     private void addRecipes(){
         NamespacedKey cloudBootsKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS);
-        
         ShapedRecipe cloudBootsRecipe = new ShapedRecipe(cloudBootsKey, CustomItems.cloudBoots.getCustomItem());
         cloudBootsRecipe.shape("F F", "F F");
-        cloudBootsRecipe.setIngredient('F', Material.FEATHER);
+        cloudBootsRecipe.setIngredient('F', CustomItems.cloudSailor.getMaterial());
         
         NamespacedKey smelterFurnaceKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE);
         ShapedRecipe smelterFurnaceRecipe = new ShapedRecipe(smelterFurnaceKey, CustomItems.autoSmeltFurnace.getCustomItem());
@@ -345,9 +344,8 @@ public class RelluEssentials extends JavaPlugin {
         NamespacedKey smelterPickaxeKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE);
         ShapelessRecipe smelterPickaxeRecipe = new ShapelessRecipe(smelterPickaxeKey, CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
         smelterPickaxeRecipe.addIngredient(Material.NETHERITE_PICKAXE);
-        smelterPickaxeRecipe.addIngredient(Material.GLASS_BOTTLE);
-        smelterPickaxeRecipe.addIngredient(Material.FURNACE);
-        
+        smelterPickaxeRecipe.addIngredient(CustomItems.autoSmeltTank.getMaterial());
+        smelterPickaxeRecipe.addIngredient(CustomItems.autoSmeltFurnace.getMaterial());
         
         Bukkit.addRecipe(smelterFurnaceRecipe);
         Bukkit.addRecipe(smelterTankRecipe);
