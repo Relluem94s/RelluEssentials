@@ -328,30 +328,30 @@ public class RelluEssentials extends JavaPlugin {
         cloudBootsRecipe.shape("F F", "F F");
         cloudBootsRecipe.setIngredient('F', Material.FEATHER);
         
-        NamespacedKey k1 = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE);
-        ShapedRecipe r1 = new ShapedRecipe(k1, CustomItems.autoSmeltFurnace.getCustomItem());
-        r1.shape("OOO", "CFC", "OGO");
-        r1.setIngredient('O', Material.OBSIDIAN);
-        r1.setIngredient('F', Material.FURNACE);
-        r1.setIngredient('C', Material.COMPARATOR);
-        r1.setIngredient('G', Material.GLASS);
+        NamespacedKey smelterFurnaceKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE);
+        ShapedRecipe smelterFurnaceRecipe = new ShapedRecipe(smelterFurnaceKey, CustomItems.autoSmeltFurnace.getCustomItem());
+        smelterFurnaceRecipe.shape("OOO", "CFC", "OGO");
+        smelterFurnaceRecipe.setIngredient('O', Material.OBSIDIAN);
+        smelterFurnaceRecipe.setIngredient('F', Material.FURNACE);
+        smelterFurnaceRecipe.setIngredient('C', Material.COMPARATOR);
+        smelterFurnaceRecipe.setIngredient('G', Material.GLASS);
         
-        NamespacedKey k2 = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_TANK);
-        ShapedRecipe r2 = new ShapedRecipe(k2, CustomItems.autoSmeltTank.getCustomItem());
-        r2.shape("GGG", "GCG", "GGG");
-        r2.setIngredient('G', Material.GLASS);
-        r2.setIngredient('C', Material.CAULDRON);
+        NamespacedKey smelterTankKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_TANK);
+        ShapedRecipe smelterTankRecipe = new ShapedRecipe(smelterTankKey, CustomItems.autoSmeltTank.getCustomItem());
+        smelterTankRecipe.shape("GGG", "GCG", "GGG");
+        smelterTankRecipe.setIngredient('G', Material.GLASS);
+        smelterTankRecipe.setIngredient('C', Material.CAULDRON);
         
-        NamespacedKey k3 = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE);
-        ShapelessRecipe r3 = new ShapelessRecipe(k3, CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
-        r3.addIngredient(Material.NETHERITE_PICKAXE);
-        r3.addIngredient(Material.GLASS_BOTTLE);
-        r3.addIngredient(Material.FURNACE);
+        NamespacedKey smelterPickaxeKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE);
+        ShapelessRecipe smelterPickaxeRecipe = new ShapelessRecipe(smelterPickaxeKey, CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
+        smelterPickaxeRecipe.addIngredient(Material.NETHERITE_PICKAXE);
+        smelterPickaxeRecipe.addIngredient(Material.GLASS_BOTTLE);
+        smelterPickaxeRecipe.addIngredient(Material.FURNACE);
         
         
-        Bukkit.addRecipe(r1);
-        Bukkit.addRecipe(r2);
-        Bukkit.addRecipe(r3);
+        Bukkit.addRecipe(smelterFurnaceRecipe);
+        Bukkit.addRecipe(smelterTankRecipe);
+        Bukkit.addRecipe(smelterPickaxeRecipe);
         Bukkit.addRecipe(cloudBootsRecipe);
     }
 }
