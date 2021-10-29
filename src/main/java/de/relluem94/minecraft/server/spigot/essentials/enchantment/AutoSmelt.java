@@ -1,16 +1,22 @@
 package de.relluem94.minecraft.server.spigot.essentials.enchantment;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LORE;
+import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  *
  * @author rellu
  */
-public class AutoSmelt extends Enchantment {
+public class AutoSmelt extends Enchantment implements IEnchantment {
 
     public AutoSmelt(NamespacedKey id) {
         super(id);
@@ -54,5 +60,26 @@ public class AutoSmelt extends Enchantment {
     @Override
     public boolean canEnchantItem(ItemStack item) {
         return false;
+    }
+    
+    @Override
+    public void addTo(ItemStack i) {
+        i.addUnsafeEnchantment(this, 1);
+        ItemMeta im =  i.getItemMeta();
+        List<String> lore;
+        if(im.getLore() != null){
+            lore = im.getLore();
+            lore.add(lore.get(lore.size()-1));
+            lore.set(lore.size()-2, PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
+        }
+        else{
+            lore = new ArrayList();
+            lore.add(PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
+            lore.add(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
+        }
+        
+        im.setLore(lore);
+        
+        i.setItemMeta(im);
     }
 }
