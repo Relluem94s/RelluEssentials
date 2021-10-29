@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.enchantment;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -17,17 +18,17 @@ public class AutoSmelt extends Enchantment {
 
     @Override
     public String getName() {
-        return "AutoSmelt";
+        return PLUGIN_ENCHANTMENT_AUTOSMELT.toLowerCase();
     }
 
     @Override
     public int getMaxLevel() {
-        return 5;
+        return 1;
     }
 
     @Override
     public int getStartLevel() {
-        return 0;
+        return 1;
     }
 
     @Override
