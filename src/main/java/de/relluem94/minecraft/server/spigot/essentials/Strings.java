@@ -25,6 +25,12 @@ public class Strings {
     /*                              ITEM   STUFF                                   */
     /*******************************************************************************/
     
+    public static final String PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS = "cloud_boots";
+    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE = "smelter_pickaxe";
+    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_TANK = "smelter_tank";
+    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE = "smelter_furnace"; 
+   
+    
     public static final String PLUGIN_ITEM_RELLU_HELMET = "§6Rellu's Helmet";
     public static final String PLUGIN_ITEM_RELLU_CHESTPLATE = "§3Rellu's Chestplate";
     public static final String PLUGIN_ITEM_RELLU_LEGGINGS = "§aRellu's Leggings";
