@@ -6,6 +6,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.enums;
  */
 public enum ItemType {
     TOOL,
+    INGREDIENT,
     GADGET,
     ARMOR,
     WEAPON,
