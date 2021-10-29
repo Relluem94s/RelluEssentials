@@ -6,6 +6,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemType;
 import java.util.Arrays;
+import java.util.List;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -36,9 +37,18 @@ public class CustomItems {
         @Override
         public void init(){
             ItemMeta im = getItemMeta();
-            im.setUnbreakable(true);     
+            im.setUnbreakable(true);            
             setItemMeta(im);
             autosmelt.addTo(getItemStack());
+        }
+        
+        @Override
+        public void postInit(){
+            ItemMeta im = getItemMeta();
+            List<String> lore = im.getLore();
+            lore.remove(lore.size()-2); // Removes Rarity from Pickaxe
+            im.setLore(lore);
+            setItemMeta(im);
         }
     };
     
