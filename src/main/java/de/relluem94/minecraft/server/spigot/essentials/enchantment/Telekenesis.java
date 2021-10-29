@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.enchantment;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS_LORE;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
@@ -65,21 +66,30 @@ public class Telekenesis extends Enchantment implements IEnchantment {
     @Override
     public void addTo(ItemStack i) {
         i.addUnsafeEnchantment(this, 1);
-        ItemMeta im =  i.getItemMeta();
+        ItemMeta im = i.getItemMeta();
         List<String> lore;
-        if(im.getLore() != null){
+        if (im.getLore() != null) {
             lore = im.getLore();
-            lore.add(lore.get(lore.size()-1));
-            lore.set(lore.size()-2, PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
-        }
-        else{
+            lore.add(lore.get(lore.size() - 1));
+            lore.set(lore.size() - 2, PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
+        } else {
             lore = new ArrayList();
             lore.add(PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
             lore.add(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
         }
-        
+
         im.setLore(lore);
-        
+
+        i.setItemMeta(im);
+    }
+
+    @Override
+    public void removeFrom(ItemStack i) {
+        i.removeEnchantment(this);
+        ItemMeta im = i.getItemMeta();
+        List<String> lore = im.getLore();
+        lore.remove(PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
+        im.setLore(lore);
         i.setItemMeta(im);
     }
 }
