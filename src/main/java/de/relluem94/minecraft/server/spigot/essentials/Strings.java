@@ -39,7 +39,16 @@ public class Strings {
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE1 = "§bHeld in Off Hand grants gliding abillity.";
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE2 = "§bAlso reduces Fall Damage by 50%";
     
-
+    /*******************************************************************************/
+    /*                          ENCHANTMENT   STUFF                                */
+    /*******************************************************************************/
+    
+    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT = "Autosmelt";
+    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LORE = "§7Smelts Ores and Blocks if mined with this Tool";
+    public static final String PLUGIN_ENCHANTMENT_TELEKENESIS = "Telekenesis";
+    public static final String PLUGIN_ENCHANTMENT_TELEKENESIS_LORE = "§7All drops from Blocks broken and Mobs killed are teleported directly into your Inventory";
+    
+    
     /*******************************************************************************/
     /*                           DATABASE   STUFF                                  */
     /*******************************************************************************/
