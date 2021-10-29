@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.enchantment;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_COLOR;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS_LORE;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
@@ -71,9 +71,12 @@ public class Telekenesis extends Enchantment implements IEnchantment {
         if (im.getLore() != null) {
             lore = im.getLore();
             lore.add(lore.get(lore.size() - 1));
+            lore.add(lore.get(lore.size() - 1));
+            lore.set(lore.size() - 3, PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKENESIS);
             lore.set(lore.size() - 2, PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
         } else {
             lore = new ArrayList();
+            lore.add(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKENESIS);
             lore.add(PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
             lore.add(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
         }
@@ -88,6 +91,7 @@ public class Telekenesis extends Enchantment implements IEnchantment {
         i.removeEnchantment(this);
         ItemMeta im = i.getItemMeta();
         List<String> lore = im.getLore();
+        lore.remove(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKENESIS);
         lore.remove(PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
         im.setLore(lore);
         i.setItemMeta(im);
