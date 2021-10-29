@@ -78,6 +78,10 @@ public class ItemHelper implements IItemHelper {
         addItemRarity();
         return is;
     }
+    
+    protected ItemStack getItemStack(){
+        return is;
+    }
 
     /**
      *
