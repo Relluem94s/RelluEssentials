@@ -47,6 +47,8 @@ public class Strings {
     public static final String PLUGIN_ENCHANTMENT_LORE_COLOR = "§7§o  ";
     
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT = "Autosmelt";
+    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK = PLUGIN_ENCHANTMENT_LORE_COLOR + "Your Lava Tank is filled: "; 
+    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT = "%s§f/§21000";
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Smelts Ores and Blocks if mined with this Tool";
     public static final String PLUGIN_ENCHANTMENT_TELEKENESIS = "Telekenesis";
     public static final String PLUGIN_ENCHANTMENT_TELEKENESIS_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "All drops from Blocks broken and Mobs killed are teleported directly into your Inventory";
