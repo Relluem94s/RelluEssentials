@@ -1,10 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,15 +11,15 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class Ev_AutoSmelt implements Listener {
-
+    
     @EventHandler
     public void onBreakSmelt(BlockBreakEvent e) {
         Player p = e.getPlayer();
 
         Block b = e.getBlock(); //TODO Check blockfaces for items like torches.
         
-        if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt")))) {
-            if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis")))) {
+        if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(autosmelt)) {
+            if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekenesis)) {
                 if (p.getInventory().firstEmpty() >= 0) {
                     for (ItemStack im : b.getDrops()) {
                         p.getInventory().addItem(smelt(im));
@@ -81,25 +80,10 @@ public class Ev_AutoSmelt implements Listener {
                 im.setAmount(4);
                 break;
             case OAK_LOG:
-                im.setType(Material.CHARCOAL);
-                im.setAmount(amount);
-                break;
             case BIRCH_LOG:
-                im.setType(Material.CHARCOAL);
-                im.setAmount(amount);
-                break;
             case SPRUCE_LOG:
-                im.setType(Material.CHARCOAL);
-                im.setAmount(amount);
-                break;
             case DARK_OAK_LOG:
-                im.setType(Material.CHARCOAL);
-                im.setAmount(amount);
-                break;
             case JUNGLE_LOG:
-                im.setType(Material.CHARCOAL);
-                im.setAmount(amount);
-                break;
             case ACACIA_LOG:
                 im.setType(Material.CHARCOAL);
                 im.setAmount(amount);
