@@ -71,7 +71,7 @@ public class ItemHelper implements IItemHelper {
 
     /**
      *
-     * @return Bukkit ItemStack
+     * @return ItemStack of ItemHelper
      */
     public ItemStack getCustomItem() {
         init();
@@ -79,13 +79,17 @@ public class ItemHelper implements IItemHelper {
         return is;
     }
     
+    /**
+     * 
+     * @return ItemStack of ItemHelper
+     */
     protected ItemStack getItemStack(){
         return is;
     }
 
     /**
      *
-     * @return Amount of ItemHelper
+     * @return int Amount of ItemHelper
      */
     public int getAmount() {
         return amount;
@@ -93,7 +97,7 @@ public class ItemHelper implements IItemHelper {
 
     /**
      *
-     * @return DisplayName of ItemHelper
+     * @return String DisplayName of ItemHelper
      */
     public String getDisplayName() {
         return displayName;
@@ -101,7 +105,7 @@ public class ItemHelper implements IItemHelper {
 
     /**
      *
-     * @return Lore (String List) of ItemHelper
+     * @return List of String Lore of ItemHelper
      */
     public List<String> getLore() {
         return lore;
@@ -109,7 +113,7 @@ public class ItemHelper implements IItemHelper {
 
     /**
      *
-     * @return Bukkit Material of ItemHelper
+     * @return Material of ItemHelper
      */
     public Material getMaterial() {
         return material;
@@ -139,6 +143,12 @@ public class ItemHelper implements IItemHelper {
         is.setItemMeta(itemmeta);
     }
 
+    /**
+     * 
+     * @param compare
+     * @return boolean
+     */
+    @Deprecated
     public boolean equals(ItemStack compare) {
         if (is == null || compare == null) {
             return false;
