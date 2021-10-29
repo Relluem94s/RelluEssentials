@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -113,8 +115,8 @@ public class RelluEssentials extends JavaPlugin {
     public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
 
-    public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "autosmelt"));
-    public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), "telekenesis"));
+    public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), PLUGIN_ENCHANTMENT_AUTOSMELT.toLowerCase()));
+    public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), PLUGIN_ENCHANTMENT_TELEKENESIS.toLowerCase()));
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
