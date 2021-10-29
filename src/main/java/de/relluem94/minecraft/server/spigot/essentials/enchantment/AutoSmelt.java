@@ -1,7 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.enchantment;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LORE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_COLOR;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
 import java.util.ArrayList;
@@ -69,13 +72,18 @@ public class AutoSmelt extends Enchantment implements IEnchantment {
         List<String> lore;
         if(im.getLore() != null){
             lore = im.getLore();
-            lore.add(lore.get(lore.size()-1));
-            lore.set(lore.size()-2, PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
+            lore.add(lore.get(lore.size() - 1));
+            lore.add(lore.get(lore.size() - 1));
+            lore.add(lore.get(lore.size() - 1));
+            lore.set(lore.size() - 4, PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT);
+            lore.set(lore.size() - 3, PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
+            lore.set(lore.size() - 2, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, 0));
         }
         else{
             lore = new ArrayList();
+            lore.add(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT);
             lore.add(PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
-            lore.add(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
+            lore.add(ItemRarity.EPIC.getPrefix() + ItemRarity.EPIC.getDisplayName());
         }
         
         im.setLore(lore);
@@ -88,6 +96,14 @@ public class AutoSmelt extends Enchantment implements IEnchantment {
         i.removeEnchantment(this);
         ItemMeta im = i.getItemMeta();
         List<String> lore = im.getLore();
+        lore.remove(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT);
+        
+        for(int o = 0; o < lore.size(); o++){
+            if(lore.get(o).startsWith(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK)){
+                lore.remove(o);
+            }
+        }
+        
         lore.remove(PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
         im.setLore(lore);
         i.setItemMeta(im);
