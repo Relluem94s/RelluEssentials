@@ -149,7 +149,6 @@ public class ItemHelper implements IItemHelper {
      * @param compare
      * @return boolean
      */
-    @Deprecated
     public boolean equals(ItemStack compare) {
         if (is == null || compare == null) {
             return false;
