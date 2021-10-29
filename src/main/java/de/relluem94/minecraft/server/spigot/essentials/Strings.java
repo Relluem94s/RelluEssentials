@@ -43,10 +43,13 @@ public class Strings {
     /*                          ENCHANTMENT   STUFF                                */
     /*******************************************************************************/
     
+    public static final String PLUGIN_ENCHANTMENT_COLOR = "§8";
+    public static final String PLUGIN_ENCHANTMENT_LORE_COLOR = "§7§o  ";
+    
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT = "Autosmelt";
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LORE = "§7Smelts Ores and Blocks if mined with this Tool";
+    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Smelts Ores and Blocks if mined with this Tool";
     public static final String PLUGIN_ENCHANTMENT_TELEKENESIS = "Telekenesis";
-    public static final String PLUGIN_ENCHANTMENT_TELEKENESIS_LORE = "§7All drops from Blocks broken and Mobs killed are teleported directly into your Inventory";
+    public static final String PLUGIN_ENCHANTMENT_TELEKENESIS_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "All drops from Blocks broken and Mobs killed are teleported directly into your Inventory";
     
     
     /*******************************************************************************/
