@@ -32,7 +32,11 @@ public class Strings {
     public static final String PLUGIN_ITEM_RELLU_SWORD = "§eRellu's Sword";
     public static final String PLUGIN_ITEM_RELLU_SHIELD = "§5Rellu's Shield";
     
+    public static final String PLUGIN_ITEM_INGREDIENT = "§4§l§oThis is a crafting ingredient";
+    
     public static final String PLUGIN_ITEM_AUTOSMELTER = "§cSmelter Pickaxe";
+    public static final String PLUGIN_ITEM_AUTOSMELTER_TANK = "§cSmelter Tank";
+    public static final String PLUGIN_ITEM_AUTOSMELTER_FURNACE = "§cSmelter Furnace";
     
     public static final String PLUGIN_ITEM_CLOUDBOOTS = "§bCloud Boots";
     public static final String PLUGIN_ITEM_CLOUDBOOTS_LORE1 = "§bGrants gliding abillity if worn.";
