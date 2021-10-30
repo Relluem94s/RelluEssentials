@@ -34,17 +34,17 @@ public class CloudSailor implements Listener {
         LivingEntity e = event.getEntity();
         if (e instanceof Chicken) {
             Random r = new Random();
-            
+
             int i = r.nextInt(150);
-            
-            if( i == 19 || i == 94){
+
+            if (i == 19 || i == 94) {
                 event.getDrops().clear();
                 event.setDroppedExp(30);
                 event.getDrops().add(CustomItems.cloudSailor.getCustomItem());
             }
         }
     }
-    
+
     @EventHandler
     public void cloudBootsCrafting(PrepareItemCraftEvent e) {
         if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.cloudBoots.equals(e.getRecipe().getResult())) {
