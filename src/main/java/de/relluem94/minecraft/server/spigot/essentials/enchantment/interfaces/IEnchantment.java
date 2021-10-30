@@ -7,7 +7,8 @@ import org.bukkit.inventory.ItemStack;
  * @author rellu
  */
 public interface IEnchantment {
+
     public void addTo(ItemStack i);
-    
+
     public void removeFrom(ItemStack i);
 }
