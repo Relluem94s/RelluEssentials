@@ -4,8 +4,12 @@ import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_COLOR;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import java.util.List;
@@ -46,13 +50,13 @@ public class Ev_AutoSmelt implements Listener {
             if(e.getInventory().getResult() != null){
                 ItemStack i = e.getInventory().getResult();
                 ItemMeta im = i.getItemMeta();
-                im.setLore(setFuel(im.getLore(), PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX));
+                im.setLore(setFuel(im.getLore(), PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX));
                 i.setItemMeta(im);
             }
         }
     }
     
-    private List<String> setFuel(List<String> lore, int fuel){
+    private List<String> setFuel(List<String> lore, String fuel){
             for (int i = 0; i < lore.size(); i++) {
                 if (lore.get(i).startsWith(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK)) {
                     lore.set(i, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, fuel));
@@ -68,23 +72,39 @@ public class Ev_AutoSmelt implements Listener {
         Block b = e.getBlock(); //TODO Check blockfaces for items like torches.
 
         if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(autosmelt)) {
-
+            // PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_COLOR
             boolean hasFuel = true;
             int fuel = 0;
             ItemMeta im = p.getInventory().getItemInMainHand().getItemMeta();
             List<String> lore = im.getLore();
             for (int i = 0; i < lore.size(); i++) {
                 if (lore.get(i).startsWith(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK)) {
-                    fuel = Integer.parseInt(lore.get(i).replace(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK, "").split(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR)[0]);
+                    fuel = Integer.parseInt(lore.get(i)
+                            .replace(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK, "")
+                            .split(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR)[0]
+                            .replace(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_COLOR, "")
+                            .replace(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR, "")
+                            .replace(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR, "")
+                    );
                     if(fuel == 0){
                         hasFuel = false;
                     }
                     else{
                         fuel--;
-                        lore.set(i, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, fuel));
-                        if(fuel == 0){
-                            sendMessage(p, "No Fuel Left in your Smelter Pickaxe thingi, better text in Strings ;)");
+                        String color = "";
+                        if(fuel >= PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX/2){
+                            color = PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR;
                         }
+                        else if(fuel < PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX/2){
+                            color = PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR;
+                        }
+                        else if(fuel == 0){
+                            color = PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_COLOR;
+                            sendMessage(p, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_MESSAGE);
+                        }
+                        
+                        lore.set(i, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, color + fuel));
+                        
                     }
                 }
             }
