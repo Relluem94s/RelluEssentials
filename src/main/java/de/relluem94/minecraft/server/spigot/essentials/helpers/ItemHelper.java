@@ -212,10 +212,14 @@ public class ItemHelper implements IItemHelper {
             } else {
                 loc_lore = new ArrayList();
             }
+            
+            loc_lore.remove(ItemRarity.COMMON.getPrefix() + ItemRarity.COMMON.getDisplayName());
+            loc_lore.remove(ItemRarity.UNCOMMON.getPrefix() + ItemRarity.UNCOMMON.getDisplayName());
+            loc_lore.remove(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
+            loc_lore.remove(ItemRarity.EPIC.getPrefix() + ItemRarity.EPIC.getDisplayName());
+            loc_lore.remove(ItemRarity.LEGENDARY.getPrefix() + ItemRarity.LEGENDARY.getDisplayName());
 
-            if (loc_lore.isEmpty() || !loc_lore.get(loc_lore.size() - 1).equalsIgnoreCase(ir.getPrefix() + "" + ir.getDisplayName())) {
-                loc_lore.add(ir.getPrefix() + "" + ir.getDisplayName());
-            }
+            loc_lore.add(ir.getPrefix() + "" + ir.getDisplayName());
 
             im.setLore(loc_lore);
             is.setItemMeta(im);
