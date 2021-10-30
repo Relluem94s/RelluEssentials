@@ -1,11 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
 public class Strings {
-    
-    /*******************************************************************************/
+
+    /**
+     * ****************************************************************************
+     */
     /*                             PLUGIN   STUFF                                  */
-    /*******************************************************************************/
-    
+    /**
+     * ****************************************************************************
+     */
     public static final String PLUGIN_NAME = "RelluEssentials";
     public static final String PLUGIN_NAME_CONSOLE = "[" + PLUGIN_NAME + "] ";
     public static final String PLUGIN_PREFIX = "§o§l§4§8Rellu§cEssentials§r§f";
@@ -18,49 +21,54 @@ public class Strings {
     public static final String PLUGIN_START_MESSAGE = "starts configuring ...";
     public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
-    
+
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
-    
-    /*******************************************************************************/
+
+    /**
+     * ****************************************************************************
+     */
     /*                              ITEM   STUFF                                   */
-    /*******************************************************************************/
-    
+    /**
+     * ****************************************************************************
+     */
     public static final String PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS = "cloud_boots";
     public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE = "smelter_pickaxe";
     public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_TANK = "smelter_tank";
-    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE = "smelter_furnace"; 
-    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL = "smelter_fuel"; 
-   
-    
+    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE = "smelter_furnace";
+    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL = "smelter_fuel";
+
     public static final String PLUGIN_ITEM_RELLU_HELMET = "§6Rellu's Helmet";
     public static final String PLUGIN_ITEM_RELLU_CHESTPLATE = "§3Rellu's Chestplate";
     public static final String PLUGIN_ITEM_RELLU_LEGGINGS = "§aRellu's Leggings";
     public static final String PLUGIN_ITEM_RELLU_BOOTS = "§cRellu's Boots";
     public static final String PLUGIN_ITEM_RELLU_SWORD = "§eRellu's Sword";
     public static final String PLUGIN_ITEM_RELLU_SHIELD = "§5Rellu's Shield";
-    
+
     public static final String PLUGIN_ITEM_INGREDIENT = "§4§l§oThis is a crafting ingredient";
-    
+
     public static final String PLUGIN_ITEM_AUTOSMELTER = "§cSmelter Pickaxe";
     public static final String PLUGIN_ITEM_AUTOSMELTER_TANK = "§cSmelter Tank";
     public static final String PLUGIN_ITEM_AUTOSMELTER_FURNACE = "§cSmelter Furnace";
-    
+
     public static final String PLUGIN_ITEM_CLOUDBOOTS = "§bCloud Boots";
     public static final String PLUGIN_ITEM_CLOUDBOOTS_LORE1 = "§bGrants gliding abillity if worn.";
     public static final String PLUGIN_ITEM_CLOUDBOOTS_LORE2 = "§bAlso reduces Fall Damage by 100%";
     public static final String PLUGIN_ITEM_CLOUDSAILOR = "§bCloud Sailor";
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE1 = "§bHeld in Off Hand grants gliding abillity.";
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE2 = "§bAlso reduces Fall Damage by 50%";
-    
-    /*******************************************************************************/
+
+    /**
+     * ****************************************************************************
+     */
     /*                          ENCHANTMENT   STUFF                                */
-    /*******************************************************************************/
-    
+    /**
+     * ****************************************************************************
+     */
     public static final String PLUGIN_ENCHANTMENT_COLOR = "§8";
     public static final String PLUGIN_ENCHANTMENT_LORE_COLOR = "§7§o  ";
-    
+
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT = "Autosmelt";
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK = PLUGIN_ENCHANTMENT_LORE_COLOR + "Your Lava Tank is filled: "; 
+    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK = PLUGIN_ENCHANTMENT_LORE_COLOR + "Your Lava Tank is filled: ";
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR = "§f/§2";
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR = "§6";
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR = "§2";
@@ -71,25 +79,30 @@ public class Strings {
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Smelts Ores and Blocks if mined with this Tool";
     public static final String PLUGIN_ENCHANTMENT_TELEKENESIS = "Telekenesis";
     public static final String PLUGIN_ENCHANTMENT_TELEKENESIS_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "All drops from Blocks broken and Mobs killed are teleported directly into your Inventory";
-    
-    
-    /*******************************************************************************/
+
+    /**
+     * ****************************************************************************
+     */
     /*                           DATABASE   STUFF                                  */
-    /*******************************************************************************/
-    
+    /**
+     * ****************************************************************************
+     */
     public static final String PLUGIN_DATABASE_VERSION = "";
     public static final String PLUGIN_DATABASE_NAME = "rellu_essentials";
 
-    /*******************************************************************************/
+    /**
+     * ****************************************************************************
+     */
     /*                            COMMAND   STUFF                                  */
-    /*******************************************************************************/
-    
+    /**
+     * ****************************************************************************
+     */
     public static final String PLUGIN_COMMAND_GAMEMODE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Gamemode von %s" + PLUGIN_COMMAND_COLOR + " wurde zu " + PLUGIN_COMMAND_NAME_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " geändert!";
 
     public static final String PLUGIN_COMMAND_AFK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " ist jetzt %s";
     public static final String PLUGIN_COMMAND_AFK_ACTIVATED = "§cafk";
     public static final String PLUGIN_COMMAND_AFK_DEACTIVATED = "§awieder da";
-    
+
     public static final String PLUGIN_COMMAND_FLYMODE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Flugmodus von %s" + PLUGIN_COMMAND_COLOR + " wurde " + PLUGIN_COMMAND_ARG_COLOR + "%s!";
     public static final String PLUGIN_COMMAND_FLYMODE_ACTIVATED = "aktiviert";
     public static final String PLUGIN_COMMAND_FLYMODE_DEACTIVATED = "deaktiviert";
@@ -97,7 +110,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_RELLU_PING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast ein Ping von " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "ms!";
     public static final String PLUGIN_COMMAND_RELLU_PING_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " hast ein Ping von " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "ms!";
     public static final String PLUGIN_COMMAND_RELLU_WRONG_COMMAND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Es wurde kein passender Subbefehl gefunden!";
-    public static final String PLUGIN_COMMAND_RELLU_OPTIONS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze: " +  PLUGIN_COMMAND_ARG_COLOR + "ping";
+    public static final String PLUGIN_COMMAND_RELLU_OPTIONS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze: " + PLUGIN_COMMAND_ARG_COLOR + "ping";
 
     public static final String PLUGIN_COMMAND_CRAFTINGBENCH = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Die Werkbank von %s" + PLUGIN_COMMAND_COLOR + " wurde geöffnet!";
 
@@ -107,8 +120,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_COOKIES_LORE_2 = PLUGIN_COMMAND_COLOR + "Backe doch auch einen Keks!";
     public static final String PLUGIN_COMMAND_COOKIES_LORE_3 = PLUGIN_COMMAND_COLOR + "Wie selbstverliebt!";
     public static final String PLUGIN_COMMAND_COOKIES_DISPLAYNAME = PLUGIN_COMMAND_COLOR + "Schokoladenkeks";
-    
-    
+
     public static final String PLUGIN_COMMAND_HEAD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast ein Kopf von " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " erzeugt!";
     public static final String PLUGIN_COMMAND_VANISH_DISABLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast vanish für " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "deaktiviert!";
     public static final String PLUGIN_COMMAND_VANISH_ENABLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast vanish für " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "aktiviert!";
@@ -155,50 +167,50 @@ public class Strings {
     public static final String PLUGIN_COMMAND_INVENTORY_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast das Inventar von " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "geöffnet!";
 
     public static final String PLUGIN_COMMAND_SPAWN = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest in der Welt " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "an den Spawn teleportiert!";
-    
+
     public static final String PLUGIN_COMMAND_NICK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast den Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "umbenannt!";
 
     public static final String PLUGIN_COMMAND_SUICIDE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "hat sich umgebracht!";
-    
+
     public static final String PLUGIN_COMMAND_WHERE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "befindet sich bei " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "!";
-    public static final String PLUGIN_COMMAND_WHERE_STRING = PLUGIN_COMMAND_COLOR + "X: " + PLUGIN_COMMAND_ARG_COLOR  + "%s " + PLUGIN_COMMAND_COLOR + "Y: " + PLUGIN_COMMAND_ARG_COLOR  + "%s " + PLUGIN_COMMAND_COLOR + "Z: " + PLUGIN_COMMAND_ARG_COLOR  + "%s " + PLUGIN_COMMAND_COLOR + "Welt: " + PLUGIN_COMMAND_ARG_COLOR  + "%s";
-    
+    public static final String PLUGIN_COMMAND_WHERE_STRING = PLUGIN_COMMAND_COLOR + "X: " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "Y: " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "Z: " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "Welt: " + PLUGIN_COMMAND_ARG_COLOR + "%s";
+
     public static final String PLUGIN_COMMAND_MSG_PLAYER_OFFLINE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Spieler ist Offline!";
     public static final String PLUGIN_COMMAND_MSG_NO_ONE_TO_REPLY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Niemand da der dir antworten könnte!";
     public static final String PLUGIN_COMMAND_MSG_SPACER_IN = "§9 >> §f";
     public static final String PLUGIN_COMMAND_MSG_SPACER_OUT = "§9 << §f";
-    public static final String PLUGIN_COMMAND_MSG_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/msg " + PLUGIN_COMMAND_COLOR +  "<" + PLUGIN_COMMAND_ARG_COLOR + "spieler" + PLUGIN_COMMAND_COLOR + ">" + " " + "<" + PLUGIN_COMMAND_ARG_COLOR + "nachricht" + PLUGIN_COMMAND_COLOR + ">";
-    
+    public static final String PLUGIN_COMMAND_MSG_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/msg " + PLUGIN_COMMAND_COLOR + "<" + PLUGIN_COMMAND_ARG_COLOR + "spieler" + PLUGIN_COMMAND_COLOR + ">" + " " + "<" + PLUGIN_COMMAND_ARG_COLOR + "nachricht" + PLUGIN_COMMAND_COLOR + ">";
+
     public static final String PLUGIN_COMMAND_PRINT_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/print " + "<" + PLUGIN_COMMAND_ARG_COLOR + "nachricht" + PLUGIN_COMMAND_COLOR + ">";
-    
+
     public static final String PLUGIN_COMMAND_RENAME_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/rename " + "<" + PLUGIN_COMMAND_ARG_COLOR + "name" + PLUGIN_COMMAND_COLOR + ">";
     public static final String PLUGIN_COMMAND_RENAME_AIR = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du kannst Luft nicht umbenennen! ";
     public static final String PLUGIN_COMMAND_RENAME = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast dein Gegenstand umbenannt!";
-    
+
     public static final String PLUGIN_COMMAND_SPEED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Geschwindigkeit wurde auf " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " gesetzt";
     public static final String PLUGIN_COMMAND_SPEED_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/speed " + "<" + PLUGIN_COMMAND_ARG_COLOR + "0-10" + PLUGIN_COMMAND_COLOR + ">";
-    
-    public static final String PLUGIN_COMMAND_BROADCAST_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Um ein Title Broadcast zu machen nutze " + PLUGIN_COMMAND_ARG_COLOR + "/broadcast title " + PLUGIN_COMMAND_COLOR + "sonst " + PLUGIN_COMMAND_ARG_COLOR + "/broadcast " + PLUGIN_COMMAND_COLOR +  "<" + PLUGIN_COMMAND_ARG_COLOR + "message" + PLUGIN_COMMAND_COLOR + ">";
-    
-    
-    
+
+    public static final String PLUGIN_COMMAND_BROADCAST_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Um ein Title Broadcast zu machen nutze " + PLUGIN_COMMAND_ARG_COLOR + "/broadcast title " + PLUGIN_COMMAND_COLOR + "sonst " + PLUGIN_COMMAND_ARG_COLOR + "/broadcast " + PLUGIN_COMMAND_COLOR + "<" + PLUGIN_COMMAND_ARG_COLOR + "message" + PLUGIN_COMMAND_COLOR + ">";
+
     public static final String PLUGIN_COMMAND_PERMISSION_MISSING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Dafür hast du leider keine Rechte!";
     public static final String PLUGIN_COMMAND_NOT_A_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du bist leider kein Spieler!";
     public static final String PLUGIN_COMMAND_TO_LESS_ARGUMENTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Zu wenig Argumente!";
 
-    /*******************************************************************************/
+    /**
+     * ****************************************************************************
+     */
     /*                             EVENT   STUFF                                   */
-    /*******************************************************************************/
-    
+    /**
+     * ****************************************************************************
+     */
     public static final String PLUGIN_EVENT_JOIN_MESSAGE = "§2[\u2726] " + PLUGIN_MESSAGE_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " hat den Server betreten.";
     public static final String PLUGIN_EVENT_QUIT_MESSAGE = "§4[\u274C] " + PLUGIN_MESSAGE_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " hat den Server verlassen.";
     public static final String PLUGIN_EVENT_DEATH = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du starbst bei " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + PLUGIN_COMMAND_WHERE_STRING + PLUGIN_COMMAND_COLOR;
     public static final String PLUGIN_EVENT_DEATH_TP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Klicke diese Nachricht um dich zum Todespunkt zu teleportieren!";
 
-    
     public static final String PLUGIN_EVENT_SKILL_REPAIR_DONE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast den Gegenstand repariert!";
     public static final String PLUGIN_EVENT_SKILL_REPAIR_WARNING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du benötigst mehr" + PLUGIN_COMMAND_ARG_COLOR + " %s " + PLUGIN_COMMAND_COLOR + "um diesen Gegenstand zu reparieren!";
     public static final String PLUGIN_EVENT_SKILL_SALVAGE_DONE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast" + PLUGIN_COMMAND_ARG_COLOR + " %s " + PLUGIN_COMMAND_COLOR + "erhalten!";
-    
+
     //TODO Have to do a Language Pack to load german and english translations via config. Maybe default en and user customizable
 }
