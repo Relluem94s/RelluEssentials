@@ -26,7 +26,7 @@ public class Head implements CommandExecutor {
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         String owner = args[0];
                         ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD, 1);
-                        SkullMeta sm = (SkullMeta)itemStack.getItemMeta();
+                        SkullMeta sm = (SkullMeta) itemStack.getItemMeta();
                         sm.setOwner(owner);
                         sm.setDisplayName(owner);
                         itemStack.setItemMeta((ItemMeta) sm);
