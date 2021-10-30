@@ -70,7 +70,7 @@ public class AutoSmelt extends Enchantment implements IEnchantment {
         i.addUnsafeEnchantment(this, 1);
         ItemMeta im =  i.getItemMeta();
         List<String> lore;
-        if(im.getLore() != null){
+        if(im.getLore() != null && !im.getLore().contains(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT)){
             lore = im.getLore();
             lore.add(lore.get(lore.size() - 1));
             lore.add(lore.get(lore.size() - 1));
