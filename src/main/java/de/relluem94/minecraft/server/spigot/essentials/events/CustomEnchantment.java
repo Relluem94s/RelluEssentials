@@ -16,13 +16,12 @@ public class CustomEnchantment implements Listener {
 
     @EventHandler
     public void addCustomEnchantToTable(EnchantItemEvent e) {
-        if(e.getExpLevelCost() == 30){
+        if (e.getExpLevelCost() == 30) {
             int r = random.nextInt(10) + 1;
             if (r == 9 || r == 4) {
                 telekenesis.addTo(e.getItem());
                 e.getEnchantsToAdd().merge(telekenesis, 1, (prev, one) -> prev + one);
             }
         }
-       
     }
 }
