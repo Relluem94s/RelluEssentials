@@ -11,7 +11,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENC
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -36,16 +38,42 @@ public class Ev_AutoSmelt implements Listener {
     @EventHandler
     public void cloudBootsCrafting(PrepareItemCraftEvent e) {
         if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.autoSmeltNetheritePickAxe.almostEquals(e.getRecipe().getResult())) {
-            for (ItemStack is : e.getInventory().getMatrix()) {
-                if (is != null) {
-                    if ((is.getEnchantments().containsKey(autosmelt) && !is.equals(new ItemStack(Material.LAVA_BUCKET, 1)) || (!is.getEnchantments().containsKey(autosmelt) && is.equals(new ItemStack(Material.LAVA_BUCKET, 1))))) {
+            
+            List<ItemStack> matrix = Arrays.asList(e.getInventory().getMatrix());
+            
+            
+            consoleSendMessage(matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) + " " +
+                               matrix.contains(CustomItems.autoSmeltTank.getCustomItem()), " " + 
+                               matrix.contains(new ItemStack(CustomItems.autoSmeltNetheritePickAxe.getMaterial(), 1)) + " " + 
+                               matrix.contains(CustomItems.autoSmeltNetheritePickAxe.getCustomItem()));
+            
+            
+            if(matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) && matrix.contains(CustomItems.autoSmeltTank.getCustomItem()) && matrix.contains(new ItemStack(CustomItems.autoSmeltNetheritePickAxe.getMaterial(), 1))){
+                int asnp = matrix.indexOf(CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
+                int asf = matrix.indexOf(CustomItems.autoSmeltFurnace.getCustomItem());
+                int ast = matrix.indexOf(CustomItems.autoSmeltTank.getCustomItem());
 
-                    } else {
-                        e.getInventory().setResult(null);
-                        break;
-                    }
+                if(matrix.get(asnp).getEnchantments().containsKey(autosmelt)){
+                    e.getInventory().setResult(null);
+                    consoleSendMessage("§acase: ", "§c1");
                 }
+                else{
+                    consoleSendMessage("§acase: ", "§c2");
+                }
+                
+                
+                
             }
+            else if(matrix.contains(CustomItems.autoSmeltNetheritePickAxe.getCustomItem())) {
+                consoleSendMessage("§acase: ", "§c3");
+            }
+            else{
+                e.getInventory().setResult(null);
+                consoleSendMessage("§acase: ", "§c4");
+                
+            }
+            
+           
             if (e.getInventory().getResult() != null) {
                 ItemStack i = e.getInventory().getResult();
                 ItemMeta im = i.getItemMeta();
@@ -53,6 +81,7 @@ public class Ev_AutoSmelt implements Listener {
                 i.setItemMeta(im);
             }
         }
+        consoleSendMessage(">>", "-----------------------------------------------------------------------");
     }
 
     private List<String> setFuel(List<String> lore, String fuel) {
