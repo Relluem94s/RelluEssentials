@@ -29,6 +29,7 @@ public class Strings {
     public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE = "smelter_pickaxe";
     public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_TANK = "smelter_tank";
     public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE = "smelter_furnace"; 
+    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL = "smelter_fuel"; 
    
     
     public static final String PLUGIN_ITEM_RELLU_HELMET = "§6Rellu's Helmet";
@@ -61,7 +62,8 @@ public class Strings {
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT = "Autosmelt";
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK = PLUGIN_ENCHANTMENT_LORE_COLOR + "Your Lava Tank is filled: "; 
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR = "§f/§2";
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT = "%s" + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR + "1000";
+    public static final int PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX = 1000;
+    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT = "%s" + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX;
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Smelts Ores and Blocks if mined with this Tool";
     public static final String PLUGIN_ENCHANTMENT_TELEKENESIS = "Telekenesis";
     public static final String PLUGIN_ENCHANTMENT_TELEKENESIS_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "All drops from Blocks broken and Mobs killed are teleported directly into your Inventory";
