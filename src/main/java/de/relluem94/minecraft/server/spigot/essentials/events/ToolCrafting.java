@@ -23,20 +23,18 @@ public class ToolCrafting implements Listener {
     Material[] chainmail = new Material[]{Material.STONE_HOE, Material.STONE_AXE, Material.STONE_PICKAXE, Material.STONE_SHOVEL, Material.STONE_SWORD, Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_BOOTS};
     Material[] leather = new Material[]{Material.SHIELD, Material.SHEARS, Material.FLINT_AND_STEEL, Material.COMPASS, Material.CLOCK, Material.FISHING_ROD, Material.WOODEN_HOE, Material.WOODEN_AXE, Material.WOODEN_PICKAXE, Material.WOODEN_SHOVEL, Material.WOODEN_SWORD, Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.LEATHER_HORSE_ARMOR};
 
-    
-    
     @EventHandler
     public void addRarityToTools(PrepareSmithingEvent e) {
         if (e.getResult() != null) {
             ItemMeta im = e.getResult().getItemMeta();
-            
+
             for (Material m : netherite) {
                 if (e.getResult().getType().equals(m)) {
-                    
+
                     List<String> lore = im.getLore();
                     lore.addAll(Arrays.asList(new String[]{ItemRarity.EPIC.getPrefix() + ItemRarity.EPIC.getDisplayName()}));
                     lore.remove(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
-                    
+
                     im.setLore(lore);
                     im.setUnbreakable(true);
                     e.getResult().setItemMeta(im);
@@ -44,14 +42,12 @@ public class ToolCrafting implements Listener {
             }
         }
     }
-            
-    
+
     @EventHandler
     public void addRarityToTools(PrepareItemCraftEvent e) {
         if (e.getRecipe() != null) {
             ItemMeta im = e.getRecipe().getResult().getItemMeta();
-            
-            
+
             for (Material m : diamond) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
                     im.setLore(Arrays.asList(new String[]{ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName()}));
