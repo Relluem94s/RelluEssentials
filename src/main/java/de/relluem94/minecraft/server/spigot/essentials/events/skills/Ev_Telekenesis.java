@@ -45,15 +45,15 @@ public class Ev_Telekenesis implements Listener {
 
                 List<ItemStack> lis = new ArrayList();
                 lis.addAll(b.getDrops());
-                
-                while(bl.getType().equals(Material.SUGAR_CANE)){
+
+                while (bl.getType().equals(Material.SUGAR_CANE)) {
                     lis.addAll(bl.getDrops());
                     bl.getDrops().clear();
-                    
+
                     bl.setType(Material.AIR);
                     bl = bl.getRelative(BlockFace.UP);
                 }
-                
+
                 lis.forEach(im -> {
                     if (p.getInventory().firstEmpty() >= 0) {
                         p.getInventory().addItem(im);
