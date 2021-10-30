@@ -64,13 +64,13 @@ public class AutoSmelt extends Enchantment implements IEnchantment {
     public boolean canEnchantItem(ItemStack item) {
         return false;
     }
-    
+
     @Override
     public void addTo(ItemStack i) {
         i.addUnsafeEnchantment(this, 1);
-        ItemMeta im =  i.getItemMeta();
+        ItemMeta im = i.getItemMeta();
         List<String> lore;
-        if(im.getLore() != null && !im.getLore().contains(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT)){
+        if (im.getLore() != null && !im.getLore().contains(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT)) {
             lore = im.getLore();
             lore.add(lore.get(lore.size() - 1));
             lore.add(lore.get(lore.size() - 1));
@@ -78,33 +78,32 @@ public class AutoSmelt extends Enchantment implements IEnchantment {
             lore.set(lore.size() - 4, PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT);
             lore.set(lore.size() - 3, PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
             lore.set(lore.size() - 2, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, 0));
-        }
-        else{
+        } else {
             lore = new ArrayList();
             lore.add(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT);
             lore.add(PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
             lore.add(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, 0));
             lore.add(ItemRarity.EPIC.getPrefix() + ItemRarity.EPIC.getDisplayName());
         }
-        
+
         im.setLore(lore);
-        
+
         i.setItemMeta(im);
     }
-    
+
     @Override
     public void removeFrom(ItemStack i) {
         i.removeEnchantment(this);
         ItemMeta im = i.getItemMeta();
         List<String> lore = im.getLore();
         lore.remove(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT);
-        
-        for(int o = 0; o < lore.size(); o++){
-            if(lore.get(o).startsWith(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK)){
+
+        for (int o = 0; o < lore.size(); o++) {
+            if (lore.get(o).startsWith(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK)) {
                 lore.remove(o);
             }
         }
-        
+
         lore.remove(PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
         im.setLore(lore);
         i.setItemMeta(im);
