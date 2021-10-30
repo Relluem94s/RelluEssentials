@@ -6,9 +6,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.te
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
-import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -35,22 +34,37 @@ public class Ev_AutoSmelt implements Listener {
         if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.autoSmeltNetheritePickAxe.almostEquals(e.getRecipe().getResult())) {
             for (ItemStack is : e.getInventory().getMatrix()) {
                 if(is != null){
-                    consoleSendMessage("enchant: " + is.getEnchantments().containsKey(autosmelt),"lava: " + is.equals(new ItemStack(Material.LAVA_BUCKET, 1)));
-                    if(is.getEnchantments().containsKey(autosmelt) && !is.equals(new ItemStack(Material.LAVA_BUCKET, 1))){}
-                    else if(!is.getEnchantments().containsKey(autosmelt) && is.equals(new ItemStack(Material.LAVA_BUCKET, 1))){}
+                    if((is.getEnchantments().containsKey(autosmelt) && !is.equals(new ItemStack(Material.LAVA_BUCKET, 1)) || (!is.getEnchantments().containsKey(autosmelt) && is.equals(new ItemStack(Material.LAVA_BUCKET, 1))))){
+                    
+                    }
                     else{
                         e.getInventory().setResult(null);
+                        break;
                     }
                 }
+            }
+            if(e.getInventory().getResult() != null){
+                ItemStack i = e.getInventory().getResult();
+                ItemMeta im = i.getItemMeta();
+                im.setLore(setFuel(im.getLore(), PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX));
+                i.setItemMeta(im);
             }
         }
     }
     
+    private List<String> setFuel(List<String> lore, int fuel){
+            for (int i = 0; i < lore.size(); i++) {
+                if (lore.get(i).startsWith(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK)) {
+                    lore.set(i, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, fuel));
+                }
+            }
+        
+        return lore;
+    }
     
     @EventHandler
     public void onBreakSmelt(BlockBreakEvent e) {
         Player p = e.getPlayer();
-
         Block b = e.getBlock(); //TODO Check blockfaces for items like torches.
 
         if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(autosmelt)) {
@@ -68,6 +82,9 @@ public class Ev_AutoSmelt implements Listener {
                     else{
                         fuel--;
                         lore.set(i, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, fuel));
+                        if(fuel == 0){
+                            sendMessage(p, "No Fuel Left in your Smelter Pickaxe thingi, better text in Strings ;)");
+                        }
                     }
                 }
             }
@@ -93,9 +110,8 @@ public class Ev_AutoSmelt implements Listener {
                 }
                 e.setDropItems(false);
             } else {
-                sendMessage(p, "No Fuel Left in your Smelter Pickaxe thingi, better text in Strings ;)");
+                e.setDropItems(true);
             }
-
         } else {
             e.setDropItems(true);
         }
