@@ -25,7 +25,7 @@ public class WorldHelper {
     public static boolean isInWorld(Player p, String m) {
         return p.getWorld().getName().equalsIgnoreCase(m);
     }
-    
+
     public static boolean isInWorld(Player p, List<String> worlds) {
         return worlds.contains(p.getWorld().getName());
     }
