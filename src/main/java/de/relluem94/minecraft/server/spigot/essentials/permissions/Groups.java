@@ -14,7 +14,7 @@ public class Groups {
     /**
      * Returns a GroupEntry if a Group is found by name<br>
      * Returns null if no Group is found
-     * 
+     *
      * @param name String
      * @return GroupEntry
      */
@@ -30,7 +30,7 @@ public class Groups {
     /**
      * Returns a GroupEntry if a Group is found by id<br>
      * Returns null if no Group is found
-     * 
+     *
      * @param id int
      * @return GroupEntry
      */
@@ -45,7 +45,7 @@ public class Groups {
 
     /**
      * Returns true if GroupEntry is in Database else false
-     * 
+     *
      * @param groupEntry GroupEntry
      * @return boolean
      */
