@@ -150,19 +150,42 @@ public class ItemHelper implements IItemHelper {
      * @return boolean
      */
     public boolean equals(ItemStack compare) {
-        if (is == null || compare == null) {
+        ItemStack item = this.getCustomItem();
+        if (item == null || compare == null) {
             return false;
         }
 
-        if (is.getType() != compare.getType()) {
+        if (item.getType() != compare.getType()) {
             return false;
         }
 
-        if (is.hasItemMeta() != compare.hasItemMeta()) {
+        if (item.hasItemMeta() != compare.hasItemMeta()) {
             return false;
         }
 
-        if (is.hasItemMeta() && !is.getItemMeta().equals(compare.getItemMeta())) {
+        if (item.hasItemMeta() && !item.getItemMeta().equals(compare.getItemMeta())) {
+            return false;
+        }
+
+        return true;
+    }
+    
+    /**
+     * 
+     * @param compare
+     * @return boolean
+     */
+    public boolean almostEquals(ItemStack compare) {
+        ItemStack item = this.getCustomItem();
+        if (item == null || compare == null) {
+            return false;
+        }
+
+        if (item.getType() != compare.getType()) {
+            return false;
+        }
+
+        if (item.hasItemMeta() != compare.hasItemMeta()) {
             return false;
         }
 
