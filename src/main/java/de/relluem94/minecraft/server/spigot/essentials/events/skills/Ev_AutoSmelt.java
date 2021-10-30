@@ -37,17 +37,16 @@ public class Ev_AutoSmelt implements Listener {
     public void cloudBootsCrafting(PrepareItemCraftEvent e) {
         if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.autoSmeltNetheritePickAxe.almostEquals(e.getRecipe().getResult())) {
             for (ItemStack is : e.getInventory().getMatrix()) {
-                if(is != null){
-                    if((is.getEnchantments().containsKey(autosmelt) && !is.equals(new ItemStack(Material.LAVA_BUCKET, 1)) || (!is.getEnchantments().containsKey(autosmelt) && is.equals(new ItemStack(Material.LAVA_BUCKET, 1))))){
-                    
-                    }
-                    else{
+                if (is != null) {
+                    if ((is.getEnchantments().containsKey(autosmelt) && !is.equals(new ItemStack(Material.LAVA_BUCKET, 1)) || (!is.getEnchantments().containsKey(autosmelt) && is.equals(new ItemStack(Material.LAVA_BUCKET, 1))))) {
+
+                    } else {
                         e.getInventory().setResult(null);
                         break;
                     }
                 }
             }
-            if(e.getInventory().getResult() != null){
+            if (e.getInventory().getResult() != null) {
                 ItemStack i = e.getInventory().getResult();
                 ItemMeta im = i.getItemMeta();
                 im.setLore(setFuel(im.getLore(), PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX));
@@ -55,17 +54,17 @@ public class Ev_AutoSmelt implements Listener {
             }
         }
     }
-    
-    private List<String> setFuel(List<String> lore, String fuel){
-            for (int i = 0; i < lore.size(); i++) {
-                if (lore.get(i).startsWith(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK)) {
-                    lore.set(i, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, fuel));
-                }
+
+    private List<String> setFuel(List<String> lore, String fuel) {
+        for (int i = 0; i < lore.size(); i++) {
+            if (lore.get(i).startsWith(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK)) {
+                lore.set(i, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, fuel));
             }
-        
+        }
+
         return lore;
     }
-    
+
     @EventHandler
     public void onBreakSmelt(BlockBreakEvent e) {
         Player p = e.getPlayer();
@@ -86,31 +85,28 @@ public class Ev_AutoSmelt implements Listener {
                             .replace(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR, "")
                             .replace(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR, "")
                     );
-                    if(fuel == 0){
+                    if (fuel == 0) {
                         hasFuel = false;
-                    }
-                    else{
+                    } else {
                         fuel--;
                         String color = "";
-                        if(fuel >= PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX/2){
+                        if (fuel >= PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX / 2) {
                             color = PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR;
-                        }
-                        else if(fuel < PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX/2){
+                        } else if (fuel < PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX / 2) {
                             color = PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR;
-                        }
-                        else if(fuel == 0){
+                        } else if (fuel == 0) {
                             color = PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_COLOR;
                             sendMessage(p, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_MESSAGE);
                         }
-                        
+
                         lore.set(i, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, color + fuel));
-                        
+
                     }
                 }
             }
             im.setLore(lore);
             p.getInventory().getItemInMainHand().setItemMeta(im);
-            
+
             if (hasFuel) {
                 if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekenesis)) {
                     if (p.getInventory().firstEmpty() >= 0) {
