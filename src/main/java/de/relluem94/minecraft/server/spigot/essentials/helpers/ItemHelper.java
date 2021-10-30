@@ -79,12 +79,12 @@ public class ItemHelper implements IItemHelper {
         postInit();
         return is;
     }
-    
+
     /**
-     * 
+     *
      * @return ItemStack of ItemHelper
      */
-    protected ItemStack getItemStack(){
+    protected ItemStack getItemStack() {
         return is;
     }
 
@@ -145,7 +145,7 @@ public class ItemHelper implements IItemHelper {
     }
 
     /**
-     * 
+     *
      * @param compare
      * @return boolean
      */
@@ -169,9 +169,9 @@ public class ItemHelper implements IItemHelper {
 
         return true;
     }
-    
+
     /**
-     * 
+     *
      * @param compare
      * @return boolean
      */
@@ -196,10 +196,10 @@ public class ItemHelper implements IItemHelper {
     public void init() {
 
     }
-    
+
     @Override
     public void postInit() {
-        
+
     }
 
     private void addItemRarity() {
@@ -212,7 +212,7 @@ public class ItemHelper implements IItemHelper {
             } else {
                 loc_lore = new ArrayList();
             }
-            
+
             loc_lore.remove(ItemRarity.COMMON.getPrefix() + ItemRarity.COMMON.getDisplayName());
             loc_lore.remove(ItemRarity.UNCOMMON.getPrefix() + ItemRarity.UNCOMMON.getDisplayName());
             loc_lore.remove(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
