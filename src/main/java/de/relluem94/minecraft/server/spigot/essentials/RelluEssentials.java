@@ -350,7 +350,7 @@ public class RelluEssentials extends JavaPlugin {
         
         NamespacedKey smelterFuelKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL);
         ShapelessRecipe smelterFuelRecipe = new ShapelessRecipe(smelterFuelKey, CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
-        smelterFuelRecipe.addIngredient(Material.NETHERITE_PICKAXE);
+        smelterFuelRecipe.addIngredient(CustomItems.autoSmeltNetheritePickAxe.getMaterial());
         smelterFuelRecipe.addIngredient(Material.LAVA_BUCKET);
         
         Bukkit.addRecipe(smelterFuelRecipe);
