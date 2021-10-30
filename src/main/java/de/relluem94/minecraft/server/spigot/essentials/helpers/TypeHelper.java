@@ -41,11 +41,11 @@ public class TypeHelper {
             return false;
         }
     }
-    
-    public static boolean areBlocksMaterial(List<Block> blocks, Material material){
+
+    public static boolean areBlocksMaterial(List<Block> blocks, Material material) {
         boolean isMat = true;
-        for(Block b: blocks){
-            if(!b.getType().equals(material)){
+        for (Block b : blocks) {
+            if (!b.getType().equals(material)) {
                 isMat = false;
             }
         }
@@ -63,12 +63,12 @@ public class TypeHelper {
     public static boolean isConsole(CommandSender sender) {
         return sender instanceof ConsoleCommandSender;
     }
-    
-    public static boolean isMaterialInList(Material material, List<Material> materialList){
+
+    public static boolean isMaterialInList(Material material, List<Material> materialList) {
         return materialList.contains(material);
     }
-    
-    public static boolean isMaterialInArray(Material material, Material[] materialArray){
+
+    public static boolean isMaterialInArray(Material material, Material[] materialArray) {
         return isMaterialInList(material, Arrays.asList(materialArray));
     }
 }
