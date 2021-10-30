@@ -6,7 +6,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.te
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -27,6 +30,21 @@ public class Ev_AutoSmelt implements Listener {
         }
     }
 
+    @EventHandler
+    public void cloudBootsCrafting(PrepareItemCraftEvent e) {
+        if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.autoSmeltNetheritePickAxe.almostEquals(e.getRecipe().getResult())) {
+            for (ItemStack is : e.getInventory().getMatrix()) {
+                if(is != null){
+                    consoleSendMessage("enchant: " + is.getEnchantments().containsKey(autosmelt),"lava: " + is.equals(new ItemStack(Material.LAVA_BUCKET, 1)));
+                    if(is.getEnchantments().containsKey(autosmelt) && !is.equals(new ItemStack(Material.LAVA_BUCKET, 1))){}
+                    else if(!is.getEnchantments().containsKey(autosmelt) && is.equals(new ItemStack(Material.LAVA_BUCKET, 1))){}
+                    else{
+                        e.getInventory().setResult(null);
+                    }
+                }
+            }
+        }
+    }
     
     
     @EventHandler
