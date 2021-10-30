@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_TANK;
@@ -347,6 +348,12 @@ public class RelluEssentials extends JavaPlugin {
         smelterPickaxeRecipe.addIngredient(CustomItems.autoSmeltTank.getMaterial());
         smelterPickaxeRecipe.addIngredient(CustomItems.autoSmeltFurnace.getMaterial());
         
+        NamespacedKey smelterFuelKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL);
+        ShapelessRecipe smelterFuelRecipe = new ShapelessRecipe(smelterFuelKey, CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
+        smelterFuelRecipe.addIngredient(Material.NETHERITE_PICKAXE);
+        smelterFuelRecipe.addIngredient(Material.LAVA_BUCKET);
+        
+        Bukkit.addRecipe(smelterFuelRecipe);
         Bukkit.addRecipe(smelterFurnaceRecipe);
         Bukkit.addRecipe(smelterTankRecipe);
         Bukkit.addRecipe(smelterPickaxeRecipe);
