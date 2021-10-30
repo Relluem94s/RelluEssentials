@@ -23,20 +23,18 @@ public class Vanish implements CommandExecutor {
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         sendMessage(p, PLUGIN_COMMAND_VANISH);
                         boolean canSee = false;
-                                                
-                        for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            if(onlinePlayer.canSee(p)){
+
+                        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                            if (onlinePlayer.canSee(p)) {
                                 onlinePlayer.hidePlayer(p);
-                            }
-                            else{
+                            } else {
                                 onlinePlayer.showPlayer(p);
                                 canSee = true;
                             }
                         }
-                        
+
                         sendMessage(p, String.format(canSee ? PLUGIN_COMMAND_VANISH_ENABLE : PLUGIN_COMMAND_VANISH_DISABLE, p.getCustomName()));
-            
-                        
+
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -50,22 +48,19 @@ public class Vanish implements CommandExecutor {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                             sendMessage(target, PLUGIN_COMMAND_VANISH);
-                            
+
                             boolean canSee = false;
-                            for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                                if(onlinePlayer.canSee(target)){
+                            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                                if (onlinePlayer.canSee(target)) {
                                     onlinePlayer.hidePlayer(target);
-                                }
-                                else{
+                                } else {
                                     onlinePlayer.showPlayer(target);
                                     canSee = true;
                                 }
                             }
-                            
+
                             sendMessage(p, String.format(canSee ? PLUGIN_COMMAND_VANISH_ENABLE : PLUGIN_COMMAND_VANISH_DISABLE, p.getCustomName()));
-                            
-            
-                            
+
                             return true;
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
