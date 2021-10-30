@@ -322,13 +322,13 @@ public class RelluEssentials extends JavaPlugin {
             }
         }, 0L, 2L);
     }
-    
-    private void addRecipes(){
+
+    private void addRecipes() {
         NamespacedKey cloudBootsKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS);
         ShapedRecipe cloudBootsRecipe = new ShapedRecipe(cloudBootsKey, CustomItems.cloudBoots.getCustomItem());
         cloudBootsRecipe.shape("F F", "F F");
         cloudBootsRecipe.setIngredient('F', CustomItems.cloudSailor.getMaterial());
-        
+
         NamespacedKey smelterFurnaceKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE);
         ShapedRecipe smelterFurnaceRecipe = new ShapedRecipe(smelterFurnaceKey, CustomItems.autoSmeltFurnace.getCustomItem());
         smelterFurnaceRecipe.shape("OOO", "CFC", "OGO");
@@ -336,24 +336,24 @@ public class RelluEssentials extends JavaPlugin {
         smelterFurnaceRecipe.setIngredient('F', Material.FURNACE);
         smelterFurnaceRecipe.setIngredient('C', Material.COMPARATOR);
         smelterFurnaceRecipe.setIngredient('G', Material.GLASS);
-        
+
         NamespacedKey smelterTankKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_TANK);
         ShapedRecipe smelterTankRecipe = new ShapedRecipe(smelterTankKey, CustomItems.autoSmeltTank.getCustomItem());
         smelterTankRecipe.shape("GGG", "GCG", "GGG");
         smelterTankRecipe.setIngredient('G', Material.GLASS);
         smelterTankRecipe.setIngredient('C', Material.CAULDRON);
-        
+
         NamespacedKey smelterPickaxeKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE);
         ShapelessRecipe smelterPickaxeRecipe = new ShapelessRecipe(smelterPickaxeKey, CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
         smelterPickaxeRecipe.addIngredient(Material.NETHERITE_PICKAXE);
         smelterPickaxeRecipe.addIngredient(CustomItems.autoSmeltTank.getMaterial());
         smelterPickaxeRecipe.addIngredient(CustomItems.autoSmeltFurnace.getMaterial());
-        
+
         NamespacedKey smelterFuelKey = new NamespacedKey(this, PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL);
         ShapelessRecipe smelterFuelRecipe = new ShapelessRecipe(smelterFuelKey, CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
         smelterFuelRecipe.addIngredient(CustomItems.autoSmeltNetheritePickAxe.getMaterial());
         smelterFuelRecipe.addIngredient(Material.LAVA_BUCKET);
-        
+
         Bukkit.addRecipe(smelterFuelRecipe);
         Bukkit.addRecipe(smelterFurnaceRecipe);
         Bukkit.addRecipe(smelterTankRecipe);
