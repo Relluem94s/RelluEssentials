@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.permissions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -11,12 +10,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 public class Permission {
 
     /**
-     * Checks if Player is Authorized
-     * Player has to be in a Group with id >= group
-     * 
+     * Checks if Player is Authorized Player has to be in a Group with id >=
+     * group
+     *
      * @param p Player
      * @param group long
-     * @return 
+     * @return
      */
     public static boolean isAuthorized(Player p, long group) {
         long id = User.getGroup(p).getId();
@@ -25,7 +24,7 @@ public class Permission {
 
     /**
      * Checks if CommandSender is Authorized
-     * 
+     *
      * @param sender CommandSender
      * @param group long
      * @return boolean
@@ -37,8 +36,8 @@ public class Permission {
             return true;
         } else if (isConsole(sender)) {
             return true;
-        } 
-        
+        }
+
         return false;
     }
 }
