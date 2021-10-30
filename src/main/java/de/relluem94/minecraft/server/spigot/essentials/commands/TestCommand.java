@@ -55,18 +55,17 @@ public class TestCommand implements CommandExecutor {
                         } else if (args[0].equals("noenchant")) {
                             autosmelt.removeFrom(p.getInventory().getItemInMainHand());
                             telekenesis.removeFrom(p.getInventory().getItemInMainHand());
-                            
-                            
+
                             //////////////////////////////////////////////////////////////
                             //FOR TEST WITH LORE ACTIVATE THIS BLOCK                    //
                             //                                                          //
                             boolean isDebugged = false;                                 //
                             //                                                          //
-                            if(isDebugged){                                             //
+                            if (isDebugged) {                                             //
                                 ItemStack i = p.getInventory().getItemInMainHand();     //
                                 ItemMeta im = i.getItemMeta();                          //
                                 List<String> lore = im.getLore();                       //
-                                String rarity = lore.get(lore.size()-1);                //
+                                String rarity = lore.get(lore.size() - 1);                //
                                 lore.clear();                                           //
                                 lore.add(rarity);                                       //
                                 im.setLore(lore);                                       //
