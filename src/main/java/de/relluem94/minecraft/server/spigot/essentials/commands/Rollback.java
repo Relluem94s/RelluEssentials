@@ -46,7 +46,7 @@ public class Rollback implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("rollback")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK)) {
             switch (args.length) {
                 case 2:
                     if (sender instanceof Player) {
