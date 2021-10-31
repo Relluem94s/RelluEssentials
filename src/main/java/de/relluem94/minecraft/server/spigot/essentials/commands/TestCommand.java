@@ -15,17 +15,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_RELLU;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE;
 
 public class TestCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND)) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
                 if (p.getName().equalsIgnoreCase("Relluem94")) {
                     if (args.length == 1) {
-                        if (args[0].equals("cm")) {
+                        if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB)) {
                             MobHelper mh = new MobHelper(p.getLocation(), EntityType.ZOMBIE, "§aX Æ A-XII", true);
                             mh.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1000000, 1));
                             mh.setCanPickupItems(true);
@@ -38,21 +45,21 @@ public class TestCommand implements CommandExecutor {
                                     new ItemStack(Material.LEATHER_LEGGINGS, 1),
                                     new ItemStack(Material.LEATHER_BOOTS, 1)
                             );
-                        } else if (args[0].equals("cs")) {
+                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR)) {
                             p.getInventory().addItem(CustomItems.cloudSailor.getCustomItem());
                             p.getInventory().addItem(CustomItems.cloudBoots.getCustomItem());
-                        } else if (args[0].equals("rellu")) {
+                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_RELLU)) {
                             p.getInventory().addItem(CustomItems.relluHelmet.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluChestPlate.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluLeggings.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluBoots.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluShield.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluSword.getCustomItem());
-                        } else if (args[0].equals("smelt")) {
+                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT)) {
                             autosmelt.addTo(p.getInventory().getItemInMainHand());
-                        } else if (args[0].equals("tele")) {
+                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE)) {
                             telekenesis.addTo(p.getInventory().getItemInMainHand());
-                        } else if (args[0].equals("noenchant")) {
+                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT)) {
                             autosmelt.removeFrom(p.getInventory().getItemInMainHand());
                             telekenesis.removeFrom(p.getInventory().getItemInMainHand());
 
