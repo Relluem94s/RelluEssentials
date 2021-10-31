@@ -1,12 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ITEM_NAMESPACE_SMELTER_TANK;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -93,8 +86,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
 import de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.events.SkullInfo;
@@ -183,45 +175,45 @@ public class RelluEssentials extends JavaPlugin {
 
     private void commandManager() {
         /*	Commands	*/
-        Objects.requireNonNull(this.getCommand("0")).setExecutor(new GameMode());
-        Objects.requireNonNull(this.getCommand("1")).setExecutor(new GameMode());
-        Objects.requireNonNull(this.getCommand("2")).setExecutor(new GameMode());
-        Objects.requireNonNull(this.getCommand("3")).setExecutor(new GameMode());
-        Objects.requireNonNull(this.getCommand("fly")).setExecutor(new Fly());
-        Objects.requireNonNull(this.getCommand("cookie")).setExecutor(new Cookies());
-        Objects.requireNonNull(this.getCommand("craft")).setExecutor(new PortableCraftingBench());
-        Objects.requireNonNull(this.getCommand("sun")).setExecutor(new Sun());
-        Objects.requireNonNull(this.getCommand("rain")).setExecutor(new Rain());
-        Objects.requireNonNull(this.getCommand("storm")).setExecutor(new Storm());
-        Objects.requireNonNull(this.getCommand("spawn")).setExecutor(new Spawn());
-        Objects.requireNonNull(this.getCommand("home")).setExecutor(new Home());
-        Objects.requireNonNull(this.getCommand("day")).setExecutor(new Day());
-        Objects.requireNonNull(this.getCommand("night")).setExecutor(new Night());
-        Objects.requireNonNull(this.getCommand("more")).setExecutor(new More());
-        Objects.requireNonNull(this.getCommand("repair")).setExecutor(new Repair());
-        Objects.requireNonNull(this.getCommand("enderchest")).setExecutor(new Enderchest());
-        Objects.requireNonNull(this.getCommand("inv")).setExecutor(new Inventory());
-        Objects.requireNonNull(this.getCommand("setGroup")).setExecutor(new PermissionsGroup());
-        Objects.requireNonNull(this.getCommand("nick")).setExecutor(new Nick());
-        Objects.requireNonNull(this.getCommand("suicide")).setExecutor(new Suicide());
-        Objects.requireNonNull(this.getCommand("rellu")).setExecutor(new Rellu());
-        Objects.requireNonNull(this.getCommand("heal")).setExecutor(new Heal());
-        Objects.requireNonNull(this.getCommand("god")).setExecutor(new God());
-        Objects.requireNonNull(this.getCommand("head")).setExecutor(new Head());
-        Objects.requireNonNull(this.getCommand("vanish")).setExecutor(new Vanish());
-        Objects.requireNonNull(this.getCommand("cc")).setExecutor(new ClearChat());
-        Objects.requireNonNull(this.getCommand("afk")).setExecutor(new AFK());
-        Objects.requireNonNull(this.getCommand("msg")).setExecutor(new Message());
-        Objects.requireNonNull(this.getCommand("r")).setExecutor(new Message());
-        Objects.requireNonNull(this.getCommand("title")).setExecutor(new Title());
-        Objects.requireNonNull(this.getCommand("where")).setExecutor(new Where());
-        Objects.requireNonNull(this.getCommand("print")).setExecutor(new Print());
-        Objects.requireNonNull(this.getCommand("broadcast")).setExecutor(new Broadcast());
-        Objects.requireNonNull(this.getCommand("rename")).setExecutor(new Rename());
-        Objects.requireNonNull(this.getCommand("speed")).setExecutor(new Speed());
-        Objects.requireNonNull(this.getCommand("poke")).setExecutor(new Poke());
-        Objects.requireNonNull(this.getCommand("rollback")).setExecutor(new Rollback());
-        Objects.requireNonNull(this.getCommand("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")).setExecutor(new TestCommand());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_0   )).setExecutor(new GameMode());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_1   )).setExecutor(new GameMode());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_2   )).setExecutor(new GameMode());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_3   )).setExecutor(new GameMode());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_FLY          )).setExecutor(new Fly());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_COOCKIE      )).setExecutor(new Cookies());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CRAFT        )).setExecutor(new PortableCraftingBench());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUN          )).setExecutor(new Sun());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RAIN         )).setExecutor(new Rain());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_STORM        )).setExecutor(new Storm());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPAWN        )).setExecutor(new Spawn());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HOME         )).setExecutor(new Home());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_DAY          )).setExecutor(new Day());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NIGHT        )).setExecutor(new Night());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MORE         )).setExecutor(new More());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPAIR       )).setExecutor(new Repair());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ENDERCHEST   )).setExecutor(new Enderchest());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_INVENTORY    )).setExecutor(new Inventory());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SETGROUP     )).setExecutor(new PermissionsGroup());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NICK         )).setExecutor(new Nick());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUICIDE      )).setExecutor(new Suicide());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RELLU        )).setExecutor(new Rellu());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAL         )).setExecutor(new Heal());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GOD          )).setExecutor(new God());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAD         )).setExecutor(new Head());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_VANISH       )).setExecutor(new Vanish());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CLEARCHAT    )).setExecutor(new ClearChat());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_AFK          )).setExecutor(new AFK());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MSG          )).setExecutor(new Message());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPLY        )).setExecutor(new Message());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TITLE        )).setExecutor(new Title());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WHERE        )).setExecutor(new Where());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_PRINT        )).setExecutor(new Print());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_BROADCAST    )).setExecutor(new Broadcast());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RENAME       )).setExecutor(new Rename());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPEED        )).setExecutor(new Speed());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_POKE         )).setExecutor(new Poke());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ROLLBACK     )).setExecutor(new Rollback());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TEST_COMMAND )).setExecutor(new TestCommand());
         // @TODO add Warps
         // @TODO add Marriage
         // @TODO Fix Command execution for command Blocks
