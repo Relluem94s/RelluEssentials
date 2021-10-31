@@ -47,7 +47,7 @@ public class Fly implements CommandExecutor {
     }
 
     private boolean flyMode(Command command, Player p) {
-        if (command.getName().equalsIgnoreCase("fly")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_FLY)) {
             PlayerEntry pe = playerEntryList.get(p.getUniqueId());
             pe.setFlying(!pe.isFlying());
             dBH.updatePlayer(pe);
@@ -58,5 +58,4 @@ public class Fly implements CommandExecutor {
             return false;
         }
     }
-
 }
