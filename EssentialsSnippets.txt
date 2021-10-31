@@ -448,45 +448,6 @@ public void kissPlayer(Player p1, Player p2){
 		}
 	 
 
-
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-		public String User = "User";
-		public String Vip = "Vip";
-		public String Builder = "Builder";
-		public String SGBuilder = "SGBuilder";
-		public String pMod = "pMod";
-		public String Mod = "Mod";
-		public String sMod = "sMod";
-		public String Geek = "Geek";
-		public String Admin = "Admin";
-		public String Visitor = "Visitor";
-		public String Unknown = "Unknown";
-		
-		
-		 public String getPlayerName(Player p){
-			 return p.getDisplayName();
-		 }
-		
-		 public String getPlayerGroup(Player p){
-			 return main.PlayerGroup.get(p);
-		 }
-		
-		public void setPlayerState(Player p, State string){
-			main.PlayerState.put(p, string);
-		 }
-		
-		
-		 public State getPlayerState(Player p){
-			 return main.PlayerState.get(p);
-		 }
-
-
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -2303,29 +2264,6 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 			
 		 }
 	 }
-	 
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-	 @EventHandler
-		public void skullInfo(PlayerInteractEvent e) {
-			Player p = e.getPlayer();
-			if(e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)){
-				if(p.hasPermission("rellu.skull.info")){
-					if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-						BlockState block = e.getClickedBlock().getState();
-			            if (block instanceof Skull) {
-			                Skull sk = (Skull) block;
-			                title(p, "§a" + sk.getOwner(), "§8~~~~~~~~~~~~~~~~~~~~~~~");
-			            }
-					}
-				}
-			}
-			
-	 }
-	 
-
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -3297,8 +3235,6 @@ public class PlayerState{
 	
 	
 }
-
-
 
 
 
