@@ -19,7 +19,7 @@ public class Head implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("head")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_HEAD)) {
             if (args.length == 1) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
