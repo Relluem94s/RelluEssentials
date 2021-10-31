@@ -97,6 +97,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REG
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
 import de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
+import de.relluem94.minecraft.server.spigot.essentials.events.SkullInfo;
 import de.relluem94.minecraft.server.spigot.essentials.events.ToolCrafting;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
@@ -240,6 +241,7 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new BlockPlace(), this);
         pm.registerEvents(new BetterMobs(), this);
         pm.registerEvents(new BetterSoil(), this);
+        pm.registerEvents(new SkullInfo(), this);
         pm.registerEvents(new BetterSavety(), this);
         pm.registerEvents(new NoDeathMessage(), this);
         pm.registerEvents(new PlayerMove(), this);
