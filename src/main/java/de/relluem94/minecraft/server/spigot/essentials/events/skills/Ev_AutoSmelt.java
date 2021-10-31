@@ -11,14 +11,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENC
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemType;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.server.v1_16_R3.Enchantment.Rarity;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -44,69 +39,74 @@ public class Ev_AutoSmelt implements Listener {
         if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.autoSmeltNetheritePickAxe.almostEquals(e.getRecipe().getResult())) {
             
             List<ItemStack> matrix = Arrays.asList(e.getInventory().getMatrix());
-            
             ItemStack pickaxe = new ItemStack(Material.APPLE);
             
             for(ItemStack is : matrix){
                 if(is != null){
-                    consoleSendMessage("Type: ", is.getType().name() + " " + is.getAmount() + " " + is.getItemMeta().getDisplayName());
-                    if(is.getType().equals(Material.NETHERITE_PICKAXE)){
+                    if(is.getType().equals(CustomItems.autoSmeltNetheritePickAxe.getMaterial())){
                         pickaxe = is;
                     }
                 }
                 
-            }
-
-            consoleSendMessage("§aType: §r", pickaxe.getType().name() + " " + pickaxe.getAmount());
-            
-            
-            consoleSendMessage("asf: " + 
-                               matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) + " ast: " +
-                               matrix.contains(CustomItems.autoSmeltTank.getCustomItem()), " pick: " + 
-                               matrix.contains(pickaxe) + " pick2: " + 
-                               matrix.contains(CustomItems.autoSmeltNetheritePickAxe.getCustomItem()) + " is: " + 
-                               matrix.contains(new ItemStack(Material.NETHERITE_PICKAXE, 1))
-            );
-            
+            }          
             
             if(matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) && matrix.contains(CustomItems.autoSmeltTank.getCustomItem()) && matrix.contains(pickaxe)){
+                // Crafting Smelting Pickaxe
                 int asnp = matrix.indexOf(pickaxe);
-                int asf = matrix.indexOf(CustomItems.autoSmeltFurnace.getCustomItem());
-                int ast = matrix.indexOf(CustomItems.autoSmeltTank.getCustomItem());
-
-                
-                
-
-                
                 if(!matrix.get(asnp).getEnchantments().isEmpty() && matrix.get(asnp).getEnchantments().containsKey(autosmelt)){
+                    // Crafting Smelting Pickaxe but is already Smelting Pickaxe
                     e.getInventory().setResult(null);
-                    consoleSendMessage("§acase: ", "§c1");
                 }
                 else{
-                    consoleSendMessage("§acase: ", "§c2");
+                    // Crafting Smelting Pickaxe
+                    e.getInventory().getResult().addUnsafeEnchantments(pickaxe.getEnchantments());
+                    ItemMeta im = e.getInventory().getResult().getItemMeta();
+                    List<String> lore = pickaxe.getItemMeta().getLore();
+                    lore.remove(lore.size()-1);
+                    lore.addAll(im.getLore());
+                    im.setLore(lore);
+                    e.getInventory().getResult().setItemMeta(im);
+                }
+            }
+            else if(matrix.contains(pickaxe) && matrix.contains(new ItemStack(Material.LAVA_BUCKET, 1))) {
+                // Filling up Smelting Pickaxe
+                int asnp = matrix.indexOf(pickaxe);
+                if(!matrix.get(asnp).getEnchantments().isEmpty()){
+                    if(!matrix.get(asnp).getEnchantments().containsKey(autosmelt)){
+                        // Filling up Smelting Pickaxe but is no Smelting Pickaxe
+                        e.getInventory().setResult(null);
+                    }
+                    else{
+                        // Filling up Smelting Pickaxe
+                        e.getInventory().getResult().addUnsafeEnchantments(pickaxe.getEnchantments());
+                        ItemMeta im = e.getInventory().getResult().getItemMeta();
+                        List<String> lore = pickaxe.getItemMeta().getLore();
+                        im.setLore(lore);
+                        e.getInventory().getResult().setItemMeta(im);
+                    }
+                }
+                else{
+                    // Filling up Smelting Pickaxe but is no Smelting Pickaxe (no Enchants at all)
+                    e.getInventory().setResult(null);
                 }
                 
                 
-                
-            }
-            else if(matrix.contains(CustomItems.autoSmeltNetheritePickAxe.getCustomItem())) {
-                consoleSendMessage("§acase: ", "§c3");
+                if (e.getInventory().getResult() != null) {
+                    // Sets Fuel Lecel
+                    ItemStack i = e.getInventory().getResult();
+                    ItemMeta im = i.getItemMeta();
+                    im.setLore(setFuel(im.getLore(), PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX));
+                    i.setItemMeta(im);
+                }
             }
             else{
+                // Any other case. 
                 e.getInventory().setResult(null);
-                consoleSendMessage("§acase: ", "§c4");
-                
             }
             
            
-            if (e.getInventory().getResult() != null) {
-                ItemStack i = e.getInventory().getResult();
-                ItemMeta im = i.getItemMeta();
-                im.setLore(setFuel(im.getLore(), PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX));
-                i.setItemMeta(im);
-            }
+            
         }
-        consoleSendMessage(">>", "-----------------------------------------------------------------------");
     }
 
     private List<String> setFuel(List<String> lore, String fuel) {
