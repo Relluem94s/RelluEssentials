@@ -17,7 +17,7 @@ public class Print implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("print")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PRINT)) {
             if (args.length >= 1) {
                 return print(sender, args, 0);
             } else {
