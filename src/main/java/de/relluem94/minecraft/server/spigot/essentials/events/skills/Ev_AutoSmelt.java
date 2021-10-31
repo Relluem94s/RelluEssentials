@@ -13,8 +13,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENC
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemType;
 import java.util.Arrays;
 import java.util.List;
+import net.minecraft.server.v1_16_R3.Enchantment.Rarity;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -36,24 +40,45 @@ public class Ev_AutoSmelt implements Listener {
     }
 
     @EventHandler
-    public void cloudBootsCrafting(PrepareItemCraftEvent e) {
+    public void pickaxeCrafting(PrepareItemCraftEvent e) {
         if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.autoSmeltNetheritePickAxe.almostEquals(e.getRecipe().getResult())) {
             
             List<ItemStack> matrix = Arrays.asList(e.getInventory().getMatrix());
             
+            ItemStack pickaxe = new ItemStack(Material.APPLE);
             
-            consoleSendMessage(matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) + " " +
-                               matrix.contains(CustomItems.autoSmeltTank.getCustomItem()), " " + 
-                               matrix.contains(new ItemStack(CustomItems.autoSmeltNetheritePickAxe.getMaterial(), 1)) + " " + 
-                               matrix.contains(CustomItems.autoSmeltNetheritePickAxe.getCustomItem()));
+            for(ItemStack is : matrix){
+                if(is != null){
+                    consoleSendMessage("Type: ", is.getType().name() + " " + is.getAmount() + " " + is.getItemMeta().getDisplayName());
+                    if(is.getType().equals(Material.NETHERITE_PICKAXE)){
+                        pickaxe = is;
+                    }
+                }
+                
+            }
+
+            consoleSendMessage("§aType: §r", pickaxe.getType().name() + " " + pickaxe.getAmount());
             
             
-            if(matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) && matrix.contains(CustomItems.autoSmeltTank.getCustomItem()) && matrix.contains(new ItemStack(CustomItems.autoSmeltNetheritePickAxe.getMaterial(), 1))){
-                int asnp = matrix.indexOf(CustomItems.autoSmeltNetheritePickAxe.getCustomItem());
+            consoleSendMessage("asf: " + 
+                               matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) + " ast: " +
+                               matrix.contains(CustomItems.autoSmeltTank.getCustomItem()), " pick: " + 
+                               matrix.contains(pickaxe) + " pick2: " + 
+                               matrix.contains(CustomItems.autoSmeltNetheritePickAxe.getCustomItem()) + " is: " + 
+                               matrix.contains(new ItemStack(Material.NETHERITE_PICKAXE, 1))
+            );
+            
+            
+            if(matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) && matrix.contains(CustomItems.autoSmeltTank.getCustomItem()) && matrix.contains(pickaxe)){
+                int asnp = matrix.indexOf(pickaxe);
                 int asf = matrix.indexOf(CustomItems.autoSmeltFurnace.getCustomItem());
                 int ast = matrix.indexOf(CustomItems.autoSmeltTank.getCustomItem());
 
-                if(matrix.get(asnp).getEnchantments().containsKey(autosmelt)){
+                
+                
+
+                
+                if(!matrix.get(asnp).getEnchantments().isEmpty() && matrix.get(asnp).getEnchantments().containsKey(autosmelt)){
                     e.getInventory().setResult(null);
                     consoleSendMessage("§acase: ", "§c1");
                 }
