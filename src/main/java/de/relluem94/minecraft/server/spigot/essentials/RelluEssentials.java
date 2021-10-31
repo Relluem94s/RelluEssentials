@@ -23,6 +23,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ShapelessRecipe;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Day;
@@ -58,6 +59,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Head;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
 import de.relluem94.minecraft.server.spigot.essentials.commands.TestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
 
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterBlockDrop;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
@@ -71,6 +73,9 @@ import de.relluem94.minecraft.server.spigot.essentials.events.NoDeathMessage;
 import de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
 import de.relluem94.minecraft.server.spigot.essentials.events.CloudSailor;
+import de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
+import de.relluem94.minecraft.server.spigot.essentials.events.SkullInfo;
+import de.relluem94.minecraft.server.spigot.essentials.events.ToolCrafting;
 
 import de.relluem94.minecraft.server.spigot.essentials.events.features.RotationTool;
 import de.relluem94.minecraft.server.spigot.essentials.events.features.SelectionTool;
@@ -80,6 +85,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Repair;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Salvage;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_TreeFeller;
 
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
@@ -87,10 +93,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
-import de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
-import de.relluem94.minecraft.server.spigot.essentials.events.SkullInfo;
-import de.relluem94.minecraft.server.spigot.essentials.events.ToolCrafting;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
@@ -102,7 +104,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntr
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import org.bukkit.inventory.ShapelessRecipe;
 
 public class RelluEssentials extends JavaPlugin {
 
@@ -175,45 +176,45 @@ public class RelluEssentials extends JavaPlugin {
 
     private void commandManager() {
         /*	Commands	*/
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_0   )).setExecutor(new GameMode());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_1   )).setExecutor(new GameMode());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_2   )).setExecutor(new GameMode());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_3   )).setExecutor(new GameMode());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_FLY          )).setExecutor(new Fly());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_COOCKIE      )).setExecutor(new Cookies());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CRAFT        )).setExecutor(new PortableCraftingBench());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUN          )).setExecutor(new Sun());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RAIN         )).setExecutor(new Rain());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_STORM        )).setExecutor(new Storm());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPAWN        )).setExecutor(new Spawn());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HOME         )).setExecutor(new Home());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_DAY          )).setExecutor(new Day());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NIGHT        )).setExecutor(new Night());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MORE         )).setExecutor(new More());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPAIR       )).setExecutor(new Repair());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ENDERCHEST   )).setExecutor(new Enderchest());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_INVENTORY    )).setExecutor(new Inventory());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SETGROUP     )).setExecutor(new PermissionsGroup());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NICK         )).setExecutor(new Nick());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUICIDE      )).setExecutor(new Suicide());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RELLU        )).setExecutor(new Rellu());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAL         )).setExecutor(new Heal());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GOD          )).setExecutor(new God());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAD         )).setExecutor(new Head());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_VANISH       )).setExecutor(new Vanish());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CLEARCHAT    )).setExecutor(new ClearChat());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_AFK          )).setExecutor(new AFK());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MSG          )).setExecutor(new Message());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPLY        )).setExecutor(new Message());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TITLE        )).setExecutor(new Title());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WHERE        )).setExecutor(new Where());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_PRINT        )).setExecutor(new Print());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_BROADCAST    )).setExecutor(new Broadcast());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RENAME       )).setExecutor(new Rename());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPEED        )).setExecutor(new Speed());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_POKE         )).setExecutor(new Poke());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ROLLBACK     )).setExecutor(new Rollback());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TEST_COMMAND )).setExecutor(new TestCommand());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_0   )).setExecutor(new GameMode()               );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_1   )).setExecutor(new GameMode()               );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_2   )).setExecutor(new GameMode()               );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_3   )).setExecutor(new GameMode()               );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_FLY          )).setExecutor(new Fly()                    );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_COOCKIE      )).setExecutor(new Cookies()                );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CRAFT        )).setExecutor(new PortableCraftingBench()  );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUN          )).setExecutor(new Sun()                    );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RAIN         )).setExecutor(new Rain()                   );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_STORM        )).setExecutor(new Storm()                  );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPAWN        )).setExecutor(new Spawn()                  );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HOME         )).setExecutor(new Home()                   );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_DAY          )).setExecutor(new Day()                    );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NIGHT        )).setExecutor(new Night()                  );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MORE         )).setExecutor(new More()                   );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPAIR       )).setExecutor(new Repair()                 );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ENDERCHEST   )).setExecutor(new Enderchest()             );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_INVENTORY    )).setExecutor(new Inventory()              );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SETGROUP     )).setExecutor(new PermissionsGroup()       );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NICK         )).setExecutor(new Nick()                   );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUICIDE      )).setExecutor(new Suicide()                );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RELLU        )).setExecutor(new Rellu()                  );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAL         )).setExecutor(new Heal()                   );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GOD          )).setExecutor(new God()                    );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAD         )).setExecutor(new Head()                   );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_VANISH       )).setExecutor(new Vanish()                 );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CLEARCHAT    )).setExecutor(new ClearChat()              );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_AFK          )).setExecutor(new AFK()                    );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MSG          )).setExecutor(new Message()                );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPLY        )).setExecutor(new Message()                );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TITLE        )).setExecutor(new Title()                  );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WHERE        )).setExecutor(new Where()                  );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_PRINT        )).setExecutor(new Print()                  );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_BROADCAST    )).setExecutor(new Broadcast()              );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RENAME       )).setExecutor(new Rename()                 );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPEED        )).setExecutor(new Speed()                  );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_POKE         )).setExecutor(new Poke()                   );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ROLLBACK     )).setExecutor(new Rollback()               );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TEST_COMMAND )).setExecutor(new TestCommand()            );
         // @TODO add Warps
         // @TODO add Marriage
         // @TODO Fix Command execution for command Blocks
@@ -226,36 +227,36 @@ public class RelluEssentials extends JavaPlugin {
 
     private void eventManager() {
         /*	Events	*/
-        pm.registerEvents(new BetterChatFormat(), this);
-        pm.registerEvents(new BetterPlayerJoin(), this);
-        pm.registerEvents(new BetterPlayerQuit(), this);
-        pm.registerEvents(new BetterBlockDrop(), this);
-        pm.registerEvents(new BlockPlace(), this);
-        pm.registerEvents(new BetterMobs(), this);
-        pm.registerEvents(new BetterSoil(), this);
-        pm.registerEvents(new SkullInfo(), this);
-        pm.registerEvents(new BetterSavety(), this);
-        pm.registerEvents(new NoDeathMessage(), this);
-        pm.registerEvents(new PlayerMove(), this);
-        pm.registerEvents(new MOTD(), this);
-        pm.registerEvents(new CloudSailor(), this);
-        pm.registerEvents(new ToolCrafting(), this);
-        pm.registerEvents(new CustomEnchantment(), this); // @TODO is enchanted but is lost on anvil use ( like book and pickaxe )
+        pm.registerEvents(new BetterChatFormat(),   this);
+        pm.registerEvents(new BetterPlayerJoin(),   this);
+        pm.registerEvents(new BetterPlayerQuit(),   this);
+        pm.registerEvents(new BetterBlockDrop(),    this);
+        pm.registerEvents(new BlockPlace(),         this);
+        pm.registerEvents(new BetterMobs(),         this);
+        pm.registerEvents(new BetterSoil(),         this);
+        pm.registerEvents(new SkullInfo(),          this);
+        pm.registerEvents(new BetterSavety(),       this);
+        pm.registerEvents(new NoDeathMessage(),     this);
+        pm.registerEvents(new PlayerMove(),         this);
+        pm.registerEvents(new MOTD(),               this);
+        pm.registerEvents(new CloudSailor(),        this);
+        pm.registerEvents(new ToolCrafting(),       this);
+        pm.registerEvents(new CustomEnchantment(),  this); // @TODO is enchanted but is lost on anvil use ( like book and pickaxe )
     }
 
     private void featureManager() {
-        pm.registerEvents(new SelectionTool(), this);
-        pm.registerEvents(new RotationTool(), this);
+        pm.registerEvents(new SelectionTool(),      this);
+        pm.registerEvents(new RotationTool(),       this);
     }
 
     private void skillManager() {
         /*  Skill Events */
-        pm.registerEvents(new Ev_Repair(), this);
-        pm.registerEvents(new Ev_Salvage(), this);
-        // pm.registerEvents(new Ev_TreeFeller(), this); TODO Big Bug Wrong implementation
-        pm.registerEvents(new Ev_AutoReplant(), this);
-        pm.registerEvents(new Ev_AutoSmelt(), this);
-        pm.registerEvents(new Ev_Telekenesis(), this);
+        pm.registerEvents(new Ev_Repair(),          this);
+        pm.registerEvents(new Ev_Salvage(),         this);
+        pm.registerEvents(new Ev_TreeFeller(),      this); // @TODO Big Bug Wrong implementation
+        pm.registerEvents(new Ev_AutoReplant(),     this);
+        pm.registerEvents(new Ev_AutoSmelt(),       this);
+        pm.registerEvents(new Ev_Telekenesis(),     this);
     }
 
     private void boardManager() {
