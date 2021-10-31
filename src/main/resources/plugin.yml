@@ -113,6 +113,9 @@ commands:
     rename:
         description: rename item in hand
         usage: /rename
+    poke:
+        description: Pokes a Player
+        usage: /poke <name>
     speed:
         description: set either fly or walk speed of the player
         usage: /speed
