@@ -19,7 +19,7 @@ public class Rename implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("rename")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_RENAME)) {
             if (args.length >= 1) {
                 if (sender instanceof Player) {
                     return rename((Player) sender, args);
