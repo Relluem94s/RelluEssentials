@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_SETGROUP;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 
@@ -19,7 +20,7 @@ public class PermissionsGroup implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("setGroup")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SETGROUP)) {
             if (args.length == 2) {
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target != null) {
