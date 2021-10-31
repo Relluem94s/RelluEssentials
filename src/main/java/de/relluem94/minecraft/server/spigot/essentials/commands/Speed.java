@@ -14,7 +14,7 @@ public class Speed implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("speed")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SPEED)) {
             if (args.length == 1) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
@@ -43,9 +43,7 @@ public class Speed implements CommandExecutor {
 
     private float parseSpeed(String arg) {
         int in = Integer.parseInt(arg);
-
-        float speed = 0F;
-
+        float speed;
         switch (in) {
             case 0:
                 speed = 0.0F;
@@ -86,5 +84,4 @@ public class Speed implements CommandExecutor {
         }
         return speed;
     }
-
 }
