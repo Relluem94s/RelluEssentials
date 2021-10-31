@@ -18,7 +18,7 @@ public class Nick implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("nick")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_NICK)) {
             if (args.length == 2) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
