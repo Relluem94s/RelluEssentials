@@ -14,7 +14,7 @@ public class Storm implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("storm")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_STORM)) {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
