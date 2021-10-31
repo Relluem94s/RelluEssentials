@@ -15,7 +15,7 @@ public class ClearChat implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("cc")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_CLEARCHAT)) {
             if (Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
                 Bukkit.getOnlinePlayers().forEach(player -> {
                     for (int i = 0; i <= 60; i++) {
