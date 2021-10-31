@@ -38,7 +38,7 @@ public class Rellu implements CommandExecutor {
                 break;
             case 2:
                 if (args[0].equalsIgnoreCase("ping")) {
-                    Player target = Bukkit.getPlayer(args[0]);
+                    Player target = Bukkit.getPlayer(args[1]);
                     if (target != null) {
                         if (sender instanceof Player) {
                             Player p = (Player) sender;
