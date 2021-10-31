@@ -22,7 +22,7 @@ public class Message implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("msg")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_MSG)) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
                 if (args.length > 1) {
@@ -38,7 +38,7 @@ public class Message implements CommandExecutor {
                     return true;
                 }
             }
-        } else if (command.getName().equalsIgnoreCase("r")) {
+        } else if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_REPLY)) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
                 if (reply.containsKey(p)) {
