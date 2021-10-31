@@ -18,7 +18,7 @@ public class Repair implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("repair")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_REPAIR)) {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
