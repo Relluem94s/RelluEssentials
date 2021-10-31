@@ -19,7 +19,7 @@ public class Poke implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("poke")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_POKE)) {
             if (args.length == 0) {
                 if (isPlayer(sender)) {
                     Player p = (Player) sender;
