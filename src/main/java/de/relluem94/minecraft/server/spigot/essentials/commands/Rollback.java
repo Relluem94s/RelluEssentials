@@ -113,6 +113,7 @@ public class Rollback implements CommandExecutor {
                                         bh.setDeletedby(id);
                                         blockHistoryList.add(bh);
                                     }
+                                    // @TODO remove String and add to Strings.java
                                     p.sendMessage("Added: " + list.size());
                                 }
                             }
