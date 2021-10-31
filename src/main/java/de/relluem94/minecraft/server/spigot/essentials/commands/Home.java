@@ -21,7 +21,7 @@ public class Home implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("home")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME)) {
             switch (args.length) {
                 case 0:
                     if (sender instanceof Player) {
@@ -41,7 +41,7 @@ public class Home implements CommandExecutor {
                     }
                     break;
                 case 1:
-                    if (args[0].equalsIgnoreCase("list")) {
+                    if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_LIST)) {
                         if (sender instanceof Player) {
                             Player p = (Player) sender;
                             PlayerEntry pe = playerEntryList.get(p.getUniqueId());
@@ -91,7 +91,7 @@ public class Home implements CommandExecutor {
                         le.setLocationType(locationTypeEntryList.get(0));
                         le.setPlayerId(pe.getId());
 
-                        if (args[0].equalsIgnoreCase("set")) {
+                        if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_SET)) {
                             if (homeExists(pe, le)) {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
                             } else if (!args[1].startsWith("death_")) {
@@ -102,7 +102,7 @@ public class Home implements CommandExecutor {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_RESERVED, args[1]));
                             }
                             return true;
-                        } else if (args[0].equalsIgnoreCase("delete")) {
+                        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_DELETE)) {
                             if (homeExists(pe, le)) {
                                 le = getLocationEntry(pe, le);
                                 dBH.deleteLocation(le);
