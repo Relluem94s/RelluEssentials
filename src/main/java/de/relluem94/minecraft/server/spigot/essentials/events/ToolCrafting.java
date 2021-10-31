@@ -51,7 +51,6 @@ public class ToolCrafting implements Listener {
             for (Material m : diamond) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
                     im.setLore(Arrays.asList(new String[]{ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName()}));
-                    im.setUnbreakable(true);
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
@@ -59,7 +58,6 @@ public class ToolCrafting implements Listener {
             for (Material m : iron) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
                     im.setLore(Arrays.asList(new String[]{ItemRarity.UNCOMMON.getPrefix() + ItemRarity.UNCOMMON.getDisplayName()}));
-                    im.setUnbreakable(true);
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
@@ -67,7 +65,6 @@ public class ToolCrafting implements Listener {
             for (Material m : gold) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
                     im.setLore(Arrays.asList(new String[]{ItemRarity.COMMON.getPrefix() + ItemRarity.COMMON.getDisplayName()}));
-                    im.setUnbreakable(true);
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
@@ -75,7 +72,6 @@ public class ToolCrafting implements Listener {
             for (Material m : chainmail) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
                     im.setLore(Arrays.asList(new String[]{ItemRarity.UNCOMMON.getPrefix() + ItemRarity.UNCOMMON.getDisplayName()}));
-                    im.setUnbreakable(true);
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
@@ -83,7 +79,6 @@ public class ToolCrafting implements Listener {
             for (Material m : leather) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
                     im.setLore(Arrays.asList(new String[]{ItemRarity.COMMON.getPrefix() + ItemRarity.COMMON.getDisplayName()}));
-                    im.setUnbreakable(true);
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
