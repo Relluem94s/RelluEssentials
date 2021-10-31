@@ -18,7 +18,7 @@ public class Title implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("title")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TITLE)) {
             if (args.length > 2) {
                 Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
                 if (target != null) {
