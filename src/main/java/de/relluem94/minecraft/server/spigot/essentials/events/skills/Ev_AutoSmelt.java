@@ -92,7 +92,7 @@ public class Ev_AutoSmelt implements Listener {
                 
                 
                 if (e.getInventory().getResult() != null) {
-                    // Sets Fuel Lecel
+                    // Sets Fuel Level
                     ItemStack i = e.getInventory().getResult();
                     ItemMeta im = i.getItemMeta();
                     im.setLore(setFuel(im.getLore(), PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX));
@@ -103,9 +103,6 @@ public class Ev_AutoSmelt implements Listener {
                 // Any other case. 
                 e.getInventory().setResult(null);
             }
-            
-           
-            
         }
     }
 
@@ -154,7 +151,6 @@ public class Ev_AutoSmelt implements Listener {
                         }
 
                         lore.set(i, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, color + fuel));
-
                     }
                 }
             }
@@ -164,19 +160,19 @@ public class Ev_AutoSmelt implements Listener {
             if (hasFuel) {
                 if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekenesis)) {
                     if (p.getInventory().firstEmpty() >= 0) {
-                        for (ItemStack is : b.getDrops()) {
+                        b.getDrops().forEach(is -> {
                             p.getInventory().addItem(smelt(is));
-                        }
+                        });
 
                     } else {
-                        for (ItemStack is : b.getDrops()) {
+                        b.getDrops().forEach(is -> {
                             p.getWorld().dropItem(p.getLocation(), smelt(is));
-                        }
+                        });
                     }
                 } else {
-                    for (ItemStack is : b.getDrops()) {
+                    b.getDrops().forEach(is -> {
                         b.getWorld().dropItemNaturally(b.getLocation(), smelt(is));
-                    }
+                    });
                 }
                 e.setDropItems(false);
             } else {
