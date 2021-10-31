@@ -16,7 +16,7 @@ public class Vanish implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("vanish")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_VANISH)) {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
