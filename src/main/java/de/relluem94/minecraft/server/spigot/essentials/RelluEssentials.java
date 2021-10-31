@@ -95,6 +95,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_REGISTER_ENCHANTMENT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
 import de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.events.ToolCrafting;
 
@@ -217,6 +218,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand("broadcast")).setExecutor(new Broadcast());
         Objects.requireNonNull(this.getCommand("rename")).setExecutor(new Rename());
         Objects.requireNonNull(this.getCommand("speed")).setExecutor(new Speed());
+        Objects.requireNonNull(this.getCommand("poke")).setExecutor(new Poke());
         Objects.requireNonNull(this.getCommand("rollback")).setExecutor(new Rollback());
         Objects.requireNonNull(this.getCommand("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")).setExecutor(new TestCommand());
         // @TODO add Warps
