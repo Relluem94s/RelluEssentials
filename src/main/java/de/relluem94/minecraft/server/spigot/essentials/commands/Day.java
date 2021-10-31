@@ -16,7 +16,7 @@ public class Day implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("day")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_DAY)) {
             if (args.length == 0) {
                 if (isPlayer(sender)) {
                     Player p = (Player) sender;
