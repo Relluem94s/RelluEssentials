@@ -37,7 +37,10 @@ public class Ev_TreeFeller implements Listener {
     public void onFell(BlockBreakEvent e) {
         ItemStack itemInHand = e.getPlayer().getInventory().getItemInMainHand();
         ItemMeta im = itemInHand.getItemMeta();
-        if (itemInHand.getType().equals(Material.DIAMOND_AXE)) {
+        
+        boolean disabled = true;
+        
+        if (itemInHand.getType().equals(Material.DIAMOND_AXE) && !disabled) {
             for (Material b2d : logs) {
                 if (e.getBlock().getType().equals(b2d)) {
                     int damage = fellTree(e.getBlock());
