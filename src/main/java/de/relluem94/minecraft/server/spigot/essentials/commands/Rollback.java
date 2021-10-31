@@ -54,7 +54,7 @@ public class Rollback implements CommandExecutor {
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             UUID targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
                             PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
-                            if (pe != null && args[0].equalsIgnoreCase("player")) {
+                            if (pe != null && args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER)) {
                                 int id = playerEntryList.get(p.getUniqueId()).getId();
                                 List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayer(pe);
                                 for (BlockHistoryEntry bh : list) {
@@ -74,7 +74,7 @@ public class Rollback implements CommandExecutor {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                            if (args[0].equalsIgnoreCase("player")) {
+                            if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER)) {
                                 UUID targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
                                 PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
 
@@ -87,7 +87,7 @@ public class Rollback implements CommandExecutor {
                                     }
                                     p.sendMessage("Added: " + list.size());
                                 }
-                            } else if (args[0].equalsIgnoreCase("undo") && args[1].equalsIgnoreCase("player")) {
+                            } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO) && args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER)) {
 
                             }
 
@@ -102,7 +102,7 @@ public class Rollback implements CommandExecutor {
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                            if (args[0].equalsIgnoreCase("undo") && args[1].equalsIgnoreCase("player")) {
+                            if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO) && args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER)) {
                                 UUID targetUUID = Bukkit.getOfflinePlayer(args[2]).getUniqueId();
                                 PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
 
