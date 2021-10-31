@@ -19,9 +19,9 @@ public class Broadcast implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("broadcast")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_BROADCAST)) {
             if (args.length >= 1) {
-                if (args[0].equalsIgnoreCase("title")) {
+                if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_BROADCAST_TITLE)) {
                     return broadcast(sender, args, 1, false);
                 } else {
                     return broadcast(sender, args, 0, true);
