@@ -43,7 +43,7 @@ public class Cookies implements CommandExecutor {
     }
 
     private boolean getCookies(Command command, ItemStack is, Player p) {
-        if (command.getName().equalsIgnoreCase("cookie")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_COOCKIE)) {
             p.getWorld().dropItem(p.getLocation(), is);
             sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES, p.getCustomName()));
             return true;
