@@ -14,7 +14,7 @@ public class PortableCraftingBench implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("craft")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_CRAFT)) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
                 if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
