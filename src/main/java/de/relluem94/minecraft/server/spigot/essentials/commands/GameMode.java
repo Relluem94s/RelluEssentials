@@ -44,26 +44,25 @@ public class GameMode implements CommandExecutor {
     }
 
     private boolean gameMode(Command command, Player p) {
-        if (command.getName().equalsIgnoreCase("0")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMEMODE_0)) {
             p.setGameMode(org.bukkit.GameMode.SURVIVAL);
             PlayerHelper.setFlying(p);
-            p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Survival"));
+            p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME));
             return true;
-        } else if (command.getName().equalsIgnoreCase("1")) {
+        } else if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMEMODE_1)) {
             p.setGameMode(org.bukkit.GameMode.CREATIVE);
-            p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Creative"));
+            p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), PLUGIN_COMMAND_NAME_GAMEMODE_1_NAME));
             return true;
-        } else if (command.getName().equalsIgnoreCase("2")) {
+        } else if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMEMODE_2)) {
             p.setGameMode(org.bukkit.GameMode.ADVENTURE);
-            p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Adventure"));
+            p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME));
             return true;
-        } else if (command.getName().equalsIgnoreCase("3")) {
+        } else if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMEMODE_3)) {
             p.setGameMode(org.bukkit.GameMode.SPECTATOR);
-            p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), "Spectator"));
+            p.sendMessage(String.format(PLUGIN_COMMAND_GAMEMODE, p.getCustomName(), PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME));
             return true;
         } else {
             return false;
         }
     }
-
 }
