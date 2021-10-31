@@ -57,7 +57,7 @@ public class AutoSmelt extends Enchantment implements IEnchantment {
 
     @Override
     public boolean conflictsWith(Enchantment other) {
-        return false;
+        return other.equals(Enchantment.SILK_TOUCH);
     }
 
     @Override
