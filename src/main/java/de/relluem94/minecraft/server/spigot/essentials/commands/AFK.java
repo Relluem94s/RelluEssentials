@@ -18,7 +18,7 @@ public class AFK implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("afk")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_AFK)) {
             if (args.length == 0) {
                 if (isPlayer(sender)) {
                     Player p = (Player) sender;
