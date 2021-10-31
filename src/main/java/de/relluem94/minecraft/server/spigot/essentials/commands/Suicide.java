@@ -15,7 +15,7 @@ public class Suicide implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase("suicide")) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SUICIDE)) {
             if (args.length == 0) {
                 if (sender instanceof Player) {
                     Player p = (Player) sender;
