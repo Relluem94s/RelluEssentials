@@ -53,15 +53,19 @@
 * Show where a Player is (`/where`)
 * Print Message in Chat in Player / Commandblock Name (`/print`)
 * Rename item in your Hand (`/rename`)
+* Vanish you from other Players (`/vanish`)
+* Clear Chat from unwanted stuff (`/cc`)
+* Poke a Player if he does not respond (`/poke`)
+* Show Worlds or Teleport to the spawn (`/world`)
 
 
 ## Skills
+* Auto Replant Seeds
+* Auto Smelt  [small tweaks for attached Blocks needed]
+* Telekinesis
 * TreeFeller (Fell the whole Tree) [he is dead jim]
 * Repair (Repair Tools and Armor) [the lost son]
 * Salvage (Salvage Tools and Armor and get back resources and enchantments) [needs some love]
-* Auto Replant Seeds
-* Auto Smelt  [small tweaks]
-* Telekenesis [half finished]
 
 
 ## Events
@@ -109,7 +113,7 @@
 * sudo command and sudo chat player 
 * log Playtime of Players
 * statistics command to show player stats like playtime, first and last played, avg playtime or others
-* check inv for incomplete stack of item for telekenesis event (drops item if no space is left)
+* check inv for incomplete stack of item for telekinesis event (drops item if no space is left)
 * the rest from the snippet textfile
 
 
