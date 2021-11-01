@@ -1,7 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.util.List;
+import java.util.Objects;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -45,5 +48,23 @@ public class WorldHelper {
 
     public static boolean isInWorld(Entity e, World m) {
         return e.getWorld().equals(m);
+    }
+    
+    public static void loadWorld(String worldName){
+        WorldCreator wc = new WorldCreator(worldName);
+        Bukkit.createWorld(wc);
+    }
+    
+    public static void unloadWorld(String worldName, boolean save){
+        Bukkit.unloadWorld(worldName, true);
+    }
+    
+    public static void cloneWorld(String worldName, String copyWorldName){
+        WorldCreator wc = new WorldCreator(worldName);
+        if(Bukkit.getWorld(copyWorldName) != null){
+            wc.copy(Objects.requireNonNull(Bukkit.getWorld(copyWorldName)));
+        }
+        
+        Bukkit.createWorld(wc);
     }
 }
