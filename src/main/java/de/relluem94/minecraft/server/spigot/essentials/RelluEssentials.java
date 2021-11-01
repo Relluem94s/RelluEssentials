@@ -93,6 +93,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekinesis;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Gamerules;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
@@ -201,6 +202,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RELLU        )).setExecutor(new Rellu()                  );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAL         )).setExecutor(new Heal()                   );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GOD          )).setExecutor(new God()                    );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMERULES    )).setExecutor(new Gamerules()              );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAD         )).setExecutor(new Head()                   );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_VANISH       )).setExecutor(new Vanish()                 );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CLEARCHAT    )).setExecutor(new ClearChat()              );
