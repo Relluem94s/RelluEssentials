@@ -93,6 +93,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
@@ -213,6 +214,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RENAME       )).setExecutor(new Rename()                 );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPEED        )).setExecutor(new Speed()                  );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_POKE         )).setExecutor(new Poke()                   );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WORLD        )).setExecutor(new Worlds()                 );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ROLLBACK     )).setExecutor(new Rollback()               );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TEST_COMMAND )).setExecutor(new TestCommand()            );
         // @TODO add Warps
