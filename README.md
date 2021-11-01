@@ -83,9 +83,25 @@
 * Better (Call) Soil (disables trampling, sneak to disable)
 * Better Safety (Auto disable some commands like /pl)
 * Player Move is disabled while afk
+* Player Head Info
+* Cloudsailor (Gliding Feather and Boots)
+* Tool Crafting with Rarity, Higher Tier is unbreakable
 * No Death Message
   * Save Death Location as Home
   * Show Location in Chat (private)
+
+## Helpers
+
+- [BlockHelper](./docs/helpers/BlockHelper.md)
+- ChatHelper
+- ConfigHelper
+- InventoryHelper
+- MobHelper
+- PlayerHelper
+- StringHelper
+- TypeHelper
+- Vector2Location
+- WorldHelper
 
 
 ## Database Model
