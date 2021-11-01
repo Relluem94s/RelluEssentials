@@ -29,7 +29,7 @@ public class ConfigHelper {
     private File file;
     private YamlConfiguration config;
 
-    //TODO Make an migrator from config files to db
+    // @TODO Make an migrator from config files to db
     public ConfigHelper(String name) {
         this.name = name;
 
