@@ -95,7 +95,9 @@
 - [BlockHelper](./docs/helpers/BlockHelper.md)
 - [ChatHelper](./docs/helpers/ChatHelper.md)
 - [ConfigHelper](./docs/helpers/ConfigHelper.md)
+- DatabaseHelper
 - [InventoryHelper](./docs/helpers/InventoryHelper.md)
+- [ItemHelper](./docs/helpers/ItemHelper.md)
 - [MobHelper](./docs/helpers/MobHelper.md)
 - [PlayerHelper](./docs/helpers/PlayerHelper.md)
 - [StringHelper](./docs/helpers/StringHelper.md)
