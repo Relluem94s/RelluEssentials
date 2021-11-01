@@ -32,7 +32,7 @@ public class Print implements CommandExecutor {
     }
 
     private boolean print(CommandSender sender, String[] args, int start) {
-        String name = "";
+        String name;
         if (isPlayer(sender)) {
             Player p = (Player) sender;
             if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
