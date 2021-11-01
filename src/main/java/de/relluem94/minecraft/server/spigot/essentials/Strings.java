@@ -152,6 +152,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT = "smelt";
     public static final String PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE = "tele";
     public static final String PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT = "noenchant";
+    public static final String PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS = "worlds";
     public static final String PLUGIN_COMMAND_NAME_TITLE = "title";
     public static final String PLUGIN_COMMAND_NAME_VANISH = "vanish";
     public static final String PLUGIN_COMMAND_NAME_WHERE = "where";
