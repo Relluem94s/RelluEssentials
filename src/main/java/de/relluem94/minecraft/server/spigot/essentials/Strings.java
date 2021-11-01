@@ -116,6 +116,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_3 = "3";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME = "Spectator";
     public static final String PLUGIN_COMMAND_NAME_GOD = "god";
+    public static final String PLUGIN_COMMAND_NAME_GAMERULES = "gamerules";
     public static final String PLUGIN_COMMAND_NAME_HEAD = "head";        
     public static final String PLUGIN_COMMAND_NAME_HEAL = "heal";        
     public static final String PLUGIN_COMMAND_NAME_HOME = "home"; 
@@ -192,6 +193,8 @@ public class Strings {
 
     public static final String PLUGIN_COMMAND_REPAIR = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " repariert!";
     public static final String PLUGIN_COMMAND_REPAIR_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " repariert bekommen!";
+
+    public static final String PLUGIN_COMMAND_GAMERULES = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Die Welt " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "hat folgende Einstellungen:";
 
     public static final String PLUGIN_COMMAND_HOME = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest in der Welt " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "an den Bett Spawn teleportiert!";
     public static final String PLUGIN_COMMAND_HOME_TP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest zu " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "teleportiert!";
