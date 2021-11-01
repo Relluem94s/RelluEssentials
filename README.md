@@ -93,15 +93,15 @@
 ## Helpers
 
 - [BlockHelper](./docs/helpers/BlockHelper.md)
-- ChatHelper
-- ConfigHelper
-- InventoryHelper
-- MobHelper
-- PlayerHelper
-- StringHelper
-- TypeHelper
-- Vector2Location
-- WorldHelper
+- [ChatHelper](./docs/helpers/ChatHelper.md)
+- [ConfigHelper](./docs/helpers/ConfigHelper.md)
+- [InventoryHelper](./docs/helpers/InventoryHelper.md)
+- [MobHelper](./docs/helpers/MobHelper.md)
+- [PlayerHelper](./docs/helpers/PlayerHelper.md)
+- [StringHelper](./docs/helpers/StringHelper.md)
+- [TypeHelper](./docs/helpers/TypeHelper.md)
+- [Vector2Location](./docs/helpers/Vector2Location.md)
+- [WorldHelper](./docs/helpers/WorldHelper.md)
 
 
 ## Database Model
