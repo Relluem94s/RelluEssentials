@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekinesis;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_COLOR;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_MESSAGE;
@@ -158,7 +158,7 @@ public class Ev_AutoSmelt implements Listener {
             p.getInventory().getItemInMainHand().setItemMeta(im);
 
             if (hasFuel) {
-                if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekenesis)) {
+                if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekinesis)) {
                     if (p.getInventory().firstEmpty() >= 0) {
                         b.getDrops().forEach(is -> {
                             p.getInventory().addItem(smelt(is));

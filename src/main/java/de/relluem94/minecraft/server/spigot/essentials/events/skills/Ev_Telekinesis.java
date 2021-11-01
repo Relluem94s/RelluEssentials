@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekinesis;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -15,13 +15,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class Ev_Telekenesis implements Listener {
+public class Ev_Telekinesis implements Listener {
 
     @EventHandler
     public void onDeathCollect(EntityDeathEvent e) {
         if (e.getEntity().getKiller() instanceof Player) {
             Player p = (Player) e.getEntity().getKiller();
-            if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekenesis)) {
+            if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekinesis)) {
                 e.getDrops().forEach(im -> {
                     if (p.getInventory().firstEmpty() >= 0) {
                         p.getInventory().addItem(im);
@@ -39,7 +39,7 @@ public class Ev_Telekenesis implements Listener {
         Player p = e.getPlayer();
         Block b = e.getBlock();
 
-        if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekenesis)) {
+        if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(telekinesis)) {
             if (!p.getInventory().getItemInMainHand().getEnchantments().containsKey(autosmelt)) {
                 Block bl = b.getRelative(BlockFace.UP);
 

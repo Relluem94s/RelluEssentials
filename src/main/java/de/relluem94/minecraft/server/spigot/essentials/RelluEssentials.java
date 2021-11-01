@@ -84,11 +84,11 @@ import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoRepl
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Repair;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Salvage;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekenesis;
+import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekinesis;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_TreeFeller;
 
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekenesis;
+import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekinesis;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
@@ -119,7 +119,7 @@ public class RelluEssentials extends JavaPlugin {
     public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
 
     public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), PLUGIN_ENCHANTMENT_AUTOSMELT.toLowerCase()));
-    public static Telekenesis telekenesis = new Telekenesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), PLUGIN_ENCHANTMENT_TELEKENESIS.toLowerCase()));
+    public static Telekinesis telekinesis = new Telekinesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), PLUGIN_ENCHANTMENT_TELEKINESIS.toLowerCase()));
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
@@ -224,7 +224,7 @@ public class RelluEssentials extends JavaPlugin {
 
     private void enchantmentManager() {
         registerEnchants(autosmelt);
-        registerEnchants(telekenesis);
+        registerEnchants(telekinesis);
     }
 
     private void eventManager() {
@@ -258,7 +258,7 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new Ev_TreeFeller(),      this); // @TODO Big Bug Wrong implementation
         pm.registerEvents(new Ev_AutoReplant(),     this);
         pm.registerEvents(new Ev_AutoSmelt(),       this);
-        pm.registerEvents(new Ev_Telekenesis(),     this);
+        pm.registerEvents(new Ev_Telekinesis(),     this);
     }
 
     private void boardManager() {

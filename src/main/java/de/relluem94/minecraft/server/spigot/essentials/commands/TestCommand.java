@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekenesis;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekinesis;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.MobHelper;
 import java.util.List;
 import org.bukkit.Material;
@@ -61,10 +61,10 @@ public class TestCommand implements CommandExecutor {
                         } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT)) {
                             autosmelt.addTo(p.getInventory().getItemInMainHand());
                         } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE)) {
-                            telekenesis.addTo(p.getInventory().getItemInMainHand());
+                            telekinesis.addTo(p.getInventory().getItemInMainHand());
                         } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT)) {
                             autosmelt.removeFrom(p.getInventory().getItemInMainHand());
-                            telekenesis.removeFrom(p.getInventory().getItemInMainHand());
+                            telekinesis.removeFrom(p.getInventory().getItemInMainHand());
 
                             //////////////////////////////////////////////////////////////
                             //FOR TEST WITH LORE ACTIVATE THIS BLOCK                    //

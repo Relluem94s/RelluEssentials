@@ -1,8 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.enchantment;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_COLOR;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKENESIS_LORE;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
 import java.util.ArrayList;
@@ -12,20 +10,22 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKINESIS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKINESIS_LORE;
 
 /**
  *
  * @author rellu
  */
-public class Telekenesis extends Enchantment implements IEnchantment {
+public class Telekinesis extends Enchantment implements IEnchantment {
 
-    public Telekenesis(NamespacedKey id) {
+    public Telekinesis(NamespacedKey id) {
         super(id);
     }
 
     @Override
     public String getName() {
-        return PLUGIN_ENCHANTMENT_TELEKENESIS.toLowerCase();
+        return PLUGIN_ENCHANTMENT_TELEKINESIS.toLowerCase();
     }
 
     @Override
@@ -72,12 +72,12 @@ public class Telekenesis extends Enchantment implements IEnchantment {
             lore = im.getLore();
             lore.add(lore.get(lore.size() - 1));
             lore.add(lore.get(lore.size() - 1));
-            lore.set(lore.size() - 3, PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKENESIS);
-            lore.set(lore.size() - 2, PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
+            lore.set(lore.size() - 3, PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKINESIS);
+            lore.set(lore.size() - 2, PLUGIN_ENCHANTMENT_TELEKINESIS_LORE);
         } else {
             lore = new ArrayList();
-            lore.add(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKENESIS);
-            lore.add(PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
+            lore.add(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKINESIS);
+            lore.add(PLUGIN_ENCHANTMENT_TELEKINESIS_LORE);
             lore.add(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
         }
 
@@ -91,8 +91,8 @@ public class Telekenesis extends Enchantment implements IEnchantment {
         i.removeEnchantment(this);
         ItemMeta im = i.getItemMeta();
         List<String> lore = im.getLore();
-        lore.remove(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKENESIS);
-        lore.remove(PLUGIN_ENCHANTMENT_TELEKENESIS_LORE);
+        lore.remove(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKINESIS);
+        lore.remove(PLUGIN_ENCHANTMENT_TELEKINESIS_LORE);
         im.setLore(lore);
         i.setItemMeta(im);
     }
