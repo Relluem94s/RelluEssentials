@@ -141,6 +141,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_NAME_ROLLBACK_UNDO = "undo";
     public static final String PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER = "player";
     public static final String PLUGIN_COMMAND_NAME_SPAWN = "spawn";
+    public static final String PLUGIN_COMMAND_NAME_WORLD = "world";
     public static final String PLUGIN_COMMAND_NAME_SPEED = "speed";
     public static final String PLUGIN_COMMAND_NAME_STORM = "storm";
     public static final String PLUGIN_COMMAND_NAME_SUICIDE = "suicide";
@@ -247,6 +248,9 @@ public class Strings {
     public static final String PLUGIN_COMMAND_RENAME_AIR = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du kannst Luft nicht umbenennen! ";
     public static final String PLUGIN_COMMAND_RENAME = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast dein Gegenstand umbenannt!";
 
+    public static final String PLUGIN_COMMAND_WORLD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Folgende Welten gibt es:";
+    public static final String PLUGIN_COMMAND_WORLD_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Die Welt " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " existiert nicht";
+    
     public static final String PLUGIN_COMMAND_POKE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze /poke " + PLUGIN_COMMAND_ARG_COLOR + "<Name>" + PLUGIN_COMMAND_COLOR + " um einen Spieler anzustubsen";
     public static final String PLUGIN_COMMAND_POKE_TITLE = "§4Buuuh";
     public static final String PLUGIN_COMMAND_POKE_SUBTITLE = "~~~~~~~~~~~~~~";
