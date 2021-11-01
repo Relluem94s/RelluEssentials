@@ -128,5 +128,8 @@ commands:
     ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj:            
         description: not a command
         usage: /ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj
+    gamerules:
+        description: shows gamerules from world the sender is in
+        usage: /gamerules
 
 
