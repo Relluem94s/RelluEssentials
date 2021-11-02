@@ -159,7 +159,7 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        ChatHelper.consoleSendMessage(PLUGIN_PREFIX, PLUGIN_STOP_MESSAGE);
+        ChatHelper.consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_STOP_MESSAGE);
         try {
             configManager(false);
         } catch (IOException ex) {
@@ -174,28 +174,28 @@ public class RelluEssentials extends JavaPlugin {
         
         start = Calendar.getInstance().getTimeInMillis();
         consoleSendMessage(PLUGIN_COMMAND_COLOR, PLUGIN_BORDER);
-        consoleSendMessage(PLUGIN_PREFIX, "");
-        consoleSendMessage(PLUGIN_PREFIX, "");
-        consoleSendMessage(PLUGIN_PREFIX, PLUGIN_START_MESSAGE);
-        consoleSendMessage(PLUGIN_PREFIX, "");
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_START_MESSAGE);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     }
 
     private void stopLoading() {
-        consoleSendMessage(PLUGIN_PREFIX, "");
-        consoleSendMessage(PLUGIN_PREFIX, PLUGIN_COMMAND_COLOR + String.format(PLUGIN_STARTTIME, Calendar.getInstance().getTimeInMillis() - start));
-        consoleSendMessage(PLUGIN_PREFIX, "");
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + String.format(PLUGIN_STARTTIME, Calendar.getInstance().getTimeInMillis() - start));
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
         consoleSendMessage(PLUGIN_COMMAND_COLOR + PLUGIN_BORDER, "");
     }
 
     private void configManager(boolean enable) throws IOException {
-        consoleSendMessage(PLUGIN_PREFIX, PLUGIN_COMMAND_COLOR + LANG_LOADING_CONFIGS);
         /*  Config */
         if (enable) {
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_LOADING_CONFIGS);
             this.saveDefaultConfig();
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_CONFIGS_LOADED);
         } else {
             this.saveConfig();
         }
-        consoleSendMessage(PLUGIN_PREFIX, PLUGIN_COMMAND_COLOR + LANG_CONFIGS_LOADED);
     }
 
     public static void reloadConfigs() {
@@ -203,7 +203,7 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void commandManager() {
-        consoleSendMessage(PLUGIN_PREFIX, PLUGIN_COMMAND_COLOR + LANG_REGISTER_COMMANDS);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_COMMANDS);
         /*	Commands	*/
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_0   )).setExecutor(new GameMode()               );
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_1   )).setExecutor(new GameMode()               );
@@ -250,7 +250,7 @@ public class RelluEssentials extends JavaPlugin {
         // @TODO add Marriage
         // @TODO Fix Command execution for command Blocks
         
-        consoleSendMessage(PLUGIN_PREFIX, PLUGIN_COMMAND_COLOR + LANG_COMMANDS_REGISTERED);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_COMMANDS_REGISTERED);
     }
 
     private void enchantmentManager() {
@@ -259,7 +259,7 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void eventManager() {
-        consoleSendMessage(PLUGIN_PREFIX, PLUGIN_COMMAND_COLOR + LANG_REGISTER_EVENTS);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_EVENTS);
         /*	Events	*/
         pm.registerEvents(new BetterChatFormat(),   this);
         pm.registerEvents(new BetterPlayerJoin(),   this);
@@ -291,7 +291,7 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new Ev_AutoReplant(),     this);
         pm.registerEvents(new Ev_AutoSmelt(),       this);
         pm.registerEvents(new Ev_Telekinesis(),     this);
-        consoleSendMessage(PLUGIN_PREFIX, PLUGIN_COMMAND_COLOR + LANG_EVENTS_REGISTERED);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_EVENTS_REGISTERED);
     }
 
     private void boardManager() {
@@ -324,9 +324,9 @@ public class RelluEssentials extends JavaPlugin {
             f.setAccessible(true);
             f.set(null, true);
             Enchantment.registerEnchantment(ench);
-            consoleSendMessage(PLUGIN_PREFIX, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            consoleSendMessage(PLUGIN_PREFIX, ex.getMessage() + ": " + ench.getKey().toString());
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + ench.getKey().toString());
         }
     }
 
