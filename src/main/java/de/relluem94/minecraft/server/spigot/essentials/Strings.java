@@ -21,6 +21,7 @@ public class Strings {
     public static final String PLUGIN_MESSAGE_COLOR = "§f";
     public static final String PLUGIN_START_MESSAGE = "starts configuring ...";
     public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
+    public static final String PLUGIN_STARTTIME = "wurde in %s ms gestartet!";
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
     
     public static final String LANG_LOADING_CONFIGS = "Configs werden geladen!";
