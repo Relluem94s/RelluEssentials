@@ -10,15 +10,16 @@ public class Strings {
      * ****************************************************************************
      */
     public static final String PLUGIN_NAME = "RelluEssentials";
-    public static final String PLUGIN_NAME_CONSOLE = "[" + PLUGIN_NAME + "] ";
-    public static final String PLUGIN_PREFIX = "§o§l§4§8Rellu§cEssentials§r§f";
-    public static final String PLUGIN_SPACER = "§7 >> §f";
-    public static final String PLUGIN_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
     public static final String PLUGIN_SPACER_CHANNEL = " >> §f";
     public static final String PLUGIN_COMMAND_COLOR = "§f";
     public static final String PLUGIN_COMMAND_NAME_COLOR = "§b";
     public static final String PLUGIN_COMMAND_ARG_COLOR = "§b";
     public static final String PLUGIN_MESSAGE_COLOR = "§f";
+    public static final String PLUGIN_PREFIX = "§o§l§4§8Rellu§cEssentials§r" + PLUGIN_MESSAGE_COLOR;
+    public static final String PLUGIN_NAME_CONSOLE = PLUGIN_MESSAGE_COLOR + "[" + PLUGIN_PREFIX + PLUGIN_MESSAGE_COLOR + "] ";
+    public static final String PLUGIN_SPACER = "§7 >> " + PLUGIN_MESSAGE_COLOR;
+    public static final String PLUGIN_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
+    
     public static final String PLUGIN_START_MESSAGE = "starts configuring ...";
     public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
     public static final String PLUGIN_STARTTIME = "wurde in %s ms gestartet!";
