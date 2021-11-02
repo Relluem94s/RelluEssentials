@@ -125,7 +125,7 @@ public class DatabaseHelper {
 
     public PluginInformationEntry getPluginInformation() {
         try (
-                Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port, user, password)) {
+                Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port + "?useSSL=false", user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPluginInformation.sql", StandardCharsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
