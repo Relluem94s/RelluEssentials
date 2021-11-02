@@ -13,6 +13,7 @@ public class Strings {
     public static final String PLUGIN_NAME_CONSOLE = "[" + PLUGIN_NAME + "] ";
     public static final String PLUGIN_PREFIX = "§o§l§4§8Rellu§cEssentials§r§f";
     public static final String PLUGIN_SPACER = "§7 >> §f";
+    public static final String PLUGIN_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
     public static final String PLUGIN_SPACER_CHANNEL = " >> §f";
     public static final String PLUGIN_COMMAND_COLOR = "§f";
     public static final String PLUGIN_COMMAND_NAME_COLOR = "§b";
@@ -21,6 +22,13 @@ public class Strings {
     public static final String PLUGIN_START_MESSAGE = "starts configuring ...";
     public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
+    
+    public static final String LANG_LOADING_CONFIGS = "Configs werden geladen!";
+    public static final String LANG_CONFIGS_LOADED = "Configs sind geladen!";
+    public static final String LANG_REGISTER_EVENTS = "Registriere Events!";
+    public static final String LANG_EVENTS_REGISTERED = "Events erfolgreich regestriert!";
+    public static final String LANG_REGISTER_COMMANDS = "Registriere Befehle!";
+    public static final String LANG_COMMANDS_REGISTERED = "Befehle erfolgreich regestriert!";
 
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
 
