@@ -3,7 +3,7 @@
     <groupId>de.relluem94</groupId>
     <artifactId>relluessentials</artifactId>
     <name>RelluEssentials</name>
-    <version>1.25</version>
+    <version>1.26</version>
     <url>https://github.com/Relluem94s/RelluEssentials</url>
     <properties>
         <plugin.apiVersion>1.16</plugin.apiVersion>
