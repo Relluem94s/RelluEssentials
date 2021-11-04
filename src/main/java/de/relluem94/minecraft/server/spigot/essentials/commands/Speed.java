@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,6 +7,9 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SPEED;
 
 public class Speed implements CommandExecutor {
 
@@ -42,46 +43,6 @@ public class Speed implements CommandExecutor {
     }
 
     private float parseSpeed(String arg) {
-        int in = Integer.parseInt(arg);
-        float speed;
-        switch (in) {
-            case 0:
-                speed = 0.0F;
-                break;
-            case 1:
-                speed = 0.1F;
-                break;
-            case 2:
-                speed = 0.2F;
-                break;
-            case 3:
-                speed = 0.3F;
-                break;
-            case 4:
-                speed = 0.4F;
-                break;
-            case 5:
-                speed = 0.5F;
-                break;
-            case 6:
-                speed = 0.6F;
-                break;
-            case 7:
-                speed = 0.7F;
-                break;
-            case 8:
-                speed = 0.8F;
-                break;
-            case 9:
-                speed = 0.9F;
-                break;
-            case 10:
-                speed = 1.0F;
-                break;
-            default:
-                speed = 0.1F;
-                break;
-        }
-        return speed;
+        return Integer.parseInt(arg)/10;
     }
 }
