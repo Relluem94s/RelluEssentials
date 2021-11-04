@@ -10,13 +10,14 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_CRAFT;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class PortableCraftingBench implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_CRAFT)) {
-            if (sender instanceof Player) {
+            if (isPlayer(sender)) {
                 Player p = (Player) sender;
                 if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
                     p.openWorkbench(p.getLocation(), true);
