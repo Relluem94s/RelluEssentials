@@ -23,7 +23,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 
 public class TestCommand implements CommandExecutor {
@@ -85,7 +88,11 @@ public class TestCommand implements CommandExecutor {
                             //FOR TEST FINISHED                                         //
                             //////////////////////////////////////////////////////////////
                         } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS)) {
-                            WorldHelper.cloneWorld("world2", "world");
+                            try {
+                                WorldHelper.cloneWorld("world2", "world");
+                            } catch (WorldNotFoundException ex) {
+                                Logger.getLogger(TestCommand.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                             p.teleport(Bukkit.getWorld("world2").getSpawnLocation());
                         }
                     }
