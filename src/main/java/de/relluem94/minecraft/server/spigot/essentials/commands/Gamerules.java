@@ -1,17 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.GameRule;
+import org.bukkit.World;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import org.bukkit.GameRule;
-import org.bukkit.World;
+
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMERULES;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
 
 public class Gamerules implements CommandExecutor {
 
@@ -19,7 +22,7 @@ public class Gamerules implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMERULES)) {
             if (args.length == 0) {
-                if (sender instanceof Player) {
+                if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         World world = p.getWorld();
