@@ -61,12 +61,7 @@ public class Strings {
     public static final String PLUGIN_ENCHANTMENT_TELEKINESIS_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "All drops from Blocks broken and Mobs killed are teleported directly into your Inventory";
 
     
-    /********************************************************************************/
-    /*                           DATABASE   STUFF                                   */
-    /********************************************************************************/
-    
-    public static final String PLUGIN_DATABASE_VERSION = "";
-    public static final String PLUGIN_DATABASE_NAME = "rellu_essentials";
+
 
     
     /********************************************************************************/
