@@ -14,6 +14,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dB
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_NICK;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Nick implements CommandExecutor {
 
@@ -21,7 +22,7 @@ public class Nick implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_NICK)) {
             if (args.length == 2) {
-                if (sender instanceof Player) {
+                if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
