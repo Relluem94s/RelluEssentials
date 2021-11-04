@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -48,6 +49,14 @@ public class WorldHelper {
 
     public static boolean isInWorld(Entity e, World m) {
         return e.getWorld().equals(m);
+    }
+    
+    public static void createWorld(String worldName, WorldType type, World.Environment world_environment, boolean structures){
+        WorldCreator wc = new WorldCreator(worldName);
+        wc.environment(world_environment);
+        wc.type(type);
+        wc.generateStructures(structures);
+        Bukkit.createWorld(wc);
     }
     
     public static void loadWorld(String worldName){
