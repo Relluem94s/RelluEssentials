@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EVENT_SKILL_SALVAGE_DONE;
-
 import java.util.Map;
 
 import org.bukkit.Material;
@@ -19,6 +17,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.skills.enums.ItemValues;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_SKILL_SALVAGE_DONE;
 
 public class Ev_Salvage implements Listener {
 
@@ -41,12 +41,12 @@ public class Ev_Salvage implements Listener {
                         is = new ItemStack(iv.getMaterial(), iv.getValue());
                         i.addItem(is);
                         Map<Enchantment, Integer> enchants = im.getEnchants();
-                        if (enchants.size() != 0) {
+                        if (!enchants.isEmpty()) {
                             ItemStack book = new ItemStack(Material.ENCHANTED_BOOK, 1);
                             ItemMeta im_book = book.getItemMeta();
-                            for (Map.Entry<Enchantment, Integer> em : enchants.entrySet()) {
+                            enchants.entrySet().forEach(em -> {
                                 im_book.addEnchant(em.getKey(), em.getValue(), true);
-                            }
+                            });
                             book.setItemMeta(im_book);
                             i.addItem(book);
                         }
