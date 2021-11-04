@@ -4,7 +4,7 @@
   <groupId>de.relluem94</groupId>
   <artifactId>relluessentials</artifactId>
   <name>RelluEssentials</name>
-  <version>1.26</version>
+  <version>1.27</version>
   <url>https://github.com/Relluem94s/RelluEssentials</url>
   <scm>
     <connection>scm:git:git@github.com:Relluem94s/RelluEssentials.git</connection>
