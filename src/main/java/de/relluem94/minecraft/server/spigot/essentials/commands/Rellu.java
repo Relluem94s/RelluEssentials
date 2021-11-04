@@ -13,6 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_RELLU;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_RELLU_PING;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Rellu implements CommandExecutor {
 
@@ -21,7 +22,7 @@ public class Rellu implements CommandExecutor {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_RELLU)) {
             switch (args.length) {
                 case 1:
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_RELLU_PING)) {
@@ -42,7 +43,7 @@ public class Rellu implements CommandExecutor {
                     if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_RELLU_PING)) {
                         Player target = Bukkit.getPlayer(args[1]);
                         if (target != null) {
-                            if (sender instanceof Player) {
+                            if (isPlayer(sender)) {
                                 Player p = (Player) sender;
                                 int ping = ((CraftPlayer) target).getHandle().ping;
                                 p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING_OTHER, target.getCustomName(), ping));
@@ -52,7 +53,7 @@ public class Rellu implements CommandExecutor {
                     }
                     break;
                 default:
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             p.sendMessage(PLUGIN_COMMAND_RELLU_OPTIONS);
