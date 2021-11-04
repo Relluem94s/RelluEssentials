@@ -14,6 +14,7 @@ import static de.relluem94.rellulib.utils.StringUtils.*;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TITLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Title implements CommandExecutor {
 
@@ -23,7 +24,7 @@ public class Title implements CommandExecutor {
             if (args.length > 2) {
                 Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
                 if (target != null) {
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                             target.sendTitle(replaceColor(args[1]), replaceColor(implode(2, args)), 5, 80, 5);
