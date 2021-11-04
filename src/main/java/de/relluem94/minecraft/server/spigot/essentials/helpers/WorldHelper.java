@@ -36,10 +36,16 @@ public class WorldHelper {
         return worlds.contains(p.getWorld().getName());
     }
 
-    public static boolean isInWorld(CommandSender sender, World w) {
+    /**
+     * Checks if CommandSender is in World
+     * @param sender CommandSender
+     * @param world World
+     * @return boolean
+     */
+    public static boolean isInWorld(CommandSender sender, World world) {
         if (TypeHelper.isPlayer(sender)) {
             Player p = (Player) sender;
-            return isInWorld(p, w);
+            return isInWorld(p, world);
         } else {
             return true;
         }
