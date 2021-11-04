@@ -1,10 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemType;
 import java.util.Arrays;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -14,6 +9,28 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemType;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSMELTER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSMELTER_FURNACE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSMELTER_TANK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDBOOTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDBOOTS_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDBOOTS_LORE2;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDSAILOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDSAILOR_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDSAILOR_LORE2;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_INGREDIENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_BOOTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_CHESTPLATE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_HELMET;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_LEGGINGS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_SHIELD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_SWORD;
 
 /**
  *
