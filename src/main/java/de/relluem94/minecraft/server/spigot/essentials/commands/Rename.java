@@ -16,6 +16,7 @@ import static de.relluem94.rellulib.utils.StringUtils.*;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_RENAME;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Rename implements CommandExecutor {
 
@@ -23,7 +24,7 @@ public class Rename implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_RENAME)) {
             if (args.length >= 1) {
-                if (sender instanceof Player) {
+                if (isPlayer(sender)) {
                     return rename((Player) sender, args);
                 }
             } else {
