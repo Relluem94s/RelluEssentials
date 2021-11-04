@@ -12,6 +12,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EXCEPTION_WORLD_NOT_LOADED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_EXCEPTION_WORLD_NOT_FOUND;
 
 /**
  *
@@ -122,7 +124,7 @@ public class WorldHelper {
             Bukkit.unloadWorld(worldName, true);
         }
         else{
-            throw new WorldNotLoadedException("Can't unload a World (" + worldName + ") that is not loaded. ");
+            throw new WorldNotLoadedException(String.format(PLUGIN_EXCEPTION_WORLD_NOT_LOADED, worldName));
         }
     }
     
@@ -139,7 +141,7 @@ public class WorldHelper {
             Bukkit.createWorld(wc);
         }
         else{
-            throw new WorldNotFoundException("No World found with name: " + worldName);
+            throw new WorldNotFoundException(String.format(PLUGIN_EXCEPTION_WORLD_NOT_FOUND, copyWorldName));
         }
     }
 }
