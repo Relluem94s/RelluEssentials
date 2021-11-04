@@ -2,13 +2,10 @@ package de.relluem94.minecraft.server.spigot.essentials;
 
 public class Strings {
 
-    /**
-     * ****************************************************************************
-     */
-    /*                             PLUGIN   STUFF                                  */
-    /**
-     * ****************************************************************************
-     */
+    /********************************************************************************/
+    /*                             PLUGIN   STUFF                                   */
+    /********************************************************************************/
+    
     public static final String PLUGIN_NAME = "RelluEssentials";
     public static final String PLUGIN_SPACER_CHANNEL = " >> §f";
     public static final String PLUGIN_COMMAND_COLOR = "§f";
@@ -33,14 +30,12 @@ public class Strings {
     public static final String LANG_COMMANDS_REGISTERED = "Befehle erfolgreich regestriert!";
 
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
-
-    /**
-     * ****************************************************************************
-     */
-    /*                              ITEM   STUFF                                   */
-    /**
-     * ****************************************************************************
-     */
+    
+    
+    /********************************************************************************/
+    /*                              ITEM   STUFF                                    */
+    /********************************************************************************/
+    
     public static final String PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS = "cloud_boots";
     public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE = "smelter_pickaxe";
     public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_TANK = "smelter_tank";
@@ -67,13 +62,11 @@ public class Strings {
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE1 = "§bHeld in Off Hand grants gliding abillity.";
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE2 = "§bAlso reduces Fall Damage by 50%";
 
-    /**
-     * ****************************************************************************
-     */
-    /*                          ENCHANTMENT   STUFF                                */
-    /**
-     * ****************************************************************************
-     */
+    
+    /********************************************************************************/
+    /*                          ENCHANTMENT   STUFF                                 */
+    /********************************************************************************/
+    
     public static final String PLUGIN_ENCHANTMENT_COLOR = "§8";
     public static final String PLUGIN_ENCHANTMENT_LORE_COLOR = "§7§o  ";
 
@@ -90,23 +83,18 @@ public class Strings {
     public static final String PLUGIN_ENCHANTMENT_TELEKINESIS = "Telekinesis";
     public static final String PLUGIN_ENCHANTMENT_TELEKINESIS_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "All drops from Blocks broken and Mobs killed are teleported directly into your Inventory";
 
-    /**
-     * ****************************************************************************
-     */
-    /*                           DATABASE   STUFF                                  */
-    /**
-     * ****************************************************************************
-     */
+    
+    /********************************************************************************/
+    /*                           DATABASE   STUFF                                   */
+    /********************************************************************************/
+    
     public static final String PLUGIN_DATABASE_VERSION = "";
     public static final String PLUGIN_DATABASE_NAME = "rellu_essentials";
 
-    /**
-     * ****************************************************************************
-     */
-    /*                            COMMAND   STUFF                                  */
-    /**
-     * ****************************************************************************
-     */
+    
+    /********************************************************************************/
+    /*                            COMMAND   STUFF                                   */
+    /********************************************************************************/
     
     public static final String PLUGIN_COMMAND_NAME_AFK = "afk";
     public static final String PLUGIN_COMMAND_NAME_BROADCAST = "broadcast";
@@ -284,13 +272,11 @@ public class Strings {
     public static final String PLUGIN_COMMAND_NOT_A_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du bist leider kein Spieler!";
     public static final String PLUGIN_COMMAND_TO_LESS_ARGUMENTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Zu wenig Argumente!";
 
-    /**
-     * ****************************************************************************
-     */
-    /*                             EVENT   STUFF                                   */
-    /**
-     * ****************************************************************************
-     */
+    
+    /********************************************************************************/
+    /*                             EVENT   STUFF                                    */
+    /********************************************************************************/
+    
     public static final String PLUGIN_EVENT_JOIN_MESSAGE = "§2[\u2726] " + PLUGIN_MESSAGE_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " hat den Server betreten.";
     public static final String PLUGIN_EVENT_QUIT_MESSAGE = "§4[\u274C] " + PLUGIN_MESSAGE_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " hat den Server verlassen.";
     public static final String PLUGIN_EVENT_DEATH = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du starbst bei " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + PLUGIN_COMMAND_WHERE_STRING + PLUGIN_COMMAND_COLOR;
@@ -300,5 +286,5 @@ public class Strings {
     public static final String PLUGIN_EVENT_SKILL_REPAIR_WARNING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du benötigst mehr" + PLUGIN_COMMAND_ARG_COLOR + " %s " + PLUGIN_COMMAND_COLOR + "um diesen Gegenstand zu reparieren!";
     public static final String PLUGIN_EVENT_SKILL_SALVAGE_DONE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast" + PLUGIN_COMMAND_ARG_COLOR + " %s " + PLUGIN_COMMAND_COLOR + "erhalten!";
 
-    //TODO Have to do a Language Pack to load german and english translations via config. Maybe default en and user customizable
+    // @TODO Have to do a Language Pack to load german and english translations via config. Maybe default en and user customizable
 }
