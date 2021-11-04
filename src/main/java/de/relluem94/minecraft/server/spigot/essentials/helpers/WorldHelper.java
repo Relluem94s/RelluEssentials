@@ -61,6 +61,10 @@ public class WorldHelper {
         Bukkit.createWorld(wc);
     }
     
+    /**
+     * Creates a World for the Bukkit Server
+     * @param worldName String
+     */
     public static void loadWorld(String worldName){
         WorldCreator wc = new WorldCreator(worldName);
         Bukkit.createWorld(wc);
