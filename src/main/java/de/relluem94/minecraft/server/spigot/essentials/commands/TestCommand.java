@@ -1,10 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekinesis;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.MobHelper;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,19 +15,23 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_RELLU;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS;
+
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.bukkit.Bukkit;
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.MobHelper;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekinesis;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_RELLU;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS;
 
 public class TestCommand implements CommandExecutor {
 
