@@ -53,6 +53,13 @@ public class WorldHelper {
         return e.getWorld().equals(m);
     }
     
+    /**
+     * Creates a new World for the Bukkit Server
+     * @param worldName String
+     * @param type WorldType
+     * @param world_environment World.Environment
+     * @param structures boolean
+     */
     public static void createWorld(String worldName, WorldType type, World.Environment world_environment, boolean structures){
         WorldCreator wc = new WorldCreator(worldName);
         wc.environment(world_environment);
