@@ -2,19 +2,22 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import java.util.HashMap;
 import java.util.Map;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.rellulib.utils.StringUtils.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import org.bukkit.command.ConsoleCommandSender;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MSG;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_REPLY;
+import static de.relluem94.rellulib.utils.StringUtils.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Message implements CommandExecutor {
 
@@ -23,7 +26,7 @@ public class Message implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_MSG)) {
-            if (sender instanceof Player) {
+            if (isPlayer(sender)) {
                 Player p = (Player) sender;
                 if (args.length > 1) {
                     Player target = Bukkit.getPlayer(args[0]);
@@ -39,7 +42,7 @@ public class Message implements CommandExecutor {
                 }
             }
         } else if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_REPLY)) {
-            if (sender instanceof Player) {
+            if (isPlayer(sender)) {
                 Player p = (Player) sender;
                 if (reply.containsKey(p)) {
                     Player target = reply.get(p);
@@ -64,7 +67,7 @@ public class Message implements CommandExecutor {
     }
 
     private boolean msg(CommandSender sender, Player target, String[] args, int start) {
-        if (sender instanceof Player) {
+        if (isPlayer(sender)) {
             Player p = (Player) sender;
             if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                 String message = implode(start, args);
