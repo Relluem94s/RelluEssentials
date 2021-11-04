@@ -32,13 +32,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class TestCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND)) {
-            if (sender instanceof Player) {
+            if (isPlayer(sender)) {
                 Player p = (Player) sender;
                 if (p.getName().equalsIgnoreCase("Relluem94")) {
                     if (args.length == 1) {
