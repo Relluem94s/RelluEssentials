@@ -1,19 +1,21 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.rellulib.utils.StringUtils.*;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+
+import static de.relluem94.rellulib.utils.StringUtils.*;
+
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_RENAME;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
 public class Rename implements CommandExecutor {
 
