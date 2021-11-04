@@ -68,6 +68,11 @@ public class WorldHelper {
         Bukkit.unloadWorld(worldName, true);
     }
     
+    /**
+     * Copies a World from another
+     * @param worldName String
+     * @param copyWorldName String
+     */
     public static void cloneWorld(String worldName, String copyWorldName){
         WorldCreator wc = new WorldCreator(worldName);
         if(Bukkit.getWorld(copyWorldName) != null){
