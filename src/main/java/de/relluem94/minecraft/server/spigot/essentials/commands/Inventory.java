@@ -11,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_INVENTORY;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Inventory implements CommandExecutor {
 
@@ -18,7 +19,7 @@ public class Inventory implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_INVENTORY)) {
             if (args.length == 0) {
-                if (sender instanceof Player) {
+                if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
                         p.openInventory(p.getInventory());
@@ -32,7 +33,7 @@ public class Inventory implements CommandExecutor {
             } else {
                 Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
                 if (target != null) {
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                             p.openInventory(target.getInventory());
