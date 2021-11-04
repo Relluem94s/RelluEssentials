@@ -65,12 +65,17 @@ public class WorldHelper {
         Bukkit.createWorld(wc);
     }
     
+    /**
+     * Unloads a World from the Bukkit Server
+     * @param worldName String
+     * @param save boolean
+     */
     public static void unloadWorld(String worldName, boolean save){
         Bukkit.unloadWorld(worldName, true);
     }
     
     /**
-     * Copies a World from another
+     * Copies a World from another from the Bukkit Server
      * @param worldName String
      * @param copyWorldName String
      * @throws de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException if World was not found
