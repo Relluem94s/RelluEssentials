@@ -11,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SPAWN;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Spawn implements CommandExecutor {
 
@@ -18,7 +19,7 @@ public class Spawn implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SPAWN)) {
             if (args.length == 0) {
-                if (sender instanceof Player) {
+                if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                         p.teleport(p.getWorld().getSpawnLocation());
@@ -32,7 +33,7 @@ public class Spawn implements CommandExecutor {
             } else {
                 Player target = Bukkit.getPlayer(args[0]);
                 if (target != null) {
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                             target.teleport(target.getWorld().getSpawnLocation());
