@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import java.util.List;
 import java.util.Objects;
 import org.bukkit.Bukkit;
@@ -69,9 +70,15 @@ public class WorldHelper {
      * Unloads a World from the Bukkit Server
      * @param worldName String
      * @param save boolean
+     * @throws de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException if World is not loaded
      */
-    public static void unloadWorld(String worldName, boolean save){
-        Bukkit.unloadWorld(worldName, true);
+    public static void unloadWorld(String worldName, boolean save) throws WorldNotLoadedException{
+        if(Bukkit.getWorld(worldName) != null){
+            Bukkit.unloadWorld(worldName, true);
+        }
+        else{
+            throw new WorldNotLoadedException("Can't unload a World (" + worldName + ") that is not loaded. ");
+        }
     }
     
     /**
