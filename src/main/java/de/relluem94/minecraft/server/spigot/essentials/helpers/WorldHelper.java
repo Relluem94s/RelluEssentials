@@ -29,10 +29,9 @@ public class WorldHelper {
         return player.getWorld().getName().equalsIgnoreCase(worldName);
     }
     
-    public static boolean isInWorld(CommandSender sender, String m) {
+    public static boolean isInWorld(CommandSender sender, String worldName) {
         if (TypeHelper.isPlayer(sender)) {
-            Player p = (Player) sender;
-            return p.getWorld().getName().equalsIgnoreCase(m);
+            return isInWorld((Player) sender, worldName);
         } else {
             return true;
         }
@@ -56,8 +55,7 @@ public class WorldHelper {
      */
     public static boolean isInWorld(CommandSender sender, World world) {
         if (TypeHelper.isPlayer(sender)) {
-            Player p = (Player) sender;
-            return isInWorld(p, world);
+            return isInWorld((Player) sender, world);
         } else {
             return true;
         }
