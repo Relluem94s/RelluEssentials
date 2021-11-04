@@ -60,5 +60,4 @@ public class Cookies implements CommandExecutor {
         is.setItemMeta(im);
         return is;
     }
-
 }
