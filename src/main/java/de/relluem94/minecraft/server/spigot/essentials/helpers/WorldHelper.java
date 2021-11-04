@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
 import java.util.List;
 import java.util.Objects;
 import org.bukkit.Bukkit;
@@ -72,13 +73,16 @@ public class WorldHelper {
      * Copies a World from another
      * @param worldName String
      * @param copyWorldName String
+     * @throws de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException if World was not found
      */
-    public static void cloneWorld(String worldName, String copyWorldName){
+    public static void cloneWorld(String worldName, String copyWorldName) throws WorldNotFoundException{
         WorldCreator wc = new WorldCreator(worldName);
         if(Bukkit.getWorld(copyWorldName) != null){
             wc.copy(Objects.requireNonNull(Bukkit.getWorld(copyWorldName)));
+            Bukkit.createWorld(wc);
         }
-        
-        Bukkit.createWorld(wc);
+        else{
+            throw new WorldNotFoundException("No World found with name: " + worldName);
+        }
     }
 }
