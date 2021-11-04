@@ -1,14 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationEntryList;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,6 +7,20 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationEntryList;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_DELETE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_LIST;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_SET;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Home implements CommandExecutor {
 
@@ -24,7 +29,7 @@ public class Home implements CommandExecutor {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME)) {
             switch (args.length) {
                 case 0:
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                             if (p.getBedSpawnLocation() != null) {
@@ -42,7 +47,7 @@ public class Home implements CommandExecutor {
                     break;
                 case 1:
                     if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_LIST)) {
-                        if (sender instanceof Player) {
+                        if (isPlayer(sender)) {
                             Player p = (Player) sender;
                             PlayerEntry pe = playerEntryList.get(p.getUniqueId());
 
@@ -61,7 +66,7 @@ public class Home implements CommandExecutor {
                             return true;
                         }
                     } else {
-                        if (sender instanceof Player) {
+                        if (isPlayer(sender)) {
                             Player p = (Player) sender;
                             PlayerEntry pe = playerEntryList.get(p.getUniqueId());
                             LocationEntry le = new LocationEntry();
@@ -82,7 +87,7 @@ public class Home implements CommandExecutor {
                     }
                     break;
                 case 2:
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
 
