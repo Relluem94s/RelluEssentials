@@ -10,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_NIGHT;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Night implements CommandExecutor {
 
@@ -17,7 +18,7 @@ public class Night implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_NIGHT)) {
             if (args.length == 0) {
-                if (sender instanceof Player) {
+                if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         p.getWorld().setTime(18000L);
