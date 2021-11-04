@@ -33,14 +33,6 @@ public class Strings {
           
     
     /********************************************************************************/
-    /*                         EXCEPTION   STUFF                                    */
-    /********************************************************************************/
-    
-    public static final String PLUGIN_EXCEPTION_WORLD_NOT_LOADED = "Can't unload a World (%s) that is not loaded.";
-    public static final String PLUGIN_EXCEPTION_WORLD_NOT_FOUND = "No World found with name: %s";
-
-    
-    /********************************************************************************/
     /*                          ENCHANTMENT   STUFF                                 */
     /********************************************************************************/
     
@@ -59,9 +51,6 @@ public class Strings {
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Smelts Ores and Blocks if mined with this Tool";
     public static final String PLUGIN_ENCHANTMENT_TELEKINESIS = "Telekinesis";
     public static final String PLUGIN_ENCHANTMENT_TELEKINESIS_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "All drops from Blocks broken and Mobs killed are teleported directly into your Inventory";
-
-    
-
 
     
     /********************************************************************************/
