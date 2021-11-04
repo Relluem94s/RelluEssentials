@@ -1,18 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static de.relluem94.rellulib.utils.StringUtils.*;
-
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+
+import static de.relluem94.rellulib.utils.StringUtils.*;
+
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TITLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
 public class Title implements CommandExecutor {
 
