@@ -22,6 +22,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ROLLBACK_UNDO;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Rollback implements CommandExecutor {
 
@@ -54,7 +55,7 @@ public class Rollback implements CommandExecutor {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK)) {
             switch (args.length) {
                 case 2:
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             UUID targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
@@ -76,7 +77,7 @@ public class Rollback implements CommandExecutor {
                     }
                     break;
                 case 3:
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER)) {
@@ -104,7 +105,7 @@ public class Rollback implements CommandExecutor {
                     }
                     break;
                 case 4:
-                    if (sender instanceof Player) {
+                    if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO) && args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER)) {
