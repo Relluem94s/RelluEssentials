@@ -45,8 +45,14 @@ public class WorldHelper {
         }
     }
 
-    public static boolean isInWorld(Block b, World m) {
-        return b.getWorld().equals(m);
+    /**
+     * Checks if Block is in World
+     * @param block Block
+     * @param world World
+     * @return boolean
+     */
+    public static boolean isInWorld(Block block, World world) {
+        return block.getWorld().equals(world);
     }
 
     /**
