@@ -7,17 +7,26 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_0;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_1_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_2;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_3;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class GameMode implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            if (sender instanceof Player) {
+            if (isPlayer(sender)) {
                 Player p = (Player) sender;
                 if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                     return gameMode(command, p);
@@ -29,7 +38,7 @@ public class GameMode implements CommandExecutor {
         } else {
             Player target = Bukkit.getPlayer(args[0]);
             if (target != null) {
-                if (sender instanceof Player) {
+                if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         return gameMode(command, target);
