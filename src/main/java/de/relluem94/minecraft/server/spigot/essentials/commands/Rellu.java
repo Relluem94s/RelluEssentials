@@ -1,16 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_RELLU;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_RELLU_PING;
 
 public class Rellu implements CommandExecutor {
 
