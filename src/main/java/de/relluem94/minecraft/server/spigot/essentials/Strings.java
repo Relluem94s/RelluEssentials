@@ -30,6 +30,14 @@ public class Strings {
     public static final String LANG_COMMANDS_REGISTERED = "Befehle erfolgreich regestriert!";
 
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
+          
+    
+    /********************************************************************************/
+    /*                         EXCEPTION   STUFF                                    */
+    /********************************************************************************/
+    
+    public static final String WORLD_NOT_LOADED_EXCEPTION = "Can't unload a World (%s) that is not loaded.";
+    public static final String WORLD_NOT_FOUND_EXCEPTION = "No World found with name: %s";
     
     
     /********************************************************************************/
