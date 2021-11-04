@@ -29,6 +29,12 @@ public class WorldHelper {
         return player.getWorld().getName().equalsIgnoreCase(worldName);
     }
     
+    /**
+     * Checks if Command Sender is in World with Name
+     * @param sender CommandSender
+     * @param worldName String
+     * @return boolean
+     */
     public static boolean isInWorld(CommandSender sender, String worldName) {
         if (TypeHelper.isPlayer(sender)) {
             return isInWorld((Player) sender, worldName);
