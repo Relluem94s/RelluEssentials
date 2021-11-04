@@ -36,8 +36,8 @@ public class Strings {
     /*                         EXCEPTION   STUFF                                    */
     /********************************************************************************/
     
-    public static final String WORLD_NOT_LOADED_EXCEPTION = "Can't unload a World (%s) that is not loaded.";
-    public static final String WORLD_NOT_FOUND_EXCEPTION = "No World found with name: %s";
+    public static final String PLUGIN_EXCEPTION_WORLD_NOT_LOADED = "Can't unload a World (%s) that is not loaded.";
+    public static final String PLUGIN_EXCEPTION_WORLD_NOT_FOUND = "No World found with name: %s";
     
     
     /********************************************************************************/
