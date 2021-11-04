@@ -49,8 +49,14 @@ public class WorldHelper {
         return b.getWorld().equals(m);
     }
 
-    public static boolean isInWorld(Entity e, World m) {
-        return e.getWorld().equals(m);
+    /**
+     * Checks if Entity is in World
+     * @param entity Entity
+     * @param world World
+     * @return boolean
+     */
+    public static boolean isInWorld(Entity entity, World world) {
+        return entity.getWorld().equals(world);
     }
     
     /**
