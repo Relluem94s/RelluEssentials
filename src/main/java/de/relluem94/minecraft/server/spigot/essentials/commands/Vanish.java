@@ -1,8 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,6 +8,10 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_VANISH;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 
 public class Vanish implements CommandExecutor {
 
