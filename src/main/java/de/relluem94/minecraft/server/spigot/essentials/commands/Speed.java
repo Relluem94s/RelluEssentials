@@ -44,6 +44,6 @@ public class Speed implements CommandExecutor {
     }
 
     private float parseSpeed(String arg) {
-        return Integer.parseInt(arg)/10;
+        return (float)Integer.parseInt(arg)/10;
     }
 }
