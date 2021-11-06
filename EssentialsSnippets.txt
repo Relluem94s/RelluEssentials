@@ -1943,50 +1943,6 @@ else if (cmd.getName().equalsIgnoreCase("kick")) {
 		}
 
 
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-else if (cmd.getName().equalsIgnoreCase("kopf")) {
-			if (hasPermission(sender, permmod + "kopf") == true){
-				if (args.length == 0) {
-					SendMessage(sender, prefix + "§6Nutze /kopf §c<Name> <Spieler>");
-				}
-				else if (args.length == 1) {
-					if(isPlayer(sender)){
-						Player p = (Player)sender;
-						
-						ItemStack is = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-						SkullMeta sm = (SkullMeta) is.getItemMeta();
-						sm.setOwner(args[0]);
-						sm.setLore(Arrays.asList("§6Erstellt von: §r" + p.getDisplayName()));
-						is.setItemMeta(sm);
-						p.getInventory().addItem(is);
-						SendMessage(sender, prefix + "§6Spieler Kopf von: §a" + args[0] + "§6 erzeugt");
-					}
-				}
-				else if (args.length == 2) {
-					if(Target(args[0]) != null){
-						Player p = Target(args[0]);
-						ItemStack is = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-						SkullMeta sm = (SkullMeta) is.getItemMeta();
-						sm.setOwner(args[0]);
-						sm.setLore(Arrays.asList("§6Erstellt von: §r" + p.getDisplayName()));
-						is.setItemMeta(sm);
-						p.getInventory().addItem(is);
-						SendMessage(sender, prefix + "§6Spieler Kopf von: §a" + args[0] + "§6 erzeugt");
-					}						
-				}
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-
-
-
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
