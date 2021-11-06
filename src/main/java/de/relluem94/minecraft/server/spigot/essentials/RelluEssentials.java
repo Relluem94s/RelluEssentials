@@ -157,6 +157,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_SMELTER_TANK;
+import de.relluem94.minecraft.server.spigot.essentials.events.SignActions;
+import de.relluem94.minecraft.server.spigot.essentials.events.SignClick;
 
 public class RelluEssentials extends JavaPlugin {
 
@@ -323,6 +325,8 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new PlayerMove(),         this);
         pm.registerEvents(new MOTD(),               this);
         pm.registerEvents(new CloudSailor(),        this);
+        pm.registerEvents(new SignActions(),        this);
+        pm.registerEvents(new SignClick(),          this);
         pm.registerEvents(new ToolCrafting(),       this);
         pm.registerEvents(new CustomEnchantment(),  this); // @TODO is enchanted but is lost on anvil use ( like book and pickaxe )
     }
