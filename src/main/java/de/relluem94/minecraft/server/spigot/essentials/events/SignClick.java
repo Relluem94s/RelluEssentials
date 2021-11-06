@@ -19,7 +19,7 @@ public class SignClick implements Listener {
 
     @EventHandler
     public void onChangeSignCreateActionSign(PlayerInteractEvent e) {
-        if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
+        if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && e.getPlayer().isSneaking() == false) {
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
                 if (e.getClickedBlock().getType().equals(Material.OAK_WALL_SIGN) || e.getClickedBlock().getType().equals(Material.OAK_SIGN)) {
                     Sign sign = (Sign) e.getClickedBlock().getState();
