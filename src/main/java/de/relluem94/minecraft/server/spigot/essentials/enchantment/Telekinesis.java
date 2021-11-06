@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.ItemRarity;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKINESIS;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_TELEKINESIS_LORE;
@@ -80,7 +80,7 @@ public class Telekinesis extends Enchantment implements IEnchantment {
             lore = new ArrayList();
             lore.add(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKINESIS);
             lore.add(PLUGIN_ENCHANTMENT_TELEKINESIS_LORE);
-            lore.add(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
+            lore.add(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
         }
 
         im.setLore(lore);
