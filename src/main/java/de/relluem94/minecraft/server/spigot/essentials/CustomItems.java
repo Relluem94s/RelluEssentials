@@ -11,8 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.ItemType;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.ItemRarity;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSMELTER;
@@ -38,8 +38,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
  */
 public class CustomItems {
 
-    public static ItemHelper cloudSailor = new ItemHelper(Material.FEATHER, 1, PLUGIN_ITEM_CLOUDSAILOR, ItemType.GADGET, ItemRarity.EPIC, Arrays.asList(new String[]{PLUGIN_ITEM_CLOUDSAILOR_LORE1, PLUGIN_ITEM_CLOUDSAILOR_LORE2}));
-    public static ItemHelper cloudBoots = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_CLOUDBOOTS, ItemType.ARMOR, ItemRarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_CLOUDBOOTS_LORE1, PLUGIN_ITEM_CLOUDBOOTS_LORE2})) {
+    public static ItemHelper cloudSailor = new ItemHelper(Material.FEATHER, 1, PLUGIN_ITEM_CLOUDSAILOR, Type.GADGET, Rarity.EPIC, Arrays.asList(new String[]{PLUGIN_ITEM_CLOUDSAILOR_LORE1, PLUGIN_ITEM_CLOUDSAILOR_LORE2}));
+    public static ItemHelper cloudBoots = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_CLOUDBOOTS, Type.ARMOR, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_CLOUDBOOTS_LORE1, PLUGIN_ITEM_CLOUDBOOTS_LORE2})) {
         @Override
         public void init() {
             LeatherArmorMeta cloudBootsMeta = (LeatherArmorMeta) getItemMeta();
@@ -50,7 +50,7 @@ public class CustomItems {
         }
     };
 
-    public static ItemHelper autoSmeltNetheritePickAxe = new ItemHelper(Material.NETHERITE_PICKAXE, 1, PLUGIN_ITEM_AUTOSMELTER, ItemType.TOOL, ItemRarity.LEGENDARY) {
+    public static ItemHelper autoSmeltNetheritePickAxe = new ItemHelper(Material.NETHERITE_PICKAXE, 1, PLUGIN_ITEM_AUTOSMELTER, Type.TOOL, Rarity.LEGENDARY) {
         @Override
         public void init() {
             ItemMeta im = getItemMeta();
@@ -60,8 +60,8 @@ public class CustomItems {
         }
     };
 
-    public static ItemHelper autoSmeltTank = new ItemHelper(Material.GLASS_BOTTLE, 1, PLUGIN_ITEM_AUTOSMELTER_TANK, ItemType.INGREDIENT, ItemRarity.RARE, Arrays.asList(new String[]{PLUGIN_ITEM_INGREDIENT}));
-    public static ItemHelper autoSmeltFurnace = new ItemHelper(Material.FURNACE, 1, PLUGIN_ITEM_AUTOSMELTER_FURNACE, ItemType.INGREDIENT, ItemRarity.RARE, Arrays.asList(new String[]{PLUGIN_ITEM_INGREDIENT}));
+    public static ItemHelper autoSmeltTank = new ItemHelper(Material.GLASS_BOTTLE, 1, PLUGIN_ITEM_AUTOSMELTER_TANK, Type.INGREDIENT, Rarity.RARE, Arrays.asList(new String[]{PLUGIN_ITEM_INGREDIENT}));
+    public static ItemHelper autoSmeltFurnace = new ItemHelper(Material.FURNACE, 1, PLUGIN_ITEM_AUTOSMELTER_FURNACE, Type.INGREDIENT, Rarity.RARE, Arrays.asList(new String[]{PLUGIN_ITEM_INGREDIENT}));
 
     /**
      *
@@ -69,7 +69,7 @@ public class CustomItems {
      *
      *
      */
-    public static ItemHelper relluHelmet = new ItemHelper(Material.LEATHER_HELMET, 1, PLUGIN_ITEM_RELLU_HELMET, ItemType.ARMOR, ItemRarity.LEGENDARY) {
+    public static ItemHelper relluHelmet = new ItemHelper(Material.LEATHER_HELMET, 1, PLUGIN_ITEM_RELLU_HELMET, Type.ARMOR, Rarity.LEGENDARY) {
         @Override
         public void init() {
             LeatherArmorMeta lam = (LeatherArmorMeta) getItemMeta();
@@ -82,7 +82,7 @@ public class CustomItems {
         }
     };
 
-    public static ItemHelper relluChestPlate = new ItemHelper(Material.LEATHER_CHESTPLATE, 1, PLUGIN_ITEM_RELLU_CHESTPLATE, ItemType.ARMOR, ItemRarity.LEGENDARY) {
+    public static ItemHelper relluChestPlate = new ItemHelper(Material.LEATHER_CHESTPLATE, 1, PLUGIN_ITEM_RELLU_CHESTPLATE, Type.ARMOR, Rarity.LEGENDARY) {
         @Override
         public void init() {
             LeatherArmorMeta lam = (LeatherArmorMeta) getItemMeta();
@@ -95,7 +95,7 @@ public class CustomItems {
         }
     };
 
-    public static ItemHelper relluLeggings = new ItemHelper(Material.LEATHER_LEGGINGS, 1, PLUGIN_ITEM_RELLU_LEGGINGS, ItemType.ARMOR, ItemRarity.LEGENDARY) {
+    public static ItemHelper relluLeggings = new ItemHelper(Material.LEATHER_LEGGINGS, 1, PLUGIN_ITEM_RELLU_LEGGINGS, Type.ARMOR, Rarity.LEGENDARY) {
         @Override
         public void init() {
             LeatherArmorMeta lam = (LeatherArmorMeta) getItemMeta();
@@ -108,7 +108,7 @@ public class CustomItems {
         }
     };
 
-    public static ItemHelper relluBoots = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_RELLU_BOOTS, ItemType.ARMOR, ItemRarity.LEGENDARY) {
+    public static ItemHelper relluBoots = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_RELLU_BOOTS, Type.ARMOR, Rarity.LEGENDARY) {
         @Override
         public void init() {
             LeatherArmorMeta lam = (LeatherArmorMeta) getItemMeta();
@@ -121,7 +121,7 @@ public class CustomItems {
         }
     };
 
-    public static ItemHelper relluSword = new ItemHelper(Material.DIAMOND_SWORD, 1, PLUGIN_ITEM_RELLU_SWORD, ItemType.WEAPON, ItemRarity.LEGENDARY) {
+    public static ItemHelper relluSword = new ItemHelper(Material.DIAMOND_SWORD, 1, PLUGIN_ITEM_RELLU_SWORD, Type.WEAPON, Rarity.LEGENDARY) {
         @Override
         public void init() {
             ItemMeta im = getItemMeta();
@@ -135,7 +135,7 @@ public class CustomItems {
         }
     };
 
-    public static ItemHelper relluShield = new ItemHelper(Material.SHIELD, 1, PLUGIN_ITEM_RELLU_SHIELD, ItemType.ARMOR, ItemRarity.LEGENDARY) {
+    public static ItemHelper relluShield = new ItemHelper(Material.SHIELD, 1, PLUGIN_ITEM_RELLU_SHIELD, Type.ARMOR, Rarity.LEGENDARY) {
         @Override
         public void init() {
             BlockStateMeta bmeta = (BlockStateMeta) getItemMeta();
