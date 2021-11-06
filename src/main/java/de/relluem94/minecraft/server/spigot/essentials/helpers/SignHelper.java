@@ -3,40 +3,39 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_CLICK_SIGN;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_SIGN;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCustomInputException;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.SignActionType;
 
 /**
  *
  * @author rellu
  */
 public class SignHelper {
+
     private final String line0 = PLUGIN_NAME_SIGN;
     private final String line1;
     private final String line2;
     private final String line3 = PLUGIN_CLICK_SIGN;
-    private final SignActionType signActionType;
+    private final ActionType signActionType;
 
-    public SignHelper(SignActionType signActionType, String customInput) {
+    public SignHelper(ActionType signActionType, String customInput) {
         this.signActionType = signActionType;
         this.line1 = signActionType.getDisplayName();
-        if(signActionType.hasCustomInput()){
+        if (signActionType.hasCustomInput()) {
             this.line2 = customInput;
-        }
-        else{
+        } else {
             this.line2 = "";
-        }        
+        }
     }
-    
-    public SignHelper(SignActionType signActionType) throws SignMissingCustomInputException {
+
+    public SignHelper(ActionType signActionType) throws SignMissingCustomInputException {
         this.signActionType = signActionType;
         this.line1 = signActionType.getDisplayName();
         this.line2 = "";
-        if(signActionType.hasCustomInput()){
+        if (signActionType.hasCustomInput()) {
             throw new SignMissingCustomInputException("");
         }
     }
 
-    public SignActionType getSignActionType() {
+    public ActionType getSignActionType() {
         return signActionType;
     }
 
@@ -55,12 +54,51 @@ public class SignHelper {
     public String getLine3() {
         return line3;
     }
-    
-    public static boolean isSign(SignHelper sh, String line0, String line1, String line3){
+
+    public static boolean isSign(SignHelper sh, String line0, String line1, String line3) {
         return sh.getLine0().equals(line0) && sh.getLine1().equals(line1) && sh.getLine3().equals(line3);
     }
-    
-    public static boolean isSign(SignHelper sh, String line1){
+
+    public static boolean isSign(SignHelper sh, String line1) {
         return sh.getSignActionType().getShorthand().equals(line1) || sh.getSignActionType().getName().equalsIgnoreCase(line1);
+    }
+
+    public enum ActionType {
+        COMMAND(1, "Command", true),
+        TELEPORT(2, "Teleport", true),
+        SPAWN(3, "Spawn", false),
+        UP(4, "Up", false),
+        DOWN(5, "Down", false),
+        HOME(6, "Home", true);
+
+        private final int id;
+        private final String displayName;
+        private final boolean customInput;
+
+        private ActionType(int id, String displayName, boolean test) {
+            this.id = id;
+            this.customInput = test;
+            this.displayName = displayName;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public boolean hasCustomInput() {
+            return customInput;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        public String getShorthand() {
+            return "[" + id + "]";
+        }
+
+        public String getName() {
+            return "[" + this.name() + "]";
+        }
     }
 }
