@@ -388,7 +388,11 @@ public class RelluEssentials extends JavaPlugin {
         pie = dBH.getPluginInformation();
         dBH.init();
         locationTypeEntryList.addAll(dBH.getLocationTypes());
-        locationEntryList.addAll(dBH.getLocations());
+                
+        this.getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
+            locationEntryList.addAll(dBH.getLocations());
+        });
+        
         groupEntryList.addAll(dBH.getGroups());
     }
 
