@@ -9,7 +9,8 @@ public enum SignActionType {
     TELEPORT(2, "Teleport", true),
     SPAWN(3, "Spawn", false),
     UP(4, "Up", false),
-    DOWN(5, "Down", false);
+    DOWN(5, "Down", false),
+    HOME(6, "Home", true);
     
     
     private final int id;
@@ -32,5 +33,9 @@ public enum SignActionType {
 
     public String getDisplayName() {
         return displayName;
+    }
+    
+    public String getShorthand(){
+        return "[" + id + "]";
     }
 }
