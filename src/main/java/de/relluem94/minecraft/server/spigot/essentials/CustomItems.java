@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemType;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.ItemType;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.ItemRarity;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
