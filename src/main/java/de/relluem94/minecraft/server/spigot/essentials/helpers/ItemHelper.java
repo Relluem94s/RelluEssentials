@@ -17,8 +17,8 @@ public class ItemHelper implements IItemHelper {
     private final Material material;
     private final int amount;
     private final String displayName;
-    private final ItemType it;
-    private final ItemRarity ir;
+    private final Type it;
+    private final Rarity ir;
 
     private List<String> lore;
 
@@ -30,7 +30,7 @@ public class ItemHelper implements IItemHelper {
      * @param itemType ItemType
      * @param itemRarity ItemRarity
      */
-    public ItemHelper(Material material, int amount, String displayName, ItemType itemType, ItemRarity itemRarity) {
+    public ItemHelper(Material material, int amount, String displayName, Type itemType, Rarity itemRarity) {
         this.amount = amount;
         this.material = material;
         this.displayName = displayName;
@@ -52,7 +52,7 @@ public class ItemHelper implements IItemHelper {
      * @param itemRarity ItemRarity
      * @param lore List String
      */
-    public ItemHelper(Material material, int amount, String displayName, ItemType itemType, ItemRarity itemRarity, List<String> lore) {
+    public ItemHelper(Material material, int amount, String displayName, Type itemType, Rarity itemRarity, List<String> lore) {
         this.amount = amount;
         this.material = material;
         this.displayName = displayName;
@@ -122,7 +122,7 @@ public class ItemHelper implements IItemHelper {
      *
      * @return ItemType of ItemHelper
      */
-    public ItemType getItemType() {
+    public Type getItemType() {
         return it;
     }
 
@@ -211,11 +211,11 @@ public class ItemHelper implements IItemHelper {
                 loc_lore = new ArrayList();
             }
 
-            loc_lore.remove(ItemRarity.COMMON.getPrefix() + ItemRarity.COMMON.getDisplayName());
-            loc_lore.remove(ItemRarity.UNCOMMON.getPrefix() + ItemRarity.UNCOMMON.getDisplayName());
-            loc_lore.remove(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
-            loc_lore.remove(ItemRarity.EPIC.getPrefix() + ItemRarity.EPIC.getDisplayName());
-            loc_lore.remove(ItemRarity.LEGENDARY.getPrefix() + ItemRarity.LEGENDARY.getDisplayName());
+            loc_lore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
+            loc_lore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
+            loc_lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
+            loc_lore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
+            loc_lore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
 
             loc_lore.add(ir.getPrefix() + "" + ir.getDisplayName());
 
@@ -224,8 +224,7 @@ public class ItemHelper implements IItemHelper {
         }
     }
 
-    public enum ItemRarity {
-
+    public enum Rarity {
         COMMON("Common", "§f§l", 0),
         UNCOMMON("Uncommon", "§a§l", 1),
         RARE("Rare", "§9§l", 2),
@@ -236,7 +235,7 @@ public class ItemHelper implements IItemHelper {
         private final String prefix;
         private final int level;
 
-        private ItemRarity(String displayName, String prefix, int level) {
+        private Rarity(String displayName, String prefix, int level) {
             this.displayName = displayName;
             this.prefix = prefix;
             this.level = level;
@@ -270,7 +269,7 @@ public class ItemHelper implements IItemHelper {
         }
     }
 
-    public enum ItemType {
+    public enum Type {
         TOOL,
         INGREDIENT,
         GADGET,
