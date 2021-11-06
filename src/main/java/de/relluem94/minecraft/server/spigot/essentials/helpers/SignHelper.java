@@ -10,27 +10,27 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.SignActionT
  * @author rellu
  */
 public class SignHelper {
-    private final String line1 = PLUGIN_NAME_SIGN;
+    private final String line0 = PLUGIN_NAME_SIGN;
+    private final String line1;
     private final String line2;
-    private final String line3;
-    private final String line4 = PLUGIN_CLICK_SIGN;
+    private final String line3 = PLUGIN_CLICK_SIGN;
     private final SignActionType signActionType;
 
     public SignHelper(SignActionType signActionType, String customInput) {
         this.signActionType = signActionType;
-        this.line2 = signActionType.getDisplayName();
+        this.line1 = signActionType.getDisplayName();
         if(signActionType.hasCustomInput()){
-            this.line3 = customInput;
+            this.line2 = customInput;
         }
         else{
-            this.line3 = "";
+            this.line2 = "";
         }        
     }
     
     public SignHelper(SignActionType signActionType) throws SignMissingCustomInputException {
         this.signActionType = signActionType;
-        this.line2 = signActionType.getDisplayName();
-        this.line3 = "";
+        this.line1 = signActionType.getDisplayName();
+        this.line2 = "";
         if(signActionType.hasCustomInput()){
             throw new SignMissingCustomInputException("");
         }
@@ -38,6 +38,10 @@ public class SignHelper {
 
     public SignActionType getSignActionType() {
         return signActionType;
+    }
+
+    public String getLine0() {
+        return line0;
     }
 
     public String getLine1() {
@@ -51,8 +55,12 @@ public class SignHelper {
     public String getLine3() {
         return line3;
     }
-
-    public String getLine4() {
-        return line4;
+    
+    public static boolean isSign(SignHelper sh, String line0, String line1, String line3){
+        return sh.getLine0().equals(line0) && sh.getLine1().equals(line1) && sh.getLine3().equals(line3);
+    }
+    
+    public static boolean isSign(SignHelper sh, String line1){
+        return sh.getSignActionType().getShorthand().equals(line1) || sh.getSignActionType().getName().equalsIgnoreCase(line1);
     }
 }
