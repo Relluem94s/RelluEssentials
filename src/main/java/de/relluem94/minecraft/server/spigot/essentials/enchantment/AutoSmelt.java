@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.ItemRarity;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
@@ -86,7 +86,7 @@ public class AutoSmelt extends Enchantment implements IEnchantment {
             lore.add(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT);
             lore.add(PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
             lore.add(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, 0));
-            lore.add(ItemRarity.EPIC.getPrefix() + ItemRarity.EPIC.getDisplayName());
+            lore.add(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
         }
 
         im.setLore(lore);
