@@ -13,4 +13,4 @@ INNER JOIN
 ON 
     l.location_type_fk = lt.id
 WHERE 
-    deletedby is null;
+    deletedby is null and location_type_fk in(1,2,3);
