@@ -38,4 +38,8 @@ public enum SignActionType {
     public String getShorthand(){
         return "[" + id + "]";
     }
+    
+    public String getName(){
+        return "[" + this.name() + "]";
+    }
 }
