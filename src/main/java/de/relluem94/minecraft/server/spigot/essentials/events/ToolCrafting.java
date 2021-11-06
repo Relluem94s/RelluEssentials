@@ -1,14 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.enums.ItemRarity;
 import java.util.Arrays;
 import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.ItemRarity;
 
 /**
  *
