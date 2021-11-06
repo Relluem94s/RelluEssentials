@@ -10,7 +10,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.ItemRarity;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 
 /**
  *
@@ -34,8 +34,8 @@ public class ToolCrafting implements Listener {
                 if (e.getResult().getType().equals(m)) {
 
                     List<String> lore = im.getLore();
-                    lore.addAll(Arrays.asList(new String[]{ItemRarity.EPIC.getPrefix() + ItemRarity.EPIC.getDisplayName()}));
-                    lore.remove(ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName());
+                    lore.addAll(Arrays.asList(new String[]{Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName()}));
+                    lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
 
                     im.setLore(lore);
                     im.setUnbreakable(true);
@@ -52,35 +52,35 @@ public class ToolCrafting implements Listener {
 
             for (Material m : diamond) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{ItemRarity.RARE.getPrefix() + ItemRarity.RARE.getDisplayName()}));
+                    im.setLore(Arrays.asList(new String[]{Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName()}));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
 
             for (Material m : iron) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{ItemRarity.UNCOMMON.getPrefix() + ItemRarity.UNCOMMON.getDisplayName()}));
+                    im.setLore(Arrays.asList(new String[]{Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName()}));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
 
             for (Material m : gold) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{ItemRarity.COMMON.getPrefix() + ItemRarity.COMMON.getDisplayName()}));
+                    im.setLore(Arrays.asList(new String[]{Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName()}));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
 
             for (Material m : chainmail) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{ItemRarity.UNCOMMON.getPrefix() + ItemRarity.UNCOMMON.getDisplayName()}));
+                    im.setLore(Arrays.asList(new String[]{Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName()}));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
 
             for (Material m : leather) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{ItemRarity.COMMON.getPrefix() + ItemRarity.COMMON.getDisplayName()}));
+                    im.setLore(Arrays.asList(new String[]{Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName()}));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
