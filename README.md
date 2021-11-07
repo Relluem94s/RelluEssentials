@@ -100,6 +100,7 @@
 - [ItemHelper](./docs/helpers/ItemHelper.md)
 - [MobHelper](./docs/helpers/MobHelper.md)
 - [PlayerHelper](./docs/helpers/PlayerHelper.md)
+- [SignHelper](./docs/helpers/SignHelper.md)
 - [StringHelper](./docs/helpers/StringHelper.md)
 - [TypeHelper](./docs/helpers/TypeHelper.md)
 - [Vector2Location](./docs/helpers/Vector2Location.md)
