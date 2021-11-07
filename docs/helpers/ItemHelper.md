@@ -4,7 +4,7 @@
 
  * **Author:** rellu
 
-## `public ItemHelper(Material material, int amount, String displayName, ItemType itemType, ItemRarity itemRarity)`
+## `public ItemHelper(Material material, int amount, String displayName, Type itemType, Rarity itemRarity)`
 
  * **Parameters:**
    * `material` — Bukkit Material
@@ -13,7 +13,7 @@
    * `itemType` — ItemType
    * `itemRarity` — ItemRarity
 
-## `public ItemHelper(Material material, int amount, String displayName, ItemType itemType, ItemRarity itemRarity, List<String> lore)`
+## `public ItemHelper(Material material, int amount, String displayName, Type itemType, Rarity itemRarity, List<String> lore)`
 
  * **Parameters:**
    * `material` — Bukkit Material
@@ -47,7 +47,7 @@
 
  * **Returns:** Material of ItemHelper
 
-## `public ItemType getItemType()`
+## `public Type getItemType()`
 
  * **Returns:** ItemType of ItemHelper
 
@@ -68,3 +68,21 @@
 
  * **Parameters:** `compare` — 
  * **Returns:** boolean
+
+## `public String getDisplayName()`
+
+Returns Displayname of Rarity
+
+ * **Returns:** String displayName
+
+## `public String getPrefix()`
+
+Returns Prefix of Rarity (Color and Bold)
+
+ * **Returns:** String prefix
+
+## `public int getLevel()`
+
+Returns Level of Rarity
+
+ * **Returns:** int level
