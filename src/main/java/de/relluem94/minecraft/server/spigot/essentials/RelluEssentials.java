@@ -78,9 +78,6 @@ import de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.events.SkullInfo;
 import de.relluem94.minecraft.server.spigot.essentials.events.ToolCrafting;
 
-import de.relluem94.minecraft.server.spigot.essentials.events.features.RotationTool;
-import de.relluem94.minecraft.server.spigot.essentials.events.features.SelectionTool;
-
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoReplant;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Repair;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Salvage;
@@ -201,7 +198,6 @@ public class RelluEssentials extends JavaPlugin {
         enchantmentManager();
         groupManager();
         eventManager();
-        featureManager();
         skillManager();
         addRecipes();
         blockHistoryManager();
@@ -329,11 +325,6 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new SignClick(),          this);
         pm.registerEvents(new ToolCrafting(),       this);
         pm.registerEvents(new CustomEnchantment(),  this); // @TODO is enchanted but is lost on anvil use ( like book and pickaxe )
-    }
-
-    private void featureManager() {
-        pm.registerEvents(new SelectionTool(),      this);
-        pm.registerEvents(new RotationTool(),       this);
     }
 
     private void skillManager() {
