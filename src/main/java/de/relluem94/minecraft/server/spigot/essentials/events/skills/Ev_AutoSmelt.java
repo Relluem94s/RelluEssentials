@@ -1,19 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekinesis;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_COLOR;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import java.util.Arrays;
 import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -24,6 +13,20 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekinesis;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_COLOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX;
 
 public class Ev_AutoSmelt implements Listener {
 
