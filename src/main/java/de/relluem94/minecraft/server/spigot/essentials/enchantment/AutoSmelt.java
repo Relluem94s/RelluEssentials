@@ -12,11 +12,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_AUTOSMELT_LORE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_ENCHANTMENT_COLOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LORE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_COLOR;
 
 /**
  *
