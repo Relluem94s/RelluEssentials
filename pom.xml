@@ -10,7 +10,7 @@
         <plugin.author>Relluem94</plugin.author>
         <plugin.website>http://www.relluem94.de</plugin.website>
         <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
-        <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+        <project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
     </properties>
     <distributionManagement>
         <repository>
