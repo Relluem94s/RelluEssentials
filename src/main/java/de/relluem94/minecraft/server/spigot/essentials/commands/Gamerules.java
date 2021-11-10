@@ -33,17 +33,17 @@ public class Gamerules implements CommandExecutor {
                             String color;
                             if(value instanceof Boolean){
                                 if((boolean)value == true){
-                                    color = "Â§a";
+                                    color = "§a";
                                 }
                                 else{
-                                    color = "Â§c";
+                                    color = "§c";
                                 }
                             }
                             else{
-                                color = "Â§7";
+                                color = "§7";
                             }
                             
-                            sendMessage(p, "        Â§d" + gamerule + "Â§f = " + color + value);
+                            sendMessage(p, "        §d" + gamerule + "§f = " + color + value);
                         }
                         
                         
