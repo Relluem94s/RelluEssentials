@@ -21,7 +21,7 @@ public class SkullInfo implements Listener {
                     BlockState block = e.getClickedBlock().getState();
                     if (block instanceof Skull) {
                         Skull sk = (Skull) block;
-                        p.sendTitle("ยงa" + sk.getOwner(), "ยง8~~~~~~~~~~~~~~~~~~~~~~~", 5, 80, 5);
+                        p.sendTitle("งa" + sk.getOwner(), "ง8~~~~~~~~~~~~~~~~~~~~~~~", 5, 80, 5);
                     }
                 }
             }
