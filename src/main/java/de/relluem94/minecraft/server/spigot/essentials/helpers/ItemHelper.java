@@ -225,11 +225,11 @@ public class ItemHelper implements IItemHelper {
     }
 
     public enum Rarity {
-        COMMON("Common", "ยงfยงl", 0),
-        UNCOMMON("Uncommon", "ยงaยงl", 1),
-        RARE("Rare", "ยง9ยงl", 2),
-        EPIC("Epic", "ยง5ยงl", 3),
-        LEGENDARY("Legendary", "ยง6ยงl", 4);
+        COMMON("Common", "งfงl", 0),
+        UNCOMMON("Uncommon", "งaงl", 1),
+        RARE("Rare", "ง9งl", 2),
+        EPIC("Epic", "ง5งl", 3),
+        LEGENDARY("Legendary", "ง6งl", 4);
 
         private final String displayName;
         private final String prefix;
