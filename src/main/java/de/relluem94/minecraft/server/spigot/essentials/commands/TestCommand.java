@@ -44,7 +44,7 @@ public class TestCommand implements CommandExecutor {
                 if (p.getName().equalsIgnoreCase("Relluem94")) {
                     if (args.length == 1) {
                         if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB)) {
-                            MobHelper mh = new MobHelper(p.getLocation(), EntityType.ZOMBIE, "§aX Æ A-XII", true);
+                            MobHelper mh = new MobHelper(p.getLocation(), EntityType.ZOMBIE, "�aX Æ A-XII", true);
                             mh.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1000000, 1));
                             mh.setCanPickupItems(true);
 
