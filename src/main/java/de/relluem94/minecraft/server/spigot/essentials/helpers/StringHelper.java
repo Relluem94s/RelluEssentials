@@ -13,10 +13,10 @@ public class StringHelper {
     /**
      *
      * @param message String
-     * @return String replaces & with ยง to trigger the ChatColor codes
+     * @return String replaces & with ง to trigger the ChatColor codes
      */
     public static String replaceColor(String message) {
-        return message.replaceAll("&", "ยง");
+        return message.replaceAll("&", "ง");
     }
 
     /**
