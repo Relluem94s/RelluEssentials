@@ -7,22 +7,22 @@ public class Strings {
     /********************************************************************************/
     
     public static final String PLUGIN_NAME = "RelluEssentials";
-    public static final String PLUGIN_SPACER_CHANNEL = " >> §f";
-    public static final String PLUGIN_COMMAND_COLOR = "§f";
-    public static final String PLUGIN_COMMAND_NAME_COLOR = "§b";
-    public static final String PLUGIN_COMMAND_ARG_COLOR = "§b";
-    public static final String PLUGIN_MESSAGE_COLOR = "§f";
-    public static final String PLUGIN_PREFIX = "§o§l§4§8Rellu§cEssentials§r" + PLUGIN_MESSAGE_COLOR;
-    public static final String PLUGIN_NAME_SIGN = PLUGIN_MESSAGE_COLOR + "[" + "§8R§cE" + PLUGIN_MESSAGE_COLOR + "]";
+    public static final String PLUGIN_SPACER_CHANNEL = " >> �f";
+    public static final String PLUGIN_COMMAND_COLOR = "�f";
+    public static final String PLUGIN_COMMAND_NAME_COLOR = "�b";
+    public static final String PLUGIN_COMMAND_ARG_COLOR = "�b";
+    public static final String PLUGIN_MESSAGE_COLOR = "�f";
+    public static final String PLUGIN_PREFIX = "�o�l�4�8Rellu�cEssentials�r" + PLUGIN_MESSAGE_COLOR;
+    public static final String PLUGIN_NAME_SIGN = PLUGIN_MESSAGE_COLOR + "[" + "�8R�cE" + PLUGIN_MESSAGE_COLOR + "]";
     public static final String PLUGIN_CLICK_SIGN = PLUGIN_MESSAGE_COLOR + "[Click here]";
     public static final String PLUGIN_NAME_CONSOLE = PLUGIN_MESSAGE_COLOR + "[" + PLUGIN_PREFIX + PLUGIN_MESSAGE_COLOR + "] ";
-    public static final String PLUGIN_SPACER = "§7 >> " + PLUGIN_MESSAGE_COLOR;
+    public static final String PLUGIN_SPACER = "�7 >> " + PLUGIN_MESSAGE_COLOR;
     public static final String PLUGIN_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
     
     public static final String PLUGIN_START_MESSAGE = "starts configuring ...";
     public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
     public static final String PLUGIN_STARTTIME = "wurde in %s ms gestartet!";
-    public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
+    public static final String PLUGIN_BROADCAST_NAME = "�5Broadcast";
     
     public static final String LANG_LOADING_CONFIGS = "Configs werden geladen!";
     public static final String LANG_CONFIGS_LOADED = "Configs sind geladen!";
@@ -41,8 +41,8 @@ public class Strings {
     public static final String PLUGIN_COMMAND_GAMEMODE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Gamemode von %s" + PLUGIN_COMMAND_COLOR + " wurde zu " + PLUGIN_COMMAND_NAME_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " geändert!";
 
     public static final String PLUGIN_COMMAND_AFK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " ist jetzt %s";
-    public static final String PLUGIN_COMMAND_AFK_ACTIVATED = "§cafk";
-    public static final String PLUGIN_COMMAND_AFK_DEACTIVATED = "§awieder da";
+    public static final String PLUGIN_COMMAND_AFK_ACTIVATED = "�cafk";
+    public static final String PLUGIN_COMMAND_AFK_DEACTIVATED = "�awieder da";
 
     public static final String PLUGIN_COMMAND_FLYMODE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Flugmodus von %s" + PLUGIN_COMMAND_COLOR + " wurde " + PLUGIN_COMMAND_ARG_COLOR + "%s!";
     public static final String PLUGIN_COMMAND_FLYMODE_ACTIVATED = "aktiviert";
@@ -120,8 +120,8 @@ public class Strings {
 
     public static final String PLUGIN_COMMAND_MSG_PLAYER_OFFLINE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Spieler ist Offline!";
     public static final String PLUGIN_COMMAND_MSG_NO_ONE_TO_REPLY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Niemand da der dir antworten könnte!";
-    public static final String PLUGIN_COMMAND_MSG_SPACER_IN = "§9 >> §f";
-    public static final String PLUGIN_COMMAND_MSG_SPACER_OUT = "§9 << §f";
+    public static final String PLUGIN_COMMAND_MSG_SPACER_IN = "�9 >> �f";
+    public static final String PLUGIN_COMMAND_MSG_SPACER_OUT = "�9 << �f";
     public static final String PLUGIN_COMMAND_MSG_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/msg " + PLUGIN_COMMAND_COLOR + "<" + PLUGIN_COMMAND_ARG_COLOR + "spieler" + PLUGIN_COMMAND_COLOR + ">" + " " + "<" + PLUGIN_COMMAND_ARG_COLOR + "nachricht" + PLUGIN_COMMAND_COLOR + ">";
 
     public static final String PLUGIN_COMMAND_PRINT_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/print " + "<" + PLUGIN_COMMAND_ARG_COLOR + "nachricht" + PLUGIN_COMMAND_COLOR + ">";
@@ -134,7 +134,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_WORLD_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Die Welt " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " existiert nicht";
     
     public static final String PLUGIN_COMMAND_POKE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze /poke " + PLUGIN_COMMAND_ARG_COLOR + "<Name>" + PLUGIN_COMMAND_COLOR + " um einen Spieler anzustubsen";
-    public static final String PLUGIN_COMMAND_POKE_TITLE = "§4Buuuh";
+    public static final String PLUGIN_COMMAND_POKE_TITLE = "�4Buuuh";
     public static final String PLUGIN_COMMAND_POKE_SUBTITLE = "~~~~~~~~~~~~~~";
     public static final String PLUGIN_COMMAND_POKE_MESSAGE_TARGET = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "hat dich angestupst!";
     public static final String PLUGIN_COMMAND_POKE_MESSAGE_SENDER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + "%s " + PLUGIN_COMMAND_COLOR + "angestupst!";
