@@ -44,11 +44,11 @@ public ArrayList<String> WarpsAsArrayList() throws FileNotFoundException, IOExce
 		FileConfiguration Warps = getWarps();
 		
 		if(Warps.contains("Warps." + "." + name.toLowerCase())){
-			SendMessage(p, prefix + "Â§6Fehler der Warp existiert bereits");
+			SendMessage(p, prefix + "§6Fehler der Warp existiert bereits");
 		}
 		else{
 			if(Funktionen.isInt(name)){
-				SendMessage(p, prefix + "Â§6Kein GÃ¼ltiger Name!");
+				SendMessage(p, prefix + "§6Kein Gültiger Name!");
 			}
 			else{
 				String name2 = name.toLowerCase();
@@ -68,7 +68,7 @@ public ArrayList<String> WarpsAsArrayList() throws FileNotFoundException, IOExce
 				Warps.set("Warps" + "." + name2 + ".pitch", pitch);
 				Warps.set("Warps" + "." + name2 + ".yaw", yaw);
 				saveWarpsFile();
-				SendMessage(p, prefix + "Â§6Der Warppunkt Â§a" + name + "Â§6 wurde gesetzt");
+				SendMessage(p, prefix + "§6Der Warppunkt §a" + name + "§6 wurde gesetzt");
 			}
 		}
 	}
@@ -88,10 +88,10 @@ public ArrayList<String> WarpsAsArrayList() throws FileNotFoundException, IOExce
 			ArrayList <String> warps = new ArrayList<String>();
 			warps.addAll(Warps.getConfigurationSection("Warps.").getKeys(false));
 			saveWarpsFile();
-			SendMessage(sender, prefix + "Â§6Der Warppunkt Â§a" + name + "Â§6 wurde gelÃ¶scht");
+			SendMessage(sender, prefix + "§6Der Warppunkt §a" + name + "§6 wurde gelöscht");
 		}
 		else{
-			SendMessage(sender, prefix + "Â§6Fehler Warp existiert nicht!");
+			SendMessage(sender, prefix + "§6Fehler Warp existiert nicht!");
 		}
 	}
 	
@@ -138,17 +138,17 @@ public void kissPlayer(Player p1, Player p2){
 	}
 	
 	public void marryInfo(Player p1){
-		SendMessage(p1, prefix + "Â§6Marry Befehle");
+		SendMessage(p1, prefix + "§6Marry Befehle");
 		SendMessage(p1, "");
-		SendMessage(p1, "Â§6/marry Â§bhome");
-		SendMessage(p1, "Â§6/marry Â§bhome Â§cset");
-		SendMessage(p1, "Â§6/marry Â§bhome Â§cdel");
+		SendMessage(p1, "§6/marry §bhome");
+		SendMessage(p1, "§6/marry §bhome §cset");
+		SendMessage(p1, "§6/marry §bhome §cdel");
 		SendMessage(p1, "");
-		SendMessage(p1, "Â§6/marry Â§btp");
-		SendMessage(p1, "Â§6/marry Â§bgive");
+		SendMessage(p1, "§6/marry §btp");
+		SendMessage(p1, "§6/marry §bgive");
 		SendMessage(p1, "");
-		SendMessage(p1, "Â§6/marry Â§bmarry Â§c<Spieler> <Spieler>");
-		SendMessage(p1, "Â§6/marry Â§bdivorce Â§c<Spieler> <Spieler>");
+		SendMessage(p1, "§6/marry §bmarry §c<Spieler> <Spieler>");
+		SendMessage(p1, "§6/marry §bdivorce §c<Spieler> <Spieler>");
 	}
 	
 	public void marryTP(Player p1){
@@ -157,11 +157,11 @@ public void kissPlayer(Player p1, Player p2){
 				Player p2 = Bukkit.getPlayer(getmarryPartner(p1));
 				Location l = p2.getLocation();
 				p1.teleport(l);
-				SendMessage(p1, prefix + "Â§6Teleportiere zu deinem Partner...");
-				SendMessage(p2, prefix + "Â§6Achtung dein Partner kommt");
+				SendMessage(p1, prefix + "§6Teleportiere zu deinem Partner...");
+				SendMessage(p2, prefix + "§6Achtung dein Partner kommt");
 			}
 			else{
-				SendMessage(p1, prefix + "Â§6Du bist nicht verheiratet");
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
 			}
 			
 		} 
@@ -186,18 +186,18 @@ public void kissPlayer(Player p1, Player p2){
 						
 						Location l = new Location(w,y,z,x,yaw,pitch);
 						p1.teleport(l);
-						SendMessage(p1, prefix + "Â§6Willkommen Zuhause");
+						SendMessage(p1, prefix + "§6Willkommen Zuhause");
 					}
 					else{
-						SendMessage(p1, prefix + "Â§6Ihr habt noch kein Zuhause gesetzt");
+						SendMessage(p1, prefix + "§6Ihr habt noch kein Zuhause gesetzt");
 					}
 				}
 				else{
-					SendMessage(p1, prefix + "Â§6Du bist nicht verheiratet");
+					SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
 				}
 			}
 			else{
-				SendMessage(p1, prefix + "Â§6Du bist nicht verheiratet");
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
 			}
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
@@ -210,17 +210,17 @@ public void kissPlayer(Player p1, Player p2){
 			if(isMarried(p1, p2) == true && isMarried(p2, p1) == true){
 				ItemStack i = p2.getEquipment().getItemInMainHand();
 				if(p2.getInventory().firstEmpty() == -1){
-					SendMessage(p1, prefix + "Â§6Das Inventar deines Partners ist voll");
+					SendMessage(p1, prefix + "§6Das Inventar deines Partners ist voll");
 				}
 				else{
 					int a = p2.getInventory().firstEmpty();
 					p1.getInventory().setItem(a, i);
-					SendMessage(p1, prefix + "Â§6Das Item wurde an dein Partner verschickt");
-					SendMessage(p2, prefix + "Â§6Dein Partner hat dir ein Geschenk gemacht");
+					SendMessage(p1, prefix + "§6Das Item wurde an dein Partner verschickt");
+					SendMessage(p2, prefix + "§6Dein Partner hat dir ein Geschenk gemacht");
 				}
 			}
 			else{
-				SendMessage(p1, prefix + "Â§6Du bist nicht verheiratet");
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
 			}
 		} 
 		catch (IOException | InvalidConfigurationException e) {
@@ -244,8 +244,8 @@ public void kissPlayer(Player p1, Player p2){
 				saveMarryFile();
 			}
 			else{
-				SendMessage(p1, prefix + "Â§6Du bist nicht verheiratet");
-				SendMessage(p2, prefix + "Â§6Du bist nicht verheiratet");
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
+				SendMessage(p2, prefix + "§6Du bist nicht verheiratet");
 			}
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
@@ -260,14 +260,14 @@ public void kissPlayer(Player p1, Player p2){
 			marry.set("Marry." + p2.getUniqueId(), p1.getUniqueId());	
 			marry.set("Marry." + p1.getUniqueId(), p2.getUniqueId());
 			
-			BroadCastMessage(prefix + "Â§6Die Spieler " + p1.getDisplayName() + " Â§6und " + p2.getDisplayName() + " Â§6haben geheiratet");
+			BroadCastMessage(prefix + "§6Die Spieler " + p1.getDisplayName() + " §6und " + p2.getDisplayName() + " §6haben geheiratet");
 			
 			marryPlayerEffect(p1, p2);
 			
 			saveMarryFile();
 			}
 			else{
-				SendMessage(p1, prefix + "Â§6Du bist schon verheiratet");
+				SendMessage(p1, prefix + "§6Du bist schon verheiratet");
 			}
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
@@ -315,7 +315,7 @@ public void kissPlayer(Player p1, Player p2){
 			}
 		}
 			else{
-				SendMessage(p1, prefix + "Â§6Du bist nicht verheiratet");
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
 			}
 		} 
 		catch (IOException | InvalidConfigurationException e) {
@@ -353,7 +353,7 @@ public void kissPlayer(Player p1, Player p2){
 				}
 			}
 			else{
-				SendMessage(p1, prefix + "Â§6Du bist nicht verheiratet");
+				SendMessage(p1, prefix + "§6Du bist nicht verheiratet");
 			}
 			
 			
@@ -397,8 +397,8 @@ public void kissPlayer(Player p1, Player p2){
 		for(int i = 0; i < homes.size(); i++){
 			ItemStack item = new ItemStack(Material.COMPASS, 1);
 			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName("Â§a" + homes.get(i));
-			meta.setLore(Arrays.asList("Â§aKlicken zum schnellreisen"));
+			meta.setDisplayName("§a" + homes.get(i));
+			meta.setLore(Arrays.asList("§aKlicken zum schnellreisen"));
 			item.setItemMeta(meta);
 			inv.setItem(i, item);
 		}
@@ -455,7 +455,7 @@ public void kissPlayer(Player p1, Player p2){
 	 public void DoPlayerJoinSilence(Player p){
 		 setPlayerGroup(p);
 		 p.setScoreboard(main.sb);
-		 sendTabTitle(p,"         Â§c--- Â§aWillkommen auf dem Â§c---         ","         Â§c--- Â§dmc.cloudsailor.de Â§c---         ");
+		 sendTabTitle(p,"         §c--- §aWillkommen auf dem §c---         ","         §c--- §dmc.cloudsailor.de §c---         ");
 		 DoFeuerwerk(p);	 
 
       	if (p.getName().equals("Stellachen") || p.getName().equals("Relluem94")) {
@@ -533,13 +533,13 @@ else if (cmd.getName().equalsIgnoreCase("spielerinfo")) {
 			if (hasPermission(sender, permuser + "spielerinfo") == true){
 				if(isPlayer(sender) == true){
 					if (args.length == 0){
-						SendMessage(sender, prefix + "Â§6/si <SpielerName>");
+						SendMessage(sender, prefix + "§6/si <SpielerName>");
 					}
 					else if (args.length == 1){
 						@SuppressWarnings("deprecation")
 						OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(args[0]);
 						if (!targetPlayer.hasPlayedBefore()){
-							SendMessage(sender, prefix + "Â§6Keine Spielerinfo vorhanden");
+							SendMessage(sender, prefix + "§6Keine Spielerinfo vorhanden");
 					        return false;
 					    }
 						long current = System.currentTimeMillis();
@@ -591,7 +591,7 @@ else if (cmd.getName().equalsIgnoreCase("spielerinfo")) {
 						if(Target(args[0]) != null) {
 							Player target = Target(args[0]);
 							teleport(target, loc);
-							SendMessage(sender, prefix + "Â§r" + target.getDisplayName() + " Â§6wurde Teleportiert");
+							SendMessage(sender, prefix + "§r" + target.getDisplayName() + " §6wurde Teleportiert");
 						}
 					}
 					else {
@@ -614,7 +614,7 @@ else if (cmd.getName().equalsIgnoreCase("spielerinfo")) {
 						if(Target(args[0]) != null) {
 							Player target = Target(args[0]);
 							teleport(target, loc);
-							SendMessage(sender, prefix + "Â§r" + target.getDisplayName() + " Â§6wurde Teleportiert");
+							SendMessage(sender, prefix + "§r" + target.getDisplayName() + " §6wurde Teleportiert");
 						}
 					}
 					else {
@@ -672,13 +672,13 @@ else if (cmd.getName().equalsIgnoreCase("ah")) {
 			if (hasPermission(sender, permuser + "7fail") == true){
 				if(isPlayer(sender) == true){
 					Player p = (Player)sender;
-					Bukkit.broadcastMessage(p.getDisplayName() + " Â§7>> Â§csiebenFAIL!");
+					Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §csiebenFAIL!");
 				}
 				else{
 					ConsoleCommandSender console;
 					console = r.server.getConsoleSender();
 					
-					r.server.dispatchCommand(console, "say Â§7>> Â§csiebenFAIL!");
+					r.server.dispatchCommand(console, "say §7>> §csiebenFAIL!");
 				}
 			}
 			else {
@@ -689,13 +689,13 @@ else if (cmd.getName().equalsIgnoreCase("ah")) {
 			if (hasPermission(sender, permuser + "palme") == true){
 				if(isPlayer(sender) == true){
 					Player p = (Player)sender;
-					Bukkit.broadcastMessage(p.getDisplayName() + " Â§7>> Â§aGesichtsPALME!");
+					Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §aGesichtsPALME!");
 				}
 				else{
 					ConsoleCommandSender console;
 					console = r.server.getConsoleSender();
 					
-					r.server.dispatchCommand(console, "say Â§7>> Â§aGesichtsPALME!");
+					r.server.dispatchCommand(console, "say §7>> §aGesichtsPALME!");
 					
 				}
 			}
@@ -715,13 +715,13 @@ else if (cmd.getName().equalsIgnoreCase("love")) {
 			if (hasPermission(sender, permuser + "love") == true){
 				if(isPlayer(sender) == true){
 					Player p = (Player)sender;
-					Bukkit.broadcastMessage(p.getDisplayName() + " Â§7>> Â§4\u2764");
+					Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §4\u2764");
 				}
 				else{
 					ConsoleCommandSender console;
 					console = r.server.getConsoleSender();
 					
-					r.server.dispatchCommand(console, "say Â§7>> Â§4\u2764");
+					r.server.dispatchCommand(console, "say §7>> §4\u2764");
 					
 				}
 			}
@@ -743,7 +743,7 @@ else if (cmd.getName().equalsIgnoreCase("list")) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					Spielerliste = Spielerliste + ", " + getGroupPrefix(p) + "[" + getPlayerGroup(p) + "] " + p.getDisplayName();
 				}
-				SendMessage(sender, prefix + "Â§6Zurzeit Online");
+				SendMessage(sender, prefix + "§6Zurzeit Online");
 				SendMessage(sender, Spielerliste.replaceFirst(", ", ""));
 			}
 			else {
@@ -765,7 +765,7 @@ else if (cmd.getName().equalsIgnoreCase("rcmd")) {
 			if (hasPermission(sender, permadmin + "cmd") == true){
 				String m = ArryToString(args);
 				consoleCMD(m);
-				SendMessage(sender, prefix + "Â§6Dein Befehl wurde ausgefÃ¼hrt");
+				SendMessage(sender, prefix + "§6Dein Befehl wurde ausgeführt");
 			}
 			else {
 				SendMessage(sender, noPerm);
@@ -782,287 +782,287 @@ else if (cmd.getName().equalsIgnoreCase("rcmd")) {
 if(cmd.getName().equalsIgnoreCase("rellu")) {
 			if (hasPermission(p, permbase + "info") == true) {
 			if (args.length == 0) {
-				SendMessage(p, "Â§c--------------------------------------");
-				SendMessage(p, prefix + "Â§6Entwickelt von Relluem94!");
-	            SendMessage(p, "Â§5Um die Befehle des Plugins zu sehen");
-	            SendMessage(p, "Â§6/rellu <user>, <vip>, <pmod>, <mod>, <mod2> oder <give>");
-	            SendMessage(p, "Â§6/rellu <scoreboard> oder <sb> Â§5um das Plugin Scoreboard angezeigt zu bekommen");
-	            SendMessage(p, "Â§5FÃ¼r weitere Funktionen des Plugins");
-	            SendMessage(p, "Â§6/rellu <channel> oder <msg> ");
-	            SendMessage(p, "Â§5Allgemeine Befehle und Info");
-	            SendMessage(p, "Â§6/rellu <ab>, <schilder> oder <info>");
-	            SendMessage(p, "Â§5Rezepte und Funktionen zum nachmachen");
-	            SendMessage(p, "Â§6/rellu <ofen>, <kessel> oder <herstellen>");
-	            SendMessage(p, "Â§c--------------------------------------");
+				SendMessage(p, "§c--------------------------------------");
+				SendMessage(p, prefix + "§6Entwickelt von Relluem94!");
+	            SendMessage(p, "§5Um die Befehle des Plugins zu sehen");
+	            SendMessage(p, "§6/rellu <user>, <vip>, <pmod>, <mod>, <mod2> oder <give>");
+	            SendMessage(p, "§6/rellu <scoreboard> oder <sb> §5um das Plugin Scoreboard angezeigt zu bekommen");
+	            SendMessage(p, "§5Für weitere Funktionen des Plugins");
+	            SendMessage(p, "§6/rellu <channel> oder <msg> ");
+	            SendMessage(p, "§5Allgemeine Befehle und Info");
+	            SendMessage(p, "§6/rellu <ab>, <schilder> oder <info>");
+	            SendMessage(p, "§5Rezepte und Funktionen zum nachmachen");
+	            SendMessage(p, "§6/rellu <ofen>, <kessel> oder <herstellen>");
+	            SendMessage(p, "§c--------------------------------------");
 	            return true;
 			}
 			if (args.length == 1) {
 				if (args[0].equals("scoreboard") || args[0].equals("sb")) {
-					SendMessage(p, prefix + "Â§6Scoreboard wird angezeigt");
+					SendMessage(p, prefix + "§6Scoreboard wird angezeigt");
 					p.setScoreboard(main.sb);
 		            return true;
 				}
 				else if (args[0].equals("user")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§8User Befehle");
-					SendMessage(p, "Â§8/rellu Â§5\u00BBÂ§8 Info");
-		            SendMessage(p, "Â§8/uh, /ah, /oh");
-		            SendMessage(p, "Â§8/7 Â§5\u00BBÂ§c siebenFAIL!");
-		            SendMessage(p, "Â§8/8 Â§5\u00BBÂ§a GesichtsPALME!");
-		            SendMessage(p, "Â§8/love Â§5\u00BB Â§4\u2764");
-		            SendMessage(p, "Â§8/kevin Â§5\u00BBÂ§8 Mit Kevin das Leben nehmen");
-		            SendMessage(p, "Â§8/si Â§5\u00BBÂ§8 SpielerInfo");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§8User Befehle");
+					SendMessage(p, "§8/rellu §5\u00BB§8 Info");
+		            SendMessage(p, "§8/uh, /ah, /oh");
+		            SendMessage(p, "§8/7 §5\u00BB§c siebenFAIL!");
+		            SendMessage(p, "§8/8 §5\u00BB§a GesichtsPALME!");
+		            SendMessage(p, "§8/love §5\u00BB §4\u2764");
+		            SendMessage(p, "§8/kevin §5\u00BB§8 Mit Kevin das Leben nehmen");
+		            SendMessage(p, "§8/si §5\u00BB§8 SpielerInfo");
+		            SendMessage(p, "§c--------------------------------------");
 		          //  p.setScoreboard(main.sb);
 		            return true;
 				}
 				else if (args[0].equals("vip")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§aVip Befehle");
-					SendMessage(p, "Â§a/willkommen");
-		            SendMessage(p, "Â§a/flug Â§5\u00BBÂ§a Flugmodus");
-		            SendMessage(p, "Â§a");
-		            SendMessage(p, "Â§aChat Symbole");
-		            SendMessage(p, "Â§8[<3], [PFEIL], [PFEIL2], [PUNKT]");
-		            SendMessage(p, "Â§8[TICK], [X], [STAR], [BLUME]");
-		            SendMessage(p, "Â§8[XD], [ACHTUNG], [MAIL], [STERN]");
-		            SendMessage(p, "Â§8[SUIT], [+], [KREIS], [SONNE]");
-		            // SendMessage(p, "Â§a");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§aVip Befehle");
+					SendMessage(p, "§a/willkommen");
+		            SendMessage(p, "§a/flug §5\u00BB§a Flugmodus");
+		            SendMessage(p, "§a");
+		            SendMessage(p, "§aChat Symbole");
+		            SendMessage(p, "§8[<3], [PFEIL], [PFEIL2], [PUNKT]");
+		            SendMessage(p, "§8[TICK], [X], [STAR], [BLUME]");
+		            SendMessage(p, "§8[XD], [ACHTUNG], [MAIL], [STERN]");
+		            SendMessage(p, "§8[SUIT], [+], [KREIS], [SONNE]");
+		            // SendMessage(p, "§a");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("pmod")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§bpMod Befehle");
-		            SendMessage(p, "Â§b/slag /elag Â§5\u00BBÂ§b Lag Nachricht");
-		            SendMessage(p, "Â§b/mod Â§5\u00BBÂ§b ModKit");
-		            SendMessage(p, "Â§b/werkbank");
-		            SendMessage(p, "Â§b/swr, /sws, /swnÂ§5\u00BBÂ§b Spieler Wetter");
-		            SendMessage(p, "Â§b/gott Â§5\u00BBÂ§b Temporaler Gott Modus");
-		            SendMessage(p, "Â§b/faway, /fback Â§5\u00BBÂ§b Fake afk");
-		            SendMessage(p, "Â§b/b1, /b2 Â§5\u00BBÂ§b Besch\u00E4ftigt");
-		            SendMessage(p, "Â§b/a1 Â§5\u00BBÂ§b Kisten protecten");
-		            SendMessage(p, "Â§b/a2 Â§5\u00BBÂ§b GS Protecten");
-		            SendMessage(p, "Â§b/a3 Â§5\u00BBÂ§b Farmwelt farmen");
-		            SendMessage(p, "Â§b/a4 Â§5\u00BBÂ§b Regeln lesen");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§bpMod Befehle");
+		            SendMessage(p, "§b/slag /elag §5\u00BB§b Lag Nachricht");
+		            SendMessage(p, "§b/mod §5\u00BB§b ModKit");
+		            SendMessage(p, "§b/werkbank");
+		            SendMessage(p, "§b/swr, /sws, /swn§5\u00BB§b Spieler Wetter");
+		            SendMessage(p, "§b/gott §5\u00BB§b Temporaler Gott Modus");
+		            SendMessage(p, "§b/faway, /fback §5\u00BB§b Fake afk");
+		            SendMessage(p, "§b/b1, /b2 §5\u00BB§b Besch\u00E4ftigt");
+		            SendMessage(p, "§b/a1 §5\u00BB§b Kisten protecten");
+		            SendMessage(p, "§b/a2 §5\u00BB§b GS Protecten");
+		            SendMessage(p, "§b/a3 §5\u00BB§b Farmwelt farmen");
+		            SendMessage(p, "§b/a4 §5\u00BB§b Regeln lesen");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("mod")) {	            
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§6Mod Befehle");
-					SendMessage(p, "Â§6/tag, /nacht Â§5\u00BBÂ§6 Zeit");
-					SendMessage(p, "Â§6/sturm, /sonne Â§5\u00BBÂ§6 Wetter");
-					SendMessage(p, "Â§6/0, /1, /2, /3 Â§5\u00BBÂ§6 Spiel-Modus");
-					SendMessage(p, "Â§6/anstupsen Â§5\u00BBÂ§6 Stupst Spieler an");
-					SendMessage(p, "Â§6/keks Â§5\u00BBÂ§6 Gibt ein Keks");
-		            SendMessage(p, "Â§6/tempo Â§5\u00BBÂ§6 Geschwindigkeit");
-		            SendMessage(p, "Â§6/rmob Â§5\u00BBÂ§6 Monsterspawnen");
-		            SendMessage(p, "Â§6/wo Â§5\u00BBÂ§6 Zeigt die Position oder die eines Spielers"); 
-		            SendMessage(p, "Â§6/heilen Â§5\u00BBÂ§6 Heilt den Spieler");
-		            SendMessage(p, "Â§6/chat Â§5\u00BBÂ§6 SÃ¤ubert den Chat");
-		            SendMessage(p, "Â§6/rcmd Â§5\u00BBÂ§6 Schreibt als Konsole");
-		            SendMessage(p, "Â§6/nick Â§5\u00BBÂ§6 Benennt Nutzer TemporÃ¤r um");
-		            SendMessage(p, "Â§6/fx Â§5\u00BBÂ§6 FX Modus");
-		            SendMessage(p, "Â§6/enderchest Â§5\u00BBÂ§6 Zeigt die Endertruhe des Spielers");
-		            SendMessage(p, "Â§6/effekt Â§5\u00BBÂ§6 Effekt Items fÃ¼r die Lobby");
-		            SendMessage(p, "Â§6/kopf Â§5\u00BBÂ§6 Erstellt einen Spieler Kopf");
-		            SendMessage(p, "Â§6/brotkasten Â§5\u00BBÂ§6 VerÃ¶ffentlicht an alle eine Nachricht");
-		            SendMessage(p, "Â§6/bc /bt Â§5\u00BBÂ§6 Brotkasten in Kurzform");
-		            SendMessage(p, "Â§6/inv Â§5\u00BBÂ§6 Ã–ffnet das Inventar");
-		            SendMessage(p, "Â§6/exp Â§5\u00BBÂ§6 Gibt Erfahrungspunkte");
-		            SendMessage(p, "Â§6/sl Â§5\u00BBÂ§6 StraÃŸenlampen ");
-		            SendMessage(p, "Â§6/reparieren Â§5\u00BBÂ§6 Repariert Items");
-		            SendMessage(p, "Â§6/mehr Â§5\u00BBÂ§6 Repliziert Items");
-		            SendMessage(p, "Â§6/ping Â§5\u00BBÂ§6 Zeigt den Ping des Spielers");
-		            SendMessage(p, "Â§6/gott Â§5\u00BBÂ§6 8 Minuten Gottmodus");
-		            SendMessage(p, "Â§6/w Â§5\u00BBÂ§6 Ã–ffnet die Virtuelle Werkbank");
-	            	SendMessage(p, "Â§6/x Â§5\u00BBÂ§6 Benennt alle Nutzer auf den UrsprÃ¼nglichen Namen um");
-//		            SendMessage(p, "Â§6/ Â§5\u00BBÂ§6 ");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Mod Befehle");
+					SendMessage(p, "§6/tag, /nacht §5\u00BB§6 Zeit");
+					SendMessage(p, "§6/sturm, /sonne §5\u00BB§6 Wetter");
+					SendMessage(p, "§6/0, /1, /2, /3 §5\u00BB§6 Spiel-Modus");
+					SendMessage(p, "§6/anstupsen §5\u00BB§6 Stupst Spieler an");
+					SendMessage(p, "§6/keks §5\u00BB§6 Gibt ein Keks");
+		            SendMessage(p, "§6/tempo §5\u00BB§6 Geschwindigkeit");
+		            SendMessage(p, "§6/rmob §5\u00BB§6 Monsterspawnen");
+		            SendMessage(p, "§6/wo §5\u00BB§6 Zeigt die Position oder die eines Spielers"); 
+		            SendMessage(p, "§6/heilen §5\u00BB§6 Heilt den Spieler");
+		            SendMessage(p, "§6/chat §5\u00BB§6 Säubert den Chat");
+		            SendMessage(p, "§6/rcmd §5\u00BB§6 Schreibt als Konsole");
+		            SendMessage(p, "§6/nick §5\u00BB§6 Benennt Nutzer Temporär um");
+		            SendMessage(p, "§6/fx §5\u00BB§6 FX Modus");
+		            SendMessage(p, "§6/enderchest §5\u00BB§6 Zeigt die Endertruhe des Spielers");
+		            SendMessage(p, "§6/effekt §5\u00BB§6 Effekt Items für die Lobby");
+		            SendMessage(p, "§6/kopf §5\u00BB§6 Erstellt einen Spieler Kopf");
+		            SendMessage(p, "§6/brotkasten §5\u00BB§6 Veröffentlicht an alle eine Nachricht");
+		            SendMessage(p, "§6/bc /bt §5\u00BB§6 Brotkasten in Kurzform");
+		            SendMessage(p, "§6/inv §5\u00BB§6 Ã–ffnet das Inventar");
+		            SendMessage(p, "§6/exp §5\u00BB§6 Gibt Erfahrungspunkte");
+		            SendMessage(p, "§6/sl §5\u00BB§6 StraÃŸenlampen ");
+		            SendMessage(p, "§6/reparieren §5\u00BB§6 Repariert Items");
+		            SendMessage(p, "§6/mehr §5\u00BB§6 Repliziert Items");
+		            SendMessage(p, "§6/ping §5\u00BB§6 Zeigt den Ping des Spielers");
+		            SendMessage(p, "§6/gott §5\u00BB§6 8 Minuten Gottmodus");
+		            SendMessage(p, "§6/w §5\u00BB§6 Ã–ffnet die Virtuelle Werkbank");
+	            	SendMessage(p, "§6/x §5\u00BB§6 Benennt alle Nutzer auf den Ursprünglichen Namen um");
+//		            SendMessage(p, "§6/ §5\u00BB§6 ");
+		            SendMessage(p, "§c--------------------------------------");
 				}
 				else if (args[0].equals("give")) {
-					SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
 					
 					if (!(p.hasPermission("rellu.mod.give"))) {
 						return true;
 					}
 					else {
-							SendMessage(p, "Â§c--------------------------------------");
-							SendMessage(p, prefix + "Â§6Alle Custom Items");
+							SendMessage(p, "§c--------------------------------------");
+							SendMessage(p, prefix + "§6Alle Custom Items");
 							SendMessage(p, " ");
-							SendMessage(p, "Â§6Monster Eier");
-							SendMessage(p, "Â§bKristallEi, CreeperEi, HuehnerEi, KuhEi,");
-							SendMessage(p, "Â§bSchafEi, SchweineEi, SkelettenEi, SlimeEi,");
-							SendMessage(p, "Â§bSpinnenEi, TintenFischEi");
+							SendMessage(p, "§6Monster Eier");
+							SendMessage(p, "§bKristallEi, CreeperEi, HuehnerEi, KuhEi,");
+							SendMessage(p, "§bSchafEi, SchweineEi, SkelettenEi, SlimeEi,");
+							SendMessage(p, "§bSpinnenEi, TintenFischEi");
 							SendMessage(p, " ");
-							SendMessage(p, "Â§6BlÃ¶cke");
-							SendMessage(p, "Â§bRahmen, VerstaerkterRahmen,");
-							SendMessage(p, "Â§bVerstaerkterRahmenII, MonsterSpawner");
+							SendMessage(p, "§6Blöcke");
+							SendMessage(p, "§bRahmen, VerstaerkterRahmen,");
+							SendMessage(p, "§bVerstaerkterRahmenII, MonsterSpawner");
 							SendMessage(p, " ");
-							SendMessage(p, "Â§6Anderes");
-							SendMessage(p, "Â§bLiebesrute, Donnerknochen, Feder, Schneeball, Feuerstab");
-							// SendMessage(p, "Â§b ");
-							SendMessage(p, "Â§c--------------------------------------");
+							SendMessage(p, "§6Anderes");
+							SendMessage(p, "§bLiebesrute, Donnerknochen, Feder, Schneeball, Feuerstab");
+							// SendMessage(p, "§b ");
+							SendMessage(p, "§c--------------------------------------");
 						}
 				}
 				else if (args[0].equals("version")) {
-						SendMessage(p, "Â§c--------------------------------------");
-						SendMessage(p, prefix + "Â§5Version " + Bukkit.getServer().getPluginManager().getPlugin("RelluAPI").getDescription().getVersion() + "!");
-						SendMessage(p, "Â§6" + updatedate + " Â§5Relluem94");
-						SendMessage(p, "Â§c--------------------------------------");
-						// SendMessage(p, "Â§6");
+						SendMessage(p, "§c--------------------------------------");
+						SendMessage(p, prefix + "§5Version " + Bukkit.getServer().getPluginManager().getPlugin("RelluAPI").getDescription().getVersion() + "!");
+						SendMessage(p, "§6" + updatedate + " §5Relluem94");
+						SendMessage(p, "§c--------------------------------------");
+						// SendMessage(p, "§6");
 				}
 				// Funktionen
 				else if (args[0].equals("channel")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§7Channel");
-					SendMessage(p, "Â§6Du kannst mit einem Â§3#Indikator Â§6am Anfang deiner Nachricht");
-					SendMessage(p, "Â§6in verschidenen Channeln abschicken, wenn du die entsprechenden Rechte hast.");
-					SendMessage(p, "Â§6Alle Â§3#Indikatoren Â§6im Ãœberblick:");
-					SendMessage(p, "Â§3#s Â§5\u00BB Â§cFSK 18 Chat");
-					SendMessage(p, "Â§3#v Â§5\u00BB Â§aVIP Chat");
-					SendMessage(p, "Â§3#sg Â§5\u00BB Â§dStargate Chat");
-					SendMessage(p, "Â§3#m Â§5\u00BB Â§6Mod Chat");
-					SendMessage(p, "Â§3#a Â§5\u00BB Â§5Admin Chat");
-					SendMessage(p, "Â§3#e Â§5\u00BB Â§eEvent Chat");
-					SendMessage(p, "Â§3ohne Â§5\u00BB Â§7Normaler Chat");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§7Channel");
+					SendMessage(p, "§6Du kannst mit einem §3#Indikator §6am Anfang deiner Nachricht");
+					SendMessage(p, "§6in verschidenen Channeln abschicken, wenn du die entsprechenden Rechte hast.");
+					SendMessage(p, "§6Alle §3#Indikatoren §6im Ãœberblick:");
+					SendMessage(p, "§3#s §5\u00BB §cFSK 18 Chat");
+					SendMessage(p, "§3#v §5\u00BB §aVIP Chat");
+					SendMessage(p, "§3#sg §5\u00BB §dStargate Chat");
+					SendMessage(p, "§3#m §5\u00BB §6Mod Chat");
+					SendMessage(p, "§3#a §5\u00BB §5Admin Chat");
+					SendMessage(p, "§3#e §5\u00BB §eEvent Chat");
+					SendMessage(p, "§3ohne §5\u00BB §7Normaler Chat");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("msg")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§7Private Nachrichten");
-					SendMessage(p, "Â§6Du kannst einem Spieler eine Private Nachricht schicken ohne einen Befehl nutzen zu mÃ¼ssen.");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6Hierzu schreibe:");
-					SendMessage(p, "Â§b@ <Name> <Nachricht>");
-					SendMessage(p, "Â§6Achte darauf, dass vor dem Â§b@ Â§6kein Zeichen ist und danach ein Leerzeichen und dann erst der Â§bName Â§6kommt");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6Diesen kannst du Bequem mit der Minecraft AutovervollstÃ¤ndigung schreiben.");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6Nun wieder ein Leerzeichen und deine Nachricht an den Spieler.");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§7Private Nachrichten");
+					SendMessage(p, "§6Du kannst einem Spieler eine Private Nachricht schicken ohne einen Befehl nutzen zu müssen.");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Hierzu schreibe:");
+					SendMessage(p, "§b@ <Name> <Nachricht>");
+					SendMessage(p, "§6Achte darauf, dass vor dem §b@ §6kein Zeichen ist und danach ein Leerzeichen und dann erst der §bName §6kommt");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Diesen kannst du Bequem mit der Minecraft Autovervollständigung schreiben.");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Nun wieder ein Leerzeichen und deine Nachricht an den Spieler.");
 					
-		            SendMessage(p, "Â§c--------------------------------------");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("schilder")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§bSchilder");
-					SendMessage(p, "Â§bDu kannst Schilder Plazieren und damit Funktionen nutzen");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6   Item Center");
-					SendMessage(p, "Â§6   Hierzu schreibe:");
-					SendMessage(p, "Â§31. Â§b");
-					SendMessage(p, "Â§32. Â§aMaterialID");
-					SendMessage(p, "Â§33. Â§cAnzahl (max 576 StÃ¼ck)");
-					SendMessage(p, "Â§34. Â§b[r0001]");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6   Wetter");
-					SendMessage(p, "Â§6   Hierzu schreibe:");
-					SendMessage(p, "Â§31. Â§b");
-					SendMessage(p, "Â§32. Â§a ");
-					SendMessage(p, "Â§33. Â§a ");
-					SendMessage(p, "Â§34. Â§b[r0002]");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6   Zeit");
-					SendMessage(p, "Â§6   Hierzu schreibe:");
-					SendMessage(p, "Â§31. Â§b");
-					SendMessage(p, "Â§32. Â§a");
-					SendMessage(p, "Â§33. Â§a");
-					SendMessage(p, "Â§34. Â§b[r0003]");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6   Kommando");
-					SendMessage(p, "Â§6   Hierzu schreibe:");
-					SendMessage(p, "Â§31. Â§b");
-					SendMessage(p, "Â§32. Befehl");
-					SendMessage(p, "Â§33. Â§a");
-					SendMessage(p, "Â§34. Â§b[r0004]");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6   Warps");
-					SendMessage(p, "Â§6   Hierzu schreibe:");
-					SendMessage(p, "Â§31. Â§b");
-					SendMessage(p, "Â§32. Â§a");
-					SendMessage(p, "Â§33. Â§aWarp Name");
-					SendMessage(p, "Â§34. Â§b[r0005]");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§bSchilder");
+					SendMessage(p, "§bDu kannst Schilder Plazieren und damit Funktionen nutzen");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Item Center");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. §aMaterialID");
+					SendMessage(p, "§33. §cAnzahl (max 576 Stück)");
+					SendMessage(p, "§34. §b[r0001]");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Wetter");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. §a ");
+					SendMessage(p, "§33. §a ");
+					SendMessage(p, "§34. §b[r0002]");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Zeit");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. §a");
+					SendMessage(p, "§33. §a");
+					SendMessage(p, "§34. §b[r0003]");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Kommando");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. Befehl");
+					SendMessage(p, "§33. §a");
+					SendMessage(p, "§34. §b[r0004]");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6   Warps");
+					SendMessage(p, "§6   Hierzu schreibe:");
+					SendMessage(p, "§31. §b");
+					SendMessage(p, "§32. §a");
+					SendMessage(p, "§33. §aWarp Name");
+					SendMessage(p, "§34. §b[r0005]");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				// Allgemein
 				else if (args[0].equals("ab")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§6Allgemeine Befehle");
-					SendMessage(p, "Â§6/reiten Â§5\u00BBÂ§6 Spieler auf den Kopf setzten");
-					SendMessage(p, "Â§6/rellu Â§5\u00BBÂ§6 Zeigt die Hilfe Ã¼ber das Plugin");
-					SendMessage(p, "Â§6/team Â§5\u00BBÂ§6 Zeigt die Team Mitglieder");
-					SendMessage(p, "Â§6/hub, /lobby Â§5\u00BBÂ§6 Teleportiert dich in die Lobby");
-					SendMessage(p, "Â§6/fb Â§5\u00BBÂ§6 Teleportiert dich in die Freebuild Welt");
-					SendMessage(p, "Â§6/cb Â§5\u00BBÂ§6 Teleportiert dich in den City Build ");
-					SendMessage(p, "Â§6/nether Â§5\u00BBÂ§6 Teleportiert dich in die HÃ¶lle");
-					SendMessage(p, "Â§6/farm Â§5\u00BBÂ§6 Teleportiert dich in die Farmwelt");
-					SendMessage(p, "Â§6/adv Â§5\u00BBÂ§6 Teleportiert dich in die ADV Welt");
-					SendMessage(p, "Â§6/dev, /bau Â§5\u00BBÂ§6 Teleportiert dich in die Dev und Bauwelt");
-					SendMessage(p, "Â§6/studio Â§5\u00BBÂ§6 Teleportiert dich in die Stargate Welt");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Allgemeine Befehle");
+					SendMessage(p, "§6/reiten §5\u00BB§6 Spieler auf den Kopf setzten");
+					SendMessage(p, "§6/rellu §5\u00BB§6 Zeigt die Hilfe über das Plugin");
+					SendMessage(p, "§6/team §5\u00BB§6 Zeigt die Team Mitglieder");
+					SendMessage(p, "§6/hub, /lobby §5\u00BB§6 Teleportiert dich in die Lobby");
+					SendMessage(p, "§6/fb §5\u00BB§6 Teleportiert dich in die Freebuild Welt");
+					SendMessage(p, "§6/cb §5\u00BB§6 Teleportiert dich in den City Build ");
+					SendMessage(p, "§6/nether §5\u00BB§6 Teleportiert dich in die Hölle");
+					SendMessage(p, "§6/farm §5\u00BB§6 Teleportiert dich in die Farmwelt");
+					SendMessage(p, "§6/adv §5\u00BB§6 Teleportiert dich in die ADV Welt");
+					SendMessage(p, "§6/dev, /bau §5\u00BB§6 Teleportiert dich in die Dev und Bauwelt");
+					SendMessage(p, "§6/studio §5\u00BB§6 Teleportiert dich in die Stargate Welt");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("info")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§6Allgemeine Infos");
-					SendMessage(p, "Â§6Rechte fÃ¼r den Â§cFSK Chat,");
-					SendMessage(p, "Â§6Rechte um Spieler Â§2Login Â§6und Â§4Logout Â§6sehen zu kÃ¶nnen");
-					SendMessage(p, "Â§6bei Â§5Relluem94 Â§6melden");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6Nutze die Â§dCloudsailor-Feder Â§6um durch die Wolken zu schweben");
-					SendMessage(p, "Â§6Die Pilze im Hub geben dir den nÃ¶tigen Schwung");
-					SendMessage(p, "Â§6Nutze die Â§fSchneebÃ¤llenÂ§6 im Hub..");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Allgemeine Infos");
+					SendMessage(p, "§6Rechte für den §cFSK Chat,");
+					SendMessage(p, "§6Rechte um Spieler §2Login §6und §4Logout §6sehen zu können");
+					SendMessage(p, "§6bei §5Relluem94 §6melden");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Nutze die §dCloudsailor-Feder §6um durch die Wolken zu schweben");
+					SendMessage(p, "§6Die Pilze im Hub geben dir den nötigen Schwung");
+					SendMessage(p, "§6Nutze die §fSchneebällen§6 im Hub..");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("ofen")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§6Ofen-Rezepte");
-					SendMessage(p, "Â§6Nutze den Ofen um mit Â§cVerottenen Fleisch Â§aLeder Â§6herzustellen");
-					// SendMessage(p, "Â§6");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Ofen-Rezepte");
+					SendMessage(p, "§6Nutze den Ofen um mit §cVerottenen Fleisch §aLeder §6herzustellen");
+					// SendMessage(p, "§6");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("kessel")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§6Kessel-Funktion");
-					SendMessage(p, "Â§6Nutze den Kessel um Â§cWolle Â§6und Â§cTeppicheÂ§6 zu Â§aentfÃ¤rben");
-					SendMessage(p, "Â§6Unter dem Kessel muss ein Feuer brennen");
-					// SendMessage(p, "Â§6");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Kessel-Funktion");
+					SendMessage(p, "§6Nutze den Kessel um §cWolle §6und §cTeppiche§6 zu §aentfärben");
+					SendMessage(p, "§6Unter dem Kessel muss ein Feuer brennen");
+					// SendMessage(p, "§6");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("buch")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§6Info Buch");
-					SendMessage(p, "Â§6Du hast dir ein Info Buch gegeben");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Info Buch");
+					SendMessage(p, "§6Du hast dir ein Info Buch gegeben");
 					p.getInventory().addItem(is);
-					// SendMessage(p, "Â§6");
-		            SendMessage(p, "Â§c--------------------------------------");
+					// SendMessage(p, "§6");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("herstellen")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§6Werkbank-Rezepte");
-					SendMessage(p, "Â§6Um eine Â§aKettenrÃ¼stung Â§6herzustellen lege das Â§cRÃ¼stungstÃ¼ck Â§6in die Mitte und lege auÃŸenrum Â§c8 Eisen Â§6in die Werkbank");
-					SendMessage(p, "Â§6");
-					SendMessage(p, "Â§6Um Â§aFÃ¤den Â§6herzustellen fÃ¼lle die Werkbank mit Â§cweiÃŸer Wolle");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§6Werkbank-Rezepte");
+					SendMessage(p, "§6Um eine §aKettenrüstung §6herzustellen lege das §cRüstungstück §6in die Mitte und lege auÃŸenrum §c8 Eisen §6in die Werkbank");
+					SendMessage(p, "§6");
+					SendMessage(p, "§6Um §aFäden §6herzustellen fülle die Werkbank mit §cweiÃŸer Wolle");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("rellu")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§5www.relluem94.de die Offizielle Webseite!");
-		            SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§5www.relluem94.de die Offizielle Webseite!");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("1994")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§5Wenn du die Rechte hast..");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§5Wenn du die Rechte hast..");
 					if (!(p.hasPermission("rellu.admin.armor"))) {
 						return true;
 					}
@@ -1074,12 +1074,12 @@ if(cmd.getName().equalsIgnoreCase("rellu")) {
 						 p.getInventory().addItem(rellu.getById(4));
 						 p.getInventory().addItem(rellu.getById(48));
 						 }
-		            SendMessage(p, "Â§c--------------------------------------");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 				}
 				else if (args[0].equals("2001")) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§5Wenn du die Rechte hast..");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§5Wenn du die Rechte hast..");
 					if (!(p.hasPermission("rellu.admin.equip"))) {
 						return true;
 					}
@@ -1088,16 +1088,16 @@ if(cmd.getName().equalsIgnoreCase("rellu")) {
 						 p.getInventory().addItem(rellu.getById(6));
 						 p.getInventory().addItem(rellu.getById(7));
 					}
-		            SendMessage(p, "Â§c--------------------------------------");
+		            SendMessage(p, "§c--------------------------------------");
 		            return true;
 
 
 		else {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, prefix + "Â§5Version " + Bukkit.getServer().getPluginManager().getPlugin("RelluAPI").getDescription().getVersion() + "!");
-					SendMessage(p, "Â§6" + updatedate + " Â§5Relluem94");
-					SendMessage(p, "Â§c--------------------------------------");
-					// SendMessage(p, "Â§6");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, prefix + "§5Version " + Bukkit.getServer().getPluginManager().getPlugin("RelluAPI").getDescription().getVersion() + "!");
+					SendMessage(p, "§6" + updatedate + " §5Relluem94");
+					SendMessage(p, "§c--------------------------------------");
+					// SendMessage(p, "§6");
 				}
 
 
@@ -1109,94 +1109,94 @@ if(cmd.getName().equalsIgnoreCase("rellu")) {
 if (cmd.getName().equalsIgnoreCase("i")) {
 			if (hasPermission(p, permbase + "info") == true) {
 				if (args.length == 0) {
-					SendMessage(p, "Â§5Alle Regeln!");
-					SendMessage(p, "Â§c/i ag Â§6(Allgemeine Regeln)");
-					SendMessage(p, "Â§c/i ab Â§6(User-Befehle)");
-					SendMessage(p, "Â§c/i br Â§6(Bau-Regeln)");
-					SendMessage(p, "Â§c/i fr Â§6(Farm-Regeln)");
-					SendMessage(p, "Â§c/i pr Â§6(Protection)");
-					SendMessage(p, "Â§c/i ts Â§6(Teamspeak)");
-					SendMessage(p, "Â§c/i mr Â§6(Mod-Regeln)");
-					SendMessage(p, "Â§c/team Â§6(Alle Team Mitglieder)");
-					SendMessage(p, "Â§c/rang Â§6(Alle Gruppen)");
-					SendMessage(p, "Â§c/rellu Â§6(Infos und Befehle)");
+					SendMessage(p, "§5Alle Regeln!");
+					SendMessage(p, "§c/i ag §6(Allgemeine Regeln)");
+					SendMessage(p, "§c/i ab §6(User-Befehle)");
+					SendMessage(p, "§c/i br §6(Bau-Regeln)");
+					SendMessage(p, "§c/i fr §6(Farm-Regeln)");
+					SendMessage(p, "§c/i pr §6(Protection)");
+					SendMessage(p, "§c/i ts §6(Teamspeak)");
+					SendMessage(p, "§c/i mr §6(Mod-Regeln)");
+					SendMessage(p, "§c/team §6(Alle Team Mitglieder)");
+					SendMessage(p, "§c/rang §6(Alle Gruppen)");
+					SendMessage(p, "§c/rellu §6(Infos und Befehle)");
 				}
 				else if (args.length == 1) {
 					if(args[0].equalsIgnoreCase("ab")){
-						SendMessage(p, "Â§5User-Befehle");
-						SendMessage(p, "Â§c/support <Nachricht> Â§6schreibt einen Moderator an");
-						SendMessage(p, "Â§c/hub Â§6oder Â§c/lobby Â§6bringt dich zum HUB");
-						SendMessage(p, "Â§c/spawn Â§6bringt dich zum Welt Spawn");
-						SendMessage(p, "Â§c/fb Â§6teleportiert dich zum Freebuild");
-						SendMessage(p, "Â§c/kevin Â§6killt dich sofort");
-						SendMessage(p, "Â§6Setzen eines Homes mit Â§c/haus set <name>Â§6 am aktuellen Standort");
-						SendMessage(p, "Â§6zum Standort Reisen mit Â§c/haus tp <name>Â§6");
+						SendMessage(p, "§5User-Befehle");
+						SendMessage(p, "§c/support <Nachricht> §6schreibt einen Moderator an");
+						SendMessage(p, "§c/hub §6oder §c/lobby §6bringt dich zum HUB");
+						SendMessage(p, "§c/spawn §6bringt dich zum Welt Spawn");
+						SendMessage(p, "§c/fb §6teleportiert dich zum Freebuild");
+						SendMessage(p, "§c/kevin §6killt dich sofort");
+						SendMessage(p, "§6Setzen eines Homes mit §c/haus set <name>§6 am aktuellen Standort");
+						SendMessage(p, "§6zum Standort Reisen mit §c/haus tp <name>§6");
 					}
 					else if(args[0].equalsIgnoreCase("ag")){
-						SendMessage(p, "Â§5Allgemeine Regeln");
-						SendMessage(p, "Â§31. Â§6Kein Spam");
-						SendMessage(p, "Â§32. Â§6Keine Beleidigungen");
-						SendMessage(p, "Â§33. Â§6Keine Werbung/Links");
-						SendMessage(p, "Â§34. Â§6Kein Griefing (griffen)");
-						SendMessage(p, "Â§35. Â§6Den Anweisungen eines Moderators ist Folge zu leisten");
-						SendMessage(p, "Â§36. Â§6Killen von Spielern und deren Tieren ist verboten");
-						SendMessage(p, "Â§37. Â§6Das Errichten von Spieler-Fallen ist verboten.");
+						SendMessage(p, "§5Allgemeine Regeln");
+						SendMessage(p, "§31. §6Kein Spam");
+						SendMessage(p, "§32. §6Keine Beleidigungen");
+						SendMessage(p, "§33. §6Keine Werbung/Links");
+						SendMessage(p, "§34. §6Kein Griefing (griffen)");
+						SendMessage(p, "§35. §6Den Anweisungen eines Moderators ist Folge zu leisten");
+						SendMessage(p, "§36. §6Killen von Spielern und deren Tieren ist verboten");
+						SendMessage(p, "§37. §6Das Errichten von Spieler-Fallen ist verboten.");
 					}
 					else if(args[0].equalsIgnoreCase("br")){
-						SendMessage(p, "Â§5Bauregeln!");
-						SendMessage(p, "Â§3 1. Â§6Variiert in den Blockarten");
-						SendMessage(p, "Â§3 2. Â§6Keine fliegenden Plattformen");
-						SendMessage(p, "Â§3 3. Â§6Keine Plattformen auf dem Wasser");
-						SendMessage(p, "Â§3 4. Â§6Thematisch passend bauen");
-						SendMessage(p, "Â§3 5. Â§6Keine \u00FCberirdischen Mobfarmen");
-						SendMessage(p, "Â§3 6. Â§6Redstone deaktivierbar bauen");
-						SendMessage(p, "Â§3 7. Â§64 Bl\u00F6cke pro Tier");
-						SendMessage(p, "Â§3 8. Â§6Keine 1x1 T\u00FCrme bauen");
-						SendMessage(p, "Â§3 9. Â§6Unsch\u00F6ne H\u00E4user werden nach Ermahnung gel\u00F6scht");
-						SendMessage(p, "Â§310. Â§6Inaktive H\u00E4user von +1 Monat ebenfalls");
+						SendMessage(p, "§5Bauregeln!");
+						SendMessage(p, "§3 1. §6Variiert in den Blockarten");
+						SendMessage(p, "§3 2. §6Keine fliegenden Plattformen");
+						SendMessage(p, "§3 3. §6Keine Plattformen auf dem Wasser");
+						SendMessage(p, "§3 4. §6Thematisch passend bauen");
+						SendMessage(p, "§3 5. §6Keine \u00FCberirdischen Mobfarmen");
+						SendMessage(p, "§3 6. §6Redstone deaktivierbar bauen");
+						SendMessage(p, "§3 7. §64 Bl\u00F6cke pro Tier");
+						SendMessage(p, "§3 8. §6Keine 1x1 T\u00FCrme bauen");
+						SendMessage(p, "§3 9. §6Unsch\u00F6ne H\u00E4user werden nach Ermahnung gel\u00F6scht");
+						SendMessage(p, "§310. §6Inaktive H\u00E4user von +1 Monat ebenfalls");
 					}
 					else if(args[0].equalsIgnoreCase("fr")){
-						SendMessage(p, "Â§5Farmwelt Regeln");
-						SendMessage(p, "Â§3 1. Â§6Ausschliesslich in der Farmwelt farmen");
-						SendMessage(p, "Â§3 2. Â§6Ausnahme unter dem eigenen GS");
-						SendMessage(p, "Â§3 3. Â§6Mods nicht nach Items fragen");
-						SendMessage(p, "Â§3 4. Â§6Setzlinge aus den Kisten nicht aus der Farmwelt mitnehmen");
-						SendMessage(p, "Â§3 5. Â§6B\u00E4ume nachpflanzen");
-						SendMessage(p, "Â§3 6. Â§6Keine tiefen L\u00F6cher und/oder Fallen bauen");
-						SendMessage(p, "Â§3 7. Â§6Bauen ist nicht sinnvoll");
+						SendMessage(p, "§5Farmwelt Regeln");
+						SendMessage(p, "§3 1. §6Ausschliesslich in der Farmwelt farmen");
+						SendMessage(p, "§3 2. §6Ausnahme unter dem eigenen GS");
+						SendMessage(p, "§3 3. §6Mods nicht nach Items fragen");
+						SendMessage(p, "§3 4. §6Setzlinge aus den Kisten nicht aus der Farmwelt mitnehmen");
+						SendMessage(p, "§3 5. §6B\u00E4ume nachpflanzen");
+						SendMessage(p, "§3 6. §6Keine tiefen L\u00F6cher und/oder Fallen bauen");
+						SendMessage(p, "§3 7. §6Bauen ist nicht sinnvoll");
 					}
 					else if(args[0].equalsIgnoreCase("mr")){
-						SendMessage(p, "Â§5Moderator - Regeln");
-						SendMessage(p, "Â§3 1. Â§6Usern nichts aus dem Creativemodus geben");
-						SendMessage(p, "Â§3 2. Â§6Den Usern nichts wegnehmen");
-						SendMessage(p, "Â§3 3. Â§6Kein Schaden an den Usern");
-						SendMessage(p, "Â§3 4. Â§6Vorbildliches Verhalten ");
-						SendMessage(p, "Â§3 5. Â§6Entscheidung von h\u00F6heren sMods/Admins ist Folge zu leisten");
-						SendMessage(p, "Â§3 6. Â§6Kein Diebstahl von vergebenen Grundst\u00FCcken");
-						SendMessage(p, "Â§3 7. Â§6Keine User bevorzugen");
-						SendMessage(p, "Â§3 8. Â§6Kein Spawnen von Gegnern");
-						SendMessage(p, "Â§3 9. Â§6Beachtung der User-Rechte");
-						SendMessage(p, "Â§310. Â§6Auf Support muss reagiert werden");
-						SendMessage(p, "Â§311. Â§6Bei l\u00E4ngerem AFK - Server verlassen");
-						SendMessage(p, "Â§312. Â§6Mods m\u00FCssen TS haben und benutzen");
+						SendMessage(p, "§5Moderator - Regeln");
+						SendMessage(p, "§3 1. §6Usern nichts aus dem Creativemodus geben");
+						SendMessage(p, "§3 2. §6Den Usern nichts wegnehmen");
+						SendMessage(p, "§3 3. §6Kein Schaden an den Usern");
+						SendMessage(p, "§3 4. §6Vorbildliches Verhalten ");
+						SendMessage(p, "§3 5. §6Entscheidung von h\u00F6heren sMods/Admins ist Folge zu leisten");
+						SendMessage(p, "§3 6. §6Kein Diebstahl von vergebenen Grundst\u00FCcken");
+						SendMessage(p, "§3 7. §6Keine User bevorzugen");
+						SendMessage(p, "§3 8. §6Kein Spawnen von Gegnern");
+						SendMessage(p, "§3 9. §6Beachtung der User-Rechte");
+						SendMessage(p, "§310. §6Auf Support muss reagiert werden");
+						SendMessage(p, "§311. §6Bei l\u00E4ngerem AFK - Server verlassen");
+						SendMessage(p, "§312. §6Mods m\u00FCssen TS haben und benutzen");
 					}
 					else if(args[0].equalsIgnoreCase("pr")){
-						SendMessage(p, "Â§5Protection Regeln");
-						SendMessage(p, "Â§3 1. Â§6Sucht euch ein freies Gebiet in der Freebuild");
-						SendMessage(p, "Â§3 2. Â§6Markiert mit einem auff\u00E4lligen Block Ecken");
-						SendMessage(p, "Â§3 3. Â§6Schreibt via Â§c/support Bitte mein GS protectetÂ§6 einen Admin oder Moderator an.");
-						SendMessage(p, "Â§3 4. Â§6Der Mod/Admin wird euch mitteilen wenn das GS gesichert ist");
-						SendMessage(p, "Â§3 5. Â§6Die 1x1 T\u00FCrme wieder entfernen!");
+						SendMessage(p, "§5Protection Regeln");
+						SendMessage(p, "§3 1. §6Sucht euch ein freies Gebiet in der Freebuild");
+						SendMessage(p, "§3 2. §6Markiert mit einem auff\u00E4lligen Block Ecken");
+						SendMessage(p, "§3 3. §6Schreibt via §c/support Bitte mein GS protectet§6 einen Admin oder Moderator an.");
+						SendMessage(p, "§3 4. §6Der Mod/Admin wird euch mitteilen wenn das GS gesichert ist");
+						SendMessage(p, "§3 5. §6Die 1x1 T\u00FCrme wieder entfernen!");
 					}
 					else if(args[0].equalsIgnoreCase("ts")){
-						SendMessage(p, "Â§5TS - Regeln");
-						SendMessage(p, "Â§6Unseren Teamspeak findet ihr unter: ts.cloudsailor.de");
-						SendMessage(p, "Â§3 1. Â§6Kein Spam");
-						SendMessage(p, "Â§3 2. Â§6Keine Beleidigung");
-						SendMessage(p, "Â§3 3. Â§6Kein Mobbing");
-						SendMessage(p, "Â§3 4. Â§6Keine anst\u00F6ssigen Channel- / Usernamen");
-						SendMessage(p, "Â§3 5. Â§6Keine st\u00F6rende Ger\u00E4usche");
-						SendMessage(p, "Â§3 6. Â§6Keine Bots");
+						SendMessage(p, "§5TS - Regeln");
+						SendMessage(p, "§6Unseren Teamspeak findet ihr unter: ts.cloudsailor.de");
+						SendMessage(p, "§3 1. §6Kein Spam");
+						SendMessage(p, "§3 2. §6Keine Beleidigung");
+						SendMessage(p, "§3 3. §6Kein Mobbing");
+						SendMessage(p, "§3 4. §6Keine anst\u00F6ssigen Channel- / Usernamen");
+						SendMessage(p, "§3 5. §6Keine st\u00F6rende Ger\u00E4usche");
+						SendMessage(p, "§3 6. §6Keine Bots");
 					}
 				}
 			}
@@ -1218,12 +1218,12 @@ if (cmd.getName().equalsIgnoreCase("i")) {
 else if (cmd.getName().equalsIgnoreCase("team")) {
 			if (hasPermission(p, permbase + "info") == true) {
 				if (args.length == 0) {
-					SendMessage(p, "Â§5Das Team von Cloudsailor");
-					SendMessage(p, "Â§3Probe Mods Â§7>> Â§bStellachen, Vettelfrank");
-					SendMessage(p, "Â§3Mods Â§7>> Â§6Morsmorse, AliceNex");
-					SendMessage(p, "Â§3Super Mods Â§7>> Nightmare47");
-					SendMessage(p, "Â§3Geek Â§7>> Â§5Relluem94");
-					SendMessage(p, "Â§3Admin Â§7>> Â§5Kaimar1995");
+					SendMessage(p, "§5Das Team von Cloudsailor");
+					SendMessage(p, "§3Probe Mods §7>> §bStellachen, Vettelfrank");
+					SendMessage(p, "§3Mods §7>> §6Morsmorse, AliceNex");
+					SendMessage(p, "§3Super Mods §7>> Nightmare47");
+					SendMessage(p, "§3Geek §7>> §5Relluem94");
+					SendMessage(p, "§3Admin §7>> §5Kaimar1995");
 				}
 			}
 			else 
@@ -1244,17 +1244,17 @@ else if (cmd.getName().equalsIgnoreCase("team")) {
 else if (cmd.getName().equalsIgnoreCase("rang")) {
 			if (hasPermission(p, permbase + "info") == true) {
 				if (args.length == 0) {
-					SendMessage(p, "Â§c--------------------------------------");
-					SendMessage(p, "Â§5Alle RÃ¤nge");
+					SendMessage(p, "§c--------------------------------------");
+					SendMessage(p, "§5Alle Ränge");
 					SendMessage(p, "");
-					SendMessage(p, "Â§8    User und StarGateBuilder");
-					SendMessage(p, "Â§a    VIP und Builder");
-					SendMessage(p, "Â§b    Probe Mod");
-					SendMessage(p, "Â§6    Mod und SuperMod");
-					SendMessage(p, "Â§f    [V] Visitor (Besucher)");
-					SendMessage(p, "Â§5    Geek und Admin");
+					SendMessage(p, "§8    User und StarGateBuilder");
+					SendMessage(p, "§a    VIP und Builder");
+					SendMessage(p, "§b    Probe Mod");
+					SendMessage(p, "§6    Mod und SuperMod");
+					SendMessage(p, "§f    [V] Visitor (Besucher)");
+					SendMessage(p, "§5    Geek und Admin");
 					SendMessage(p, "");
-					SendMessage(p, "Â§c--------------------------------------");
+					SendMessage(p, "§c--------------------------------------");
 				}
 			}
 			else 
@@ -1282,11 +1282,11 @@ else if (cmd.getName().equalsIgnoreCase("back")) {
 					if(r.PlayerLastPostition.containsKey(p)){
 						Location l = r.PlayerLastPostition.get(p);
 						
-						SendMessage(sender, prefix + "Â§6Kehre zurÃ¼ck..");
+						SendMessage(sender, prefix + "§6Kehre zurück..");
 						teleport(p, l);
 					}
 					else{
-						SendMessage(sender, prefix + "Â§6Kein Punkt gesetz..");
+						SendMessage(sender, prefix + "§6Kein Punkt gesetz..");
 					}
 					
 				}
@@ -1312,12 +1312,12 @@ else if (cmd.getName().equalsIgnoreCase("willkommen")) {
 				if(isPlayer(sender) == true){
 					Player p = (Player)sender;
 					if (args.length == 0) {
-						Bukkit.broadcastMessage(p.getDisplayName() + " Â§7>> Â§aWillkommen auf dem Cloudsailor!");
+						Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §aWillkommen auf dem Cloudsailor!");
 					}
 					else {
 						if(Target(args[0]) != null) {
 							Player target = Target(args[0]);
-							Bukkit.broadcastMessage(p.getDisplayName() + " Â§7>> Â§aWillkommen auf dem Cloudsailor Â§a"+ target.getDisplayName() + "Â§a!");
+							Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §aWillkommen auf dem Cloudsailor §a"+ target.getDisplayName() + "§a!");
 						}
 					}
 					
@@ -1325,10 +1325,10 @@ else if (cmd.getName().equalsIgnoreCase("willkommen")) {
 				else{
 					if (args.length == 0) {
 						if(sender.getName().equals("CONSOLE")){
-							Bukkit.broadcastMessage("Â§f[Server] Â§7>> Â§aWillkommen auf dem Cloudsailor!");
+							Bukkit.broadcastMessage("§f[Server] §7>> §aWillkommen auf dem Cloudsailor!");
 						}
 						else{
-							Bukkit.broadcastMessage(sender.getName() + " Â§7>> Â§aWillkommen auf dem Cloudsailor!");
+							Bukkit.broadcastMessage(sender.getName() + " §7>> §aWillkommen auf dem Cloudsailor!");
 						}
 						
 					}
@@ -1336,10 +1336,10 @@ else if (cmd.getName().equalsIgnoreCase("willkommen")) {
 						if(Target(args[0]) != null) {
 							Player target = Target(args[0]);
 							if(sender.getName().equals("CONSOLE")){
-								Bukkit.broadcastMessage("Â§f[Server] Â§7>> Â§aWillkommen auf dem Cloudsailor Â§a"+ target.getDisplayName() + "Â§a!");
+								Bukkit.broadcastMessage("§f[Server] §7>> §aWillkommen auf dem Cloudsailor §a"+ target.getDisplayName() + "§a!");
 							}
 							else{
-								Bukkit.broadcastMessage(sender.getName() + " Â§7>> Â§aWillkommen auf dem Cloudsailor Â§a"+ target.getDisplayName() + "Â§a!");
+								Bukkit.broadcastMessage(sender.getName() + " §7>> §aWillkommen auf dem Cloudsailor §a"+ target.getDisplayName() + "§a!");
 							}
 							
 						}
@@ -1363,7 +1363,7 @@ else if (cmd.getName().equalsIgnoreCase("swn")) {
 				if(isPlayer(sender) == true){
 					Player p = (Player)sender;
 					p.resetPlayerWeather();
-					SendMessage(sender, prefix + "Â§6Das Wetter ist wieder Normal!");
+					SendMessage(sender, prefix + "§6Das Wetter ist wieder Normal!");
 					
 				}
 			}
@@ -1376,7 +1376,7 @@ else if (cmd.getName().equalsIgnoreCase("swn")) {
 				if(isPlayer(sender) == true){
 					Player p = (Player)sender;
 					p.setPlayerWeather(WeatherType.DOWNFALL);
-					SendMessage(sender, prefix + "Â§6Es Regnet nur fÃ¼r dich!");
+					SendMessage(sender, prefix + "§6Es Regnet nur für dich!");
 				}
 			}
 			else {
@@ -1388,7 +1388,7 @@ else if (cmd.getName().equalsIgnoreCase("swn")) {
 				if(isPlayer(sender) == true){
 					Player p = (Player)sender;
 					p.setPlayerWeather(WeatherType.CLEAR);
-					SendMessage(sender, prefix + "Â§6Die Sonne scheint nur fÃ¼r Dich!");
+					SendMessage(sender, prefix + "§6Die Sonne scheint nur für Dich!");
 				}
 			}
 			else {
@@ -1408,7 +1408,7 @@ else if (cmd.getName().equalsIgnoreCase("top")) {
 				if(isPlayer(sender) == true){
 					Player p = (Player)sender;
 					Location l = p.getWorld().getHighestBlockAt(p.getLocation()).getLocation();
-					SendMessage(p, prefix + "Â§6Teleportiere zur OberflÃ¤che..");
+					SendMessage(p, prefix + "§6Teleportiere zur Oberfläche..");
 					teleport(p, l);
 					
 				}
@@ -1426,7 +1426,7 @@ else if (cmd.getName().equalsIgnoreCase("top")) {
 else if (cmd.getName().equalsIgnoreCase("reiten")) {
 			if (hasPermission(sender, permvip + "reiten") == true){
 				if (args.length == 0) {
-					SendMessage(sender, prefix + "Â§6Bitte Spielerrnamen eingeben");
+					SendMessage(sender, prefix + "§6Bitte Spielerrnamen eingeben");
 				}
 				else if (args.length == 1) {
 					if(isPlayer(sender)){
@@ -1436,21 +1436,21 @@ else if (cmd.getName().equalsIgnoreCase("reiten")) {
 							if (target.getWorld() == p.getWorld()) {
 								if (target.getVehicle() == p) {
 									target.leaveVehicle();
-									p.sendMessage(prefix + "Â§6Du wirst nicht mehr von Â§r" + target.getDisplayName() + " Â§6geritten!");
-									target.sendMessage(prefix + "Â§6Du reitest nicht mehr Â§r" + p.getDisplayName() + " Â§6!");
+									p.sendMessage(prefix + "§6Du wirst nicht mehr von §r" + target.getDisplayName() + " §6geritten!");
+									target.sendMessage(prefix + "§6Du reitest nicht mehr §r" + p.getDisplayName() + " §6!");
 								}
 								else {
 									p.setPassenger(target);
-									p.sendMessage(prefix + "Â§6Du wirst geritten vonÂ§r " + target.getDisplayName());
-									target.sendMessage(prefix + "Â§6Du reitestÂ§r " + p.getDisplayName());
+									p.sendMessage(prefix + "§6Du wirst geritten von§r " + target.getDisplayName());
+									target.sendMessage(prefix + "§6Du reitest§r " + p.getDisplayName());
 								}		
 							}
 						}
 						else if(Target(args[0]) == null){
-							SendMessage(sender, prefix + "Â§6Der Spieler Â§r" + args[0] + " Â§6ist nicht Online!");
+							SendMessage(sender, prefix + "§6Der Spieler §r" + args[0] + " §6ist nicht Online!");
 						}
 						else if(Target(args[0]) == sender){
-							SendMessage(sender, prefix + "Â§6Du kannst dich nicht reiten!");
+							SendMessage(sender, prefix + "§6Du kannst dich nicht reiten!");
 						}
 					}
 				}
@@ -1462,14 +1462,14 @@ else if (cmd.getName().equalsIgnoreCase("reiten")) {
 							if (target.getVehicle() == target2) {
 								target.leaveVehicle();
 								// p.setPassenger(null);
-								target2.sendMessage(prefix + "Â§6Du wirst nicht mehr von Â§r" + target.getDisplayName() + " Â§6geritten!");
-								target.sendMessage(prefix + "Â§6Du reitest nicht mehr Â§r" + target2.getDisplayName() + " Â§6!");
+								target2.sendMessage(prefix + "§6Du wirst nicht mehr von §r" + target.getDisplayName() + " §6geritten!");
+								target.sendMessage(prefix + "§6Du reitest nicht mehr §r" + target2.getDisplayName() + " §6!");
 								return true;
 							}
 							else {
 								target2.setPassenger(target);
-								target2.sendMessage(prefix + "Â§6Du wirst geritten vonÂ§r " + target.getDisplayName());
-								target.sendMessage(prefix + "Â§6Du reitestÂ§r " + target2.getDisplayName());
+								target2.sendMessage(prefix + "§6Du wirst geritten von§r " + target.getDisplayName());
+								target.sendMessage(prefix + "§6Du reitest§r " + target2.getDisplayName());
 								return true;
 							}		
 						}
@@ -1477,10 +1477,10 @@ else if (cmd.getName().equalsIgnoreCase("reiten")) {
 						
 					}
 					else if(Target(args[0]) == null){
-						SendMessage(sender, prefix + "Â§6Der Spieler Â§r" + args[0] + " Â§6ist nicht Online!");
+						SendMessage(sender, prefix + "§6Der Spieler §r" + args[0] + " §6ist nicht Online!");
 					}
 					else if(Target(args[0]) == Target(args[1])){
-						SendMessage(sender, prefix + "Â§6Du kannst nicht den gleichen Spieler auf einander reiten lassen!");
+						SendMessage(sender, prefix + "§6Du kannst nicht den gleichen Spieler auf einander reiten lassen!");
 					}
 				}
 			}
@@ -1519,20 +1519,20 @@ else if (cmd.getName().equalsIgnoreCase("fafk")) {
 else if (cmd.getName().equalsIgnoreCase("noob")) {
 			if (hasPermission(sender, permmod + "noob") == true){
 				if (args.length == 0) {
-					SendMessage(sender, prefix + "Â§6/noob Â§c<Kisten>, <Protect>, <Farmwelt> oder <Info>");
+					SendMessage(sender, prefix + "§6/noob §c<Kisten>, <Protect>, <Farmwelt> oder <Info>");
 				}
 				else if (args.length == 1) {
 					if (args[0].equalsIgnoreCase("Kisten")) {
-						Bukkit.broadcastMessage("Â§6Um deine Kisten auf andere zu protecten mach Â§c/cmodify <deinFreund>Â§6!");
+						Bukkit.broadcastMessage("§6Um deine Kisten auf andere zu protecten mach §c/cmodify <deinFreund>§6!");
 					}
 					else if (args[0].equalsIgnoreCase("Protect")) {
-						Bukkit.broadcastMessage("Â§6Wie das Protecten funktioniert findest du unter Â§c/prÂ§6 heraus!");
+						Bukkit.broadcastMessage("§6Wie das Protecten funktioniert findest du unter §c/pr§6 heraus!");
 					}
 					else if (args[0].equalsIgnoreCase("Farmwelt")) {
-						Bukkit.broadcastMessage("Â§6Bitte nur in der Farmwelt farmen Â§c/farmÂ§6. Der Freebuild ist nur zum bauen da!");
+						Bukkit.broadcastMessage("§6Bitte nur in der Farmwelt farmen §c/farm§6. Der Freebuild ist nur zum bauen da!");
 					}
 					else if (args[0].equalsIgnoreCase("Info")) {
-						Bukkit.broadcastMessage("Â§6Lese dir bitte Â§c/i Â§6noch einmal aufmerksam durch. Danke!");
+						Bukkit.broadcastMessage("§6Lese dir bitte §c/i §6noch einmal aufmerksam durch. Danke!");
 					}
 				}
 			}
@@ -1548,7 +1548,7 @@ else if (cmd.getName().equalsIgnoreCase("noob")) {
 else if (cmd.getName().equalsIgnoreCase("anstupsen")) {
 			if (hasPermission(sender, permmod + "anstupsen") == true){
 				if (args.length == 0) {
-					SendMessage(sender, prefix + "Â§6Bitte Spielernamen eingeben");
+					SendMessage(sender, prefix + "§6Bitte Spielernamen eingeben");
 				}
 				else {
 					 if(Target(args[0]) != null){
@@ -1580,7 +1580,7 @@ else if (cmd.getName().equalsIgnoreCase("chat")) {
 						}
 						if(isPlayer(sender) == true){
 							Player s = (Player)sender;
-							SendMessage(s, prefix + "Â§6Chat wurde gereinigt von " + p.getDisplayName());
+							SendMessage(s, prefix + "§6Chat wurde gereinigt von " + p.getDisplayName());
 						}
 						
 					}
@@ -1604,150 +1604,150 @@ else if (cmd.getName().equalsIgnoreCase("fx")) {
 				if(isPlayer(sender)){
 					Player p = (Player)sender;
 					if (args.length == 0) {
-						p.sendMessage(prefix + "Â§6Nutze Â§c/fx <sb> / <sc> / <note> / <love> / <spell> / <fw> / <sel> / <id> / <wl> / <st> / <feu> / <midi> / <info>");
+						p.sendMessage(prefix + "§6Nutze §c/fx <sb> / <sc> / <note> / <love> / <spell> / <fw> / <sel> / <id> / <wl> / <st> / <feu> / <midi> / <info>");
 					}
 					else if (args.length == 1) {
 						if (args[0].equals("sb")) {
 							if (getPlayerState(p) == State.SNOWBALL) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist der Schneemann!");
+								p.sendMessage(prefix + "§6Du bist der Schneemann!");
 								setPlayerState(p, State.SNOWBALL);
 							}
 						}
 						else if (args[0].equals("fw")) {
 							if (getPlayerState(p) == State.FIREWORK) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist das Feuerwerk!");
+								p.sendMessage(prefix + "§6Du bist das Feuerwerk!");
 								setPlayerState(p, State.FIREWORK);
 							}
 						}
 						else if (args[0].equals("note")) {
 							if (getPlayerState(p) == State.NOTES) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist der Mozart!");
+								p.sendMessage(prefix + "§6Du bist der Mozart!");
 								setPlayerState(p, State.NOTES);
 							}
 						}
 						else if (args[0].equals("feu")) {
 							if (getPlayerState(p) == State.FIRE) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist das Feuer!");
+								p.sendMessage(prefix + "§6Du bist das Feuer!");
 								setPlayerState(p, State.FIRE);
 							}
 						}
 						else if (args[0].equals("love")) {
 							if (getPlayerState(p) == State.LOVE) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist Verliebt!");
+								p.sendMessage(prefix + "§6Du bist Verliebt!");
 								setPlayerState(p, State.LOVE);
 							}
 						}
 						else if (args[0].equals("spell")) {
 							if (getPlayerState(p) == State.MAGIC) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist Verhext. Hex Hex!");
+								p.sendMessage(prefix + "§6Du bist Verhext. Hex Hex!");
 								setPlayerState(p, State.MAGIC);
 							}
 						}
 						//TODO
 						else if (args[0].equals("id")) {
 							if (getPlayerState(p) == State.BLOCKID) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else{
-								p.sendMessage(prefix + "Â§6Nutze Â§c/fx id <BlockID>");
+								p.sendMessage(prefix + "§6Nutze §c/fx id <BlockID>");
 							}
 						}
 						else if (args[0].equals("st")) {
 							if (getPlayerState(p) == State.STACKER) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist der Stecker!");
+								p.sendMessage(prefix + "§6Du bist der Stecker!");
 								setPlayerState(p, State.STACKER);
 							}
 						}
 						//TODO
 						else if (args[0].equals("sel")) {
 							if (getPlayerState(p) == State.SELECTOR) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else{
-								p.sendMessage(prefix + "Â§6Nutze Â§c/fx sel <0-15>");
+								p.sendMessage(prefix + "§6Nutze §c/fx sel <0-15>");
 							}
 						}
 						else if (args[0].equals("wl")) {
 							if (getPlayerState(p) == State.SANDPIPER) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist der WasserlÃ¤ufer!");
+								p.sendMessage(prefix + "§6Du bist der Wasserläufer!");
 								setPlayerState(p, State.SANDPIPER);
 							}
 						}
 						else if (args[0].equalsIgnoreCase("midi")) {
-							p.sendMessage(prefix + "Â§6Nutze Â§c/fx midi <Dateinamen>");
+							p.sendMessage(prefix + "§6Nutze §c/fx midi <Dateinamen>");
 						}
 						else if (args[0].equals("sc")) {
 							if (getPlayerState(p) == State.SIGNPASTE) {
-								p.sendMessage(prefix + "Â§6Du bist der Gutenberg!");
+								p.sendMessage(prefix + "§6Du bist der Gutenberg!");
 								setPlayerState(p, State.SIGNCOPY);
 							}
 							else if (getPlayerState(p) == State.SIGNCOPY) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist der Gutenberg!");
+								p.sendMessage(prefix + "§6Du bist der Gutenberg!");
 								setPlayerState(p, State.SIGNCOPY);
 							}
 						}
 						else if (args[0].equals("i") || args[0].equals("info")) {
-							p.sendMessage(prefix + "Â§6FX Info");
-							p.sendMessage("Â§c<sb> Â§fSchneeball Maschienen Pistole");
-							p.sendMessage("Â§c<fw> Â§6Feuerwerk");
-							p.sendMessage("Â§c<sel> Â§bSelektierung");
-							p.sendMessage("Â§c<sc> Â§6SchildKopierer");
-							p.sendMessage("Â§c<wl> Â§1Laufe Ã¼bers Wasser wie Notch!");
-							p.sendMessage("Â§c<st> Â§cSetze dich auf alles");
-							p.sendMessage("Â§c<feu> Â§6Feuer frei");
-							p.sendMessage("Â§c<spell> Â§dSei Bibbi Blocksberg!");
-							p.sendMessage("Â§c<note> Â§aSei Â§cKreativ Â§bund Â§dBund");
-							p.sendMessage("Â§c<love> Â§4Sei verliebt!");
-							p.sendMessage("Â§c<id> Â§aÃ„ndere die Block ID");
-							p.sendMessage("Â§c<midi> Â§4Sei die Jukebox!");
+							p.sendMessage(prefix + "§6FX Info");
+							p.sendMessage("§c<sb> §fSchneeball Maschienen Pistole");
+							p.sendMessage("§c<fw> §6Feuerwerk");
+							p.sendMessage("§c<sel> §bSelektierung");
+							p.sendMessage("§c<sc> §6SchildKopierer");
+							p.sendMessage("§c<wl> §1Laufe übers Wasser wie Notch!");
+							p.sendMessage("§c<st> §cSetze dich auf alles");
+							p.sendMessage("§c<feu> §6Feuer frei");
+							p.sendMessage("§c<spell> §dSei Bibbi Blocksberg!");
+							p.sendMessage("§c<note> §aSei §cKreativ §bund §dBund");
+							p.sendMessage("§c<love> §4Sei verliebt!");
+							p.sendMessage("§c<id> §aÃ„ndere die Block ID");
+							p.sendMessage("§c<midi> §4Sei die Jukebox!");
 						}
 					}
 					else if (args.length == 2) {
 						if (args[0].equals("sel")) {
 							if (getPlayerState(p) == State.SELECTOR) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist Der AuserwÃ¤hlte!");
+								p.sendMessage(prefix + "§6Du bist Der Auserwählte!");
 								setPlayerState(p, State.SELECTOR);
 								rellu.blockIDs.put(p, args[1]);
 							}
@@ -1758,21 +1758,21 @@ else if (cmd.getName().equalsIgnoreCase("fx")) {
     						
 							if(file.exists()){
 								MidiFunktionen.playMidi(file, 1, 1, p);
-	    						p.sendMessage(prefix + "Â§6Du bist die Jukebox!");
+	    						p.sendMessage(prefix + "§6Du bist die Jukebox!");
 							}
 							else {   						
-	    						p.sendMessage(prefix + "Â§6Lied nicht gefunden!");
+	    						p.sendMessage(prefix + "§6Lied nicht gefunden!");
 							}
 
 							
         				}
 						else if (args[0].equals("id")) {
 							if (getPlayerState(p) == State.BLOCKID) {
-								p.sendMessage(prefix + "Â§6Du bist wieder voll Normal!");
+								p.sendMessage(prefix + "§6Du bist wieder voll Normal!");
 								setPlayerState(p, State.DEFAULT);
 							}
 							else {
-								p.sendMessage(prefix + "Â§6Du bist der Ã„ndermann!");
+								p.sendMessage(prefix + "§6Du bist der Ã„ndermann!");
 								setPlayerState(p, State.BLOCKID);
 								rellu.blockIDs.put(p, args[1]);
 							}
@@ -1797,46 +1797,46 @@ else if (cmd.getName().equalsIgnoreCase("sl")) {
 						if(args[0].equalsIgnoreCase("platte")){
 							if(args[1].equalsIgnoreCase("holz")){
 								setPlayerState(p, State.LIGHTS_WOOD);
-								p.sendMessage(prefix + "Â§6Du bist im Holz Lampen Modus!");
+								p.sendMessage(prefix + "§6Du bist im Holz Lampen Modus!");
 							}
 							else if(args[1].equalsIgnoreCase("stein")){
 								setPlayerState(p, State.LIGHTS_STONE);
-								p.sendMessage(prefix + "Â§6Du bist im Stein Lampen Modus!");
+								p.sendMessage(prefix + "§6Du bist im Stein Lampen Modus!");
 							}
 							else if(args[1].equalsIgnoreCase("eisen")){
 								setPlayerState(p, State.LIGHTS_IRON);
-								p.sendMessage(prefix + "Â§6Du bist im Eisen Lampen Modus!");
+								p.sendMessage(prefix + "§6Du bist im Eisen Lampen Modus!");
 							}
 							else if(args[1].equalsIgnoreCase("gold")){
 								setPlayerState(p, State.LIGHTS_GOLD);
-								p.sendMessage(prefix + "Â§6Du bist im Gold Lampen Modus!");
+								p.sendMessage(prefix + "§6Du bist im Gold Lampen Modus!");
 							}
 						}
 						else if(args[0].equalsIgnoreCase("knopf")){
 							if(args[1].equalsIgnoreCase("holz")){
 								setPlayerState(p, State.LIGHTS_WOODBUTTON);
-								p.sendMessage(prefix + "Â§6Du bist im Holz Lampen Modus!");
+								p.sendMessage(prefix + "§6Du bist im Holz Lampen Modus!");
 							}
 							else if(args[1].equalsIgnoreCase("stein")){
 								setPlayerState(p, State.LIGHTS_STONEBUTTON);
-								p.sendMessage(prefix + "Â§6Du bist im Stein Lampen Modus!");
+								p.sendMessage(prefix + "§6Du bist im Stein Lampen Modus!");
 							}
 						}
 					}
 					else if (args.length == 1) {
 						if(args[0].equalsIgnoreCase("stop")){
 							setPlayerState(p, State.DEFAULT);
-							p.sendMessage(prefix + "Â§6Du hast den Lampen Modus verlassen!");
+							p.sendMessage(prefix + "§6Du hast den Lampen Modus verlassen!");
 						}
 						else if(args[0].equalsIgnoreCase("platte")){
-							p.sendMessage(prefix + "Â§6Nutze Â§c/sl platte <holz>, <stein>, <eisen> Â§6oder Â§c<gold>Â§6!");
+							p.sendMessage(prefix + "§6Nutze §c/sl platte <holz>, <stein>, <eisen> §6oder §c<gold>§6!");
 						}
 						else if(args[0].equalsIgnoreCase("knopf")){
-							p.sendMessage(prefix + "Â§6Nutze Â§c/sl knopf <holz> Â§6oder Â§c<stein>Â§6!");
+							p.sendMessage(prefix + "§6Nutze §c/sl knopf <holz> §6oder §c<stein>§6!");
 						}
 					}
 					else{
-						p.sendMessage(prefix + "Â§6Nutze Â§c/sl <knopf>, <platte> oder <stop>!");
+						p.sendMessage(prefix + "§6Nutze §c/sl <knopf>, <platte> oder <stop>!");
 					}
 				}
 			}
@@ -1854,20 +1854,20 @@ else if (cmd.getName().equalsIgnoreCase("sl")) {
 else if (cmd.getName().equalsIgnoreCase("kick")) {
 			if (hasPermission(sender, permmod + "kick") == true){
 				if (args.length == 0){
-					SendMessage(sender, prefix + "Â§6Benutze /kick Â§c<Spieler> <Grund> ");
+					SendMessage(sender, prefix + "§6Benutze /kick §c<Spieler> <Grund> ");
 				}
 				else if (args.length >= 2){
 					if(OfflineTarget(args[0]) != null){
 						OfflinePlayer p = OfflineTarget(args[0]);
 						if(isPlayer(sender)){
 							Player pl = (Player)sender;
-							BroadCastMessage(prefix + "Â§6Der Spieler Â§c" + p.getName() + " Â§6wurde von " + pl.getCustomName() + "Â§6 gekickt");
+							BroadCastMessage(prefix + "§6Der Spieler §c" + p.getName() + " §6wurde von " + pl.getCustomName() + "§6 gekickt");
 							String grund = ArryToString(args);
 							grund = farbe(grund);
 					        grund = symbole(grund);
 					        grund = grund.replaceFirst(p.getName(), "");
 					        grund = grund.replaceFirst(" ", "");
-					        BroadCastMessage(prefix + "Â§6Grund: Â§r" + grund);
+					        BroadCastMessage(prefix + "§6Grund: §r" + grund);
 					        
 					        if(p.isOnline()){
 					        	Player op = (Player)p;
@@ -1876,13 +1876,13 @@ else if (cmd.getName().equalsIgnoreCase("kick")) {
 					        
 						}
 						else {
-							BroadCastMessage(prefix + "Â§6Der Spieler Â§c" + p.getName() + " Â§6wurde gekickt" );
+							BroadCastMessage(prefix + "§6Der Spieler §c" + p.getName() + " §6wurde gekickt" );
 					        String grund = ArryToString(args);
 					        grund = farbe(grund);
 					        grund = symbole(grund);
 					        grund = grund.replace(p.getName(), "");
 					        grund = grund.replaceFirst(" ", "");
-					        BroadCastMessage(prefix + "Â§6Grund: Â§r" + grund);
+					        BroadCastMessage(prefix + "§6Grund: §r" + grund);
 					        
 					        if(p.isOnline()){
 					        	Player op = (Player)p;
@@ -1896,20 +1896,20 @@ else if (cmd.getName().equalsIgnoreCase("kick")) {
 		else if (cmd.getName().equalsIgnoreCase("ban")) {
 			if (hasPermission(sender, permmod + "ban") == true){
 				if (args.length == 0){
-					SendMessage(sender, prefix + "Â§6Benutze /ban Â§c<Spieler> <Grund> ");
+					SendMessage(sender, prefix + "§6Benutze /ban §c<Spieler> <Grund> ");
 				}
 				else if (args.length >= 2){
 					if(OfflineTarget(args[0]) != null){
 						OfflinePlayer p = OfflineTarget(args[0]);
 						if(isPlayer(sender)){
 							Player pl = (Player)sender;
-							BroadCastMessage(prefix + "Â§6Der Spieler Â§c" + p.getName() + " Â§6wurde von " + pl.getCustomName() + "Â§6 gebannt");
+							BroadCastMessage(prefix + "§6Der Spieler §c" + p.getName() + " §6wurde von " + pl.getCustomName() + "§6 gebannt");
 							String grund = ArryToString(args);
 					        grund = farbe(grund);
 					        grund = symbole(grund);
 					        grund = grund.replaceFirst(p.getName(), "");
 					        grund = grund.replaceFirst(" ", "");
-					        BroadCastMessage(prefix + "Â§6Grund: Â§r" + grund);
+					        BroadCastMessage(prefix + "§6Grund: §r" + grund);
 					        //p.setBanned(true);
 					        //TODO WORKARROUNDDDDDDDD
 					        if(p.isOnline()){
@@ -1919,13 +1919,13 @@ else if (cmd.getName().equalsIgnoreCase("kick")) {
 					        
 						}
 						else {
-							BroadCastMessage(prefix + "Â§6Der Spieler Â§c" + p.getName() + " Â§6wurde gebannt" );
+							BroadCastMessage(prefix + "§6Der Spieler §c" + p.getName() + " §6wurde gebannt" );
 							String grund = ArryToString(args);
 					        grund = farbe(grund);
 					        grund = symbole(grund);
 					        grund = grund.replaceFirst(p.getName(), "");
 					        grund = grund.replaceFirst(" ", "");
-					        BroadCastMessage(prefix + "Â§6Grund: Â§r" + grund);
+					        BroadCastMessage(prefix + "§6Grund: §r" + grund);
 					        //p.setBanned(true);
 					        //TODO WORKARROUNDDDDDDDD
 					        if(p.isOnline()){
@@ -1949,14 +1949,14 @@ else if (cmd.getName().equalsIgnoreCase("kick")) {
 else if (cmd.getName().equalsIgnoreCase("signedit")) {
 			if (hasPermission(sender, permmod + "signedit") == true){
 				if (args.length == 0){
-					SendMessage(sender, prefix + "Â§6/signedit Â§c<Zeile> <Text> Â§6oder Â§c<stop>");
+					SendMessage(sender, prefix + "§6/signedit §c<Zeile> <Text> §6oder §c<stop>");
 				}
 				else if (args.length == 1){
 					if(args[0].equalsIgnoreCase("stop")){
 						if(isPlayer(sender)){
 							Player p = (Player)sender;
 							setPlayerState(p, State.DEFAULT);
-							SendMessage(sender, prefix + "Â§6Erfolgreich gestoppt");
+							SendMessage(sender, prefix + "§6Erfolgreich gestoppt");
 						}
 					}
 				}
@@ -1969,14 +1969,14 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 								rellu.signedit_zeile.put(p, i);
 								rellu.signedit_text.put(p, args[1]);
 								setPlayerState(p, State.SIGNEDIT);
-								SendMessage(sender, prefix + "Â§6BerÃ¼hre das Schild");
+								SendMessage(sender, prefix + "§6Berühre das Schild");
 							}
 							else{
-								SendMessage(sender, prefix + "Â§6MÃ¶glichkeiten: Â§c0, 1, 2 und 3");
+								SendMessage(sender, prefix + "§6Möglichkeiten: §c0, 1, 2 und 3");
 							}
 						}
 						else{
-							SendMessage(sender, prefix + "Â§6Kein Integer!");
+							SendMessage(sender, prefix + "§6Kein Integer!");
 						}
 					}
 				}
@@ -1999,23 +1999,23 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	 @EventHandler	
 	 public void InteractPlayer(InventoryClickEvent e) throws FileNotFoundException, IOException, InvalidConfigurationException{
 		 try{
-			 if(e.getClickedInventory().getName().equals("Â§5[RelluAPI] Â§aHaus GUI")){
+			 if(e.getClickedInventory().getName().equals("§5[RelluAPI] §aHaus GUI")){
 				 if(e.getCurrentItem().getType() == Material.COMPASS){
 					 if(e.getCurrentItem().hasItemMeta()){
 						ItemMeta meta = e.getCurrentItem().getItemMeta();
 						String name = meta.getDisplayName();
-						name = name.replace("Â§a", "");
+						name = name.replace("§a", "");
 						name = name.toLowerCase();
 						Player p = (Player) e.getWhoClicked();
 						e.setCancelled(true);
 						teleport(p, getHome(p, name));
-						SendMessage(p, prefix + "Â§6Du bist jetzt im Haus Â§a" + name);
+						SendMessage(p, prefix + "§6Du bist jetzt im Haus §a" + name);
 						p.closeInventory();
 					 }
 					 
 				 }
 			 }
-			 else if(e.getClickedInventory().getName().equals("Â§6Welt wechseln")){		
+			 else if(e.getClickedInventory().getName().equals("§6Welt wechseln")){		
 				 if (e.getCurrentItem().getItemMeta().getDisplayName().contains("Freies Bauen")) {
 	                    e.setCancelled(true);
 						Location loc = worldFB.getSpawnLocation();
@@ -2178,7 +2178,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	         int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
 	        
 	         if(onlinePlayers >= MaxPlayers){
-	                 ev.disallow(null, "Â§cDer Server ist leider voll");
+	                 ev.disallow(null, "§cDer Server ist leider voll");
 	         }
 	        
 	 }
@@ -2303,7 +2303,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	        }
 	        // block.setData((byte)level);
 	        event.getPlayer().getEquipment().setItemInMainHand(new ItemStack(Material.WOOL, size));
-	        event.getPlayer().sendMessage(prefix + "Â§6Deine Wolle wurde entfÃ¤rbt");
+	        event.getPlayer().sendMessage(prefix + "§6Deine Wolle wurde entfärbt");
 	        event.setCancelled(true);
 	      }
 	    }
@@ -2325,7 +2325,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 		        }
 		        // block2.setData((byte)level);
 		        event.getPlayer().setItemInHand(new ItemStack(Material.CARPET, size));
-		       event.getPlayer().sendMessage(prefix + "Â§6Dein Teppich wurde entfÃ¤rbt");
+		       event.getPlayer().sendMessage(prefix + "§6Dein Teppich wurde entfärbt");
 		        event.setCancelled(true);
 		      }
 		    }
@@ -2349,7 +2349,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 		
 	      final Player p = e.getPlayer();
 	      Sign s = (Sign)e.getClickedBlock().getState();
-	      if ((s.getLine(0).equalsIgnoreCase(prefix)) && (s.getLine(3).equalsIgnoreCase("Â§6[ItemCenter]"))) {
+	      if ((s.getLine(0).equalsIgnoreCase(prefix)) && (s.getLine(3).equalsIgnoreCase("§6[ItemCenter]"))) {
 	        try
 	        {
 	          ItemStack i;
@@ -2371,7 +2371,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	            
 	            if (anz < 64) {
 	            	i = new ItemStack(mat, anz);
-	            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+	            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 	            	inv.setItem(0, i);
 	  	          	p.openInventory(inv);
 	  	          	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
@@ -2402,7 +2402,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 								            	i7 = new ItemStack(mat, 64);
 								            	i8 = new ItemStack(mat, 64);
 								            	i9 = new ItemStack(mat, anz9);
-								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 								            	inv.setItem(0, i);
 								            	inv.setItem(1, i2);
 								            	inv.setItem(2, i3);
@@ -2425,7 +2425,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 								            	i7 = new ItemStack(mat, 64);
 								            	i8 = new ItemStack(mat, anz8);
 								            	
-								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 								            	inv.setItem(0, i);
 								            	inv.setItem(1, i2);
 								            	inv.setItem(2, i3);
@@ -2446,7 +2446,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 							            	i5 = new ItemStack(mat, 64);
 							            	i6 = new ItemStack(mat, 64);
 							            	i7 = new ItemStack(mat, anz7);
-							            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+							            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 							            	inv.setItem(0, i);
 							            	inv.setItem(1, i2);
 							            	inv.setItem(2, i3);
@@ -2465,7 +2465,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 						            	i4 = new ItemStack(mat, 64);
 						            	i5 = new ItemStack(mat, 64);
 						            	i6 = new ItemStack(mat, anz6);
-						            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+						            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 						            	inv.setItem(0, i);
 						            	inv.setItem(1, i2);
 						            	inv.setItem(2, i3);
@@ -2482,7 +2482,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 					            	i3 = new ItemStack(mat, 64);
 					            	i4 = new ItemStack(mat, 64);
 					            	i5 = new ItemStack(mat, anz5);
-					            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+					            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 					            	inv.setItem(0, i);
 					            	inv.setItem(1, i2);
 					            	inv.setItem(2, i3);
@@ -2497,7 +2497,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 				            	i2 = new ItemStack(mat, 64);
 				            	i3 = new ItemStack(mat, 64);
 				            	i4 = new ItemStack(mat, anz4);
-				            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+				            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 				            	inv.setItem(0, i);
 				            	inv.setItem(1, i2);
 				            	inv.setItem(2, i3);
@@ -2510,7 +2510,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 		            		i = new ItemStack(mat, 64);
 			            	i2 = new ItemStack(mat, anz2);
 			            	i3 = new ItemStack(mat, anz3);
-			            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+			            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 			            	inv.setItem(0, i);
 			            	inv.setItem(1, i2);
 			            	inv.setItem(2, i3);
@@ -2521,7 +2521,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	            	else {
 	            		i = new ItemStack(mat, 64);
 		            	i2 = new ItemStack(mat, anz2);
-		            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+		            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 		            	inv.setItem(0, i);
 		            	inv.setItem(1, i2);
 		            	p.openInventory(inv);
@@ -2538,7 +2538,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	            int damage = Integer.parseInt(ChatColor.stripColor(array[1]));
 	            if (anz < 64) {
 	            	i = new ItemStack(mat, anz, (short)damage);
-	            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+	            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 	            	inv.setItem(0, i);
 	  	          	p.openInventory(inv);
 	  	          	p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 1.0F, 3.0F);
@@ -2568,7 +2568,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 								            	i7 = new ItemStack(mat, 64, (short)damage);
 								            	i8 = new ItemStack(mat, 64, (short)damage);
 								            	i9 = new ItemStack(mat, anz9, (short)damage);
-								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 								            	inv.setItem(0, i);
 								            	inv.setItem(1, i2);
 								            	inv.setItem(2, i3);
@@ -2591,7 +2591,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 								            	i7 = new ItemStack(mat, 64, (short)damage);
 								            	i8 = new ItemStack(mat, anz8, (short)damage);
 								            	
-								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+								            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 								            	inv.setItem(0, i);
 								            	inv.setItem(1, i2);
 								            	inv.setItem(2, i3);
@@ -2612,7 +2612,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 							            	i5 = new ItemStack(mat, 64, (short)damage);
 							            	i6 = new ItemStack(mat, 64, (short)damage);
 							            	i7 = new ItemStack(mat, anz7, (short)damage);
-							            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+							            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 							            	inv.setItem(0, i);
 							            	inv.setItem(1, i2);
 							            	inv.setItem(2, i3);
@@ -2631,7 +2631,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 						            	i4 = new ItemStack(mat, 64, (short)damage);
 						            	i5 = new ItemStack(mat, 64, (short)damage);
 						            	i6 = new ItemStack(mat, anz6, (short)damage);
-						            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+						            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 						            	inv.setItem(0, i);
 						            	inv.setItem(1, i2);
 						            	inv.setItem(2, i3);
@@ -2648,7 +2648,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 					            	i3 = new ItemStack(mat, 64, (short)damage);
 					            	i4 = new ItemStack(mat, 64, (short)damage);
 					            	i5 = new ItemStack(mat, anz5, (short)damage);
-					            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+					            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 					            	inv.setItem(0, i);
 					            	inv.setItem(1, i2);
 					            	inv.setItem(2, i3);
@@ -2663,7 +2663,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 				            	i2 = new ItemStack(mat, 64, (short)damage);
 				            	i3 = new ItemStack(mat, 64, (short)damage);
 				            	i4 = new ItemStack(mat, anz4, (short)damage);
-				            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+				            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 				            	inv.setItem(0, i);
 				            	inv.setItem(1, i2);
 				            	inv.setItem(2, i3);
@@ -2677,7 +2677,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 		            		i = new ItemStack(mat, 64, (short)damage);
 			            	i2 = new ItemStack(mat, anz2, (short)damage);
 			            	i3 = new ItemStack(mat, anz3, (short)damage);
-			            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+			            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 			            	inv.setItem(0, i);
 			            	inv.setItem(1, i2);
 			            	inv.setItem(2, i3);
@@ -2688,7 +2688,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	            	else {
 	            		i = new ItemStack(mat, 64, (short)damage);
 		            	i2 = new ItemStack(mat, anz2, (short)damage);
-		            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "Â§6ItemCenter ");
+		            	Inventory inv = Bukkit.createInventory(null, 9, prefix + "§6ItemCenter ");
 		            	inv.setItem(0, i);
 		            	inv.setItem(1, i2);
 		            	p.openInventory(inv);
@@ -2720,7 +2720,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	    {
 	     // final Player p = e.getPlayer();
 	     // Sign s = (Sign)e.getClickedBlock().getState();
-	      if ((s.getLine(0).equalsIgnoreCase("Â§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("Â§1[Wetter]"))) {
+	      if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§1[Wetter]"))) {
 	        try
 	        {
 	          if(p.getWorld().hasStorm()) {
@@ -2744,7 +2744,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	    {
 	     // final Player p = e.getPlayer();
 	    //  Sign s = (Sign)e.getClickedBlock().getState();
-	      if ((s.getLine(0).equalsIgnoreCase("Â§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("Â§6[Zeit]"))) {
+	      if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§6[Zeit]"))) {
 	        try
 	        {
 	          if(p.getWorld().getTime() > 8000L ) {
@@ -2772,7 +2772,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	    	
 	     // final Player p = e.getPlayer();
 	    //  Sign s = (Sign)e.getClickedBlock().getState();
-	      if ((s.getLine(0).equalsIgnoreCase("Â§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("Â§6[Shop]"))) {
+	      if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§6[Shop]"))) {
 	        try{
 	         	     String a = s.getLine(1);
 	         	     String b = s.getLine(2);
@@ -2861,65 +2861,65 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 		 	         	    									if(z2 >= h * 64 && h <= y1){
 		 	         	    										p.getInventory().addItem(n);
 				 	         	    								q.getBlockInventory().removeItem(n);
-				 	         	    								p.sendMessage(prefix + "Â§6Item wurde verkauft");
+				 	         	    								p.sendMessage(prefix + "§6Item wurde verkauft");
 				 	         	    								for (int l = 0; l < h; l++) {
 				 	         	    									p.getInventory().removeItem(i);
 				 	         	    									k.getBlockInventory().addItem(i);
 				 	         	    							 	}
 				 	         	    							}
 		 	         	    									else if(z2 >= h * 64 && h >= y1){
-			 	         	    									p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c Ausgabekiste Â§6ist fast voll");
+			 	         	    									p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast voll");
 			 	         	    								}
 			 	         	    								else if(z2 <= h * 64 && h >= y1){
 			 	         	    									int z = h *64 - z2;
-				 	         	    								p.sendMessage(prefix + "Â§6Nicht genÃ¼gend Items zur verfÃ¼gung. BenÃ¶tigt: Â§c" + z);
+				 	         	    								p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + z);
 			 	         	    								}
 			 	         	    								else if(z2 <= h * 64 && h <= y1){
 			 	         	    									int z = h *64 - z2;
-				 	         	    								p.sendMessage(prefix + "Â§6Nicht genÃ¼gend Items zur verfÃ¼gung. BenÃ¶tigt: Â§c" + z);
+				 	         	    								p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + z);
 			 	         	    								}
 			 	         	    								else{
-			 	         	    									p.sendMessage(prefix + "Â§6Shop: Unbekannter Fehler 1");
+			 	         	    									p.sendMessage(prefix + "§6Shop: Unbekannter Fehler 1");
 			 	         	    								}
 			 	         	    							}	
 			 	         	    							else if(v == true && u == true && x == false){
-			 	         	    								p.sendMessage(prefix + "Â§6Das Inventar vonÂ§c dir Â§6ist voll");
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von§c dir §6ist voll");
 			 	         	    							}
 			 	         	    							else if(v == true && u == false && x == true){
 			 	         	    								if(z2 >= h * 64 && h <= y1){
 		 	         	    										p.getInventory().addItem(n);
 				 	         	    								q.getBlockInventory().removeItem(n);
-				 	         	    								p.sendMessage(prefix + "Â§6Item wurde verkauft");
+				 	         	    								p.sendMessage(prefix + "§6Item wurde verkauft");
 				 	         	    								for (int l = 0; l < h; l++) {
 				 	         	    									p.getInventory().removeItem(i);
 				 	         	    									k.getBlockInventory().addItem(i);
 				 	         	    							 	}
 				 	         	    							}
 		 	         	    									else if(z2 >= h * 64 && h >= y1){
-			 	         	    									p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c Ausgabekiste Â§6ist fast voll");
+			 	         	    									p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast voll");
 			 	         	    								}
 			 	         	    								else if(z2 <= h * 64 && h >= y1){
 			 	         	    									int z = h *64 - z2;
-				 	         	    								p.sendMessage(prefix + "Â§6Nicht genÃ¼gend Items zur verfÃ¼gung. BenÃ¶tigt: Â§c" + z);
+				 	         	    								p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + z);
 			 	         	    								}
 			 	         	    								else{
-			 	         	    									p.sendMessage(prefix + "Â§6Shop: Unbekannter Fehler 2");
+			 	         	    									p.sendMessage(prefix + "§6Shop: Unbekannter Fehler 2");
 			 	         	    								}
 			 	         	    							}
 			 	         	    							else if(v == false && u == true && x == true){
-			 	         	    								p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c Ausgabekiste Â§6ist voll");
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist voll");
 			 	         	    							}
 			 	         	    							else if(v == false && u == false && x == true){
-			 	         	    								p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c BezahlkisteÂ§6 und der Â§c Ausgabekiste Â§6ist voll");
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste§6 und der §c Ausgabekiste §6ist voll");
 			 	         	    							}
 			 	         	    							else if(v == true && u == false && x == false){
-			 	         	    								p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c BezahlkisteÂ§6 und vonÂ§c dir Â§6ist voll");
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste§6 und von§c dir §6ist voll");
 			 	         	    							}
 			 	         	    							else if(v == false && u == false && x == false){
-			 	         	    								p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c AusgabekisteÂ§6 und vonÂ§c dir Â§6ist voll");
+			 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste§6 und von§c dir §6ist voll");
 			 	         	    							}
 			 	         	    							else{
-			 	         	    								p.sendMessage(prefix + "Â§6Unbekannter Fehler 3");
+			 	         	    								p.sendMessage(prefix + "§6Unbekannter Fehler 3");
 			 	         	    							}
 		 	         	    						}
 		 	         	    					}
@@ -2996,81 +2996,81 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 		 	         	    								if(y2 >= m){
 	 	         	    										p.getInventory().removeItem(n);
 			 	         	    								q.getBlockInventory().addItem(n);
-			 	         	    								p.sendMessage(prefix + "Â§6Item wurde gekauft");
+			 	         	    								p.sendMessage(prefix + "§6Item wurde gekauft");
 			 	         	    								for (int l = 0; l < h; l++) {
 			 	         	    									p.getInventory().addItem(i);
 			 	         	    									k.getBlockInventory().removeItem(i);
 			 	         	    							 	}
 			 	         	    							}
 		 	         	    								else if(y2 >= m){
-		 	         	    									p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c Ausgabekiste Â§6ist fast voll");
+		 	         	    									p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast voll");
 		 	         	    								}
 		 	         	    								else if(y2 <= m){
 		 	         	    									int y = m - y2;
-			 	         	    								p.sendMessage(prefix + "Â§6Nicht genÃ¼gend Items zur verfÃ¼gung. BenÃ¶tigt: Â§c" + y);
+			 	         	    								p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + y);
 		 	         	    								}
 		 	         	    								else{
-		 	         	    									p.sendMessage(prefix + "Â§6Unbekannter Fehler 4");
+		 	         	    									p.sendMessage(prefix + "§6Unbekannter Fehler 4");
 		 	         	    								}
 		 	         	    							}
 		 	         	    							else if(v == true && u == true && x == false){
-		 	         	    								p.sendMessage(prefix + "Â§6Das Inventar vonÂ§c dir Â§6ist voll");
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von§c dir §6ist voll");
 		 	         	    							}
 		 	         	    							else if(v == true && u == false && x == true){
-		 	         	    								p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c Bezahlkiste Â§6ist voll");
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste §6ist voll");
 		 	         	    							}
 		 	         	    							else if(v == false && u == true && x == true){
 		 	         	    								if(y2 >= h * 64 && h <= y1){
 	 	         	    										p.getInventory().removeItem(n);
 			 	         	    								q.getBlockInventory().addItem(n);
-			 	         	    								p.sendMessage(prefix + "Â§6Item wurde gekauft");
+			 	         	    								p.sendMessage(prefix + "§6Item wurde gekauft");
 			 	         	    								for (int l = 0; l < h; l++) {
 			 	         	    									p.getInventory().addItem(i);
 			 	         	    									k.getBlockInventory().removeItem(i);
 			 	         	    							 	}
 			 	         	    							}
 		 	         	    								else if(z2 >= h * 64 && h >= y1){
-		 	         	    									p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c Ausgabekiste Â§6ist fast voll");
+		 	         	    									p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast voll");
 		 	         	    								}
 		 	         	    								else if(z2 <= h * 64 && h >= y1){
 		 	         	    									
 		 	         	    										p.getInventory().removeItem(n);
 				 	         	    								q.getBlockInventory().addItem(n);
-				 	         	    								p.sendMessage(prefix + "Â§6Item wurde gekauft");
+				 	         	    								p.sendMessage(prefix + "§6Item wurde gekauft");
 				 	         	    								for (int l = 0; l < h; l++) {
 				 	         	    									p.getInventory().addItem(i);
 				 	         	    									k.getBlockInventory().removeItem(i);
 				 	         	    							 	}
 				 	         	    							
 		 	         	    									// int z = h *64 - z2;
-			 	         	    								//p.sendMessage(prefix + "Â§6Nicht genÃ¼gend Items zur verfÃ¼gung. BenÃ¶tigt: Â§c" + z);
+			 	         	    								//p.sendMessage(prefix + "§6Nicht genügend Items zur verfügung. Benötigt: §c" + z);
 		 	         	    								}
 		 	         	    							}
 		 	         	    							else if(v == false && u == false && x == true){
-		 	         	    								p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c BezahlkisteÂ§6 und der Â§c Ausgabekiste Â§6ist voll");
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste§6 und der §c Ausgabekiste §6ist voll");
 		 	         	    							}
 		 	         	    							else if(v == true && u == false && x == false){
-		 	         	    								p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c BezahlkisteÂ§6 und vonÂ§c dir Â§6ist voll");
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Bezahlkiste§6 und von§c dir §6ist voll");
 		 	         	    							}
 		 	         	    							else if(v == false && u == false && x == false){
-		 	         	    								p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c AusgabekisteÂ§6 und vonÂ§c dir Â§6ist voll");
+		 	         	    								p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste§6 und von§c dir §6ist voll");
 		 	         	    							}
 		 	         	    							else{
-	 	         	    									p.sendMessage(prefix + "Â§6Unbekannter Fehler 5");
+	 	         	    									p.sendMessage(prefix + "§6Unbekannter Fehler 5");
 	 	         	    								}
 		 	         	    						}
 		 	         	    					}
 			 	         	    			}
 		 	         	    			}
 		 	         	    			else{
-		 	         	    				p.sendMessage(prefix + "Â§6Das Inventar von derÂ§c Ausgabekiste Â§6ist fast leer");
+		 	         	    				p.sendMessage(prefix + "§6Das Inventar von der§c Ausgabekiste §6ist fast leer");
 		 	         	    			}
 		 	         	    		}
 		         	    		}
 		         	    	 }
 	         	    	}
 	         	    	else{
-         	    			p.sendMessage(prefix + "Â§6Dieses Item kannst du hier nicht Handeln");
+         	    			p.sendMessage(prefix + "§6Dieses Item kannst du hier nicht Handeln");
          	    		}
 	         	     }   
 	        
@@ -3087,10 +3087,10 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
   
 	    if (e.getPlayer().hasPermission("rellu.sign.warp.use")){
 	    	 if (((schild instanceof Sign)) && (e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-	    		 if ((s.getLine(0).equalsIgnoreCase("Â§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("Â§a[Warps]"))) {
+	    		 if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§a[Warps]"))) {
 	    			 try{
 	    				 String cmdpart = s.getLine(2);
-	    				 String cmd = "warp tp " + cmdpart.replace("Â§c", "");
+	    				 String cmd = "warp tp " + cmdpart.replace("§c", "");
 	   	              p.performCommand(cmd);
 	    			 }
 	    			 catch (Exception localException) {
@@ -3110,7 +3110,7 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 	    {
 	   //   final Player p = e.getPlayer();
 	   //   Sign s = (Sign)e.getClickedBlock().getState();
-	      if ((s.getLine(0).equalsIgnoreCase("Â§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("Â§b[Befehl]"))) {
+	      if ((s.getLine(0).equalsIgnoreCase("§5[RelluAPI]")) && (s.getLine(3).equalsIgnoreCase("§b[Befehl]"))) {
 	        try
 	        {
 	        	  String cmd = s.getLine(1);
@@ -3137,19 +3137,19 @@ else if (cmd.getName().equalsIgnoreCase("signedit")) {
 		Location l = e.getFrom().getSpawnLocation();
 		if(w.equals(worldADV)){
 			if(e.getPlayer().hasPermission(permworldADV)){
-				SendMessage(e.getPlayer(), prefix + "Â§6Du bist jetzt in der ADV");
+				SendMessage(e.getPlayer(), prefix + "§6Du bist jetzt in der ADV");
 			}
 			else{
-				SendMessage(e.getPlayer(), prefix + "Â§6Du hast keine Rechte um in die ADV zu gelangen");
+				SendMessage(e.getPlayer(), prefix + "§6Du hast keine Rechte um in die ADV zu gelangen");
 				e.getPlayer().teleport(l);
 			}
 		}
 		else if(w.equals(worldBau)){
 			if(e.getPlayer().hasPermission(permworldBau)){
-				SendMessage(e.getPlayer(), prefix + "Â§6Du bist jetzt in der Bau Welt");
+				SendMessage(e.getPlayer(), prefix + "§6Du bist jetzt in der Bau Welt");
 			}
 			else{
-				SendMessage(e.getPlayer(), prefix + "Â§6Du hast keine Rechte um in die Bau Welt zu gelangen");
+				SendMessage(e.getPlayer(), prefix + "§6Du hast keine Rechte um in die Bau Welt zu gelangen");
 				e.getPlayer().teleport(l);
 			}
 		}
@@ -3204,7 +3204,7 @@ public class PlayerState{
 				(e.getLine(3).equalsIgnoreCase("[cs01]")) && (e.getLine(2).equalsIgnoreCase("")) && (e.getLine(1).equalsIgnoreCase(""))) {
 				 e.setLine(0, prefix_captureSpleef);
 			     e.setLine(1, "");
-			     e.setLine(2, "Â§aSpiel betreten");
+			     e.setLine(2, "§aSpiel betreten");
 			     e.setLine(3, "");
 			     e.getPlayer().sendMessage(prefix_captureSpleef + schild);
 			     }
@@ -3212,7 +3212,7 @@ public class PlayerState{
 					 (e.getLine(3).equalsIgnoreCase("[cs02]")) && (e.getLine(2).equalsIgnoreCase("")) && (e.getLine(1).equalsIgnoreCase(""))) {
 				 e.setLine(0, prefix_captureSpleef);
 				 e.setLine(1, "");
-			     e.setLine(2, "Â§aSpiel verlassen");
+			     e.setLine(2, "§aSpiel verlassen");
 			     e.setLine(3, "");
 			     e.getPlayer().sendMessage(prefix_captureSpleef + schild);
 			     }
@@ -3246,11 +3246,11 @@ public class PlayerState{
 	        }
 	        int i = Integer.parseInt(e.getLine(2));
 	        
-	        e.setLine(0, "Â§5[RelluAPI]");
+	        e.setLine(0, "§5[RelluAPI]");
 	        e.setLine(1, "" + e.getLine(1));
 	        e.setLine(2, "" + e.getLine(2));
-	        e.setLine(3, "Â§6[ItemCenter]");
-	        e.getPlayer().sendMessage(prefix + "Â§6Schild erstellt");
+	        e.setLine(3, "§6[ItemCenter]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
 	      }
 	      catch (Exception localException) {}
 	    }
@@ -3268,11 +3268,11 @@ public class PlayerState{
 	    		(e.getLine(3).equalsIgnoreCase("[Wetter]")) ||
 	    		(e.getLine(3).equalsIgnoreCase("[r0002]"))
 	    		)) {
-	    	e.setLine(0, "Â§5[RelluAPI]");
-	        e.setLine(1, "Â§bÃ„ndere das Wetter");
-	        e.setLine(2, "Â§bHier klicken zum wechseln");
-	        e.setLine(3, "Â§1[Wetter]");
-	        e.getPlayer().sendMessage(prefix + "Â§6Schild erstellt");
+	    	e.setLine(0, "§5[RelluAPI]");
+	        e.setLine(1, "§bÃ„ndere das Wetter");
+	        e.setLine(2, "§bHier klicken zum wechseln");
+	        e.setLine(3, "§1[Wetter]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
  
 	  }
 	   
@@ -3288,11 +3288,11 @@ public class PlayerState{
 	    		(e.getLine(3).equalsIgnoreCase("[r0003]")) &&
 	    		(e.getLine(2).equalsIgnoreCase("")) && 
 	    		(e.getLine(1).equalsIgnoreCase(""))) {
-	    	e.setLine(0, "Â§5[RelluAPI]");
-	        e.setLine(1, "Â§eÃ„ndere die Zeit");
-	        e.setLine(2, "Â§eHier klicken zum wechseln");
-	        e.setLine(3, "Â§6[Zeit]");
-	        e.getPlayer().sendMessage(prefix + "Â§6Schild erstellt");
+	    	e.setLine(0, "§5[RelluAPI]");
+	        e.setLine(1, "§eÃ„ndere die Zeit");
+	        e.setLine(2, "§eHier klicken zum wechseln");
+	        e.setLine(3, "§6[Zeit]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
  
 	  }
 	    //
@@ -3312,11 +3312,11 @@ public class PlayerState{
 	    		(e.getLine(3).equalsIgnoreCase("[Befehl]")) ||
 	    		(e.getLine(3).equalsIgnoreCase("[r0004]")) &&
 	    		(!e.getLine(1).equalsIgnoreCase(""))) {
-	    	e.setLine(0, "Â§5[RelluAPI]");
+	    	e.setLine(0, "§5[RelluAPI]");
 	    	e.setLine(1, "" + e.getLine(1));
-	        e.setLine(2, "Â§bBefehl ausfÃ¼hren");
-	        e.setLine(3, "Â§b[Befehl]");
-	        e.getPlayer().sendMessage(prefix + "Â§6Schild erstellt");
+	        e.setLine(2, "§bBefehl ausführen");
+	        e.setLine(3, "§b[Befehl]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
  
 	  }
 	    else if (	(e.getPlayer().hasPermission("rellu.sign.warp.create")) && 
@@ -3330,11 +3330,11 @@ public class PlayerState{
 	        for(int i = 0; i < WarpsAsArrayList().size(); i++){
 	        	String name = WarpsAsArrayList().get(i);
 	        	if(e.getLine(2).equalsIgnoreCase(name)){
-	        		e.setLine(0, "Â§5[RelluAPI]");
-	    	        e.setLine(1, "Â§aWarp dich zu:");
-	    	        e.setLine(2, "Â§c" + WarpsAsArrayList().get(i).replaceAll(" ", "").replaceAll(",", ""));
-	    	        e.setLine(3, "Â§a[Warps]");
-	    	        e.getPlayer().sendMessage(prefix + "Â§6Schild erstellt");
+	        		e.setLine(0, "§5[RelluAPI]");
+	    	        e.setLine(1, "§aWarp dich zu:");
+	    	        e.setLine(2, "§c" + WarpsAsArrayList().get(i).replaceAll(" ", "").replaceAll(",", ""));
+	    	        e.setLine(3, "§a[Warps]");
+	    	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
 		        }
 	        }
 	        
@@ -3347,11 +3347,11 @@ public class PlayerState{
 	    		(!e.getLine(1).equalsIgnoreCase("")) &&
 	    		(e.getLine(3).equalsIgnoreCase("[Shop]")) ||
 	    		(e.getLine(3).equalsIgnoreCase("[r0010]"))) {
-	    	e.setLine(0, "Â§5[RelluAPI]");
+	    	e.setLine(0, "§5[RelluAPI]");
 	        e.setLine(1, "" + e.getLine(1));
 	        e.setLine(2, "" + e.getLine(2));
-	        e.setLine(3, "Â§6[Shop]");
-	        e.getPlayer().sendMessage(prefix + "Â§6Schild erstellt");
+	        e.setLine(3, "§6[Shop]");
+	        e.getPlayer().sendMessage(prefix + "§6Schild erstellt");
  
 	  }
 	    else if (e.getPlayer().hasPermission("rellu.sign.color")){
@@ -3389,7 +3389,7 @@ public void onPlace(BlockPlaceEvent event){
 			 else {
        Block b = event.getBlock();
        event.setCancelled(true);
-       event.getPlayer().sendMessage(prefix + "Â§6Du hast keine Berechtigung Â§f" + b.getType().name().toLowerCase() + "Â§6 zu bauen");
+       event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 zu bauen");
        }
 		 }
 		 else if (isInWorld(player, worldADV1)){
@@ -3399,7 +3399,7 @@ public void onPlace(BlockPlaceEvent event){
 			 else {
        Block b = event.getBlock();
        event.setCancelled(true);
-       event.getPlayer().sendMessage(prefix + "Â§6Du hast keine Berechtigung Â§f" + b.getType().name().toLowerCase() + "Â§6 zu bauen");
+       event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 zu bauen");
        }
 		 }
 		 else if (isInWorld(player, worldADV)){
@@ -3409,7 +3409,7 @@ public void onPlace(BlockPlaceEvent event){
 			 else {
        Block b = event.getBlock();
        event.setCancelled(true);
-       event.getPlayer().sendMessage(prefix + "Â§6Du hast keine Berechtigung Â§f" + b.getType().name().toLowerCase() + "Â§6 zu bauen");
+       event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 zu bauen");
        }
 		 } 
    }
@@ -3427,7 +3427,7 @@ public void onPlace(BlockPlaceEvent event){
 			 else {
         Block b = event.getBlock();
         event.setCancelled(true);
-        event.getPlayer().sendMessage(prefix + "Â§6Du hast keine Berechtigung Â§f" + b.getType().name().toLowerCase() + "Â§6 abzubauen");
+        event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 abzubauen");
         }
 		 }
 		 else if (isInWorld(player, worldADV)){
@@ -3437,7 +3437,7 @@ public void onPlace(BlockPlaceEvent event){
 			 else {
         Block b = event.getBlock();
         event.setCancelled(true);
-        event.getPlayer().sendMessage(prefix + "Â§6Du hast keine Berechtigung Â§f" + b.getType().name().toLowerCase() + "Â§6 abzubauen");
+        event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 abzubauen");
         }
 		 }
 		 else  if (isInWorld(player, worldADV1)){
@@ -3447,7 +3447,7 @@ public void onPlace(BlockPlaceEvent event){
 			 else {
         Block b = event.getBlock();
         event.setCancelled(true);
-        event.getPlayer().sendMessage(prefix + "Â§6Du hast keine Berechtigung Â§f" + b.getType().name().toLowerCase() + "Â§6 abzubauen");
+        event.getPlayer().sendMessage(prefix + "§6Du hast keine Berechtigung §f" + b.getType().name().toLowerCase() + "§6 abzubauen");
         }
 		 }
 
@@ -3460,7 +3460,7 @@ public void onPlace(BlockPlaceEvent event){
 	    	   ((CreatureSpawner) b.getState()).setSpawnedType(EntityType.ARROW);
 				((CreatureSpawner) b.getState()).setDelay(2);
 				((CreatureSpawner) b.getState()).update();
-				SendMessage(event.getPlayer(), prefix + "Â§6Spawner wurde plaziert");
+				SendMessage(event.getPlayer(), prefix + "§6Spawner wurde plaziert");
 	       }		
 	}
 

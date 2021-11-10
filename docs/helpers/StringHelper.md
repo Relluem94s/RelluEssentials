@@ -7,7 +7,7 @@
 ## `public static String replaceColor(String message)`
 
  * **Parameters:** `message` — String
- * **Returns:** String replaces & with § to trigger the ChatColor codes
+ * **Returns:** String replaces & with � to trigger the ChatColor codes
 
 ## `public static String locationToString(Location l)`
 

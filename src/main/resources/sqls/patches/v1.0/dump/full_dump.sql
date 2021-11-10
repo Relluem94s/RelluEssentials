@@ -146,10 +146,10 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `rellu_essentials`;
-INSERT INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) VALUES (1, 'User', 'Â§8');
-INSERT INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) VALUES (2, 'VIP', 'Â§a');
-INSERT INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) VALUES (4, 'Mod', 'Â§6');
-INSERT INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) VALUES (8, 'Admin', 'Â§5');
+INSERT INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) VALUES (1, 'User', '§8');
+INSERT INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) VALUES (2, 'VIP', '§a');
+INSERT INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) VALUES (4, 'Mod', '§6');
+INSERT INTO `rellu_essentials`.`group` (`id`, `name`, `prefix`) VALUES (8, 'Admin', '§5');
 
 COMMIT;
 
@@ -180,4 +180,4 @@ COMMIT;
 -- -----------------------------------------------------
 -- Data for table `rellu_essentials`.`plugin_informations`
 -- -----------------------------------------------------
-INSERT INTO `rellu_essentials`.`plugin_informations` (`id`, `created`, `createdby`, `tab_header`, `tab_footer`, `motd_message`, `motd_players`, `db_version`) VALUES (1, '2021-01-05 20:57:05', 1, "Â§7<<------------------>>          Â§6Relluem94.de           Â§7<<------------------>>", , "Â§7<<------------------>> Â§6powered by Â§8RelluÂ§cEssentials Â§7<<------------------>>", "Â§6powered by Â§8RelluÂ§cEssentials", 94, 1);
+INSERT INTO `rellu_essentials`.`plugin_informations` (`id`, `created`, `createdby`, `tab_header`, `tab_footer`, `motd_message`, `motd_players`, `db_version`) VALUES (1, '2021-01-05 20:57:05', 1, "§7<<------------------>>          §6Relluem94.de           §7<<------------------>>", , "§7<<------------------>> §6powered by §8Rellu§cEssentials §7<<------------------>>", "§6powered by §8Rellu§cEssentials", 94, 1);
