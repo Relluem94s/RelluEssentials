@@ -62,7 +62,7 @@ public class PlayerHelper {
         dBH.updatePlayer(pe);
 
         p.setInvulnerable(isAFK);
-        p.setPlayerListName((isAFK ? "Â§c[AFK] " : "") + p.getCustomName());
+        p.setPlayerListName((isAFK ? "§c[AFK] " : "") + p.getCustomName());
         return true;
     }
 
