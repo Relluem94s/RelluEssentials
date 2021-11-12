@@ -93,7 +93,7 @@
   <properties>
     <plugin.author>Relluem94</plugin.author>
     <project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
-    <plugin.website>http://www.relluem94.de</plugin.website>
+    <plugin.website>https://www.relluem94.de</plugin.website>
     <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
     <plugin.apiVersion>1.16</plugin.apiVersion>
   </properties>
