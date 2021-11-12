@@ -182,9 +182,16 @@ public class RelluEssentials extends JavaPlugin {
 
     public static final boolean DEBUG = true;
     private static long start;
+    private static RelluEssentials instance;
+    public static boolean isOreRespawnEnabled = false;
+
+    public static RelluEssentials getInstance() {
+        return instance;
+    }    
 
     @Override
     public void onEnable() {
+        instance = this;
         startLoading();
         dataFolder = this.getDataFolder();
 
