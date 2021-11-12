@@ -15,9 +15,24 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dB
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.bukkit.Bukkit;
 
 public class BetterBlockDrop implements Listener {
-
+    
+    private final Material[] ores = {
+        Material.DIAMOND_ORE,
+        Material.LAPIS_ORE,
+        Material.REDSTONE_ORE,
+        Material.COAL_ORE,
+        Material.IRON_ORE,
+        Material.GOLD_ORE,
+        Material.EMERALD_ORE,
+        Material.NETHER_GOLD_ORE,
+        Material.NETHER_QUARTZ_ORE
+    };
+    
     private final Material[] blocks2Drop = {
         Material.GLASS,
         Material.GLASS_PANE,
@@ -55,9 +70,28 @@ public class BetterBlockDrop implements Listener {
         Material.YELLOW_STAINED_GLASS_PANE
     };
 
+    public void runLater(Runnable r, long d){
+        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), r, d);
+    }
+    
+    
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         Material m = e.getBlock().getBlockData().getMaterial();
+        
+        e.getPlayer().sendMessage("broke: " + m.name());
+        
+        for(Material ore: ores){
+            if(m == ore && RelluEssentials.isOreRespawnEnabled){
+                runLater(() -> {
+                     e.getPlayer().sendMessage("set: " + m.name());
+                    e.getBlock().setType(m);
+                }, 10000L);
+                break;
+            }
+        }
+        
+        
         for (Material b2d : blocks2Drop) {
             if (m == b2d) {
                 ItemStack is = new ItemStack(b2d, 1);
