@@ -77,14 +77,10 @@ public class BetterBlockDrop implements Listener {
     
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
-        Material m = e.getBlock().getBlockData().getMaterial();
-        
-        e.getPlayer().sendMessage("broke: " + m.name());
-        
+        Material m = e.getBlock().getBlockData().getMaterial();        
         for(Material ore: ores){
             if(m == ore && RelluEssentials.isOreRespawnEnabled){
                 runLater(() -> {
-                     e.getPlayer().sendMessage("set: " + m.name());
                     e.getBlock().setType(m);
                 }, 10000L);
                 break;
