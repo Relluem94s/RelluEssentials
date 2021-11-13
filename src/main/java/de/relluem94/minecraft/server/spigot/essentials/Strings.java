@@ -38,8 +38,6 @@ public class Strings {
     /*                            COMMAND   STUFF                                   */
     /********************************************************************************/
                 
-    public static final String PLUGIN_COMMAND_GAMEMODE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Gamemode von %s" + PLUGIN_COMMAND_COLOR + " wurde zu " + PLUGIN_COMMAND_NAME_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " geändert!";
-
     public static final String PLUGIN_COMMAND_AFK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " ist jetzt %s";
     public static final String PLUGIN_COMMAND_AFK_ACTIVATED = "§cafk";
     public static final String PLUGIN_COMMAND_AFK_DEACTIVATED = "§awieder da";
