@@ -246,6 +246,16 @@ public class RelluEssentials extends JavaPlugin {
         return null;
     }
     
+    public static String getText(String key) {
+        if (language.equals("eng")) {
+            return englishProperties.getString(key);
+        }
+        if (language.equals("de")) {
+            return germanProperties.getString(key);
+        }
+        return null;
+    }
+    
     private void startLoading() {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
