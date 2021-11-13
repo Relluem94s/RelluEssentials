@@ -158,6 +158,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_SMELTER_TANK;
 import de.relluem94.minecraft.server.spigot.essentials.events.SignActions;
 import de.relluem94.minecraft.server.spigot.essentials.events.SignClick;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class RelluEssentials extends JavaPlugin {
 
@@ -184,7 +186,12 @@ public class RelluEssentials extends JavaPlugin {
     private static long start;
     private static RelluEssentials instance;
     public static boolean isOreRespawnEnabled = false;
+    
+    private static ResourceBundle englishProperties;
+    private static ResourceBundle germanProperties;
 
+    public static String language;
+    
     public static RelluEssentials getInstance() {
         return instance;
     }    
@@ -197,6 +204,7 @@ public class RelluEssentials extends JavaPlugin {
 
         try {
             configManager(true);
+            loadLanguage();
         } catch (IOException ex) {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -221,6 +229,21 @@ public class RelluEssentials extends JavaPlugin {
         } catch (IOException ex) {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void loadLanguage() throws IOException{
+        germanProperties = ResourceBundle.getBundle("lang", new Locale("de", "DE"));
+        englishProperties = ResourceBundle.getBundle("lang", new Locale("en", "US"));
+    }
+    
+    public static String getText(String language, String key) {
+        if (language.equals("eng")) {
+            return englishProperties.getString(key);
+        }
+        if (language.equals("de")) {
+            return germanProperties.getString(key);
+        }
+        return null;
     }
     
     private void startLoading() {
@@ -252,6 +275,8 @@ public class RelluEssentials extends JavaPlugin {
         } else {
             this.saveConfig();
         }
+        
+        language = getConfig().getString("language");
     }
 
     public static void reloadConfigs() {
