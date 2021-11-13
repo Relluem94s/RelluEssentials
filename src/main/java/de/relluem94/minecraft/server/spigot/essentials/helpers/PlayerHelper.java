@@ -1,10 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_AFK;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_AFK_ACTIVATED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_AFK_DEACTIVATED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_COLOR;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_PREFIX;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SPACER;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -53,7 +54,7 @@ public class PlayerHelper {
         boolean isAFK = pe.isAFK();
 
         if (!join) {
-            Bukkit.broadcastMessage(String.format(PLUGIN_COMMAND_AFK, p.getCustomName(), !isAFK ? PLUGIN_COMMAND_AFK_ACTIVATED : PLUGIN_COMMAND_AFK_DEACTIVATED));
+            Bukkit.broadcastMessage(PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + String.format(getText(!isAFK ? "PLUGIN_COMMAND_AFK_ACTIVATED" : "PLUGIN_COMMAND_AFK_DEACTIVATED"), p.getCustomName() + "§f", !isAFK ? "§c" : "§a"));
             isAFK = !isAFK; // Invert for single invertion ^_^
         }
 
