@@ -61,7 +61,7 @@ public class Rollback implements CommandExecutor {
                             UUID targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
                             PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
                             if (pe != null && args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER)) {
-                                int id = playerEntryList.get(p.getUniqueId()).getId();
+                                int id = playerEntryList.get(p.getUniqueId()).getID();
                                 List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayer(pe);
                                 for (BlockHistoryEntry bh : list) {
                                     bh.setDeletedby(id);
@@ -85,7 +85,7 @@ public class Rollback implements CommandExecutor {
                                 PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
-                                    int id = playerEntryList.get(p.getUniqueId()).getId();
+                                    int id = playerEntryList.get(p.getUniqueId()).getID();
                                     List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayerAndTime(pe, args[2], false);
                                     for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);
@@ -113,7 +113,7 @@ public class Rollback implements CommandExecutor {
                                 PlayerEntry pe = dBH.getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
-                                    int id = playerEntryList.get(p.getUniqueId()).getId();
+                                    int id = playerEntryList.get(p.getUniqueId()).getID();
                                     List<BlockHistoryEntry> list = dBH.getBlockHistoryByPlayerAndTime(pe, args[3], true);
                                     for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);
