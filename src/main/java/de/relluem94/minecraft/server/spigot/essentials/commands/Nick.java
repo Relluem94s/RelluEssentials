@@ -28,8 +28,8 @@ public class Nick implements CommandExecutor {
                         Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
                         if (target != null) {
                             PlayerEntry pe = playerEntryList.get(target.getUniqueId());
-                            pe.setCustomname(args[1]);
-                            pe.setUpdatedby(playerEntryList.get(p.getUniqueId()).getId());
+                            pe.setCustomName(args[1]);
+                            pe.setUpdatedBy(playerEntryList.get(p.getUniqueId()).getID());
                             dBH.updatePlayer(pe);
                             target.setCustomName(pe.getGroup().getPrefix() + args[1]);
                             target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);
