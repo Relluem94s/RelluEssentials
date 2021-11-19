@@ -31,7 +31,7 @@ public class NoDeathMessage implements Listener {
         le.setLocation(p.getLocation());
         le.setLocationName("death_" + (int) (Math.random() * 94 - 1) + 1);
         le.setLocationType(locationTypeEntryList.get(1));
-        le.setPlayerId(pe.getId());
+        le.setPlayerId(pe.getID());
         dBH.insertLocation(le);
         locationEntryList.add(le);
         p.sendMessage(String.format(PLUGIN_EVENT_DEATH, le.getLocationName(), (int) le.getLocation().getX(), (int) le.getLocation().getY(), (int) le.getLocation().getZ(), le.getLocation().getWorld().getName()));
