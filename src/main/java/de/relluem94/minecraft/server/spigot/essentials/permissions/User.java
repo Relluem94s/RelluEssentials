@@ -64,8 +64,8 @@ public class User {
     private String getCustomName(Player p) {
         String name;
         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
-        if (pe.getCustomname() != null) {
-            name = pe.getCustomname();
+        if (pe.getCustomName() != null) {
+            name = pe.getCustomName();
         } else {
             name = p.getName();
         }
