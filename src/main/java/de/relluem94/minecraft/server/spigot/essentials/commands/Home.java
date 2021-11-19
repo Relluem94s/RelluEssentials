@@ -53,11 +53,11 @@ public class Home implements CommandExecutor {
 
                             if (hasHomes(pe)) {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
-                                locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationType().getId() == 1)).forEachOrdered(fle -> {
+                                locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationType().getId() == 1)).forEachOrdered(fle -> {
                                     p.sendMessage(PLUGIN_COMMAND_COLOR + "Name: " + PLUGIN_COMMAND_ARG_COLOR + fle.getLocationName() + " §7(" + locationToString(fle.getLocation()) + "§7)");
                                 });
                                 // @TODO remove String and add to Strings.java
-                                locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationType().getId() == 2)).forEachOrdered(fle -> {
+                                locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationType().getId() == 2)).forEachOrdered(fle -> {
                                     p.sendMessage(PLUGIN_COMMAND_COLOR + "Todespunkt: " + PLUGIN_COMMAND_ARG_COLOR + fle.getLocationName() + " §7(" + locationToString(fle.getLocation()) + "§7)");
                                 });
                             } else {
@@ -72,7 +72,7 @@ public class Home implements CommandExecutor {
                             LocationEntry le = new LocationEntry();
                             le.setLocationName(args[0]);
                             le.setLocationType(locationTypeEntryList.get(0));
-                            le.setPlayerId(pe.getId());
+                            le.setPlayerId(pe.getID());
 
                             if (homeExists(pe, le)) {
                                 le = getLocationEntry(pe, le);
@@ -95,7 +95,7 @@ public class Home implements CommandExecutor {
                         le.setLocation(p.getLocation());
                         le.setLocationName(args[1]);
                         le.setLocationType(locationTypeEntryList.get(0));
-                        le.setPlayerId(pe.getId());
+                        le.setPlayerId(pe.getID());
 
                         if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_SET)) {
                             if (homeExists(pe, le)) {
@@ -130,16 +130,16 @@ public class Home implements CommandExecutor {
     }
 
     private boolean homeExists(PlayerEntry pe, LocationEntry le) {
-        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)));
+        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationName().equals(le.getLocationName()) && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)));
     }
 
     private boolean hasHomes(PlayerEntry pe) {
-        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getId() && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)));
+        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getID() && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)));
     }
 
     private LocationEntry getLocationEntry(PlayerEntry pe, LocationEntry le) {
         for (LocationEntry fle : locationEntryList) {
-            if (fle.getPlayerId() == pe.getId() && fle.getLocationName().equals(le.getLocationName()) && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)) {
+            if (fle.getPlayerId() == pe.getID() && fle.getLocationName().equals(le.getLocationName()) && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)) {
                 return fle;
             }
         }
