@@ -6,24 +6,23 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  */
 public class PlayerEntry {
 
-    public PlayerEntry() {
-    }
+    public PlayerEntry() {}
 
     private int id;
     private String created;
-    private int createdby;
+    private int createdBy;
     private String updated;
-    private int updatedby;
+    private int updatedBy;
     private String deleted;
-    private int deletedby;
+    private int deletedBy;
     private String uuid;
     private GroupEntry group;
     private boolean afk;
     private boolean fly;
-    private String customname;
+    private String customName;
     private LocationEntry[] homes;
 
-    public int getId() {
+    public int getID() {
         return id;
     }
 
@@ -39,12 +38,12 @@ public class PlayerEntry {
         this.created = created;
     }
 
-    public int getCreatedby() {
-        return createdby;
+    public int getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCreatedby(int createdby) {
-        this.createdby = createdby;
+    public void setCreatedby(int createdBy) {
+        this.createdBy = createdBy;
     }
 
     public void setUpdated(String updated) {
@@ -55,12 +54,12 @@ public class PlayerEntry {
         return updated;
     }
 
-    public int getUpdatedby() {
-        return updatedby;
+    public int getUpdatedBy() {
+        return updatedBy;
     }
 
-    public void setUpdatedby(int updatedby) {
-        this.updatedby = updatedby;
+    public void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public void setDeleted(String deleted) {
@@ -71,12 +70,12 @@ public class PlayerEntry {
         return deleted;
     }
 
-    public int getDeletedby() {
-        return deletedby;
+    public int getDeletedBy() {
+        return deletedBy;
     }
 
-    public void setDeletedby(int deletedby) {
-        this.deletedby = deletedby;
+    public void setDeletedBy(int deletedBy) {
+        this.deletedBy = deletedBy;
     }
 
     public String getUUID() {
@@ -111,12 +110,12 @@ public class PlayerEntry {
         this.fly = fly;
     }
 
-    public String getCustomname() {
-        return customname;
+    public String getCustomName() {
+        return customName;
     }
 
-    public void setCustomname(String customname) {
-        this.customname = customname;
+    public void setCustomName(String customName) {
+        this.customName = customName;
     }
 
     public LocationEntry[] getHomes() {
