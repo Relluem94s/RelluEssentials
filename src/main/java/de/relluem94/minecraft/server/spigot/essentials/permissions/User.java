@@ -14,7 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 public class User {
 
-    private Player p;
+    private final Player p;
 
     public RepairSkill repair = new RepairSkill(RelluEssentials.board);
     public SalvageSkill salvage = new SalvageSkill(RelluEssentials.board);
@@ -23,7 +23,6 @@ public class User {
     public User(Player p) {
         this.p = p;
         users.add(this);
-
     }
 
     public Player getPlayer() {
