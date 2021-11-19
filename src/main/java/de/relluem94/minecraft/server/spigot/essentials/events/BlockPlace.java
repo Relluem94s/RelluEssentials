@@ -35,7 +35,7 @@ public class BlockPlace implements Listener {
             l = dBH.getLocation(e.getBlock().getLocation(), 4);
         }
 
-        bh.setCreatedby(p.getId());
+        bh.setCreatedby(p.getID());
         bh.setMaterial(Material.AIR.name());
 
         bh.setLocation(l);
