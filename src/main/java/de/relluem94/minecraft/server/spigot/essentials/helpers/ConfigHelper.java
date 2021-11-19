@@ -25,8 +25,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class ConfigHelper {
 
-    private String name;
-    private File file;
+    private final String name;
+    private final File file;
     private YamlConfiguration config;
 
     // @TODO Make an migrator from config files to db
@@ -65,7 +65,7 @@ public class ConfigHelper {
             p.setAFK(afk);
             p.setFlying(fly);
             p.setCreatedby(1);
-            p.setCustomname(customname);
+            p.setCustomName(customname);
             p.setUUID(uuid);
 
             list.add(p);
@@ -100,7 +100,7 @@ public class ConfigHelper {
             LocationEntry l = new LocationEntry();
             l.setLocation(new Location(world, x, y, z, yaw, pitch));
             l.setLocationName(home);
-            l.setPlayerId(p.getId());
+            l.setPlayerId(p.getID());
             LocationTypeEntry lt = new LocationTypeEntry();
             lt.setId(type);
             l.setLocationType(lt);
@@ -189,5 +189,4 @@ public class ConfigHelper {
 
         return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }
-
 }
