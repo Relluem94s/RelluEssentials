@@ -58,7 +58,7 @@ public class PlayerHelper {
             isAFK = !isAFK; // Invert for single invertion ^_^
         }
 
-        pe.setUpdatedby(playerEntryList.get(p.getUniqueId()).getId());
+        pe.setUpdatedBy(playerEntryList.get(p.getUniqueId()).getID());
         pe.setAFK(isAFK);
         dBH.updatePlayer(pe);
 
@@ -76,19 +76,19 @@ public class PlayerHelper {
     public static void sendTablist(Player p, String header, String footer) {
         IChatBaseComponent tabHeader = ChatSerializer.a("{\"text\":\"" + header + "\"}");
         IChatBaseComponent tabFooter = ChatSerializer.a("{\"text\":\"" + footer + "\"}");
-        EntityPlayer eP = ((CraftPlayer) p).getHandle();
-        ByteBuf bB = ByteBufAllocator.DEFAULT.buffer();
-        PacketDataSerializer pDA = new PacketDataSerializer(bB);
-        PacketPlayOutPlayerListHeaderFooter pPOPLHF = new PacketPlayOutPlayerListHeaderFooter();
+        EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
+        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer();
+        PacketDataSerializer packetDataSerializer = new PacketDataSerializer(byteBuf);
+        PacketPlayOutPlayerListHeaderFooter packetPlayOutPlayerListHeaderFooter = new PacketPlayOutPlayerListHeaderFooter();
 
-        pDA.a(IChatBaseComponent.ChatSerializer.a(tabHeader));
-        pDA.a(IChatBaseComponent.ChatSerializer.a(tabFooter));
+        packetDataSerializer.a(IChatBaseComponent.ChatSerializer.a(tabHeader));
+        packetDataSerializer.a(IChatBaseComponent.ChatSerializer.a(tabFooter));
         try {
-            pPOPLHF.a(pDA);
+            packetPlayOutPlayerListHeaderFooter.a(packetDataSerializer);
         } catch (IOException ex) {
             Logger.getLogger(PlayerHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
-        eP.playerConnection.sendPacket(pPOPLHF);
+        entityPlayer.playerConnection.sendPacket(packetPlayOutPlayerListHeaderFooter);
 
     }
 }
