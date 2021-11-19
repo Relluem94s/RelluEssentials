@@ -15,8 +15,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dB
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 
 public class BetterBlockDrop implements Listener {
@@ -113,7 +111,7 @@ public class BetterBlockDrop implements Listener {
             l = dBH.getLocation(e.getBlock().getLocation(), 4);
         }
 
-        bh.setCreatedby(p.getId());
+        bh.setCreatedby(p.getID());
         bh.setMaterial(e.getBlock().getType().name());
 
         bh.setLocation(l);
