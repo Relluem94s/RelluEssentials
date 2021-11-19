@@ -84,7 +84,7 @@ public class DatabaseHelper {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationsByPlayer.sql", StandardCharsets.UTF_8));
-            ps.setInt(1, pe.getId());
+            ps.setInt(1, pe.getID());
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
@@ -174,9 +174,9 @@ public class DatabaseHelper {
                     p.setCreated(rs.getString("created"));
                     p.setCreatedby(rs.getInt("createdby"));
                     p.setUpdated(rs.getString("updated"));
-                    p.setUpdatedby(rs.getInt("updatedby"));
-                    p.setCustomname(rs.getString("customname"));
-                    p.setDeletedby(rs.getInt("deletedby"));
+                    p.setUpdatedBy(rs.getInt("updatedby"));
+                    p.setCustomName(rs.getString("customname"));
+                    p.setDeletedBy(rs.getInt("deletedby"));
                     p.setFlying(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
                     p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
@@ -203,10 +203,10 @@ public class DatabaseHelper {
                     p.setCreated(rs.getString("created"));
                     p.setCreatedby(rs.getInt("createdby"));
                     p.setUpdated(rs.getString("updated"));
-                    p.setUpdatedby(rs.getInt("updatedby"));
+                    p.setUpdatedBy(rs.getInt("updatedby"));
                     p.setDeleted(rs.getString("deleted"));
-                    p.setDeletedby(rs.getInt("deletedby"));
-                    p.setCustomname(rs.getString("customname"));
+                    p.setDeletedBy(rs.getInt("deletedby"));
+                    p.setCustomName(rs.getString("customname"));
                     p.setFlying(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
                     p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
@@ -226,7 +226,7 @@ public class DatabaseHelper {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", StandardCharsets.UTF_8));
-            ps.setInt(1, pe.getCreatedby());
+            ps.setInt(1, pe.getCreatedBy());
             ps.setString(2, pe.getUUID());
             ps.setInt(3, pe.getGroup().getId());
 
@@ -254,11 +254,11 @@ public class DatabaseHelper {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayer.sql", StandardCharsets.UTF_8));
-            ps.setInt(1, pe.getId());
+            ps.setInt(1, pe.getID());
             ps.setInt(2, pe.getGroup().getId());
             ps.setBoolean(3, pe.isAFK());
             ps.setBoolean(4, pe.isFlying());
-            ps.setString(5, pe.getCustomname());
+            ps.setString(5, pe.getCustomName());
             ps.setString(6, pe.getUUID());
             ps.execute();
         } catch (SQLException | IOException ex) {
@@ -402,7 +402,7 @@ public class DatabaseHelper {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBlockHistoryByPlayer.sql", StandardCharsets.UTF_8));
-            ps.setFloat(1, p.getId());
+            ps.setFloat(1, p.getID());
 
             ps.execute();
 
@@ -457,7 +457,7 @@ public class DatabaseHelper {
                 }
             }
 
-            ps.setFloat(1, p.getId());
+            ps.setFloat(1, p.getID());
             ps.setInt(2, minute);
             ps.setInt(3, hour);
             ps.setInt(4, day);
@@ -559,8 +559,8 @@ public class DatabaseHelper {
             PlayerEntry pu = playerEntryList.get(UUID.fromString(p.getUUID()));
             pu.setAFK(p.isAFK());
             pu.setFlying(p.isFlying());
-            pu.setCustomname(p.getCustomname());
-            pu.setUpdatedby(1);
+            pu.setCustomName(p.getCustomName());
+            pu.setUpdatedBy(1);
             updatePlayer(pu);
 
             List<LocationEntry> lel = ch.getHomes(pu);
