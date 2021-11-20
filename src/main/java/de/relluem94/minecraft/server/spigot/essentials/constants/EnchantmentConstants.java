@@ -5,11 +5,10 @@ package de.relluem94.minecraft.server.spigot.essentials.constants;
  * @author rellu
  */
 public class EnchantmentConstants {
-    
-    /********************************************************************************/
-    /*                          ENCHANTMENT   STUFF                                 */
-    /********************************************************************************/
-    
+
+    //==============================================================================//
+    //                          ENCHANTMENT   STUFF                                 //
+    //==============================================================================//
     public static final String PLUGIN_ENCHANTMENT_COLOR = "§8";
     public static final String PLUGIN_ENCHANTMENT_LORE_COLOR = "§7§o  ";
 
