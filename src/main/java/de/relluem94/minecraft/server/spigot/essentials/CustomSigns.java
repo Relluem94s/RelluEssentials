@@ -11,8 +11,9 @@ import java.util.logging.Logger;
  * @author rellu
  */
 public class CustomSigns {
+
     public static SignHelper spawn;
-    
+
     static {
         SignHelper temp = null;
         try {
@@ -22,9 +23,9 @@ public class CustomSigns {
         }
         spawn = temp;
     }
-    
+
     public static SignHelper up;
-    
+
     static {
         SignHelper temp = null;
         try {
@@ -34,9 +35,9 @@ public class CustomSigns {
         }
         up = temp;
     }
-    
+
     public static SignHelper down;
-    
+
     static {
         SignHelper temp = null;
         try {
@@ -46,8 +47,8 @@ public class CustomSigns {
         }
         down = temp;
     }
-    
+
     public static SignHelper command = new SignHelper(ActionType.COMMAND, "");
-    public static SignHelper teleport = new SignHelper(ActionType.TELEPORT, "");    
+    public static SignHelper teleport = new SignHelper(ActionType.TELEPORT, "");
     public static SignHelper home = new SignHelper(ActionType.HOME, "");
 }
