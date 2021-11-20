@@ -42,7 +42,7 @@ public class PermissionsGroup implements CommandExecutor {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                             return true;
                         }
-                    } else if(isCMDBlock(sender) || isConsole(sender)){
+                    } else if (isCMDBlock(sender) || isConsole(sender)) {
                         GroupEntry g = Groups.getGroup(args[1]);
                         User u = User.getUserByPlayerName(target.getName());
 
