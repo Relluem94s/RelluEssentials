@@ -18,7 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.bukkit.Bukkit;
 
 public class BetterBlockDrop implements Listener {
-    
+
     private final Material[] ores = {
         Material.DIAMOND_ORE,
         Material.LAPIS_ORE,
@@ -30,7 +30,7 @@ public class BetterBlockDrop implements Listener {
         Material.NETHER_GOLD_ORE,
         Material.NETHER_QUARTZ_ORE
     };
-    
+
     private final Material[] blocks2Drop = {
         Material.GLASS,
         Material.GLASS_PANE,
@@ -68,24 +68,22 @@ public class BetterBlockDrop implements Listener {
         Material.YELLOW_STAINED_GLASS_PANE
     };
 
-    public void runLater(Runnable r, long d){
+    public void runLater(Runnable r, long d) {
         Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), r, d);
     }
-    
-    
+
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
-        Material m = e.getBlock().getBlockData().getMaterial();        
-        for(Material ore: ores){
-            if(m == ore && RelluEssentials.isOreRespawnEnabled){
+        Material m = e.getBlock().getBlockData().getMaterial();
+        for (Material ore : ores) {
+            if (m == ore && RelluEssentials.isOreRespawnEnabled) {
                 runLater(() -> {
                     e.getBlock().setType(m);
                 }, 10000L);
                 break;
             }
         }
-        
-        
+
         for (Material b2d : blocks2Drop) {
             if (m == b2d) {
                 ItemStack is = new ItemStack(b2d, 1);
