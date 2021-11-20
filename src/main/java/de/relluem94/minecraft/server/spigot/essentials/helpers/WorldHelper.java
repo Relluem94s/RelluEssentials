@@ -26,6 +26,7 @@ public class WorldHelper {
 
     /**
      * Checks if Player is in World with Name
+     *
      * @param player Player
      * @param worldName String
      * @return boolean
@@ -33,9 +34,10 @@ public class WorldHelper {
     public static boolean isInWorld(Player player, String worldName) {
         return player.getWorld().getName().equalsIgnoreCase(worldName);
     }
-    
+
     /**
      * Checks if Command Sender is in World with Name
+     *
      * @param sender CommandSender
      * @param worldName String
      * @return boolean
@@ -50,6 +52,7 @@ public class WorldHelper {
 
     /**
      * Checks a List of Strings (World Names) if Player is in one of it
+     *
      * @param player Player
      * @param worlds List of Strings
      * @return boolean
@@ -60,6 +63,7 @@ public class WorldHelper {
 
     /**
      * Checks if CommandSender is in World
+     *
      * @param sender CommandSender
      * @param world World
      * @return boolean
@@ -74,6 +78,7 @@ public class WorldHelper {
 
     /**
      * Checks if Block is in World
+     *
      * @param block Block
      * @param world World
      * @return boolean
@@ -84,6 +89,7 @@ public class WorldHelper {
 
     /**
      * Checks if Entity is in World
+     *
      * @param entity Entity
      * @param world World
      * @return boolean
@@ -91,59 +97,65 @@ public class WorldHelper {
     public static boolean isInWorld(Entity entity, World world) {
         return entity.getWorld().equals(world);
     }
-    
+
     /**
      * Creates a new World for the Bukkit Server
+     *
      * @param worldName String
      * @param type WorldType
      * @param world_environment World.Environment
      * @param structures boolean
      */
-    public static void createWorld(String worldName, WorldType type, World.Environment world_environment, boolean structures){
+    public static void createWorld(String worldName, WorldType type, World.Environment world_environment, boolean structures) {
         WorldCreator wc = new WorldCreator(worldName);
         wc.environment(world_environment);
         wc.type(type);
         wc.generateStructures(structures);
         Bukkit.createWorld(wc);
     }
-    
+
     /**
      * Creates a World for the Bukkit Server
+     *
      * @param worldName String
      */
-    public static void loadWorld(String worldName){
+    public static void loadWorld(String worldName) {
         WorldCreator wc = new WorldCreator(worldName);
         Bukkit.createWorld(wc);
     }
-    
+
     /**
      * Unloads a World from the Bukkit Server
+     *
      * @param worldName String
      * @param save boolean
-     * @throws de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException if World is not loaded
+     * @throws
+     * de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException
+     * if World is not loaded
      */
-    public static void unloadWorld(String worldName, boolean save) throws WorldNotLoadedException{
-        if(Bukkit.getWorld(worldName) != null){
+    public static void unloadWorld(String worldName, boolean save) throws WorldNotLoadedException {
+        if (Bukkit.getWorld(worldName) != null) {
             Bukkit.unloadWorld(worldName, true);
-        }
-        else{
+        } else {
             throw new WorldNotLoadedException(String.format(PLUGIN_EXCEPTION_WORLD_NOT_LOADED, worldName));
         }
     }
-    
+
     /**
      * Copies a World from another from the Bukkit Server
+     *
      * @param worldName String
      * @param copyWorldName String
-     * @throws de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException if World was not found
+     * @throws
+     * de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException
+     * if World was not found
      */
-    public static void cloneWorld(String worldName, String copyWorldName) throws WorldNotFoundException{
+    public static void cloneWorld(String worldName, String copyWorldName) throws WorldNotFoundException {
         WorldCreator wc = new WorldCreator(worldName);
-        if(Bukkit.getWorld(copyWorldName) != null){
+        if (Bukkit.getWorld(copyWorldName) != null) {
             wc.copy(Objects.requireNonNull(Bukkit.getWorld(copyWorldName)));
             Bukkit.createWorld(wc);
-        }
-        else{
+        } else {
             throw new WorldNotFoundException(String.format(PLUGIN_EXCEPTION_WORLD_NOT_FOUND, copyWorldName));
         }
     }
