@@ -15,7 +15,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-
 public class Gamerules implements CommandExecutor {
 
     @Override
@@ -28,25 +27,22 @@ public class Gamerules implements CommandExecutor {
                         World world = p.getWorld();
                         String[] gamerules = world.getGameRules();
                         sendMessage(p, String.format(PLUGIN_COMMAND_GAMERULES, world.getName()));
-                        for(String gamerule : gamerules){
+                        for (String gamerule : gamerules) {
                             Object value = world.getGameRuleValue(GameRule.getByName(gamerule));
                             String color;
-                            if(value instanceof Boolean){
-                                if((boolean)value == true){
+                            if (value instanceof Boolean) {
+                                if ((boolean) value == true) {
                                     color = "§a";
-                                }
-                                else{
+                                } else {
                                     color = "§c";
                                 }
-                            }
-                            else{
+                            } else {
                                 color = "§7";
                             }
-                            
+
                             sendMessage(p, "        §d" + gamerule + "§f = " + color + value);
                         }
-                        
-                        
+
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
