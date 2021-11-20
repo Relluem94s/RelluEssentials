@@ -12,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PRINT;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import static de.relluem94.rellulib.utils.StringUtils.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
@@ -39,16 +40,13 @@ public class Print implements CommandExecutor {
             if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                 p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                 return true;
-            }
-            else{
+            } else {
                 name = p.getCustomName();
             }
-        }
-        else if(isCMDBlock(sender)){
+        } else if (isCMDBlock(sender)) {
             BlockCommandSender bcs = (BlockCommandSender) sender;
             name = bcs.getName();
-        }
-        else{
+        } else {
             name = sender.getName();
         }
 
