@@ -40,46 +40,43 @@ public class Ev_AutoSmelt implements Listener {
     @EventHandler
     public void pickaxeCrafting(PrepareItemCraftEvent e) {
         if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.autoSmeltNetheritePickAxe.almostEquals(e.getRecipe().getResult())) {
-            
+
             List<ItemStack> matrix = Arrays.asList(e.getInventory().getMatrix());
             ItemStack pickaxe = new ItemStack(Material.APPLE);
-            
-            for(ItemStack is : matrix){
-                if(is != null){
-                    if(is.getType().equals(CustomItems.autoSmeltNetheritePickAxe.getMaterial())){
+
+            for (ItemStack is : matrix) {
+                if (is != null) {
+                    if (is.getType().equals(CustomItems.autoSmeltNetheritePickAxe.getMaterial())) {
                         pickaxe = is;
                     }
                 }
-                
-            }          
-            
-            if(matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) && matrix.contains(CustomItems.autoSmeltTank.getCustomItem()) && matrix.contains(pickaxe)){
+
+            }
+
+            if (matrix.contains(CustomItems.autoSmeltFurnace.getCustomItem()) && matrix.contains(CustomItems.autoSmeltTank.getCustomItem()) && matrix.contains(pickaxe)) {
                 // Crafting Smelting Pickaxe
                 int asnp = matrix.indexOf(pickaxe);
-                if(!matrix.get(asnp).getEnchantments().isEmpty() && matrix.get(asnp).getEnchantments().containsKey(autosmelt)){
+                if (!matrix.get(asnp).getEnchantments().isEmpty() && matrix.get(asnp).getEnchantments().containsKey(autosmelt)) {
                     // Crafting Smelting Pickaxe but is already Smelting Pickaxe
                     e.getInventory().setResult(null);
-                }
-                else{
+                } else {
                     // Crafting Smelting Pickaxe
                     e.getInventory().getResult().addUnsafeEnchantments(pickaxe.getEnchantments());
                     ItemMeta im = e.getInventory().getResult().getItemMeta();
                     List<String> lore = pickaxe.getItemMeta().getLore();
-                    lore.remove(lore.size()-1);
+                    lore.remove(lore.size() - 1);
                     lore.addAll(im.getLore());
                     im.setLore(lore);
                     e.getInventory().getResult().setItemMeta(im);
                 }
-            }
-            else if(matrix.contains(pickaxe) && matrix.contains(new ItemStack(Material.LAVA_BUCKET, 1))) {
+            } else if (matrix.contains(pickaxe) && matrix.contains(new ItemStack(Material.LAVA_BUCKET, 1))) {
                 // Filling up Smelting Pickaxe
                 int asnp = matrix.indexOf(pickaxe);
-                if(!matrix.get(asnp).getEnchantments().isEmpty()){
-                    if(!matrix.get(asnp).getEnchantments().containsKey(autosmelt)){
+                if (!matrix.get(asnp).getEnchantments().isEmpty()) {
+                    if (!matrix.get(asnp).getEnchantments().containsKey(autosmelt)) {
                         // Filling up Smelting Pickaxe but is no Smelting Pickaxe
                         e.getInventory().setResult(null);
-                    }
-                    else{
+                    } else {
                         // Filling up Smelting Pickaxe
                         e.getInventory().getResult().addUnsafeEnchantments(pickaxe.getEnchantments());
                         ItemMeta im = e.getInventory().getResult().getItemMeta();
@@ -87,13 +84,11 @@ public class Ev_AutoSmelt implements Listener {
                         im.setLore(lore);
                         e.getInventory().getResult().setItemMeta(im);
                     }
-                }
-                else{
+                } else {
                     // Filling up Smelting Pickaxe but is no Smelting Pickaxe (no Enchants at all)
                     e.getInventory().setResult(null);
                 }
-                
-                
+
                 if (e.getInventory().getResult() != null) {
                     // Sets Fuel Level
                     ItemStack i = e.getInventory().getResult();
@@ -101,8 +96,7 @@ public class Ev_AutoSmelt implements Listener {
                     im.setLore(setFuel(im.getLore(), PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX));
                     i.setItemMeta(im);
                 }
-            }
-            else{
+            } else {
                 // Any other case. 
                 e.getInventory().setResult(null);
             }
