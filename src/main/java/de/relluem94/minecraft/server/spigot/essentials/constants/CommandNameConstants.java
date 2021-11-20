@@ -5,10 +5,10 @@ package de.relluem94.minecraft.server.spigot.essentials.constants;
  * @author rellu
  */
 public class CommandNameConstants {
-    
-    /********************************************************************************/
-    /*                            COMMAND   STUFF                                   */
-    /********************************************************************************/
+
+    //==============================================================================//
+    //                            COMMAND   STUFF                                   //
+    //==============================================================================//
     
     public static final String PLUGIN_COMMAND_NAME_AFK = "afk";
     public static final String PLUGIN_COMMAND_NAME_BROADCAST = "broadcast";
@@ -23,24 +23,24 @@ public class CommandNameConstants {
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME = "Survival";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_1 = "1";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_1_NAME = "Creative";
-    public static final String PLUGIN_COMMAND_NAME_GAMEMODE_2 = "2";    
-    public static final String PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME = "Adventure";    
+    public static final String PLUGIN_COMMAND_NAME_GAMEMODE_2 = "2";
+    public static final String PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME = "Adventure";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_3 = "3";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME = "Spectator";
     public static final String PLUGIN_COMMAND_NAME_GOD = "god";
     public static final String PLUGIN_COMMAND_NAME_GAMERULES = "gamerules";
-    public static final String PLUGIN_COMMAND_NAME_HEAD = "head";        
-    public static final String PLUGIN_COMMAND_NAME_HEAL = "heal";        
-    public static final String PLUGIN_COMMAND_NAME_HOME = "home"; 
-    public static final String PLUGIN_COMMAND_NAME_HOME_SET = "set"; 
+    public static final String PLUGIN_COMMAND_NAME_HEAD = "head";
+    public static final String PLUGIN_COMMAND_NAME_HEAL = "heal";
+    public static final String PLUGIN_COMMAND_NAME_HOME = "home";
+    public static final String PLUGIN_COMMAND_NAME_HOME_SET = "set";
     public static final String PLUGIN_COMMAND_NAME_HOME_DELETE = "delete";
     public static final String PLUGIN_COMMAND_NAME_HOME_LIST = "list";
-    public static final String PLUGIN_COMMAND_NAME_INVENTORY = "inv";        
-    public static final String PLUGIN_COMMAND_NAME_MSG = "msg";        
-    public static final String PLUGIN_COMMAND_NAME_REPLY = "r";        
-    public static final String PLUGIN_COMMAND_NAME_MORE = "more";        
-    public static final String PLUGIN_COMMAND_NAME_NICK = "nick";        
-    public static final String PLUGIN_COMMAND_NAME_NIGHT = "night";        
+    public static final String PLUGIN_COMMAND_NAME_INVENTORY = "inv";
+    public static final String PLUGIN_COMMAND_NAME_MSG = "msg";
+    public static final String PLUGIN_COMMAND_NAME_REPLY = "r";
+    public static final String PLUGIN_COMMAND_NAME_MORE = "more";
+    public static final String PLUGIN_COMMAND_NAME_NICK = "nick";
+    public static final String PLUGIN_COMMAND_NAME_NIGHT = "night";
     public static final String PLUGIN_COMMAND_NAME_SETGROUP = "setGroup";
     public static final String PLUGIN_COMMAND_NAME_POKE = "poke";
     public static final String PLUGIN_COMMAND_NAME_PRINT = "print";
