@@ -78,17 +78,17 @@ public class Worlds implements CommandExecutor {
                                     return true;
                                 case PLUGIN_COMMAND_NAME_WORLD_UNLOAD:
                                     try {
-                                        WorldHelper.unloadWorld(args[1], true);
-                                    } catch (WorldNotLoadedException ex) {
-                                        Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                    return true;
+                                    WorldHelper.unloadWorld(args[1], true);
+                                } catch (WorldNotLoadedException ex) {
+                                    Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                return true;
                                 case PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE:
                                     try {
-                                        WorldHelper.unloadWorld(args[1], false);
-                                    } catch (WorldNotLoadedException ex) {
-                                        Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
+                                    WorldHelper.unloadWorld(args[1], false);
+                                } catch (WorldNotLoadedException ex) {
+                                    Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, null, ex);
+                                }
                                 return true;
                                 default:
                                     // HOW TO USE
@@ -105,8 +105,7 @@ public class Worlds implements CommandExecutor {
                                 Boolean structures = Boolean.valueOf(args[4]);
                                 WorldHelper.createWorld(args[1], type, world_environment, structures);
                                 return true;
-                            }
-                            else{
+                            } else {
                                 // WRONG SUB COMMAND
                             }
                         }
