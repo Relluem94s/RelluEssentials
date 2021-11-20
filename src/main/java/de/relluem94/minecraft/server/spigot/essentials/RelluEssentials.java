@@ -186,15 +186,15 @@ public class RelluEssentials extends JavaPlugin {
     private static long start;
     private static RelluEssentials instance;
     public static boolean isOreRespawnEnabled = false;
-    
+
     private static ResourceBundle englishProperties;
     private static ResourceBundle germanProperties;
 
     public static String language;
-    
+
     public static RelluEssentials getInstance() {
         return instance;
-    }    
+    }
 
     @Override
     public void onEnable() {
@@ -230,12 +230,12 @@ public class RelluEssentials extends JavaPlugin {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void loadLanguage() throws IOException{
+
+    private void loadLanguage() throws IOException {
         germanProperties = ResourceBundle.getBundle("lang", new Locale("de", "DE"));
         englishProperties = ResourceBundle.getBundle("lang", new Locale("en", "US"));
     }
-    
+
     public static String getText(String language, String key) {
         if (language.equals("eng")) {
             return englishProperties.getString(key);
@@ -245,7 +245,7 @@ public class RelluEssentials extends JavaPlugin {
         }
         return null;
     }
-    
+
     public static String getText(String key) {
         if (language.equals("eng")) {
             return englishProperties.getString(key);
@@ -255,12 +255,12 @@ public class RelluEssentials extends JavaPlugin {
         }
         return null;
     }
-    
+
     private void startLoading() {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
         }
-        
+
         start = Calendar.getInstance().getTimeInMillis();
         consoleSendMessage(PLUGIN_COMMAND_COLOR, PLUGIN_BORDER);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
@@ -285,7 +285,7 @@ public class RelluEssentials extends JavaPlugin {
         } else {
             this.saveConfig();
         }
-        
+
         language = getConfig().getString("language");
     }
 
@@ -296,51 +296,51 @@ public class RelluEssentials extends JavaPlugin {
     private void commandManager() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_COMMANDS);
         /*	Commands	*/
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_0   )).setExecutor(new GameMode()               );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_1   )).setExecutor(new GameMode()               );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_2   )).setExecutor(new GameMode()               );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_3   )).setExecutor(new GameMode()               );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_FLY          )).setExecutor(new Fly()                    );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_COOCKIE      )).setExecutor(new Cookies()                );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CRAFT        )).setExecutor(new PortableCraftingBench()  );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUN          )).setExecutor(new Sun()                    );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RAIN         )).setExecutor(new Rain()                   );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_STORM        )).setExecutor(new Storm()                  );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPAWN        )).setExecutor(new Spawn()                  );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HOME         )).setExecutor(new Home()                   );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_DAY          )).setExecutor(new Day()                    );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NIGHT        )).setExecutor(new Night()                  );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MORE         )).setExecutor(new More()                   );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPAIR       )).setExecutor(new Repair()                 );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ENDERCHEST   )).setExecutor(new Enderchest()             );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_INVENTORY    )).setExecutor(new Inventory()              );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SETGROUP     )).setExecutor(new PermissionsGroup()       );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NICK         )).setExecutor(new Nick()                   );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUICIDE      )).setExecutor(new Suicide()                );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RELLU        )).setExecutor(new Rellu()                  );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAL         )).setExecutor(new Heal()                   );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GOD          )).setExecutor(new God()                    );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMERULES    )).setExecutor(new Gamerules()              );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAD         )).setExecutor(new Head()                   );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_VANISH       )).setExecutor(new Vanish()                 );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CLEARCHAT    )).setExecutor(new ClearChat()              );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_AFK          )).setExecutor(new AFK()                    );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MSG          )).setExecutor(new Message()                );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPLY        )).setExecutor(new Message()                );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TITLE        )).setExecutor(new Title()                  );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WHERE        )).setExecutor(new Where()                  );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_PRINT        )).setExecutor(new Print()                  );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_BROADCAST    )).setExecutor(new Broadcast()              );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RENAME       )).setExecutor(new Rename()                 );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPEED        )).setExecutor(new Speed()                  );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_POKE         )).setExecutor(new Poke()                   );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WORLD        )).setExecutor(new Worlds()                 );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ROLLBACK     )).setExecutor(new Rollback()               );
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TEST_COMMAND )).setExecutor(new TestCommand()            );
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_0)).setExecutor(new GameMode());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_1)).setExecutor(new GameMode());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_2)).setExecutor(new GameMode());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_3)).setExecutor(new GameMode());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_FLY)).setExecutor(new Fly());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_COOCKIE)).setExecutor(new Cookies());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CRAFT)).setExecutor(new PortableCraftingBench());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUN)).setExecutor(new Sun());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RAIN)).setExecutor(new Rain());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_STORM)).setExecutor(new Storm());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPAWN)).setExecutor(new Spawn());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HOME)).setExecutor(new Home());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_DAY)).setExecutor(new Day());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NIGHT)).setExecutor(new Night());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MORE)).setExecutor(new More());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPAIR)).setExecutor(new Repair());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ENDERCHEST)).setExecutor(new Enderchest());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_INVENTORY)).setExecutor(new Inventory());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SETGROUP)).setExecutor(new PermissionsGroup());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NICK)).setExecutor(new Nick());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUICIDE)).setExecutor(new Suicide());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RELLU)).setExecutor(new Rellu());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAL)).setExecutor(new Heal());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GOD)).setExecutor(new God());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMERULES)).setExecutor(new Gamerules());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAD)).setExecutor(new Head());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_VANISH)).setExecutor(new Vanish());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CLEARCHAT)).setExecutor(new ClearChat());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_AFK)).setExecutor(new AFK());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MSG)).setExecutor(new Message());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPLY)).setExecutor(new Message());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TITLE)).setExecutor(new Title());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WHERE)).setExecutor(new Where());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_PRINT)).setExecutor(new Print());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_BROADCAST)).setExecutor(new Broadcast());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RENAME)).setExecutor(new Rename());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SPEED)).setExecutor(new Speed());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_POKE)).setExecutor(new Poke());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WORLD)).setExecutor(new Worlds());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ROLLBACK)).setExecutor(new Rollback());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TEST_COMMAND)).setExecutor(new TestCommand());
         // @TODO add Warps
         // @TODO add Marriage
         // @TODO Fix Command execution for command Blocks
-        
+
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_COMMANDS_REGISTERED);
     }
 
@@ -352,33 +352,33 @@ public class RelluEssentials extends JavaPlugin {
     private void eventManager() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_EVENTS);
         /*	Events	*/
-        pm.registerEvents(new BetterChatFormat(),   this);
-        pm.registerEvents(new BetterPlayerJoin(),   this);
-        pm.registerEvents(new BetterPlayerQuit(),   this);
-        pm.registerEvents(new BetterBlockDrop(),    this);
-        pm.registerEvents(new BlockPlace(),         this);
-        pm.registerEvents(new BetterMobs(),         this);
-        pm.registerEvents(new BetterSoil(),         this);
-        pm.registerEvents(new SkullInfo(),          this);
-        pm.registerEvents(new BetterSavety(),       this);
-        pm.registerEvents(new NoDeathMessage(),     this);
-        pm.registerEvents(new PlayerMove(),         this);
-        pm.registerEvents(new MOTD(),               this);
-        pm.registerEvents(new CloudSailor(),        this);
-        pm.registerEvents(new SignActions(),        this);
-        pm.registerEvents(new SignClick(),          this);
-        pm.registerEvents(new ToolCrafting(),       this);
-        pm.registerEvents(new CustomEnchantment(),  this); // @TODO is enchanted but is lost on anvil use ( like book and pickaxe )
+        pm.registerEvents(new BetterChatFormat(), this);
+        pm.registerEvents(new BetterPlayerJoin(), this);
+        pm.registerEvents(new BetterPlayerQuit(), this);
+        pm.registerEvents(new BetterBlockDrop(), this);
+        pm.registerEvents(new BlockPlace(), this);
+        pm.registerEvents(new BetterMobs(), this);
+        pm.registerEvents(new BetterSoil(), this);
+        pm.registerEvents(new SkullInfo(), this);
+        pm.registerEvents(new BetterSavety(), this);
+        pm.registerEvents(new NoDeathMessage(), this);
+        pm.registerEvents(new PlayerMove(), this);
+        pm.registerEvents(new MOTD(), this);
+        pm.registerEvents(new CloudSailor(), this);
+        pm.registerEvents(new SignActions(), this);
+        pm.registerEvents(new SignClick(), this);
+        pm.registerEvents(new ToolCrafting(), this);
+        pm.registerEvents(new CustomEnchantment(), this); // @TODO is enchanted but is lost on anvil use ( like book and pickaxe )
     }
 
     private void skillManager() {
         /*  Skill Events */
-        pm.registerEvents(new Ev_Repair(),          this);
-        pm.registerEvents(new Ev_Salvage(),         this);
-        pm.registerEvents(new Ev_TreeFeller(),      this); // @TODO Big Bug Wrong implementation
-        pm.registerEvents(new Ev_AutoReplant(),     this);
-        pm.registerEvents(new Ev_AutoSmelt(),       this);
-        pm.registerEvents(new Ev_Telekinesis(),     this);
+        pm.registerEvents(new Ev_Repair(), this);
+        pm.registerEvents(new Ev_Salvage(), this);
+        pm.registerEvents(new Ev_TreeFeller(), this); // @TODO Big Bug Wrong implementation
+        pm.registerEvents(new Ev_AutoReplant(), this);
+        pm.registerEvents(new Ev_AutoSmelt(), this);
+        pm.registerEvents(new Ev_Telekinesis(), this);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_EVENTS_REGISTERED);
     }
 
@@ -424,11 +424,11 @@ public class RelluEssentials extends JavaPlugin {
         pie = dBH.getPluginInformation();
         dBH.init();
         locationTypeEntryList.addAll(dBH.getLocationTypes());
-                
+
         this.getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
             locationEntryList.addAll(dBH.getLocations());
         });
-        
+
         groupEntryList.addAll(dBH.getGroups());
     }
 
