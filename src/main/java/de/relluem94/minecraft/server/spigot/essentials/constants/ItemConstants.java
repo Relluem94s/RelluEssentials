@@ -5,11 +5,10 @@ package de.relluem94.minecraft.server.spigot.essentials.constants;
  * @author rellu
  */
 public class ItemConstants {
-    
-    /********************************************************************************/
-    /*                              ITEM   STUFF                                    */
-    /********************************************************************************/
-    
+
+    //==============================================================================//
+    //                              ITEM   STUFF                                    //
+    //==============================================================================//
     public static final String PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS = "cloud_boots";
     public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE = "smelter_pickaxe";
     public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_TANK = "smelter_tank";
