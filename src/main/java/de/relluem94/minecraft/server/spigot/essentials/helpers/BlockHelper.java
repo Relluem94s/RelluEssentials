@@ -10,7 +10,9 @@ import org.bukkit.Material;
 public class BlockHelper {
 
     /**
-     * Sets a Block on the Location of the BlockHistoryEntry (bh) with the specified Material from the database
+     * Sets a Block on the Location of the BlockHistoryEntry (bh) with the
+     * specified Material from the database
+     *
      * @param bh BlockHistoryEntry
      */
     public static void setBlock(BlockHistoryEntry bh) {
