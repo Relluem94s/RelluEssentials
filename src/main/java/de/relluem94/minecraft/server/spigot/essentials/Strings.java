@@ -2,10 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials;
 
 public class Strings {
 
-    /********************************************************************************/
+    /**
+     * *****************************************************************************
+     */
     /*                             PLUGIN   STUFF                                   */
-    /********************************************************************************/
-    
+    /**
+     * *****************************************************************************
+     */
     public static final String PLUGIN_NAME = "RelluEssentials";
     public static final String PLUGIN_SPACER_CHANNEL = " >> §f";
     public static final String PLUGIN_COMMAND_COLOR = "§f";
@@ -18,12 +21,12 @@ public class Strings {
     public static final String PLUGIN_NAME_CONSOLE = PLUGIN_MESSAGE_COLOR + "[" + PLUGIN_PREFIX + PLUGIN_MESSAGE_COLOR + "] ";
     public static final String PLUGIN_SPACER = "§7 >> " + PLUGIN_MESSAGE_COLOR;
     public static final String PLUGIN_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
-    
+
     public static final String PLUGIN_START_MESSAGE = "starts configuring ...";
     public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
     public static final String PLUGIN_STARTTIME = "wurde in %s ms gestartet!";
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
-    
+
     public static final String LANG_LOADING_CONFIGS = "Configs werden geladen!";
     public static final String LANG_CONFIGS_LOADED = "Configs sind geladen!";
     public static final String LANG_REGISTER_EVENTS = "Registriere Events!";
@@ -32,12 +35,14 @@ public class Strings {
     public static final String LANG_COMMANDS_REGISTERED = "Befehle erfolgreich regestriert!";
 
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
- 
-    
-    /********************************************************************************/
-    /*                            COMMAND   STUFF                                   */
-    /********************************************************************************/
 
+    /**
+     * *****************************************************************************
+     */
+    /*                            COMMAND   STUFF                                   */
+    /**
+     * *****************************************************************************
+     */
     public static final String PLUGIN_COMMAND_FLYMODE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Flugmodus von %s" + PLUGIN_COMMAND_COLOR + " wurde " + PLUGIN_COMMAND_ARG_COLOR + "%s!";
     public static final String PLUGIN_COMMAND_FLYMODE_ACTIVATED = "aktiviert";
     public static final String PLUGIN_COMMAND_FLYMODE_DEACTIVATED = "deaktiviert";
@@ -126,14 +131,13 @@ public class Strings {
 
     public static final String PLUGIN_COMMAND_WORLD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Folgende Welten gibt es:";
     public static final String PLUGIN_COMMAND_WORLD_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Die Welt " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " existiert nicht";
-    
+
     public static final String PLUGIN_COMMAND_POKE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze /poke " + PLUGIN_COMMAND_ARG_COLOR + "<Name>" + PLUGIN_COMMAND_COLOR + " um einen Spieler anzustubsen";
     public static final String PLUGIN_COMMAND_POKE_TITLE = "§4Buuuh";
     public static final String PLUGIN_COMMAND_POKE_SUBTITLE = "~~~~~~~~~~~~~~";
     public static final String PLUGIN_COMMAND_POKE_MESSAGE_TARGET = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "hat dich angestupst!";
     public static final String PLUGIN_COMMAND_POKE_MESSAGE_SENDER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + "%s " + PLUGIN_COMMAND_COLOR + "angestupst!";
-    
-    
+
     public static final String PLUGIN_COMMAND_SPEED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Geschwindigkeit wurde auf " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " gesetzt";
     public static final String PLUGIN_COMMAND_SPEED_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/speed " + "<" + PLUGIN_COMMAND_ARG_COLOR + "0-10" + PLUGIN_COMMAND_COLOR + ">";
 
