@@ -51,6 +51,10 @@ public class TypeHelper {
         }
         return isMat;
     }
+    
+    public static boolean isBlockOnOfMaterials(Block block, List<Material> materials) {
+        return materials.stream().anyMatch(material -> (block.getType().equals(material)));
+    }
 
     public static boolean isPlayer(CommandSender sender) {
         return sender instanceof Player;
