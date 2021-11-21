@@ -1,5 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.skills;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
@@ -12,10 +16,12 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import java.util.Arrays;
+import org.bukkit.Bukkit;
 
 public class Ev_TreeFeller implements Listener {
 
-    private Material[] logs = {
+    private final Material[] logs = {
         Material.OAK_LOG,
         Material.ACACIA_LOG,
         Material.BIRCH_LOG,
@@ -24,7 +30,7 @@ public class Ev_TreeFeller implements Listener {
         Material.SPRUCE_LOG
     };
 
-    private Material[] leaves = {
+    private final Material[] leaves = {
         Material.OAK_LEAVES,
         Material.ACACIA_LEAVES,
         Material.BIRCH_LEAVES,
@@ -37,18 +43,16 @@ public class Ev_TreeFeller implements Listener {
     public void onFell(BlockBreakEvent e) {
         ItemStack itemInHand = e.getPlayer().getInventory().getItemInMainHand();
         ItemMeta im = itemInHand.getItemMeta();
-        
-        boolean disabled = true;
-        
-        if (itemInHand.getType().equals(Material.DIAMOND_AXE) && !disabled) {
+
+        if (itemInHand.getType().equals(Material.NETHERITE_AXE) && false) {
             for (Material b2d : logs) {
                 if (e.getBlock().getType().equals(b2d)) {
-                    int damage = fellTree(e.getBlock());
+                    fellTree(e.getBlock());
                     if (((Damageable) im) != null) {
                         User u = User.getUserByPlayerName(e.getPlayer().getName());
                         int score = u.treeFeller.getObjective().getScore("Tree Feller").getScore();
                         u.treeFeller.getObjective().getScore("Tree Feller").setScore(score + 1);
-                        ((Damageable) im).setDamage(((Damageable) im).getDamage() + damage);
+
                     }
                 }
             }
@@ -56,56 +60,134 @@ public class Ev_TreeFeller implements Listener {
         itemInHand.setItemMeta(im);
     }
 
-    private int fellTree(Block b) {
-        int blocks_broken = 0;
-        for (int x = 0; x <= 30; x++) {
-            Block b2b = b.getRelative(BlockFace.UP, x);
-            Block b2b_w = b2b.getRelative(BlockFace.WEST, 1);
-            Block b2b_e = b2b.getRelative(BlockFace.EAST, 1);
-            Block b2b_s = b2b.getRelative(BlockFace.SOUTH, 1);
-            Block b2b_n = b2b.getRelative(BlockFace.NORTH, 1);
-
-            blocks_broken += checkBlock(b2b_w);
-            blocks_broken += checkBlock(b2b_e);
-            blocks_broken += checkBlock(b2b_s);
-            blocks_broken += checkBlock(b2b_n);
-            blocks_broken += checkBlock(b2b);
-        }
-        return blocks_broken;
-    }
-
-    private int checkBlock(Block block) {
-        int blocks_broken = 0;
-        Block b2b_w = block.getRelative(BlockFace.WEST, 1);
-        Block b2b_e = block.getRelative(BlockFace.EAST, 1);
-        Block b2b_s = block.getRelative(BlockFace.SOUTH, 1);
-        Block b2b_n = block.getRelative(BlockFace.NORTH, 1);
-
-        blocks_broken += breakBlocks(logs, block);
-        blocks_broken += breakBlocks(logs, b2b_w);
-        blocks_broken += breakBlocks(logs, b2b_e);
-        blocks_broken += breakBlocks(logs, b2b_s);
-        blocks_broken += breakBlocks(logs, b2b_n);
-
-        breakBlocks(leaves, block);
-        breakBlocks(leaves, b2b_w);
-        breakBlocks(leaves, b2b_e);
-        breakBlocks(leaves, b2b_s);
-        breakBlocks(leaves, b2b_n);
-        return blocks_broken;
-    }
-
-    private int breakBlocks(Material[] materials, Block block) {
-        int blocks_broken = 0;
-        for (Material b2d : materials) {
-            if (block.getType().equals(b2d)) {
-                block.breakNaturally();
-                spawnParticle(block);
-                blocks_broken++;
-                blocks_broken += checkBlock(block);
+    private void fellTree(Block b) {
+        boolean isTree = false;
+        Block temp = b;
+        while (isBlock(temp, BlockFace.DOWN) || temp.getRelative(BlockFace.DOWN).getType().equals(Material.DIRT)) {
+            temp = temp.getRelative(BlockFace.DOWN);
+            if (temp.getType().equals(Material.DIRT)) {
+                isTree = true;
             }
         }
-        return blocks_broken;
+
+        consoleSendMessage("isTree: ", isTree + "");
+
+        if (isTree) {
+
+            Bukkit.getScheduler().runTask(RelluEssentials.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    Block block = b;
+                    BlockFace bf = BlockFace.UP;
+                    while (isBlock(block, bf)) {
+                        block = breakBlock(block, bf);
+                        Block block_up = block;
+                        breakingBad(block_up);
+
+                    }
+                }
+            });
+
+            Bukkit.getScheduler().runTask(RelluEssentials.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    Block block = b;
+                    BlockFace bf = BlockFace.DOWN;
+                    while (isBlock(block, bf)) {
+                        block = breakBlock(block, bf);
+                    }
+                }
+            });
+
+        }
+    }
+
+    private void breakingBad(Block b) {
+        Bukkit.getScheduler().runTask(RelluEssentials.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                Block block = b;
+                BlockFace bf = BlockFace.WEST;
+                while (isBlock(block, bf)) {
+                    block = breakBlock(block, bf);
+                    breakingBad(block);
+                }
+            }
+        });
+
+        Bukkit.getScheduler().runTask(RelluEssentials.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                Block block = b;
+                BlockFace bf = BlockFace.NORTH;
+                while (isBlock(block, bf)) {
+                    block = breakBlock(block, bf);
+                    breakingBad(block);
+                }
+            }
+        });
+
+        Bukkit.getScheduler().runTask(RelluEssentials.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                Block block = b;
+                BlockFace bf = BlockFace.SOUTH;
+                while (isBlock(block, bf)) {
+                    block = breakBlock(block, bf);
+                    breakingBad(block);
+                }
+            }
+        });
+
+        Bukkit.getScheduler().runTask(RelluEssentials.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                Block block = b;
+                BlockFace bf = BlockFace.EAST;
+                while (isBlock(block, bf)) {
+                    block = breakBlock(block, bf);
+                    breakingBad(block);
+                }
+            }
+        });
+
+        Bukkit.getScheduler().runTask(RelluEssentials.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                Block block = b;
+                BlockFace bf = BlockFace.DOWN;
+                while (isBlock(block, bf)) {
+                    block = breakBlock(block, bf);
+                    breakingBad(block);
+                }
+            }
+        });
+        
+        Bukkit.getScheduler().runTask(RelluEssentials.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                Block block = b;
+                BlockFace bf = BlockFace.UP;
+                while (isBlock(block, bf)) {
+                    block = breakBlock(block, bf);
+                    breakingBad(block);
+                }
+            }
+        });
+    }
+
+    private boolean isBlock(Block b, BlockFace bf) {
+        return TypeHelper.isBlockOnOfMaterials(b.getRelative(bf), Arrays.asList(logs)) || TypeHelper.isBlockOnOfMaterials(b.getRelative(bf), Arrays.asList(leaves));
+    }
+
+    private Block breakBlock(Block b, BlockFace bf) {
+        b = b.getRelative(bf);
+        b.breakNaturally();
+        spawnParticle(b);
+
+        consoleSendMessage("bf: ", bf.name() + " loc: " + locationToString(b.getLocation()) + " material: " + b.getType().name());
+
+        return b;
     }
 
     private void spawnParticle(Block block) {
