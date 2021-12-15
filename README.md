@@ -111,29 +111,29 @@
 ![Database Model](https://raw.githubusercontent.com/Relluem94/RelluEssentials/RE-14/db_model.png)
 
 ## TODOS
-* BlockHistory save materials into DB (50%)
-* Small / Easy Worldedit & World Guard
-* Netherstar for Selection
-* Manual selection with pos
-* set command (material)
-* extend command
-* region protection with permissions for player and groups with flags
-* flags -> build, enter, entry/leave-message, interact, harvest
-* chest / falldoor / door / fence-gate protection with permissions for player and groups with flags
-* flags -> cant-open-message (standard message or custom), open-on-day, open-on-night
-* MCMMO Skill Level System
-* fast pickaxe mode
-* fast shovel mode
-* Stick to Rotate Stairs and convert Upper/lower slaps
-* a permission system for external plugins (maybe)
-* Multi Language resources (from Database)
-* Skill System with listener on blockbreak etc.
-* Fix some bugs with the treefeller (activate only sometimes pair with skill system)
-* sudo command and sudo chat player 
-* log Playtime of Players
-* statistics command to show player stats like playtime, first and last played, avg playtime or others
-* check inv for incomplete stack of item for telekinesis event (drops item if no space is left)
-* the rest from the snippet textfile
+* [ ] BlockHistory save materials into DB (50%)
+* [ ] Small / Easy Worldedit & World Guard
+* [ ] Netherstar for Selection
+* [ ] Manual selection with pos
+* [ ] set command (material)
+* [ ] extend command
+* [ ] region protection with permissions for player and groups with flags
+* [ ] flags -> build, enter, entry/leave-message, interact, harvest
+* [ ] chest / falldoor / door / fence-gate protection with permissions for player and groups with flags
+* [ ] flags -> cant-open-message (standard message or custom), open-on-day, open-on-night
+* [ ] MCMMO Skill Level System
+* [ ] fast pickaxe mode
+* [ ] fast shovel mode
+* [ ] Stick to Rotate Stairs and convert Upper/lower slaps
+* [ ] a permission system for external plugins (maybe)
+* [ ] Multi Language resources (from Database)
+* [ ] Skill System with listener on blockbreak etc.
+* [ ] Fix some bugs with the treefeller (activate only sometimes pair with skill system)
+* [ ] sudo command and sudo chat player 
+* [ ] log Playtime of Players
+* [ ] statistics command to show player stats like playtime, first and last played, avg playtime or others
+* [ ] check inv for incomplete stack of item for telekinesis event (drops item if no space is left)
+* [ ] the rest from the snippet textfile
 
 
 
