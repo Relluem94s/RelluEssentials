@@ -12,7 +12,7 @@ public class BlockHistoryEntry {
     private String created;
     private int createdby;
     private String updated;
-    private int updatedby;
+    private int updatedBy;
     private String deleted;
     private int deletedby;
 
@@ -53,6 +53,22 @@ public class BlockHistoryEntry {
 
     public void setDeleted(String deleted) {
         this.deleted = deleted;
+    }
+    
+     public void setUpdated(String updated) {
+        this.updated = updated;
+    }
+
+    public String getUpdated() {
+        return updated;
+    }
+
+    public int getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(int updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public String getDeleted() {
