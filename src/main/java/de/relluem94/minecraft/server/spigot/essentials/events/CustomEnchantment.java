@@ -14,6 +14,7 @@ public class CustomEnchantment implements Listener {
 
     Random random = new Random();
 
+    // @TODO is this still necessary?
     @EventHandler
     public void addCustomEnchantToTable(EnchantItemEvent e) {
         if (e.getExpLevelCost() == 30) {

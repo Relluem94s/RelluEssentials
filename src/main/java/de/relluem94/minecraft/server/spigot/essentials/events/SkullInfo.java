@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_SKULL_INFO_SPACER;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
@@ -21,7 +22,7 @@ public class SkullInfo implements Listener {
                     BlockState block = e.getClickedBlock().getState();
                     if (block instanceof Skull) {
                         Skull sk = (Skull) block;
-                        p.sendTitle("§a" + sk.getOwner(), "§8~~~~~~~~~~~~~~~~~~~~~~~", 5, 80, 5);
+                        p.sendTitle("§a" + sk.getOwner(), PLUGIN_EVENT_SKULL_INFO_SPACER, 5, 80, 5);
                     }
                 }
             }

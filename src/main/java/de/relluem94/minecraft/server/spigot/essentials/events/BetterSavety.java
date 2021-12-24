@@ -11,7 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class BetterSavety implements Listener {
 
-    private String[] strings2block = {"/pl", "/bukkit", "/ver"};
+    private final String[] strings2block = {"/pl", "/bukkit", "/ver"};
 
     @EventHandler
     public void onType(PlayerCommandPreprocessEvent e) {
