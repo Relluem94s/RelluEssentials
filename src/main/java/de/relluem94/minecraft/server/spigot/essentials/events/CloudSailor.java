@@ -27,6 +27,7 @@ import org.bukkit.util.Vector;
 
 public class CloudSailor implements Listener {
 
+    //@TODO has to be done in Config (new Table?)
     private final String[] worlds = new String[]{"world", "world_nether", "world_the_end", "lobby"};
 
     @EventHandler
