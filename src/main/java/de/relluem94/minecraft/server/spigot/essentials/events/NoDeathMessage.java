@@ -15,6 +15,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.lo
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH_TP;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
 
 public class NoDeathMessage implements Listener {
 
@@ -29,7 +30,7 @@ public class NoDeathMessage implements Listener {
         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
         LocationEntry le = new LocationEntry();
         le.setLocation(p.getLocation());
-        le.setLocationName("death_" + (int) (Math.random() * 94 - 1) + 1);
+        le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, (int) (Math.random() * 94 - 1) + 1));
         le.setLocationType(locationTypeEntryList.get(1));
         le.setPlayerId(pe.getID());
         dBH.insertLocation(le);

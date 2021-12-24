@@ -30,6 +30,15 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Enchantm
 
 public class Ev_AutoSmelt implements Listener {
 
+    /*
+    
+    Todo: Fix Attached Blocks..
+    
+    https://github.com/Relluem94s/RelluEssentials/issues/24
+    https://relluem94.atlassian.net/browse/RE-1
+    
+    */
+    
     @EventHandler
     public void preventPlacementOfFurnace(PlayerInteractEvent e) {
         if (e.getPlayer().getInventory().getItemInMainHand().equals(CustomItems.autoSmeltFurnace.getCustomItem()) || e.getPlayer().getInventory().getItemInOffHand().equals(CustomItems.autoSmeltFurnace.getCustomItem())) {
