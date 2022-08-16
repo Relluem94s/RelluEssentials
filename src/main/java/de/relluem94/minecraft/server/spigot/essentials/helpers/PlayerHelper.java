@@ -54,7 +54,7 @@ public class PlayerHelper {
         boolean isAFK = pe.isAFK();
 
         if (!join) {
-            Bukkit.broadcastMessage(PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + String.format(getText(!isAFK ? "PLUGIN_COMMAND_AFK_ACTIVATED" : "PLUGIN_COMMAND_AFK_DEACTIVATED"), p.getCustomName() + "§f", !isAFK ? "§c" : "§a"));
+            Bukkit.broadcastMessage(PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + String.format(getText(!isAFK ? "PLUGIN_COMMAND_AFK_ACTIVATED" : "PLUGIN_COMMAND_AFK_DEACTIVATED"), p.getCustomName() + "Â§f", !isAFK ? "Â§c" : "Â§a"));
             isAFK = !isAFK; // Invert for single invertion ^_^
         }
 
@@ -63,7 +63,7 @@ public class PlayerHelper {
         dBH.updatePlayer(pe);
 
         p.setInvulnerable(isAFK);
-        p.setPlayerListName((isAFK ? "§c[AFK] " : "") + p.getCustomName());
+        p.setPlayerListName((isAFK ? "Â§c[AFK] " : "") + p.getCustomName());
         return true;
     }
 
