@@ -14,8 +14,9 @@ public class BetterMobs implements Listener {
         if (et == EntityType.PHANTOM) {
             e.setCancelled(true);
         } else if (et == EntityType.IRON_GOLEM) {
-            Location l = e.getEntity().getLocation();
-            l.getWorld().spawnEntity(l, et);
+            //Location l = e.getEntity().getLocation();
+            //l.getWorld().spawnEntity(l, et);
+            // triggers a loop
         }
     }
 }
