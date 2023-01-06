@@ -31,14 +31,14 @@ public class BlockPlace implements Listener {
             lt.setId(4);
             l.setLocationType(lt);
             l.setPlayerId(1);
-            dBH.insertLocation(l);
-            l = dBH.getLocation(e.getBlock().getLocation(), 4);
+            // dBH.insertLocation(l);
+            // l = dBH.getLocation(e.getBlock().getLocation(), 4);
         }
 
         bh.setCreatedby(p.getID());
         bh.setMaterial(Material.AIR.name());
 
         bh.setLocation(l);
-        dBH.insertBlockHistory(bh);
+        // dBH.insertBlockHistory(bh);
     }
 }
