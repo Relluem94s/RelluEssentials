@@ -9,18 +9,17 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SPA
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import java.io.IOException;
+import net.minecraft.network.PacketDataSerializer;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.chat.IChatBaseComponent.ChatSerializer;
+import net.minecraft.network.protocol.game.PacketPlayOutPlayerListHeaderFooter;
+import net.minecraft.server.level.EntityPlayer;
+
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.minecraft.server.v1_16_R3.EntityPlayer;
-import net.minecraft.server.v1_16_R3.IChatBaseComponent;
-import net.minecraft.server.v1_16_R3.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_16_R3.PacketDataSerializer;
-import net.minecraft.server.v1_16_R3.PacketPlayOutPlayerListHeaderFooter;
+
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -79,16 +78,11 @@ public class PlayerHelper {
         EntityPlayer entityPlayer = ((CraftPlayer) p).getHandle();
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.buffer();
         PacketDataSerializer packetDataSerializer = new PacketDataSerializer(byteBuf);
-        PacketPlayOutPlayerListHeaderFooter packetPlayOutPlayerListHeaderFooter = new PacketPlayOutPlayerListHeaderFooter();
+        PacketPlayOutPlayerListHeaderFooter packetPlayOutPlayerListHeaderFooter = new PacketPlayOutPlayerListHeaderFooter(packetDataSerializer);
 
         packetDataSerializer.a(IChatBaseComponent.ChatSerializer.a(tabHeader));
         packetDataSerializer.a(IChatBaseComponent.ChatSerializer.a(tabFooter));
-        try {
-            packetPlayOutPlayerListHeaderFooter.a(packetDataSerializer);
-        } catch (IOException ex) {
-            Logger.getLogger(PlayerHelper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        entityPlayer.playerConnection.sendPacket(packetPlayOutPlayerListHeaderFooter);
-
+        packetPlayOutPlayerListHeaderFooter.a(packetDataSerializer);
+        entityPlayer.b.a(packetPlayOutPlayerListHeaderFooter, null);
     }
 }
