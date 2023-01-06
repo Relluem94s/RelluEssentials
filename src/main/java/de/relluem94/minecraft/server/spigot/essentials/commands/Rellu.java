@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
