@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,7 +25,8 @@ public class Rellu implements CommandExecutor {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_RELLU_PING)) {
-                                int ping = ((CraftPlayer) p).getHandle().ping;
+                                int ping = p.getPing();
+                                
                                 p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING, ping));
                                 return true;
                             } else {
@@ -45,7 +45,7 @@ public class Rellu implements CommandExecutor {
                         if (target != null) {
                             if (isPlayer(sender)) {
                                 Player p = (Player) sender;
-                                int ping = ((CraftPlayer) target).getHandle().ping;
+                                int ping = target.getPing();
                                 p.sendMessage(String.format(PLUGIN_COMMAND_RELLU_PING_OTHER, target.getCustomName(), ping));
                                 return true;
                             }

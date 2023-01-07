@@ -209,7 +209,7 @@ public class DatabaseHelper {
                     p.setCustomName(rs.getString("customname"));
                     p.setFlying(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
-                    p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
+                    p.setGroup(de.relluem94.minecraft.server.spigot.essentials.permissions.Groups.getGroup(rs.getInt("group_fk")));
                     p.setID(rs.getInt("id"));
                     p.setUUID(rs.getString("uuid"));
 
