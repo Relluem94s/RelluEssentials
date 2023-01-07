@@ -23,9 +23,12 @@ public class BetterPlayerJoin implements Listener {
         e.setJoinMessage(null);
         Player p = e.getPlayer();
         addPlayer(p);
+
+        p.setPlayerListHeader(pie.getTabheader());
+        p.setPlayerListFooter(pie.getTabfooter());
+
         PlayerHelper.setFlying(p);
         PlayerHelper.setAFK(p, true);
-        PlayerHelper.sendTablist(p, pie.getTabheader(), pie.getTabfooter());
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
     }
 
