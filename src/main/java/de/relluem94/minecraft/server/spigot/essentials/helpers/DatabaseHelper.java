@@ -515,13 +515,19 @@ public class DatabaseHelper {
                 patch1();
                 patch2();
                 patch2_1();
+                patch3();
                 break;
             case 1:
                 patch2();
+                patch2_1();
+                patch3();
                 break;
             case 2:
                 patch2_1();
+                patch3();
                 break;
+            case 3:
+                patch3();
             default:
                 break;
         }
@@ -592,6 +598,16 @@ public class DatabaseHelper {
         executeScript(v + "insertNewDBVersion.sql");
         executeScript(v + "updateOldPluginInformation.sql");
     }
+
+    private void patch3() {
+        String v = "patches/v3.0/";
+        executeScript(v + "addBankTier.sql");
+        executeScript(v + "addBankAccount.sql");
+        executeScript(v + "addBankTransaction.sql"); 
+        executeScript(v + "insertBankTier.sql"); 
+        executeScript(v + "updateOldPluginInformation.sql");
+    }
+
 
     public void init() {
         applyPatch(pie.getDbVersion());
