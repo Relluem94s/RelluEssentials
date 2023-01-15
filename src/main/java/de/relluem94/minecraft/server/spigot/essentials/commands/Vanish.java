@@ -55,9 +55,9 @@ public class Vanish implements CommandExecutor {
                             boolean canSee = false;
                             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                                 if (onlinePlayer.canSee(target)) {
-                                    onlinePlayer.hidePlayer(target);
+                                    onlinePlayer.hidePlayer(RelluEssentials.getInstance(), target);
                                 } else {
-                                    onlinePlayer.showPlayer(target);
+                                    onlinePlayer.showPlayer(RelluEssentials.getInstance(), target);
                                     canSee = true;
                                 }
                             }
