@@ -174,8 +174,8 @@ public class RelluEssentials extends JavaPlugin {
     public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
 
-    public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), PLUGIN_ENCHANTMENT_AUTOSMELT.toLowerCase()));
-    public static Telekinesis telekinesis = new Telekinesis(new NamespacedKey(Strings.PLUGIN_NAME.toLowerCase(), PLUGIN_ENCHANTMENT_TELEKINESIS.toLowerCase()));
+    public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(RelluEssentials.getInstance(), PLUGIN_ENCHANTMENT_AUTOSMELT.toLowerCase()));
+    public static Telekinesis telekinesis = new Telekinesis(new NamespacedKey(RelluEssentials.getInstance(), PLUGIN_ENCHANTMENT_TELEKINESIS.toLowerCase()));
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
