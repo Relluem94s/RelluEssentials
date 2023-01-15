@@ -46,7 +46,7 @@ public class ConfigHelper {
      * @return Returns List of all Players from config file
      */
     public List<PlayerEntry> getPlayers() {
-        List<PlayerEntry> list = new ArrayList();
+        List<PlayerEntry> list = new ArrayList<PlayerEntry>();
         ConfigurationSection cs = config.getConfigurationSection("player");
 
         for (String uuid : cs.getKeys(false)) {
@@ -79,7 +79,7 @@ public class ConfigHelper {
      * @return List of Homes as LocationEntry
      */
     public List<LocationEntry> getHomes(PlayerEntry p) {
-        List<LocationEntry> list = new ArrayList();
+        List<LocationEntry> list = new ArrayList<LocationEntry>();
         ConfigurationSection homes = config.getConfigurationSection("player." + p.getUUID() + ".home");
         for (String home : homes.getKeys(false)) {
             ConfigurationSection h = homes.getConfigurationSection(home);
