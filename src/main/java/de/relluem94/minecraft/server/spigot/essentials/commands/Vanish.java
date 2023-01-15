@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
@@ -28,9 +29,9 @@ public class Vanish implements CommandExecutor {
 
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (onlinePlayer.canSee(p)) {
-                                onlinePlayer.hidePlayer(p);
+                                onlinePlayer.hidePlayer(RelluEssentials.getInstance(), p);
                             } else {
-                                onlinePlayer.showPlayer(p);
+                                onlinePlayer.showPlayer(RelluEssentials.getInstance(), p);
                                 canSee = true;
                             }
                         }
