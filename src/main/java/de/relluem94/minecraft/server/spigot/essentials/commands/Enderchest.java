@@ -31,7 +31,7 @@ public class Enderchest implements CommandExecutor {
                     }
                 }
             } else {
-                Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
+                Player target = Bukkit.getPlayer(args[0]).getPlayer();
                 if (target != null) {
                     if (isPlayer(sender)) {
                         Player p = (Player) sender;
