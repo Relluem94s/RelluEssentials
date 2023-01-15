@@ -18,6 +18,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
@@ -80,17 +81,13 @@ import de.relluem94.minecraft.server.spigot.essentials.events.SkullInfo;
 import de.relluem94.minecraft.server.spigot.essentials.events.ToolCrafting;
 
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoReplant;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Repair;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Salvage;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
 import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekinesis;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_TreeFeller;
 
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekinesis;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-import net.minecraft.world.scores.ScoreboardObjective;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Gamerules;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 
@@ -390,7 +387,7 @@ public class RelluEssentials extends JavaPlugin {
 
         board = sm.getNewScoreboard();
 
-        Objective o = board.registerNewObjective("bob", "dummy");
+        Objective o = board.registerNewObjective("Coins", Criteria.create("COINS"), "Coins");
         Score coins = o.getScore("");
         coins.setScore(0);
 
@@ -421,7 +418,7 @@ public class RelluEssentials extends JavaPlugin {
             f.setAccessible(true);
             f.set(null, true);
             Enchantment.registerEnchantment(ench);
-            consoleSendMessage(PLUGIN_NAME_CONSOLE, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getName(), ench.getKey().toString()));
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, String.format(PLUGIN_REGISTER_ENCHANTMENT, ench.getKey().getNamespace(), ench.getKey().toString()));
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             consoleSendMessage(PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + ench.getKey().toString());
         }
