@@ -38,6 +38,7 @@ public class BetterPlayerJoin implements Listener {
         if (pe == null) {
             pe = new PlayerEntry();
             pe.setCreatedby(1);
+            pe.setCustomName(p.getDisplayName());
             pe.setGroup(Groups.getGroup("user"));
             pe.setUUID(p.getUniqueId().toString());
             dBH.insertPlayer(pe);
