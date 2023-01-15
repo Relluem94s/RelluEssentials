@@ -82,7 +82,7 @@ public class AutoSmelt extends Enchantment implements IEnchantment {
             lore.set(lore.size() - 3, PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
             lore.set(lore.size() - 2, PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, 0));
         } else {
-            lore = new ArrayList();
+            lore = new ArrayList<String>();
             lore.add(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_AUTOSMELT);
             lore.add(PLUGIN_ENCHANTMENT_AUTOSMELT_LORE);
             lore.add(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK + String.format(PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT, 0));
