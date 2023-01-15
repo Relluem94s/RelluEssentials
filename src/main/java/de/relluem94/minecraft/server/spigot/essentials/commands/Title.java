@@ -22,7 +22,7 @@ public class Title implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TITLE)) {
             if (args.length > 2) {
-                Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
+                Player target = Bukkit.getPlayer(args[0]);
                 if (target != null) {
                     if (isPlayer(sender)) {
                         Player p = (Player) sender;
