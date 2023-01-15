@@ -16,6 +16,8 @@ public class Skill {
     private Objective objective;
 
     public Skill(Scoreboard board, String name, String displayName) {
+        System.out.println(id + " " + level  + " " + maxLevel  + " " +  minLevel);
+
         if (board.getObjective(name) == null) {
             objective = board.registerNewObjective(name, "dummy", displayName);
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
