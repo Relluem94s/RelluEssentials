@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
@@ -43,5 +44,6 @@ public class BetterPlayerJoin implements Listener {
         }
         playerEntryList.put(p.getUniqueId(), pe);
         User u = new User(p);
+        u.getPlayer().setScoreboard(RelluEssentials.board);
     }
 }
