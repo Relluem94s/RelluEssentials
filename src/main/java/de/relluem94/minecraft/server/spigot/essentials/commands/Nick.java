@@ -25,7 +25,7 @@ public class Nick implements CommandExecutor {
                 if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                        Player target = Bukkit.getOfflinePlayer(args[0]).getPlayer();
+                        Player target = Bukkit.getPlayer(args[0]).getPlayer();
                         if (target != null) {
                             PlayerEntry pe = playerEntryList.get(target.getUniqueId());
                             pe.setCustomName(args[1]);
