@@ -77,7 +77,7 @@ public class Telekinesis extends Enchantment implements IEnchantment {
             lore.set(lore.size() - 3, PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKINESIS);
             lore.set(lore.size() - 2, PLUGIN_ENCHANTMENT_TELEKINESIS_LORE);
         } else {
-            lore = new ArrayList();
+            lore = new ArrayList<String>();
             lore.add(PLUGIN_ENCHANTMENT_COLOR + PLUGIN_ENCHANTMENT_TELEKINESIS);
             lore.add(PLUGIN_ENCHANTMENT_TELEKINESIS_LORE);
             lore.add(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
