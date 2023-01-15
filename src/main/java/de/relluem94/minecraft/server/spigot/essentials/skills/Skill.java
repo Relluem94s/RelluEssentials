@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.skills;
 
+import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.RenderType;
@@ -19,7 +20,7 @@ public class Skill {
         System.out.println(id + " " + level  + " " + maxLevel  + " " +  minLevel);
 
         if (board.getObjective(name) == null) {
-            objective = board.registerNewObjective(name, "dummy", displayName);
+            objective = board.registerNewObjective(name, Criteria.DUMMY, displayName);
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             objective.setRenderType(RenderType.INTEGER);
         }
