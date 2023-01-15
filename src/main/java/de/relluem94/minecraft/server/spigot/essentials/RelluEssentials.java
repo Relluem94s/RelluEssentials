@@ -20,6 +20,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.NamespacedKey;
@@ -89,7 +90,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekinesis;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-
+import net.minecraft.world.scores.ScoreboardObjective;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Gamerules;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 
@@ -388,8 +389,14 @@ public class RelluEssentials extends JavaPlugin {
         }
 
         board = sm.getNewScoreboard();
-        Objective o = board.registerNewObjective("player deaths", "death", "player deaths");
+
+        Objective o = board.registerNewObjective("bob", "dummy");
+        Score coins = o.getScore("");
+        coins.setScore(0);
+
+
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
+        
     }
 
     private void groupManager() {
@@ -401,6 +408,7 @@ public class RelluEssentials extends JavaPlugin {
         Bukkit.getOnlinePlayers().forEach(p -> {
             User u = new User(p);
             u.setGroup(playerEntryList.get(p.getUniqueId()).getGroup());
+            u.getPlayer().setScoreboard(board);
             //TODO Add Array for Users to Access it directly without the other class. (Maybe?)
             //TODO Remove Todo above. Also (Maybe?) remove User thing. could be replaced by the pojo stuff we have.
         });
