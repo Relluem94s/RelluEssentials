@@ -12,5 +12,6 @@ public class RepairSkill extends Skill {
 
     public RepairSkill(Scoreboard board) {
         super(board, "Repair", "Repair Skill");
+        System.out.println(id + " " + level  + " " + maxLevel  + " " +  minLevel);
     }
 }
