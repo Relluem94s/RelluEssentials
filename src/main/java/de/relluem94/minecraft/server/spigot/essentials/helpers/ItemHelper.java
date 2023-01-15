@@ -208,7 +208,7 @@ public class ItemHelper implements IItemHelper {
             if (im.getLore() != null) {
                 loc_lore = im.getLore();
             } else {
-                loc_lore = new ArrayList();
+                loc_lore = new ArrayList<String>();
             }
 
             loc_lore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
