@@ -44,7 +44,7 @@ public class Ev_TreeFeller implements Listener {
         ItemStack itemInHand = e.getPlayer().getInventory().getItemInMainHand();
         ItemMeta im = itemInHand.getItemMeta();
 
-        if (itemInHand.getType().equals(Material.NETHERITE_AXE) && false) {
+        if (itemInHand.getType().equals(Material.NETHERITE_AXE)) {
             for (Material b2d : logs) {
                 if (e.getBlock().getType().equals(b2d)) {
                     fellTree(e.getBlock());
