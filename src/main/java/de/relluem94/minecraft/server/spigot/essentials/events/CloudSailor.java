@@ -87,7 +87,7 @@ public class CloudSailor implements Listener {
                 if (p.getInventory().getItemInOffHand().equals(CustomItems.cloudSailor.getCustomItem()) || (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem()))) {
                     if (!p.isFlying() && !p.isSneaking()) {
 
-                        List<Block> blocks = new ArrayList();
+                        List<Block> blocks = new ArrayList<Block>();
                         blocks.add(p.getLocation().getBlock().getRelative(BlockFace.DOWN));
                         blocks.add(blocks.get(0).getRelative(BlockFace.DOWN));
 
