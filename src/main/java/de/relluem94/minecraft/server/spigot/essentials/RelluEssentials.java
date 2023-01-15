@@ -373,9 +373,9 @@ public class RelluEssentials extends JavaPlugin {
 
     private void skillManager() {
         /*  Skill Events */
-        pm.registerEvents(new Ev_Repair(), this);
-        pm.registerEvents(new Ev_Salvage(), this);
-        pm.registerEvents(new Ev_TreeFeller(), this); // @TODO Big Bug Wrong implementation
+        //pm.registerEvents(new Ev_Repair(), this);
+        //pm.registerEvents(new Ev_Salvage(), this);
+        //pm.registerEvents(new Ev_TreeFeller(), this); // @TODO Big Bug Wrong implementation
         pm.registerEvents(new Ev_AutoReplant(), this);
         pm.registerEvents(new Ev_AutoSmelt(), this);
         pm.registerEvents(new Ev_Telekinesis(), this);
