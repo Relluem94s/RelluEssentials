@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,7 +30,7 @@ public class Head implements CommandExecutor {
                         String owner = args[0];
                         ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD, 1);
                         SkullMeta sm = (SkullMeta) itemStack.getItemMeta();
-                        sm.setOwner(owner);
+                        sm.setOwningPlayer(Bukkit.getOfflinePlayer(Bukkit.getPlayer(owner).getUniqueId()));
                         sm.setDisplayName(owner);
                         itemStack.setItemMeta((ItemMeta) sm);
                         p.getInventory().addItem(itemStack);
