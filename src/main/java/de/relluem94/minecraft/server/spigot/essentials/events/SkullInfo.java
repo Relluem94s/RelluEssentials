@@ -22,7 +22,7 @@ public class SkullInfo implements Listener {
                     BlockState block = e.getClickedBlock().getState();
                     if (block instanceof Skull) {
                         Skull sk = (Skull) block;
-                        p.sendTitle("§a" + sk.getOwnerProfile().getName(), PLUGIN_EVENT_SKULL_INFO_SPACER, 5, 80, 5);
+                        p.sendTitle("§a" + sk.getOwningPlayer().getName(), PLUGIN_EVENT_SKULL_INFO_SPACER, 5, 80, 5);
                     }
                 }
             }
