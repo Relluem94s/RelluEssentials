@@ -43,7 +43,7 @@ public class Ev_Telekinesis implements Listener {
             if (!p.getInventory().getItemInMainHand().getEnchantments().containsKey(autosmelt)) {
                 Block bl = b.getRelative(BlockFace.UP);
 
-                List<ItemStack> lis = new ArrayList();
+                List<ItemStack> lis = new ArrayList<ItemStack>();
                 lis.addAll(b.getDrops());
 
                 while (bl.getType().equals(Material.SUGAR_CANE)) {
