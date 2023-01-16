@@ -21,6 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -46,6 +47,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Suicide;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
 import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Broadcast;
 import de.relluem94.minecraft.server.spigot.essentials.commands.God;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
@@ -72,6 +74,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerQuit;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterSavety;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterSoil;
 import de.relluem94.minecraft.server.spigot.essentials.events.MOTD;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterNPC;
 import de.relluem94.minecraft.server.spigot.essentials.events.NoDeathMessage;
 import de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
@@ -119,6 +122,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_3;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMERULES;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GOD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HEAD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HEAL;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
@@ -171,8 +175,8 @@ public class RelluEssentials extends JavaPlugin {
     public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
 
-    public static AutoSmelt autosmelt = new AutoSmelt(new NamespacedKey(RelluEssentials.getInstance(), PLUGIN_ENCHANTMENT_AUTOSMELT.toLowerCase()));
-    public static Telekinesis telekinesis = new Telekinesis(new NamespacedKey(RelluEssentials.getInstance(), PLUGIN_ENCHANTMENT_TELEKINESIS.toLowerCase()));
+    public static AutoSmelt autosmelt;
+    public static Telekinesis telekinesis;
 
     public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
@@ -206,6 +210,9 @@ public class RelluEssentials extends JavaPlugin {
         } catch (IOException ex) {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        autosmelt = new AutoSmelt(new NamespacedKey(RelluEssentials.getInstance(), PLUGIN_ENCHANTMENT_AUTOSMELT.toLowerCase()));
+        telekinesis = new Telekinesis(new NamespacedKey(RelluEssentials.getInstance(), PLUGIN_ENCHANTMENT_TELEKINESIS.toLowerCase()));
 
         boardManager();
         commandManager();
@@ -318,6 +325,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RELLU)).setExecutor(new Rellu());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAL)).setExecutor(new Heal());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GOD)).setExecutor(new God());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ADMIN)).setExecutor(new Admin());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMERULES)).setExecutor(new Gamerules());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAD)).setExecutor(new Head());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_VANISH)).setExecutor(new Vanish());
@@ -366,6 +374,7 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new SignActions(), this);
         pm.registerEvents(new SignClick(), this);
         pm.registerEvents(new ToolCrafting(), this);
+        pm.registerEvents(new BetterNPC(), this);
         pm.registerEvents(new CustomEnchantment(), this); // @TODO is enchanted but is lost on anvil use ( like book and pickaxe )
     }
 
@@ -387,10 +396,9 @@ public class RelluEssentials extends JavaPlugin {
 
         board = sm.getNewScoreboard();
 
-        Objective o = board.registerNewObjective("Coins", Criteria.create("COINS"), "Coins");
-        Score coins = o.getScore("");
+        Objective o = board.registerNewObjective("coins", Criteria.DUMMY, "Coins", RenderType.INTEGER);
+        Score coins = o.getScore("coins");
         coins.setScore(0);
-
 
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
         
