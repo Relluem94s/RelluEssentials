@@ -605,6 +605,7 @@ public class DatabaseHelper {
         executeScript(v + "addBankAccount.sql");
         executeScript(v + "addBankTransaction.sql"); 
         executeScript(v + "insertBankTier.sql"); 
+        executeScript(v + "insertNewDBVersion.sql");
         executeScript(v + "updateOldPluginInformation.sql");
     }
 
