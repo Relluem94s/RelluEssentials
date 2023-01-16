@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -76,5 +77,17 @@ public class InventoryHelper {
             Player p = (Player) sender;
             p.openInventory(inv);
         }
+    }
+
+    /**
+     *
+     * @param inv Inventory to fill
+     * @param is ItemStack Item to fill with
+     */
+    public static Inventory fillInventory(Inventory inv, ItemStack is) {
+        for(int i = 0; i < inv.getSize(); i++){
+            inv.setItem(i, is);
+        }
+        return inv;
     }
 }
