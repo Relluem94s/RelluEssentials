@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
@@ -28,7 +29,8 @@ public class Admin implements CommandExecutor {
                     }
                     else if (args.length == 1) {
                         if(args[0].equals("npc")){
-                            org.bukkit.inventory.Inventory inv = InventoryHelper.createInventory(9, "NPCs");
+                            org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(9, Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER +"§dNPCs"), CustomItems.npc_gui_disabled.getCustomItem());
+                            
                             inv.setItem(0, CustomItems.npcBanker.getCustomItem());
                             inv.setItem(1, CustomItems.npcFarmer.getCustomItem());
                             inv.setItem(2, CustomItems.npcFisher.getCustomItem());
