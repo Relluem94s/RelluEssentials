@@ -34,4 +34,30 @@ public class ItemConstants {
     public static final String PLUGIN_ITEM_CLOUDSAILOR = "§bCloud Sailor";
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE1 = "§bHeld in Off Hand grants gliding abillity.";
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE2 = "§bAlso reduces Fall Damage by 50%";
+
+    public static final String PLUGIN_ITEM_NPC_BANKER = "§dBanker";
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT = "§dDeposit Coins";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1 = "Click to open";
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW = "§dWithdraw Coins";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1 = "Click to open";
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE = "§dShow Balance";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1 = "Click to open";
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE = "§dUpgrade Account";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE_LORE1 = "Click to open";
+
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK = "§dPortable Bank";
+    public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1 = "§dOpens the Bank Menu";
+    
+
+
+
+    public static final String PLUGIN_ITEM_NPC_FARMER = "§dFarmer";
+    public static final String PLUGIN_ITEM_NPC_FISHER = "§dFisher";
+
+    public static final String PLUGIN_ITEM_NPC_LORE1 = "§7Click to Spawn";
 }
