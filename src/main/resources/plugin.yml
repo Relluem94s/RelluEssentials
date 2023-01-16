@@ -75,6 +75,9 @@ commands:
     god:
         description: toogle god mode
         usage: /god
+    admin:
+        description: shows options for admins
+        usage: /admin
     head:
         description: gives you a player head
         usage: /head
