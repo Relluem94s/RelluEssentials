@@ -216,8 +216,10 @@ public class ItemHelper implements IItemHelper {
             loc_lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
             loc_lore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
             loc_lore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
-
-            loc_lore.add(ir.getPrefix() + "" + ir.getDisplayName());
+            
+            if(ir.level != -1){
+                loc_lore.add(ir.getPrefix() + "" + ir.getDisplayName());
+            }
 
             im.setLore(loc_lore);
             is.setItemMeta(im);
@@ -225,6 +227,7 @@ public class ItemHelper implements IItemHelper {
     }
 
     public enum Rarity {
+        NONE("", "", -1),
         COMMON("Common", "§f§l", 0),
         UNCOMMON("Uncommon", "§a§l", 1),
         RARE("Rare", "§9§l", 2),
@@ -278,6 +281,8 @@ public class ItemHelper implements IItemHelper {
         HUB,
         DECORATION,
         BUILDING,
+        NPC,
+        NPC_GUI,
         NONE;
     }
 }
