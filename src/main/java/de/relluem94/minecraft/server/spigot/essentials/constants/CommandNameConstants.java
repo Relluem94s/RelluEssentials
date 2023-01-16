@@ -28,6 +28,7 @@ public class CommandNameConstants {
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_3 = "3";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME = "Spectator";
     public static final String PLUGIN_COMMAND_NAME_GOD = "god";
+    public static final String PLUGIN_COMMAND_NAME_ADMIN = "admin";
     public static final String PLUGIN_COMMAND_NAME_GAMERULES = "gamerules";
     public static final String PLUGIN_COMMAND_NAME_HEAD = "head";
     public static final String PLUGIN_COMMAND_NAME_HEAL = "heal";
