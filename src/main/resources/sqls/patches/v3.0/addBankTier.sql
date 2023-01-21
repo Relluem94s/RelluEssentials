@@ -8,5 +8,6 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`bank_tier` (
   `name` VARCHAR(94) NOT NULL,
   `limit` BIGINT(21) NOT NULL,
   `interest` DOUBLE NOT NULL,
+  `cost` INT(21) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
