@@ -107,7 +107,7 @@ public class CustomItems {
         }
     };
 
-    public static ItemHelper relluSword = new ItemHelper(Material.DIAMOND_SWORD, 1, PLUGIN_ITEM_RELLU_SWORD, Type.WEAPON, Rarity.LEGENDARY) {
+    public static ItemHelper relluSword = new ItemHelper(Material.NETHERITE_SWORD, 1, PLUGIN_ITEM_RELLU_SWORD, Type.WEAPON, Rarity.LEGENDARY) {
         @Override
         public void init() {
             ItemMeta im = getItemMeta();
