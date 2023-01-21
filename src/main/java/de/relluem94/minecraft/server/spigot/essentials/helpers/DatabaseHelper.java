@@ -176,6 +176,7 @@ public class DatabaseHelper {
                     p.setUpdated(rs.getString("updated"));
                     p.setUpdatedBy(rs.getInt("updatedby"));
                     p.setCustomName(rs.getString("customname"));
+                    p.setPurse(rs.getLong("purse"));
                     p.setDeletedBy(rs.getInt("deletedby"));
                     p.setFlying(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
@@ -207,6 +208,7 @@ public class DatabaseHelper {
                     p.setDeleted(rs.getString("deleted"));
                     p.setDeletedBy(rs.getInt("deletedby"));
                     p.setCustomName(rs.getString("customname"));
+                    p.setPurse(rs.getLong("purse"));
                     p.setFlying(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
                     p.setGroup(de.relluem94.minecraft.server.spigot.essentials.permissions.Groups.getGroup(rs.getInt("group_fk")));
@@ -259,7 +261,8 @@ public class DatabaseHelper {
             ps.setBoolean(3, pe.isAFK());
             ps.setBoolean(4, pe.isFlying());
             ps.setString(5, pe.getCustomName());
-            ps.setString(6, pe.getUUID());
+            ps.setFloat(6, pe.getPurse());
+            ps.setString(7, pe.getUUID());
             ps.execute();
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
