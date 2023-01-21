@@ -36,6 +36,7 @@ public class Admin implements CommandExecutor {
                             inv.setItem(2, CustomItems.npcFisher.getCustomItem());
                             inv.setItem(3, CustomItems.npcSmith.getCustomItem());
                             inv.setItem(4, CustomItems.npcAdventurer.getCustomItem());
+                            inv.setItem(5, CustomItems.npcMiner.getCustomItem());
         
                             InventoryHelper.openInventory(sender, inv);
                             p.sendMessage("TEST 66");
