@@ -16,6 +16,7 @@ import java.util.ResourceBundle;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -56,6 +57,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Message;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Print;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Purse;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rellu;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rename;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Speed;
@@ -118,6 +120,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_DAY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ENDERCHEST;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_FLY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PURSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_0;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_1;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_2;
@@ -307,6 +310,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_2)).setExecutor(new GameMode());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_3)).setExecutor(new GameMode());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_FLY)).setExecutor(new Fly());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_PURSE)).setExecutor(new Purse());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_COOCKIE)).setExecutor(new Cookies());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CRAFT)).setExecutor(new PortableCraftingBench());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUN)).setExecutor(new Sun());
@@ -407,13 +411,14 @@ public class RelluEssentials extends JavaPlugin {
 
         Bukkit.getOnlinePlayers().forEach(p -> {
             User u = new User(p);
-            u.setGroup(playerEntryList.get(p.getUniqueId()).getGroup());
+            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+            u.setGroup(pe.getGroup());
             u.getPlayer().setScoreboard(board);
 
-            Score line_99 = objective.getScore(Strings.PLUGIN_MESSAGE_COLOR + Strings.PLUGIN_BORDER);
+            Score line_99 = objective.getScore(Strings.PLUGIN_MESSAGE_COLOR + Strings.PLUGIN_BORDER_SHORT);
             line_99.setScore(99);
 
-            Score line_9 = objective.getScore("Coins");
+            Score line_9 = objective.getScore(p.getName() +9);
             line_9.setScore(9);
             Score line_8 = objective.getScore(p.getName() +8);
             line_8.setScore(8);
@@ -522,5 +527,21 @@ public class RelluEssentials extends JavaPlugin {
         Bukkit.addRecipe(smelterTankRecipe);
         Bukkit.addRecipe(smelterPickaxeRecipe);
         Bukkit.addRecipe(cloudBootsRecipe);
+    }
+
+    public void registerPlayerSave(){ // COULD BE USED INSTEAD OF UPDATING ON EACH EVENT
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Bukkit.broadcastMessage("PURSE SAVE");
+                
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+                    dBH.updatePlayer(pe);
+                });
+
+                Bukkit.broadcastMessage("PURSE SAVE DONE");
+            }
+        }.runTaskTimer(this, 0L,  20 * 60 * 2);
     }
 }
