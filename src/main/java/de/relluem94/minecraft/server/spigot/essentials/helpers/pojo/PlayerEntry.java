@@ -13,6 +13,7 @@ public class PlayerEntry {
     private int createdBy;
     private String updated;
     private int updatedBy;
+    private float purse;
     private String deleted;
     private int deletedBy;
     private String uuid;
@@ -124,5 +125,13 @@ public class PlayerEntry {
 
     public void setHomes(LocationEntry[] homes) {
         this.homes = homes;
+    }
+
+    public float getPurse() {
+        return purse;
+    }
+
+    public void setPurse(float value) {
+        purse = value;
     }
 }
