@@ -18,6 +18,9 @@ commands:
     3:
         description: Change your Gamemode with this shorthand to Spectator
         usage: /3
+    purse:
+        description: Shows Total of Coins in Purse 
+        usage: /purse
     fly:
         description: Toggle your fly mode
         usage: /fly
