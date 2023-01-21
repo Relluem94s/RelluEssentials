@@ -51,6 +51,10 @@ public class BetterNPC implements Listener {
                         nh = new NPCHelper(location, CustomItems.npcAdventurer.getDisplayName(), true);
                         nh.spawn();
                     }
+                    else if(e.getItem().equals(CustomItems.npcMiner.getCustomItem())){
+                        nh = new NPCHelper(location, CustomItems.npcMiner.getDisplayName(), true);
+                        nh.spawn();
+                    }
 
                     e.getPlayer().sendMessage("NPC is Placed");
                 }
