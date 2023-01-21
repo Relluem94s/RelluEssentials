@@ -11,6 +11,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ShapedRecipe;
@@ -160,14 +162,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_SMELTER_TANK;
 import de.relluem94.minecraft.server.spigot.essentials.events.SignActions;
 import de.relluem94.minecraft.server.spigot.essentials.events.SignClick;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class RelluEssentials extends JavaPlugin {
 
     public static PluginManager pm = Bukkit.getServer().getPluginManager();
     public static ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
     public static Scoreboard board;
+    public static Objective objective;
     public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
     public static HashMap<UUID, PlayerEntry> playerEntryList = new HashMap<>();
     public static List<LocationEntry> locationEntryList = new ArrayList<>();
@@ -395,13 +396,7 @@ public class RelluEssentials extends JavaPlugin {
         }
 
         board = sm.getNewScoreboard();
-
-        Objective o = board.registerNewObjective("coins", Criteria.DUMMY, "Coins", RenderType.INTEGER);
-        Score coins = o.getScore("coins");
-        coins.setScore(0);
-
-        o.setDisplaySlot(DisplaySlot.SIDEBAR);
-        
+        objective = board.registerNewObjective(Strings.PLUGIN_NAME, Criteria.DUMMY, Strings.PLUGIN_WHITE_SPACE + Strings.PLUGIN_PREFIX + Strings.PLUGIN_WHITE_SPACE, RenderType.INTEGER);
     }
 
     private void groupManager() {
@@ -414,6 +409,36 @@ public class RelluEssentials extends JavaPlugin {
             User u = new User(p);
             u.setGroup(playerEntryList.get(p.getUniqueId()).getGroup());
             u.getPlayer().setScoreboard(board);
+
+            Score line_99 = objective.getScore(Strings.PLUGIN_MESSAGE_COLOR + Strings.PLUGIN_BORDER);
+            line_99.setScore(99);
+
+            Score line_9 = objective.getScore("Coins");
+            line_9.setScore(9);
+            Score line_8 = objective.getScore(p.getName() +8);
+            line_8.setScore(8);
+            Score line_7 = objective.getScore(p.getName() +7);
+            line_7.setScore(7);
+            Score line_6 = objective.getScore(p.getName() +6);
+            line_6.setScore(6);
+            Score line_5 = objective.getScore(p.getName() +5);
+            line_5.setScore(5);
+            Score line_4 = objective.getScore(p.getName() +4);
+            line_4.setScore(4);
+            Score line_3 = objective.getScore(p.getName() +3);
+            line_3.setScore(3);
+            Score line_2 = objective.getScore(p.getName() +2);
+            line_2.setScore(2);
+            Score line_1 = objective.getScore(p.getName() +1);
+            line_1.setScore(1);
+            Score line_0 = objective.getScore(p.getName() +0);
+            line_0.setScore(0);
+
+            
+
+
+            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
             //TODO Add Array for Users to Access it directly without the other class. (Maybe?)
             //TODO Remove Todo above. Also (Maybe?) remove User thing. could be replaced by the pojo stuff we have.
         });
