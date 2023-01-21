@@ -21,7 +21,7 @@ public class Strings {
     public static final String PLUGIN_NAME_CONSOLE = PLUGIN_MESSAGE_COLOR + "[" + PLUGIN_PREFIX + PLUGIN_MESSAGE_COLOR + "] ";
     public static final String PLUGIN_SPACER = "§7 >> " + PLUGIN_MESSAGE_COLOR;
     public static final String PLUGIN_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
-
+    public static final String PLUGIN_WHITE_SPACE = "               ";
     public static final String PLUGIN_START_MESSAGE = "starts configuring ...";
     public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
     public static final String PLUGIN_STARTTIME = "wurde in %s ms gestartet!";
