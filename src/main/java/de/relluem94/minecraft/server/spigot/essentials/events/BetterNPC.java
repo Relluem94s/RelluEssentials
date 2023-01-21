@@ -107,8 +107,8 @@ public class BetterNPC implements Listener {
 
     @EventHandler
     public void onInventoryClickItem(InventoryClickEvent e) {
-        if (e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER)) {
-            if(e.getCurrentItem() != null && e.getCurrentItem().equals(CustomItems.npcBanker_gui_deposit.getCustomItem())){
+        if (e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER) && e.getCurrentItem() != null) {
+            if(e.getCurrentItem().equals(CustomItems.npcBanker_gui_deposit.getCustomItem())){
                 e.getWhoClicked().closeInventory();
             }
             else if(e.getCurrentItem().equals(CustomItems.npcBanker_gui_withdraw.getCustomItem())){
