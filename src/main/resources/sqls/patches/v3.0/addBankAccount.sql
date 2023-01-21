@@ -12,7 +12,7 @@
   `deleted` DATETIME NULL,
   `deletedby` INT NULL,
   `player_fk` INT(21) NOT NULL,
-  `value` INT(21) NOT NULL,
+  `value` BIGINT(21) NOT NULL,
   `bank_tier_fk` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_bank_account_tier_1_idx` (`bank_tier_fk` ASC) VISIBLE,
