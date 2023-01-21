@@ -24,7 +24,14 @@ public class BetterNPC implements Listener {
     public void onNPCPlacement(PlayerInteractEvent e) {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if(e.getItem() != null && (e.getItem().equals(CustomItems.npcBanker.getCustomItem()) || e.getItem().equals(CustomItems.npcFisher.getCustomItem()) || e.getItem().equals(CustomItems.npcFarmer.getCustomItem()))){
+                if(e.getItem() != null && (
+                    e.getItem().equals(CustomItems.npcBanker.getCustomItem()) || 
+                    e.getItem().equals(CustomItems.npcFisher.getCustomItem()) || 
+                    e.getItem().equals(CustomItems.npcFarmer.getCustomItem()) || 
+                    e.getItem().equals(CustomItems.npcSmith.getCustomItem()) || 
+                    e.getItem().equals(CustomItems.npcAdventurer.getCustomItem()) || 
+                    e.getItem().equals(CustomItems.npcMiner.getCustomItem())
+                    )){
                     e.setCancelled(true);
 
                     Location location = e.getClickedBlock().getLocation().add(0, 1, 0);
