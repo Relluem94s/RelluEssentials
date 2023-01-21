@@ -3,6 +3,8 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Villager.Profession;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -39,27 +41,27 @@ public class BetterNPC implements Listener {
 
                     NPCHelper nh;
                     if(e.getItem().equals(CustomItems.npcBanker.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcBanker.getDisplayName(), true);
+                        nh = new NPCHelper(location, CustomItems.npcBanker.getDisplayName(), Profession.NONE, true);
                         nh.spawn();
                     }
                     else if(e.getItem().equals(CustomItems.npcFisher.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcFisher.getDisplayName(), true);
+                        nh = new NPCHelper(location, CustomItems.npcFisher.getDisplayName(), Profession.FISHERMAN, true);
                         nh.spawn();
                     }
                     else if(e.getItem().equals(CustomItems.npcFarmer.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcFarmer.getDisplayName(), true);
+                        nh = new NPCHelper(location, CustomItems.npcFarmer.getDisplayName(), Profession.FARMER, true);
                         nh.spawn();
                     }
                     else if(e.getItem().equals(CustomItems.npcSmith.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcSmith.getDisplayName(), true);
+                        nh = new NPCHelper(location, CustomItems.npcSmith.getDisplayName(), Profession.WEAPONSMITH, true);
                         nh.spawn();
                     }
                     else if(e.getItem().equals(CustomItems.npcAdventurer.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcAdventurer.getDisplayName(), true);
+                        nh = new NPCHelper(location, CustomItems.npcAdventurer.getDisplayName(), Profession.NONE, true);
                         nh.spawn();
                     }
                     else if(e.getItem().equals(CustomItems.npcMiner.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcMiner.getDisplayName(), true);
+                        nh = new NPCHelper(location, CustomItems.npcMiner.getDisplayName(), Profession.NONE, true);
                         nh.spawn();
                     }
 
@@ -73,17 +75,34 @@ public class BetterNPC implements Listener {
     @EventHandler
     public void onPlayerInteractEntity (PlayerInteractEntityEvent e) {
         Player p = e.getPlayer();
-        if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_BANKER)){
-            org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER), CustomItems.npc_gui_disabled.getCustomItem());
-
-            inv.setItem(0, CustomItems.npcBanker_gui_deposit.getCustomItem());
-            inv.setItem(4, CustomItems.npcBanker_gui_withdraw.getCustomItem());
-            inv.setItem(8, CustomItems.npcBanker_gui_balance.getCustomItem());
-            inv.setItem(26, CustomItems.npcBanker_gui_upgrade.getCustomItem());
-
-            InventoryHelper.openInventory(p, inv);
-
-        }       
+        if(e.getRightClicked() instanceof Villager){
+            if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_BANKER)){
+                org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER), CustomItems.npc_gui_disabled.getCustomItem());
+    
+                inv.setItem(0, CustomItems.npcBanker_gui_deposit.getCustomItem());
+                inv.setItem(4, CustomItems.npcBanker_gui_withdraw.getCustomItem());
+                inv.setItem(8, CustomItems.npcBanker_gui_balance.getCustomItem());
+                inv.setItem(26, CustomItems.npcBanker_gui_upgrade.getCustomItem());
+    
+                InventoryHelper.openInventory(p, inv);
+                e.setCancelled(true);
+            }
+            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_FISHER)){
+                e.setCancelled(true);
+            }
+            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_FARMER)){
+                e.setCancelled(true);
+            }
+            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_SMITH)){
+                e.setCancelled(true);
+            }
+            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_ADVENTURER)){
+                e.setCancelled(true);
+            }
+            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_MINER)){
+                e.setCancelled(true);
+            }
+        }
     }
 
     @EventHandler
