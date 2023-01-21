@@ -5,6 +5,8 @@ import java.util.HashSet;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Villager;
+import org.bukkit.entity.Villager.Profession;
 import org.bukkit.potion.PotionEffect;
 
 /**
@@ -22,10 +24,13 @@ public class NPCHelper {
     private boolean isInvisible;
     private boolean canPickupItems = false;
     private double health = 0;
+    private Profession profession;
 
-    public NPCHelper(Location location, String customName, boolean isCustomNameVisible) {
+    public NPCHelper(Location location, String customName, Profession profession, boolean isCustomNameVisible) {
         this.location = location;
         this.entityType = EntityType.VILLAGER;
+        this.profession = profession;
+
         if (customName != null) {
             this.customName = customName;
         } else {
@@ -60,5 +65,7 @@ public class NPCHelper {
         livingEntity.setInvisible(isInvisible);
         livingEntity.setCanPickupItems(canPickupItems);
 
+        Villager villager = (Villager) livingEntity;
+        villager.setProfession(profession);
     }
 }
