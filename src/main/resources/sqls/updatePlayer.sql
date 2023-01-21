@@ -11,6 +11,7 @@ SET
     `group_fk` = ?, 
     `afk` = ?, 
     `fly` = ?, 
-    `customname` = ? 
+    `customname` = ?, 
+    `purse` = ? 
 WHERE 
     `player`.`uuid` = ?
