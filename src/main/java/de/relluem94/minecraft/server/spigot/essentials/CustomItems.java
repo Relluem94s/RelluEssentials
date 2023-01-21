@@ -157,7 +157,7 @@ public class CustomItems {
 
     public static ItemHelper npcFarmer = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, PLUGIN_ITEM_NPC_FARMER, Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_LORE1}));
     public static ItemHelper npcFisher = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, PLUGIN_ITEM_NPC_FISHER, Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_LORE1}));
-    public static ItemHelper npcMiner = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, PLUGIN_ITEM_NPC_FISHER, Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_LORE1}));
+    public static ItemHelper npcMiner = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, PLUGIN_ITEM_NPC_MINER, Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_LORE1}));
     public static ItemHelper npcAdventurer = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, PLUGIN_ITEM_NPC_ADVENTURER, Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_LORE1}));
     public static ItemHelper npcSmith = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, PLUGIN_ITEM_NPC_SMITH, Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_LORE1}));
 }
