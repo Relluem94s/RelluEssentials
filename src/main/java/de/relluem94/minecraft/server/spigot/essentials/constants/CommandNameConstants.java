@@ -19,6 +19,7 @@ public class CommandNameConstants {
     public static final String PLUGIN_COMMAND_NAME_DAY = "day";
     public static final String PLUGIN_COMMAND_NAME_ENDERCHEST = "enderchest";
     public static final String PLUGIN_COMMAND_NAME_FLY = "fly";
+    public static final String PLUGIN_COMMAND_NAME_PURSE = "purse";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_0 = "0";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME = "Survival";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_1 = "1";
