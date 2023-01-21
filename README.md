@@ -8,6 +8,10 @@
    ```
 
 1. ```shell
+   git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+   ```
+
+1. ```shell
    mvn clean install
    ```
 
