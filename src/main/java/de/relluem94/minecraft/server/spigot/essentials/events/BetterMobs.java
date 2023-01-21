@@ -6,6 +6,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Score;
+
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 
 public class BetterMobs implements Listener {
 
@@ -22,6 +26,10 @@ public class BetterMobs implements Listener {
         if(e.getEntity().getKiller() != null && e.getEntity().getKiller() instanceof Player){
             Player p = e.getEntity().getKiller();
             p.sendMessage("COINS");
+            Score coins = RelluEssentials.objective.getScore(p.getName());
+            //coins.
+            coins.setScore(coins.getScore() + 10);
+            RelluEssentials.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
             // GEN COINS
         }
     }
