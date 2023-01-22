@@ -14,10 +14,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 
 public class BetterNPC implements Listener {
@@ -27,7 +33,7 @@ public class BetterNPC implements Listener {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
                 if(e.getItem() != null && (
-                    e.getItem().equals(CustomItems.npcBanker.getCustomItem()) || 
+                    e.getItem().equals(Banker.npc.getCustomItem()) || 
                     e.getItem().equals(CustomItems.npcFisher.getCustomItem()) || 
                     e.getItem().equals(CustomItems.npcFarmer.getCustomItem()) || 
                     e.getItem().equals(CustomItems.npcSmith.getCustomItem()) || 
@@ -40,8 +46,8 @@ public class BetterNPC implements Listener {
                     location.setYaw(e.getPlayer().getLocation().getYaw());
 
                     NPCHelper nh;
-                    if(e.getItem().equals(CustomItems.npcBanker.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcBanker.getDisplayName(), Profession.NONE, true);
+                    if(e.getItem().equals(Banker.npc.getCustomItem())){
+                        nh = new NPCHelper(location, Banker.npc.getDisplayName(), Profession.NONE, true);
                         nh.spawn();
                     }
                     else if(e.getItem().equals(CustomItems.npcFisher.getCustomItem())){
@@ -77,14 +83,30 @@ public class BetterNPC implements Listener {
         Player p = e.getPlayer();
         if(e.getRightClicked() instanceof Villager){
             if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_BANKER)){
-                org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER), CustomItems.npc_gui_disabled.getCustomItem());
+                PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
+                if(bae != null){
+                    p.sendMessage(bae.getValue() + " isses geld");
+                    InventoryHelper.openInventory(p, Banker.getMainGUI());
+                }
+                else{
+                    BankTierEntry bte = RelluEssentials.dBH.getBankTier(1);
+                    if(pe.getPurse() > bte.getCost()){
+                        pe.setPurse(pe.getPurse() - bte.getCost());
+                        RelluEssentials.dBH.updatePlayer(pe);
+
+                        bae = new BankAccountEntry();
+                        bae.setValue(0);
+                        bae.setTier(bte);
+                        bae.setPlayerId(pe.getID());
     
-                inv.setItem(0, CustomItems.npcBanker_gui_deposit.getCustomItem());
-                inv.setItem(4, CustomItems.npcBanker_gui_withdraw.getCustomItem());
-                inv.setItem(8, CustomItems.npcBanker_gui_balance.getCustomItem());
-                inv.setItem(26, CustomItems.npcBanker_gui_upgrade.getCustomItem());
-    
-                InventoryHelper.openInventory(p, inv);
+                        RelluEssentials.dBH.insertBankAccount(bae);
+                    }
+                    else{
+                        // NOT ENOUGH MONEY
+                    }
+                }
+                
                 e.setCancelled(true);
             }
             else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_FISHER)){
@@ -107,18 +129,26 @@ public class BetterNPC implements Listener {
 
     @EventHandler
     public void onInventoryClickItem(InventoryClickEvent e) {
-        if (e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER) && e.getCurrentItem() != null) {
-            if(e.getCurrentItem().equals(CustomItems.npcBanker_gui_deposit.getCustomItem())){
-                e.getWhoClicked().closeInventory();
+        if (e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER) && e.getCurrentItem() != null && e.getWhoClicked() instanceof Player) {
+            Player p = (Player) e.getWhoClicked();
+            if(e.getCurrentItem().equals(Banker.npc_gui_deposit.getCustomItem())){
+                InventoryHelper.closeInventory(p);
+                InventoryHelper.openInventory(p, Banker.getDepositGUI());
             }
-            else if(e.getCurrentItem().equals(CustomItems.npcBanker_gui_withdraw.getCustomItem())){
-                e.getWhoClicked().closeInventory();
+            else if(e.getCurrentItem().equals(Banker.npc_gui_withdraw.getCustomItem())){
+                InventoryHelper.closeInventory(p);
+                InventoryHelper.openInventory(p, Banker.getWithdrawGUI());
             }
-            else if(e.getCurrentItem().equals(CustomItems.npcBanker_gui_balance.getCustomItem())){
-                e.getWhoClicked().closeInventory();
+            else if(e.getCurrentItem().equals(Banker.npc_gui_balance.getCustomItem())){
+                InventoryHelper.closeInventory(p);
+                InventoryHelper.openInventory(p, Banker.getBalanceGUI());
             }
-            else if(e.getCurrentItem().equals(CustomItems.npcBanker_gui_upgrade.getCustomItem())){
-                e.getWhoClicked().closeInventory();
+            else if(e.getCurrentItem().equals(Banker.npc_gui_upgrade.getCustomItem())){
+                InventoryHelper.closeInventory(p);
+                InventoryHelper.openInventory(p, Banker.getUpgradeGUI());
+            }
+            else if(e.getCurrentItem().equals(CustomItems.npc_gui_close.getCustomItem())){
+                InventoryHelper.closeInventory(p);
             }
             e.setCancelled(true);
         }
