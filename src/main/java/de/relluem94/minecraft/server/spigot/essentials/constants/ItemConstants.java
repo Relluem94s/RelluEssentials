@@ -38,6 +38,11 @@ public class ItemConstants {
     public static final String PLUGIN_ITEM_NPC_BANKER = "§dBanker";
 
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT = "§dDeposit Coins";
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL = "§dDeposit all Coins";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT = "§dDeposit %s percent of Coins";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1 = "Click to deposit";
+
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1 = "Click to open";
 
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW = "§dWithdraw Coins";
