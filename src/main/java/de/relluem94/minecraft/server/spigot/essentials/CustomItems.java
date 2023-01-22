@@ -143,17 +143,8 @@ public class CustomItems {
     };
 
 
-    public static ItemHelper npcBanker = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, PLUGIN_ITEM_NPC_BANKER, Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_LORE1}));
-    public static ItemHelper npcBanker_gui_deposit = new ItemHelper(Material.GREEN_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1}));
-    public static ItemHelper npcBanker_gui_withdraw = new ItemHelper(Material.RED_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1}));
-    public static ItemHelper npcBanker_gui_balance = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1}));
-    public static ItemHelper npcBanker_gui_upgrade = new ItemHelper(Material.DIAMOND_BLOCK, 1, PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE_LORE1}));
-
     public static ItemHelper npc_gui_disabled = new ItemHelper(Material.BLACK_STAINED_GLASS_PANE, 1, "   ", Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{}));
-
-
-    public static ItemHelper npcBanker_portable_bank = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK, Type.TOOL, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1}));
-
+    public static ItemHelper npc_gui_close = new ItemHelper(Material.BARRIER, 1, "Close", Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{}));
 
     public static ItemHelper npcFarmer = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, PLUGIN_ITEM_NPC_FARMER, Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_LORE1}));
     public static ItemHelper npcFisher = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, PLUGIN_ITEM_NPC_FISHER, Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_LORE1}));
