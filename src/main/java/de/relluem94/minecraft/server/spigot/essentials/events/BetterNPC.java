@@ -196,28 +196,27 @@ public class BetterNPC implements Listener {
             else if(isItem(e.getCurrentItem(), Banker.npc_gui_withdraw_all)){
                 withdraw(pe, p, bae, 100f);
             }
-            else if(e.getCurrentItem().equals(Banker.npc_gui_withdraw.getCustomItem())){
+            else if(isItem(e.getCurrentItem(), Banker.npc_gui_withdraw)){
                 InventoryHelper.closeInventory(p);
                 InventoryHelper.openInventory(p, Banker.getWithdrawGUI());
             }
-            else if(e.getCurrentItem().equals(Banker.npc_gui_balance.getCustomItem())){
+            else if(isItem(e.getCurrentItem(), Banker.npc_gui_balance)){
                 InventoryHelper.closeInventory(p);
                 InventoryHelper.openInventory(p, Banker.getBalanceGUI());
             }
-            else if(e.getCurrentItem().equals(Banker.npc_gui_balance_total.getCustomItem())){
+            else if(isItem(e.getCurrentItem(), Banker.npc_gui_balance_total)){
                 InventoryHelper.closeInventory(p);
                 p.sendMessage("Your total is: " +  bae.getValue());
             }
-            else if(e.getCurrentItem().equals(Banker.npc_gui_balance_transactions.getCustomItem())){
+            else if(isItem(e.getCurrentItem(), Banker.npc_gui_balance_transactions)){
                 InventoryHelper.closeInventory(p);
                 p.sendMessage("Your transactions are:");
-
             }
-            else if(e.getCurrentItem().equals(Banker.npc_gui_upgrade.getCustomItem())){
+            else if(isItem(e.getCurrentItem(), Banker.npc_gui_upgrade)){
                 InventoryHelper.closeInventory(p);
                 InventoryHelper.openInventory(p, Banker.getUpgradeGUI());
             }
-            else if(e.getCurrentItem().equals(CustomItems.npc_gui_close.getCustomItem())){
+            else if(isItem(e.getCurrentItem(), CustomItems.npc_gui_close)){
                 InventoryHelper.closeInventory(p);
             }
             e.setCancelled(true);
