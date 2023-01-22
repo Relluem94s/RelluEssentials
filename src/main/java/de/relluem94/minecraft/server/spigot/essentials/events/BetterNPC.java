@@ -189,6 +189,62 @@ public class BetterNPC implements Listener {
                     p.sendMessage("to less money to do a transaction");
                 }
             }
+            else if(e.getCurrentItem().equals(Banker.npc_gui_withdraw_5_percent.getCustomItem())){
+                float bank = bae.getValue();
+                float purse = pe.getPurse();
+                if(bank >= 1){
+                    float transaction_value = ((bank / 100)  * 5f);
+                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value*-1, bae.getValue(), bae.getTier().getId());
+                    pe.setPurse(purse + transaction_value);
+                    RelluEssentials.dBH.updatePlayer(pe);
+                    InventoryHelper.closeInventory(p);
+                }
+                else{
+                    p.sendMessage("to less money to do a transaction");
+                }
+            }
+            else if(e.getCurrentItem().equals(Banker.npc_gui_withdraw_20_percent.getCustomItem())){
+                float bank = bae.getValue();
+                float purse = pe.getPurse();
+                if(bank >= 1){
+                    float transaction_value = ((bank / 100)  * 20f);
+                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value*-1, bae.getValue(), bae.getTier().getId());
+                    pe.setPurse(purse + transaction_value);
+                    RelluEssentials.dBH.updatePlayer(pe);
+                    InventoryHelper.closeInventory(p);
+                }
+                else{
+                    p.sendMessage("to less money to do a transaction");
+                }
+            }
+            else if(e.getCurrentItem().equals(Banker.npc_gui_withdraw_50_percent.getCustomItem())){
+                float bank = bae.getValue();
+                float purse = pe.getPurse();
+                if(bank >= 1){
+                    float transaction_value = ((bank / 100)  * 50f);
+                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value*-1, bae.getValue(), bae.getTier().getId());
+                    pe.setPurse(purse + transaction_value);
+                    RelluEssentials.dBH.updatePlayer(pe);
+                    InventoryHelper.closeInventory(p);
+                }
+                else{
+                    p.sendMessage("to less money to do a transaction");
+                }
+            }
+            else if(e.getCurrentItem().equals(Banker.npc_gui_withdraw_all.getCustomItem())){
+                float bank = bae.getValue();
+                float purse = pe.getPurse();
+                if(bank >= 1){
+                    float transaction_value = bank;
+                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value*-1, bae.getValue(), bae.getTier().getId());
+                    pe.setPurse(purse + transaction_value);
+                    RelluEssentials.dBH.updatePlayer(pe);
+                    InventoryHelper.closeInventory(p);
+                }
+                else{
+                    p.sendMessage("to less money to do a transaction");
+                }
+            }
             else if(e.getCurrentItem().equals(Banker.npc_gui_withdraw.getCustomItem())){
                 InventoryHelper.closeInventory(p);
                 InventoryHelper.openInventory(p, Banker.getWithdrawGUI());
