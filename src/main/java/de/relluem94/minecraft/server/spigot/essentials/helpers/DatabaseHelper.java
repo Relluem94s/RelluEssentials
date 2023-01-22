@@ -29,6 +29,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationType
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
@@ -191,6 +193,78 @@ public class DatabaseHelper {
         }
         return null;
     }
+
+    public BankAccountEntry getPlayerBankAccount(int player_fk) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBankAccountByPlayer.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, player_fk);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    BankAccountEntry bae = new BankAccountEntry();
+
+                    bae.setId(rs.getInt("id"));
+                    bae.setCreated(rs.getString("created"));
+                    bae.setCreatedby(rs.getInt("createdby"));
+                    bae.setUpdated(rs.getString("updated"));
+                    bae.setUpdatedBy(rs.getInt("updatedby"));
+                    bae.setDeleted(rs.getString("deleted"));
+                    bae.setDeletedBy(rs.getInt("deletedby"));
+                    bae.setValue(rs.getFloat("value"));
+                    bae.setTier(getBankTier(rs.getInt("bank_tier_fk")));
+                    
+                    return bae;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+
+
+    public BankTierEntry getBankTier(int id) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBankTier.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, id);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    BankTierEntry bte = new BankTierEntry();
+                    bte.setId(rs.getInt("id"));
+                    bte.setName(rs.getString("name"));
+                    bte.setLimit(rs.getInt("limit"));
+                    bte.setInterest(rs.getFloat("interest"));
+                    bte.setCost(rs.getInt("cost"));
+                    return bte;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public void insertBankAccount(BankAccountEntry bae) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertBankAccount.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, 1);
+            ps.setInt(2, bae.getPlayerId());
+            ps.setFloat(3, bae.getValue());
+            ps.setInt(4, bae.getTier().getId());
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+
+
 
     public List<PlayerEntry> getPlayers() {
         List<PlayerEntry> pel = new ArrayList<>();
