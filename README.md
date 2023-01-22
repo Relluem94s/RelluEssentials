@@ -112,7 +112,7 @@
 
 
 ## Database Model
-![Database Model](https://raw.githubusercontent.com/Relluem94/RelluEssentials/RE-14/db_model.png)
+![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.png)
 
 ## TODOS
 * [ ] BlockHistory save materials into DB (50%)
