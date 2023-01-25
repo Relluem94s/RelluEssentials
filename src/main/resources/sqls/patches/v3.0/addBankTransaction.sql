@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`bank_transaction` (
   `deleted` DATETIME NULL,
   `deletedby` INT NULL,
   `bank_account_fk` INT(21) NOT NULL,
-  `value` BIGINT(21) NOT NULL,
+  `value` FLOAT(21) NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_bank_account_transaction_1_idx` (`bank_account_fk` ASC) VISIBLE)
 ENGINE = InnoDB;
