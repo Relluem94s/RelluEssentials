@@ -9,6 +9,6 @@ SET
     `updated` = now(), 
     `updatedby` = ?, 
     `value` = ?, 
-    `tier` = ?, 
+    `bank_tier_fk` = ?
 WHERE 
     `bank_account`.`player_fk` = ?
