@@ -1,6 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -12,20 +14,17 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 
@@ -207,6 +206,10 @@ public class BetterNPC implements Listener {
             else if(Banker.npc_gui_balance_transactions.equals(e.getCurrentItem())){
                 InventoryHelper.closeInventory(p);
                 p.sendMessage("Your transactions are:");
+                List<BankTransactionEntry> btel = RelluEssentials.dBH.getTransactionsToBankFromPlayer(bae.getId());
+                for(BankTransactionEntry bte: btel){
+                    p.sendMessage(String.format("Transaction with %s Coins on %s", bte.getValue(), bte.getCreated()));
+                }
             }
             else if(Banker.npc_gui_upgrade.equals(e.getCurrentItem())){
                 InventoryHelper.closeInventory(p);
