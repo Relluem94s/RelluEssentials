@@ -31,6 +31,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInform
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
@@ -194,6 +195,26 @@ public class DatabaseHelper {
         return null;
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public BankAccountEntry getPlayerBankAccount(int player_fk) {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
@@ -250,7 +271,7 @@ public class DatabaseHelper {
 
     public void insertBankAccount(BankAccountEntry bae) {
         try (
-                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertBankAccount.sql", StandardCharsets.UTF_8));
             ps.setInt(1, 1);
             ps.setInt(2, bae.getPlayerId());
@@ -262,6 +283,80 @@ public class DatabaseHelper {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void addTransactionToBank(int player_fk, int bank_account_fk, float transaction_value, float bankaccount_total, int tier) {
+        try (
+            Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertBankTransaction.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, player_fk);
+            ps.setInt(2, bank_account_fk);
+            ps.setFloat(3, transaction_value);
+
+            ps.execute();
+            ps.close();
+
+            ps = connection.prepareStatement(readResource("sqls/updateBankAccount.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, player_fk);
+            ps.setFloat(2, bankaccount_total + transaction_value);
+            ps.setInt(3, tier);
+            ps.setInt(4, player_fk);
+            ps.execute();
+
+
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public List<BankTransactionEntry> getTransactionsToBankFromPlayer(int bank_account_fk) {
+        List<BankTransactionEntry> bte = new ArrayList<>();
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBankAccountTransactionsByPlayer.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, bank_account_fk);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    BankTransactionEntry b = new BankTransactionEntry();
+
+                    b.setID(rs.getInt("id"));
+                    b.setCreated(rs.getString("created"));
+                    b.setCreatedby(rs.getInt("createdby"));
+                    b.setUpdated(rs.getString("updated"));
+                    b.setUpdatedBy(rs.getInt("updatedby"));
+                    b.setDeleted(rs.getString("deleted"));
+                    b.setDeletedBy(rs.getInt("deletedby"));
+                    b.setBankAccountId(rs.getInt("bank_account_fk"));
+                    b.setValue(rs.getFloat("value"));
+                    bte.add(b);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return bte;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -683,6 +778,7 @@ public class DatabaseHelper {
         executeScript(v + "addBankTransaction.sql"); 
         executeScript(v + "insertBankTier.sql"); 
         executeScript(v + "updatePlayer.sql");
+        executeScript(v + "insertLocationTypes.sql");
         executeScript(v + "insertNewDBVersion.sql");
         executeScript(v + "updateOldPluginInformation.sql");
     }
