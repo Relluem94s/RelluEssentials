@@ -43,6 +43,10 @@ public class ItemConstants {
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT = "§dDeposit %s percent of Coins";
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1 = "Click to deposit";
 
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL = "§dWithdraw all Coins";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT = "§dWithdraw %s percent of Coins";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1 = "Click to withdraw";
+
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1 = "Click to open";
 
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW = "§dWithdraw Coins";
@@ -50,6 +54,10 @@ public class ItemConstants {
 
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE = "§dShow Balance";
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1 = "Click to open";
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL = "§dClick to get your Balance";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS = "§dClick to get your last Transactions";
+
 
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE = "§dUpgrade Account";
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE_LORE1 = "Click to open";
