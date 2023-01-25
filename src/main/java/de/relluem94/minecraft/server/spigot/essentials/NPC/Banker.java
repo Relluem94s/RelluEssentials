@@ -33,6 +33,13 @@ public class Banker {
     public static ItemHelper npc_gui_deposit_20_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 20), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1}));
     public static ItemHelper npc_gui_deposit_50_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 50), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1}));
 
+    public static ItemHelper npc_gui_withdraw_all = new ItemHelper(Material.GOLD_BLOCK, 1, PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1}));
+    public static ItemHelper npc_gui_withdraw_5_percent = new ItemHelper(Material.GOLD_NUGGET, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 5), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1}));
+    public static ItemHelper npc_gui_withdraw_20_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 20), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1}));
+    public static ItemHelper npc_gui_withdraw_50_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 50), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1}));
+
+    public static ItemHelper npc_gui_balance_total = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{}));
+    public static ItemHelper npc_gui_balance_transactions = new ItemHelper(Material.MAP, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{}));
 
 
     public static Inventory getMainGUI(){
@@ -49,8 +56,7 @@ public class Banker {
 
     public static Inventory getDepositGUI(){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, MAIN_GUI), CustomItems.npc_gui_disabled.getCustomItem());
-    
-        
+
         inv.setItem(10, npc_gui_deposit_5_percent.getCustomItem());
         inv.setItem(12, npc_gui_deposit_20_percent.getCustomItem());
         inv.setItem(14, npc_gui_deposit_50_percent.getCustomItem());
@@ -63,10 +69,10 @@ public class Banker {
     public static Inventory getWithdrawGUI(){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, MAIN_GUI), CustomItems.npc_gui_disabled.getCustomItem());
     
-        inv.setItem(10, npc_gui_deposit.getCustomItem());
-        inv.setItem(12, npc_gui_withdraw.getCustomItem());
-        inv.setItem(14, npc_gui_balance.getCustomItem());
-        inv.setItem(16, npc_gui_upgrade.getCustomItem());
+        inv.setItem(10, npc_gui_withdraw_5_percent.getCustomItem());
+        inv.setItem(12, npc_gui_withdraw_20_percent.getCustomItem());
+        inv.setItem(14, npc_gui_withdraw_50_percent.getCustomItem());
+        inv.setItem(16, npc_gui_withdraw_all.getCustomItem());
         inv.setItem(26, CustomItems.npc_gui_close.getCustomItem());
 
         return inv;
@@ -74,11 +80,9 @@ public class Banker {
 
     public static Inventory getBalanceGUI(){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, MAIN_GUI), CustomItems.npc_gui_disabled.getCustomItem());
-    
-        inv.setItem(10, npc_gui_deposit.getCustomItem());
-        inv.setItem(12, npc_gui_withdraw.getCustomItem());
-        inv.setItem(14, npc_gui_balance.getCustomItem());
-        inv.setItem(16, npc_gui_upgrade.getCustomItem());
+
+        inv.setItem(10, npc_gui_balance_total.getCustomItem());
+        inv.setItem(12, npc_gui_balance_transactions.getCustomItem());
         inv.setItem(26, CustomItems.npc_gui_close.getCustomItem());
 
         return inv;
