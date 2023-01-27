@@ -15,7 +15,11 @@
    mvn clean install
    ```
 
-   
+For Development you can use 
+```shell
+./MinecraftDevelopmentEnvironment.sh
+```
+it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 
 ## First Steps
 1. Copy the jar into the `plugin` Directory
