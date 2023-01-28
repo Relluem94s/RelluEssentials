@@ -148,6 +148,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_NOT_A_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du bist leider kein Spieler!";
     public static final String PLUGIN_COMMAND_TO_LESS_ARGUMENTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Zu wenig Argumente!";
 
+    public static final String PLUGIN_COMMAND_PURSE_GAIN = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You gained %s and now have %s Coins in your Purse!";
     public static final String PLUGIN_COMMAND_PURSE_TOTAL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You have %s Coins in your Purse!";
     public static final String PLUGIN_COMMAND_PURSE_TOTAL_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " have %s Coins in the Purse!";
 }

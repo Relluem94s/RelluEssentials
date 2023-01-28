@@ -34,7 +34,7 @@ public class BetterMobs implements Listener {
                 PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
                 pe.setPurse(pe.getPurse() + COINS_PER_DEATH);
                 RelluEssentials.dBH.updatePlayer(pe);
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(Strings.PLUGIN_COMMAND_PURSE_TOTAL, String.format("%.2f", pe.getPurse()))));
+                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, COINS_PER_DEATH, String.format("%.2f", pe.getPurse()))));
             }
         }
     }
