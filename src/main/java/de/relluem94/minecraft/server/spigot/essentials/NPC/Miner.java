@@ -32,8 +32,11 @@ public class Miner {
         
         inv.setItem(19, new ItemStack(Material.NETHERRACK, 1));
         inv.setItem(20, new ItemStack(Material.END_STONE, 1));
-        inv.setItem(21, new ItemStack(Material.MOSSY_COBBLESTONE, 1));
-        inv.setItem(22, new ItemStack(Material.QUARTZ_BLOCK, 1));
+        inv.setItem(21, new ItemStack(Material.TUFF, 1));
+        inv.setItem(22, new ItemStack(Material.CALCITE, 1));
+        inv.setItem(23, new ItemStack(Material.BLACKSTONE, 1));
+        inv.setItem(24, new ItemStack(Material.MOSSY_COBBLESTONE, 1));
+        inv.setItem(25, new ItemStack(Material.QUARTZ_BLOCK, 1));
 
         inv.setItem(31, new ItemStack(Material.COAL, 1));
         inv.setItem(32, new ItemStack(Material.RAW_COPPER, 1));
