@@ -1,15 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.NPC;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.*;
 
@@ -99,4 +103,35 @@ public class Banker {
 
         return inv;
     }
+
+
+    public static void deposit(PlayerEntry pe, Player p, BankAccountEntry bae, float percentage){
+        float purse = pe.getPurse();
+        if(purse >= 1){
+            float transaction_value = (purse / 100)  * percentage;
+            RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
+            pe.setPurse(purse - transaction_value);
+            RelluEssentials.dBH.updatePlayer(pe);
+            InventoryHelper.closeInventory(p);
+        }
+        else{
+            p.sendMessage("to less money to do a transaction");
+        }
+    }
+
+    public static void withdraw(PlayerEntry pe, Player p, BankAccountEntry bae, float percentage){
+        float bank = bae.getValue();
+        float purse = pe.getPurse();
+        if(bank >= 1){
+            float transaction_value = ((bank / 100)  * percentage);
+            RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value*-1, bae.getValue(), bae.getTier().getId());
+            pe.setPurse(purse + transaction_value);
+            RelluEssentials.dBH.updatePlayer(pe);
+            InventoryHelper.closeInventory(p);
+        }
+        else{
+            p.sendMessage("to less money to do a transaction");
+        }
+    }
+
 }
