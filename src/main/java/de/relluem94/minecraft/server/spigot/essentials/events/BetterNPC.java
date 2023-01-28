@@ -213,11 +213,12 @@ public class BetterNPC implements Listener {
                     if(!is.getItemMeta().getEnchants().isEmpty()){
                         p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_ENCHANTED);
                     }
-                    if(sellPricePerItem == 0){
-                        p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_NO_PRICE);
+                    else{
+                        if(sellPricePerItem == 0){
+                            p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_NO_PRICE);
+                        }
                     }
                 }
-                
             }
         }
     }
