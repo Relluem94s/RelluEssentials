@@ -11,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Baker;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Farmer;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Fisher;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Miner;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -39,12 +40,11 @@ public class Admin implements CommandExecutor {
                             inv.setItem(1, Farmer.npc.getCustomItem());
                             inv.setItem(2, Miner.npc.getCustomItem());
                             inv.setItem(3, Baker.npc.getCustomItem());
-                            inv.setItem(4, CustomItems.npcFisher.getCustomItem());
+                            inv.setItem(4, Fisher.npc.getCustomItem());
                             inv.setItem(5, CustomItems.npcSmith.getCustomItem());
                             inv.setItem(6, CustomItems.npcAdventurer.getCustomItem());
         
                             InventoryHelper.openInventory(sender, inv);
-                            p.sendMessage("TEST 66");
                         }
                         else{
                             p.sendMessage("TEST 44");
