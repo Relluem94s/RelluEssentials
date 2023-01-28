@@ -413,7 +413,7 @@ public class RelluEssentials extends JavaPlugin {
             User u = new User(p);
             PlayerEntry pe = playerEntryList.get(p.getUniqueId());
             u.setGroup(pe.getGroup());
-            u.getPlayer().setScoreboard(board);
+            //u.getPlayer().setScoreboard(board);
 
             Score line_99 = objective.getScore(Strings.PLUGIN_MESSAGE_COLOR + Strings.PLUGIN_BORDER_SHORT);
             line_99.setScore(99);
@@ -442,7 +442,7 @@ public class RelluEssentials extends JavaPlugin {
             
 
 
-            objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+            //objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
             //TODO Add Array for Users to Access it directly without the other class. (Maybe?)
             //TODO Remove Todo above. Also (Maybe?) remove User thing. could be replaced by the pojo stuff we have.
