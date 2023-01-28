@@ -4,8 +4,6 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import java.util.List;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
