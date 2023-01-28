@@ -4,6 +4,8 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
@@ -11,15 +13,22 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Baker;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Farmer;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Miner;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
@@ -37,10 +46,11 @@ public class BetterNPC implements Listener {
                 if(e.getItem() != null && (
                     e.getItem().equals(Banker.npc.getCustomItem()) || 
                     e.getItem().equals(CustomItems.npcFisher.getCustomItem()) || 
-                    e.getItem().equals(CustomItems.npcFarmer.getCustomItem()) || 
+                    e.getItem().equals(Farmer.npc.getCustomItem()) || 
+                    e.getItem().equals(Baker.npc.getCustomItem()) || 
                     e.getItem().equals(CustomItems.npcSmith.getCustomItem()) || 
                     e.getItem().equals(CustomItems.npcAdventurer.getCustomItem()) || 
-                    e.getItem().equals(CustomItems.npcMiner.getCustomItem())
+                    e.getItem().equals(Miner.npc.getCustomItem())
                     )){
                     e.setCancelled(true);
 
@@ -56,8 +66,8 @@ public class BetterNPC implements Listener {
                         nh = new NPCHelper(location, CustomItems.npcFisher.getDisplayName(), Profession.FISHERMAN, true);
                         nh.spawn();
                     }
-                    else if(e.getItem().equals(CustomItems.npcFarmer.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcFarmer.getDisplayName(), Profession.FARMER, true);
+                    else if(e.getItem().equals(Farmer.npc.getCustomItem())){
+                        nh = new NPCHelper(location, Farmer.npc.getDisplayName(), Profession.FARMER, true);
                         nh.spawn();
                     }
                     else if(e.getItem().equals(CustomItems.npcSmith.getCustomItem())){
@@ -68,8 +78,12 @@ public class BetterNPC implements Listener {
                         nh = new NPCHelper(location, CustomItems.npcAdventurer.getDisplayName(), Profession.NONE, true);
                         nh.spawn();
                     }
-                    else if(e.getItem().equals(CustomItems.npcMiner.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcMiner.getDisplayName(), Profession.NONE, true);
+                    else if(e.getItem().equals(Miner.npc.getCustomItem())){
+                        nh = new NPCHelper(location, Miner.npc.getDisplayName(), Profession.NONE, true);
+                        nh.spawn();
+                    }
+                    else if(e.getItem().equals(Baker.npc.getCustomItem())){
+                        nh = new NPCHelper(location, Baker.npc.getDisplayName(), Profession.NONE, true);
                         nh.spawn();
                     }
 
@@ -114,6 +128,7 @@ public class BetterNPC implements Listener {
                 e.setCancelled(true);
             }
             else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_FARMER)){
+                InventoryHelper.openInventory(p, Farmer.getMainGUI());
                 e.setCancelled(true);
             }
             else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_SMITH)){
@@ -123,102 +138,154 @@ public class BetterNPC implements Listener {
                 e.setCancelled(true);
             }
             else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_MINER)){
+                InventoryHelper.openInventory(p, Miner.getMainGUI());
+                e.setCancelled(true);
+            }
+            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_BAKER)){
+                InventoryHelper.openInventory(p, Baker.getMainGUI());
                 e.setCancelled(true);
             }
         }
     }
 
-    private void deposit(PlayerEntry pe, Player p, BankAccountEntry bae, float percentage){
-        float purse = pe.getPurse();
-        if(purse >= 1){
-            float transaction_value = (purse / 100)  * percentage;
-            RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
-            pe.setPurse(purse - transaction_value);
-            RelluEssentials.dBH.updatePlayer(pe);
+
+    private void trade(ItemStack is, Inventory inv, Player p, PlayerEntry pe, int slot){
+        if(CustomItems.npc_gui_close.equals(is)){
             InventoryHelper.closeInventory(p);
         }
-        else{
-            p.sendMessage("to less money to do a transaction");
-        }
-    }
-
-    private void withdraw(PlayerEntry pe, Player p, BankAccountEntry bae, float percentage){
-        float bank = bae.getValue();
-        float purse = pe.getPurse();
-        if(bank >= 1){
-            float transaction_value = ((bank / 100)  * percentage);
-            RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value*-1, bae.getValue(), bae.getTier().getId());
-            pe.setPurse(purse + transaction_value);
-            RelluEssentials.dBH.updatePlayer(pe);
+        else if(CustomItems.npc_gui_sell.equals(is)){
             InventoryHelper.closeInventory(p);
         }
-        else{
-            p.sendMessage("to less money to do a transaction");
+        else if(CustomItems.npc_gui_disabled.equals(is)){
+            
         }
-    }
+        else{
+            String item = is.getType().name();
+            int amountOfItem = is.getAmount();
+            int buyPricePerItem = ItemPrice.valueOf(item).getBuyPrice();
+            int sellPricePerItem = ItemPrice.valueOf(item).getSellPrice();
 
-    @EventHandler
-    public void onInventoryClickItem(InventoryClickEvent e) {
-        if (e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER) && e.getCurrentItem() != null && e.getWhoClicked() instanceof Player) {
-            Player p = (Player) e.getWhoClicked();
-            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
-            BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
-            if(e.getCurrentItem().equals(Banker.npc_gui_deposit.getCustomItem())){
-                InventoryHelper.closeInventory(p);
-                InventoryHelper.openInventory(p, Banker.getDepositGUI());
-            }
-            else if(Banker.npc_gui_deposit_5_percent.equals(e.getCurrentItem())){
-                deposit(pe, p, bae, 5f);
-            }
-            else if(Banker.npc_gui_deposit_20_percent.equals(e.getCurrentItem())){
-                deposit(pe, p, bae, 20f);
-            }
-            else if( Banker.npc_gui_deposit_50_percent.equals(e.getCurrentItem())){
-                deposit(pe, p, bae, 50f);
-            }
-            else if(Banker.npc_gui_deposit_all.equals(e.getCurrentItem())){
-                deposit(pe, p, bae, 100f);
-            }
-            else if(Banker.npc_gui_withdraw_5_percent.equals(e.getCurrentItem())){
-                withdraw(pe, p, bae, 5f);
-            }
-            else if(Banker.npc_gui_withdraw_20_percent.equals(e.getCurrentItem())){
-                withdraw(pe, p, bae, 20f);
-            }
-            else if(Banker.npc_gui_withdraw_50_percent.equals(e.getCurrentItem())){
-                withdraw(pe, p, bae, 50f);
-            }
-            else if(Banker.npc_gui_withdraw_all.equals(e.getCurrentItem())){
-                withdraw(pe, p, bae, 100f);
-            }
-            else if(Banker.npc_gui_withdraw.equals(e.getCurrentItem())){
-                InventoryHelper.closeInventory(p);
-                InventoryHelper.openInventory(p, Banker.getWithdrawGUI());
-            }
-            else if(Banker.npc_gui_balance.equals(e.getCurrentItem())){
-                InventoryHelper.closeInventory(p);
-                InventoryHelper.openInventory(p, Banker.getBalanceGUI());
-            }
-            else if(Banker.npc_gui_balance_total.equals(e.getCurrentItem())){
-                InventoryHelper.closeInventory(p);
-                p.sendMessage("Your total is: " +  bae.getValue());
-            }
-            else if(Banker.npc_gui_balance_transactions.equals(e.getCurrentItem())){
-                InventoryHelper.closeInventory(p);
-                p.sendMessage("Your transactions are:");
-                List<BankTransactionEntry> btel = RelluEssentials.dBH.getTransactionsToBankFromPlayer(bae.getId());
-                for(BankTransactionEntry bte: btel){
-                    p.sendMessage(String.format("Transaction with %s Coins on %s", bte.getValue(), bte.getCreated()));
+
+            if(inv.getType().equals(InventoryType.CHEST)){
+                int coins = buyPricePerItem * amountOfItem;
+                if(buyPricePerItem > 0){
+                    if(pe.getPurse() - buyPricePerItem * amountOfItem >= 0){
+                        if(p.getInventory().firstEmpty() != -1){
+                            p.getInventory().addItem(is.clone());
+                            p.updateInventory();
+    
+                            pe.setPurse(pe.getPurse() - coins);
+                            RelluEssentials.dBH.updatePlayer(pe);
+    
+                            p.sendMessage("Buy: " + item + " for " + coins + " now having " + pe.getPurse());
+                        }
+                        else{
+                            p.sendMessage("Can't Buy: " + item + " for " + coins + " inventory is full");
+                        }
+                    }
+                    else{
+                        p.sendMessage("Can't Buy: " + item + " for " + coins + " purse has " + pe.getPurse());
+                    }
+                }
+                else{
+                    p.sendMessage("Can't Buy: " + item + " for " + coins + " no Price is set yet.");
                 }
             }
-            else if(Banker.npc_gui_upgrade.equals(e.getCurrentItem())){
-                InventoryHelper.closeInventory(p);
-                InventoryHelper.openInventory(p, Banker.getUpgradeGUI());
+            else if(inv.getType().equals(InventoryType.PLAYER)){
+
+                if(is.getItemMeta().getEnchants().isEmpty() && sellPricePerItem != 0){
+                    int coins = sellPricePerItem * amountOfItem;
+                    
+                    p.getInventory().getItem(slot).setAmount(0);
+                    p.updateInventory();
+
+                    pe.setPurse(pe.getPurse() + coins);
+                    RelluEssentials.dBH.updatePlayer(pe);
+
+                    p.sendMessage("SELL: " + item + " for " + coins + " now having " + pe.getPurse());
+                }
+                else {
+                    p.sendMessage("WON'T SELL: " + item + " isEmpty: " + is.getItemMeta().getEnchants().isEmpty() + " price: " + sellPricePerItem);
+                }
+                
             }
-            else if(CustomItems.npc_gui_close.equals(e.getCurrentItem())){
-                InventoryHelper.closeInventory(p);
+        }
+    }
+
+
+   
+    @EventHandler
+    public void onInventoryClickItem(InventoryClickEvent e) {
+        if(e.getWhoClicked() instanceof Player && e.getCurrentItem() != null){
+            Player p = (Player) e.getWhoClicked();
+            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+            if (e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER)) {
+                BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
+                if(e.getCurrentItem().equals(Banker.npc_gui_deposit.getCustomItem())){
+                    InventoryHelper.closeInventory(p);
+                    InventoryHelper.openInventory(p, Banker.getDepositGUI());
+                }
+                else if(Banker.npc_gui_deposit_5_percent.equals(e.getCurrentItem())){
+                    Banker.deposit(pe, p, bae, 5f);
+                }
+                else if(Banker.npc_gui_deposit_20_percent.equals(e.getCurrentItem())){
+                    Banker.deposit(pe, p, bae, 20f);
+                }
+                else if( Banker.npc_gui_deposit_50_percent.equals(e.getCurrentItem())){
+                    Banker.deposit(pe, p, bae, 50f);
+                }
+                else if(Banker.npc_gui_deposit_all.equals(e.getCurrentItem())){
+                    Banker.deposit(pe, p, bae, 100f);
+                }
+                else if(Banker.npc_gui_withdraw_5_percent.equals(e.getCurrentItem())){
+                    Banker.withdraw(pe, p, bae, 5f);
+                }
+                else if(Banker.npc_gui_withdraw_20_percent.equals(e.getCurrentItem())){
+                    Banker.withdraw(pe, p, bae, 20f);
+                }
+                else if(Banker.npc_gui_withdraw_50_percent.equals(e.getCurrentItem())){
+                    Banker.withdraw(pe, p, bae, 50f);
+                }
+                else if(Banker.npc_gui_withdraw_all.equals(e.getCurrentItem())){
+                    Banker.withdraw(pe, p, bae, 100f);
+                }
+                else if(Banker.npc_gui_withdraw.equals(e.getCurrentItem())){
+                    InventoryHelper.closeInventory(p);
+                    InventoryHelper.openInventory(p, Banker.getWithdrawGUI());
+                }
+                else if(Banker.npc_gui_balance.equals(e.getCurrentItem())){
+                    InventoryHelper.closeInventory(p);
+                    InventoryHelper.openInventory(p, Banker.getBalanceGUI());
+                }
+                else if(Banker.npc_gui_balance_total.equals(e.getCurrentItem())){
+                    InventoryHelper.closeInventory(p);
+                    p.sendMessage("Your total is: " +  bae.getValue());
+                }
+                else if(Banker.npc_gui_balance_transactions.equals(e.getCurrentItem())){
+                    InventoryHelper.closeInventory(p);
+                    p.sendMessage("Your transactions are:");
+                    List<BankTransactionEntry> btel = RelluEssentials.dBH.getTransactionsToBankFromPlayer(bae.getId());
+                    for(BankTransactionEntry bte: btel){
+                        p.sendMessage(String.format("Transaction with %s Coins on %s", bte.getValue(), bte.getCreated()));
+                    }
+                }
+                else if(Banker.npc_gui_upgrade.equals(e.getCurrentItem())){
+                    InventoryHelper.closeInventory(p);
+                    InventoryHelper.openInventory(p, Banker.getUpgradeGUI());
+                }
+                else if(CustomItems.npc_gui_close.equals(e.getCurrentItem())){
+                    InventoryHelper.closeInventory(p);
+                }
+                e.setCancelled(true);
             }
-            e.setCancelled(true);
+            else if(
+                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_MINER) ||
+                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_FARMER) ||
+                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BAKER)
+                ){
+                trade(e.getCurrentItem(), e.getClickedInventory(), p, pe, e.getSlot());
+                e.setCancelled(true);
+            }
         }
     }
 }
