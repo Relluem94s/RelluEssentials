@@ -40,7 +40,7 @@ public class Fisher {
         inv.setItem(39, new ItemStack(Material.CLAY_BALL, 1));
         inv.setItem(40, new ItemStack(Material.SEA_PICKLE, 1));
         inv.setItem(41, new ItemStack(Material.SEAGRASS, 1));
-        inv.setItem(42, new ItemStack(Material.TURTLE_HELMET, 1));
+        inv.setItem(42, new ItemStack(Material.SCUTE, 1));
         inv.setItem(43, new ItemStack(Material.TURTLE_EGG, 1));
 
         inv.setItem(49, CustomItems.npc_gui_sell.getCustomItem());
