@@ -788,7 +788,7 @@ public enum ItemPrice {
   MUSHROOM_STEW(50,50),
   STRING(0,0),
   FEATHER(0,0),
-  GUNPOWDER(0,0),
+  GUNPOWDER(10,10),
   WHEAT_SEEDS(1,1),
   WHEAT(4,4),
   BREAD(12,12),

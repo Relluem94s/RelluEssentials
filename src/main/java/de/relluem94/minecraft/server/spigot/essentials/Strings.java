@@ -151,4 +151,14 @@ public class Strings {
     public static final String PLUGIN_COMMAND_PURSE_GAIN = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You gained %s and now have %s Coins in your Purse!";
     public static final String PLUGIN_COMMAND_PURSE_TOTAL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You have %s Coins in your Purse!";
     public static final String PLUGIN_COMMAND_PURSE_TOTAL_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " have %s Coins in the Purse!";
+
+
+    public static final String PLUGIN_COMMAND_NPC_BUY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Bought %s for %s Coins. You now have %s Coins in your Purse!";
+    public static final String PLUGIN_COMMAND_NPC_BUY_NOT_ENOUGH_MONEY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Can't buy %s for %s Coins. You only have %s Coins in your Purse!";
+    public static final String PLUGIN_COMMAND_NPC_BUY_INVENTORY_FULL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Can't buy %s for %s Coins. You have not enough Inventory Space left!";
+    public static final String PLUGIN_COMMAND_NPC_BUY_NOT_TRADEABLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Can't buy this Item";
+
+    public static final String PLUGIN_COMMAND_NPC_SELL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Sold %s for %s Coins. You now have %s Coins in your Purse!";
+    public static final String PLUGIN_COMMAND_NPC_SELL_ENCHANTED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You can't sell enchanted Items!";
+    public static final String PLUGIN_COMMAND_NPC_SELL_NO_PRICE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You can't sell this Item!";
 }

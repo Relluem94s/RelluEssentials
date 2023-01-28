@@ -1,6 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.NPC;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -112,6 +114,8 @@ public class Banker {
             RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
             pe.setPurse(purse - transaction_value);
             RelluEssentials.dBH.updatePlayer(pe);
+
+            p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
             InventoryHelper.closeInventory(p);
         }
         else{
@@ -127,6 +131,8 @@ public class Banker {
             RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value*-1, bae.getValue(), bae.getTier().getId());
             pe.setPurse(purse + transaction_value);
             RelluEssentials.dBH.updatePlayer(pe);
+
+            p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
             InventoryHelper.closeInventory(p);
         }
         else{

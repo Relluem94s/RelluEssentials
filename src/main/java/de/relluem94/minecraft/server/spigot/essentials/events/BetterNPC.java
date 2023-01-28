@@ -4,6 +4,8 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
@@ -161,6 +163,7 @@ public class BetterNPC implements Listener {
         }
         else{
             String item = is.getType().name();
+            String item_displayname = item.toLowerCase().replace('_', ' ');
             int amountOfItem = is.getAmount();
             int buyPricePerItem = ItemPrice.valueOf(item).getBuyPrice();
             int sellPricePerItem = ItemPrice.valueOf(item).getSellPrice();
@@ -177,18 +180,19 @@ public class BetterNPC implements Listener {
                             pe.setPurse(pe.getPurse() - coins);
                             RelluEssentials.dBH.updatePlayer(pe);
     
-                            p.sendMessage("Buy: " + item + " for " + coins + " now having " + pe.getPurse());
+                            p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_BUY, item_displayname, coins, pe.getPurse()));
+                            p.playSound(p, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
                         }
                         else{
-                            p.sendMessage("Can't Buy: " + item + " for " + coins + " inventory is full");
+                            p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_BUY_INVENTORY_FULL, item_displayname, coins));
                         }
                     }
                     else{
-                        p.sendMessage("Can't Buy: " + item + " for " + coins + " purse has " + pe.getPurse());
+                        p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_BUY_NOT_ENOUGH_MONEY, item_displayname, coins, pe.getPurse()));
                     }
                 }
                 else{
-                    p.sendMessage("Can't Buy: " + item + " for " + coins + " no Price is set yet.");
+                    p.sendMessage(Strings.PLUGIN_COMMAND_NPC_BUY_NOT_TRADEABLE);
                 }
             }
             else if(inv.getType().equals(InventoryType.PLAYER)){
@@ -202,10 +206,16 @@ public class BetterNPC implements Listener {
                     pe.setPurse(pe.getPurse() + coins);
                     RelluEssentials.dBH.updatePlayer(pe);
 
-                    p.sendMessage("SELL: " + item + " for " + coins + " now having " + pe.getPurse());
+                    p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_SELL, item_displayname, coins, pe.getPurse()));
+                    p.playSound(p, Sound.ENTITY_WANDERING_TRADER_NO, SoundCategory.MASTER, 1f, 1f);
                 }
                 else {
-                    p.sendMessage("WON'T SELL: " + item + " isEmpty: " + is.getItemMeta().getEnchants().isEmpty() + " price: " + sellPricePerItem);
+                    if(!is.getItemMeta().getEnchants().isEmpty()){
+                        p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_ENCHANTED);
+                    }
+                    if(sellPricePerItem == 0){
+                        p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_NO_PRICE);
+                    }
                 }
                 
             }
