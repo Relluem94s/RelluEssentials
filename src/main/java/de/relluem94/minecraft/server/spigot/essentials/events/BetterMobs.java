@@ -29,7 +29,7 @@ public class BetterMobs implements Listener {
     public void onDeath(EntityDeathEvent e) {
         if(e.getEntity().getKiller() != null && e.getEntity().getKiller() instanceof Player){
             int COINS_PER_DEATH = EntityCoins.valueOf(e.getEntity().getType().name()).getCoins();
-            if(COINS_PER_DEATH >= 0){
+            if(COINS_PER_DEATH > 0){
                 Player p = e.getEntity().getKiller();
                 PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
                 pe.setPurse(pe.getPurse() + COINS_PER_DEATH);
