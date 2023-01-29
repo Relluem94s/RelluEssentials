@@ -19,6 +19,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.json.JSONObject;
 
 import de.relluem94.rellulib.utils.LogUtils;
 import de.relluem94.rellulib.utils.TypeUtils;
@@ -28,6 +29,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntr
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
@@ -117,13 +119,18 @@ public class DatabaseHelper {
             ps.setFloat(1, (float) l.getX());
             ps.setFloat(2, (float) l.getY());
             ps.setFloat(3, (float) l.getZ());
+            ps.setInt(4, type);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
                     LocationEntry le = new LocationEntry();
                     le.setId(rs.getInt("id"));
                     le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                    le.setLocationType(locationTypeEntryList.get(type - 1));
+                    for(LocationTypeEntry lte : locationTypeEntryList){
+                        if(lte.getId() == type){
+                            le.setLocationType(lte);
+                        }
+                    }
                     return le;
                 }
             }
@@ -337,6 +344,67 @@ public class DatabaseHelper {
         return bte;
     }
 
+
+    public ProtectionEntry getProtectionByLocation(Location l) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getProtectionByLocation.sql", StandardCharsets.UTF_8));
+            ps.setFloat(1, (float) l.getX());
+            ps.setFloat(2, (float) l.getY());
+            ps.setFloat(3, (float) l.getZ());
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    LocationEntry le = new LocationEntry();
+                    le.setId(rs.getInt("id"));
+                    le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    for(LocationTypeEntry lte : locationTypeEntryList){
+                        if(lte.getId() == 5){
+                            le.setLocationType(lte);
+                        }
+                    }
+
+                    ProtectionEntry pe = new ProtectionEntry();
+                    pe.setId(rs.getInt("id"));
+                    pe.setCreated(rs.getString("created"));
+                    pe.setCreatedby(rs.getInt("createdby"));
+                    pe.setUpdated(rs.getString("updated"));
+                    pe.setUpdatedBy(rs.getInt("updatedby"));
+                    pe.setDeletedBy(rs.getInt("deletedby"));
+                    pe.setFlags(new JSONObject(rs.getString("flags")));
+                    pe.setRights(new JSONObject(rs.getString("rights")));
+                    pe.setMaterialName(rs.getString("material_name"));
+                    pe.setPlayerId(rs.getInt("player_fk"));
+                    pe.setLocationEntry(le);
+
+                    return pe;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public void insertProtection(ProtectionEntry pe) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertProtection.sql", StandardCharsets.UTF_8));
+
+            ps.setInt(1, pe.getPlayerId());
+            ps.setInt(2, pe.getPlayerId());
+            ps.setInt(3, pe.getLocation().getId());
+            ps.setString(4, pe.getMaterialName());
+            ps.setString(5, pe.getFlags().toString());
+            ps.setString(6, pe.getRights().toString());
+
+
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
 
 
@@ -720,6 +788,7 @@ public class DatabaseHelper {
         executeScript(v + "insertLocationTypes.sql");
         executeScript(v + "insertPluginInformation.sql");
 
+        // TODO Check if no config is there.. 
         pie = getPluginInformation();
 
         ConfigHelper ch = new ConfigHelper("players");
@@ -776,10 +845,14 @@ public class DatabaseHelper {
         executeScript(v + "addBankTier.sql");
         executeScript(v + "addBankAccount.sql");
         executeScript(v + "addBankTransaction.sql"); 
+        executeScript(v + "addPermission.sql");
+        executeScript(v + "addPermissionGroup.sql");
+        executeScript(v + "addPermissionPlayer.sql");
+        executeScript(v + "addProtections.sql");
         executeScript(v + "insertBankTier.sql"); 
-        executeScript(v + "updatePlayer.sql");
         executeScript(v + "insertLocationTypes.sql");
         executeScript(v + "insertNewDBVersion.sql");
+        executeScript(v + "updatePlayer.sql");
         executeScript(v + "updateOldPluginInformation.sql");
     }
 
