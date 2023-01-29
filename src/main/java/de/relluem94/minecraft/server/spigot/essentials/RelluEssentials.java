@@ -72,6 +72,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
 
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterBlockDrop;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterLock;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterMobs;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerJoin;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerQuit;
@@ -380,6 +381,7 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new SignClick(), this);
         pm.registerEvents(new ToolCrafting(), this);
         pm.registerEvents(new BetterNPC(), this);
+        pm.registerEvents(new BetterLock(), this);
         pm.registerEvents(new CustomEnchantment(), this); // @TODO is enchanted but is lost on anvil use ( like book and pickaxe )
     }
 
