@@ -13,4 +13,5 @@ WHERE lo.x = ?
     AND lo.y = ?
     AND lo.z = ?
     AND lo.location_type_fk = 5 
-    AND lo.deletedby is null;
+    AND lo.deletedby is null
+    AND pr.deletedby is null;
