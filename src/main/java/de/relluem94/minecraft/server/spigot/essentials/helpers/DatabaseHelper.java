@@ -406,6 +406,20 @@ public class DatabaseHelper {
         }
     }
 
+    public void deleteProtection(ProtectionEntry pe) {
+        deleteLocation(pe.getLocation());
+
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteProtection.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, pe.getPlayerId());
+            ps.setInt(2, pe.getId());
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 
 
 
