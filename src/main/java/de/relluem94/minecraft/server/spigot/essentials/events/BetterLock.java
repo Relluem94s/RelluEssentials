@@ -18,6 +18,7 @@ import org.bukkit.block.data.type.Furnace;
 import org.bukkit.block.data.type.Lectern;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.json.JSONObject;
@@ -85,6 +86,32 @@ public class BetterLock implements Listener {
             }
             else{
                 // THERE IS A PROTECTION
+            }
+        }
+    }
+
+      
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent e) {
+        Block b = e.getBlock();
+        if(isLockable(b)){
+            PlayerEntry p = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
+            ProtectionEntry bpe = dBH.getProtectionByLocation(b.getLocation());
+
+            if (bpe != null) {
+               if(bpe.getPlayerId() != p.getID()){
+                    e.setCancelled(true);
+                    e.getPlayer().sendMessage("Nicht deine Protection");
+               }
+               else{
+                    e.getPlayer().sendMessage("Deine Protection");
+                    // DOES NOT DELETE LOCATION.. ERROR
+                    dBH.deleteProtection(bpe);
+                    // You can procced
+               }
+            }
+            else{
+                // THERE IS NO PROTECTION
             }
         }
     }
