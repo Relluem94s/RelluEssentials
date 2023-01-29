@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Butcher;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Farmer;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Fisher;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Lumberjack;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Miner;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Smith;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
@@ -47,6 +48,7 @@ public class Admin implements CommandExecutor {
                             inv.setItem(5, Smith.npc.getCustomItem());
                             inv.setItem(6, Adventurer.npc.getCustomItem());
                             inv.setItem(7, Butcher.npc.getCustomItem());
+                            inv.setItem(8, Lumberjack.npc.getCustomItem());
         
                             InventoryHelper.openInventory(sender, inv);
                         }

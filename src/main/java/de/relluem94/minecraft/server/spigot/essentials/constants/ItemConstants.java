@@ -76,6 +76,7 @@ public class ItemConstants {
     public static final String PLUGIN_ITEM_NPC_ADVENTURER = "§dAdventurer";
     public static final String PLUGIN_ITEM_NPC_SMITH = "§dSmith";
     public static final String PLUGIN_ITEM_NPC_MINER = "§dMiner";
+    public static final String PLUGIN_ITEM_NPC_LUMBERJACK = "§dLumberjack";
 
     public static final String PLUGIN_ITEM_NPC_LORE1 = "§7Click to Spawn";
 }
