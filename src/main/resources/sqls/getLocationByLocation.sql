@@ -10,4 +10,5 @@ FROM `rellu_essentials`.`location` l
 WHERE l.x = ?
     AND l.y = ?
     AND l.z = ?
-    AND l.location_type_fk = 4 ;
+    AND l.location_type_fk = ?
+    AND l.deletedby IS NULL;
