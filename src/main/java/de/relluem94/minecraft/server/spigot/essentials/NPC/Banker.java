@@ -116,10 +116,15 @@ public class Banker {
             RelluEssentials.dBH.updatePlayer(pe);
 
             p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+            p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_BANKER_DEPOIST_MESSAGE, transaction_value));
+
             InventoryHelper.closeInventory(p);
         }
         else{
-            p.sendMessage("to less money to do a transaction");
+            p.sendMessage(Strings.PLUGIN_COMMAND_NPC_BANKER_DEPOIST_NO_MONEY_MESSAGE);
+
+            p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
+            InventoryHelper.closeInventory(p);
         }
     }
 
@@ -133,10 +138,14 @@ public class Banker {
             RelluEssentials.dBH.updatePlayer(pe);
 
             p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+            p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_BANKER_WITHDRAW_MESSAGE, transaction_value));
             InventoryHelper.closeInventory(p);
         }
         else{
-            p.sendMessage("to less money to do a transaction");
+            p.sendMessage(Strings.PLUGIN_COMMAND_NPC_BANKER_WITHDRAW_NO_MONEY_MESSAGE);
+
+            p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
+            InventoryHelper.closeInventory(p);
         }
     }
 

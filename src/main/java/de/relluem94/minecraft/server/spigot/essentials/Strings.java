@@ -152,6 +152,10 @@ public class Strings {
     public static final String PLUGIN_COMMAND_PURSE_TOTAL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You have %s Coins in your Purse!";
     public static final String PLUGIN_COMMAND_PURSE_TOTAL_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " have %s Coins in the Purse!";
 
+    public static final String PLUGIN_COMMAND_NPC_BANKER_DEPOIST_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You have deposited %s Coins to your Bank Account";
+    public static final String PLUGIN_COMMAND_NPC_BANKER_DEPOIST_NO_MONEY_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "To less money to do a transaction";
+    public static final String PLUGIN_COMMAND_NPC_BANKER_WITHDRAW_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You have withdrawn %s Coins from your Bank Account";
+    public static final String PLUGIN_COMMAND_NPC_BANKER_WITHDRAW_NO_MONEY_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "To less money to do a transaction";
 
     public static final String PLUGIN_COMMAND_NPC_BUY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Bought %s for %s Coins. You now have %s Coins in your Purse!";
     public static final String PLUGIN_COMMAND_NPC_BUY_NOT_ENOUGH_MONEY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Can't buy %s for %s Coins. You only have %s Coins in your Purse!";
@@ -161,4 +165,5 @@ public class Strings {
     public static final String PLUGIN_COMMAND_NPC_SELL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Sold %s for %s Coins. You now have %s Coins in your Purse!";
     public static final String PLUGIN_COMMAND_NPC_SELL_ENCHANTED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You can't sell enchanted Items!";
     public static final String PLUGIN_COMMAND_NPC_SELL_NO_PRICE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You can't sell this Item!";
+    public static final String PLUGIN_COMMAND_NPC_SELL_USED_ITEM = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You can't sell used Item!";
 }

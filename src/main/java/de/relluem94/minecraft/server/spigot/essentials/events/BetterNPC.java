@@ -19,15 +19,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Adventurer;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Baker;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Butcher;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Farmer;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Fisher;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Miner;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Smith;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
@@ -49,8 +53,9 @@ public class BetterNPC implements Listener {
                     e.getItem().equals(Fisher.npc.getCustomItem()) || 
                     e.getItem().equals(Farmer.npc.getCustomItem()) ||
                     e.getItem().equals(Baker.npc.getCustomItem()) || 
-                    e.getItem().equals(CustomItems.npcSmith.getCustomItem()) || 
-                    e.getItem().equals(CustomItems.npcAdventurer.getCustomItem()) || 
+                    e.getItem().equals(Butcher.npc.getCustomItem()) || 
+                    e.getItem().equals(Smith.npc.getCustomItem()) || 
+                    e.getItem().equals(Adventurer.npc.getCustomItem()) || 
                     e.getItem().equals(Miner.npc.getCustomItem())
                     )){
                     e.setCancelled(true);
@@ -71,12 +76,12 @@ public class BetterNPC implements Listener {
                         nh = new NPCHelper(location, Farmer.npc.getDisplayName(), Profession.FARMER, true);
                         nh.spawn();
                     }
-                    else if(e.getItem().equals(CustomItems.npcSmith.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcSmith.getDisplayName(), Profession.WEAPONSMITH, true);
+                    else if(e.getItem().equals(Smith.npc.getCustomItem())){
+                        nh = new NPCHelper(location, Smith.npc.getDisplayName(), Profession.WEAPONSMITH, true);
                         nh.spawn();
                     }
-                    else if(e.getItem().equals(CustomItems.npcAdventurer.getCustomItem())){
-                        nh = new NPCHelper(location, CustomItems.npcAdventurer.getDisplayName(), Profession.NONE, true);
+                    else if(e.getItem().equals(Adventurer.npc.getCustomItem())){
+                        nh = new NPCHelper(location, Adventurer.npc.getDisplayName(), Profession.NONE, true);
                         nh.spawn();
                     }
                     else if(e.getItem().equals(Miner.npc.getCustomItem())){
@@ -85,6 +90,10 @@ public class BetterNPC implements Listener {
                     }
                     else if(e.getItem().equals(Baker.npc.getCustomItem())){
                         nh = new NPCHelper(location, Baker.npc.getDisplayName(), Profession.NONE, true);
+                        nh.spawn();
+                    }
+                    else if(e.getItem().equals(Butcher.npc.getCustomItem())){
+                        nh = new NPCHelper(location, Butcher.npc.getDisplayName(), Profession.BUTCHER, true);
                         nh.spawn();
                     }
 
@@ -134,9 +143,11 @@ public class BetterNPC implements Listener {
                 e.setCancelled(true);
             }
             else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_SMITH)){
+                InventoryHelper.openInventory(p, Smith.getMainGUI());
                 e.setCancelled(true);
             }
             else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_ADVENTURER)){
+                InventoryHelper.openInventory(p, Adventurer.getMainGUI());
                 e.setCancelled(true);
             }
             else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_MINER)){
@@ -145,6 +156,14 @@ public class BetterNPC implements Listener {
             }
             else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_BAKER)){
                 InventoryHelper.openInventory(p, Baker.getMainGUI());
+                e.setCancelled(true);
+            }
+            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_BUTCHER)){
+                InventoryHelper.openInventory(p, Butcher.getMainGUI());
+                e.setCancelled(true);
+            }
+            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_ADVENTURER)){
+                InventoryHelper.openInventory(p, Adventurer.getMainGUI());
                 e.setCancelled(true);
             }
         }
@@ -197,7 +216,9 @@ public class BetterNPC implements Listener {
             }
             else if(inv.getType().equals(InventoryType.PLAYER)){
 
-                if(is.getItemMeta().getEnchants().isEmpty() && sellPricePerItem != 0){
+                Damageable damageable = ((Damageable) is.getItemMeta());
+                
+                if(is.getItemMeta().getEnchants().isEmpty() && sellPricePerItem != 0 && !damageable.hasDamage()){
                     int coins = sellPricePerItem * amountOfItem;
                     
                     p.getInventory().getItem(slot).setAmount(0);
@@ -214,8 +235,13 @@ public class BetterNPC implements Listener {
                         p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_ENCHANTED);
                     }
                     else{
-                        if(sellPricePerItem == 0){
-                            p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_NO_PRICE);
+                        if(damageable.hasDamage()){
+                            p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_USED_ITEM);
+                        }
+                        else{
+                            if(sellPricePerItem == 0){
+                                p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_NO_PRICE);
+                            }
                         }
                     }
                 }
@@ -291,8 +317,11 @@ public class BetterNPC implements Listener {
             }
             else if(
                 e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_MINER) ||
+                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_SMITH) ||
                 e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_FARMER) ||
                 e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_FISHER) ||
+                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BUTCHER) ||
+                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_ADVENTURER) ||
                 e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BAKER)
                 ){
                 trade(e.getCurrentItem(), e.getClickedInventory(), p, pe, e.getSlot());
