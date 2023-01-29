@@ -43,7 +43,6 @@ public class Fisher {
         inv.setItem(42, new ItemStack(Material.SCUTE, 1));
         inv.setItem(43, new ItemStack(Material.TURTLE_EGG, 1));
 
-        inv.setItem(49, CustomItems.npc_gui_sell.getCustomItem());
         inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
 
         return inv;

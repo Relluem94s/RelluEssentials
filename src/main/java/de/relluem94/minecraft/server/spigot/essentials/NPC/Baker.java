@@ -28,15 +28,12 @@ public class Baker {
         inv.setItem(13, new ItemStack(Material.CAKE, 1));
         inv.setItem(14, new ItemStack(Material.BAKED_POTATO, 1));
 
-
         inv.setItem(28, new ItemStack(Material.MUSHROOM_STEW, 1));
         inv.setItem(29, new ItemStack(Material.BEETROOT_SOUP, 1));
 
         inv.setItem(31, new ItemStack(Material.MILK_BUCKET, 1));
         inv.setItem(32, new ItemStack(Material.SUGAR, 1));
   
-
-        inv.setItem(49, CustomItems.npc_gui_sell.getCustomItem());
         inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
 
         return inv;

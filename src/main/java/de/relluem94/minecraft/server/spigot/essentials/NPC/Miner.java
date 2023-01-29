@@ -50,7 +50,6 @@ public class Miner {
         inv.setItem(42, new ItemStack(Material.EMERALD, 1));
         inv.setItem(43, new ItemStack(Material.ANCIENT_DEBRIS, 1));
 
-        inv.setItem(49, CustomItems.npc_gui_sell.getCustomItem());
         inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
 
         return inv;

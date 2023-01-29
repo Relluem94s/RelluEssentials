@@ -41,7 +41,6 @@ public class Butcher {
 
         inv.setItem(37, new ItemStack(Material.RABBIT_HIDE, 1));
   
-        inv.setItem(49, CustomItems.npc_gui_sell.getCustomItem());
         inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
 
         return inv;

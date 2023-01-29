@@ -38,8 +38,6 @@ public class Smith {
         inv.setItem(33, new ItemStack(Material.GOLDEN_LEGGINGS, 1));
         inv.setItem(34, new ItemStack(Material.GOLDEN_BOOTS, 1));
 
-  
-        inv.setItem(49, CustomItems.npc_gui_sell.getCustomItem());
         inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
 
         return inv;

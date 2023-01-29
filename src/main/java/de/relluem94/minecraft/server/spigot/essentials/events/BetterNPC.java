@@ -12,6 +12,7 @@ import org.bukkit.entity.Villager.Profession;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -180,15 +181,12 @@ public class BetterNPC implements Listener {
     }
 
 
-    private void trade(ItemStack is, Inventory inv, Player p, PlayerEntry pe, int slot){
+    private void trade(ItemStack is, Inventory inv, Player p, PlayerEntry pe, int slot, boolean isRigthClicked){
         if(CustomItems.npc_gui_close.equals(is)){
             InventoryHelper.closeInventory(p);
         }
-        else if(CustomItems.npc_gui_sell.equals(is)){
-            InventoryHelper.closeInventory(p);
-        }
         else if(CustomItems.npc_gui_disabled.equals(is)){
-            
+            // DISABLED DOES NOTHING. COULD BE AN EASTER EGG!
         }
         else{
             String item = is.getType().name();
@@ -199,11 +197,17 @@ public class BetterNPC implements Listener {
 
 
             if(inv.getType().equals(InventoryType.CHEST)){
+                ItemStack is_item = is.clone();
+                if(isRigthClicked){
+                    amountOfItem = 64;
+                    is_item.setAmount(64);
+                }
+
                 int coins = buyPricePerItem * amountOfItem;
                 if(buyPricePerItem > 0){
                     if(pe.getPurse() - buyPricePerItem * amountOfItem >= 0){
                         if(p.getInventory().firstEmpty() != -1){
-                            p.getInventory().addItem(is.clone());
+                            p.getInventory().addItem(is_item);
                             p.updateInventory();
     
                             pe.setPurse(pe.getPurse() - coins);
@@ -230,7 +234,7 @@ public class BetterNPC implements Listener {
                 
                 if(is.getItemMeta().getEnchants().isEmpty() && sellPricePerItem != 0 && !damageable.hasDamage()){
                     int coins = sellPricePerItem * amountOfItem;
-                    
+
                     p.getInventory().getItem(slot).setAmount(0);
                     p.updateInventory();
 
@@ -335,8 +339,8 @@ public class BetterNPC implements Listener {
                 e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_LUMBERJACK) ||
                 e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BAKER)
                 ){
-                trade(e.getCurrentItem(), e.getClickedInventory(), p, pe, e.getSlot());
-                e.setCancelled(true);
+                    trade(e.getCurrentItem(), e.getClickedInventory(), p, pe, e.getSlot(), e.isRightClick());
+                    e.setCancelled(true);
             }
         }
     }

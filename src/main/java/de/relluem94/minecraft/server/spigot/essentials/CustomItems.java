@@ -145,5 +145,4 @@ public class CustomItems {
 
     public static ItemHelper npc_gui_disabled = new ItemHelper(Material.BLACK_STAINED_GLASS_PANE, 1, "   ", Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{}));
     public static ItemHelper npc_gui_close = new ItemHelper(Material.BARRIER, 1, "Close", Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{}));
-    public static ItemHelper npc_gui_sell = new ItemHelper(Material.HOPPER, 1, "Sell", Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{}));
 }

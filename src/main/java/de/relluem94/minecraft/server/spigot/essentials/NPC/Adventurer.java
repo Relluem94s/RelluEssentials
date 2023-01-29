@@ -30,17 +30,15 @@ public class Adventurer {
         inv.setItem(15, new ItemStack(Material.GUNPOWDER, 1));
         inv.setItem(16, new ItemStack(Material.SLIME_BALL, 1));
 
-
         inv.setItem(28, new ItemStack(Material.GHAST_TEAR, 1));
         inv.setItem(29, new ItemStack(Material.BLAZE_ROD, 1));
 
         inv.setItem(31, new ItemStack(Material.ENDER_PEARL, 1));
-        inv.setItem(32, new ItemStack(Material.PHANTOM_MEMBRANE, 1));
+        inv.setItem(32, new ItemStack(Material.SHULKER_SHELL, 1));
+        inv.setItem(33, new ItemStack(Material.PHANTOM_MEMBRANE, 1));
 
         inv.setItem(34, new ItemStack(Material.EXPERIENCE_BOTTLE, 1));
 
-  
-        inv.setItem(49, CustomItems.npc_gui_sell.getCustomItem());
         inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
 
         return inv;
