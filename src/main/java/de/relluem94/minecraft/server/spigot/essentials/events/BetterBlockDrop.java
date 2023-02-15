@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,10 +11,6 @@ import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.bukkit.Bukkit;
 
 public class BetterBlockDrop implements Listener {
@@ -25,6 +21,9 @@ public class BetterBlockDrop implements Listener {
         Material.REDSTONE_ORE,
         Material.COAL_ORE,
         Material.IRON_ORE,
+        Material.COPPER_ORE,
+        Material.DEEPSLATE_COAL_ORE,
+        Material.DEEPSLATE_COPPER_ORE,
         Material.GOLD_ORE,
         Material.EMERALD_ORE,
         Material.NETHER_GOLD_ORE,
@@ -74,6 +73,7 @@ public class BetterBlockDrop implements Listener {
 
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
+
         Material m = e.getBlock().getBlockData().getMaterial();
         for (Material ore : ores) {
             if (m == ore && RelluEssentials.isOreRespawnEnabled) {
@@ -94,7 +94,7 @@ public class BetterBlockDrop implements Listener {
                 }
             }
         }
-        PlayerEntry p = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
+     /* PlayerEntry p = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
         BlockHistoryEntry bh = new BlockHistoryEntry();
 
         LocationEntry l = dBH.getLocation(e.getBlock().getLocation(), 4);
@@ -114,5 +114,6 @@ public class BetterBlockDrop implements Listener {
 
         bh.setLocation(l);
         // dBH.insertBlockHistory(bh);
+    */
     }
 }

@@ -4,7 +4,7 @@
   <groupId>de.relluem94</groupId>
   <artifactId>relluessentials</artifactId>
   <name>RelluEssentials</name>
-  <version>1.40</version>
+  <version>2.0</version>
   <url>https://github.com/Relluem94s/RelluEssentials</url>
   <scm>
     <connection>scm:git:git@github.com:Relluem94s/RelluEssentials.git</connection>
@@ -55,14 +55,13 @@
   </build>
   <repositories>
     <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+    <repository>
       <id>central</id>
       <name>central</name>
       <url>https://repo.maven.apache.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>rellulib</id>
-      <name>rellulib</name>
-      <url>https://maven.pkg.github.com/Relluem94s/RelluLib/</url>
     </repository>
     <repository>
       <id>spigotmc-repo</id>
@@ -82,12 +81,6 @@
       <version>1.19.3-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.31</version>
-      <scope>compile</scope>
-    </dependency>
   </dependencies>
   <distributionManagement>
     <repository>
@@ -97,10 +90,11 @@
     </repository>
   </distributionManagement>
   <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+    <plugin.apiVersion>1.19</plugin.apiVersion>
     <plugin.author>Relluem94</plugin.author>
     <project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
     <plugin.website>https://www.relluem94.de</plugin.website>
     <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
-    <plugin.apiVersion>1.19</plugin.apiVersion>
   </properties>
 </project>

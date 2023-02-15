@@ -1,12 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -19,6 +12,7 @@ public class BlockPlace implements Listener {
 
     @EventHandler
     public void placeBlocks(BlockPlaceEvent e) {
+        /* 
         PlayerEntry p = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
         BlockHistoryEntry bh = new BlockHistoryEntry();
 
@@ -40,5 +34,7 @@ public class BlockPlace implements Listener {
 
         bh.setLocation(l);
         // dBH.insertBlockHistory(bh);
+
+        */
     }
 }

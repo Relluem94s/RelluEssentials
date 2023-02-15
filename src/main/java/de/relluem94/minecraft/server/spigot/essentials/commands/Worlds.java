@@ -37,7 +37,7 @@ public class Worlds implements CommandExecutor {
                 Player p = (Player) sender;
                 switch (args.length) {
                     case 0:
-                        // HOW TO USE COMMANDS
+                        p.sendMessage(PLUGIN_COMMAND_WORLD_INFO);
                         return true;
                     case 1:
                         if (args[0].equals(PLUGIN_COMMAND_NAME_WORLD_LIST)) {
@@ -71,42 +71,53 @@ public class Worlds implements CommandExecutor {
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             switch (args[0]) {
                                 case PLUGIN_COMMAND_NAME_WORLD_CREATE:
-                                    // HOW TO USE CREATE
-                                    break;
+                                    p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_INFO);
+                                    return true;
                                 case PLUGIN_COMMAND_NAME_WORLD_LOAD:
                                     WorldHelper.loadWorld(args[1]);
+                                    p.sendMessage(PLUGIN_COMMAND_WORLD_LOAD_WORLD);
                                     return true;
                                 case PLUGIN_COMMAND_NAME_WORLD_UNLOAD:
                                     try {
-                                    WorldHelper.unloadWorld(args[1], true);
-                                } catch (WorldNotLoadedException ex) {
-                                    Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                return true;
+                                        WorldHelper.unloadWorld(args[1], true);
+                                        p.sendMessage(PLUGIN_COMMAND_WORLD_UNLOAD_WORLD);
+                                    }
+                                    catch (WorldNotLoadedException ex) {
+                                         Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED, ex);
+                                    }
+                                    return true;
                                 case PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE:
                                     try {
-                                    WorldHelper.unloadWorld(args[1], false);
-                                } catch (WorldNotLoadedException ex) {
-                                    Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                return true;
+                                        WorldHelper.unloadWorld(args[1], false);
+                                        p.sendMessage(PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE);
+                                    }
+                                    catch (WorldNotLoadedException ex) {
+                                        Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED, ex);
+                                    }
+                                    return true;
                                 default:
-                                    // HOW TO USE
+                                    p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_INFO);
                                     return true;
                             }
                         } else {
-                            // NO PERM
+                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                         }
                     case 5:
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             if (args[0].equals(PLUGIN_COMMAND_NAME_WORLD_CREATE)) {
-                                WorldType type = WorldType.getByName(args[2].toUpperCase());
-                                World.Environment world_environment = World.Environment.valueOf(args[3].toUpperCase());
-                                Boolean structures = Boolean.valueOf(args[4]);
-                                WorldHelper.createWorld(args[1], type, world_environment, structures);
+                                if(WorldType.getByName(args[2].toUpperCase()) != null && World.Environment.valueOf(args[3].toUpperCase()) != null && Boolean.valueOf(args[4]) != null){
+                                    WorldType type = WorldType.getByName(args[2].toUpperCase());
+                                    World.Environment world_environment = World.Environment.valueOf(args[3].toUpperCase());
+                                    Boolean structures = Boolean.valueOf(args[4]);
+                                    WorldHelper.createWorld(args[1], type, world_environment, structures);
+                                    p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_WORLD);
+                                }
+                                else{
+                                    p.sendMessage(PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS);
+                                }
                                 return true;
                             } else {
-                                // WRONG SUB COMMAND
+                                p.sendMessage(PLUGIN_COMMAND_WORLD_WRONG_SUBCOMMAND);
                             }
                         }
                     default:

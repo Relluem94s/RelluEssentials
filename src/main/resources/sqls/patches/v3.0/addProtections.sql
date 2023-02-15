@@ -11,12 +11,9 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`protections` (
   `updatedby` INT NULL,
   `deleted` DATETIME NULL,
   `deletedby` INT NULL,
-  `player_fk` INT(21) NOT NULL,
   `location_fk` INT NOT NULL,
   `material_name` VARCHAR(255) NOT NULL,
   `flags` JSON NULL,
   `rights` JSON NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_player_protection_1_idx` (`player_fk` ASC) VISIBLE,
-  INDEX `fk_protections_Location_1_idx` (`location_fk` ASC) VISIBLE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;

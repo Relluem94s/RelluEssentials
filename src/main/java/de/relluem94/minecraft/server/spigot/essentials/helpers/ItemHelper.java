@@ -2,9 +2,16 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
@@ -61,6 +68,49 @@ public class ItemHelper implements IItemHelper {
         this.ir = itemRarity;
 
         is = new ItemStack(this.material, this.amount);
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName(this.displayName);
+        im.setLore(this.lore);
+        is.setItemMeta(im);
+    }
+
+     /**
+     *
+     * @param is ItemStack
+     * @param displayName String
+     * @param itemType ItemType
+     * @param itemRarity ItemRarity
+     */
+    public ItemHelper(ItemStack is, String displayName, Type itemType, Rarity itemRarity) {
+        this.amount = is.getAmount();
+        this.material = is.getType();
+        this.displayName = displayName;
+        this.it = itemType;
+        this.ir = itemRarity;
+
+        this.is = is;
+        ItemMeta im = is.getItemMeta();
+        im.setDisplayName(this.displayName);
+        is.setItemMeta(im);
+    }
+
+     /**
+     *
+     * @param is ItemStack
+     * @param displayName String
+     * @param itemType ItemType
+     * @param itemRarity ItemRarity
+     * @param lore List String
+     */
+    public ItemHelper(ItemStack is, String displayName, Type itemType, Rarity itemRarity, List<String> lore) {
+        this.amount = is.getAmount();
+        this.material = is.getType();
+        this.displayName = displayName;
+        this.lore = lore;
+        this.it = itemType;
+        this.ir = itemRarity;
+
+        this.is = is;
         ItemMeta im = is.getItemMeta();
         im.setDisplayName(this.displayName);
         im.setLore(this.lore);
@@ -226,6 +276,15 @@ public class ItemHelper implements IItemHelper {
         }
     }
 
+    public static List<String> remove(List<String> loc_lore){
+        loc_lore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
+        loc_lore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
+        loc_lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
+        loc_lore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
+        loc_lore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
+        return loc_lore;
+    }
+
     public enum Rarity {
         NONE("", "", -1),
         COMMON("Common", "§f§l", 0),
@@ -283,6 +342,82 @@ public class ItemHelper implements IItemHelper {
         BUILDING,
         NPC,
         NPC_GUI,
+        ENCHANTMENT,
         NONE;
     }
+
+    public static ItemStack setDisplayName(ItemStack is, String displayname){
+        ItemMeta im = is.getItemMeta();
+
+        im.setDisplayName(displayname);
+
+        is.setItemMeta(im);
+        return is;
+    }
+
+    public static ItemStack getCleanItemStack(ItemStack is){
+        return new ItemStack(is.getType(), 1);
+    }
+
+    public static ItemStack getCleanItemStackWithAmount(ItemStack is){
+        return new ItemStack(is.getType(), is.getAmount());
+    }
+
+    public static ItemStack addBookEnchantment(ItemStack item, Enchantment enchantment, int level) {
+        if(item.getItemMeta() instanceof EnchantmentStorageMeta){
+            EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
+            meta.addStoredEnchant(enchantment, level, true);
+            meta.addEnchant(enchantment, level, true);
+            item.setItemMeta(meta);
+        }
+        
+        return item;
+    }
+
+    public static String getItemName(ItemStack is){
+        String name = "";
+        if(is.hasItemMeta()){
+            ItemMeta meta = is.getItemMeta();
+            if (meta.hasDisplayName()){
+                name = meta.getDisplayName();
+            } 
+            else {
+                if (meta.hasLocalizedName()){
+                    name = meta.getLocalizedName();
+                } else {
+                    name = is.getType().name().toLowerCase().replace("_", " ");
+                }
+            }
+        }
+
+        return name;
+    }
+
+
+    public static ItemStack getSmeltedItemStack(ItemStack is){
+        ItemStack result = null;
+        Iterator<Recipe> iter = Bukkit.recipeIterator();
+        while (iter.hasNext()) {
+            Recipe recipe = iter.next();
+            if (!(recipe instanceof FurnaceRecipe)) {
+                continue;
+            }
+            if (recipe.getResult() != null && ((FurnaceRecipe) recipe).getInput().getType() != is.getType()) {
+                continue;
+            }
+
+            if( recipe.getResult().getType() != is.getType()){
+                result = recipe.getResult();
+                break;
+            }
+           
+        }
+        
+        if(result != null){
+            result.setAmount(is.getAmount());
+            
+        }
+        return result;
+    }
+
 }

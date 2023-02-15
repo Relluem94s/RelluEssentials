@@ -6,6 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 /* Better Call Soil */
@@ -21,6 +22,14 @@ public class BetterSoil implements Listener {
                     e.setCancelled(true);
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onChange(EntityInteractEvent e) {
+        Block b = e.getBlock();
+        if (b.getType().equals(Material.FARMLAND)) {
+            e.setCancelled(true);
         }
     }
 }

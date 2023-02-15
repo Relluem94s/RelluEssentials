@@ -1,18 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
-import org.bukkit.entity.Villager.Profession;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -21,27 +20,26 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Adventurer;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Baker;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Butcher;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Farmer;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Fisher;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Lumberjack;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Miner;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Smith;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 
 public class BetterNPC implements Listener {
@@ -49,62 +47,21 @@ public class BetterNPC implements Listener {
     @EventHandler
     public void onNPCPlacement(PlayerInteractEvent e) {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
+
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if(e.getItem() != null && (
-                    e.getItem().equals(Banker.npc.getCustomItem()) || 
-                    e.getItem().equals(Fisher.npc.getCustomItem()) || 
-                    e.getItem().equals(Farmer.npc.getCustomItem()) ||
-                    e.getItem().equals(Baker.npc.getCustomItem()) || 
-                    e.getItem().equals(Butcher.npc.getCustomItem()) || 
-                    e.getItem().equals(Smith.npc.getCustomItem()) || 
-                    e.getItem().equals(Adventurer.npc.getCustomItem()) || 
-                    e.getItem().equals(Lumberjack.npc.getCustomItem()) || 
-                    e.getItem().equals(Miner.npc.getCustomItem())
-                    )){
+                if(e.getItem() != null && RelluEssentials.npc_itemstack.contains(e.getItem())){
                     e.setCancelled(true);
 
                     Location location = e.getClickedBlock().getLocation().add(0, 1, 0);
                     location.setYaw(e.getPlayer().getLocation().getYaw());
 
-                    NPCHelper nh;
-                    if(e.getItem().equals(Banker.npc.getCustomItem())){
-                        nh = new NPCHelper(location, Banker.npc.getDisplayName(), Profession.NONE, true);
-                        nh.spawn();
+                    for(int i = 0; i < RelluEssentials.npc_itemstack.size(); i++){
+                        if(RelluEssentials.npc_itemstack.get(i).equals(e.getItem())){
+                            NPCHelper nh = new NPCHelper(location, RelluEssentials.npcs.get(i));
+                            nh.spawn();
+                            e.getPlayer().sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
+                        }
                     }
-                    else if(e.getItem().equals(Fisher.npc.getCustomItem())){
-                        nh = new NPCHelper(location, Fisher.npc.getDisplayName(), Profession.FISHERMAN, true);
-                        nh.spawn();
-                    }
-                    else if(e.getItem().equals(Farmer.npc.getCustomItem())){
-                        nh = new NPCHelper(location, Farmer.npc.getDisplayName(), Profession.FARMER, true);
-                        nh.spawn();
-                    }
-                    else if(e.getItem().equals(Smith.npc.getCustomItem())){
-                        nh = new NPCHelper(location, Smith.npc.getDisplayName(), Profession.WEAPONSMITH, true);
-                        nh.spawn();
-                    }
-                    else if(e.getItem().equals(Adventurer.npc.getCustomItem())){
-                        nh = new NPCHelper(location, Adventurer.npc.getDisplayName(), Profession.NONE, true);
-                        nh.spawn();
-                    }
-                    else if(e.getItem().equals(Miner.npc.getCustomItem())){
-                        nh = new NPCHelper(location, Miner.npc.getDisplayName(), Profession.NONE, true);
-                        nh.spawn();
-                    }
-                    else if(e.getItem().equals(Baker.npc.getCustomItem())){
-                        nh = new NPCHelper(location, Baker.npc.getDisplayName(), Profession.NONE, true);
-                        nh.spawn();
-                    }
-                    else if(e.getItem().equals(Butcher.npc.getCustomItem())){
-                        nh = new NPCHelper(location, Butcher.npc.getDisplayName(), Profession.BUTCHER, true);
-                        nh.spawn();
-                    }
-                    else if(e.getItem().equals(Lumberjack.npc.getCustomItem())){
-                        nh = new NPCHelper(location, Lumberjack.npc.getDisplayName(), Profession.NONE, true);
-                        nh.spawn();
-                    }
-
-                    e.getPlayer().sendMessage("NPC is Placed");
                 }
             }
         }
@@ -115,67 +72,42 @@ public class BetterNPC implements Listener {
     public void onPlayerInteractEntity (PlayerInteractEntityEvent e) {
         Player p = e.getPlayer();
         if(e.getRightClicked() instanceof Villager){
-            if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_BANKER)){
-                PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
-                BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
-                if(bae != null){
-                    InventoryHelper.openInventory(p, Banker.getMainGUI());
-                }
-                else{
-                    BankTierEntry bte = RelluEssentials.dBH.getBankTier(1);
-                    if(pe.getPurse() > bte.getCost()){
-                        pe.setPurse(pe.getPurse() - bte.getCost());
-                        RelluEssentials.dBH.updatePlayer(pe);
-
-                        bae = new BankAccountEntry();
-                        bae.setValue(0);
-                        bae.setTier(bte);
-                        bae.setPlayerId(pe.getID());
-    
-                        RelluEssentials.dBH.insertBankAccount(bae);
-                    }
-                    else{
-                        // NOT ENOUGH MONEY
-                    }
-                }
+            if(e.getRightClicked().getCustomName() != null) {
+                String customName = e.getRightClicked().getCustomName();
+                for(int i = 0; i < RelluEssentials.npc_name.size(); i++){
+                    if(RelluEssentials.npc_name.get(i).equals(customName)){
+                        if(customName.equals(RelluEssentials.banker.getName())){
+                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
+                            if(bae != null){
+                                InventoryHelper.openInventory(p, RelluEssentials.banker.getMainGUI());
+                            }
+                            else{
+                                BankTierEntry bte = RelluEssentials.dBH.getBankTier(1);
+                                if(pe.getPurse() > bte.getCost()){
+                                    pe.setPurse(pe.getPurse() - bte.getCost());
+                                    RelluEssentials.dBH.updatePlayer(pe);
+            
+                                    bae = new BankAccountEntry();
+                                    bae.setValue(0);
+                                    bae.setTier(bte);
+                                    bae.setPlayerId(pe.getID());
                 
-                e.setCancelled(true);
-            }
-            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_FISHER)){
-                InventoryHelper.openInventory(p, Fisher.getMainGUI());
-                e.setCancelled(true);
-            }
-            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_FARMER)){
-                InventoryHelper.openInventory(p, Farmer.getMainGUI());
-                e.setCancelled(true);
-            }
-            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_SMITH)){
-                InventoryHelper.openInventory(p, Smith.getMainGUI());
-                e.setCancelled(true);
-            }
-            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_ADVENTURER)){
-                InventoryHelper.openInventory(p, Adventurer.getMainGUI());
-                e.setCancelled(true);
-            }
-            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_MINER)){
-                InventoryHelper.openInventory(p, Miner.getMainGUI());
-                e.setCancelled(true);
-            }
-            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_BAKER)){
-                InventoryHelper.openInventory(p, Baker.getMainGUI());
-                e.setCancelled(true);
-            }
-            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_BUTCHER)){
-                InventoryHelper.openInventory(p, Butcher.getMainGUI());
-                e.setCancelled(true);
-            }
-            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_ADVENTURER)){
-                InventoryHelper.openInventory(p, Adventurer.getMainGUI());
-                e.setCancelled(true);
-            }
-            else if(e.getRightClicked().getCustomName() != null && e.getRightClicked().getCustomName().equals(ItemConstants.PLUGIN_ITEM_NPC_LUMBERJACK)){
-                InventoryHelper.openInventory(p, Lumberjack.getMainGUI());
-                e.setCancelled(true);
+                                    RelluEssentials.dBH.insertBankAccount(bae);
+                                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT);
+                                }
+                                else{
+                                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS, bte.getCost()));
+                                }
+                            }
+                            e.setCancelled(true);
+                        }
+                        else{
+                            InventoryHelper.openInventory(p, RelluEssentials.npcs.get(i).getMainGUI());
+                            e.setCancelled(true);
+                        }
+                    }
+                }
             }
         }
     }
@@ -187,6 +119,39 @@ public class BetterNPC implements Listener {
         }
         else if(CustomItems.npc_gui_disabled.equals(is)){
             // DISABLED DOES NOTHING. COULD BE AN EASTER EGG!
+        }
+        else if(is.getType().equals(Material.PLAYER_HEAD) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && ((SkullMeta) is.getItemMeta()).getOwnerProfile().getName().equals(CustomHeads.BAG.getName()) ){
+            BagTypeEntry bt = null;
+
+            for(BagTypeEntry bte : RelluEssentials.bagTypeEntryList){
+                if(bte.getDisplayName().equals(is.getItemMeta().getDisplayName())){
+                    bt = bte;
+                }
+            }
+
+            if(bt != null){
+                double purse = pe.getPurse();
+                int price = bt.getCost();
+
+                if(!BagHelper.hasBag(bt.getId(), pe)){
+                    if(purse >= price){
+                        pe.setPurse(purse - price);
+                        RelluEssentials.dBH.updatePlayer(pe);
+                        RelluEssentials.dBH.insertBag(bt.getId(), pe.getID());
+                        
+                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
+                    }
+                    else{
+                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BAGS_NO_COINS);
+                    }
+                }
+                else{
+                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT, bt.getDisplayName()));
+                }
+            }
+            else{
+                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND);
+            }
         }
         else{
             String item = is.getType().name();
@@ -203,7 +168,7 @@ public class BetterNPC implements Listener {
                     is_item.setAmount(64);
                 }
 
-                int coins = buyPricePerItem * amountOfItem;
+                double coins = buyPricePerItem * amountOfItem;
                 if(buyPricePerItem > 0){
                     if(pe.getPurse() - buyPricePerItem * amountOfItem >= 0){
                         if(p.getInventory().firstEmpty() != -1){
@@ -213,48 +178,70 @@ public class BetterNPC implements Listener {
                             pe.setPurse(pe.getPurse() - coins);
                             RelluEssentials.dBH.updatePlayer(pe);
     
-                            p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_BUY, item_displayname, coins, pe.getPurse()));
+                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY, item_displayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                             p.playSound(p, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
                         }
                         else{
-                            p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_BUY_INVENTORY_FULL, item_displayname, coins));
+                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL, item_displayname, StringHelper.formatDouble(coins)));
                         }
                     }
                     else{
-                        p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_BUY_NOT_ENOUGH_MONEY, item_displayname, coins, pe.getPurse()));
+                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS, item_displayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                     }
                 }
                 else{
-                    p.sendMessage(Strings.PLUGIN_COMMAND_NPC_BUY_NOT_TRADEABLE);
+                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE);
                 }
             }
             else if(inv.getType().equals(InventoryType.PLAYER)){
 
                 Damageable damageable = ((Damageable) is.getItemMeta());
-                
-                if(is.getItemMeta().getEnchants().isEmpty() && sellPricePerItem != 0 && !damageable.hasDamage()){
-                    int coins = sellPricePerItem * amountOfItem;
+                if(is.getItemMeta().getEnchants().isEmpty() && sellPricePerItem != 0 && !damageable.hasDamage() && (!is.getItemMeta().hasDisplayName() || is.getItemMeta() instanceof SkullMeta)){
 
-                    p.getInventory().getItem(slot).setAmount(0);
+                    double coins = 0;
+                    
+                    if(isRigthClicked){
+                        amountOfItem = 0;
+                        ItemStack[] iss = p.getInventory().getContents();
+                        for(ItemStack lis : iss){
+                            if(lis != null && lis.equals(is)){
+                                amountOfItem += lis.getAmount();
+                                p.getInventory().remove(lis);
+                            }
+                        }
+                        coins = sellPricePerItem * amountOfItem;
+                        
+
+                    }
+                    else{
+                        coins = sellPricePerItem * amountOfItem;
+                        p.getInventory().getItem(slot).setAmount(0);
+                    }
+                    
                     p.updateInventory();
 
                     pe.setPurse(pe.getPurse() + coins);
                     RelluEssentials.dBH.updatePlayer(pe);
 
-                    p.sendMessage(String.format(Strings.PLUGIN_COMMAND_NPC_SELL, item_displayname, coins, pe.getPurse()));
+                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SELL, item_displayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                     p.playSound(p, Sound.ENTITY_WANDERING_TRADER_NO, SoundCategory.MASTER, 1f, 1f);
                 }
                 else {
                     if(!is.getItemMeta().getEnchants().isEmpty()){
-                        p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_ENCHANTED);
+                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_ENCHANTED);
                     }
                     else{
                         if(damageable.hasDamage()){
-                            p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_USED_ITEM);
+                            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_USED_ITEM);
                         }
                         else{
                             if(sellPricePerItem == 0){
-                                p.sendMessage(Strings.PLUGIN_COMMAND_NPC_SELL_NO_PRICE);
+                                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_NO_PRICE);
+                            }
+                            else{
+                                if(is.getItemMeta().hasDisplayName()){
+                                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_RENAMED);
+                                }
                             }
                         }
                     }
@@ -270,77 +257,97 @@ public class BetterNPC implements Listener {
         if(e.getWhoClicked() instanceof Player && e.getCurrentItem() != null){
             Player p = (Player) e.getWhoClicked();
             PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
-            if (e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BANKER)) {
+            if (e.getView().getTitle().equals(RelluEssentials.banker.getTitle())) {
                 BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
-                if(e.getCurrentItem().equals(Banker.npc_gui_deposit.getCustomItem())){
+                if(e.getCurrentItem().equals(BankerHelper.npc_gui_deposit.getCustomItem())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, Banker.getDepositGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.banker.getDepositGUI());
                 }
-                else if(Banker.npc_gui_deposit_5_percent.equals(e.getCurrentItem())){
-                    Banker.deposit(pe, p, bae, 5f);
+                else if(e.getCurrentItem().getType().equals(BankerHelper.UPGRADE_MATERIAL)){
+                    BankerHelper.upgradeAccount(e.getCurrentItem(), p, pe, bae);
                 }
-                else if(Banker.npc_gui_deposit_20_percent.equals(e.getCurrentItem())){
-                    Banker.deposit(pe, p, bae, 20f);
+                else if(BankerHelper.npc_gui_deposit_5_percent.equals(e.getCurrentItem())){
+                    BankerHelper.deposit(pe, p, bae, 5f);
                 }
-                else if( Banker.npc_gui_deposit_50_percent.equals(e.getCurrentItem())){
-                    Banker.deposit(pe, p, bae, 50f);
+                else if(BankerHelper.npc_gui_deposit_20_percent.equals(e.getCurrentItem())){
+                    BankerHelper.deposit(pe, p, bae, 20f);
                 }
-                else if(Banker.npc_gui_deposit_all.equals(e.getCurrentItem())){
-                    Banker.deposit(pe, p, bae, 100f);
+                else if(BankerHelper.npc_gui_deposit_50_percent.equals(e.getCurrentItem())){
+                    BankerHelper.deposit(pe, p, bae, 50f);
                 }
-                else if(Banker.npc_gui_withdraw_5_percent.equals(e.getCurrentItem())){
-                    Banker.withdraw(pe, p, bae, 5f);
+                else if(BankerHelper.npc_gui_deposit_all.equals(e.getCurrentItem())){
+                    BankerHelper.deposit(pe, p, bae, 100f);
                 }
-                else if(Banker.npc_gui_withdraw_20_percent.equals(e.getCurrentItem())){
-                    Banker.withdraw(pe, p, bae, 20f);
+                else if(BankerHelper.npc_gui_withdraw_5_percent.equals(e.getCurrentItem())){
+                    BankerHelper.withdraw(pe, p, bae, 5f);
                 }
-                else if(Banker.npc_gui_withdraw_50_percent.equals(e.getCurrentItem())){
-                    Banker.withdraw(pe, p, bae, 50f);
+                else if(BankerHelper.npc_gui_withdraw_20_percent.equals(e.getCurrentItem())){
+                    BankerHelper.withdraw(pe, p, bae, 20f);
                 }
-                else if(Banker.npc_gui_withdraw_all.equals(e.getCurrentItem())){
-                    Banker.withdraw(pe, p, bae, 100f);
+                else if(BankerHelper.npc_gui_withdraw_50_percent.equals(e.getCurrentItem())){
+                    BankerHelper.withdraw(pe, p, bae, 50f);
                 }
-                else if(Banker.npc_gui_withdraw.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_withdraw_all.equals(e.getCurrentItem())){
+                    BankerHelper.withdraw(pe, p, bae, 100f);
+                }
+                else if(BankerHelper.npc_gui_withdraw.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, Banker.getWithdrawGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.banker.getWithdrawGUI());
                 }
-                else if(Banker.npc_gui_balance.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_balance.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, Banker.getBalanceGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.banker.getBalanceGUI());
                 }
-                else if(Banker.npc_gui_balance_total.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_balance_total.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    p.sendMessage("Your total is: " +  bae.getValue());
+                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue())));
                 }
-                else if(Banker.npc_gui_balance_transactions.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_balance_transactions.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    p.sendMessage("Your transactions are:");
+                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION);
                     List<BankTransactionEntry> btel = RelluEssentials.dBH.getTransactionsToBankFromPlayer(bae.getId());
                     for(BankTransactionEntry bte: btel){
-                        p.sendMessage(String.format("Transaction with %s Coins on %s", bte.getValue(), bte.getCreated()));
+                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST, bte.getValue() > 1 ? EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE : EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE, StringHelper.formatDouble(bte.getValue()), bte.getCreated()));
                     }
                 }
-                else if(Banker.npc_gui_upgrade.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_upgrade.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, Banker.getUpgradeGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.banker.getUpgradeGUI());
                 }
                 else if(CustomItems.npc_gui_close.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                 }
                 e.setCancelled(true);
             }
-            else if(
-                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_MINER) ||
-                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_SMITH) ||
-                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_FARMER) ||
-                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_FISHER) ||
-                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BUTCHER) ||
-                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_ADVENTURER) ||
-                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_LUMBERJACK) ||
-                e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + ItemConstants.PLUGIN_ITEM_NPC_BAKER)
-                ){
+            else if(RelluEssentials.npc_trader_title.contains(e.getView().getTitle())){
                     trade(e.getCurrentItem(), e.getClickedInventory(), p, pe, e.getSlot(), e.isRightClick());
                     e.setCancelled(true);
+            }
+            else if(e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER +"§dNPCs")){
+                if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
+                    p.getInventory().addItem(e.getCurrentItem().clone());
+                    p.updateInventory();
+                }
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onNPCDamage(EntityDamageByEntityEvent e){
+        if(e.getEntity() instanceof Villager){
+            if(e.getEntity().getCustomName() != null){
+                if(RelluEssentials.npc_name.contains(e.getEntity().getCustomName())){
+                    if(e.getDamager() instanceof Player){
+                        Player p = (Player) e.getDamager();
+                        if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
+                            e.setCancelled(true);
+                        }
+                    }
+                    else{
+                        e.setCancelled(true);
+                    }
+                }
             }
         }
     }

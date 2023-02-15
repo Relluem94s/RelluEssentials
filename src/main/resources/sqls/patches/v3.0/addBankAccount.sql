@@ -14,7 +14,5 @@
   `player_fk` INT(21) NOT NULL,
   `value` FLOAT(21) NOT NULL,
   `bank_tier_fk` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk_bank_account_tier_1_idx` (`bank_tier_fk` ASC) VISIBLE,
-  INDEX `fk_bank_account_player_1_idx` (`player_fk` ASC) VISIBLE)
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;

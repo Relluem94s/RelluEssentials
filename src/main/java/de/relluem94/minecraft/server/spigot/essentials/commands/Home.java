@@ -56,7 +56,7 @@ public class Home implements CommandExecutor {
                                 locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationType().getId() == 1)).forEachOrdered(fle -> {
                                     p.sendMessage(PLUGIN_COMMAND_COLOR + "Name: " + PLUGIN_COMMAND_ARG_COLOR + fle.getLocationName() + " §7(" + locationToString(fle.getLocation()) + "§7)");
                                 });
-                                // @TODO remove String and add to Strings.java
+                                // TODO remove String and add to Strings.java
                                 locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationType().getId() == 2)).forEachOrdered(fle -> {
                                     p.sendMessage(PLUGIN_COMMAND_COLOR + "Todespunkt: " + PLUGIN_COMMAND_ARG_COLOR + fle.getLocationName() + " §7(" + locationToString(fle.getLocation()) + "§7)");
                                 });

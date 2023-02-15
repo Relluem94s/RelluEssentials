@@ -24,7 +24,7 @@ public class Inventory implements CommandExecutor {
                     if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
                         p.openInventory(p.getInventory());
                         p.sendMessage(PLUGIN_COMMAND_INVENTORY);
-                        return true;
+                        return true; // TODO BUGS Clicked Items will be placed anywhere and overwrite other items..  
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                         return true;

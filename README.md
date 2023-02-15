@@ -29,56 +29,61 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 1. Enjoy
 
 ## Commands
+* Admin gives Clearing Chat, Fake AFK, Teleport to highest Block and Custom NPCs  (`/admin`) 
+* Away from Keyboard (`/afk`)
+* Broadcasts Message to online Players (`/broadcast`)
+* Gift Cookies (`/cookie`)
+* Change time to Day (`/day`)
+* Open the Enderchest (`/enderchest`)
 * Flymode (`/fly`)
 * Gamemode (`/0` `/1 `/`2` `/3`)
-* Portable Craftingbench (`/craft`)
-* Gift Cookies (`/cookie`)
-* Change Weather to Sun (`/sun`)
-* Change Weather to Rain (`/rain`)
-* Change Weather to Storm (`/storm`)
-* Change time to Day (`/day`)
-* Change time to Night (`/night`)
-* Teleport to Worldspawn (`/spawn`)
-* Open the Enderchest (`/enderchest`)
-* Open the Inventory (`/inv`)
-* Set Permission Group (`/setGroup`)
-* Nick Player (`/nick`)
-* Kill yourself (`/suicide`)
-* Get More Stuff (`/more`)
-* Gives a Player Head (`/head`)
-* ClearChat (`/cc`)
-* Vanishes Player (`/vanish`)
-* Does a rollback of a player (`/rollback`)
-* Repair your favorite Tools (`/repair`)
-* Teleport to your Bed spawn location or set list tp to homes that get saved in players.yml (`/home`)
-* Save, Reload your config or more (`/rellu`)
+* List all Gamerules for the current World (`/gamerules`)
 * Play as god (`/god`)
+* Gives a Player Head (`/head`)
 * Heal yourself if you low on health (`/heal`)
-* Away from Keyboard (`/afk`)
+* Teleport to your Bed spawn location or set list tp to homes that get saved in players.yml (`/home`)
+* Open the Inventory (`/inv`)
 * Message other Players (`/msg`)
-* Send a Title to a Player (`/title`)
-* Broadcasts Message to online Players (`/broadcast`)
-* Show where a Player is (`/where`)
-* Print Message in Chat in Player / Commandblock Name (`/print`)
-* Rename item in your Hand (`/rename`)
-* Vanish you from other Players (`/vanish`)
-* Clear Chat from unwanted stuff (`/cc`)
+* Get More Stuff (`/more`)
+* Nick Player (`/nick`)
+* Change time to Night (`/night`)
+* Set Permission Group (`/setGroup`)
 * Poke a Player if he does not respond (`/poke`)
+* Portable Craftingbench (`/craft`)
+* Print Message in Chat in Player / Commandblock Name (`/print`)
+* Protect your Chests, Doors and other Blocks with (`/protect`)
+* Shows you your Money in your Purse (`/purse`)
+* Change Weather to Rain (`/rain`)
+* Save, Reload your config or more (`/rellu`)
+* Rename item in your Hand (`/rename`)
+* Repair your favorite Tools (`/repair`)
+* Does a rollback of a player (`/rollback`) (WIP)
+* Edit or Copy your Signs (`/sign`)
+* Teleport to Worldspawn (`/spawn`)
+* Change your Speed with (`/speed`)
+* Change Weather to Storm (`/storm`)
+* Kill yourself (`/suicide`)
+* Change Weather to Sun (`/sun`)
+* Send a Title to a Player (`/title`)
+* Vanish you from other Players (`/vanish`)
+* Show where a Player is (`/where`)
 * Show Worlds or Teleport to the spawn (`/world`)
 
 
 ## Skills
-* Auto Replant Seeds
-* Auto Smelt  [small tweaks for attached Blocks needed]
-* Telekinesis
-* TreeFeller (Fell the whole Tree) [he is dead jim]
-* Repair (Repair Tools and Armor) [the lost son]
-* Salvage (Salvage Tools and Armor and get back resources and enchantments) [needs some love]
+* Skills will be reworked. Some as Enchant some as Skill. (WIP)
+    * Auto Replant Seeds
+    * Auto Smelt  [small tweaks for attached Blocks needed]
+    * Telekinesis
+    * TreeFeller (Fell the whole Tree) [he is dead jim]
+    * Repair (Repair Tools and Armor) [the lost son]
+    * Salvage (Salvage Tools and Armor and get back resources and enchantments) [needs some love]
 
 
 ## Events
 * Better Chat Format (Player >> Message)
     * Color Codes for VIP and higher
+    * Chat Channels Vip, Mod, Admin | #v, #m, #a
 * Better Player Join Message (Shows Custom Join Message)
   * Sets Custom Tab Header and Footer (defined in config.yml)
   * Sets Flymode to enabled 
@@ -87,7 +92,7 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
     * if flymode enabled in players.yml
 * Better Player Quit Message (Shows Custom Leave Message)
 * Better Block Drop (Glass etc.)
-* Better Mobs (Disable Phantom, more Iron Golem)
+* Better Mobs (Disable Phantom)
 * Better (Call) Soil (disables trampling, sneak to disable)
 * Better Safety (Auto disable some commands like /pl)
 * Player Move is disabled while afk
@@ -119,31 +124,65 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 ![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.png)
 
 ## TODOS
-* [ ] BlockHistory save materials into DB (50%)
+* [x] Add Protection Command for Chests Doors etc
+* [x] chest / falldoor / door / fence-gate protection with permissions for player and groups with flags
+* [x] Add Messages for Protection Modify etc
+* [x] May add Views to increase performance (View with only location type 5)
+* [x] Add Missing Up and Down Sign Action
+* [x] Add Sign Edit
+* [x] Add Sign Copy / Paste
+* [x] Add Fake AFK (/admin Command)
+* [x] Add Chat Clear (/admin Command)
+* [x] Add Top (/admin Command)
+* [x] Add Bank Upgrade
+* [x] Add Redstoneless Lights /admin light
+* [x] Add NPC Adventurer, Baker, Butcher, Farmer, Fisher, Florist, Lumberjack, Miner, Musican, Shepherd, Smith, Bag Salesman, Banker, Beekeeper, Enchanter
+* [x] Rewrite NPC Stuff (less hardcoded)
+* [x] Add NPCs to Database
+* [x] Fixed Playerhead Command 
+* [x] Fixed Playerhead Event 
+* [x] Add Request to Mojang API to get Textures
+* [x] Add CustomHeads (with textures as base64, uuid and name)
+* [x] Add Bags (Miner, Farmer) Database based (softcoded) with insert in bag_type new bag
+* [x] Add Sign Up and Down Command
+* [x] Add Protection Lock Materials / Types in Database
+* [x] Add Protection overwrite by admin and mod group
+* [x] Add interest for bank every day (on login)
+* [x] Add Missing Strings from Admin.java Command
+* [x] Add Missing Strings from Worlds.java Command
+* [x] Included /rellu ping to /admin ping
+* [x] Add Sudo Command to sudo as other Player 
+* [x] Add Exit Command to self kick Players. Or Close Server as Console Sender
+* [x] Add NPC Builder who sells Buildblocks
+* [x] Enchantment System with custom enchantments
+* [x] Add Telekinesis
+* [x] Add Thunderstroke
+* [x] Add Replenishment
+* [x] Add Delicate
+* [x] Add Auto Smelting
+
+
+## LONG TERM TODOS
+* [ ] statistics command to show player stats like playtime, first and last played, avg playtime or others
+* [ ] MCMMO Skill Level System with listener on blockbreak etc.
+* [ ] Fix some bugs with the treefeller (activate only sometimes pair with skill system)
+* [ ] check inv for incomplete stack of item for telekinesis event (drops item if no space is left)
 * [ ] Small / Easy Worldedit & World Guard
+* [ ] BlockHistory save materials into DB (50%)
 * [ ] Netherstar for Selection
 * [ ] Manual selection with pos
 * [ ] set command (material)
 * [ ] extend command
 * [ ] region protection with permissions for player and groups with flags
 * [ ] flags -> build, enter, entry/leave-message, interact, harvest
-* [ ] chest / falldoor / door / fence-gate protection with permissions for player and groups with flags
 * [ ] flags -> cant-open-message (standard message or custom), open-on-day, open-on-night
-* [ ] MCMMO Skill Level System
 * [ ] fast pickaxe mode
 * [ ] fast shovel mode
 * [ ] Stick to Rotate Stairs and convert Upper/lower slaps
-* [ ] a permission system for external plugins (maybe)
-* [ ] Multi Language resources (from Database)
-* [ ] Skill System with listener on blockbreak etc.
-* [ ] Fix some bugs with the treefeller (activate only sometimes pair with skill system)
-* [ ] sudo command and sudo chat player 
+* [ ] Add Permission System as extra for external plugins (maybe)
 * [ ] log Playtime of Players
-* [ ] statistics command to show player stats like playtime, first and last played, avg playtime or others
-* [ ] check inv for incomplete stack of item for telekinesis event (drops item if no space is left)
+* [ ] Multi Language resources (from Database)
 * [ ] the rest from the snippet textfile
-
-
 
 
 

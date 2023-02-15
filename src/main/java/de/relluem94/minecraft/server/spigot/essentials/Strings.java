@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants;
+
 public class Strings {
 
     /**
@@ -23,10 +25,12 @@ public class Strings {
     public static final String PLUGIN_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
     public static final String PLUGIN_BORDER_SHORT = "<><><><><><><><><><><><><><><><><><>";
     public static final String PLUGIN_WHITE_SPACE = "               ";
+    public static final String PLUGIN_WHITE_SPACE_SHORT = "    ";
     public static final String PLUGIN_START_MESSAGE = "starts configuring ...";
     public static final String PLUGIN_STOP_MESSAGE = "shutdown();";
     public static final String PLUGIN_STARTTIME = "wurde in %s ms gestartet!";
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
+    public static final String PLUGIN_EOL = System.getProperty("line.separator");
 
     public static final String LANG_LOADING_CONFIGS = "Configs werden geladen!";
     public static final String LANG_CONFIGS_LOADED = "Configs sind geladen!";
@@ -36,6 +40,10 @@ public class Strings {
     public static final String LANG_COMMANDS_REGISTERED = "Befehle erfolgreich regestriert!";
 
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
+
+    public static final String PLUGIN_CONSOLE_NAME = "§cConsole";
+    public static final String PLUGIN_MONEY_COLOR = "§6"; 
+    public static final String PLUGIN_MONEY_NAME = PLUGIN_MONEY_COLOR + "Coins" + PLUGIN_MESSAGE_COLOR; 
 
     /**
      * *****************************************************************************
@@ -48,10 +56,8 @@ public class Strings {
     public static final String PLUGIN_COMMAND_FLYMODE_ACTIVATED = "aktiviert";
     public static final String PLUGIN_COMMAND_FLYMODE_DEACTIVATED = "deaktiviert";
 
-    public static final String PLUGIN_COMMAND_RELLU_PING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast ein Ping von " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "ms!";
-    public static final String PLUGIN_COMMAND_RELLU_PING_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " hast ein Ping von " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "ms!";
-    public static final String PLUGIN_COMMAND_RELLU_WRONG_COMMAND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Es wurde kein passender Subbefehl gefunden!";
-    public static final String PLUGIN_COMMAND_RELLU_OPTIONS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze: " + PLUGIN_COMMAND_ARG_COLOR + "ping";
+    public static final String PLUGIN_COMMAND_ADMIN_PING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast ein Ping von " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "ms!";
+    public static final String PLUGIN_COMMAND_ADMIN_PING_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " hast ein Ping von " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "ms!";
 
     public static final String PLUGIN_COMMAND_CRAFTINGBENCH = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Die Werkbank von %s" + PLUGIN_COMMAND_COLOR + " wurde geöffnet!";
 
@@ -63,6 +69,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_COOKIES_DISPLAYNAME = PLUGIN_COMMAND_COLOR + "Schokoladenkeks";
 
     public static final String PLUGIN_COMMAND_HEAD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast ein Kopf von " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " erzeugt!";
+    public static final String PLUGIN_COMMAND_HEAD_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Es konnte kei Kopf erzeugt werden, Spieler nicht gefunden";
     public static final String PLUGIN_COMMAND_VANISH_DISABLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast vanish für " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "deaktiviert!";
     public static final String PLUGIN_COMMAND_VANISH_ENABLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast vanish für " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "aktiviert!";
     public static final String PLUGIN_COMMAND_VANISH = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Dein vanish wurde umgeschaltet!";
@@ -148,22 +155,45 @@ public class Strings {
     public static final String PLUGIN_COMMAND_NOT_A_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du bist leider kein Spieler!";
     public static final String PLUGIN_COMMAND_TO_LESS_ARGUMENTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Zu wenig Argumente!";
 
-    public static final String PLUGIN_COMMAND_PURSE_GAIN = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You gained %s and now have %s Coins in your Purse!";
-    public static final String PLUGIN_COMMAND_PURSE_TOTAL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You have %s Coins in your Purse!";
-    public static final String PLUGIN_COMMAND_PURSE_TOTAL_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " have %s Coins in the Purse!";
+    public static final String PLUGIN_COMMAND_PURSE_GAIN = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You gained %s and now have " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in your Purse!";
+    public static final String PLUGIN_COMMAND_PURSE_TOTAL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You have " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in your Purse!";
+    public static final String PLUGIN_COMMAND_PURSE_TOTAL_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " have " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in the Purse!";
 
-    public static final String PLUGIN_COMMAND_NPC_BANKER_DEPOIST_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You have deposited %s Coins to your Bank Account";
-    public static final String PLUGIN_COMMAND_NPC_BANKER_DEPOIST_NO_MONEY_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "To less money to do a transaction";
-    public static final String PLUGIN_COMMAND_NPC_BANKER_WITHDRAW_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You have withdrawn %s Coins from your Bank Account";
-    public static final String PLUGIN_COMMAND_NPC_BANKER_WITHDRAW_NO_MONEY_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "To less money to do a transaction";
+    public static final String PLUGIN_COMMAND_PROTECT_COMMAND_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use " + PLUGIN_COMMAND_NAME_COLOR + "/" + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT + " " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_ADD + PLUGIN_MESSAGE_COLOR + ", " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_REMOVE + PLUGIN_MESSAGE_COLOR + " or " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_FLAG + PLUGIN_MESSAGE_COLOR + ", " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_RIGHT;
+    public static final String PLUGIN_COMMAND_PROTECT_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click a Protected Block to view the Protection Info";
+    public static final String PLUGIN_COMMAND_PROTECT_ADD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click Protectable Block to create a Protection";
+    public static final String PLUGIN_COMMAND_PROTECT_REMOVE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click your Protected Block to remove the Protection";
+    public static final String PLUGIN_COMMAND_PROTECT_FLAG = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use " + PLUGIN_COMMAND_NAME_COLOR + "/" + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT + " " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_FLAG + " " + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD + PLUGIN_MESSAGE_COLOR + " or " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE + " flagname";
+    public static final String PLUGIN_COMMAND_PROTECT_FLAG_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Flag was not found!";
+    public static final String PLUGIN_COMMAND_PROTECT_RIGHT = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use " + PLUGIN_COMMAND_NAME_COLOR + "/" + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT + " " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_RIGHT + " " + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD + PLUGIN_MESSAGE_COLOR + " or " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE + " playername";
+    public static final String PLUGIN_COMMAND_PROTECT_FLAG_ADD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click your Protected Block to add the Flag";
+    public static final String PLUGIN_COMMAND_PROTECT_FLAG_REMOVE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click your Protected Block to remove the Flag";
+    public static final String PLUGIN_COMMAND_PROTECT_RIGHT_ADD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click your Protected Block to add the Player";
+    public static final String PLUGIN_COMMAND_PROTECT_RIGHT_REMOVE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click your Protected Block to remove the Player";
+    public static final String PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Wrong Sub Command";   
 
-    public static final String PLUGIN_COMMAND_NPC_BUY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Bought %s for %s Coins. You now have %s Coins in your Purse!";
-    public static final String PLUGIN_COMMAND_NPC_BUY_NOT_ENOUGH_MONEY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Can't buy %s for %s Coins. You only have %s Coins in your Purse!";
-    public static final String PLUGIN_COMMAND_NPC_BUY_INVENTORY_FULL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Can't buy %s for %s Coins. You have not enough Inventory Space left!";
-    public static final String PLUGIN_COMMAND_NPC_BUY_NOT_TRADEABLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Can't buy this Item";
+    public static final String PLUGIN_COMMAND_SIGN_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use " + PLUGIN_COMMAND_NAME_COLOR + "/" + CommandNameConstants.PLUGIN_COMMAND_NAME_SIGN + " " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_SIGN_COPY + PLUGIN_MESSAGE_COLOR + " or " + PLUGIN_COMMAND_ARG_COLOR + CommandNameConstants.PLUGIN_COMMAND_NAME_SIGN_EDIT;
+    public static final String PLUGIN_COMMAND_SIGN_COPY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click the Sign you want to copy";
+    public static final String PLUGIN_COMMAND_SIGN_EDIT = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click the Sign you want to edit";
+    public static final String PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click the Redstone Lamp you want to Lit. Use this Command again to disable the Light Toogle Mode.";
+    public static final String PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE_DISABLED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Light Toogle Mode is now disabled.";
+    public static final String PLUGIN_COMMAND_ADMIN_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use this command with the following Subcommands: npc, chat, light, afk, top, ping";
+    public static final String PLUGIN_COMMAND_ADMIN_CHAT_CLEARED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Chat was cleared";
+    public static final String PLUGIN_COMMAND_ADMIN_TOP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Teleported to the highest Block";
+    public static final String PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Wrong Subcommand";
+    public static final String PLUGIN_COMMAND_WORLD_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use this command with the following Subcommands: list load unload unloadNoSave";
+    public static final String PLUGIN_COMMAND_WORLD_CREATE_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use this command with the following arguments: name(String) type(WordType String) environment (Environment as String) structures (boolean)";
+    public static final String PLUGIN_COMMAND_WORLD_WRONG_SUBCOMMAND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Wrong Subcommand";
+    public static final String PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED = "World not loaded. Can't unload this World.";
+    public static final String PLUGIN_COMMAND_WORLD_UNLOAD_WORLD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "World get's saved and unloaded.";
+    public static final String PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "World get's unloaded without saving it.";
+    public static final String PLUGIN_COMMAND_WORLD_LOAD_WORLD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "World get's loaded.";
+    public static final String PLUGIN_COMMAND_WORLD_CREATE_WORLD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "World get's created.";
+    public static final String PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Can't create World, wrong parameters given!";
+    public static final String PLUGIN_COMMAND_SUDO_ACTIVATED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You are now sudoing %s";
+    public static final String PLUGIN_COMMAND_SUDO_DEACTIVATED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Exited.";
+    public static final String PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Can't Sudo Player " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + ". Player not found!";
+    public static final String PLUGIN_COMAND_EXIT_KICK_MESSAGE = PLUGIN_COMMAND_COLOR + "exited.";
+    public static final String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COMMAND_COLOR + "Server is shutting down...";
 
-    public static final String PLUGIN_COMMAND_NPC_SELL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Sold %s for %s Coins. You now have %s Coins in your Purse!";
-    public static final String PLUGIN_COMMAND_NPC_SELL_ENCHANTED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You can't sell enchanted Items!";
-    public static final String PLUGIN_COMMAND_NPC_SELL_NO_PRICE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You can't sell this Item!";
-    public static final String PLUGIN_COMMAND_NPC_SELL_USED_ITEM = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You can't sell used Item!";
 }

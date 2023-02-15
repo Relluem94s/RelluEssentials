@@ -27,4 +27,53 @@ public class StringHelper {
     public static String locationToString(Location l) {
         return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), l.getWorld().getName());
     }
+
+    public static String firstCharToUpper(String s){
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+
+    public static String formatLong(long l) {
+        if(l >= 1000000000){
+            return String.format("%.2fB", l / 1000000000.0);
+        }
+        else if(l >= 1000000){
+            return String.format("%.2fM", l / 1000000.0);
+        }
+        else if(l >= 1000){
+            return String.format("%.2fK", l / 1000.0);
+        }
+        else{
+            return String.format("%.2f", l);
+        }
+    }
+
+    public static String formatDouble(double d) {
+        if(d >= 1000000000){
+            return String.format("%.2fB", d / 1000000000.0);
+        }
+        else if(d >= 1000000){
+            return String.format("%.2fM", d / 1000000.0);
+        }
+        else if(d >= 1000){
+            return String.format("%.2fK", d / 1000.0);
+        }
+        else if(d < 1000 && d > -1000){
+            return String.format("%.2f", d);
+        }
+        else if(d <= -1000000000){
+            return String.format("%.2fB", d / 1000000000.0);
+        }
+        else if(d <= -1000000){
+            return String.format("%.2fM", d / 1000000.0);
+        }
+        else if(d <= -1000){
+            return String.format("%.2fK", d / 1000.0);
+        }
+        else{
+            return String.format("%.2f", d);
+        }
+    }
+
+
 }

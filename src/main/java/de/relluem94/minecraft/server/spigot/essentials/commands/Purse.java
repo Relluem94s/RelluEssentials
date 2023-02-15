@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
@@ -25,7 +26,7 @@ public class Purse implements CommandExecutor {
                 if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                     if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
                         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
-                        p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL, String.format("%.2f", pe.getPurse())));
+                        p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL, StringHelper.formatDouble(pe.getPurse())));
                         return true;
                     } else {
                         return false;
@@ -44,7 +45,7 @@ public class Purse implements CommandExecutor {
                         
                         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
                             PlayerEntry pe = playerEntryList.get(target.getUniqueId());
-                            p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, String.format("%.2f", pe.getPurse())));
+                            p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, StringHelper.formatDouble(pe.getPurse())));
                             return true;
                         } else {
                             return false;

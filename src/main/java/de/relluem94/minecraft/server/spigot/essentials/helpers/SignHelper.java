@@ -2,6 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_CLICK_SIGN;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_SIGN;
+
+import org.bukkit.block.Block;
+import org.bukkit.block.data.type.HangingSign;
+import org.bukkit.block.data.type.Sign;
+import org.bukkit.block.data.type.WallHangingSign;
+import org.bukkit.block.data.type.WallSign;
+
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCustomInputException;
 
 /**
@@ -61,6 +68,15 @@ public class SignHelper {
 
     public static boolean isSign(SignHelper sh, String line1) {
         return sh.getSignActionType().getShorthand().equals(line1) || sh.getSignActionType().getName().equalsIgnoreCase(line1);
+    }
+
+    public static boolean isBlockASign(Block b){
+        return (
+            b.getBlockData() instanceof WallSign ||
+            b.getBlockData() instanceof Sign ||
+            b.getBlockData() instanceof WallHangingSign ||
+            b.getBlockData() instanceof HangingSign 
+        );
     }
 
     public enum ActionType {

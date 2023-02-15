@@ -3,7 +3,7 @@
     <groupId>de.relluem94</groupId>
     <artifactId>relluessentials</artifactId>
     <name>RelluEssentials</name>
-    <version>1.40</version>
+    <version>2.0</version>
     <url>https://github.com/Relluem94s/RelluEssentials</url>
     <properties>
         <plugin.apiVersion>1.19</plugin.apiVersion>
@@ -11,6 +11,7 @@
         <plugin.website>https://www.relluem94.de</plugin.website>
         <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
         <project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
     </properties>
     <distributionManagement>
         <repository>
@@ -26,14 +27,13 @@
     </scm>
     <repositories>
         <repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+        <repository>
             <id>central</id>
             <name>central</name>
             <url>https://repo.maven.apache.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>rellulib</id>
-            <name>rellulib</name>
-            <url>https://maven.pkg.github.com/Relluem94s/RelluLib/</url>
         </repository>
         <repository>
             <id>spigotmc-repo</id>
@@ -54,20 +54,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>de.relluem94</groupId>
-            <artifactId>rellulib</artifactId>
-            <version>0.9</version>
-            <scope>compile</scope>
-        </dependency>
+            <groupId>com.github.Relluem94s</groupId>
+            <artifactId>RelluLib</artifactId>
+            <version>0.11</version>
+	    </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <version>8.0.31</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20220924</version>
         </dependency>
     </dependencies>
     <build>
@@ -78,40 +72,40 @@
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <configuration>
-                    <source>17</source>
-                    <target>17</target>
-                     <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.4.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <minimizeJar>true</minimizeJar>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                    <configuration>
+                        <source>17</source>
+                        <target>17</target>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.4.1</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <minimizeJar>true</minimizeJar>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+            </plugins>
     </build>
 </project>

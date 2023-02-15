@@ -5,7 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -40,13 +42,28 @@ public class NoDeathMessage implements Listener {
         Bukkit.getConsoleSender().getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + p.getName() + " [\"\",{\"text\":\"" + PLUGIN_EVENT_DEATH_TP + "\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/home " + le.getLocationName() + "\"}}]");
     }
 
+    // This Below fixes the default disable of Flight in Spigot 1.19.3
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
         PlayerEntry pe = playerEntryList.get(p.getUniqueId());
-        p.sendMessage(p.isFlying() + " " + pe.isFlying());
         p.setAllowFlight(pe.isFlying());
         p.setFlying(pe.isFlying());
-        p.sendMessage(p.isFlying() + " " + pe.isFlying());
+    }
+
+    @EventHandler
+    public void onWorldChange(PlayerChangedWorldEvent e) {
+        Player p = e.getPlayer();
+        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        p.setAllowFlight(pe.isFlying());
+        p.setFlying(pe.isFlying());
+    }
+
+    @EventHandler
+    public void onWorldChange(PlayerTeleportEvent e) {
+        Player p = e.getPlayer();
+        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        p.setAllowFlight(pe.isFlying());
+        p.setFlying(pe.isFlying());
     }
 }

@@ -4,8 +4,7 @@
  */
 
 SELECT 
-    pr.*,
-    lo.*
+    pr.*
 FROM `rellu_essentials`.`location` lo
 INNER JOIN `rellu_essentials`.`protections` pr on pr.location_fk = lo.id
 

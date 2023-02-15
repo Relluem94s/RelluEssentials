@@ -26,7 +26,7 @@ public class Vanish implements CommandExecutor {
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         sendMessage(p, PLUGIN_COMMAND_VANISH);
                         boolean canSee = false;
-
+                        // TODO BUGGED Check on Live if reproduceable
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (onlinePlayer.canSee(p)) {
                                 onlinePlayer.hidePlayer(RelluEssentials.getInstance(), p);

@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+
 /**
  *
  * @author rellu
@@ -13,7 +15,7 @@ public class PlayerEntry {
     private int createdBy;
     private String updated;
     private int updatedBy;
-    private float purse;
+    private double purse;
     private String deleted;
     private int deletedBy;
     private String uuid;
@@ -22,6 +24,8 @@ public class PlayerEntry {
     private boolean fly;
     private String customName;
     private LocationEntry[] homes;
+    private PlayerState playerState;
+    private Object playerStateParameter;
 
     public int getID() {
         return id;
@@ -127,11 +131,49 @@ public class PlayerEntry {
         this.homes = homes;
     }
 
-    public float getPurse() {
+    public double getPurse() {
         return purse;
     }
 
-    public void setPurse(float value) {
+    public void setPurse(double value) {
         purse = value;
+    }
+
+    public PlayerState getPlayerState(){
+        return playerState;
+    }
+
+    public void setPlayerState(PlayerState playerState){
+        this.playerState = playerState;
+    }
+
+    public Object getPlayerStateParameter(){
+        return this.playerStateParameter;
+    }
+
+    public void setPlayerStateParameter(Object o) {
+        this.playerStateParameter = o;
+    }
+
+    public PlayerEntry clone(){
+        PlayerEntry pe = new PlayerEntry();
+        pe.setAFK(afk);
+        pe.setCreated(created);
+        pe.setCreatedby(createdBy);
+        pe.setCustomName(customName);
+        pe.setDeleted(deleted);
+        pe.setDeletedBy(deletedBy);
+        pe.setFlying(fly);
+        pe.setGroup(group);
+        pe.setHomes(homes);
+        pe.setID(id);
+        pe.setPlayerState(playerState);
+        pe.setPlayerStateParameter(playerStateParameter);
+        pe.setPurse(purse);
+        pe.setUUID(uuid);
+        pe.setUpdated(updated);
+        pe.setUpdatedBy(updatedBy);
+
+        return pe;
     }
 }

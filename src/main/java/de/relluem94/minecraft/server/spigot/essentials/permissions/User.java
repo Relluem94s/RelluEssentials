@@ -5,9 +5,6 @@ import org.bukkit.entity.Player;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
-import de.relluem94.minecraft.server.spigot.essentials.skills.RepairSkill;
-import de.relluem94.minecraft.server.spigot.essentials.skills.SalvageSkill;
-import de.relluem94.minecraft.server.spigot.essentials.skills.TreeFellerSkill;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.users;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -16,10 +13,6 @@ public class User {
 
     private final Player p;
 
-    public RepairSkill repair = new RepairSkill(RelluEssentials.board);
-    public SalvageSkill salvage = new SalvageSkill(RelluEssentials.board);
-    public TreeFellerSkill treeFeller = new TreeFellerSkill(RelluEssentials.board);
-
     public User(Player p) {
         this.p = p;
         users.add(this);
@@ -27,6 +20,10 @@ public class User {
 
     public Player getPlayer() {
         return p;
+    }
+
+    public void done(){
+
     }
 
     public void setGroup(GroupEntry g) {

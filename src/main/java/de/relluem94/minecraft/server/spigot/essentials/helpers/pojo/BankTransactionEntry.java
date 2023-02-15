@@ -16,7 +16,7 @@ public class BankTransactionEntry {
     private String deleted;
     private int deletedBy;
     private int bank_account_fk;
-    private float value;
+    private double value;
 
     public int getID() {
         return id;
@@ -82,11 +82,11 @@ public class BankTransactionEntry {
         this.bank_account_fk = bank_account_fk;
     }
 
-    public float getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(float value) {
+    public void setValue(double value) {
         this.value = value;
     }
 }

@@ -14,7 +14,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.*;
 
 
@@ -32,6 +31,7 @@ public class CustomItems {
             cloudBootsMeta.setColor(Color.SILVER);
             cloudBootsMeta.setUnbreakable(true);
             cloudBootsMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3, true);
+            
             setItemMeta(cloudBootsMeta);
         }
     };
@@ -42,7 +42,7 @@ public class CustomItems {
             ItemMeta im = getItemMeta();
             im.setUnbreakable(true);
             setItemMeta(im);
-            autosmelt.addTo(getItemStack());
+            CustomEnchants.autosmelt.addTo(getItemStack());
         }
     };
 
@@ -116,6 +116,17 @@ public class CustomItems {
             im.addEnchant(Enchantment.SWEEPING_EDGE, 94, true);
             im.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
             im.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 94, true);
+            im.setUnbreakable(true);
+            setItemMeta(im);
+        }
+    };
+
+    public static ItemHelper relluPickAxe = new ItemHelper(Material.NETHERITE_PICKAXE, 1, PLUGIN_ITEM_RELLU_PICKAXE, Type.TOOL, Rarity.LEGENDARY) {
+        @Override
+        public void init() {
+            ItemMeta im = getItemMeta();
+            im.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 94, true);
+            im.addEnchant(Enchantment.DIG_SPEED, 94, true);
             im.setUnbreakable(true);
             setItemMeta(im);
         }

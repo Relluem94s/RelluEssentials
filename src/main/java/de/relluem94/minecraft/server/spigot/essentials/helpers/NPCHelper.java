@@ -9,6 +9,8 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.potion.PotionEffect;
 
+import de.relluem94.minecraft.server.spigot.essentials.NPC.NPC;
+
 /**
  *
  * @author rellu
@@ -22,9 +24,27 @@ public class NPCHelper {
     private final String customName;
     private final boolean isCustomNameVisible;
     private boolean isInvisible;
+    private boolean isCollidable = true;
     private boolean canPickupItems = false;
     private double health = 0;
     private Profession profession;
+
+    public static final int INV_SIZE = 54;
+
+    public NPCHelper(Location location, NPC npc) {
+        this.location = location;
+        this.entityType = EntityType.VILLAGER;
+        this.profession = npc.getProfession();
+
+        if (npc.getName() != null) {
+            this.customName = npc.getName();
+        } else {
+            this.customName = entityType.name();
+        }
+
+        this.isCustomNameVisible = true;
+    }
+
 
     public NPCHelper(Location location, String customName, Profession profession, boolean isCustomNameVisible) {
         this.location = location;
@@ -48,12 +68,17 @@ public class NPCHelper {
         this.health = health;
     }
 
+    public void setCollidable(boolean b) {
+        this.isCollidable = b;
+    }
+
+
     public void spawn() {
         livingEntity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
         livingEntity.setCustomName(customName);
         livingEntity.setCustomNameVisible(isCustomNameVisible);
         livingEntity.setAI(false);
-        livingEntity.setCollidable(true);
+        livingEntity.setCollidable(isCollidable);
         livingEntity.setPersistent(true);
 
         if (health == 0 || health > livingEntity.getHealth()) {
@@ -67,5 +92,10 @@ public class NPCHelper {
 
         Villager villager = (Villager) livingEntity;
         villager.setProfession(profession);
+    }
+
+
+    public String getCustomName() {
+        return customName;
     }
 }

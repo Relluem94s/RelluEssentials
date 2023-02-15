@@ -1,5 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -89,5 +92,26 @@ public class InventoryHelper {
             inv.setItem(i, is);
         }
         return inv;
+    }
+
+    private static List<Integer> INVENTORY_SKIPS = Arrays.asList(new Integer[]{0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53});
+
+    public static int getSkipsSize(){
+        return INVENTORY_SKIPS.size();
+    }
+
+    public static int getNextSlot(int slot){
+        if(INVENTORY_SKIPS.contains(slot)){
+            for(int i = slot; i <= 54; i++){
+                if(!INVENTORY_SKIPS.contains(i)){
+                    return i;
+                }
+            }     
+        }
+        else{
+            return slot;
+        }
+
+        return -1;
     }
 }

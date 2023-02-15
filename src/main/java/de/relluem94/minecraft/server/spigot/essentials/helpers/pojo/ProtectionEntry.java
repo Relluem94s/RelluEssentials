@@ -16,7 +16,6 @@ public class ProtectionEntry {
     private String deleted;
     private int deletedBy;
     private LocationEntry location;
-    private int player_fk;
     private String material_name;
 
     private JSONObject flags;
@@ -87,14 +86,6 @@ public class ProtectionEntry {
 
     public void setLocationEntry(LocationEntry location) {
         this.location = location;
-    }
-
-    public int getPlayerId() {
-        return player_fk;
-    }
-
-    public void setPlayerId(int playerId) {
-        this.player_fk = playerId;
     }
 
     public String getMaterialName() {

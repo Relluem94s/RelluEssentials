@@ -8,9 +8,9 @@ public class BankTierEntry {
 
     private int id;
     private String name;
-    private int limit;
+    private long limit;
     private double interest;
-    private int cost;
+    private long cost;
 
     public int getId() {
         return id;
@@ -28,11 +28,11 @@ public class BankTierEntry {
         this.name = name;
     }
 
-    public int getLimit() {
+    public long getLimit() {
         return limit;
     }
 
-    public void setLimit(int limit) {
+    public void setLimit(long limit) {
         this.limit = limit;
     }
 
@@ -44,11 +44,11 @@ public class BankTierEntry {
         this.interest = interest;
     }
 
-    public int getCost() {
+    public long getCost() {
         return cost;
     }
 
-    public void setCost(int cost) {
+    public void setCost(long cost) {
         this.cost = cost;
     }
 }

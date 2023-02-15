@@ -27,8 +27,8 @@ import org.bukkit.util.Vector;
 
 public class CloudSailor implements Listener {
 
-    //@TODO has to be done in Config (new Table?)
-    private final String[] worlds = new String[]{"world", "world_nether", "world_the_end", "lobby"};
+    //TODO has to be done in Config (new Table?)
+    private final String[] worlds = new String[]{"123", "123_nether", "123_the_end", "world", "world_nether", "world_the_end", "lobby"};
 
     @EventHandler
     public void mobDeath(EntityDeathEvent event) {
@@ -55,7 +55,8 @@ public class CloudSailor implements Listener {
                         if (!CustomItems.cloudSailor.equals(is)) {
                             e.getInventory().setResult(null);
                         }
-                    } else {
+                    }
+                    else {
                         e.getInventory().setResult(null);
                     }
                 }
@@ -69,10 +70,11 @@ public class CloudSailor implements Listener {
             Player p = (Player) e.getEntity();
             if (isInWorld(p, Arrays.asList(worlds))) {
                 if (e.getCause().equals(DamageCause.FALL)) {
-                    if (p.getInventory().getItemInOffHand().equals(CustomItems.cloudSailor.getCustomItem())) {
-                        e.setDamage(e.getDamage() / 2);
-                    } else if (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem())) {
+                    if (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem())) {
                         e.setCancelled(true);
+                    }
+                    else if (p.getInventory().getItemInOffHand().equals(CustomItems.cloudSailor.getCustomItem())) {
+                        e.setDamage(e.getDamage() / 2);
                     }
                 }
             }

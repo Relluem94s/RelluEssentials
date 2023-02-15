@@ -15,17 +15,14 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Criteria;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.RenderType;
-import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.NamespacedKey;
@@ -35,6 +32,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Day;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Enderchest;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Exit;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Inventory;
@@ -47,31 +45,39 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Repair;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rain;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Suicide;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.BagSalesman;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Beekeeper;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.Enchanter;
+import de.relluem94.minecraft.server.spigot.essentials.NPC.NPC;
 import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Bags;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Broadcast;
 import de.relluem94.minecraft.server.spigot.essentials.commands.God;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Message;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Print;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Protect;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Purse;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Rellu;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rename;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Speed;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Title;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Where;
-import de.relluem94.minecraft.server.spigot.essentials.commands.ClearChat;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Head;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Sign;
 import de.relluem94.minecraft.server.spigot.essentials.commands.TestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
-
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterBags;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterBlockDrop;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterLights;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterLock;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterMobs;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerJoin;
@@ -87,117 +93,91 @@ import de.relluem94.minecraft.server.spigot.essentials.events.CloudSailor;
 import de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.events.SkullInfo;
 import de.relluem94.minecraft.server.spigot.essentials.events.ToolCrafting;
-
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoReplant;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_AutoSmelt;
-import de.relluem94.minecraft.server.spigot.essentials.events.skills.Ev_Telekinesis;
-
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.AutoSmelt;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.Telekinesis;
-
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
+import de.relluem94.rellulib.stores.DoubleStore;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Gamerules;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
-
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLockEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_AFK;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BROADCAST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_CLEARCHAT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_COOCKIE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_CRAFT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_DAY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ENDERCHEST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_FLY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PURSE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_0;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_1;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_2;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_3;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMERULES;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GOD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HEAD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HEAL;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_INVENTORY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MORE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MSG;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_NICK;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_NIGHT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_POKE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PRINT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_RAIN;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_RELLU;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_RENAME;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_REPAIR;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_REPLY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ROLLBACK;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SETGROUP;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SPAWN;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SPEED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_STORM;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SUICIDE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SUN;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TITLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_VANISH;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WHERE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.*;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_SMELTER_TANK;
+
 import de.relluem94.minecraft.server.spigot.essentials.events.SignActions;
 import de.relluem94.minecraft.server.spigot.essentials.events.SignClick;
+import de.relluem94.minecraft.server.spigot.essentials.events.SignEdit;
 
 public class RelluEssentials extends JavaPlugin {
+
+    // TODO add Animal Protection (horse cat dog?)
 
     public static PluginManager pm = Bukkit.getServer().getPluginManager();
     public static ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
     public static Scoreboard board;
-    public static Objective objective;
-    public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
-    public static HashMap<UUID, PlayerEntry> playerEntryList = new HashMap<>();
-    public static List<LocationEntry> locationEntryList = new ArrayList<>();
-    public static List<GroupEntry> groupEntryList = new ArrayList<>();
-    public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
-    public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
-
-    public static AutoSmelt autosmelt;
-    public static Telekinesis telekinesis;
-
-    public static List<User> users = new ArrayList<User>();
     public static File dataFolder;
-
     public static DatabaseHelper dBH;
     public static PluginInformationEntry pie;
-
     public static final boolean DEBUG = true;
     private static long start;
     private static RelluEssentials instance;
     public static boolean isOreRespawnEnabled = false;
-
     private static ResourceBundle englishProperties;
     private static ResourceBundle germanProperties;
-
     public static String language;
+    public static Banker banker;
+
+    public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
+    public static HashMap<UUID, PlayerEntry> playerEntryList = new HashMap<>();
+    public static HashMap<UUID, PlayerEntry> sudoers = new HashMap<>();
+    public static HashMap<Material, DoubleStore> dropMap = new HashMap<>();
+    public static HashMap<Location, ProtectionEntry> protectionEntries = new HashMap<>();
+    public static HashMap<UUID, BankAccountEntry> bankIntrestMap = new HashMap<>();
+    public static HashMap<Material, Material> crops = new HashMap<>();
+
+    public static List<LocationEntry> locationEntryList = new ArrayList<>();
+    public static List<GroupEntry> groupEntryList = new ArrayList<>();
+    public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
+    public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
+    public static List<BagTypeEntry> bagTypeEntryList = new ArrayList<BagTypeEntry>();
+    public static List<BagEntry> playerBagEntryList = new ArrayList<BagEntry>();
+    public static List<ItemStack> bagBlocks2collect = new ArrayList<>();
+    public static List<ProtectionLockEntry> protectionLocksEntryList;
+    public static List<Material> protectionLocksList = new ArrayList<>();
+    public static List<BankTierEntry> bankTiersList = new ArrayList<>();
+    public static List<NPCEntry> npcEntryList = new ArrayList<NPCEntry>();
+    public static List<ItemStack> npc_itemstack = new ArrayList<>();
+    public static List<String> npc_name = new ArrayList<>();
+    public static List<String> npc_trader_title = new ArrayList<>();
+    public static List<User> users = new ArrayList<User>();
+    public static List<NPC> npcs = new ArrayList<>();
 
     public static RelluEssentials getInstance() {
         return instance;
@@ -215,10 +195,8 @@ public class RelluEssentials extends JavaPlugin {
         } catch (IOException ex) {
             Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        autosmelt = new AutoSmelt(new NamespacedKey(RelluEssentials.getInstance(), PLUGIN_ENCHANTMENT_AUTOSMELT.toLowerCase()));
-        telekinesis = new Telekinesis(new NamespacedKey(RelluEssentials.getInstance(), PLUGIN_ENCHANTMENT_TELEKINESIS.toLowerCase()));
-
+        initCrops();
+        initDrops();
         boardManager();
         commandManager();
         databaseManager();
@@ -228,12 +206,57 @@ public class RelluEssentials extends JavaPlugin {
         skillManager();
         addRecipes();
         blockHistoryManager();
+        autoSave();
+        addNPCs();
         stopLoading();
+    }
+
+    private void initDrops() {
+        dropMap.put(Material.DIAMOND, new DoubleStore(1, 2));
+        dropMap.put(Material.EMERALD, new DoubleStore(1, 2));
+        dropMap.put(Material.RAW_IRON, new DoubleStore(1, 3));
+        dropMap.put(Material.RAW_COPPER, new DoubleStore(2, 5));
+        dropMap.put(Material.RAW_GOLD, new DoubleStore(1, 2));
+        dropMap.put(Material.LAPIS_LAZULI, new DoubleStore(2, 5));
+        dropMap.put(Material.REDSTONE, new DoubleStore(4, 5));
+        dropMap.put(Material.COAL, new DoubleStore(1, 3));
+        dropMap.put(Material.QUARTZ, new DoubleStore(1, 3));
+    }
+
+    private void initCrops() {
+        crops.put(Material.CARROT, Material.CARROTS);
+        crops.put(Material.NETHER_WART, Material.NETHER_WART);
+        crops.put(Material.POTATO, Material.POTATOES);
+        crops.put(Material.WHEAT_SEEDS, Material.WHEAT);
+        crops.put(Material.BEETROOT_SEEDS, Material.BEETROOTS);
+    }
+
+
+
+    private void addNPCs() {
+        new BagSalesman();
+        banker = new Banker();
+        new Beekeeper();
+        new Enchanter();
     }
 
     @Override
     public void onDisable() {
         ChatHelper.consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_STOP_MESSAGE);
+
+        saveBags();
+
+        protectionEntries.clear();
+        playerEntryList.clear();
+        locationEntryList.clear();
+        groupEntryList.clear();
+        locationTypeEntryList.clear();
+        blockHistoryList.clear();
+        selections.clear();
+        bagTypeEntryList.clear();
+        
+        System.gc();
+
         try {
             configManager(false);
         } catch (IOException ex) {
@@ -264,6 +287,30 @@ public class RelluEssentials extends JavaPlugin {
             return germanProperties.getString(key);
         }
         return null;
+    }
+
+    private void saveBags(){
+        int updatedBags = 0;
+
+        for(BagEntry be : playerBagEntryList){
+            if(be.hasToBeUpdated()){
+                dBH.updateBagEntry(be);
+                be.setToBeUpdated(false);
+                updatedBags++;
+            }
+        }
+        if(updatedBags != 0){
+            sendMessageInChannel("#a " + updatedBags + " Bag(s) saved!", Strings.PLUGIN_CONSOLE_NAME, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+        }
+    }
+
+    private void autoSave(){
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                saveBags();
+            }
+        }.runTaskTimer(this, 0L,  20 * 60 * 2); // last part is minutes * 2 min * 10 min etc
     }
 
     private void startLoading() {
@@ -328,14 +375,12 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SETGROUP)).setExecutor(new PermissionsGroup());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_NICK)).setExecutor(new Nick());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUICIDE)).setExecutor(new Suicide());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_RELLU)).setExecutor(new Rellu());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAL)).setExecutor(new Heal());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GOD)).setExecutor(new God());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ADMIN)).setExecutor(new Admin());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_GAMERULES)).setExecutor(new Gamerules());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_HEAD)).setExecutor(new Head());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_VANISH)).setExecutor(new Vanish());
-        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_CLEARCHAT)).setExecutor(new ClearChat());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_AFK)).setExecutor(new AFK());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_MSG)).setExecutor(new Message());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_REPLY)).setExecutor(new Message());
@@ -349,16 +394,24 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WORLD)).setExecutor(new Worlds());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_ROLLBACK)).setExecutor(new Rollback());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TEST_COMMAND)).setExecutor(new TestCommand());
-        // @TODO add Warps
-        // @TODO add Marriage
-        // @TODO Fix Command execution for command Blocks
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_PROTECT)).setExecutor(new Protect());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SIGN)).setExecutor(new Sign());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_BAGS)).setExecutor(new Bags());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUDO)).setExecutor(new Sudo());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_EXIT)).setExecutor(new Exit());
+        // TODO add Warps
+        // TODO add Marriage
+        // TODO Fix Command execution for command Blocks
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_COMMANDS_REGISTERED);
     }
 
     private void enchantmentManager() {
-        registerEnchants(autosmelt);
-        registerEnchants(telekinesis);
+        registerEnchants(CustomEnchants.autosmelt);
+        registerEnchants(CustomEnchants.replenishment);
+        registerEnchants(CustomEnchants.telekinesis);
+        registerEnchants(CustomEnchants.delicate);
+        registerEnchants(CustomEnchants.thunderstrike);
     }
 
     private void eventManager() {
@@ -368,31 +421,28 @@ public class RelluEssentials extends JavaPlugin {
         pm.registerEvents(new BetterPlayerJoin(), this);
         pm.registerEvents(new BetterPlayerQuit(), this);
         pm.registerEvents(new BetterBlockDrop(), this);
+        pm.registerEvents(new BetterLights(), this);
+        pm.registerEvents(new BetterBags(), this);
         pm.registerEvents(new BlockPlace(), this);
         pm.registerEvents(new BetterMobs(), this);
         pm.registerEvents(new BetterSoil(), this);
-        pm.registerEvents(new SkullInfo(), this);
+        pm.registerEvents(new BetterNPC(), this);
         pm.registerEvents(new BetterSavety(), this);
+        pm.registerEvents(new BetterLock(), this);
+        pm.registerEvents(new SkullInfo(), this);
         pm.registerEvents(new NoDeathMessage(), this);
         pm.registerEvents(new PlayerMove(), this);
         pm.registerEvents(new MOTD(), this);
         pm.registerEvents(new CloudSailor(), this);
         pm.registerEvents(new SignActions(), this);
         pm.registerEvents(new SignClick(), this);
+        pm.registerEvents(new SignEdit(), this);
         pm.registerEvents(new ToolCrafting(), this);
-        pm.registerEvents(new BetterNPC(), this);
-        pm.registerEvents(new BetterLock(), this);
-        pm.registerEvents(new CustomEnchantment(), this); // @TODO is enchanted but is lost on anvil use ( like book and pickaxe )
+        pm.registerEvents(new CustomEnchantment(), this);
     }
 
     private void skillManager() {
         /*  Skill Events */
-        //pm.registerEvents(new Ev_Repair(), this);
-        //pm.registerEvents(new Ev_Salvage(), this);
-        //pm.registerEvents(new Ev_TreeFeller(), this); // @TODO Big Bug Wrong implementation
-        pm.registerEvents(new Ev_AutoReplant(), this);
-        pm.registerEvents(new Ev_AutoSmelt(), this);
-        pm.registerEvents(new Ev_Telekinesis(), this);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_EVENTS_REGISTERED);
     }
 
@@ -402,7 +452,6 @@ public class RelluEssentials extends JavaPlugin {
         }
 
         board = sm.getNewScoreboard();
-        objective = board.registerNewObjective(Strings.PLUGIN_NAME, Criteria.DUMMY, Strings.PLUGIN_WHITE_SPACE + Strings.PLUGIN_PREFIX + Strings.PLUGIN_WHITE_SPACE, RenderType.INTEGER);
     }
 
     private void groupManager() {
@@ -415,39 +464,6 @@ public class RelluEssentials extends JavaPlugin {
             User u = new User(p);
             PlayerEntry pe = playerEntryList.get(p.getUniqueId());
             u.setGroup(pe.getGroup());
-            //u.getPlayer().setScoreboard(board);
-
-            Score line_99 = objective.getScore(Strings.PLUGIN_MESSAGE_COLOR + Strings.PLUGIN_BORDER_SHORT);
-            line_99.setScore(99);
-
-            Score line_9 = objective.getScore(p.getName() +9);
-            line_9.setScore(9);
-            Score line_8 = objective.getScore(p.getName() +8);
-            line_8.setScore(8);
-            Score line_7 = objective.getScore(p.getName() +7);
-            line_7.setScore(7);
-            Score line_6 = objective.getScore(p.getName() +6);
-            line_6.setScore(6);
-            Score line_5 = objective.getScore(p.getName() +5);
-            line_5.setScore(5);
-            Score line_4 = objective.getScore(p.getName() +4);
-            line_4.setScore(4);
-            Score line_3 = objective.getScore(p.getName() +3);
-            line_3.setScore(3);
-            Score line_2 = objective.getScore(p.getName() +2);
-            line_2.setScore(2);
-            Score line_1 = objective.getScore(p.getName() +1);
-            line_1.setScore(1);
-            Score line_0 = objective.getScore(p.getName() +0);
-            line_0.setScore(0);
-
-            
-
-
-            //objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-            //TODO Add Array for Users to Access it directly without the other class. (Maybe?)
-            //TODO Remove Todo above. Also (Maybe?) remove User thing. could be replaced by the pojo stuff we have.
         });
     }
 
@@ -475,6 +491,48 @@ public class RelluEssentials extends JavaPlugin {
         });
 
         groupEntryList.addAll(dBH.getGroups());
+        protectionEntries = dBH.getProtections();
+        bagTypeEntryList = dBH.getBagTypes();
+        playerBagEntryList = dBH.getBags();
+        npcEntryList = dBH.getNPCs();
+        protectionLocksEntryList = dBH.getProtectionLocks();
+        bankTiersList = dBH.getBankTiers();
+
+        for(NPCEntry ne : npcEntryList){
+            new NPC(ne){
+                @Override
+                public org.bukkit.inventory.Inventory getMainGUI(){
+                    org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(NPCHelper.INV_SIZE, getTitle()), CustomItems.npc_gui_disabled.getCustomItem());
+                    int slot = 0;
+                    for(int i = 0; i < ne.getSlotNames().length; i++){
+                        slot = InventoryHelper.getNextSlot(slot);
+                        if(!ne.getSlotName(i).equals("AIR")){
+                            inv.setItem(slot, new ItemStack(Material.valueOf(ne.getSlotName(i)),1));
+                        }
+                        slot++;
+                    }
+                    inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
+                    return inv;
+                }
+            };
+        }
+
+        for(int i = 0; i < RelluEssentials.bagTypeEntryList.size(); i++){
+            ItemStack[] isa = BagHelper.getItemStacks(RelluEssentials.bagTypeEntryList.get(i));
+            for(ItemStack is : isa){
+                bagBlocks2collect.add(is);
+            }
+        }
+
+        for(ProtectionLockEntry ple: protectionLocksEntryList){
+            protectionLocksList.add(ple.getValue());
+        }
+
+        protectionLocksEntryList = null;
+        npcEntryList = null;
+
+        System.gc();
+
     }
 
     private void blockHistoryManager() {

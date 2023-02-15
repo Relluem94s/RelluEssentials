@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+
 /**
  *
  * @author rellu
@@ -21,6 +23,7 @@ public class ItemConstants {
     public static final String PLUGIN_ITEM_RELLU_BOOTS = "§cRellu's Boots";
     public static final String PLUGIN_ITEM_RELLU_SWORD = "§eRellu's Sword";
     public static final String PLUGIN_ITEM_RELLU_SHIELD = "§5Rellu's Shield";
+    public static final String PLUGIN_ITEM_RELLU_PICKAXE = "§eRellu's Pickaxe";
 
     public static final String PLUGIN_ITEM_INGREDIENT = "§4§l§oThis is a crafting ingredient";
 
@@ -35,48 +38,40 @@ public class ItemConstants {
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE1 = "§bHeld in Off Hand grants gliding abillity.";
     public static final String PLUGIN_ITEM_CLOUDSAILOR_LORE2 = "§bAlso reduces Fall Damage by 50%";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER = "§dBanker";
+    public static final String PLUGIN_ITEM_NPC_BAGSALESMAN = "§dBag Salesman";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT = "§dDeposit Coins";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL = "§dDeposit all Coins";
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT = "§dDeposit %s percent of Coins";
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_COLOR = "§d";
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT = PLUGIN_ITEM_NPC_BANKER_COLOR + "Deposit " + PLUGIN_MONEY_NAME;
+
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL = PLUGIN_ITEM_NPC_BANKER_COLOR + "Deposit all " + PLUGIN_MONEY_NAME;
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT = PLUGIN_ITEM_NPC_BANKER_COLOR + "Deposit " + PLUGIN_MONEY_COLOR + "%s" + PLUGIN_ITEM_NPC_BANKER_COLOR + " percent of " + PLUGIN_MONEY_NAME;
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1 = "Click to deposit";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL = "§dWithdraw all Coins";
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT = "§dWithdraw %s percent of Coins";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL = PLUGIN_ITEM_NPC_BANKER_COLOR + "Withdraw all " + PLUGIN_MONEY_NAME;
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT = PLUGIN_ITEM_NPC_BANKER_COLOR + "Withdraw " + PLUGIN_MONEY_COLOR + "%s" + PLUGIN_ITEM_NPC_BANKER_COLOR + " percent of " + PLUGIN_MONEY_NAME;
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1 = "Click to withdraw";
 
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1 = "Click to open";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW = "§dWithdraw Coins";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW = PLUGIN_ITEM_NPC_BANKER_COLOR + "Withdraw " + PLUGIN_MONEY_NAME;
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1 = "Click to open";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE = "§dShow Balance";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE = PLUGIN_ITEM_NPC_BANKER_COLOR + "Show Balance";
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1 = "Click to open";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL = "§dClick to get your Balance";
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS = "§dClick to get your last Transactions";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL = PLUGIN_ITEM_NPC_BANKER_COLOR + "Click to get your Balance";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS = PLUGIN_ITEM_NPC_BANKER_COLOR + "Click to get your last Transactions";
 
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE = "§dUpgrade Account";
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE = PLUGIN_ITEM_NPC_BANKER_COLOR + "Upgrade Account";
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE_LORE1 = "Click to open";
 
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK = "§dPortable Bank";
-    public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1 = "§dOpens the Bank Menu";
+    public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK = PLUGIN_ITEM_NPC_BANKER_COLOR + "Portable Bank";
+    public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1 = PLUGIN_ITEM_NPC_BANKER_COLOR + "Opens the Bank Menu";
     
-
-
-
-    public static final String PLUGIN_ITEM_NPC_FARMER = "§dFarmer";
-    public static final String PLUGIN_ITEM_NPC_BAKER = "§dBaker";
-    public static final String PLUGIN_ITEM_NPC_BUTCHER = "§dButcher";
-    public static final String PLUGIN_ITEM_NPC_FISHER = "§dFisher";
-    public static final String PLUGIN_ITEM_NPC_ADVENTURER = "§dAdventurer";
-    public static final String PLUGIN_ITEM_NPC_SMITH = "§dSmith";
-    public static final String PLUGIN_ITEM_NPC_MINER = "§dMiner";
-    public static final String PLUGIN_ITEM_NPC_LUMBERJACK = "§dLumberjack";
-
     public static final String PLUGIN_ITEM_NPC_LORE1 = "§7Click to Spawn";
 }

@@ -18,11 +18,15 @@ import org.bukkit.potion.PotionEffectType;
 
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.MobHelper;
-
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.autosmelt;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.telekinesis;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR;
@@ -56,7 +60,10 @@ public class TestCommand implements CommandExecutor {
                                     new ItemStack(Material.LEATHER_LEGGINGS, 1),
                                     new ItemStack(Material.LEATHER_BOOTS, 1)
                             );
-                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR)) {
+                        }else if (args[0].equals("pick"))  {
+                            p.getInventory().addItem(CustomItems.relluPickAxe.getCustomItem());
+                        }
+                        else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR)) {
                             p.getInventory().addItem(CustomItems.cloudSailor.getCustomItem());
                             p.getInventory().addItem(CustomItems.cloudBoots.getCustomItem());
                         } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_RELLU)) {
@@ -67,12 +74,12 @@ public class TestCommand implements CommandExecutor {
                             p.getInventory().addItem(CustomItems.relluShield.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluSword.getCustomItem());
                         } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT)) {
-                            autosmelt.addTo(p.getInventory().getItemInMainHand());
+                            CustomEnchants.autosmelt.addTo(p.getInventory().getItemInMainHand());
                         } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE)) {
-                            telekinesis.addTo(p.getInventory().getItemInMainHand());
+                            CustomEnchants.telekinesis.addTo(p.getInventory().getItemInMainHand());
                         } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT)) {
-                            autosmelt.removeFrom(p.getInventory().getItemInMainHand());
-                            telekinesis.removeFrom(p.getInventory().getItemInMainHand());
+                            CustomEnchants.autosmelt.removeFrom(p.getInventory().getItemInMainHand());
+                            CustomEnchants.telekinesis.removeFrom(p.getInventory().getItemInMainHand());
 
                             //////////////////////////////////////////////////////////////
                             //FOR TEST WITH LORE ACTIVATE THIS BLOCK                    //
@@ -99,6 +106,35 @@ public class TestCommand implements CommandExecutor {
                                 Logger.getLogger(TestCommand.class.getName()).log(Level.SEVERE, null, ex);
                             }
                             p.teleport(Bukkit.getWorld("world2").getSpawnLocation());
+                        }
+                        else if (args[0].equals("bc")) {
+                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            RelluEssentials.dBH.insertBag(1, pe.getID());
+                        }
+                        else if (args[0].equals("bo")) {
+                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            p.openInventory(BagHelper.getBag(1, pe));
+                        }
+                        else if (args[0].equals("bc2")) {
+                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            RelluEssentials.dBH.insertBag(2, pe.getID());
+                        }
+                        else if (args[0].equals("bo2")) {
+                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            p.openInventory(BagHelper.getBag(2, pe)); 
+                        }
+                        else if(args[0].equals("di")){
+                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            if(pe.getPlayerState().equals(PlayerState.DEFAULT)){
+                                pe.setPlayerState(PlayerState.DAMAGE_INFO);
+                            }
+                            else{
+                                pe.setPlayerState(PlayerState.DEFAULT);
+                            }
+                        }
+                        else if (args[0].equals("sk")) {
+                            p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG_OF_COINS));
+                            p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.MONEY_BAG));
                         }
                     }
                     return true;

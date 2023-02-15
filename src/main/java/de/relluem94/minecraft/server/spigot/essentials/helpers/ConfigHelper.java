@@ -28,8 +28,8 @@ public class ConfigHelper {
     private final String name;
     private final File file;
     private YamlConfiguration config;
+    private boolean configFound = true;
 
-    // @TODO Make an migrator from config files to db
     public ConfigHelper(String name) {
         this.name = name;
 
@@ -37,8 +37,12 @@ public class ConfigHelper {
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
         } else {
-
+            configFound = false;
         }
+    }
+
+    public boolean isConfigFound(){
+        return configFound;
     }
 
     /**
