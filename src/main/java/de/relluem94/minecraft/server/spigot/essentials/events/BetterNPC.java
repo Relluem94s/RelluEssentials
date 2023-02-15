@@ -138,6 +138,7 @@ public class BetterNPC implements Listener {
                         pe.setPurse(purse - price);
                         RelluEssentials.dBH.updatePlayer(pe);
                         RelluEssentials.dBH.insertBag(bt.getId(), pe.getID());
+                        RelluEssentials.playerBagEntryList.add(RelluEssentials.dBH.getBag(bt.getId(), pe.getID()));
                         
                         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
                     }
