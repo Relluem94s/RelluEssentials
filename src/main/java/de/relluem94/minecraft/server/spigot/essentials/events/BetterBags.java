@@ -6,7 +6,10 @@ import java.util.ListIterator;
 import java.util.Random;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.type.Cocoa;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -72,6 +75,20 @@ public class BetterBags implements Listener {
             for(int i = 0; i < e.getItems().size(); i++){
                 if(e.getItems().get(i) != null && RelluEssentials.crops.containsKey(e.getItems().get(i).getItemStack().getType())){
                     e.getBlock().setType(RelluEssentials.crops.get(e.getItems().get(i).getItemStack().getType()));
+
+                    if(e.getBlockState() instanceof Cocoa){
+                        Cocoa c = (Cocoa) e.getBlockState();
+                        Block cocoa = e.getBlock();
+                        Block wood = cocoa.getRelative(c.getFacing().getOppositeFace());
+                        if(!wood.getType().equals(Material.JUNGLE_LOG)){
+                            for(BlockFace f : BlockFace.values()){
+                                wood = cocoa.getRelative(f);
+                                if(wood.getType().equals(Material.JUNGLE_LOG)){
+                                    c.setFacing(f.getOppositeFace());
+                                }
+                            }                            
+                        }
+                    }
                     int oldAmount =  e.getItems().get(i).getItemStack().getAmount();
                     e.getItems().get(i).getItemStack().setAmount(oldAmount -1);
                 }

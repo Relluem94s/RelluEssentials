@@ -58,14 +58,14 @@ public class BetterPlayerJoin implements Listener {
         PlayerHelper.setAFK(p, true);
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
 
-        if(RelluEssentials.bankIntrestMap.containsKey(e.getPlayer().getUniqueId())){
-            BankAccountEntry bae = RelluEssentials.bankIntrestMap.get(p.getUniqueId());
+        if(RelluEssentials.bankInterestMap.containsKey(e.getPlayer().getUniqueId())){
+            BankAccountEntry bae = RelluEssentials.bankInterestMap.get(p.getUniqueId());
 
-            double intrest = (bae.getValue() / 100) * bae.getTier().getInterest();
-            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_INTREST, StringHelper.formatDouble(intrest)));
+            double interest = (bae.getValue() / 100) * bae.getTier().getInterest();
+            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_INTEREST, StringHelper.formatDouble(interest)));
 
-            RelluEssentials.dBH.addTransactionToBank(bae.getPlayerId(), bae.getId(), intrest, bae.getValue(), bae.getTier().getId());
-            RelluEssentials.bankIntrestMap.remove(p.getUniqueId());
+            RelluEssentials.dBH.addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(), bae.getTier().getId());
+            RelluEssentials.bankInterestMap.remove(p.getUniqueId());
         }
     }
 
@@ -94,7 +94,7 @@ public class BetterPlayerJoin implements Listener {
             Date todayDate = new Date(startOfDayInZone.toInstant().toEpochMilli());
 
             if(lastPlayedDate.before(todayDate)){
-                RelluEssentials.bankIntrestMap.put(e.getUniqueId(), bae);
+                RelluEssentials.bankInterestMap.put(e.getUniqueId(), bae);
             }
         }
     }

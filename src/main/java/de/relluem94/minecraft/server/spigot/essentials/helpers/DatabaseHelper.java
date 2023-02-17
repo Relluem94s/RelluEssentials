@@ -915,25 +915,10 @@ public class DatabaseHelper {
                 patch3();
             default:
 
-                String v = "patches/v3.0/";
+                //String v = "patches/v3.0/";
                 //executeScript(v + "script.sql");
                 // To add Scripts in Development without its own patch version
-
-   
-                executeScript(v + "addBagType.sql");
-                executeScript(v + "addBag.sql");
-                executeScript(v + "addNPC.sql");
-                executeScript(v + "addProtectionLocks.sql");
-                executeScript(v + "insertNPC.sql");
-                executeScript(v + "insertBagType.sql"); 
-                executeScript(v + "insertProtectionLocks.sql");
-                executeScript(v + "alterPlayer.sql");
-                executeScript(v + "alterBankAccount.sql");
-                executeScript(v + "alterBankTier.sql");
-                executeScript(v + "alterBankTransaction.sql");
-            
-                
-                
+                 
                 break;
         }
     }

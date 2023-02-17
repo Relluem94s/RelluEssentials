@@ -159,7 +159,7 @@ public class RelluEssentials extends JavaPlugin {
     public static HashMap<UUID, PlayerEntry> sudoers = new HashMap<>();
     public static HashMap<Material, DoubleStore> dropMap = new HashMap<>();
     public static HashMap<Location, ProtectionEntry> protectionEntries = new HashMap<>();
-    public static HashMap<UUID, BankAccountEntry> bankIntrestMap = new HashMap<>();
+    public static HashMap<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
     public static HashMap<Material, Material> crops = new HashMap<>();
 
     public static List<LocationEntry> locationEntryList = new ArrayList<>();
@@ -229,6 +229,7 @@ public class RelluEssentials extends JavaPlugin {
         crops.put(Material.POTATO, Material.POTATOES);
         crops.put(Material.WHEAT_SEEDS, Material.WHEAT);
         crops.put(Material.BEETROOT_SEEDS, Material.BEETROOTS);
+        crops.put(Material.COCOA_BEANS, Material.COCOA);
     }
 
 

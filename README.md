@@ -124,6 +124,21 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 ![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.png)
 
 ## TODOS
+* [ ] Fix flags and Rights problem on modify (reload that protectionentry)
+* [ ] Add Bank on deposit or withdraw show balance
+* [ ] Add /bags 1,2,3,4 or /bags miner, farmer, etc 
+* [ ] Fix Bambus and Sugarcane drops on telekinesis
+* [ ] Add Price for enchantments
+* [ ] May Add Toggle for Replenishment and Autosmelt
+* [ ] Delicate add torches to non break list
+* [ ] /head 3 args to /customheads
+* [ ] Head info user
+* [ ] Add Death Chests
+* [ ] Add Config (DB) for Deathchests, Ore Restore, etc
+* [ ] 
+* [ ] 
+* [ ] 
+* [ ] 
 * [x] Add Protection Command for Chests Doors etc
 * [x] chest / falldoor / door / fence-gate protection with permissions for player and groups with flags
 * [x] Add Messages for Protection Modify etc

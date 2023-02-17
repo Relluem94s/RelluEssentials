@@ -117,7 +117,7 @@ public class EventConstants {
     public static final String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You Bought the Upgrade with your Bank Account";
     public static final String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You Bought the Upgrade with your Purse and Bank Account";
     public static final String PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "To less " + PLUGIN_MONEY_NAME;
-    public static final String PLUGIN_EVENT_NPC_BANKER_INTREST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You earnd " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in intrest!";
+    public static final String PLUGIN_EVENT_NPC_BANKER_INTEREST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You earnd " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in interest!";
 
 
 

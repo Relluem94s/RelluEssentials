@@ -10,6 +10,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+
 /* Skull info on Click */
 public class SkullInfo implements Listener {
 
@@ -17,7 +20,7 @@ public class SkullInfo implements Listener {
     public void onClick(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
-            if (p.hasPermission("rellu.skull.info")) {
+            if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
                 if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     BlockState block = e.getClickedBlock().getState();
                     if (block instanceof Skull) {

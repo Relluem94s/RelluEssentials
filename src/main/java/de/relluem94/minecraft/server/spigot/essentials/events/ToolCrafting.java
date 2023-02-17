@@ -38,7 +38,6 @@ public class ToolCrafting implements Listener {
                     lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
 
                     im.setLore(lore);
-                    im.setUnbreakable(true);
                     e.getResult().setItemMeta(im);
                 }
             }
