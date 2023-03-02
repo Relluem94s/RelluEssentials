@@ -219,7 +219,6 @@ public class RelluEssentials extends JavaPlugin {
         dropMap.put(Material.RAW_COPPER, new DoubleStore(2, 5));
         dropMap.put(Material.RAW_GOLD, new DoubleStore(1, 2));
         dropMap.put(Material.LAPIS_LAZULI, new DoubleStore(2, 5));
-        dropMap.put(Material.REDSTONE, new DoubleStore(1, 2));
         dropMap.put(Material.COAL, new DoubleStore(1, 3));
         dropMap.put(Material.QUARTZ, new DoubleStore(1, 3));
     }
