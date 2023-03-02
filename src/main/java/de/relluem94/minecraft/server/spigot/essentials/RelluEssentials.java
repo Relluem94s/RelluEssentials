@@ -48,6 +48,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Suicide;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Teleport;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.BagSalesman;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Beekeeper;
@@ -218,7 +219,7 @@ public class RelluEssentials extends JavaPlugin {
         dropMap.put(Material.RAW_COPPER, new DoubleStore(2, 5));
         dropMap.put(Material.RAW_GOLD, new DoubleStore(1, 2));
         dropMap.put(Material.LAPIS_LAZULI, new DoubleStore(2, 5));
-        dropMap.put(Material.REDSTONE, new DoubleStore(4, 5));
+        dropMap.put(Material.REDSTONE, new DoubleStore(1, 2));
         dropMap.put(Material.COAL, new DoubleStore(1, 3));
         dropMap.put(Material.QUARTZ, new DoubleStore(1, 3));
     }
@@ -400,6 +401,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_BAGS)).setExecutor(new Bags());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUDO)).setExecutor(new Sudo());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_EXIT)).setExecutor(new Exit());
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TELEPORT)).setExecutor(new Teleport());
         // TODO add Warps
         // TODO add Marriage
         // TODO Fix Command execution for command Blocks
