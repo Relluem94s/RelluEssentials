@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -29,13 +29,13 @@ public class Sign implements CommandExecutor {
                     }
                     else if (args.length == 1) {
                         if(args[0].equals(PLUGIN_COMMAND_NAME_SIGN_EDIT)){
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             pe.setPlayerState(PlayerState.SIGNEDIT);
                             p.sendMessage(PLUGIN_COMMAND_SIGN_EDIT);
                         }
                         else 
                         if(args[0].equals(PLUGIN_COMMAND_NAME_SIGN_COPY)){
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             pe.setPlayerState(PlayerState.SIGNCOPY);
                             p.sendMessage(PLUGIN_COMMAND_SIGN_COPY);
                         }

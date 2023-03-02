@@ -3,8 +3,9 @@ package de.relluem94.minecraft.server.spigot.essentials.permissions;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.users;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -27,7 +28,7 @@ public class User {
     }
 
     public void setGroup(GroupEntry g) {
-        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
         pe.setGroup(g);
         dBH.updatePlayer(pe);
         p.setCustomName(g.getPrefix() + getCustomName(p));
@@ -36,7 +37,7 @@ public class User {
     }
 
     public static GroupEntry getGroup(Player p) {
-        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
 
         if (pe != null) {
             return pe.getGroup();
@@ -60,7 +61,7 @@ public class User {
 
     private String getCustomName(Player p) {
         String name;
-        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
         if (pe.getCustomName() != null) {
             name = pe.getCustomName();
         } else {

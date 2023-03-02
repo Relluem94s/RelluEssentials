@@ -5,12 +5,16 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 
 public class BetterBlockDrop implements Listener {
@@ -76,7 +80,7 @@ public class BetterBlockDrop implements Listener {
 
         Material m = e.getBlock().getBlockData().getMaterial();
         for (Material ore : ores) {
-            if (m == ore && RelluEssentials.isOreRespawnEnabled) {
+            if (m == ore && Arrays.asList(RelluEssentials.ore_respawn).contains(e.getBlock().getLocation().getWorld().getName())) {
                 runLater(() -> {
                     e.getBlock().setType(m);
                 }, 10000L);
@@ -115,5 +119,11 @@ public class BetterBlockDrop implements Listener {
         bh.setLocation(l);
         // dBH.insertBlockHistory(bh);
     */
+    }
+
+
+    @EventHandler(priority=EventPriority.HIGHEST)
+    public void worldInit(org.bukkit.event.world.WorldInitEvent e){
+        e.getWorld().setKeepSpawnInMemory(false);
     }
 }

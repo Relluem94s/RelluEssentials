@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_COLOR;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SPACER;
@@ -10,6 +9,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SPA
 import java.util.Properties;
 import java.util.UUID;
 
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -34,7 +34,7 @@ public class PlayerHelper {
      */
     public static void setFlying(Player p) {
         if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+            PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
             if (pe.isFlying()) {
                 p.setAllowFlight(true);
                 p.setFlying(true);
@@ -49,7 +49,7 @@ public class PlayerHelper {
      * @return Boolean
      */
     public static boolean setAFK(Player p, boolean join) {
-        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
         boolean isAFK = pe.isAFK();
 
         if(pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)){
@@ -65,7 +65,7 @@ public class PlayerHelper {
         }
 
         if(pe.getPlayerState().equals(PlayerState.DEFAULT)){
-            pe.setUpdatedBy(playerEntryList.get(p.getUniqueId()).getID());
+            pe.setUpdatedBy(pe.getID());
             pe.setAFK(isAFK);
             dBH.updatePlayer(pe);
             p.setInvulnerable(isAFK);

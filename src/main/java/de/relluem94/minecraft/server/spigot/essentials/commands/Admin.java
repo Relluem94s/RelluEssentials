@@ -9,8 +9,9 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -38,8 +39,8 @@ public class Admin implements CommandExecutor {
                             if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                                 org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(18, Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER +"§dNPCs"), CustomItems.npc_gui_disabled.getCustomItem());
                             
-                                for(int i = 0; i < RelluEssentials.npcs.size(); i++){
-                                    inv.setItem(i, RelluEssentials.npcs.get(i).getItemHelper().getCustomItem());
+                                for(int i = 0; i < NPCAPI.getNPCs().size(); i++){
+                                    inv.setItem(i, NPCAPI.getNPCs().get(i).getItemHelper().getCustomItem());
                                 }
 
                                 InventoryHelper.openInventory(sender, inv);
@@ -64,7 +65,7 @@ public class Admin implements CommandExecutor {
                             p.sendMessage(PLUGIN_COMMAND_ADMIN_CHAT_CLEARED);
                         }
                         else if(args[0].equals("light")){
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             
                             if(pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE)){
                                 pe.setPlayerState(PlayerState.DEFAULT);
@@ -76,7 +77,7 @@ public class Admin implements CommandExecutor {
                             }
                         }
                         else if(args[0].equals("afk")){
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             
                             if(pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)){
                                 PlayerHelper.setAFK(p, false);

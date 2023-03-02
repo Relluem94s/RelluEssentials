@@ -8,10 +8,10 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_FLY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -50,7 +50,7 @@ public class Fly implements CommandExecutor {
 
     private boolean flyMode(Command command, Player p) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_FLY)) {
-            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+            PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
             pe.setFlying(!pe.isFlying());
             dBH.updatePlayer(pe);
             p.setAllowFlight(pe.isFlying());

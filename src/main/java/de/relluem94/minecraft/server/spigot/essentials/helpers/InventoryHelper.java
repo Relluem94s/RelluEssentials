@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.json.JSONObject;
 
 /**
  *
@@ -114,4 +117,51 @@ public class InventoryHelper {
 
         return -1;
     }
+
+
+    public static void createInventory(String json, Player p){
+        p.getInventory().clear();
+
+        try {
+            JSONObject invJson = new JSONObject(json);
+            for (int i=p.getInventory().getSize(); i >= 0; i--) {
+                JSONObject slot = invJson.getJSONObject(i+"");
+                                
+                if (slot.has("itemStack")) {
+                    int slotID = slot.getInt("id");
+                    ItemStack stack = ItemHelper.itemFrom64(slot.getString("itemStack"));
+                    
+                    if(stack != null){
+                        p.getInventory().setItem(slotID, stack);
+                    }
+
+                  
+                }
+            }
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    public static JSONObject saveInventoryToJSON(Player p){
+        PlayerInventory inventory = p.getInventory();
+        JSONObject inv = new JSONObject();
+
+        for (int i=inventory.getSize(); i >= 0; i--) {
+            ItemStack stack = inventory.getItem(i);
+            JSONObject slot = new JSONObject();
+            slot.put("id",Integer.valueOf(i));
+            slot.put("itemStack", ItemHelper.itemTo64(stack));
+            inv.put(Integer.valueOf(i) + "", slot);
+        }
+        return inv;
+    }
+
+
+
+
+
+
+
+
 }

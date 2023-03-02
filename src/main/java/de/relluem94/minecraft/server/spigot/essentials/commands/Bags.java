@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
@@ -23,7 +23,7 @@ public class Bags implements CommandExecutor {
                 if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-                        p.openInventory(BagHelper.getBags(RelluEssentials.playerEntryList.get(p.getUniqueId())));
+                        p.openInventory(BagHelper.getBags(PlayerAPI.getPlayerEntry(p)));
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

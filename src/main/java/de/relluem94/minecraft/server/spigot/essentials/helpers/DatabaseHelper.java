@@ -22,7 +22,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.json.JSONObject;
 
-import de.relluem94.rellulib.utils.LogUtils;
 import de.relluem94.rellulib.utils.TypeUtils;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -33,7 +32,11 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLockEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupInventoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
@@ -44,10 +47,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistory
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.DEBUG;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 
 /**
@@ -96,6 +97,440 @@ public class DatabaseHelper {
     //                                               DUMMY END                                                                                 //
     //                                                                                                                                         //
     //*****************************************************************************************************************************************//
+
+
+
+    //*****************************************************************************************************************************************//
+    //                                                                                                                                         //
+    //                                                PATCH                                                                                    //
+    //                                                                                                                                         //
+    //*****************************************************************************************************************************************//
+    private void applyPatch(int version) {
+        switch (version) {
+            case -1:
+                patch1();
+                patch2();
+                patch3();
+                patch4();
+                patch5();
+                break;
+            case 0:
+                patch1();
+                patch2();
+                patch3();
+                patch4();
+                patch5();
+                break;
+            case 1:
+                patch2();
+                patch3();
+                patch4();
+                patch5();
+                break;
+            case 2:
+                patch3();
+                patch4();
+                patch5();
+                break;
+            case 3:
+                patch4();
+                patch5();
+            case 4:
+                patch5();
+            default:
+
+                //String v = "patches/v5/";
+                //executeScript(v + "script.sql");
+                // To add Scripts in Development without its own patch version
+                 
+                break;
+        }
+    }
+
+    private void patch1() {
+        String v = "patches/v1/";
+        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, "applying " + v);
+        executeScriptNoSchema(v + "createSchema.sql");
+        executeScript(v + "createGroup.sql");
+        executeScript(v + "createPlayer.sql");
+        executeScript(v + "createLocationType.sql");
+        executeScript(v + "createLocation.sql");
+        executeScript(v + "createBlockHistory.sql");
+        executeScript(v + "createPluginInformation.sql");
+        executeScript(v + "insertGroups.sql");
+        executeScript(v + "insertPlayers.sql");
+        executeScript(v + "insertLocationTypes.sql");
+        executeScript(v + "insertPluginInformation.sql");
+
+        pie = getPluginInformation();
+
+        List<PlayerEntry> pel = getPlayers();
+        pel.forEach(p -> {
+            PlayerAPI.putPlayerEntry(UUID.fromString(p.getUUID()), p);
+        });
+
+        ConfigHelper ch = new ConfigHelper("players");
+
+        if(ch.isConfigFound()){
+            List<PlayerEntry> pe = ch.getPlayers();
+            pe.forEach(p -> {
+                insertPlayer(p);
+            });
+
+            for (PlayerEntry p : pe) {
+                PlayerEntry pu = PlayerAPI.getPlayerEntry(UUID.fromString(p.getUUID()));
+                pu.setAFK(p.isAFK());
+                pu.setFlying(p.isFlying());
+                pu.setCustomName(p.getCustomName());
+                pu.setUpdatedBy(1);
+                updatePlayer(pu);
+    
+                List<LocationEntry> lel = ch.getHomes(pu);
+                lel.forEach(le -> {
+                    insertLocation(le);
+                });
+            }
+        }
+    }
+
+    private void patch2() {
+        String v = "patches/v2/";
+        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, "applying " + v);
+        executeScript(v + "dropBlockHistory.sql");
+        executeScript(v + "createBlockHistory.sql");
+        executeScript(v + "insertNewDBVersion.sql");
+        executeScript(v + "updateOldPluginInformation.sql");
+    }
+
+    private void patch3() {
+        String v = "patches/v3/";
+        executeScript(v + "dropPlayerConstraint.sql");
+        executeScript(v + "updateAdminGroup.sql"); // changed id of Admin
+        executeScript(v + "updateModGroup.sql"); // changed id of Mod
+        executeScript(v + "updateVipGroup.sql"); // changed id of Vip
+        executeScript(v + "updateAdminGroupPlayer.sql"); // changed id of Admin
+        executeScript(v + "updateModGroupPlayer.sql"); // changed id of Mod
+        executeScript(v + "updateVipGroupPlayer.sql"); // changed id of Vip
+        executeScript(v + "addPlayerConstraint.sql");
+        executeScript(v + "insertNewDBVersion.sql");
+        executeScript(v + "updateOldPluginInformation.sql");
+    }
+
+    private void patch4() {
+        String v = "patches/v4/";
+        executeScript(v + "addBankTier.sql");
+        executeScript(v + "addBankAccount.sql");
+        executeScript(v + "addBagType.sql");
+        executeScript(v + "addBag.sql");
+        executeScript(v + "addBankTransaction.sql"); 
+        executeScript(v + "addPermission.sql");
+        executeScript(v + "addPermissionGroup.sql");
+        executeScript(v + "addPermissionPlayer.sql");
+        executeScript(v + "addProtections.sql");
+        executeScript(v + "addSkills.sql");
+        executeScript(v + "addSkillsPlayer.sql");
+        executeScript(v + "addNPC.sql");
+        executeScript(v + "addProtectionLocks.sql");
+
+        executeScript(v + "insertProtectionLocks.sql");
+        executeScript(v + "insertNPC.sql");
+        executeScript(v + "insertSkills.sql"); 
+        executeScript(v + "insertBankTier.sql"); 
+        executeScript(v + "insertBagType.sql"); 
+        executeScript(v + "insertLocationTypes.sql");
+        executeScript(v + "alterPlayer.sql");
+        executeScript(v + "alterBankAccount.sql");
+        executeScript(v + "alterBankTier.sql");
+        executeScript(v + "alterBankTransaction.sql");
+        executeScript(v + "insertNewDBVersion.sql");
+        executeScript(v + "updatePlayer.sql");
+        executeScript(v + "updateOldPluginInformation.sql");
+    }
+
+    private void patch5() {
+        String v = "patches/v5/";
+        executeScript(v + "addSetting.sql");
+        executeScript(v + "addPluginSetting.sql");
+        executeScript(v + "addSettingPlayer.sql");
+        executeScript(v + "addWorldGroup.sql"); 
+        executeScript(v + "addWorld.sql");
+        executeScript(v + "addWorldGroupInventory.sql");
+        executeScript(v + "addWorldGroupSetting.sql");
+
+        executeScript(v + "insertSettings.sql");
+        executeScript(v + "insertWorldGroup.sql");
+        executeScript(v + "insertWorlds.sql");
+        executeScript(v + "insertWorldGroupSetting.sql");
+
+        executeScript(v + "insertNewDBVersion.sql");
+        executeScript(v + "updateOldPluginInformation.sql");
+    }
+
+
+    public void init() {
+        applyPatch(pie.getDbVersion());
+    }
+
+
+
+
+    //*****************************************************************************************************************************************//
+    //                                                                                                                                         //
+    //                                               PATCH END                                                                                 //
+    //                                                                                                                                         //
+    //*****************************************************************************************************************************************//
+
+
+
+
+    private void executeScript(String script) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, StandardCharsets.UTF_8));
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void executeScriptNoSchema(String script) {
+
+        try (
+                Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, StandardCharsets.UTF_8));
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public String readResource(final String fileName, Charset charset) throws IOException {
+
+        String out = "";
+        try (InputStream is = getClass().getResourceAsStream("/" + fileName); InputStreamReader isr = new InputStreamReader(is); BufferedReader br = new BufferedReader(isr)) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                out += line + System.lineSeparator();
+            }
+        }
+
+        return out;
+    }
+
+
+
+
+    //*****************************************************************************************************************************************//
+    //*****************************************************************************************************************************************//
+    //*****************************************************************************************************************************************//
+    //*****************************************************************************************************************************************//
+
+
+    public List<WorldGroupEntry> getWorldGroups() {
+        List<WorldGroupEntry> lbte = new ArrayList<>();
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroups.sql", StandardCharsets.UTF_8));
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    WorldGroupEntry wge = new WorldGroupEntry();
+                    wge.setId(rs.getInt("id"));
+                    wge.setCreated(rs.getString("created"));
+                    wge.setCreatedby(rs.getInt("createdby"));
+                    wge.setUpdated(rs.getString("updated"));
+                    wge.setUpdatedBy(rs.getInt("updatedby"));
+                    wge.setDeleted(rs.getString("deleted"));
+                    wge.setDeletedBy(rs.getInt("deletedby"));
+                    wge.setName(rs.getString("name"));
+                  
+                    lbte.add(wge);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lbte;
+    }
+
+
+    public  List<WorldEntry> getWorldByGroup(WorldGroupEntry wge) {
+        List<WorldEntry> lwe = new ArrayList<>();
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldByGroup.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, wge.getId());
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    WorldEntry we = new WorldEntry();
+                    we.setId(rs.getInt("id"));
+                    we.setCreated(rs.getString("created"));
+                    we.setCreatedby(rs.getInt("createdby"));
+                    we.setUpdated(rs.getString("updated"));
+                    we.setUpdatedBy(rs.getInt("updatedby"));
+                    we.setDeleted(rs.getString("deleted"));
+                    we.setDeletedBy(rs.getInt("deletedby"));
+                    we.setName(rs.getString("name"));
+                    we.setWorldGroup(wge);
+                    lwe.add(we);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lwe;
+    }
+
+    public void insertWorldGroupInventory(WorldGroupInventoryEntry wgie) {
+        try (
+            Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertWorldInventoryByGroupAndPlayer.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, wgie.getPlayerId());
+            ps.setInt(2, wgie.getPlayerId());
+            ps.setInt(3, wgie.getWorldGroupEntry().getId());
+            ps.setString(4, wgie.getInventory().toString());
+            ps.setDouble(5, wgie.getHealth());
+            ps.setInt(6, wgie.getFoodLevel());
+            ps.setFloat(7, wgie.getExpirience());
+            ps.setInt(8, wgie.getExpirienceToLevel());
+            ps.setInt(9, wgie.getTotalExpirience());
+            ps.setInt(10, wgie.getLevel());
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void updateWorldGroupInventory(WorldGroupInventoryEntry wgie) {
+        try (
+            Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateWorldInventoryByGroupAndPlayer.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, wgie.getUpdatedBy());
+            ps.setString(2, wgie.getInventory().toString());
+            ps.setDouble(3, wgie.getHealth());
+            ps.setInt(4, wgie.getFoodLevel());
+            ps.setFloat(5, wgie.getExpirience());
+            ps.setInt(6, wgie.getExpirienceToLevel());
+            ps.setInt(7, wgie.getTotalExpirience());
+            ps.setInt(8, wgie.getLevel());
+            ps.setInt(9, wgie.getPlayerId());
+            ps.setInt(10, wgie.getWorldGroupEntry().getId());
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public WorldGroupInventoryEntry getWorldGroupInventory(PlayerEntry pe, WorldGroupEntry wge) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldInventoryByGroupAndPlayer.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, wge.getId());
+            ps.setInt(2, pe.getID());
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    WorldGroupInventoryEntry wgie = new WorldGroupInventoryEntry();
+                    wgie.setId(rs.getInt("id"));
+                    wgie.setCreated(rs.getString("created"));
+                    wgie.setCreatedby(rs.getInt("createdby"));
+                    wgie.setUpdated(rs.getString("updated"));
+                    wgie.setUpdatedBy(rs.getInt("updatedby"));
+                    wgie.setDeleted(rs.getString("deleted"));
+                    wgie.setDeletedBy(rs.getInt("deletedby"));
+                    wgie.setPlayerId(rs.getInt("player_fk"));
+                    wgie.setHealth(rs.getInt("health"));
+                    wgie.setExpirience(rs.getInt("exp"));
+                    wgie.setTotalExpirience(rs.getInt("totalExperience"));
+                    wgie.setLevel(rs.getInt("level"));
+                    wgie.setFoodLevel(rs.getInt("food"));
+                    wgie.setWorldGroup(wge);
+                    wgie.setInventory(new JSONObject(rs.getString("inventory")));
+                    
+                    return wgie;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public void insertWorld(WorldEntry we) {
+        try (
+            Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertWorld.sql", StandardCharsets.UTF_8));
+
+            ps.setInt(1, we.getCreatedBy());
+            ps.setString(2, we.getName());
+            ps.setInt(3, we.getWorldGroupEntry().getId());
+            ps.setInt(4, we.getBuildGroup().getId());
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void insertWorldGroup(WorldGroupEntry wge) {
+        try (
+            Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertWorldGroup.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, wge.getCreatedBy());
+            ps.setString(2, wge.getName());
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public WorldGroupEntry getWorldGroup(String name) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroupByName.sql", StandardCharsets.UTF_8));
+            ps.setString(1, name);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    WorldGroupEntry wge = new WorldGroupEntry();
+                    wge.setId(rs.getInt("id"));
+                    wge.setCreated(rs.getString("created"));
+                    wge.setCreatedby(rs.getInt("createdby"));
+                    wge.setUpdated(rs.getString("updated"));
+                    wge.setUpdatedBy(rs.getInt("updatedby"));
+                    wge.setDeleted(rs.getString("deleted"));
+                    wge.setDeletedBy(rs.getInt("deletedby"));
+                    wge.setName(rs.getString("name"));
+                  
+                    return wge;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public LocationEntry getLocation(PlayerEntry pe, int type) {
         try (
@@ -221,9 +656,10 @@ public class DatabaseHelper {
                     p.setCreatedby(rs.getInt("createdby"));
                     p.setUpdated(rs.getString("updated"));
                     p.setUpdatedBy(rs.getInt("updatedby"));
+                    p.setDeleted(rs.getString("deleted"));
+                    p.setDeletedBy(rs.getInt("deletedby"));
                     p.setCustomName(rs.getString("customname"));
                     p.setPurse(rs.getDouble("purse"));
-                    p.setDeletedBy(rs.getInt("deletedby"));
                     p.setFlying(rs.getBoolean("fly"));
                     p.setAFK(rs.getBoolean("afk"));
                     p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
@@ -871,7 +1307,6 @@ public class DatabaseHelper {
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
-        LogUtils.debug("Amount: " + bhe.size() + " Years: " + year + " Months: " + month + " Days: " + day + " Hours: " + hour + " Minutes: " + minute + " UUID: " + p.getUUID(), DEBUG);
         return bhe;
     }
 
@@ -886,182 +1321,6 @@ public class DatabaseHelper {
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    private void applyPatch(int version) {
-        switch (version) {
-            case -1:
-                patch1();
-                patch2();
-                patch2_1();
-                patch3();
-                break;
-            case 0:
-                patch1();
-                patch2();
-                patch2_1();
-                patch3();
-                break;
-            case 1:
-                patch2();
-                patch2_1();
-                patch3();
-                break;
-            case 2:
-                patch2_1();
-                patch3();
-                break;
-            case 3:
-                patch3();
-            default:
-
-                //String v = "patches/v3.0/";
-                //executeScript(v + "script.sql");
-                // To add Scripts in Development without its own patch version
-                 
-                break;
-        }
-    }
-
-    private void patch1() {
-        String v = "patches/v1.0/";
-        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, "applying " + v);
-        executeScriptNoSchema(v + "createSchema.sql");
-        executeScript(v + "createGroup.sql");
-        executeScript(v + "createPlayer.sql");
-        executeScript(v + "createLocationType.sql");
-        executeScript(v + "createLocation.sql");
-        executeScript(v + "createBlockHistory.sql");
-        executeScript(v + "createPluginInformation.sql");
-        executeScript(v + "insertGroups.sql");
-        executeScript(v + "insertPlayers.sql");
-        executeScript(v + "insertLocationTypes.sql");
-        executeScript(v + "insertPluginInformation.sql");
-
-        pie = getPluginInformation();
-
-        List<PlayerEntry> pel = getPlayers();
-        pel.forEach(p -> {
-            playerEntryList.put(UUID.fromString(p.getUUID()), p);
-        });
-
-        ConfigHelper ch = new ConfigHelper("players");
-
-        if(ch.isConfigFound()){
-            List<PlayerEntry> pe = ch.getPlayers();
-            pe.forEach(p -> {
-                insertPlayer(p);
-            });
-
-            for (PlayerEntry p : pe) {
-                PlayerEntry pu = playerEntryList.get(UUID.fromString(p.getUUID()));
-                pu.setAFK(p.isAFK());
-                pu.setFlying(p.isFlying());
-                pu.setCustomName(p.getCustomName());
-                pu.setUpdatedBy(1);
-                updatePlayer(pu);
-    
-                List<LocationEntry> lel = ch.getHomes(pu);
-                lel.forEach(le -> {
-                    insertLocation(le);
-                });
-            }
-        }
-    }
-
-    private void patch2() {
-        String v = "patches/v2.0/";
-        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, "applying " + v);
-        executeScript(v + "dropBlockHistory.sql");
-        executeScript(v + "createBlockHistory.sql");
-        executeScript(v + "insertNewDBVersion.sql");
-        executeScript(v + "updateOldPluginInformation.sql");
-    }
-
-    private void patch2_1() {
-        String v = "patches/v2.1/";
-        executeScript(v + "dropPlayerConstraint.sql");
-        executeScript(v + "updateAdminGroup.sql"); // changed id of Admin
-        executeScript(v + "updateModGroup.sql"); // changed id of Mod
-        executeScript(v + "updateVipGroup.sql"); // changed id of Vip
-        executeScript(v + "updateAdminGroupPlayer.sql"); // changed id of Admin
-        executeScript(v + "updateModGroupPlayer.sql"); // changed id of Mod
-        executeScript(v + "updateVipGroupPlayer.sql"); // changed id of Vip
-        executeScript(v + "addPlayerConstraint.sql");
-        executeScript(v + "insertNewDBVersion.sql");
-        executeScript(v + "updateOldPluginInformation.sql");
-    }
-
-    private void patch3() {
-        String v = "patches/v3.0/";
-        executeScript(v + "addBankTier.sql");
-        executeScript(v + "addBankAccount.sql");
-        executeScript(v + "addBagType.sql");
-        executeScript(v + "addBag.sql");
-        executeScript(v + "addBankTransaction.sql"); 
-        executeScript(v + "addPermission.sql");
-        executeScript(v + "addPermissionGroup.sql");
-        executeScript(v + "addPermissionPlayer.sql");
-        executeScript(v + "addProtections.sql");
-        executeScript(v + "addSkills.sql");
-        executeScript(v + "addSkillsPlayer.sql");
-        executeScript(v + "addNPC.sql");
-        executeScript(v + "addProtectionLocks.sql");
-
-        executeScript(v + "insertProtectionLocks.sql");
-        executeScript(v + "insertNPC.sql");
-        executeScript(v + "insertSkills.sql"); 
-        executeScript(v + "insertBankTier.sql"); 
-        executeScript(v + "insertBagType.sql"); 
-        executeScript(v + "insertLocationTypes.sql");
-        executeScript(v + "alterPlayer.sql");
-        executeScript(v + "alterBankAccount.sql");
-        executeScript(v + "alterBankTier.sql");
-        executeScript(v + "alterBankTransaction.sql");
-        executeScript(v + "insertNewDBVersion.sql");
-        executeScript(v + "updatePlayer.sql");
-        executeScript(v + "updateOldPluginInformation.sql");
-    }
-
-
-    public void init() {
-        applyPatch(pie.getDbVersion());
-    }
-
-    private void executeScript(String script) {
-        try (
-                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, StandardCharsets.UTF_8));
-
-            ps.execute();
-        } catch (SQLException | IOException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void executeScriptNoSchema(String script) {
-
-        try (
-                Connection connection = DriverManager.getConnection(connector + "://" + host + ":" + port, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, StandardCharsets.UTF_8));
-
-            ps.execute();
-        } catch (SQLException | IOException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public String readResource(final String fileName, Charset charset) throws IOException {
-
-        String out = "";
-        try (InputStream is = getClass().getResourceAsStream("/" + fileName); InputStreamReader isr = new InputStreamReader(is); BufferedReader br = new BufferedReader(isr)) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                out += line + System.lineSeparator();
-            }
-        }
-
-        return out;
     }
 
     public List<GroupEntry> getGroups() {

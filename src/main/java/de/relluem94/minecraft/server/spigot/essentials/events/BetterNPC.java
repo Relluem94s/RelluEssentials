@@ -25,6 +25,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
@@ -49,15 +52,15 @@ public class BetterNPC implements Listener {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
 
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if(e.getItem() != null && RelluEssentials.npc_itemstack.contains(e.getItem())){
+                if(e.getItem() != null && NPCAPI.getNPCItemStackList().contains(e.getItem())){
                     e.setCancelled(true);
 
                     Location location = e.getClickedBlock().getLocation().add(0, 1, 0);
                     location.setYaw(e.getPlayer().getLocation().getYaw());
 
-                    for(int i = 0; i < RelluEssentials.npc_itemstack.size(); i++){
-                        if(RelluEssentials.npc_itemstack.get(i).equals(e.getItem())){
-                            NPCHelper nh = new NPCHelper(location, RelluEssentials.npcs.get(i));
+                    for(int i = 0; i < NPCAPI.getNPCItemStackList().size(); i++){
+                        if(NPCAPI.getNPCItemStackList().get(i).equals(e.getItem())){
+                            NPCHelper nh = new NPCHelper(location, NPCAPI.getNPC(i));
                             nh.spawn();
                             e.getPlayer().sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
                         }
@@ -74,10 +77,10 @@ public class BetterNPC implements Listener {
         if(e.getRightClicked() instanceof Villager){
             if(e.getRightClicked().getCustomName() != null) {
                 String customName = e.getRightClicked().getCustomName();
-                for(int i = 0; i < RelluEssentials.npc_name.size(); i++){
-                    if(RelluEssentials.npc_name.get(i).equals(customName)){
+                for(int i = 0; i < NPCAPI.getNPCNameList().size(); i++){
+                    if(NPCAPI.getNPCNameList().get(i).equals(customName)){
                         if(customName.equals(RelluEssentials.banker.getName())){
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
                             if(bae != null){
                                 InventoryHelper.openInventory(p, RelluEssentials.banker.getMainGUI());
@@ -103,7 +106,7 @@ public class BetterNPC implements Listener {
                             e.setCancelled(true);
                         }
                         else{
-                            InventoryHelper.openInventory(p, RelluEssentials.npcs.get(i).getMainGUI());
+                            InventoryHelper.openInventory(p, NPCAPI.getNPC(i).getMainGUI());
                             e.setCancelled(true);
                         }
                     }
@@ -123,7 +126,7 @@ public class BetterNPC implements Listener {
         else if(is.getType().equals(Material.PLAYER_HEAD) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && ((SkullMeta) is.getItemMeta()).getOwnerProfile().getName().equals(CustomHeads.BAG.getName()) ){
             BagTypeEntry bt = null;
 
-            for(BagTypeEntry bte : RelluEssentials.bagTypeEntryList){
+            for(BagTypeEntry bte : BagAPI.getBagTypeEntryList()){
                 if(bte.getDisplayName().equals(is.getItemMeta().getDisplayName())){
                     bt = bte;
                 }
@@ -138,7 +141,7 @@ public class BetterNPC implements Listener {
                         pe.setPurse(purse - price);
                         RelluEssentials.dBH.updatePlayer(pe);
                         RelluEssentials.dBH.insertBag(bt.getId(), pe.getID());
-                        RelluEssentials.playerBagEntryList.add(RelluEssentials.dBH.getBag(bt.getId(), pe.getID()));
+                        PlayerAPI.putPlayerBagEntry(pe.getID(), RelluEssentials.dBH.getBag(bt.getId(), pe.getID()));
                         
                         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
                     }
@@ -257,7 +260,7 @@ public class BetterNPC implements Listener {
     public void onInventoryClickItem(InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player && e.getCurrentItem() != null){
             Player p = (Player) e.getWhoClicked();
-            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
             if (e.getView().getTitle().equals(RelluEssentials.banker.getTitle())) {
                 BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
                 if(e.getCurrentItem().equals(BankerHelper.npc_gui_deposit.getCustomItem())){
@@ -320,7 +323,7 @@ public class BetterNPC implements Listener {
                 }
                 e.setCancelled(true);
             }
-            else if(RelluEssentials.npc_trader_title.contains(e.getView().getTitle())){
+            else if(NPCAPI.getNPCTraderTitleList().contains(e.getView().getTitle())){
                     trade(e.getCurrentItem(), e.getClickedInventory(), p, pe, e.getSlot(), e.isRightClick());
                     e.setCancelled(true);
             }
@@ -338,7 +341,7 @@ public class BetterNPC implements Listener {
     public void onNPCDamage(EntityDamageByEntityEvent e){
         if(e.getEntity() instanceof Villager){
             if(e.getEntity().getCustomName() != null){
-                if(RelluEssentials.npc_name.contains(e.getEntity().getCustomName())){
+                if(NPCAPI.getNPCNameList().contains(e.getEntity().getCustomName())){
                     if(e.getDamager() instanceof Player){
                         Player p = (Player) e.getDamager();
                         if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {

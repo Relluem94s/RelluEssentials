@@ -9,13 +9,13 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH_TP;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
@@ -30,7 +30,7 @@ public class NoDeathMessage implements Listener {
 
         Player p = e.getEntity().getPlayer();
 
-        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
         LocationEntry le = new LocationEntry();
         le.setLocation(p.getLocation());
         le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, (int) (Math.random() * 94 - 1) + 1));
@@ -46,7 +46,7 @@ public class NoDeathMessage implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
-        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
         p.setAllowFlight(pe.isFlying());
         p.setFlying(pe.isFlying());
     }
@@ -54,7 +54,7 @@ public class NoDeathMessage implements Listener {
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent e) {
         Player p = e.getPlayer();
-        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
         p.setAllowFlight(pe.isFlying());
         p.setFlying(pe.isFlying());
     }
@@ -62,7 +62,7 @@ public class NoDeathMessage implements Listener {
     @EventHandler
     public void onWorldChange(PlayerTeleportEvent e) {
         Player p = e.getPlayer();
-        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
         p.setAllowFlight(pe.isFlying());
         p.setFlying(pe.isFlying());
     }

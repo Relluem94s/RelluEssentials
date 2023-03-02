@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -13,6 +14,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
@@ -54,7 +57,7 @@ public class BagHelper {
 
     public static Inventory getBags(boolean npc, String title){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title), CustomItems.npc_gui_disabled.getCustomItem());
-        ListIterator<BagTypeEntry> bteli = RelluEssentials.bagTypeEntryList.listIterator();
+        ListIterator<BagTypeEntry> bteli = BagAPI.getBagTypeEntryList().listIterator();
 
         int slot = 0;
         while(bteli.hasNext()){
@@ -68,7 +71,7 @@ public class BagHelper {
 
     public static Inventory getBags(PlayerEntry pe){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI), CustomItems.npc_gui_disabled.getCustomItem());
-        ListIterator<BagTypeEntry> bteli = RelluEssentials.bagTypeEntryList.listIterator();
+        ListIterator<BagTypeEntry> bteli = BagAPI.getBagTypeEntryList().listIterator();
 
         int slot = 0;
         while(bteli.hasNext()){
@@ -128,7 +131,7 @@ public class BagHelper {
 
         List<String> lore = new ArrayList<>();
         lore.add("Amount: " + value);
-        lore.add("Click to retrieve");
+        lore.add("Click to retrieve"); // TODO add to Strings
 
         im.setLore(lore);
 
@@ -158,35 +161,37 @@ public class BagHelper {
     }
 
     public static boolean hasBag(int player_fk, int bag_type){
-        for(BagEntry be : RelluEssentials.playerBagEntryList){
-            if(be.getPlayerId() == player_fk && be.getBagType().getId() == bag_type){
-                return true;
+        if(PlayerAPI.getPlayerBagMap().containsKey(player_fk)){
+            Collection<BagEntry> cbe = PlayerAPI.getPlayerBagMap().get(player_fk);
+            for(BagEntry be : cbe){
+                if(be.getPlayerId() == player_fk && be.getBagType().getId() == bag_type){
+                    return true;
+                }
             }
         }
+
         return false;
     }
 
     public static boolean hasBags(int player_fk){
-        for(BagEntry be : RelluEssentials.playerBagEntryList){
-            if(be.getPlayerId() == player_fk){
-                return true;
-            }
-        }
-        return false;
+        return PlayerAPI.getPlayerBagMap().containsKey(player_fk);
     }
 
 
     public static BagEntry getBag(int player_fk, int bag_type){
-        for(BagEntry be : RelluEssentials.playerBagEntryList){
-            if(be.getPlayerId() == player_fk && be.getBagType().getId() == bag_type){
-                return be;
+        if(PlayerAPI.getPlayerBagMap().containsKey(player_fk)){
+            Collection<BagEntry> cbe = PlayerAPI.getPlayerBagMap().get(player_fk);
+            for(BagEntry be : cbe){
+                if(be.getPlayerId() == player_fk && be.getBagType().getId() == bag_type){
+                    return be;
+                }
             }
         }
         return null;
     }
 
     public static BagTypeEntry getBagTypeByName(String name){
-        for(BagTypeEntry bte : RelluEssentials.bagTypeEntryList){
+        for(BagTypeEntry bte : BagAPI.getBagTypeEntryList()){
             if(name.contains(bte.getDisplayName())){
                 return bte;
             }
@@ -194,14 +199,14 @@ public class BagHelper {
         return null;
     }
 
-    public static List<BagEntry> getBags(int player_fk){
-        List<BagEntry> bel = new ArrayList<>();
-        for(BagEntry be : RelluEssentials.playerBagEntryList){
-            if(be.getPlayerId() == player_fk){
-                bel.add(be);
-            }
+    public static Collection<BagEntry> getBags(int player_fk){
+        Collection<BagEntry> cbe = new ArrayList<>();
+
+        if(PlayerAPI.getPlayerBagMap().containsKey(player_fk)){
+            cbe = PlayerAPI.getPlayerBagMap().get(player_fk);
         }
-        return bel;
+
+        return cbe;
     }
 
 

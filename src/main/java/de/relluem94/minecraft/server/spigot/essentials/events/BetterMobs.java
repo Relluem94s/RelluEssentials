@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
@@ -38,20 +39,22 @@ public class BetterMobs implements Listener {
     
     @EventHandler
     public void onKill(PlayerDeathEvent e) {
-        Player p = e.getEntity();
-        PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
-        
-        double purse = pe.getPurse();
-        double losses = purse / 2;
-        if(purse - losses >= 1){
-            pe.setPurse(purse - losses);
-            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS, StringHelper.formatDouble(losses)));
-        }
-        else{
-            pe.setPurse(0);
-        }
+        if(RelluEssentials.moneyLostOnDeath){
+            Player p = e.getEntity();
+            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+            
+            double purse = pe.getPurse();
+            double losses = purse / 2;
+            if(purse - losses >= 1){
+                pe.setPurse(purse - losses);
+                p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS, StringHelper.formatDouble(losses)));
+            }
+            else{
+                pe.setPurse(0);
+            }
 
-        RelluEssentials.dBH.updatePlayer(pe);
+            RelluEssentials.dBH.updatePlayer(pe);
+        }
     }
 
     @EventHandler
@@ -60,7 +63,7 @@ public class BetterMobs implements Listener {
             int COINS_PER_DEATH = EntityCoins.valueOf(e.getEntity().getType().name()).getCoins();
             if(COINS_PER_DEATH > 0){
                 Player p = e.getEntity().getKiller();
-                PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                 pe.setPurse(pe.getPurse() + COINS_PER_DEATH);
                 RelluEssentials.dBH.updatePlayer(pe);
                 p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, COINS_PER_DEATH, StringHelper.formatDouble(pe.getPurse()))));
@@ -84,9 +87,9 @@ public class BetterMobs implements Listener {
         if (e.getEntity() instanceof Monster && e.getDamager() instanceof Player) {
             Monster m = (Monster) e.getEntity();
             Player p = (Player) e.getDamager();
-            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
             if(pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)){
-                p.sendMessage("Damage: " + e.getDamage() + " Last Damage: " + m.getLastDamage() + " Health: " + m.getHealth());
+                p.sendMessage("Damage: " + e.getDamage() + " Last Damage: " + m.getLastDamage() + " Health: " + m.getHealth()); // TODO add to strings
             }
             if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.thunderstrike)){
                 m.getLocation().getWorld().strikeLightningEffect(m.getLocation());

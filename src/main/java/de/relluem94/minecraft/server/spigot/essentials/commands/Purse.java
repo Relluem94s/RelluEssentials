@@ -8,10 +8,10 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PURSE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -25,7 +25,7 @@ public class Purse implements CommandExecutor {
                 Player p = (Player) sender;
                 if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                     if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
-                        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+                        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
                         p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL, StringHelper.formatDouble(pe.getPurse())));
                         return true;
                     } else {
@@ -44,7 +44,7 @@ public class Purse implements CommandExecutor {
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         
                         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
-                            PlayerEntry pe = playerEntryList.get(target.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(target.getUniqueId());
                             p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, StringHelper.formatDouble(pe.getPurse())));
                             return true;
                         } else {

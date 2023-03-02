@@ -1,6 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.areBlocksMaterial;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 import java.util.ArrayList;
@@ -27,8 +29,7 @@ import org.bukkit.util.Vector;
 
 public class CloudSailor implements Listener {
 
-    //TODO has to be done in Config (new Table?)
-    private final String[] worlds = new String[]{"123", "123_nether", "123_the_end", "world", "world_nether", "world_the_end", "lobby"};
+    
 
     @EventHandler
     public void mobDeath(EntityDeathEvent event) {
@@ -68,7 +69,7 @@ public class CloudSailor implements Listener {
     public void onFallDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
             Player p = (Player) e.getEntity();
-            if (isInWorld(p, Arrays.asList(worlds))) {
+            if (isInWorld(p, Arrays.asList(RelluEssentials.worlds))) {
                 if (e.getCause().equals(DamageCause.FALL)) {
                     if (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem())) {
                         e.setCancelled(true);
@@ -84,7 +85,7 @@ public class CloudSailor implements Listener {
     @EventHandler
     public void onSail(PlayerMoveEvent e) {
         Player p = e.getPlayer();
-        if (isInWorld(p, Arrays.asList(worlds))) {
+        if (isInWorld(p, Arrays.asList(RelluEssentials.worlds))) {
             if (!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation())) {
                 if (p.getInventory().getItemInOffHand().equals(CustomItems.cloudSailor.getCustomItem()) || (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem()))) {
                     if (!p.isFlying() && !p.isSneaking()) {

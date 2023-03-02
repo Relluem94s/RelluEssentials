@@ -70,6 +70,29 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 * Show Worlds or Teleport to the spawn (`/world`)
 
 
+## NPCs
+* Custom NPC via Database or via API
+* NPCs in Game via Database
+    * Adventurer
+    * Baker
+    * Butcher
+    * Farmer
+    * Fisher
+    * Florist
+    * Lumberjack
+    * Miner
+    * Musican
+    * Shepherd
+    * Smith
+* NPCs in Game via Code
+    * Bag Salesman
+    * Banker
+    * Beekeeper
+    * Enchanter (WIP)
+
+## Functional Block Protections
+* Add aditional Blocks via Database or via API
+
 ## Skills
 * Skills will be reworked. Some as Enchant some as Skill. (WIP)
     * Auto Replant Seeds
@@ -135,8 +158,8 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 * [ ] Head info user
 * [ ] Add Death Chests
 * [ ] Add Config (DB) for Deathchests, Ore Restore, etc
-* [ ] 
-* [ ] 
+* [ ] Remove custom crafting custom smelter stuff
+* [ ] Add API with methods to access lists etc and use it internally too
 * [ ] 
 * [ ] 
 * [x] Add Protection Command for Chests Doors etc
@@ -151,7 +174,6 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 * [x] Add Top (/admin Command)
 * [x] Add Bank Upgrade
 * [x] Add Redstoneless Lights /admin light
-* [x] Add NPC Adventurer, Baker, Butcher, Farmer, Fisher, Florist, Lumberjack, Miner, Musican, Shepherd, Smith, Bag Salesman, Banker, Beekeeper, Enchanter
 * [x] Rewrite NPC Stuff (less hardcoded)
 * [x] Add NPCs to Database
 * [x] Fixed Playerhead Command 

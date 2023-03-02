@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.helpers.types;
 
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;

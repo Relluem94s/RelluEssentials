@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,12 +21,18 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.GameRule;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import org.bukkit.NamespacedKey;
+import org.bukkit.World;
+import org.bukkit.WorldType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ShapelessRecipe;
 
@@ -52,7 +59,11 @@ import de.relluem94.minecraft.server.spigot.essentials.NPC.BagSalesman;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Beekeeper;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Enchanter;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Bags;
@@ -93,31 +104,28 @@ import de.relluem94.minecraft.server.spigot.essentials.events.CloudSailor;
 import de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.events.SkullInfo;
 import de.relluem94.minecraft.server.spigot.essentials.events.ToolCrafting;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.rellulib.stores.DoubleStore;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Gamerules;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLockEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.types.Vector2Location;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
@@ -145,40 +153,34 @@ public class RelluEssentials extends JavaPlugin {
     public static File dataFolder;
     public static DatabaseHelper dBH;
     public static PluginInformationEntry pie;
-    public static final boolean DEBUG = true;
     private static long start;
     private static RelluEssentials instance;
-    public static boolean isOreRespawnEnabled = false;
     private static ResourceBundle englishProperties;
     private static ResourceBundle germanProperties;
     public static String language;
     public static Banker banker;
 
     public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
-    public static HashMap<UUID, PlayerEntry> playerEntryList = new HashMap<>();
-    public static HashMap<UUID, PlayerEntry> sudoers = new HashMap<>();
-    public static HashMap<Material, DoubleStore> dropMap = new HashMap<>();
-    public static HashMap<Location, ProtectionEntry> protectionEntries = new HashMap<>();
-    public static HashMap<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
-    public static HashMap<Material, Material> crops = new HashMap<>();
+    public static HashMap<UUID, PlayerEntry> sudoers = new HashMap<UUID, PlayerEntry>();
+    public static HashMap<Material, DoubleStore> dropMap = new HashMap<Material, DoubleStore>();
+    public static HashMap<UUID, BankAccountEntry> bankInterestMap = new HashMap<UUID, BankAccountEntry>();
+    public static HashMap<Material, Material> crops = new HashMap<Material, Material>();
+    public static Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
 
+    public static List<User> users = new ArrayList<User>();
     public static List<LocationEntry> locationEntryList = new ArrayList<>();
     public static List<GroupEntry> groupEntryList = new ArrayList<>();
     public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
-    public static List<BagTypeEntry> bagTypeEntryList = new ArrayList<BagTypeEntry>();
-    public static List<BagEntry> playerBagEntryList = new ArrayList<BagEntry>();
     public static List<ItemStack> bagBlocks2collect = new ArrayList<>();
-    public static List<ProtectionLockEntry> protectionLocksEntryList;
-    public static List<Material> protectionLocksList = new ArrayList<>();
-    public static List<BankTierEntry> bankTiersList = new ArrayList<>();
-    public static List<NPCEntry> npcEntryList = new ArrayList<NPCEntry>();
-    public static List<ItemStack> npc_itemstack = new ArrayList<>();
-    public static List<String> npc_name = new ArrayList<>();
-    public static List<String> npc_trader_title = new ArrayList<>();
-    public static List<User> users = new ArrayList<User>();
-    public static List<NPC> npcs = new ArrayList<>();
 
+    //TODO has to be done in Config (new Table?) #IsComming
+
+    public static String[] ore_respawn = new String[]{"world_nether", "123_nether"};
+    public static boolean moneyLostOnDeath = true;
+    public final static String[] worlds = new String[]{"123", "123_nether", "123_the_end", "world", "world_nether", "world_the_end", "lobby"};
+    public final String[][] worlds_group = new String[][]{new String[]{"123", "123_nether", "123_the_end"}, new String[]{"world", "world_nether", "world_the_end"}, new String[]{"lobby"}};
+    
     public static RelluEssentials getInstance() {
         return instance;
     }
@@ -209,6 +211,80 @@ public class RelluEssentials extends JavaPlugin {
         autoSave();
         addNPCs();
         stopLoading();
+        initWorlds();
+    }
+
+    private void initWorlds() {
+
+        System.out.println("Worlds Sizes: " + worldsMap.size());
+        for (WorldGroupEntry wge : worldsMap.keySet()) {
+            for(WorldEntry we: worldsMap.get(wge)){
+                if(WorldHelper.worldExists(we.getName())){
+                    
+                    for(World w: Bukkit.getWorlds()){
+                        if(w.getName().equals(we.getName())){
+                            continue;
+                        }
+                        else{
+                            WorldHelper.loadWorld(we.getName());
+                            World world = Bukkit.getWorld(we.getName());
+                            world.setGameRule(GameRule.DO_FIRE_TICK, false);
+                            world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+                            world.setGameRule(GameRule.MOB_GRIEFING, false);
+                            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+                        }
+                    }                    
+                }
+                else{
+                    
+                    WorldType type = WorldType.NORMAL;
+                    World.Environment world_environment = World.Environment.NORMAL;
+
+                    if(we.getName().endsWith("_nether")){
+                        world_environment = World.Environment.NETHER;
+                    }
+                    else if(we.getName().endsWith("_the_end")){
+                        world_environment = World.Environment.THE_END;
+                    }
+                    else if(we.getName().endsWith("_custom")){
+                        world_environment = World.Environment.CUSTOM;
+                    }
+
+                    if(we.getName().equals("lobby")){
+                        WorldHelper.createWorld(we.getName(), type, world_environment, false, 6203818585396731238L);
+                        World lobbyWorld = Bukkit.getWorld(we.getName());
+                        lobbyWorld.setGameRule(GameRule.DO_FIRE_TICK, false);
+                        lobbyWorld.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+                        lobbyWorld.setGameRule(GameRule.MOB_GRIEFING, false);
+                        lobbyWorld.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+                        Random r = new Random();
+                        int random = r.nextInt(9+1 -1) +1;
+                        switch(random){
+                            case 1:
+                                lobbyWorld.setSpawnLocation(140, 143, 188);
+                                break;
+                            case 2:
+                                lobbyWorld.setSpawnLocation(-226, 115, -5777);
+                                break;
+                            case 3:
+                                lobbyWorld.setSpawnLocation(718, 136, -4215);
+                                break;
+                            case 4:
+                                lobbyWorld.setSpawnLocation(497, 68, -2800);
+                                break;
+                            default:
+                                lobbyWorld.setSpawnLocation(140, 143, 188);
+                                break;
+                        }
+                    }
+                    else{
+                        WorldHelper.createWorld(we.getName(), type, world_environment, false);
+                    }
+                }
+            }
+        }
+
+       
     }
 
     private void initDrops() {
@@ -232,7 +308,7 @@ public class RelluEssentials extends JavaPlugin {
         crops.put(Material.COCOA_BEANS, Material.COCOA);
     }
 
-
+   
 
     private void addNPCs() {
         new BagSalesman();
@@ -245,16 +321,29 @@ public class RelluEssentials extends JavaPlugin {
     public void onDisable() {
         ChatHelper.consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_STOP_MESSAGE);
 
-        saveBags();
+        for(UUID uuid: sudoers.keySet()){
+            Sudo.exitSudo(Bukkit.getPlayer(uuid));
+        }
 
-        protectionEntries.clear();
-        playerEntryList.clear();
+        saveBags();
+    
+        for (WorldGroupEntry wge : worldsMap.keySet()) {
+            for(WorldEntry we: worldsMap.get(wge)){
+                try{
+                    WorldHelper.unloadWorld(we.getName(), true);
+                }
+                catch(WorldNotLoadedException e){
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+            
+        
         locationEntryList.clear();
         groupEntryList.clear();
         locationTypeEntryList.clear();
         blockHistoryList.clear();
         selections.clear();
-        bagTypeEntryList.clear();
         
         System.gc();
 
@@ -293,7 +382,7 @@ public class RelluEssentials extends JavaPlugin {
     private void saveBags(){
         int updatedBags = 0;
 
-        for(BagEntry be : playerBagEntryList){
+        for(BagEntry be : PlayerAPI.getPlayerBagMap().values()){
             if(be.hasToBeUpdated()){
                 dBH.updateBagEntry(be);
                 be.setToBeUpdated(false);
@@ -301,7 +390,7 @@ public class RelluEssentials extends JavaPlugin {
             }
         }
         if(updatedBags != 0){
-            sendMessageInChannel("#a " + updatedBags + " Bag(s) saved!", Strings.PLUGIN_CONSOLE_NAME, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+            sendMessageInChannel(BetterChatFormat.ADMIN_CHANNEL + updatedBags + " Bag(s) saved!", Strings.PLUGIN_CONSOLE_NAME, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin")); // TODO add String to Strings
         }
     }
 
@@ -458,12 +547,12 @@ public class RelluEssentials extends JavaPlugin {
     private void groupManager() {
         List<PlayerEntry> pel = dBH.getPlayers();
         pel.forEach(p -> {
-            playerEntryList.put(UUID.fromString(p.getUUID()), p);
+            PlayerAPI.putPlayerEntry(UUID.fromString(p.getUUID()), p);
         });
 
         Bukkit.getOnlinePlayers().forEach(p -> {
             User u = new User(p);
-            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
             u.setGroup(pe.getGroup());
         });
     }
@@ -485,6 +574,20 @@ public class RelluEssentials extends JavaPlugin {
         dBH = new DatabaseHelper(this.getConfig().getString("database.host"), this.getConfig().getString("database.user"), this.getConfig().getString("database.password"), this.getConfig().getInt("database.port"));
         pie = dBH.getPluginInformation();
         dBH.init();
+
+        new PlayerAPI(dBH.getBags());
+        new ProtectionAPI(dBH.getProtectionLocks(), dBH.getProtections());
+        new NPCAPI(dBH.getNPCs());
+        new BagAPI(dBH.getBagTypes());
+        new BankAPI(dBH.getBankTiers());
+
+        for(WorldGroupEntry wge: dBH.getWorldGroups()){
+            for(WorldEntry we: dBH.getWorldByGroup(wge)){
+                consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName());
+                worldsMap.put(wge, we);
+            }
+        }
+
         locationTypeEntryList.addAll(dBH.getLocationTypes());
 
         this.getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
@@ -492,48 +595,15 @@ public class RelluEssentials extends JavaPlugin {
         });
 
         groupEntryList.addAll(dBH.getGroups());
-        protectionEntries = dBH.getProtections();
-        bagTypeEntryList = dBH.getBagTypes();
-        playerBagEntryList = dBH.getBags();
-        npcEntryList = dBH.getNPCs();
-        protectionLocksEntryList = dBH.getProtectionLocks();
-        bankTiersList = dBH.getBankTiers();
 
-        for(NPCEntry ne : npcEntryList){
-            new NPC(ne){
-                @Override
-                public org.bukkit.inventory.Inventory getMainGUI(){
-                    org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(NPCHelper.INV_SIZE, getTitle()), CustomItems.npc_gui_disabled.getCustomItem());
-                    int slot = 0;
-                    for(int i = 0; i < ne.getSlotNames().length; i++){
-                        slot = InventoryHelper.getNextSlot(slot);
-                        if(!ne.getSlotName(i).equals("AIR")){
-                            inv.setItem(slot, new ItemStack(Material.valueOf(ne.getSlotName(i)),1));
-                        }
-                        slot++;
-                    }
-                    inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
-                    return inv;
-                }
-            };
-        }
-
-        for(int i = 0; i < RelluEssentials.bagTypeEntryList.size(); i++){
-            ItemStack[] isa = BagHelper.getItemStacks(RelluEssentials.bagTypeEntryList.get(i));
+        for(int i = 0; i < BagAPI.getBagTypeEntryList().size(); i++){
+            ItemStack[] isa = BagHelper.getItemStacks(BagAPI.getBagTypeEntryList().get(i));
             for(ItemStack is : isa){
                 bagBlocks2collect.add(is);
             }
         }
 
-        for(ProtectionLockEntry ple: protectionLocksEntryList){
-            protectionLocksList.add(ple.getValue());
-        }
-
-        protectionLocksEntryList = null;
-        npcEntryList = null;
-
         System.gc();
-
     }
 
     private void blockHistoryManager() {
@@ -597,7 +667,7 @@ public class RelluEssentials extends JavaPlugin {
                 Bukkit.broadcastMessage("PURSE SAVE");
                 
                 Bukkit.getOnlinePlayers().forEach(p -> {
-                    PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+                    PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                     dBH.updatePlayer(pe);
                 });
 

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
@@ -49,8 +50,8 @@ public class BankerHelper {
 
     public static List<ItemHelper> getBankTiers(){
         List<ItemHelper> lih = new ArrayList<>();
-        for(int i = 0; i < RelluEssentials.bankTiersList.size(); i++){
-            BankTierEntry bte = RelluEssentials.bankTiersList.get(i);
+        for(int i = 0; i < BankAPI.getBankTiers().size(); i++){
+            BankTierEntry bte = BankAPI.getBankTiers().get(i);
             lih.add(new ItemHelper(new ItemStack(UPGRADE_MATERIAL, 1), bte.getName(), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{"Costs: " + bte.getCost(), "Interest: " + bte.getInterest(), "Limit: " + bte.getLimit()})));
         }
         return lih;
@@ -123,7 +124,7 @@ public class BankerHelper {
             if(ih.getCustomItem().equals(itemStack)){
                 Long costs = Long.parseLong(ih.getLore().get(0).replace("Costs: ", ""));
                 BankTierEntry bt = bae.getTier();
-                for(BankTierEntry bte: RelluEssentials.bankTiersList){
+                for(BankTierEntry bte: BankAPI.getBankTiers()){
                     if(bte.getCost() == costs){
                         bt = bte;
                         break;

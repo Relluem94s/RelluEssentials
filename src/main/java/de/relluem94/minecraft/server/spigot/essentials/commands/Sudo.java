@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -26,27 +28,16 @@ public class Sudo implements CommandExecutor {
                 if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if(RelluEssentials.sudoers.containsKey(p.getUniqueId())){
-                        PlayerEntry tpe = RelluEssentials.sudoers.get(p.getUniqueId());
-                        PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
-                        pe.setID(tpe.getID());
-                        pe.setCustomName(tpe.getCustomName());
-                        pe.setGroup(tpe.getGroup());
-                        pe.setHomes(tpe.getHomes());
-                        pe.setPurse(tpe.getPurse());
-                        p.setCustomName(tpe.getGroup().getPrefix() + p.getName());
-                        if(tpe.getCustomName() != null){
-                            p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
-                        }
-                        RelluEssentials.sudoers.remove(p.getUniqueId());
-                        p.sendMessage(Strings.PLUGIN_COMMAND_SUDO_DEACTIVATED);
+                        exitSudo(p);
                         return true;
                     }
                     else if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         OfflinePlayerEntry target = PlayerHelper.getOfflinePlayerByName((args[0]));
-                        PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
-                        if (target != null && RelluEssentials.playerEntryList.get(target.getID()) != null) {
-                            PlayerEntry tpe = RelluEssentials.playerEntryList.get(target.getID());
+                        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                        if (target != null && PlayerAPI.getPlayerEntry(target.getID()) != null) {
+                            PlayerEntry tpe = PlayerAPI.getPlayerEntry(target.getID());
                             RelluEssentials.sudoers.put(p.getUniqueId(), pe.clone());
+                            WorldHelper.saveWorldGroupInventory(p);
                             pe.setID(tpe.getID());
                             pe.setCustomName(tpe.getCustomName());
                             pe.setGroup(tpe.getGroup());
@@ -56,6 +47,7 @@ public class Sudo implements CommandExecutor {
                             if(tpe.getCustomName() != null){
                                 p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
                             }
+                            WorldHelper.loadWorldGroupInventory(p);
                             p.sendMessage(String.format(Strings.PLUGIN_COMMAND_SUDO_ACTIVATED, tpe.getGroup().getPrefix() + target.getName()));
                         }
                         else{
@@ -72,4 +64,23 @@ public class Sudo implements CommandExecutor {
         }
         return false;
     }
+
+    public static void exitSudo(Player p){
+        PlayerEntry tpe = RelluEssentials.sudoers.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        WorldHelper.saveWorldGroupInventory(p);
+        pe.setID(tpe.getID());
+        pe.setCustomName(tpe.getCustomName());
+        pe.setGroup(tpe.getGroup());
+        pe.setHomes(tpe.getHomes());
+        pe.setPurse(tpe.getPurse());
+        p.setCustomName(tpe.getGroup().getPrefix() + p.getName());
+        if(tpe.getCustomName() != null){
+            p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
+        }
+        WorldHelper.loadWorldGroupInventory(p);
+        RelluEssentials.sudoers.remove(p.getUniqueId());
+        p.sendMessage(Strings.PLUGIN_COMMAND_SUDO_DEACTIVATED);
+    }
+
 }

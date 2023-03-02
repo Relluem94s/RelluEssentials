@@ -18,7 +18,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Bisected.Half;
 
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Chest;
@@ -31,7 +30,6 @@ import org.bukkit.block.data.type.Piston;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.Gate;
 import org.bukkit.block.data.type.Chest.Type;
-import org.bukkit.block.data.type.Door.Hinge;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -49,8 +47,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -69,102 +70,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.EventCon
  */
 public class BetterLock implements Listener {
 
-    private boolean isLockable(Block b){
-        return (RelluEssentials.protectionLocksList.contains(b.getType()));
-    }
-
-    private boolean isOpenable(Block b){
-        return b.getBlockData() instanceof Openable;
-    }
-
-    private Location getLocationFromBlockAlternateForDoor(Block b){
-        if(b != null){
-            Location l = b.getLocation();
-            if(isOpenable(b)){
-                Openable openable = (Openable) b.getBlockData();
-                if(openable instanceof Door){
-                    Door door = (Door) b.getBlockData();
-                    if (door.getHalf().equals(Half.TOP)) {
-                        l.add(0, -1, 0);
-                    }
-                }
-            }
-            return l;
-        }
-        return null;
-    }
-    
-    public Block getOtherPart(Door door, Block block) {
-        Location l = block.getLocation();
-        if(door != null){
-            if(door.getHinge().equals(Hinge.LEFT)){
-                if(door.isOpen()){
-                    if(door.getFacing().equals(BlockFace.EAST)){
-                        l = l.add(0, 0, 1);
-                    }
-                    if(door.getFacing().equals(BlockFace.WEST)){
-                        l = l.add(0, 0, -1);
-                    }
-                    if(door.getFacing().equals(BlockFace.SOUTH)){
-                        l = l.add(-1, 0, 0);
-                    }
-                    if(door.getFacing().equals(BlockFace.NORTH)){
-                        l = l.add(1, 0, 0);
-                    }
-                }
-                else{
-                    if(door.getFacing().equals(BlockFace.EAST)){
-                        l = l.add(0, 0, 1);
-                    }
-                    if(door.getFacing().equals(BlockFace.WEST)){
-                        l = l.add(0, 0, -1);
-                    }
-                    if(door.getFacing().equals(BlockFace.SOUTH)){
-                        l = l.add(-1, 0, 0);
-                    }
-                    if(door.getFacing().equals(BlockFace.NORTH)){
-                        l = l.add(1, 0, 0);
-                    }
-                }
-            }
-            else{
-                if(door.isOpen()){
-                    if(door.getFacing().equals(BlockFace.EAST)){
-                        l = l.add(0, 0, -1);
-                    }
-                    if(door.getFacing().equals(BlockFace.WEST)){
-                        l = l.add(0, 0, 1);
-                    }
-                    if(door.getFacing().equals(BlockFace.SOUTH)){
-                        l = l.add(1, 0, 0);
-                    }
-                    if(door.getFacing().equals(BlockFace.NORTH)){
-                        l = l.add(-1, 0, 0);
-                    }
-                }
-                else{
-                    if(door.getFacing().equals(BlockFace.EAST)){
-                        l = l.add(0, 0, -1);
-                    }
-                    if(door.getFacing().equals(BlockFace.WEST)){
-                        l = l.add(0, 0, 1);
-                    }
-                    if(door.getFacing().equals(BlockFace.SOUTH)){
-                        l = l.add(1, 0, 0);
-                    }
-                    if(door.getFacing().equals(BlockFace.NORTH)){
-                        l = l.add(-1, 0, 0);
-                    }
-                }
-            }
-        }
-        if(isOpenable(l.getBlock())){
-            return l.getBlock();
-        }
-
-        return null;
-    }
-
     private boolean handleMoveItemEvent(Inventory inventory) {
         Location location;
         InventoryHolder holder;
@@ -182,77 +87,12 @@ public class BetterLock implements Listener {
                 return false;
             } 
             
-            ProtectionEntry protection = RelluEssentials.protectionEntries.get(location);
+            ProtectionEntry protection = ProtectionAPI.getProtectionEntry(location);
             if (protection == null){
                 return false; 
             }
             else{
-                return !hasFlag(protection, ProtectionFlags.ALLOWHOPPER);
-            }
-        }
-        else{
-            return false;
-        }
-    }
-
-    public boolean hasPermission(Block b, Player p){
-        Location l = getLocationFromBlockAlternateForDoor(b);
-        PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
-        ProtectionEntry pre = RelluEssentials.protectionEntries.get(l);
-        if (pre != null) {
-            if(pre.getLocation().getPlayerId() != pe.getID()){
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
-                return false;
-            }
-            else{
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
-                return true;
-            }
-        }
-        else{
-            return true;
-        }
-    }
-
-    public boolean hasPermission(ProtectionEntry pre, Player p){
-        PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
-        if (pre != null) {
-            if(pre.getLocation().getPlayerId() != pe.getID()){
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
-                return false;
-            }
-            else{
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
-                return true;
-            }
-        }
-        else{
-            return true;
-        }
-    }
-
-
-    private boolean hasFlag(ProtectionEntry protection, ProtectionFlags flag) {
-        JSONObject flags = protection.getFlags();
-        if(
-            (!flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(PLUGIN_EVENT_PROTECT_FLAGS) instanceof JSONArray && flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(flag.getName())) ||
-            !flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(PLUGIN_EVENT_PROTECT_FLAGS) instanceof String && flags.get(PLUGIN_EVENT_PROTECT_FLAGS).equals(flag.getName())
-        ){
-            return true; 
-        }
-        else{
-            return false;
-        }
-    }
-
-    private boolean hasRights(ProtectionEntry protection, int player_fk) {
-        JSONObject rights = protection.getRights();
-        if(!rights.isEmpty() && rights.has(PLUGIN_EVENT_PROTECT_RIGHTS)){
-            if(rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(player_fk)){
-                return true; 
-            }
-            else{
-                return false;
+                return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOWHOPPER);
             }
         }
         else{
@@ -261,10 +101,10 @@ public class BetterLock implements Listener {
     }
 
     private boolean removeProtectionFromBlock(Player p , Block b){
-        PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
-        if(isLockable(b)){
-            Location l = getLocationFromBlockAlternateForDoor(b);
-            ProtectionEntry bpe = RelluEssentials.protectionEntries.get(l);
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        if(ProtectionHelper.isLockable(b)){
+            Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+            ProtectionEntry bpe = ProtectionAPI.getProtectionEntry(l);
             if (bpe != null) {
                 if(bpe.getLocation().getPlayerId() != pe.getID()){
                     p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
@@ -272,7 +112,7 @@ public class BetterLock implements Listener {
                 }
                 else{            
                     dBH.deleteProtection(bpe);
-                    RelluEssentials.protectionEntries.remove(b.getLocation());
+                    ProtectionAPI.removeProtectionEntry(b.getLocation());
                     p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
                     return false;
                 }
@@ -280,10 +120,10 @@ public class BetterLock implements Listener {
         }
         else if(isAttachedToBlock(b, BlockFace.EAST)){
             Location l = b.getRelative(BlockFace.EAST).getLocation();
-            ProtectionEntry bpe = RelluEssentials.protectionEntries.get(l);
+            ProtectionEntry bpe = ProtectionAPI.getProtectionEntry(l);
             if(bpe != null && bpe.getLocation() != null && bpe.getLocation().getPlayerId() == pe.getID()){
                 dBH.deleteProtection(bpe);
-                RelluEssentials.protectionEntries.remove(b.getLocation());
+                ProtectionAPI.removeProtectionEntry(b.getLocation());
                 p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
                 return false;
             }
@@ -295,10 +135,10 @@ public class BetterLock implements Listener {
         }
         else if(isAttachedToBlock(b, BlockFace.SOUTH)){
             Location l = b.getRelative(BlockFace.SOUTH).getLocation();
-            ProtectionEntry bpe = RelluEssentials.protectionEntries.get(l);
+            ProtectionEntry bpe = ProtectionAPI.getProtectionEntry(l);
             if(bpe != null && bpe.getLocation() != null && bpe.getLocation().getPlayerId() == pe.getID()){
                 dBH.deleteProtection(bpe);
-                RelluEssentials.protectionEntries.remove(b.getLocation());
+                ProtectionAPI.removeProtectionEntry(b.getLocation());
                 p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
                 return false;
             }
@@ -309,10 +149,10 @@ public class BetterLock implements Listener {
         }
         else if(isAttachedToBlock(b, BlockFace.NORTH)){
             Location l = b.getRelative(BlockFace.NORTH).getLocation();
-            ProtectionEntry bpe = RelluEssentials.protectionEntries.get(l);
+            ProtectionEntry bpe = ProtectionAPI.getProtectionEntry(l);
             if(bpe != null && bpe.getLocation() != null && bpe.getLocation().getPlayerId() == pe.getID()){
                 dBH.deleteProtection(bpe);
-                RelluEssentials.protectionEntries.remove(b.getLocation());
+                ProtectionAPI.removeProtectionEntry(b.getLocation());
                 p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
                 return false;
             }
@@ -323,10 +163,10 @@ public class BetterLock implements Listener {
         }
         else if(isAttachedToBlock(b, BlockFace.WEST)){
             Location l = b.getRelative(BlockFace.WEST).getLocation();
-            ProtectionEntry bpe = RelluEssentials.protectionEntries.get(l);
+            ProtectionEntry bpe = ProtectionAPI.getProtectionEntry(l);
             if(bpe != null && bpe.getLocation() != null && bpe.getLocation().getPlayerId() == pe.getID()){
                 dBH.deleteProtection(bpe);
-                RelluEssentials.protectionEntries.remove(b.getLocation());
+                ProtectionAPI.removeProtectionEntry(b.getLocation());
                 p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
                 return false;
             }
@@ -337,10 +177,10 @@ public class BetterLock implements Listener {
         }
         else if(isAttachedToBlock(b, BlockFace.UP)){
             Location l = b.getRelative(BlockFace.UP).getLocation();
-            ProtectionEntry bpe = RelluEssentials.protectionEntries.get(l);
+            ProtectionEntry bpe = ProtectionAPI.getProtectionEntry(l);
             if(bpe != null && bpe.getLocation() != null && bpe.getLocation().getPlayerId() == pe.getID()){
                 dBH.deleteProtection(bpe);
-                RelluEssentials.protectionEntries.remove(b.getLocation());
+                ProtectionAPI.removeProtectionEntry(b.getLocation());
                 p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
                 return false;
             }
@@ -353,8 +193,8 @@ public class BetterLock implements Listener {
     }
 
     private boolean protectBlock(Player p, Block b) {
-        if(isLockable(b)){
-            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+        if(ProtectionHelper.isLockable(b)){
+            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
             ProtectionEntry bpe = new ProtectionEntry();
             LocationEntry l = dBH.getLocation(b.getLocation(), 5);
 
@@ -389,8 +229,9 @@ public class BetterLock implements Listener {
                     if(b2.getBlockData() instanceof Chest){
                         Chest cd2 = (Chest) b2.getBlockData();
                         if(cd2.getFacing().equals(cd.getFacing())){
-                            if(!hasPermission(b2, p)){
+                            if(!ProtectionHelper.hasPermission(b2, p)){
                                 hasRights = false;
+                                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
                                 p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY);
                             }
                         }
@@ -398,8 +239,9 @@ public class BetterLock implements Listener {
                     else if(b3.getBlockData() instanceof Chest){
                         Chest cd3 = (Chest) b3.getBlockData();
                         if(cd3.getFacing().equals(cd.getFacing())){
-                            if(!hasPermission(b3, p)){
+                            if(!ProtectionHelper.hasPermission(b3, p)){
                                 hasRights = false;
+                                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
                                 p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY);
                             }
                         }
@@ -439,7 +281,7 @@ public class BetterLock implements Listener {
                 bpe.setFlags(flags);
 
                 dBH.insertProtection(bpe);
-                RelluEssentials.protectionEntries.put(b.getLocation(), dBH.getProtectionByLocation(b.getLocation()));
+                ProtectionAPI.putProtectionEntry(b.getLocation(), dBH.getProtectionByLocation(b.getLocation()));
                 return true;
             }
             else{
@@ -493,7 +335,7 @@ public class BetterLock implements Listener {
 
     @EventHandler
     public void onPlayerProtectionChange(PlayerInteractEvent e) {
-        PlayerEntry pe = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId()); 
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getPlayer());
 
         if(pe.getPlayerState().equals(PlayerState.PROTECTION_ADD)){
             protectBlock(e.getPlayer(), e.getClickedBlock());
@@ -509,8 +351,8 @@ public class BetterLock implements Listener {
         }
         else if(pe.getPlayerState().equals(PlayerState.PROTECTION_INFO)){
             Block b = e.getClickedBlock();
-            Location l = getLocationFromBlockAlternateForDoor(b);
-            ProtectionEntry pre = RelluEssentials.protectionEntries.get(l);
+            Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+            ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
             if(pre != null){
                 Player p = e.getPlayer();
                 Location loc = pre.getLocation().getLocation();
@@ -525,7 +367,7 @@ public class BetterLock implements Listener {
                 p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID, pre.getLocation().getPlayerId()));
 
                 
-                for(Map.Entry<UUID, PlayerEntry> entry : RelluEssentials.playerEntryList.entrySet()) {
+                for(Map.Entry<UUID, PlayerEntry> entry : PlayerAPI.getPlayerEntryMap().entrySet()) {
                     if(entry.getValue().getID() == pre.getLocation().getPlayerId()){
                         OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(entry.getValue().getUUID()));
                         
@@ -553,9 +395,10 @@ public class BetterLock implements Listener {
         }
         else if(pe.getPlayerState().equals(PlayerState.PROTECTION_FLAG_REMOVE)){
             Block b = e.getClickedBlock();
-            Location l = getLocationFromBlockAlternateForDoor(b);
-            ProtectionEntry pre = RelluEssentials.protectionEntries.get(l);
-            if(pre != null && hasPermission(pre, e.getPlayer())){
+            Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+            ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
+            if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
+                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
                 if(pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)){
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
 
@@ -574,6 +417,7 @@ public class BetterLock implements Listener {
                 e.setCancelled(true);
             }
             else{
+                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
             }
@@ -582,9 +426,10 @@ public class BetterLock implements Listener {
             // TODO ERROR does Update entry but if flag was added and gets added again.. it will fail..  JSONObject["flags"] is not a JSONArray (Class String) 
             
             Block b = e.getClickedBlock();
-            Location l = getLocationFromBlockAlternateForDoor(b);
-            ProtectionEntry pre = RelluEssentials.protectionEntries.get(l);
-            if(pre != null && hasPermission(pre, e.getPlayer())){
+            Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+            ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
+            if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
+                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
                 if(pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)){
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
 
@@ -619,22 +464,24 @@ public class BetterLock implements Listener {
                 e.setCancelled(true);
             }
             else{
+                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
             }
         }
         else if(pe.getPlayerState().equals(PlayerState.PROTECTION_RIGHT_ADD)){
             Block b = e.getClickedBlock();
-            Location l = getLocationFromBlockAlternateForDoor(b);
-            ProtectionEntry pre = RelluEssentials.protectionEntries.get(l);
-            if(pre != null && hasPermission(pre, e.getPlayer())){
+            Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+            ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
+            if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
+                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
                 if(pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)){
                     JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
 
                     List<Object> list = rightJSON.toList();
 
                     UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
-                    int id = RelluEssentials.playerEntryList.get(uuid).getID();
+                    int id = PlayerAPI.getPlayerEntry(uuid).getID();
                     if(!list.contains(id)){
                         list.add((Object)id);
                         
@@ -652,22 +499,24 @@ public class BetterLock implements Listener {
                 e.setCancelled(true);
             }
             else{
+                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
             }
         }
         else if(pe.getPlayerState().equals(PlayerState.PROTECTION_RIGHT_REMOVE)){
             Block b = e.getClickedBlock();
-            Location l = getLocationFromBlockAlternateForDoor(b);
-            ProtectionEntry pre = RelluEssentials.protectionEntries.get(l);
-            if(pre != null && hasPermission(pre, e.getPlayer())){
+            Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+            ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
+            if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
+                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
                 if(pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)){
                     JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
 
                     List<Object> list = rightJSON.toList();
 
                     UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
-                    int id = RelluEssentials.playerEntryList.get(uuid).getID();
+                    int id = PlayerAPI.getPlayerEntry(uuid).getID();
                     if(list.contains(id)){
                         list.remove((Object)id);
                         
@@ -685,6 +534,7 @@ public class BetterLock implements Listener {
                 e.setCancelled(true);
             }
             else{
+                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
             }
@@ -696,10 +546,10 @@ public class BetterLock implements Listener {
         Block b = e.getClickedBlock();
        
         if(b != null){
-            Location l = getLocationFromBlockAlternateForDoor(b);
-            if(isOpenable(b)){
-                ProtectionEntry protection = RelluEssentials.protectionEntries.get(l);
-                PlayerEntry pe = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
+            Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+            if(ProtectionHelper.isOpenable(b)){
+                ProtectionEntry protection = ProtectionAPI.getProtectionEntry(l);
+                PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getPlayer());
                 if (protection != null && pe != null && 
                     !(
                         pe.getPlayerState().equals(PlayerState.PROTECTION_INFO) || 
@@ -711,8 +561,8 @@ public class BetterLock implements Listener {
                         pe.getPlayerState().equals(PlayerState.PROTECTION_RIGHT_REMOVE)
                     )
                 ) {  
-                    if (!hasRights(protection, pe.getID())) {
-                        if(hasFlag(protection, ProtectionFlags.ALLOWPUBLIC)){
+                    if (!ProtectionHelper.hasRights(protection, pe.getID())) {
+                        if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOWPUBLIC)){
                             e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
                         }
                         else{
@@ -735,7 +585,7 @@ public class BetterLock implements Listener {
 
                         if(openable instanceof Door){
                             Door door = (Door) b.getBlockData();
-                            Block b2 = getOtherPart(door, b);
+                            Block b2 = ProtectionHelper.getOtherPart(door, b);
                             if(b2 != null){
                                 if(b2.getBlockData() instanceof Door){
                                     Door door2 = (Door) b2.getBlockData();
@@ -745,7 +595,7 @@ public class BetterLock implements Listener {
                                     else{
                                         door2.setOpen(true);
 
-                                        if(hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
+                                        if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
                                        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
 
                                                 @Override
@@ -766,7 +616,7 @@ public class BetterLock implements Listener {
                                 }
                             }
                             else{
-                                if(hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
+                                if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
                                     Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
 
                                         @Override
@@ -783,7 +633,7 @@ public class BetterLock implements Listener {
                         }
                         else if(openable instanceof TrapDoor){
                             TrapDoor door = (TrapDoor) b.getBlockData();
-                            if(hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
+                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
                                 Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
 
                                     @Override
@@ -799,7 +649,7 @@ public class BetterLock implements Listener {
                         }
                         else if(openable instanceof Gate){
                             Gate door = (Gate) b.getBlockData();
-                            if(hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
+                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
                                 Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
 
                                     @Override
@@ -819,12 +669,12 @@ public class BetterLock implements Listener {
                     }
                 }
             }
-            else if(isLockable(b)){
-                ProtectionEntry protection = RelluEssentials.protectionEntries.get(l);
-                PlayerEntry pe = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
+            else if(ProtectionHelper.isLockable(b)){
+                ProtectionEntry protection = ProtectionAPI.getProtectionEntry(l);
+                PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getPlayer());
                 if (protection != null && pe != null && pe.getPlayerState().equals(PlayerState.DEFAULT)) { 
-                    if (!hasRights(protection, pe.getID())) {
-                        if(hasFlag(protection, ProtectionFlags.ALLOWPUBLIC)){
+                    if (!ProtectionHelper.hasRights(protection, pe.getID())) {
+                        if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOWPUBLIC)){
                             e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
                         }
                         else{
@@ -864,8 +714,8 @@ public class BetterLock implements Listener {
         ProtectionEntry protection;
         
         if (b != null){
-            Location l = getLocationFromBlockAlternateForDoor(b);
-            protection = RelluEssentials.protectionEntries.get(l);
+            Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+            protection = ProtectionAPI.getProtectionEntry(l);
             
             if (protection != null){
                 JSONObject flags = protection.getFlags();
@@ -881,8 +731,8 @@ public class BetterLock implements Listener {
     @EventHandler
     public void entityBreakDoor(EntityBreakDoorEvent e) {
         Block b = e.getBlock();
-        Location l = getLocationFromBlockAlternateForDoor(b);
-        ProtectionEntry protection = RelluEssentials.protectionEntries.get(l);
+        Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+        ProtectionEntry protection = ProtectionAPI.getProtectionEntry(l);
         if (protection != null) {
             e.setCancelled(true); 
         } 
@@ -906,13 +756,13 @@ public class BetterLock implements Listener {
         if (moved.getType() == Material.OAK_DOOR || moved.getType() == Material.IRON_DOOR) {
             Block below = moved.getRelative(BlockFace.DOWN).getRelative(direction.getOppositeFace());
 
-            ProtectionEntry protection = RelluEssentials.protectionEntries.get(below.getLocation());
+            ProtectionEntry protection = ProtectionAPI.getProtectionEntry(below.getLocation());
             if (protection != null) {
                 e.setCancelled(true);
                 return;
             } 
         } 
-        ProtectionEntry protection = RelluEssentials.protectionEntries.get(moved.getLocation());
+        ProtectionEntry protection = ProtectionAPI.getProtectionEntry(moved.getLocation());
         if (protection != null) {
             e.setCancelled(true); 
         } 
@@ -927,7 +777,7 @@ public class BetterLock implements Listener {
         if (piston.getBlockData() instanceof Piston){
             direction = ((Piston)piston.getBlockData()).getFacing(); 
             Block block = e.getBlock().getRelative(direction);
-            ProtectionEntry protection = RelluEssentials.protectionEntries.get(block.getLocation());
+            ProtectionEntry protection = ProtectionAPI.getProtectionEntry(block.getLocation());
             if (protection != null) {
                 e.setCancelled(true);
                 return;
@@ -939,7 +789,7 @@ public class BetterLock implements Listener {
           
         for (int i = 0; i <  e.getBlocks().size() + 2; i++) {
             Block block = piston.getRelative(direction, i);
-            ProtectionEntry protection = RelluEssentials.protectionEntries.get(block.getLocation());
+            ProtectionEntry protection = ProtectionAPI.getProtectionEntry(block.getLocation());
             if (block.getType() == Material.AIR){
                 break;
             }
@@ -953,7 +803,7 @@ public class BetterLock implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityExplode(EntityExplodeEvent event) {
         for (Block block : event.blockList()) {
-            ProtectionEntry protection = RelluEssentials.protectionEntries.get(block.getLocation());
+            ProtectionEntry protection = ProtectionAPI.getProtectionEntry(block.getLocation());
             if (protection != null) {
                 dBH.deleteProtection(protection);
                 continue;

@@ -1,0 +1,18 @@
+/**
+ * Author:  rellu
+ * Created: 19.02.2023
+ */
+
+CREATE TABLE IF NOT EXISTS `rellu_essentials`.`world` (
+  `ID` INT NOT NULL AUTO_INCREMENT,
+  `CREATED` DATETIME NOT NULL,
+  `CREATEDBY` INT NOT NULL,
+  `UPDATED` DATETIME NULL,
+  `UPDATEDBY` INT NULL,
+  `DELETED` DATETIME NULL,
+  `DELETEDBY` INT NULL,
+  `NAME` VARCHAR(45) NOT NULL,
+  `world_group_fk` INT NOT NULL,
+  `build_group_fk` INT NOT NULL,
+  PRIMARY KEY (`ID`));
+

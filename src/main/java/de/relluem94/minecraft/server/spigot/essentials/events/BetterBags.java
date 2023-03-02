@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
@@ -23,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
@@ -48,7 +50,9 @@ public class BetterBags implements Listener {
             if(e.getBlock().getBlockData() instanceof Ageable){
                 Ageable age = (Ageable) e.getBlock().getBlockData();
                 if(age.getAge() != age.getMaximumAge()){
-                    e.setCancelled(true);
+                    if(!e.getBlock().getType().equals(Material.SUGAR_CANE)){
+                        e.setCancelled(true);
+                    }
                 }
             }
         }
@@ -60,11 +64,11 @@ public class BetterBags implements Listener {
     public void onBlockDrop(BlockDropItemEvent e) {
         Player p = e.getPlayer();
        
-        PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
 
         for(Item i : e.getItems()){
             if(RelluEssentials.dropMap.containsKey(i.getItemStack().getType())){
-                if(i.getItemStack().getAmount() == 1){ // Some ores dropped allways only one item. e.g. coal thats not right. can be removed if problem is solved 
+                if(i.getItemStack().getAmount() == 1){ 
                     DoubleStore ds = RelluEssentials.dropMap.get(i.getItemStack().getType());
                     i.getItemStack().setAmount(r.nextInt((int)ds.getSecondValue()) + (int)ds.getValue());
                 }
@@ -76,17 +80,23 @@ public class BetterBags implements Listener {
                 if(e.getItems().get(i) != null && RelluEssentials.crops.containsKey(e.getItems().get(i).getItemStack().getType())){
                     e.getBlock().setType(RelluEssentials.crops.get(e.getItems().get(i).getItemStack().getType()));
 
-                    if(e.getBlockState() instanceof Cocoa){
-                        Cocoa c = (Cocoa) e.getBlockState();
+                    if(e.getBlock().getBlockData() instanceof Cocoa){
+                        Cocoa c = (Cocoa) e.getBlock().getBlockData();
                         Block cocoa = e.getBlock();
                         Block wood = cocoa.getRelative(c.getFacing().getOppositeFace());
                         if(!wood.getType().equals(Material.JUNGLE_LOG)){
                             for(BlockFace f : BlockFace.values()){
-                                wood = cocoa.getRelative(f);
+                                wood = e.getBlock().getRelative(f);
                                 if(wood.getType().equals(Material.JUNGLE_LOG)){
-                                    c.setFacing(f.getOppositeFace());
+                                    c.setFacing(f);
+                                    cocoa.setBlockData(c);
+                                    break;
                                 }
                             }                            
+                        }
+                        else{
+                            c.setFacing(c.getFacing().getOppositeFace());
+                            cocoa.setBlockData(c);
                         }
                     }
                     int oldAmount =  e.getItems().get(i).getItemStack().getAmount();
@@ -130,7 +140,7 @@ public class BetterBags implements Listener {
             ItemStack checkWithoutAmount = i.getItemStack().clone();
             checkWithoutAmount.setAmount(1);
             if(RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
-                List<BagEntry> bel = BagHelper.getBags(pe.getID());
+                Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
                 for(BagEntry be: bel){
                     int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
                     if(slot != -1){
@@ -151,7 +161,7 @@ public class BetterBags implements Listener {
             Player p = (Player) e.getWhoClicked();
             if (e.getView().getTitle().startsWith(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER) && e.getView().getTitle().endsWith(" Bag")) {
 
-                PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                 BagEntry be = BagHelper.getBag(pe.getID(), BagHelper.getBagTypeByName(e.getView().getTitle()).getId());
 
                 ItemStack is = e.getCurrentItem();
@@ -243,7 +253,7 @@ public class BetterBags implements Listener {
                 String name = e.getCurrentItem().getItemMeta().getDisplayName();
                 BagTypeEntry bte = BagHelper.getBagTypeByName(name);
                 if(bte != null){
-                    PlayerEntry pe = RelluEssentials.playerEntryList.get(e.getWhoClicked().getUniqueId());
+                    PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getWhoClicked().getUniqueId());
                     e.getWhoClicked().openInventory(BagHelper.getBag(bte.getId(), pe));
                 }
             }

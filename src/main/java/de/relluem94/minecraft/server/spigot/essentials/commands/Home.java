@@ -7,13 +7,13 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_DELETE;
@@ -49,7 +49,7 @@ public class Home implements CommandExecutor {
                     if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_LIST)) {
                         if (isPlayer(sender)) {
                             Player p = (Player) sender;
-                            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
 
                             if (hasHomes(pe)) {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
@@ -68,7 +68,7 @@ public class Home implements CommandExecutor {
                     } else {
                         if (isPlayer(sender)) {
                             Player p = (Player) sender;
-                            PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
                             LocationEntry le = new LocationEntry();
                             le.setLocationName(args[0]);
                             le.setLocationType(locationTypeEntryList.get(0));
@@ -89,7 +89,7 @@ public class Home implements CommandExecutor {
                 case 2:
                     if (isPlayer(sender)) {
                         Player p = (Player) sender;
-                        PlayerEntry pe = playerEntryList.get(p.getUniqueId());
+                        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
 
                         LocationEntry le = new LocationEntry();
                         le.setLocation(p.getLocation());

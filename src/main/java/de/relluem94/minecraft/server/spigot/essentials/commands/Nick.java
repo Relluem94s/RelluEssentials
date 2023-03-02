@@ -8,10 +8,10 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.playerEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_NICK;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -27,9 +27,9 @@ public class Nick implements CommandExecutor {
                     if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         Player target = Bukkit.getPlayer(args[0]).getPlayer();
                         if (target != null) {
-                            PlayerEntry pe = playerEntryList.get(target.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(target.getUniqueId());
                             pe.setCustomName(args[1]);
-                            pe.setUpdatedBy(playerEntryList.get(p.getUniqueId()).getID());
+                            pe.setUpdatedBy(PlayerAPI.getPlayerEntry(p.getUniqueId()).getID());
                             dBH.updatePlayer(pe);
                             target.setCustomName(pe.getGroup().getPrefix() + args[1]);
                             target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);

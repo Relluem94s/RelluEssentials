@@ -22,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
@@ -108,23 +109,23 @@ public class TestCommand implements CommandExecutor {
                             p.teleport(Bukkit.getWorld("world2").getSpawnLocation());
                         }
                         else if (args[0].equals("bc")) {
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             RelluEssentials.dBH.insertBag(1, pe.getID());
                         }
                         else if (args[0].equals("bo")) {
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             p.openInventory(BagHelper.getBag(1, pe));
                         }
                         else if (args[0].equals("bc2")) {
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             RelluEssentials.dBH.insertBag(2, pe.getID());
                         }
                         else if (args[0].equals("bo2")) {
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             p.openInventory(BagHelper.getBag(2, pe)); 
                         }
                         else if(args[0].equals("di")){
-                            PlayerEntry pe = RelluEssentials.playerEntryList.get(p.getUniqueId());
+                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             if(pe.getPlayerState().equals(PlayerState.DEFAULT)){
                                 pe.setPlayerState(PlayerState.DAMAGE_INFO);
                             }
@@ -132,6 +133,15 @@ public class TestCommand implements CommandExecutor {
                                 pe.setPlayerState(PlayerState.DEFAULT);
                             }
                         }
+                        else if(args[0].equals("pl")){
+                            p.sendMessage("Health: " + p.getHealth());
+                            p.sendMessage("Food: " + p.getFoodLevel());
+                            p.sendMessage("Exp: " + p.getExp());
+                        }
+
+                        
+
+
                         else if (args[0].equals("sk")) {
                             p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG_OF_COINS));
                             p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.MONEY_BAG));
