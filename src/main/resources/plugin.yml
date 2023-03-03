@@ -26,7 +26,7 @@ commands:
         usage: /fly
     craft:
         description: Open Craftingbench protable
-        usage: /craft
+        usage: /craftteleport
     cookie:
         description: Share a Cookie (with your best friend)
         usage: /cookie
@@ -145,5 +145,9 @@ commands:
     exit:
         description: Linux like exit 
         usage: /exit
+    teleport:
+        description: Telport Player
+        usage: /teleport
+        aliases: tp
 
 
