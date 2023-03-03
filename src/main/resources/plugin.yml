@@ -145,5 +145,9 @@ commands:
     exit:
         description: Linux like exit 
         usage: /exit
+    teleport:
+        description: Telport Player
+        usage: /teleport
+        aliases: tp
 
 
