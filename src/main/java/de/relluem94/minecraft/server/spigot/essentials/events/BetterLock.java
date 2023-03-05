@@ -642,7 +642,6 @@ public class BetterLock implements Listener {
                                                     b.setBlockData(door);
                                                     b2.setBlockData(door2);
                                                     e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                                    // TODO shows 2x Autoclose Message but door is already closed by player
                                                 }
                                                 
                                             }, 50);
