@@ -2,9 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,10 +21,12 @@ import org.bukkit.potion.PotionEffectType;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
@@ -138,7 +142,25 @@ public class TestCommand implements CommandExecutor {
                             p.sendMessage("Food: " + p.getFoodLevel());
                             p.sendMessage("Exp: " + p.getExp());
                         }
+                        else if(args[0].equals("cp")){
+                            HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
 
+                            p.sendMessage(ProtectionAPI.getProtectionEntryList().size() + " << list size");
+                            for(Location l : ProtectionAPI.getProtectionEntryList().keySet()){
+                                ProtectionEntry pe = ProtectionAPI.getProtectionEntryList().get(l);
+                                if(!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))){
+                                    p.sendMessage(pe.getId() + " >> " + l.getBlock().getType().name() + " != " + pe.getMaterialName() + " >> wrong");
+                                    removeMap.put(l, pe);
+                                    
+                                    RelluEssentials.dBH.deleteProtection(pe);
+                                }
+                            }
+
+                            for(Location l : removeMap.keySet()){
+                                ProtectionAPI.removeProtectionEntry(l);
+                            }
+                        }
+                        
                         
 
 
