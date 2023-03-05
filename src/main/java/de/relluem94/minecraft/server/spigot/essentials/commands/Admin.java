@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,19 +10,24 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN_PING;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
+import java.util.HashMap;
 
 public class Admin implements CommandExecutor {
 
@@ -74,6 +80,30 @@ public class Admin implements CommandExecutor {
                             else{
                                 p.sendMessage(Strings.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE);
                                 pe.setPlayerState(PlayerState.LIGHT_TOOGLE);
+                            }
+                        }
+                        else if(args[0].equalsIgnoreCase("cleanProtections")){
+                            HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
+                            
+                            p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START, ProtectionAPI.getProtectionEntryList().size() ));
+                            for(Location l : ProtectionAPI.getProtectionEntryList().keySet()){
+                                ProtectionEntry pe = ProtectionAPI.getProtectionEntryList().get(l);
+                                if(!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))){
+                                    removeMap.put(l, pe);
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS, pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
+                                    RelluEssentials.dBH.deleteProtection(pe);
+                                }
+                            }
+
+                            if(removeMap.size() != 0){
+                                p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP, removeMap.size() ));
+                                for(Location l : removeMap.keySet()){                                    
+                                    ProtectionAPI.removeProtectionEntry(l);
+                                }
+                                p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END, ProtectionAPI.getProtectionEntryList().size()));
+                            }
+                            else{
+                                p.sendMessage(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE);
                             }
                         }
                         else if(args[0].equals("afk")){
