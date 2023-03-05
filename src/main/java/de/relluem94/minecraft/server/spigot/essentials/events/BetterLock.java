@@ -101,7 +101,6 @@ public class BetterLock implements Listener {
     }
 
     private boolean removeProtectionFromBlock(Player p , Block b){
-        //TODO check block above if is lockable (block below door can break door)
         PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
         if(ProtectionHelper.isLockable(b)){
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
@@ -308,6 +307,9 @@ public class BetterLock implements Listener {
             return attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
         }
         else if(bd instanceof Sign){
+            return attachedBlock.getRelative(BlockFace.DOWN).equals(b);
+        }
+        else if(bd instanceof Door){
             return attachedBlock.getRelative(BlockFace.DOWN).equals(b);
         }
         else{
