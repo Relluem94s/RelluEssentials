@@ -26,7 +26,7 @@ public class Exit implements CommandExecutor {
                 if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-                        p.kickPlayer(Strings.PLUGIN_COMAND_EXIT_KICK_MESSAGE);
+                        p.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_KICK_MESSAGE);
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
