@@ -54,11 +54,10 @@ public class Home implements CommandExecutor {
                             if (hasHomes(pe)) {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
                                 locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationType().getId() == 1)).forEachOrdered(fle -> {
-                                    p.sendMessage(PLUGIN_COMMAND_COLOR + "Name: " + PLUGIN_COMMAND_ARG_COLOR + fle.getLocationName() + " §7(" + locationToString(fle.getLocation()) + "§7)");
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation())));
                                 });
-                                // TODO remove String and add to Strings.java
                                 locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationType().getId() == 2)).forEachOrdered(fle -> {
-                                    p.sendMessage(PLUGIN_COMMAND_COLOR + "Todespunkt: " + PLUGIN_COMMAND_ARG_COLOR + fle.getLocationName() + " §7(" + locationToString(fle.getLocation()) + "§7)");
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS, fle.getLocationName(), locationToString(fle.getLocation())));
                                 });
                             } else {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
