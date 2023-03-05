@@ -101,6 +101,7 @@ public class BetterLock implements Listener {
     }
 
     private boolean removeProtectionFromBlock(Player p , Block b){
+        //TODO check block above if is lockable (block below door can break door)
         PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
         if(ProtectionHelper.isLockable(b)){
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
@@ -738,7 +739,8 @@ public class BetterLock implements Listener {
         } 
     }
 
-    @EventHandler
+    // TODO test if can be removed
+    //@EventHandler
     public void onBlockPistonRetract(BlockPistonRetractEvent e) {
 
         Block piston = e.getBlock();        
@@ -773,23 +775,54 @@ public class BetterLock implements Listener {
         Block piston = e.getBlock();        
         BlockFace direction = null;
 
-
         if (piston.getBlockData() instanceof Piston){
             direction = ((Piston)piston.getBlockData()).getFacing(); 
             Block block = e.getBlock().getRelative(direction);
-            ProtectionEntry protection = ProtectionAPI.getProtectionEntry(block.getLocation());
-            if (protection != null) {
-                e.setCancelled(true);
-                return;
-            } 
+
+            if(ProtectionAPI.getMaterialProtectionList().contains(block.getType())){
+                ProtectionEntry protection = ProtectionAPI.getProtectionEntry(block.getLocation());
+                if (protection != null) {
+                    e.setCancelled(true);
+                    return;
+                } 
+                else{
+                    Block block_lower = e.getBlock().getRelative(direction).getRelative(BlockFace.DOWN);
+                    ProtectionEntry protection_lower = ProtectionAPI.getProtectionEntry(block_lower.getLocation());
+                    if (protection_lower != null) {
+                        e.setCancelled(true);
+                        return;
+                    } 
+                }
+            }
         }
         if (direction == null){
             return; 
         }
-          
+        
+        boolean hasSlimeBlock = false;
+        
+        for (int i = 0; i <  e.getBlocks().size() + 2; i++) {
+            Block block = piston.getRelative(direction, i);
+            if(block.getType().equals(Material.SLIME_BLOCK)){
+                hasSlimeBlock = true;
+            }
+        } 
+
         for (int i = 0; i <  e.getBlocks().size() + 2; i++) {
             Block block = piston.getRelative(direction, i);
             ProtectionEntry protection = ProtectionAPI.getProtectionEntry(block.getLocation());
+
+            if(hasSlimeBlock){
+                Block block_upper = piston.getRelative(direction, i+1).getRelative(BlockFace.UP);
+                ProtectionEntry protection_upper = ProtectionAPI.getProtectionEntry(block_upper.getLocation());
+                System.out.println("upper: " + block.getType().name() + " " + i + " " + block_upper.getY());
+                if (protection_upper != null) {
+                    e.setCancelled(true);
+                    return;
+                } 
+            }
+
+            System.out.println("same: " + block.getType().name() + " " + i + " " + block.getY());
             if (block.getType() == Material.AIR){
                 break;
             }
