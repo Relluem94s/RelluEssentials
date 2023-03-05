@@ -36,7 +36,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
@@ -402,21 +401,35 @@ public class BetterLock implements Listener {
             ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
                 e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                boolean update = false;
                 if(pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)){
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
 
+                    String flag = ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName();
                     List<Object> list = flagJSON.toList();
-                    list.remove(ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName());
-                    JSONObject flags = new JSONObject();
-                    flags.put(PLUGIN_EVENT_PROTECT_FLAGS, list);
+                    if(list.contains(flag)){
+                        update = true;
+                        list.remove(flag);
+                        JSONObject flags = new JSONObject();
+                        flags.put(PLUGIN_EVENT_PROTECT_FLAGS, list);
 
-                    pre.setFlags(flags);
+                        pre.setFlags(flags);
+                    }
                 }
 
-                dBH.updateProtectionFlag(pre);
+                if(update){
+                    dBH.updateProtectionFlag(pre);
+                    ProtectionAPI.removeProtectionEntry(l);
+                    ProtectionAPI.putProtectionEntry(l, pre);
+                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE);
+                }
+                else{
+                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE_FAILED);
+                }
+               
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE);
+               
                 e.setCancelled(true);
             }
             else{
@@ -425,21 +438,24 @@ public class BetterLock implements Listener {
                 pe.setPlayerStateParameter(null);
             }
         }
-        else if(pe.getPlayerState().equals(PlayerState.PROTECTION_FLAG_ADD)){
-            // TODO ERROR does Update entry but if flag was added and gets added again.. it will fail..  JSONObject["flags"] is not a JSONArray (Class String) 
-            
+        else if(pe.getPlayerState().equals(PlayerState.PROTECTION_FLAG_ADD)){            
             Block b = e.getClickedBlock();
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
             ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
                 e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                boolean update = false;
                 if(pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)){
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
 
                     List<Object> list = flagJSON.toList();
-                    
-                    list.add(ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName());
-                    
+                    String flag = ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName();
+
+                    if(!list.contains(flag)){
+                        update = true;
+                        list.add(ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName());
+                    }
+
                     JSONObject flags = new JSONObject();
                     flags.put(PLUGIN_EVENT_PROTECT_FLAGS, list);
 
@@ -455,15 +471,22 @@ public class BetterLock implements Listener {
                         String[] flag = {ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName()};
                         flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
                     }
-
+                    update = true;
                     pre.setFlags(flags);  
                 }
                 
-                dBH.updateProtectionFlag(pre);
+                if(update){
+                    dBH.updateProtectionFlag(pre);
+                    ProtectionAPI.removeProtectionEntry(l);
+                    ProtectionAPI.putProtectionEntry(l, pre);
+                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD);
+                }
+                else{
+                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD_FAILED);
+                }                
                 
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD);
                 e.setCancelled(true);
             }
             else{
@@ -493,8 +516,13 @@ public class BetterLock implements Listener {
                         pre.setRights(rights);
                         e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD);
 
-                        dBH.updateProtectionFlag(pre);
-                    }                    
+                        dBH.updateProtectionRight(pre);
+                        ProtectionAPI.removeProtectionEntry(l);
+                        ProtectionAPI.putProtectionEntry(l, pre);
+                    }
+                    else{
+                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED);
+                    }                 
                 }
 
                 pe.setPlayerState(PlayerState.DEFAULT);
@@ -527,13 +555,18 @@ public class BetterLock implements Listener {
                         rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, list);
                         pre.setRights(rights);
 
-                        dBH.updateProtectionFlag(pre);
+                        dBH.updateProtectionRight(pre);
+                        ProtectionAPI.removeProtectionEntry(l);
+                        ProtectionAPI.putProtectionEntry(l, pre);
+                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE);
+                    }
+                    else{
+                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED);
                     }
                 }
 
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE);
                 e.setCancelled(true);
             }
             else{
