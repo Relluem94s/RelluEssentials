@@ -20,6 +20,7 @@ public class ProtectionAPI {
         for(ProtectionLockEntry ple: protectionLocksEntryList){
             addProtectionMaterial(ple.getValue());
         }
+        ProtectionAPI.protectionEntryMap.putAll(protectionEntryMap);
     }
 
     /**
@@ -58,4 +59,13 @@ public class ProtectionAPI {
     public static List<Material> getMaterialProtectionList(){
         return protectionLocksList;
     }
+
+    /**
+     * 
+     * @return
+     */
+    public static HashMap<Location, ProtectionEntry> getProtectionEntryList(){
+        return protectionEntryMap;
+    }
+
 }
