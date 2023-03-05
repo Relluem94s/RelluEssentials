@@ -64,10 +64,14 @@ public class EventConstants {
     public static final String PLUGIN_EVENT_PROTECT_BLOCK_REMOVE = PLUGIN_PREFIX + PLUGIN_SPACER +"§4\u2716 " + PLUGIN_COMMAND_COLOR + " Successful removed Protection!";
 
     public static final String PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD = PLUGIN_PREFIX + PLUGIN_SPACER +"§2\u2714 " + PLUGIN_COMMAND_COLOR + "Successful added Flag to Protection!";
+    public static final String PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD_FAILED = PLUGIN_PREFIX + PLUGIN_SPACER +"§4\u2716 " + PLUGIN_COMMAND_COLOR + "Can't add Flag to Protection, Flag already found on Protection!";
     public static final String PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE = PLUGIN_PREFIX + PLUGIN_SPACER +"§4\u2716 " + PLUGIN_COMMAND_COLOR + "Successful removed Flag from Protection!";
+    public static final String PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE_FAILED = PLUGIN_PREFIX + PLUGIN_SPACER +"§4\u2716 " + PLUGIN_COMMAND_COLOR + "Can't remove Flag from Protection, Flag not found on Protection!";
 
     public static final String PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD = PLUGIN_PREFIX + PLUGIN_SPACER +"§2\u2714 " + PLUGIN_COMMAND_COLOR + "Successful added Right to Protection!";
+    public static final String PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED = PLUGIN_PREFIX + PLUGIN_SPACER +"§4\u2716 " + PLUGIN_COMMAND_COLOR + "Can't add Right to Protection, Right already found on Protection!";
     public static final String PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE = PLUGIN_PREFIX + PLUGIN_SPACER +"§4\u2716 " + PLUGIN_COMMAND_COLOR + "Successful removed Right from Protection!";
+    public static final String PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED = PLUGIN_PREFIX + PLUGIN_SPACER +"§4\u2716 " + PLUGIN_COMMAND_COLOR + "Can't remove Right from Protection, Right not found on Protection!";
 
     public static final String PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN = "§cDer Server ist leider voll";
 
