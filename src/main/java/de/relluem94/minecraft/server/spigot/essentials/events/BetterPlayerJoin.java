@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
@@ -74,21 +73,6 @@ public class BetterPlayerJoin implements Listener {
 
         
     }
-
-
-    @EventHandler
-    public void onWorldChange(PlayerChangedWorldEvent e){
-        Player p = e.getPlayer();
-        
-        WorldHelper.saveWorldGroupInventory(p, e.getFrom());
-        WorldHelper.loadWorldGroupInventory(p); // TODO own class
-    }
-
-
-
-
-
-
 
     @EventHandler
     public void login(PlayerLoginEvent e){
