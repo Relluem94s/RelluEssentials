@@ -89,7 +89,7 @@ public class BetterMobs implements Listener {
             Player p = (Player) e.getDamager();
             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
             if(pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)){
-                p.sendMessage("Damage: " + e.getDamage() + " Last Damage: " + m.getLastDamage() + " Health: " + m.getHealth()); // TODO add to strings
+                p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(), m.getLastDamage(), m.getHealth()));
             }
             if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.thunderstrike)){
                 m.getLocation().getWorld().strikeLightningEffect(m.getLocation());
