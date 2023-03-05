@@ -28,12 +28,16 @@ public class User {
     }
 
     public void setGroup(GroupEntry g) {
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
-        pe.setGroup(g);
-        dBH.updatePlayer(pe);
         p.setCustomName(g.getPrefix() + getCustomName(p));
         p.setPlayerListName(p.getCustomName());
         p.setScoreboard(RelluEssentials.board);
+    }
+
+    public void updateGroup(GroupEntry g) {
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        pe.setGroup(g);
+        dBH.updatePlayer(pe);
+        setGroup(g);
     }
 
     public static GroupEntry getGroup(Player p) {
@@ -41,7 +45,8 @@ public class User {
 
         if (pe != null) {
             return pe.getGroup();
-        } else {
+        }
+        else {
             return Groups.getGroup(1);
         }
     }
@@ -62,10 +67,16 @@ public class User {
     private String getCustomName(Player p) {
         String name;
         PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
-        if (pe.getCustomName() != null) {
+        if (pe.getCustomName() != null && pe.getCustomName() != "null") {
             name = pe.getCustomName();
-        } else {
-            name = p.getName();
+        } 
+        else {
+            if (pe.getName() != null && pe.getName() != "null") {
+                name = pe.getName();
+            } 
+            else {
+                name = p.getName();
+            }
         }
 
         return name;

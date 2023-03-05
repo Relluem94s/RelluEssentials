@@ -262,6 +262,9 @@ public class DatabaseHelper {
         executeScript(v + "insertWorlds.sql");
         executeScript(v + "insertWorldGroupSetting.sql");
 
+        executeScript(v + "addPlayerName.sql");
+        executeScript(v + "changePlayerCustomName.sql");
+
         executeScript(v + "insertNewDBVersion.sql");
         executeScript(v + "updateOldPluginInformation.sql");
     }
@@ -658,6 +661,7 @@ public class DatabaseHelper {
                     p.setUpdatedBy(rs.getInt("updatedby"));
                     p.setDeleted(rs.getString("deleted"));
                     p.setDeletedBy(rs.getInt("deletedby"));
+                    p.setName(rs.getString("name"));
                     p.setCustomName(rs.getString("customname"));
                     p.setPurse(rs.getDouble("purse"));
                     p.setFlying(rs.getBoolean("fly"));
@@ -1018,6 +1022,7 @@ public class DatabaseHelper {
                     p.setUpdatedBy(rs.getInt("updatedby"));
                     p.setDeleted(rs.getString("deleted"));
                     p.setDeletedBy(rs.getInt("deletedby"));
+                    p.setName(rs.getString("name"));
                     p.setCustomName(rs.getString("customname"));
                     p.setPurse(rs.getDouble("purse"));
                     p.setFlying(rs.getBoolean("fly"));
@@ -1042,7 +1047,9 @@ public class DatabaseHelper {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", StandardCharsets.UTF_8));
             ps.setInt(1, pe.getCreatedBy());
             ps.setString(2, pe.getUUID());
-            ps.setInt(3, pe.getGroup().getId());
+            ps.setString(3, pe.getName());
+            ps.setString(4, pe.getCustomName());
+            ps.setInt(5, pe.getGroup().getId());
 
             ps.execute();
         } catch (SQLException | IOException ex) {
@@ -1072,9 +1079,10 @@ public class DatabaseHelper {
             ps.setInt(2, pe.getGroup().getId());
             ps.setBoolean(3, pe.isAFK());
             ps.setBoolean(4, pe.isFlying());
-            ps.setString(5, pe.getCustomName());
-            ps.setDouble(6, pe.getPurse());
-            ps.setString(7, pe.getUUID());
+            ps.setString(5, pe.getName());
+            ps.setString(6, pe.getCustomName());
+            ps.setDouble(7, pe.getPurse());
+            ps.setString(8, pe.getUUID());
             ps.execute();
         } catch (SQLException | IOException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);

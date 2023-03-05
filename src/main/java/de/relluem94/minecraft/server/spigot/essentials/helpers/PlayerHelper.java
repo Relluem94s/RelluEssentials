@@ -65,9 +65,11 @@ public class PlayerHelper {
         }
 
         if(pe.getPlayerState().equals(PlayerState.DEFAULT)){
-            pe.setUpdatedBy(pe.getID());
-            pe.setAFK(isAFK);
-            dBH.updatePlayer(pe);
+            if(!join){
+                pe.setUpdatedBy(pe.getID());
+                pe.setAFK(isAFK);
+                dBH.updatePlayer(pe);
+            }
             p.setInvulnerable(isAFK);
         }
         

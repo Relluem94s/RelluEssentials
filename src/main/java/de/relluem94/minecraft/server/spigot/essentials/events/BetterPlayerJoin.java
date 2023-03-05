@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
@@ -36,11 +37,22 @@ public class BetterPlayerJoin implements Listener {
         if (pe == null) {
             pe = new PlayerEntry();
             pe.setCreatedby(1);
+            pe.setName(p.getName());
             pe.setCustomName(p.getDisplayName());
             pe.setGroup(Groups.getGroup("user"));
             pe.setUUID(p.getUniqueId().toString());
             dBH.insertPlayer(pe);
+
+            pe = dBH.getPlayer(p.getUniqueId().toString());
         }
+        else{
+            if(pe.getName() == null){
+                pe.setName(p.getName());
+                dBH.updatePlayer(pe);
+                pe = dBH.getPlayer(p.getUniqueId().toString());
+            }
+        }
+
         PlayerAPI.putPlayerEntry(p.getUniqueId(), pe);
         User u = new User(p);   
         u.done();
@@ -88,20 +100,22 @@ public class BetterPlayerJoin implements Listener {
     public void checkInterest(AsyncPlayerPreLoginEvent e){
         if(Bukkit.getOfflinePlayer(e.getUniqueId()).hasPlayedBefore()){
             PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getUniqueId());
-            BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
-            if(bae != null){
-                OfflinePlayer op = Bukkit.getOfflinePlayer(e.getUniqueId());
-                long lastPlayedTime = op.getLastPlayed()/1000L;
-                
-                LocalDate localDate = LocalDate.now();
-                ZonedDateTime startOfDayInZone = localDate.atStartOfDay(ZoneId.systemDefault());
-
-                Date lastPlayedDate = new Date(lastPlayedTime*1000L); 
-                Date todayDate = new Date(startOfDayInZone.toInstant().toEpochMilli());
-
-                if(lastPlayedDate.before(todayDate)){
-                    RelluEssentials.bankInterestMap.put(e.getUniqueId(), bae);
-                    // TODO check for online players (at 0:00) add to map
+            if(pe != null){ // Only if Player got deleted in DB
+                BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
+                if(bae != null){
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(e.getUniqueId());
+                    long lastPlayedTime = op.getLastPlayed()/1000L;
+                    
+                    LocalDate localDate = LocalDate.now();
+                    ZonedDateTime startOfDayInZone = localDate.atStartOfDay(ZoneId.systemDefault());
+    
+                    Date lastPlayedDate = new Date(lastPlayedTime*1000L); 
+                    Date todayDate = new Date(startOfDayInZone.toInstant().toEpochMilli());
+    
+                    if(lastPlayedDate.before(todayDate)){
+                        RelluEssentials.bankInterestMap.put(e.getUniqueId(), bae);
+                        // TODO check for online players (at 0:00) add to map
+                    }
                 }
             }
         }        

@@ -22,6 +22,7 @@ public class PlayerEntry {
     private GroupEntry group;
     private boolean afk;
     private boolean fly;
+    private String name;
     private String customName;
     private LocationEntry[] homes;
     private PlayerState playerState;
@@ -113,6 +114,14 @@ public class PlayerEntry {
 
     public void setFlying(boolean fly) {
         this.fly = fly;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCustomName() {

@@ -11,6 +11,7 @@ SET
     `group_fk` = ?, 
     `afk` = ?, 
     `fly` = ?, 
+    `name` = ?, 
     `customname` = ?, 
     `purse` = ? 
 WHERE 

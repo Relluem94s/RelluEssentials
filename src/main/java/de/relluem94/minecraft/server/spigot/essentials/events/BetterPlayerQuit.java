@@ -26,7 +26,6 @@ public class BetterPlayerQuit implements Listener {
         }
         
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
-        User.getUserByPlayerName(p.getName());
         User.removeUser(p.getName());
         p.teleport(Bukkit.getWorld("lobby").getSpawnLocation());
     }

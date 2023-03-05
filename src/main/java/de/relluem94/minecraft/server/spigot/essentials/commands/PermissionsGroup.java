@@ -32,10 +32,10 @@ public class PermissionsGroup implements CommandExecutor {
                             User u = User.getUserByPlayerName(target.getName());
 
                             if (u != null) {
-                                u.setGroup(g);
+                                u.updateGroup(g);
                             } else {
                                 u = new User(target);
-                                u.setGroup(g);
+                                u.updateGroup(g);
                             }
                             return true;
                         } else {
@@ -47,10 +47,10 @@ public class PermissionsGroup implements CommandExecutor {
                         User u = User.getUserByPlayerName(target.getName());
 
                         if (u != null) {
-                            u.setGroup(g);
+                            u.updateGroup(g);
                         } else {
                             u = new User(target);
-                            u.setGroup(g);
+                            u.updateGroup(g);
                         }
                         return true;
                     }
