@@ -96,6 +96,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerJoin;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerQuit;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterSavety;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterSoil;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterWorlds;
 import de.relluem94.minecraft.server.spigot.essentials.events.MOTD;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterNPC;
 import de.relluem94.minecraft.server.spigot.essentials.events.NoDeathMessage;
@@ -509,6 +510,7 @@ public class RelluEssentials extends JavaPlugin {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_EVENTS);
         /*	Events	*/
         pm.registerEvents(new BetterChatFormat(), this);
+        pm.registerEvents(new BetterWorlds(), this);
         pm.registerEvents(new BetterPlayerJoin(), this);
         pm.registerEvents(new BetterPlayerQuit(), this);
         pm.registerEvents(new BetterBlockDrop(), this);
