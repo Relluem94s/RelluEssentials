@@ -739,37 +739,6 @@ public class BetterLock implements Listener {
         } 
     }
 
-    // TODO test if can be removed
-    //@EventHandler
-    public void onBlockPistonRetract(BlockPistonRetractEvent e) {
-
-        Block piston = e.getBlock();        
-        BlockFace direction = null;
-
-        if (piston.getBlockData() instanceof Piston){
-            direction = ((Piston)piston.getBlockData()).getFacing(); 
-        }
-          
-        if (direction == null){
-            return; 
-        }
-
-        Block moved = piston.getRelative(direction, 2);
-        if (moved.getType() == Material.OAK_DOOR || moved.getType() == Material.IRON_DOOR) {
-            Block below = moved.getRelative(BlockFace.DOWN).getRelative(direction.getOppositeFace());
-
-            ProtectionEntry protection = ProtectionAPI.getProtectionEntry(below.getLocation());
-            if (protection != null) {
-                e.setCancelled(true);
-                return;
-            } 
-        } 
-        ProtectionEntry protection = ProtectionAPI.getProtectionEntry(moved.getLocation());
-        if (protection != null) {
-            e.setCancelled(true); 
-        } 
-    }
-
     @EventHandler
     public void onBlockPistonExtend(BlockPistonExtendEvent e) {
         Block piston = e.getBlock();        
@@ -815,14 +784,12 @@ public class BetterLock implements Listener {
             if(hasSlimeBlock){
                 Block block_upper = piston.getRelative(direction, i+1).getRelative(BlockFace.UP);
                 ProtectionEntry protection_upper = ProtectionAPI.getProtectionEntry(block_upper.getLocation());
-                System.out.println("upper: " + block.getType().name() + " " + i + " " + block_upper.getY());
                 if (protection_upper != null) {
                     e.setCancelled(true);
                     return;
                 } 
             }
 
-            System.out.println("same: " + block.getType().name() + " " + i + " " + block.getY());
             if (block.getType() == Material.AIR){
                 break;
             }
