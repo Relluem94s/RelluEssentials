@@ -22,6 +22,7 @@ public class Strings {
     public static final String PLUGIN_CLICK_SIGN = PLUGIN_MESSAGE_COLOR + "[Click here]";
     public static final String PLUGIN_NAME_CONSOLE = PLUGIN_MESSAGE_COLOR + "[" + PLUGIN_PREFIX + PLUGIN_MESSAGE_COLOR + "] ";
     public static final String PLUGIN_SPACER = "§7 >> " + PLUGIN_MESSAGE_COLOR;
+    public static final String PLUGIN_COMMAND_PREFIX = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR;
     public static final String PLUGIN_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
     public static final String PLUGIN_BORDER_SHORT = "<><><><><><><><><><><><><><><><><><>";
     public static final String PLUGIN_WHITE_SPACE = "               ";
@@ -169,6 +170,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_PROTECT_FLAG_ADD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click your Protected Block to add the Flag";
     public static final String PLUGIN_COMMAND_PROTECT_FLAG_REMOVE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click your Protected Block to remove the Flag";
     public static final String PLUGIN_COMMAND_PROTECT_RIGHT_ADD = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click your Protected Block to add the Player";
+    public static final String PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "No Player found with Name: " + PLUGIN_COMMAND_ARG_COLOR + "%s";
     public static final String PLUGIN_COMMAND_PROTECT_RIGHT_REMOVE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click your Protected Block to remove the Player";
     public static final String PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Wrong Sub Command";   
 
@@ -177,9 +179,14 @@ public class Strings {
     public static final String PLUGIN_COMMAND_SIGN_EDIT = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click the Sign you want to edit";
     public static final String PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Click the Redstone Lamp you want to Lit. Use this Command again to disable the Light Toogle Mode.";
     public static final String PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE_DISABLED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Light Toogle Mode is now disabled.";
-    public static final String PLUGIN_COMMAND_ADMIN_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use this command with the following Subcommands: npc, chat, light, afk, top, ping";
+    public static final String PLUGIN_COMMAND_ADMIN_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use this command with the following Subcommands: npc, chat, light, afk, top, ping, cleanProtections";
     public static final String PLUGIN_COMMAND_ADMIN_CHAT_CLEARED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Chat was cleared";
     public static final String PLUGIN_COMMAND_ADMIN_TOP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Teleported to the highest Block";
+    public static final String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS ="ID: " + PLUGIN_COMMAND_ARG_COLOR + "#%s" + PLUGIN_COMMAND_COLOR + " PMat: " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " != LMat: " + PLUGIN_COMMAND_ARG_COLOR + "%s";
+    public static final String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Checking " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " Protection Materials against their Location Materials";
+    public static final String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Cleaning Up " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " Protections";
+    public static final String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Reduced to " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " Protections";
+    public static final String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "No Protections to Clean Up";
     public static final String PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Wrong Subcommand";
     public static final String PLUGIN_COMMAND_WORLD_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use this command with the following Subcommands: list load unload unloadNoSave";
     public static final String PLUGIN_COMMAND_WORLD_CREATE_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Use this command with the following arguments: name(String) type(WordType String) environment (Environment as String) structures (boolean)";
@@ -193,7 +200,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_SUDO_ACTIVATED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You are now sudoing %s";
     public static final String PLUGIN_COMMAND_SUDO_DEACTIVATED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Exited.";
     public static final String PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Can't Sudo Player " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + ". Player not found!";
-    public static final String PLUGIN_COMAND_EXIT_KICK_MESSAGE = PLUGIN_COMMAND_COLOR + "exited.";
+    public static final String PLUGIN_COMMAND_EXIT_KICK_MESSAGE = PLUGIN_COMMAND_COLOR + "exited.";
     public static final String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COMMAND_COLOR + "Server is shutting down...";
 
     public static final String PLUGIN_COMMAND_TP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest zu " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "teleportiert!";
