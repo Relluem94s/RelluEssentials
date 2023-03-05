@@ -625,29 +625,31 @@ public class BetterLock implements Listener {
                             if(b2 != null){
                                 if(b2.getBlockData() instanceof Door){
                                     Door door2 = (Door) b2.getBlockData();
-                                    if (door2.isOpen()) {
-                                        door2.setOpen(false);
-                                    }
-                                    else{
-                                        door2.setOpen(true);
-
-                                        if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
-                                       Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
-
-                                                @Override
-                                                public void run() {
-                                                    door.setOpen(false);
-                                                    door2.setOpen(false);
-
-                                                    b.setBlockData(door);
-                                                    b2.setBlockData(door2);
-                                                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                                }
-                                                
-                                            }, 50);
+                                    if(door2.getHinge() != door.getHinge()){
+                                        if (door2.isOpen()) {
+                                            door2.setOpen(false);
                                         }
+                                        else{
+                                            door2.setOpen(true);
+    
+                                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
+                                           Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
+    
+                                                    @Override
+                                                    public void run() {
+                                                        door.setOpen(false);
+                                                        door2.setOpen(false);
+    
+                                                        b.setBlockData(door);
+                                                        b2.setBlockData(door2);
+                                                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
+                                                    }
+                                                    
+                                                }, 50);
+                                            }
+                                        }
+                                        b2.setBlockData(door2);
                                     }
-                                    b2.setBlockData(door2);
                                 }
                             }
                             else{

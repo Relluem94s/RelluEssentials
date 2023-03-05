@@ -152,7 +152,7 @@ public class ProtectionHelper {
      * @return
      */
     public static Block getOtherPart(Door door, Block block) {
-        Location l = block.getLocation();
+        Location l = block.getLocation().clone();
         if(door != null){
             if(door.getHinge().equals(Hinge.LEFT)){
                 if(door.isOpen()){
