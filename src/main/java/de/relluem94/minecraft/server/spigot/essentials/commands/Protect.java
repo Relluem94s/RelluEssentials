@@ -96,16 +96,28 @@ public class Protect implements CommandExecutor {
                         }
                         else if(args[0].equals(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)){
                             if(args[1].equals(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD)){
-                                pe.setPlayerState(PlayerState.PROTECTION_RIGHT_ADD);
-                                p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT_ADD);
                                 OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
-                                pe.setPlayerStateParameter(player.getID().toString());
+
+                                if(player != null){
+                                    p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT_ADD);
+                                    pe.setPlayerState(PlayerState.PROTECTION_RIGHT_ADD);
+                                    pe.setPlayerStateParameter(player.getID().toString());
+                                }
+                                else{
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND, args[2]));
+                                }
                             }
                             else if(args[1].equals(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE)){
-                                pe.setPlayerState(PlayerState.PROTECTION_RIGHT_REMOVE);
-                                p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT_REMOVE);
                                 OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
-                                pe.setPlayerStateParameter(player.getID().toString());
+
+                                if(player != null){
+                                    p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT_REMOVE);
+                                    pe.setPlayerState(PlayerState.PROTECTION_RIGHT_REMOVE);
+                                    pe.setPlayerStateParameter(player.getID().toString());
+                                }
+                                else{
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND, args[2]));
+                                }
                             }
                             else{
                                 p.sendMessage(PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND);
