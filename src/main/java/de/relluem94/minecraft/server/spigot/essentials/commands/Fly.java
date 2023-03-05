@@ -12,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_FLY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -54,7 +55,18 @@ public class Fly implements CommandExecutor {
             pe.setFlying(!pe.isFlying());
             dBH.updatePlayer(pe);
             p.setAllowFlight(pe.isFlying());
-            p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, p.getCustomName(), pe.isFlying() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
+            p.sendMessage(
+                PLUGIN_COMMAND_PREFIX + 
+                String.format(
+                    getText("PLUGIN_COMMAND_FLYMODE"), 
+                    p.getCustomName() + PLUGIN_COMMAND_COLOR, 
+                    PLUGIN_COMMAND_ARG_COLOR + 
+                    (pe.isFlying() ? 
+                        getText("PLUGIN_COMMAND_FLYMODE_ACTIVATED") : 
+                        getText("PLUGIN_COMMAND_FLYMODE_DEACTIVATED")
+                    ) + PLUGIN_COMMAND_COLOR
+                )
+            );
             return true;
         } else {
             return false;
