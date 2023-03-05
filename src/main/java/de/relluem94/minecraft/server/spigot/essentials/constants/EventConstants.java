@@ -87,6 +87,7 @@ public class EventConstants {
 
     public static final String PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You have deposited " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " to your Bank Account";
     public static final String PLUGIN_EVENT_NPC_BANKER_DEPOIST_NO_COINS_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "To less " + PLUGIN_MONEY_NAME + " to do a transaction";
+    public static final String PLUGIN_EVENT_NPC_BANKER_DEPOIST_LIMIT_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "Your Bank Account is full. Consider Upgrading it!";
     public static final String PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "You have withdrawn " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " from your Bank Account";
     public static final String PLUGIN_EVENT_NPC_BANKER_WITHDRAW_NO_COINS_MESSAGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR  + "To less " + PLUGIN_MONEY_NAME + " to do a transaction";
 
@@ -124,12 +125,5 @@ public class EventConstants {
     public static final String PLUGIN_EVENT_NPC_BANKER_INTEREST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You earnd " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in interest!";
 
     public static final String PLUGIN_EVENT_DAMAGE_SHOW = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR +  "Damage: " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " Last Damage: " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " Health: " + PLUGIN_COMMAND_ARG_COLOR + "%s";
-
-
-
-
-
-
-
 
 }

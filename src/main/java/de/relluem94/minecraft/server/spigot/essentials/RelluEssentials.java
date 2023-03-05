@@ -391,7 +391,7 @@ public class RelluEssentials extends JavaPlugin {
             }
         }
         if(updatedBags != 0){
-            sendMessageInChannel(BetterChatFormat.ADMIN_CHANNEL + updatedBags + " Bag(s) saved!", Strings.PLUGIN_CONSOLE_NAME, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin")); // TODO add String to Strings
+            sendMessageInChannel(String.format(PLUGIN_BAGS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedBags), Strings.PLUGIN_CONSOLE_NAME, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
         }
     }
 

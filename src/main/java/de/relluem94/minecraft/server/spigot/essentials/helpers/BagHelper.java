@@ -130,8 +130,8 @@ public class BagHelper {
         ItemMeta im = is.getItemMeta();
 
         List<String> lore = new ArrayList<>();
-        lore.add("Amount: " + value);
-        lore.add("Click to retrieve"); // TODO add to Strings
+        lore.add(String.format(Strings.PLUGIN_BAG_AMOUNT, value));
+        lore.add(Strings.PLUGIN_BAG_RETRIEVE);
 
         im.setLore(lore);
 

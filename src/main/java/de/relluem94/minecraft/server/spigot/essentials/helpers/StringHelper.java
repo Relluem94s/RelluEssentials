@@ -35,16 +35,31 @@ public class StringHelper {
 
     public static String formatLong(long l) {
         if(l >= 1000000000){
-            return String.format("%.2fB", l / 1000000000.0);
+            return String.format("%sB", l / 1000000000.0);
         }
         else if(l >= 1000000){
-            return String.format("%.2fM", l / 1000000.0);
+            return String.format("%sM", l / 1000000.0);
         }
         else if(l >= 1000){
-            return String.format("%.2fK", l / 1000.0);
+            return String.format("%sK", l / 1000.0);
         }
         else{
-            return String.format("%.2f", l);
+            return String.format("%s", l);
+        }
+    }
+
+    public static String formatInt(int i) {
+        if(i >= 1000000000){
+            return String.format("%sB", i / 1000000000.0);
+        }
+        else if(i >= 1000000){
+            return String.format("%sM", i / 1000000.0);
+        }
+        else if(i >= 1000){
+            return String.format("%sK", i / 1000.0);
+        }
+        else{
+            return String.format("%s", i);
         }
     }
 

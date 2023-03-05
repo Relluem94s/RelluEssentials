@@ -64,21 +64,43 @@ public class BankerHelper {
         if(purse >= 1){
             double transaction_value = (double)((double)purse / (double)100)  * (double)percentage;
 
-            if(percentage == 100){
-                transaction_value = purse;
-                pe.setPurse(0);
+            if(bae.getTier().getLimit() >= transaction_value + bae.getValue()){
+                if(percentage == 100){
+                    transaction_value = purse;
+                    pe.setPurse(0);
+                }
+                else{
+                    pe.setPurse((double)purse - (double)transaction_value);
+                }
+    
+                
+    
+                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
+                
+                RelluEssentials.dBH.updatePlayer(pe);
+    
+                p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+                p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE, StringHelper.formatDouble(transaction_value)));
+    
             }
             else{
-                pe.setPurse((double)purse - (double)transaction_value);
+                transaction_value = bae.getTier().getLimit() - bae.getValue();
+                if(transaction_value > 0){
+                    pe.setPurse((double)purse - (double)transaction_value);
+
+                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
+                    
+                    RelluEssentials.dBH.updatePlayer(pe);
+        
+                    p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE, StringHelper.formatDouble(transaction_value)));
+                    p.sendMessage();
+                }
+                
+                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_LIMIT_MESSAGE);
             }
 
-            RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
             
-            RelluEssentials.dBH.updatePlayer(pe);
-
-            p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE, StringHelper.formatDouble(transaction_value)));
-
             InventoryHelper.closeInventory(p);
         }
         else{
