@@ -1126,6 +1126,30 @@ public class DatabaseHelper {
         return ll;
     }
 
+    public List<LocationEntry> getWarps() {
+        List<LocationEntry> ll = new ArrayList<>();
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWarps.sql", StandardCharsets.UTF_8));
+
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    LocationEntry p = new LocationEntry();
+                    p.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    p.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk") - 1));
+                    p.setPlayerId(rs.getInt("player_fk"));
+                    p.setLocationName(rs.getString("location_name"));
+                    p.setId(rs.getInt("id"));
+                    ll.add(p);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ll;
+    }
+
     public void insertLocation(LocationEntry le) {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {

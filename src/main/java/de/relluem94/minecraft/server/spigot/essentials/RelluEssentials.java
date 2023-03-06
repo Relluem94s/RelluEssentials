@@ -65,6 +65,7 @@ import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
 import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Bags;
@@ -85,6 +86,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sign;
 import de.relluem94.minecraft.server.spigot.essentials.commands.TestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Warp;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterBags;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterBlockDrop;
@@ -491,7 +493,7 @@ public class RelluEssentials extends JavaPlugin {
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_SUDO)).setExecutor(new Sudo());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_EXIT)).setExecutor(new Exit());
         Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_TELEPORT)).setExecutor(new Teleport());
-        // TODO add Warps
+        Objects.requireNonNull(this.getCommand(PLUGIN_COMMAND_NAME_WARP)).setExecutor(new Warp());
         // TODO add Marriage
         // TODO Fix Command execution for command Blocks
 
@@ -578,11 +580,15 @@ public class RelluEssentials extends JavaPlugin {
         pie = dBH.getPluginInformation();
         dBH.init();
 
+        locationTypeEntryList.addAll(dBH.getLocationTypes());
+
+
         new PlayerAPI(dBH.getBags());
         new ProtectionAPI(dBH.getProtectionLocks(), dBH.getProtections());
         new NPCAPI(dBH.getNPCs());
         new BagAPI(dBH.getBagTypes());
         new BankAPI(dBH.getBankTiers());
+        new WarpAPI(dBH.getWarps());
 
         for(WorldGroupEntry wge: dBH.getWorldGroups()){
             for(WorldEntry we: dBH.getWorldByGroup(wge)){
@@ -591,7 +597,7 @@ public class RelluEssentials extends JavaPlugin {
             }
         }
 
-        locationTypeEntryList.addAll(dBH.getLocationTypes());
+        
 
         this.getServer().getScheduler().scheduleSyncDelayedTask(this, () -> {
             locationEntryList.addAll(dBH.getLocations());
