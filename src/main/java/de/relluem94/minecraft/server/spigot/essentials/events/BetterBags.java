@@ -1,9 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Random;
 
 import org.bukkit.Material;
@@ -17,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
@@ -25,15 +24,12 @@ import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 public class BetterBags implements Listener {
 
     
@@ -116,7 +112,7 @@ public class BetterBags implements Listener {
         if(BagHelper.hasBags(pe.getID())){
             List<Item> li = new ArrayList<>();
             li.addAll(e.getItems());
-            e.getItems().removeAll(collectItems(li, p, pe));
+            e.getItems().removeAll(BagHelper.collectItems(li, p, pe));
         }
 
         if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchants() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.telekinesis)){
@@ -130,29 +126,6 @@ public class BetterBags implements Listener {
             e.getItems().removeAll(lis);
         }
         
-    }
-
-    public static List<Item> collectItems(List<Item> li, Player p, PlayerEntry pe){
-        ListIterator<Item> lii = li.listIterator();
-        List<Item> lio = new ArrayList<>();
-        while(lii.hasNext()){
-            Item i = lii.next();
-            ItemStack checkWithoutAmount = i.getItemStack().clone();
-            checkWithoutAmount.setAmount(1);
-            if(RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
-                Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
-                for(BagEntry be: bel){
-                    int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
-                    if(slot != -1){
-                        be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
-                        be.setToBeUpdated(true);
-                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName())));
-                        lio.add(i);
-                    }
-                }
-            }
-        }
-        return lio;
     }
 
     @EventHandler
@@ -256,6 +229,22 @@ public class BetterBags implements Listener {
                     PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getWhoClicked().getUniqueId());
                     e.getWhoClicked().openInventory(BagHelper.getBag(bte.getId(), pe));
                 }
+            }
+        }
+    }
+
+
+    @EventHandler
+    public void onItemCollect(EntityPickupItemEvent e) {
+        if(e.getEntity() instanceof Player){
+            Player p = (Player) e.getEntity();
+            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+
+            if(BagHelper.hasBags(pe.getID()) && BagHelper.collectItem(e.getItem(), p, pe)){
+                p.getInventory().remove(e.getItem().getItemStack());
+                p.updateInventory();
+                e.setCancelled(true);
+                e.getItem().remove();
             }
         }
     }
