@@ -83,13 +83,7 @@ public class PlayerHelper {
         OfflinePlayerEntry ope = new OfflinePlayerEntry();
 
         if(json.has("name")){
-            String uuid = new StringBuilder(json.get("id") + "").insert(20, '-')
-            .insert(16, '-')
-            .insert(12, '-')
-            .insert(8, '-')
-            .toString();
-
-            ope.setID(UUID.fromString(uuid));
+            ope.setID(UUIDHelper.dashed((String)json.get("id")));
             ope.setName(json.get("name").toString());
             return ope;
         }

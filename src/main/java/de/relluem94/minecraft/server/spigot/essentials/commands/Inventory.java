@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
@@ -23,6 +24,9 @@ public class Inventory implements CommandExecutor {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
                         p.openInventory(p.getInventory());
+                        for(HumanEntity he : p.getInventory().getViewers()){
+                            he.closeInventory();
+                        }
                         p.sendMessage(PLUGIN_COMMAND_INVENTORY);
                         return true; // TODO BUGS Clicked Items will be placed anywhere and overwrite other items..  
                     } else {

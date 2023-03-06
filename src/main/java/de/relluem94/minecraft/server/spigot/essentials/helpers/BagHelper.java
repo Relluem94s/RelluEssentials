@@ -264,7 +264,7 @@ public class BagHelper {
                     if(slot != -1){
                         be.setSlotValue(slot, be.getSlotValue(slot) + i.getAmount());
                         be.setToBeUpdated(true);
-                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(), i.getType().name())));
+                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(), i.getType().name().replace("_", " ").toLowerCase())));
                         p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
                         lio.add(i);
                     }
