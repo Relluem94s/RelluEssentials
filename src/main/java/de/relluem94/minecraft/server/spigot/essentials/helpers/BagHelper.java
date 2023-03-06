@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,11 +21,14 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class BagHelper {
 
@@ -192,7 +199,7 @@ public class BagHelper {
 
     public static BagTypeEntry getBagTypeByName(String name){
         for(BagTypeEntry bte : BagAPI.getBagTypeEntryList()){
-            if(name.contains(bte.getDisplayName())){
+            if(name.contains(bte.getDisplayName()) || bte.getDisplayName().contains(name)){
                 return bte;
             }
         }
@@ -209,6 +216,81 @@ public class BagHelper {
         return cbe;
     }
 
+    public static BagTypeEntry getBagTypeById(int id) {
+        for(BagTypeEntry bte : BagAPI.getBagTypeEntryList()){
+            if(bte.getId() == id){
+                return bte;
+            }
+        }
+        return null;
+    }
 
 
+    public static List<Item> collectItems(List<Item> li, Player p, PlayerEntry pe){
+        ListIterator<Item> lii = li.listIterator();
+        List<Item> lio = new ArrayList<>();
+        while(lii.hasNext()){
+            Item i = lii.next();
+            ItemStack checkWithoutAmount = i.getItemStack().clone();
+            checkWithoutAmount.setAmount(1);
+            if(RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
+                Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
+                for(BagEntry be: bel){
+                    int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
+                    if(slot != -1){
+                        be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
+                        be.setToBeUpdated(true);
+                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName())));
+                        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
+                        lio.add(i);
+                    }
+                }
+            }
+        }
+        return lio;
+    }
+
+    public static List<ItemStack> collectItemStacks(List<ItemStack> li, Player p, PlayerEntry pe){
+        ListIterator<ItemStack> lii = li.listIterator();
+        List<ItemStack> lio = new ArrayList<>();
+        while(lii.hasNext()){
+            ItemStack i = lii.next();
+            ItemStack checkWithoutAmount = i.clone();
+            checkWithoutAmount.setAmount(1);
+            if(RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
+                Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
+                for(BagEntry be: bel){
+                    int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
+                    if(slot != -1){
+                        be.setSlotValue(slot, be.getSlotValue(slot) + i.getAmount());
+                        be.setToBeUpdated(true);
+                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(), i.getType().name())));
+                        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
+                        lio.add(i);
+                    }
+                }
+            }
+        }
+        return lio;
+    }
+
+    public static boolean collectItem(Item item, Player p, PlayerEntry pe) {
+        ItemStack checkWithoutAmount = item.getItemStack().clone();
+        checkWithoutAmount.setAmount(1);
+        if(RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
+            Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
+            for(BagEntry be: bel){
+                int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
+                if(slot != -1){
+                    be.setSlotValue(slot, be.getSlotValue(slot) + item.getItemStack().getAmount());
+                    be.setToBeUpdated(true);
+                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(), item.getName())));
+                    p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
+                    item.getItemStack().setAmount(0);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
