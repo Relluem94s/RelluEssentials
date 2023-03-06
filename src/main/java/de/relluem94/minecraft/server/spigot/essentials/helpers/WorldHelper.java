@@ -209,17 +209,6 @@ public class WorldHelper {
     }
 
 
-
-    public double calculateExperience(int level) {
-        if(level <= 16) {
-          return level * level + 6 * level;
-        } else if(level <= 31) {
-          return 2.5 * level * level - 40.5 * level + 360;
-        } else {
-          return 4.5 * level * level - 162.5 * level + 2220;
-        }
-      }
-
     public static void loadWorldGroupInventory(Player p){
         PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
         for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
@@ -229,14 +218,8 @@ public class WorldHelper {
                     if(wgie != null){
                         InventoryHelper.createInventory(wgie.getInventory().toString(), p); 
                         p.setFoodLevel(wgie.getFoodLevel());
-                        p.setExp(wgie.getExpirience());
-                        p.setTotalExperience(wgie.getTotalExpirience());
-                        p.setLevel(wgie.getLevel());
-                        //p.setExpToLevel(wgie.getExpirience()); // TODO LOSING EXP not levels.
-                        
+                        ExperienceHelper.setTotalExperience(p, wgie.getTotalExperience());
                         p.setHealth(wgie.getHealth());
-
-                        p.sendMessage("<< " + wgie.getFoodLevel() + " " + wgie.getExpirience() + " " + wgie.getHealth());
                     }
                     else{
                         wgie = new WorldGroupInventoryEntry();
@@ -246,7 +229,7 @@ public class WorldHelper {
                         wgie.setWorldGroup(wge);
                         wgie.setFoodLevel(p.getFoodLevel());
                         wgie.setHealth(p.getHealth());
-                        wgie.setExpirience(p.getTotalExperience());
+                        wgie.setTotalExperience(ExperienceHelper.getTotalExperience(p));
 
                         RelluEssentials.dBH.insertWorldGroupInventory(wgie);
                     }
@@ -272,28 +255,30 @@ public class WorldHelper {
                         wgie = new WorldGroupInventoryEntry();
                         wgie.setCreatedby(pe.getID());
                         wgie.setPlayerId(pe.getID());
-                        wgie.setInventory(InventoryHelper.saveInventoryToJSON(p));
                         wgie.setWorldGroup(wge);
+
+                        wgie.setInventory(InventoryHelper.saveInventoryToJSON(p));
                         wgie.setFoodLevel(p.getFoodLevel());
                         wgie.setHealth(p.getHealth());
-                        wgie.setExpirience(p.getTotalExperience());
+
+                        wgie.setTotalExperience(ExperienceHelper.getTotalExperience(p));
+                        p.setTotalExperience(0);
+                        p.setLevel(0);
+                        p.setExp(0);
 
                         RelluEssentials.dBH.insertWorldGroupInventory(wgie);
                     }
                     else{
                         wgie.setInventory(InventoryHelper.saveInventoryToJSON(p));
+
                         wgie.setFoodLevel(p.getFoodLevel());
                         wgie.setHealth(p.getHealth());
-                        wgie.setExpirience(p.getTotalExperience());
                         wgie.setUpdatedBy(pe.getID());
 
-
-                        wgie.setExpirience(p.getExp());
-                        wgie.setTotalExpirience(p.getTotalExperience());
-                        wgie.setLevel(p.getLevel());
-
-                        p.sendMessage(">> " + wgie.getFoodLevel() + " " + wgie.getExpirience() + " " + wgie.getHealth());
-                        p.sendMessage(">> " + p.getExp() + " " + p.getExpToLevel() + " " + p.getTotalExperience() + " " + p.getLevel());
+                        wgie.setTotalExperience(ExperienceHelper.getTotalExperience(p));
+                        p.setTotalExperience(0);
+                        p.setLevel(0);
+                        p.setExp(0);
 
                         RelluEssentials.dBH.updateWorldGroupInventory(wgie);
                         p.getInventory().clear();
