@@ -5,7 +5,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -119,11 +118,5 @@ public class BetterBlockDrop implements Listener {
         bh.setLocation(l);
         // dBH.insertBlockHistory(bh);
     */
-    }
-
-
-    @EventHandler(priority=EventPriority.HIGHEST)
-    public void worldInit(org.bukkit.event.world.WorldInitEvent e){
-        e.getWorld().setKeepSpawnInMemory(false);
     }
 }

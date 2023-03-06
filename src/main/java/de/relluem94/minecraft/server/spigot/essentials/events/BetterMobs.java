@@ -24,6 +24,7 @@ import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
@@ -67,6 +68,14 @@ public class BetterMobs implements Listener {
                 pe.setPurse(pe.getPurse() + COINS_PER_DEATH);
                 RelluEssentials.dBH.updatePlayer(pe);
                 p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, COINS_PER_DEATH, StringHelper.formatDouble(pe.getPurse()))));
+
+
+                if(BagHelper.hasBags(pe.getID())){
+                    List<ItemStack> li = new ArrayList<>();
+                    li.addAll(e.getDrops());
+                    e.getDrops().removeAll(BagHelper.collectItemStacks(li, p, pe));
+                }
+
 
                 if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.telekinesis)){
                     List<ItemStack> lis = new ArrayList<>();
