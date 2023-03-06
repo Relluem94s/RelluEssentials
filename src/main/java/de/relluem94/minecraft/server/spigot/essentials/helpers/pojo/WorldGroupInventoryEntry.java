@@ -21,10 +21,7 @@ public class WorldGroupInventoryEntry {
     private JSONObject inventory;
     private double health;
     private int food;
-    private float exp;
-    private int expToLevel;
     private int totalExperience;
-    private int level;
 
     public WorldGroupInventoryEntry(){
 
@@ -118,40 +115,12 @@ public class WorldGroupInventoryEntry {
         this.food = level;
     }
 
-    public float getExpirience(){
-        return exp;
-    }
-
-    public void setExpirience(float level){
-        this.exp = level;
-    }
-
-    public int getExpirienceToLevel(){
-        return expToLevel;
-    }
-
-    public void setExpirienceToLevel(int level){
-        this.expToLevel = level;
-    }
-
-    public int getTotalExpirience(){
+    public int getTotalExperience(){
         return totalExperience;
     }
 
-    public void setTotalExpirience(int level){
+    public void setTotalExperience(int level){
         this.totalExperience = level;
-    }
-
-    public void setExpirience(int level){
-        this.exp = level;
-    }
-
-    public int getLevel(){
-        return level;
-    }
-
-    public void setLevel(int level){
-        this.level = level;
     }
 
     public double getHealth(){
