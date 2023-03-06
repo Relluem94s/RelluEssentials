@@ -261,6 +261,7 @@ public class DatabaseHelper {
         executeScript(v + "insertWorldGroup.sql");
         executeScript(v + "insertWorlds.sql");
         executeScript(v + "insertWorldGroupSetting.sql");
+        executeScript(v + "insertBagType.sql"); 
 
         executeScript(v + "addPlayerName.sql");
         executeScript(v + "changePlayerCustomName.sql");
@@ -397,10 +398,7 @@ public class DatabaseHelper {
             ps.setString(4, wgie.getInventory().toString());
             ps.setDouble(5, wgie.getHealth());
             ps.setInt(6, wgie.getFoodLevel());
-            ps.setFloat(7, wgie.getExpirience());
-            ps.setInt(8, wgie.getExpirienceToLevel());
-            ps.setInt(9, wgie.getTotalExpirience());
-            ps.setInt(10, wgie.getLevel());
+            ps.setInt(7, wgie.getTotalExperience());
 
             ps.execute();
         } catch (SQLException | IOException ex) {
@@ -416,12 +414,9 @@ public class DatabaseHelper {
             ps.setString(2, wgie.getInventory().toString());
             ps.setDouble(3, wgie.getHealth());
             ps.setInt(4, wgie.getFoodLevel());
-            ps.setFloat(5, wgie.getExpirience());
-            ps.setInt(6, wgie.getExpirienceToLevel());
-            ps.setInt(7, wgie.getTotalExpirience());
-            ps.setInt(8, wgie.getLevel());
-            ps.setInt(9, wgie.getPlayerId());
-            ps.setInt(10, wgie.getWorldGroupEntry().getId());
+            ps.setInt(5, wgie.getTotalExperience());
+            ps.setInt(6, wgie.getPlayerId());
+            ps.setInt(7, wgie.getWorldGroupEntry().getId());
 
             ps.execute();
         } catch (SQLException | IOException ex) {
@@ -448,9 +443,7 @@ public class DatabaseHelper {
                     wgie.setDeletedBy(rs.getInt("deletedby"));
                     wgie.setPlayerId(rs.getInt("player_fk"));
                     wgie.setHealth(rs.getInt("health"));
-                    wgie.setExpirience(rs.getInt("exp"));
-                    wgie.setTotalExpirience(rs.getInt("totalExperience"));
-                    wgie.setLevel(rs.getInt("level"));
+                    wgie.setTotalExperience(rs.getInt("totalExperience"));
                     wgie.setFoodLevel(rs.getInt("food"));
                     wgie.setWorldGroup(wge);
                     wgie.setInventory(new JSONObject(rs.getString("inventory")));
