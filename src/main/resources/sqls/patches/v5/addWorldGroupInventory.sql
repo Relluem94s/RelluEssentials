@@ -16,8 +16,5 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`world_group_inventory` (
   `inventory` JSON NOT NULL,
   `health` DOUBLE NOT NULL,
   `food` INT NOT NULL,
-  `exp` FLOAT NOT NULL,
-  `expToLevel` INT NOT NULL,
   `totalExperience` INT NOT NULL,
-  `level` INT NOT NULL,
   PRIMARY KEY (`ID`));
