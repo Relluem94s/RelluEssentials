@@ -11,10 +11,7 @@ SET
     `inventory` = ?,
     `health` = ?,
     `food` = ?,
-    `exp` = ?,
-    `expToLevel` = ?,
-    `totalExperience` = ?,
-    `level` = ?
+    `totalExperience` = ?
 WHERE 
     `player_fk` = ? AND
     `world_group_fk` = ? AND
