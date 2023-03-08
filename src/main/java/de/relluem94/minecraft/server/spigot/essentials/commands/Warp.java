@@ -18,20 +18,34 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 public class Warp implements CommandExecutor {
 
+    //TODO add proper impl
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_WARP)) {
             if (isPlayer(sender)) {
                 Player p = (Player) sender;
                 if (args.length == 0) {
+                    for(LocationEntry le : WarpAPI.getWarps(p.getWorld())){
+                        p.sendMessage(le.getLocationName());
+                    }
+
                     return true;
                 }
                 else if (args.length == 1) {
                     if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-                        LocationEntry le = WarpAPI.getWarp(args[0]);
+                        LocationEntry le = WarpAPI.getWarp(args[0], p.getWorld());
                         if(le != null){
-                            p.teleport(le.getLocation());
-                            p.sendMessage();
+                            if(le.getLocation() != null && le.getLocation().getWorld() != null){
+                                p.teleport(le.getLocation());
+                                p.sendMessage("warped");
+                            }
+                            else{
+                                p.sendMessage("error world unloaded");
+                            }
+                        }
+                        else{
+                            p.sendMessage("no warp");
                         }
 
                         return true;
@@ -41,7 +55,7 @@ public class Warp implements CommandExecutor {
                     }
                 } 
                 else if (args.length == 2) {
-                    if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+                    if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         if(args[0].equalsIgnoreCase("add")){
                             LocationEntry le = WarpAPI.getWarp(args[0]);
                             if(le == null){
@@ -52,7 +66,10 @@ public class Warp implements CommandExecutor {
                                 le.setLocationType(RelluEssentials.locationTypeEntryList.get(typeId - 1));
                                 le.setPlayerId(PlayerAPI.getPlayerEntry(p).getID());
                                 RelluEssentials.dBH.insertLocation(le);
-                                le = RelluEssentials.dBH.getLocation(p.getLocation(), typeId);
+                                if(RelluEssentials.dBH.getLocation(p.getLocation(), typeId) != null){
+                                    le = RelluEssentials.dBH.getLocation(p.getLocation(), typeId);
+                                }
+
                                 WarpAPI.addWarp(le);
                             }
                         }

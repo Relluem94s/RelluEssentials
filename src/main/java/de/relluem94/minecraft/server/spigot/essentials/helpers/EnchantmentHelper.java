@@ -1,4 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.google.common.collect.Multimap;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantLevel;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantName;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
@@ -195,6 +197,19 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
             lore.remove(getRarity().getPrefix() + getRarity().getDisplayName());
             im.setLore(lore);
             i.setItemMeta(im);
+        }
+    }
+
+    public static void registerEnchants(Enchantment ench) {
+        try {
+            Field f;
+            f = Enchantment.class.getDeclaredField("acceptingNew");
+            f.setAccessible(true);
+            f.set(null, true);
+            Enchantment.registerEnchantment(ench);
+            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_REGISTER_ENCHANTMENT, ench.getKey().getNamespace(), ench.getKey().toString()));
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + ench.getKey().toString());
         }
     }
 }

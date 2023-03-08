@@ -160,10 +160,6 @@ public class TestCommand implements CommandExecutor {
                                 ProtectionAPI.removeProtectionEntry(l);
                             }
                         }
-                        
-                        
-
-
                         else if (args[0].equals("sk")) {
                             p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG_OF_COINS));
                             p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.MONEY_BAG));

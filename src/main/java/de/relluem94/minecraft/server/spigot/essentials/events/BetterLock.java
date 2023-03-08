@@ -68,6 +68,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.EventCon
  * @author rellu
  */
 public class BetterLock implements Listener {
+    // TODO prevent water flow destroy protected block
 
     private boolean handleMoveItemEvent(Inventory inventory) {
         Location location;

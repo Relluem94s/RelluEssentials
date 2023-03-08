@@ -56,5 +56,4 @@ public class LocationEntry {
     public void setLocationName(String locationName) {
         this.location_name = locationName;
     }
-
 }

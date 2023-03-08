@@ -37,8 +37,12 @@ public class Strings {
     public static final String LANG_CONFIGS_LOADED = "Configs sind geladen!";
     public static final String LANG_REGISTER_EVENTS = "Registriere Events!";
     public static final String LANG_EVENTS_REGISTERED = "Events erfolgreich regestriert!";
+    public static final String LANG_REGISTER_RECIPE = "Registriere Rezepte!";
+    public static final String LANG_RECIPE_REGISTERED = "Rezepte erfolgreich regestriert!";
     public static final String LANG_REGISTER_COMMANDS = "Registriere Befehle!";
     public static final String LANG_COMMANDS_REGISTERED = "Befehle erfolgreich regestriert!";
+    public static final String LANG_REGISTER_AUTOSAVE = "Registriere Auto Save!";
+    public static final String LANG_AUTOSAVE_REGISTERED = "Auto Save erfolgreich regestriert!";
 
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
 
@@ -59,6 +63,7 @@ public class Strings {
 
     public static final String PLUGIN_COMMAND_ADMIN_PING = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast ein Ping von " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "ms!";
     public static final String PLUGIN_COMMAND_ADMIN_PING_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " hast ein Ping von " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "ms!";
+    public static final String PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND  = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Der Spieler " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "wurde nicht gefunden";
 
     public static final String PLUGIN_COMMAND_CRAFTINGBENCH = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Die Werkbank von %s" + PLUGIN_COMMAND_COLOR + " wurde geöffnet!";
 

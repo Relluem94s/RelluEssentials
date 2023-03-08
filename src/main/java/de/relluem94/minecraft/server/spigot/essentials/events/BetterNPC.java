@@ -339,20 +339,28 @@ public class BetterNPC implements Listener {
 
     @EventHandler
     public void onNPCDamage(EntityDamageByEntityEvent e){
-        if(e.getEntity() instanceof Villager){
-            if(e.getEntity().getCustomName() != null){
-                if(NPCAPI.getNPCNameList().contains(e.getEntity().getCustomName())){
-                    if(e.getDamager() instanceof Player){
-                        Player p = (Player) e.getDamager();
-                        if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                            e.setCancelled(true);
-                        }
-                    }
-                    else{
-                        e.setCancelled(true);
-                    }
-                }
-            }
+        if(!(e.getEntity() instanceof Villager)){
+            return;
+        }
+
+        if(e.getEntity().getCustomName() == null){
+            return;
+        }
+
+        if(!NPCAPI.getNPCNameList().contains(e.getEntity().getCustomName())){
+            return;
+        }
+
+        if(!(e.getDamager() instanceof Player)){
+            e.setCancelled(true);
+            return;
+        }
+
+        Player p = (Player) e.getDamager();
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
+            e.setCancelled(true);
+            return;
         }
     }
 }
