@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +20,8 @@ import com.google.common.collect.Multimap;
 import de.relluem94.rellulib.stores.DoubleStore;
 
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
-import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -40,6 +34,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEn
 import de.relluem94.minecraft.server.spigot.essentials.helpers.types.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.managers.AutoSaveManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.BlockHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.CleanUpManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ConfigManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
@@ -50,6 +45,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.NPCManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.RecipeManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
@@ -65,7 +61,6 @@ public class RelluEssentials extends JavaPlugin {
 
     public static ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
     public static Scoreboard board;
-    public static File dataFolder;
     public static DatabaseHelper dBH;
     public static PluginInformationEntry pie;
     private static long start;
@@ -88,7 +83,7 @@ public class RelluEssentials extends JavaPlugin {
         put(Material.LAPIS_LAZULI, new DoubleStore(2, 5));
         put(Material.COAL, new DoubleStore(1, 3));
         put(Material.QUARTZ, new DoubleStore(1, 3));
-        } // TODO into DB
+        } // TODO into DB (wip)
     };
     public static HashMap<Material, Material> crops = new HashMap<Material, Material>() {
         {
@@ -98,7 +93,7 @@ public class RelluEssentials extends JavaPlugin {
         put(Material.WHEAT_SEEDS, Material.WHEAT);
         put(Material.BEETROOT_SEEDS, Material.BEETROOTS);
         put(Material.COCOA_BEANS, Material.COCOA);
-        } // TODO into DB
+        } // TODO into DB (wip)
     };
     public static Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
 
@@ -109,9 +104,7 @@ public class RelluEssentials extends JavaPlugin {
     public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
     public static List<ItemStack> bagBlocks2collect = new ArrayList<>();
 
-    //TODO has to be done in Config (new Table?) #IsComming
-
-    public static String[] ore_respawn = new String[]{"world_nether", "123_nether"};
+    public static String[] ore_respawn = new String[]{"world_nether", "123_nether"}; //TODO has to be done in Config (new Table?) #IsComming
     public static boolean moneyLostOnDeath = true;
     public final static String[] worlds = new String[]{"123", "123_nether", "123_the_end", "world", "world_nether", "world_the_end", "lobby"};
     public final String[][] worlds_group = new String[][]{new String[]{"123", "123_nether", "123_the_end"}, new String[]{"world", "world_nether", "world_the_end"}, new String[]{"lobby"}};
@@ -124,56 +117,30 @@ public class RelluEssentials extends JavaPlugin {
     public void onEnable() {
         instance = this;
         startLoading();
-        dataFolder = this.getDataFolder();
-
-
-        new ConfigManager().manage();
-        new ScoreBoardManager().manage();
-        new CommandManager().manage();
-        new DatabaseManager().manage();
-        new EnchantmentManager().manage();
-        new GroupManager().manage();
-        new EventManager().manage();
-        new SkillManager().manage();
-        new RecipeManager().manage();
-        new BlockHistoryManager().manage();
-        new AutoSaveManager().manage();
-        new NPCManager().manage();
+        new ConfigManager().enable();
+        new ScoreBoardManager().enable();
+        new CommandManager().enable();
+        new DatabaseManager().enable();
+        new EnchantmentManager().enable();
+        new GroupManager().enable();
+        new EventManager().enable();
+        new SkillManager().enable();
+        new RecipeManager().enable();
+        new BlockHistoryManager().enable();
+        new AutoSaveManager().enable();
+        new NPCManager().enable();
         stopLoading();
-        new WorldManager().manage();
+        new WorldManager().enable();
     }
 
     @Override
     public void onDisable() {
-        ChatHelper.consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_STOP_MESSAGE);
-
-        for(UUID uuid: sudoers.keySet()){
-            Sudo.exitSudo(Bukkit.getPlayer(uuid));
-        }
-
-        BagHelper.saveBags();
-    
-        for (WorldGroupEntry wge : worldsMap.keySet()) {
-            for(WorldEntry we: worldsMap.get(wge)){
-                try{
-                    WorldHelper.unloadWorld(we.getName(), true);
-                }
-                catch(WorldNotLoadedException e){
-                    System.out.println(e.getMessage());
-                }
-            }
-        }
-            
-        
-        locationEntryList.clear();
-        groupEntryList.clear();
-        locationTypeEntryList.clear();
-        blockHistoryList.clear();
-        selections.clear();
-        
-        System.gc();
-
-        this.saveConfig();
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_STOP_MESSAGE);
+        new SudoManager().disable();
+        new AutoSaveManager().disable();
+        new WorldManager().disable();
+        new CleanUpManager().disable();
+        new ConfigManager().disable();
     }
 
     public static String getText(String language, String key) {
@@ -197,14 +164,9 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void startLoading() {
-        if (!getDataFolder().exists()) {
-            getDataFolder().mkdir();
-        }
-
         start = Calendar.getInstance().getTimeInMillis();
         consoleSendMessage(PLUGIN_COMMAND_COLOR, PLUGIN_BORDER);
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_START_MESSAGE);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     }
