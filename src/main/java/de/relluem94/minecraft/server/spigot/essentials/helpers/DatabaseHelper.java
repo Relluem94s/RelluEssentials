@@ -256,6 +256,8 @@ public class DatabaseHelper {
         executeScript(v + "addWorld.sql");
         executeScript(v + "addWorldGroupInventory.sql");
         executeScript(v + "addWorldGroupSetting.sql");
+        executeScript(v + "addCrops.sql");
+        executeScript(v + "addDrops.sql");
 
         executeScript(v + "insertSettings.sql");
         executeScript(v + "insertWorldGroup.sql");
