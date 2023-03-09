@@ -73,28 +73,8 @@ public class RelluEssentials extends JavaPlugin {
     public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
     public static HashMap<UUID, PlayerEntry> sudoers = new HashMap<UUID, PlayerEntry>();
     public static HashMap<UUID, BankAccountEntry> bankInterestMap = new HashMap<UUID, BankAccountEntry>();
-    public static HashMap<Material, DoubleStore> dropMap = new HashMap<Material, DoubleStore>(){
-        {
-        put(Material.DIAMOND, new DoubleStore(1, 2));
-        put(Material.EMERALD, new DoubleStore(1, 2));
-        put(Material.RAW_IRON, new DoubleStore(1, 3));
-        put(Material.RAW_COPPER, new DoubleStore(2, 5));
-        put(Material.RAW_GOLD, new DoubleStore(1, 2));
-        put(Material.LAPIS_LAZULI, new DoubleStore(2, 5));
-        put(Material.COAL, new DoubleStore(1, 3));
-        put(Material.QUARTZ, new DoubleStore(1, 3));
-        } // TODO into DB (wip)
-    };
-    public static HashMap<Material, Material> crops = new HashMap<Material, Material>() {
-        {
-        put(Material.CARROT, Material.CARROTS);
-        put(Material.NETHER_WART, Material.NETHER_WART);
-        put(Material.POTATO, Material.POTATOES);
-        put(Material.WHEAT_SEEDS, Material.WHEAT);
-        put(Material.BEETROOT_SEEDS, Material.BEETROOTS);
-        put(Material.COCOA_BEANS, Material.COCOA);
-        } // TODO into DB (wip)
-    };
+    public static HashMap<Material, DoubleStore> dropMap = new HashMap<Material, DoubleStore>();
+    public static HashMap<Material, Material> crops = new HashMap<Material, Material>();
     public static Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
 
     public static List<User> users = new ArrayList<User>();
