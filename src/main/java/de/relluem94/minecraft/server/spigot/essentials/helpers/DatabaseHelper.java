@@ -44,6 +44,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountE
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
@@ -332,6 +334,52 @@ public class DatabaseHelper {
     //*****************************************************************************************************************************************//
     //*****************************************************************************************************************************************//
     //*****************************************************************************************************************************************//
+
+    public List<CropEntry> getCrops() {
+        List<CropEntry> lce = new ArrayList<>();
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroups.sql", StandardCharsets.UTF_8));
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    CropEntry ce = new CropEntry();
+                    ce.setId(rs.getInt("id"));
+                    ce.setPlant(rs.getString("plant"));
+                    ce.setSeed(rs.getString("seed"));
+                                      
+                    lce.add(ce);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lce;
+    }
+
+    public List<DropEntry> getDrops() {
+        List<DropEntry> lde = new ArrayList<>();
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroups.sql", StandardCharsets.UTF_8));
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    DropEntry de = new DropEntry();
+                    de.setId(rs.getInt("id"));
+                    de.setMaterial(rs.getString("material"));
+                    de.setMin(rs.getInt("min_int"));
+                    de.setMax(rs.getInt("max_int"));
+                                      
+                    lde.add(de);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lde;
+    }
+
 
 
     public List<WorldGroupEntry> getWorldGroups() {
