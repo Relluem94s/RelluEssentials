@@ -1,15 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.bukkit.Material;
@@ -45,6 +41,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.types.Vector2Loca
 import de.relluem94.minecraft.server.spigot.essentials.managers.AutoSaveManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.BlockHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.ConfigManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EnchantmentManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EventManager;
@@ -73,8 +70,8 @@ public class RelluEssentials extends JavaPlugin {
     public static PluginInformationEntry pie;
     private static long start;
     private static RelluEssentials instance;
-    private static ResourceBundle englishProperties;
-    private static ResourceBundle germanProperties;
+    public static ResourceBundle englishProperties;
+    public static ResourceBundle germanProperties;
     public static String language;
     public static Banker banker;
 
@@ -129,13 +126,8 @@ public class RelluEssentials extends JavaPlugin {
         startLoading();
         dataFolder = this.getDataFolder();
 
-        try {
-            configManager(true);
-            loadLanguage();
-        } catch (IOException ex) {
-            Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
+        new ConfigManager().manage();
         new ScoreBoardManager().manage();
         new CommandManager().manage();
         new DatabaseManager().manage();
@@ -147,8 +139,8 @@ public class RelluEssentials extends JavaPlugin {
         new BlockHistoryManager().manage();
         new AutoSaveManager().manage();
         new NPCManager().manage();
-        new WorldManager().manage();
         stopLoading();
+        new WorldManager().manage();
     }
 
     @Override
@@ -181,16 +173,7 @@ public class RelluEssentials extends JavaPlugin {
         
         System.gc();
 
-        try {
-            configManager(false);
-        } catch (IOException ex) {
-            Logger.getLogger(RelluEssentials.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void loadLanguage() throws IOException {
-        germanProperties = ResourceBundle.getBundle("lang", new Locale("de", "DE"));
-        englishProperties = ResourceBundle.getBundle("lang", new Locale("en", "US"));
+        this.saveConfig();
     }
 
     public static String getText(String language, String key) {
@@ -231,22 +214,5 @@ public class RelluEssentials extends JavaPlugin {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + String.format(PLUGIN_STARTTIME, Calendar.getInstance().getTimeInMillis() - start));
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
         consoleSendMessage(PLUGIN_COMMAND_COLOR + PLUGIN_BORDER, "");
-    }
-
-    private void configManager(boolean enable) throws IOException {
-        /*  Config */
-        if (enable) {
-            consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_LOADING_CONFIGS);
-            this.saveDefaultConfig();
-            consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_CONFIGS_LOADED);
-        } else {
-            this.saveConfig();
-        }
-
-        language = getConfig().getString("language");
-    }
-
-    public static void reloadConfigs() {
-        RelluEssentials.reloadConfigs();
     }
 }

@@ -10,7 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
-public class GroupManager implements Manager{
+public class GroupManager implements IManager{
     
     @Override
     public void manage() {

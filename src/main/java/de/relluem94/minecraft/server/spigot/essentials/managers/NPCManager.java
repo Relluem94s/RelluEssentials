@@ -6,7 +6,7 @@ import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Beekeeper;
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Enchanter;
 
-public class NPCManager implements Manager {
+public class NPCManager implements IManager {
 
     @Override
     public void manage() {

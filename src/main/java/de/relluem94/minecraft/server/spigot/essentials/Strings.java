@@ -33,16 +33,20 @@ public class Strings {
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
     public static final String PLUGIN_EOL = System.getProperty("line.separator");
 
+    public static final String LANG_REGISTER_SKILLS = "Registriere Skills!";
+    public static final String LANG_SKILLS_REGISTERED = "Skills erfolgreich registriert!";
     public static final String LANG_LOADING_CONFIGS = "Configs werden geladen!";
     public static final String LANG_CONFIGS_LOADED = "Configs sind geladen!";
     public static final String LANG_REGISTER_EVENTS = "Registriere Events!";
-    public static final String LANG_EVENTS_REGISTERED = "Events erfolgreich regestriert!";
+    public static final String LANG_EVENTS_REGISTERED = "%s Events erfolgreich registriert!";
     public static final String LANG_REGISTER_RECIPE = "Registriere Rezepte!";
-    public static final String LANG_RECIPE_REGISTERED = "Rezepte erfolgreich regestriert!";
+    public static final String LANG_RECIPE_REGISTERED = "%s Rezepte erfolgreich registriert!";
     public static final String LANG_REGISTER_COMMANDS = "Registriere Befehle!";
-    public static final String LANG_COMMANDS_REGISTERED = "Befehle erfolgreich regestriert!";
+    public static final String LANG_COMMANDS_REGISTERED = "%s Befehle erfolgreich registriert!";
     public static final String LANG_REGISTER_AUTOSAVE = "Registriere Auto Save!";
-    public static final String LANG_AUTOSAVE_REGISTERED = "Auto Save erfolgreich regestriert!";
+    public static final String LANG_AUTOSAVE_REGISTERED = "Auto Save erfolgreich registriert!";
+    public static final String LANG_REGISTER_ENCHANTMENTS = "Registriere Enchantments!";
+    public static final String LANG_ENCHANTMENTS_REGISTERED = "%s Enchantments erfolgreich registriert!";
 
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
 

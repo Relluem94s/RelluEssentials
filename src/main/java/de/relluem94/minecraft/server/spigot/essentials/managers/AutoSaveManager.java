@@ -11,7 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-public class AutoSaveManager implements Manager {
+public class AutoSaveManager implements IManager {
 
     public static final int AUTO_SAVE_MINUTES = 2;
 

@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistory
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 
-public class BlockHistoryManager implements Manager {
+public class BlockHistoryManager implements IManager {
 
     @Override
     public void manage() {

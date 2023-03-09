@@ -20,7 +20,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import org.bukkit.inventory.ItemStack;
 
-public class DatabaseManager implements Manager{
+public class DatabaseManager implements IManager{
 
     @Override
     public void manage() {

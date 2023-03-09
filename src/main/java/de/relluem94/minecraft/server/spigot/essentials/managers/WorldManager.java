@@ -15,11 +15,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.worldsMap;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-public class WorldManager implements Manager {
+public class WorldManager implements IManager {
 
     @Override
     public void manage() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + "Worlds Sizes: " + worldsMap.size());
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + "Worlds Size: " + worldsMap.size());
 
         System.out.println();
         for (WorldGroupEntry wge : worldsMap.keySet()) {

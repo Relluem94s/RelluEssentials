@@ -1,5 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
+import java.util.Objects;
+
+import org.bukkit.command.PluginCommandYamlParser;
+
 import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Day;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Enderchest;
@@ -50,14 +54,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-import java.util.Objects;
-
-public class CommandManager implements Manager {
+public class CommandManager implements IManager {
 
     @Override
     public void manage() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_COMMANDS);
-        /*	Commands	*/
+
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_0)).setExecutor(new GameMode());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_1)).setExecutor(new GameMode());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_2)).setExecutor(new GameMode());
@@ -107,7 +109,8 @@ public class CommandManager implements Manager {
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_TELEPORT)).setExecutor(new Teleport());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_WARP)).setExecutor(new Warp());
 
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_COMMANDS_REGISTERED);
+        int commands = PluginCommandYamlParser.parse(RelluEssentials.getInstance()).size();
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + String.format(LANG_COMMANDS_REGISTERED, commands));
     }
     
 }

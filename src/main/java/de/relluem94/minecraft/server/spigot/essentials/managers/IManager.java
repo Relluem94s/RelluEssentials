@@ -1,5 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-public interface Manager {
+public interface IManager {
     public void manage();
 }

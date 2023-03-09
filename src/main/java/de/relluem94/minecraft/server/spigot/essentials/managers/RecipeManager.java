@@ -7,17 +7,18 @@ import org.bukkit.Bukkit;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomRecipes;
 
-public class RecipeManager implements Manager {
+public class RecipeManager implements IManager {
 
     @Override
     public void manage() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_RECIPE);
-        Bukkit.addRecipe(CustomRecipes.smelterFurnace.getRecipe());
-        Bukkit.addRecipe(CustomRecipes.smelterFuel.getRecipe());
-        Bukkit.addRecipe(CustomRecipes.cloudBoots.getRecipe());
-        Bukkit.addRecipe(CustomRecipes.smelterTank.getRecipe());
-        Bukkit.addRecipe(CustomRecipes.autoSmeltFurnace.getRecipe());
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_RECIPE_REGISTERED);
+        int recipeCount = 0;
+        Bukkit.addRecipe(CustomRecipes.smelterFurnace.getRecipe());             recipeCount++;
+        Bukkit.addRecipe(CustomRecipes.smelterFuel.getRecipe());                recipeCount++;
+        Bukkit.addRecipe(CustomRecipes.cloudBoots.getRecipe());                 recipeCount++;
+        Bukkit.addRecipe(CustomRecipes.smelterTank.getRecipe());                recipeCount++;
+        Bukkit.addRecipe(CustomRecipes.autoSmeltFurnace.getRecipe());           recipeCount++;
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + String.format(LANG_RECIPE_REGISTERED, recipeCount));
     }
     
 }

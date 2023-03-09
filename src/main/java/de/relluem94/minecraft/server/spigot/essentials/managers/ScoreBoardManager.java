@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 
-public class ScoreBoardManager implements Manager {
+public class ScoreBoardManager implements IManager {
 
     @Override
     public void manage() {

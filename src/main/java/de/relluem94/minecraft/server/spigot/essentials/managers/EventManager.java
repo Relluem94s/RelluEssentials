@@ -29,39 +29,40 @@ import de.relluem94.minecraft.server.spigot.essentials.events.SignActions;
 import de.relluem94.minecraft.server.spigot.essentials.events.SignClick;
 import de.relluem94.minecraft.server.spigot.essentials.events.SignEdit;
 
-
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-public class EventManager implements Manager{
+public class EventManager implements IManager{
     
     @Override
     public void manage() {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_EVENTS);
-        /*	Events	*/
-        pm.registerEvents(new BetterChatFormat(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterWorlds(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterPlayerJoin(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterPlayerQuit(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterBlockDrop(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterLights(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterBags(), RelluEssentials.getInstance());
-        pm.registerEvents(new BlockPlace(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterMobs(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterSoil(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterNPC(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterSavety(), RelluEssentials.getInstance());
-        pm.registerEvents(new BetterLock(), RelluEssentials.getInstance());
-        pm.registerEvents(new SkullInfo(), RelluEssentials.getInstance());
-        pm.registerEvents(new NoDeathMessage(), RelluEssentials.getInstance());
-        pm.registerEvents(new PlayerMove(), RelluEssentials.getInstance());
-        pm.registerEvents(new MOTD(), RelluEssentials.getInstance());
-        pm.registerEvents(new CloudSailor(), RelluEssentials.getInstance());
-        pm.registerEvents(new SignActions(), RelluEssentials.getInstance());
-        pm.registerEvents(new SignClick(), RelluEssentials.getInstance());
-        pm.registerEvents(new SignEdit(), RelluEssentials.getInstance());
-        pm.registerEvents(new ToolCrafting(), RelluEssentials.getInstance());
-        pm.registerEvents(new CustomEnchantment(), RelluEssentials.getInstance());
+
+        int eventCount = 0;
+        pm.registerEvents(new BetterChatFormat(), RelluEssentials.getInstance());           eventCount++;
+        pm.registerEvents(new BetterWorlds(), RelluEssentials.getInstance());               eventCount++;
+        pm.registerEvents(new BetterPlayerJoin(), RelluEssentials.getInstance());           eventCount++;
+        pm.registerEvents(new BetterPlayerQuit(), RelluEssentials.getInstance());           eventCount++;
+        pm.registerEvents(new BetterBlockDrop(), RelluEssentials.getInstance());            eventCount++;
+        pm.registerEvents(new BetterLights(), RelluEssentials.getInstance());               eventCount++;
+        pm.registerEvents(new BetterBags(), RelluEssentials.getInstance());                 eventCount++;
+        pm.registerEvents(new BlockPlace(), RelluEssentials.getInstance());                 eventCount++;
+        pm.registerEvents(new BetterMobs(), RelluEssentials.getInstance());                 eventCount++;
+        pm.registerEvents(new BetterSoil(), RelluEssentials.getInstance());                 eventCount++;
+        pm.registerEvents(new BetterNPC(), RelluEssentials.getInstance());                  eventCount++;
+        pm.registerEvents(new BetterSavety(), RelluEssentials.getInstance());               eventCount++;
+        pm.registerEvents(new BetterLock(), RelluEssentials.getInstance());                 eventCount++;
+        pm.registerEvents(new SkullInfo(), RelluEssentials.getInstance());                  eventCount++;
+        pm.registerEvents(new NoDeathMessage(), RelluEssentials.getInstance());             eventCount++;
+        pm.registerEvents(new PlayerMove(), RelluEssentials.getInstance());                 eventCount++;
+        pm.registerEvents(new MOTD(), RelluEssentials.getInstance());                       eventCount++;
+        pm.registerEvents(new CloudSailor(), RelluEssentials.getInstance());                eventCount++;
+        pm.registerEvents(new SignActions(), RelluEssentials.getInstance());                eventCount++;
+        pm.registerEvents(new SignClick(), RelluEssentials.getInstance());                  eventCount++;
+        pm.registerEvents(new SignEdit(), RelluEssentials.getInstance());                   eventCount++;
+        pm.registerEvents(new ToolCrafting(), RelluEssentials.getInstance());               eventCount++;
+        pm.registerEvents(new CustomEnchantment(), RelluEssentials.getInstance());          eventCount++;
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + String.format(LANG_EVENTS_REGISTERED, eventCount));
     }
 }
