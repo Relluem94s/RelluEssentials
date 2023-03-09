@@ -7,10 +7,10 @@ import org.bukkit.Bukkit;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomRecipes;
 
-public class RecipeManager implements IManager {
+public class RecipeManager implements IEnable {
 
     @Override
-    public void manage() {
+    public void enable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_RECIPE);
         int recipeCount = 0;
         Bukkit.addRecipe(CustomRecipes.smelterFurnace.getRecipe());             recipeCount++;

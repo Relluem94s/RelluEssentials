@@ -6,10 +6,10 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-public class EnchantmentManager implements IManager {
+public class EnchantmentManager implements IEnable {
 
     @Override
-    public void manage() {
+    public void enable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_ENCHANTMENTS);
         int enchantmentCount = 0;
         EnchantmentHelper.registerEnchants(CustomEnchants.autosmelt);           enchantmentCount++;

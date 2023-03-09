@@ -7,10 +7,10 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistory
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 
-public class BlockHistoryManager implements IManager {
+public class BlockHistoryManager implements IEnable {
 
     @Override
-    public void manage() {
+    public void enable() {
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         scheduler.scheduleSyncRepeatingTask(RelluEssentials.getInstance(), () -> {
             if (!RelluEssentials.blockHistoryList.isEmpty()) {

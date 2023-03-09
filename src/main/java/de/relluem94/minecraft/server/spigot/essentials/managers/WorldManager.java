@@ -7,6 +7,7 @@ import org.bukkit.WorldType;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
@@ -15,10 +16,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.worldsMap;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-public class WorldManager implements IManager {
+public class WorldManager implements IEnable, IDisable {
 
     @Override
-    public void manage() {
+    public void enable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + "Worlds Size: " + worldsMap.size());
 
         System.out.println();
@@ -85,6 +86,20 @@ public class WorldManager implements IManager {
                     else{
                         WorldHelper.createWorld(we.getName(), type, world_environment, false);
                     }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void disable() {
+        for (WorldGroupEntry wge : worldsMap.keySet()) {
+            for(WorldEntry we: worldsMap.get(wge)){
+                try{
+                    WorldHelper.unloadWorld(we.getName(), true);
+                }
+                catch(WorldNotLoadedException e){
+                    System.out.println(e.getMessage());
                 }
             }
         }

@@ -8,11 +8,15 @@ import java.util.ResourceBundle;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 
-public class ConfigManager implements IManager {
+public class ConfigManager implements IEnable, IDisable {
 
     @Override
-    public void manage() {
+    public void enable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_LOADING_CONFIGS);
+
+        if (!RelluEssentials.getInstance().getDataFolder().exists()) {
+            RelluEssentials.getInstance().getDataFolder().mkdir();
+        }
         
         RelluEssentials.getInstance().saveDefaultConfig();
         RelluEssentials.language = RelluEssentials.getInstance().getConfig().getString("language");
@@ -21,6 +25,11 @@ public class ConfigManager implements IManager {
         RelluEssentials.englishProperties = ResourceBundle.getBundle("lang", new Locale("en", "US"));
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_CONFIGS_LOADED);
+    }
+
+    @Override
+    public void disable() {
+        RelluEssentials.getInstance().saveConfig();
     }
     
 }

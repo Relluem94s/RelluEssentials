@@ -32,10 +32,10 @@ import de.relluem94.minecraft.server.spigot.essentials.events.SignEdit;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-public class EventManager implements IManager{
+public class EventManager implements IEnable{
     
     @Override
-    public void manage() {
+    public void enable() {
         PluginManager pm = Bukkit.getServer().getPluginManager();
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_EVENTS);
 

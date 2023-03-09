@@ -11,12 +11,12 @@ import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-public class AutoSaveManager implements IManager {
+public class AutoSaveManager implements IEnable, IDisable {
 
     public static final int AUTO_SAVE_MINUTES = 2;
 
     @Override
-    public void manage() {
+    public void enable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_AUTOSAVE);
         new BukkitRunnable() {
             @Override
@@ -37,6 +37,11 @@ public class AutoSaveManager implements IManager {
         }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 * 60 * AUTO_SAVE_MINUTES);
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_AUTOSAVE_REGISTERED);
+    }
+
+    @Override
+    public void disable() {
+        BagHelper.saveBags();
     }
 
     

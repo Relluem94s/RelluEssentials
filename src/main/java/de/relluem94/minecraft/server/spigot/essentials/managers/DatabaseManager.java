@@ -20,10 +20,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import org.bukkit.inventory.ItemStack;
 
-public class DatabaseManager implements IManager{
+public class DatabaseManager implements IEnable{
 
     @Override
-    public void manage() {
+    public void enable() {
         dBH = new DatabaseHelper(
             RelluEssentials.getInstance().getConfig().getString("database.host"), 
             RelluEssentials.getInstance().getConfig().getString("database.user"), 

@@ -10,10 +10,10 @@ import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
-public class GroupManager implements IManager{
+public class GroupManager implements IEnable{
     
     @Override
-    public void manage() {
+    public void enable() {
         List<PlayerEntry> pel = RelluEssentials.dBH.getPlayers();
         pel.forEach(p -> {
             PlayerAPI.putPlayerEntry(UUID.fromString(p.getUUID()), p);
