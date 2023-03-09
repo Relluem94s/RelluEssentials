@@ -33,7 +33,7 @@ public class ConfigHelper {
     public ConfigHelper(String name) {
         this.name = name;
 
-        file = new File(RelluEssentials.dataFolder, name + ".yml");
+        file = new File(RelluEssentials.getInstance().getDataFolder(), name + ".yml");
         if (file.exists()) {
             config = YamlConfiguration.loadConfiguration(file);
         } else {
