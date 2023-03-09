@@ -260,6 +260,7 @@ public class DatabaseHelper {
         executeScript(v + "addWorldGroupSetting.sql");
         executeScript(v + "addCrops.sql");
         executeScript(v + "addDrops.sql");
+        executeScript(v + "addPlayerPartner.sql");
 
         executeScript(v + "insertSettings.sql");
         executeScript(v + "insertWorldGroup.sql");
