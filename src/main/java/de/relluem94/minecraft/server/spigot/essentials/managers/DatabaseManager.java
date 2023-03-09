@@ -9,8 +9,11 @@ import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
+import de.relluem94.rellulib.stores.DoubleStore;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
@@ -35,6 +38,13 @@ public class DatabaseManager implements IEnable{
 
         RelluEssentials.locationTypeEntryList.addAll(dBH.getLocationTypes());
 
+        for(DropEntry de : dBH.getDrops()){
+            RelluEssentials.dropMap.put(de.getMaterial(), new DoubleStore(de.getMin(), de.getMax()));
+        }
+
+        for(CropEntry ce : dBH.getCrops()){
+            RelluEssentials.crops.put(ce.getSeed(), ce.getPlant());
+        }
 
         new PlayerAPI(dBH.getBags());
         new ProtectionAPI(dBH.getProtectionLocks(), dBH.getProtections());
@@ -49,8 +59,6 @@ public class DatabaseManager implements IEnable{
                 RelluEssentials.worldsMap.put(wge, we);
             }
         }
-
-        
 
         RelluEssentials.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(RelluEssentials.getInstance(), () -> {
             RelluEssentials.locationEntryList.addAll(dBH.getLocations());
