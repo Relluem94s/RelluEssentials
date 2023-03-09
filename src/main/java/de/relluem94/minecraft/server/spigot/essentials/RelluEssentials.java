@@ -56,7 +56,7 @@ public class RelluEssentials extends JavaPlugin {
     // TODO add Animal Protection (horse cat dog?)
     // TODO add /trade to trade with player (coins and items)
     // TODO change /tp to request teleport (if not mod) 
-    // TODO add Marriage
+    // TODO add Marriage (WIP)
     // TODO Fix Command execution for command Blocks
 
     public static ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
