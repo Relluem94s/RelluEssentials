@@ -216,6 +216,9 @@ public class Strings {
     public static final String PLUGIN_COMMAND_EXIT_KICK_MESSAGE = PLUGIN_COMMAND_COLOR + "exited.";
     public static final String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COMMAND_COLOR + "Server is shutting down...";
 
+    public static final String PLUGIN_COMMAND_TP_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " eine Teleport Anfrage geschickt";
+    public static final String PLUGIN_COMMAND_TP_REQUEST_TARGET = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Teleport Anfrage von " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "";
+    public static final String PLUGIN_COMMAND_TP_REQUEST_EXPIRED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Teleport Anfrage ist abgelaufen!";
     public static final String PLUGIN_COMMAND_TP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest zu " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "teleportiert!";
     public static final String PLUGIN_COMMAND_TP_TO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "zu  dir teleportiert!";
     public static final String PLUGIN_COMMAND_TP_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/teleport <name> " + PLUGIN_COMMAND_COLOR + "," + PLUGIN_COMMAND_ARG_COLOR + "/teleport <name>" + PLUGIN_COMMAND_COLOR + " oder " + PLUGIN_COMMAND_ARG_COLOR + "/teleport <x> <y> <z> " + PLUGIN_COMMAND_COLOR + ",";
