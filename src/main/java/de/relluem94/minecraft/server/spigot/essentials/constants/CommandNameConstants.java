@@ -22,6 +22,7 @@ public class CommandNameConstants {
     public static final String PLUGIN_COMMAND_NAME_WARP = "warp";
     public static final String PLUGIN_COMMAND_NAME_TELEPORT = "teleport";
     public static final String PLUGIN_COMMAND_NAME_TELEPORT_TO = "to";
+    public static final String PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT = "accept";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_0 = "0";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME = "Survival";
     public static final String PLUGIN_COMMAND_NAME_GAMEMODE_1 = "1";
