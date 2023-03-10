@@ -20,26 +20,37 @@ public class Title implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TITLE)) {
-            if (args.length > 2) {
-                Player target = Bukkit.getPlayer(args[0]);
-                if (target != null) {
-                    if (isPlayer(sender)) {
-                        Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                            target.sendTitle(replaceColor(args[1]), replaceColor(implode(2, args)), 5, 80, 5);
-                            return true;
-                        } else {
-                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                            return true;
-                        }
-                    }
-                }
-            } else {
-                sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
-                return true;
-            }
+        Player p = null;
+        Player target = null;
+
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TITLE)) {
+            return false;
         }
-        return false;
+
+        if (args.length < 2) {
+            sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+            return true;
+        } 
+
+        target = Bukkit.getPlayer(args[0]);
+        if (target == null) {
+            return false;
+        }
+
+        if (isPlayer(sender)) {
+            p = (Player) sender;
+        }
+
+        if(p == null){
+            return false;
+        }
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        } 
+
+        target.sendTitle(replaceColor(args[1]), replaceColor(implode(2, args)), 5, 80, 5);
+        return true;
     }
 }
