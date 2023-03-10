@@ -18,34 +18,35 @@ public class Where implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_WHERE)) {
-            if (args.length == 0) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-                        p.sendMessage(String.format(PLUGIN_COMMAND_WHERE, p.getCustomName(), locationToString(p.getLocation())));
-                        return true;
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-            } else {
-                Player target = Bukkit.getPlayer(args[0]);
-                if (target != null) {
-                    if (isPlayer(sender)) {
-                        Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                            p.sendMessage(String.format(PLUGIN_COMMAND_WHERE, target.getCustomName(), locationToString(target.getLocation())));
-                            return true;
-                        } else {
-                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                            return true;
-                        }
-                    }
-                }
-            }
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_WHERE)) {
+            return false;
         }
+
+        Player p = null;
+        if (isPlayer(sender)) {
+            p = (Player) sender;
+        }
+
+        if(p == null){
+            return false;
+        }
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if (args.length == 0) {
+            p.sendMessage(String.format(PLUGIN_COMMAND_WHERE, p.getCustomName(), locationToString(p.getLocation())));
+            return true;
+        } 
+
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target != null) {
+            p.sendMessage(String.format(PLUGIN_COMMAND_WHERE, target.getCustomName(), locationToString(target.getLocation())));
+            return true;
+        }
+
         return false;
     }
 }
