@@ -1,5 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,6 +20,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 public class Vanish implements CommandExecutor {
 
+    List<Player> isVanished = new ArrayList<>();
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_VANISH)) {
@@ -25,14 +30,21 @@ public class Vanish implements CommandExecutor {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         sendMessage(p, PLUGIN_COMMAND_VANISH);
-                        boolean canSee = false;
-                        // TODO BUGGED has to be fixed
+                        boolean canSee = true;
+
+                        if (isVanished.contains(p)) {
+                            canSee = false;
+                        }
+
+                        // TODO test with other players // EntityTargetEvent
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                            if (onlinePlayer.canSee(p)) {
+                            if (canSee) {
                                 onlinePlayer.hidePlayer(RelluEssentials.getInstance(), p);
-                            } else {
+                                isVanished.add(p);
+                            }
+                            else {
                                 onlinePlayer.showPlayer(RelluEssentials.getInstance(), p);
-                                canSee = true;
+                                isVanished.remove(p);
                             }
                         }
 
