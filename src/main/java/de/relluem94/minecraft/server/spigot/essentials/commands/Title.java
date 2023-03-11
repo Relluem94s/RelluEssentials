@@ -23,6 +23,8 @@ public class Title implements CommandExecutor {
         Player p = null;
         Player target = null;
 
+        
+
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TITLE)) {
             return false;
         }
@@ -31,11 +33,6 @@ public class Title implements CommandExecutor {
             sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
             return true;
         } 
-
-        target = Bukkit.getPlayer(args[0]);
-        if (target == null) {
-            return false;
-        }
 
         if (isPlayer(sender)) {
             p = (Player) sender;
@@ -49,6 +46,12 @@ public class Title implements CommandExecutor {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         } 
+
+        target = Bukkit.getPlayer(args[0]);
+        if (target == null) {
+            p.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            return true;
+        }   
 
         target.sendTitle(replaceColor(args[1]), replaceColor(implode(2, args)), 5, 80, 5);
         return true;
