@@ -144,10 +144,6 @@ public class DatabaseHelper {
                 //String v = "patches/v5/";
                 //executeScript(v + "script.sql");
                 // To add Scripts in Development without its own patch version
-
-                String v = "patches/v5/";
-        executeScript(v + "addCrops.sql");
-        executeScript(v + "addDrops.sql");
                  
                 break;
         }
@@ -266,6 +262,7 @@ public class DatabaseHelper {
         executeScript(v + "addDrops.sql");
         executeScript(v + "addPlayerPartner.sql");
 
+        executeScript(v + "insertSkills.sql"); 
         executeScript(v + "insertSettings.sql");
         executeScript(v + "insertWorldGroup.sql");
         executeScript(v + "insertWorlds.sql");
