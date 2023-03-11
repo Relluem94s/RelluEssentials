@@ -144,6 +144,10 @@ public class DatabaseHelper {
                 //String v = "patches/v5/";
                 //executeScript(v + "script.sql");
                 // To add Scripts in Development without its own patch version
+
+                String v = "patches/v5/";
+        executeScript(v + "addCrops.sql");
+        executeScript(v + "addDrops.sql");
                  
                 break;
         }
@@ -267,6 +271,8 @@ public class DatabaseHelper {
         executeScript(v + "insertWorlds.sql");
         executeScript(v + "insertWorldGroupSetting.sql");
         executeScript(v + "insertBagType.sql"); 
+        executeScript(v + "insertCrops.sql");
+        executeScript(v + "insertDrops.sql");
 
         executeScript(v + "addPlayerName.sql");
         executeScript(v + "changePlayerCustomName.sql");
@@ -340,14 +346,14 @@ public class DatabaseHelper {
         List<CropEntry> lce = new ArrayList<>();
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroups.sql", StandardCharsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getCrops.sql", StandardCharsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
                     CropEntry ce = new CropEntry();
                     ce.setId(rs.getInt("id"));
-                    ce.setPlant(rs.getString("plant"));
-                    ce.setSeed(rs.getString("seed"));
+                    ce.setPlant(rs.getString("PLANT"));
+                    ce.setSeed(rs.getString("SEED"));
                                       
                     lce.add(ce);
                 }
@@ -362,15 +368,15 @@ public class DatabaseHelper {
         List<DropEntry> lde = new ArrayList<>();
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroups.sql", StandardCharsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getDrops.sql", StandardCharsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
                 while (rs.next()) {
                     DropEntry de = new DropEntry();
                     de.setId(rs.getInt("id"));
-                    de.setMaterial(rs.getString("material"));
-                    de.setMin(rs.getInt("min_int"));
-                    de.setMax(rs.getInt("max_int"));
+                    de.setMaterial(rs.getString("MATERIAL"));
+                    de.setMin(rs.getInt("MIN_INT"));
+                    de.setMax(rs.getInt("MAX_INT"));
                                       
                     lde.add(de);
                 }
