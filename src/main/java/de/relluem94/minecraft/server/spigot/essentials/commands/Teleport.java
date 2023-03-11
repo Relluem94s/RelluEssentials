@@ -129,11 +129,13 @@ public class Teleport implements CommandExecutor {
 
             Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
+                p.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
                 return false;
             }
 
             if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                addTeleportEntry(p, p);
+                addTeleportEntry(p, target);
+                p.sendMessage(String.format(PLUGIN_COMMAND_TP_SEND_REQUEST, target.getCustomName()));
                 return true;
             }
 
