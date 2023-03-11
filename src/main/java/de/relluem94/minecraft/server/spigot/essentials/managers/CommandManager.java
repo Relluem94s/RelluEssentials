@@ -4,52 +4,8 @@ import java.util.Objects;
 
 import org.bukkit.command.PluginCommandYamlParser;
 
-import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Day;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Enderchest;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Exit;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
-import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Gamerules;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Inventory;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Marry;
-import de.relluem94.minecraft.server.spigot.essentials.commands.More;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Nick;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Night;
-import de.relluem94.minecraft.server.spigot.essentials.commands.PermissionsGroup;
-import de.relluem94.minecraft.server.spigot.essentials.commands.PortableCraftingBench;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Repair;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Rain;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Suicide;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Teleport;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Bags;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Broadcast;
-import de.relluem94.minecraft.server.spigot.essentials.commands.God;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Message;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Print;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Protect;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Purse;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Rename;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Speed;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Title;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Where;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Head;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Rollback;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Sign;
-import de.relluem94.minecraft.server.spigot.essentials.commands.TestCommand;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Warp;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
+import de.relluem94.minecraft.server.spigot.essentials.commands.*;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.*;
@@ -114,5 +70,4 @@ public class CommandManager implements IEnable {
         int commands = PluginCommandYamlParser.parse(RelluEssentials.getInstance()).size();
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + String.format(LANG_COMMANDS_REGISTERED, commands));
     }
-    
 }
