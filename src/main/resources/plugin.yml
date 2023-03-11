@@ -148,7 +148,6 @@ commands:
     teleport:
         description: Telport Player
         usage: /teleport
-        aliases: tp
     warp:
         description: Warps Player
         usage: /warp
