@@ -113,12 +113,18 @@ public class Teleport implements CommandExecutor {
             if(args[0].equals(PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT)){
                 if(hasTeleportEntry(p)){
                     teleport(p, telportAcceptList.get(p));
+                    removeTeleportEntry(p);
                     return true;
                 }
 
                 if(hasToTeleportEntry(p)){
                     teleportTo(p, telportToAcceptList.get(p));
+                    removeToTeleportEntry(p);
+                    return true;
                 }
+
+                p.sendMessage(PLUGIN_COMMAND_TP_ACCEPT_NO_REQUEST);
+                return true;
             }
 
             Player target = Bukkit.getPlayer(args[0]);

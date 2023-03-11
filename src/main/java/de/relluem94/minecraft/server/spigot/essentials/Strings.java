@@ -223,6 +223,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_TP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest zu " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "teleportiert!";
     public static final String PLUGIN_COMMAND_TP_TO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "zu  dir teleportiert!";
     public static final String PLUGIN_COMMAND_TP_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/teleport <name> " + PLUGIN_COMMAND_COLOR + "," + PLUGIN_COMMAND_ARG_COLOR + "/teleport <name>" + PLUGIN_COMMAND_COLOR + " oder " + PLUGIN_COMMAND_ARG_COLOR + "/teleport <x> <y> <z> " + PLUGIN_COMMAND_COLOR + ",";
+    public static final String PLUGIN_COMMAND_TP_ACCEPT_NO_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Keine offene Teleport Anfrage!";
 
     public static final String PLUGIN_BAG_AMOUNT = "Amount: " + PLUGIN_COMMAND_ARG_COLOR + "%s";
     public static final String PLUGIN_BAG_RETRIEVE = "Click to retrieve";
