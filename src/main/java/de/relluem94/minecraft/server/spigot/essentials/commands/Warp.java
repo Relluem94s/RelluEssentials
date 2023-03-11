@@ -37,6 +37,7 @@ public class Warp implements CommandExecutor {
                         LocationEntry le = WarpAPI.getWarp(args[0], p.getWorld());
                         if(le != null){
                             if(le.getLocation() != null && le.getLocation().getWorld() != null){
+                                Back.addBackPoint(p);
                                 p.teleport(le.getLocation());
                                 p.sendMessage("warped");
                             }

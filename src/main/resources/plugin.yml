@@ -148,6 +148,9 @@ commands:
     teleport:
         description: Telport Player
         usage: /teleport
+    back:
+        description: Teleports to last location
+        usage: /back
     warp:
         description: Warps Player
         usage: /warp

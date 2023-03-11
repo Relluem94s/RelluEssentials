@@ -55,6 +55,7 @@ public class Worlds implements CommandExecutor {
                             if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                                 World w = Bukkit.getWorld(args[0]);
                                 if (w != null) {
+                                    Back.addBackPoint(p);
                                     p.teleport(w.getSpawnLocation());
                                     p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
                                 } else {

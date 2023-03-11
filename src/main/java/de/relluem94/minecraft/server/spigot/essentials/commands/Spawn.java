@@ -22,6 +22,7 @@ public class Spawn implements CommandExecutor {
                 if (isPlayer(sender)) {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
+                        Back.addBackPoint(p);
                         p.teleport(p.getWorld().getSpawnLocation());
                         p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
                         return true;
@@ -36,6 +37,7 @@ public class Spawn implements CommandExecutor {
                     if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+                            Back.addBackPoint(target);
                             target.teleport(target.getWorld().getSpawnLocation());
                             target.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, target.getWorld().getName()));
                             return true;

@@ -33,6 +33,7 @@ public class Home implements CommandExecutor {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                             if (p.getBedSpawnLocation() != null) {
+                                Back.addBackPoint(p);
                                 p.teleport(p.getBedSpawnLocation());
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME, p.getWorld().getName()));
                             } else {
@@ -75,6 +76,7 @@ public class Home implements CommandExecutor {
 
                             if (homeExists(pe, le)) {
                                 le = getLocationEntry(pe, le);
+                                Back.addBackPoint(p);
                                 p.teleport(le.getLocation());
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_TP, args[0]));
                                 return true;

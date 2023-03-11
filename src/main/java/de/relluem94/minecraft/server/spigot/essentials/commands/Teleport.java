@@ -74,11 +74,13 @@ public class Teleport implements CommandExecutor {
     }
 
     public void teleport(Player p, Player t){
+        Back.addBackPoint(t);
         t.teleport(p);
         p.sendMessage(String.format(PLUGIN_COMMAND_TP, t.getCustomName()));
     }
 
     public void teleportTo(Player p, Player t){
+        Back.addBackPoint(p);
         p.teleport(t);
         t.sendMessage(String.format(PLUGIN_COMMAND_TP_TO, p.getCustomName()));
     }
@@ -139,6 +141,7 @@ public class Teleport implements CommandExecutor {
                 return true;
             }
 
+            Back.addBackPoint(p);
             p.teleport(target);
             p.sendMessage(String.format(PLUGIN_COMMAND_TP, target.getCustomName()));
             return true;
@@ -189,6 +192,7 @@ public class Teleport implements CommandExecutor {
             l.setY(Integer.parseInt(args[1]));
             l.setZ(Integer.parseInt(args[2]));
 
+            Back.addBackPoint(p);
             p.teleport(l);
             p.sendMessage(String.format(PLUGIN_COMMAND_TP, l.getX() + ", " + l.getY() + ", " + l.getZ()));
 

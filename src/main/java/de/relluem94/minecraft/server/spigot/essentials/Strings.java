@@ -236,4 +236,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_MARRY_MARRIED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "geheiratet!";
     public static final String PLUGIN_COMMAND_MARRY_ACCEPT_NO_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Keine offene Hochzeits Anfrage!";
 
+    public static final String PLUGIN_COMMAND_BACK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest zurück teleportiert!";
+    public static final String PLUGIN_COMMAND_BACK_NO_LOCATION = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast kein Back Punkt gesetzt!";
+
 }
