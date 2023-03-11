@@ -39,7 +39,7 @@ public class Warp implements CommandExecutor {
         if (args.length == 0) {
             p.sendMessage(PLUGIN_COMMAND_WARP_LIST_INFO);
             for(LocationEntry le : WarpAPI.getWarps(p.getWorld())){
-                p.sendMessage(String.format(PLUGIN_COMMAND_WARP_LIST_INFO, le.getLocationName()));
+                p.sendMessage(String.format(PLUGIN_COMMAND_WARP_LIST, le.getLocationName()));
             }
 
             return true;
