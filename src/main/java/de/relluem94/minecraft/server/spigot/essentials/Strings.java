@@ -240,4 +240,11 @@ public class Strings {
     public static final String PLUGIN_COMMAND_BACK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest zurück teleportiert!";
     public static final String PLUGIN_COMMAND_BACK_NO_LOCATION = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast kein Back Punkt gesetzt!";
 
+
+    public static final String PLUGIN_COMMAND_WARP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest gewarped!";
+    public static final String PLUGIN_COMMAND_WARP_LIST_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Warp Liste:";
+    public static final String PLUGIN_COMMAND_WARP_LIST = PLUGIN_COMMAND_COLOR + "Warp Name: " + PLUGIN_COMMAND_ARG_COLOR + "%s ";
+    public static final String PLUGIN_COMMAND_WARP_ERROR_WORLD_UNLOADED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Error, Welt ist nicht geladen!";
+    public static final String PLUGIN_COMMAND_WARP_ERROR_NO_WARP_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Kein Warp mit diesem Namen gefunden!";
+
 }

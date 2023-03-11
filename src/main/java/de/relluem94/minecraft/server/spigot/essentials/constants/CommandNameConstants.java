@@ -20,6 +20,8 @@ public class CommandNameConstants {
     public static final String PLUGIN_COMMAND_NAME_FLY = "fly";
     public static final String PLUGIN_COMMAND_NAME_PURSE = "purse";
     public static final String PLUGIN_COMMAND_NAME_WARP = "warp";
+    public static final String PLUGIN_COMMAND_NAME_WARP_ADD = "add";
+    public static final String PLUGIN_COMMAND_NAME_WARP_REMOVE = "remove";
     public static final String PLUGIN_COMMAND_NAME_TELEPORT = "teleport";
     public static final String PLUGIN_COMMAND_NAME_TELEPORT_TO = "to";
     public static final String PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT = "accept";
