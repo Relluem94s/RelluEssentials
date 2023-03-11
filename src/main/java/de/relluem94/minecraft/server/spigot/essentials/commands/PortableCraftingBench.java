@@ -16,19 +16,27 @@ public class PortableCraftingBench implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_CRAFT)) {
-            if (isPlayer(sender)) {
-                Player p = (Player) sender;
-                if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-                    p.openWorkbench(p.getLocation(), true);
-                    p.sendMessage(String.format(PLUGIN_COMMAND_CRAFTINGBENCH, p.getCustomName()));
-                    return true;
-                } else {
-                    p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                    return true;
-                }
-            }
+        Player p = null;
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_CRAFT)) {
+            return false;
         }
-        return false;
+
+        if (isPlayer(sender)) {
+            p = (Player) sender;
+        }
+
+        if(p == null){
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        } 
+        
+        p.openWorkbench(p.getLocation(), true);
+        p.sendMessage(String.format(PLUGIN_COMMAND_CRAFTINGBENCH, p.getCustomName()));
+        return true;
     }
 }
