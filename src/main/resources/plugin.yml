@@ -151,5 +151,7 @@ commands:
     warp:
         description: Warps Player
         usage: /warp
-
+    marry:
+        description: Marry Player
+        usage: /marry
 

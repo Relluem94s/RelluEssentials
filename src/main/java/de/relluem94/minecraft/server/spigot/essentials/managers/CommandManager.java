@@ -12,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Gamerules;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Inventory;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Marry;
 import de.relluem94.minecraft.server.spigot.essentials.commands.More;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Nick;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Night;
@@ -108,6 +109,7 @@ public class CommandManager implements IEnable {
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_EXIT)).setExecutor(new Exit());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_TELEPORT)).setExecutor(new Teleport());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_WARP)).setExecutor(new Warp());
+        Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_MARRY)).setExecutor(new Marry());
 
         int commands = PluginCommandYamlParser.parse(RelluEssentials.getInstance()).size();
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + String.format(LANG_COMMANDS_REGISTERED, commands));
