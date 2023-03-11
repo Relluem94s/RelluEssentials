@@ -21,39 +21,43 @@ public class Broadcast implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_BROADCAST)) {
-            if (args.length >= 1) {
-                if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_BROADCAST_TITLE)) {
-                    return broadcast(sender, args, 1, false);
-                } else {
-                    return broadcast(sender, args, 0, true);
-                }
-            } else {
-                sendMessage(sender, PLUGIN_COMMAND_BROADCAST_INFO);
-                return true;
-            }
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_BROADCAST)) {
+            return false;
         }
-        return false;
+
+        if (args.length <= 1) {
+            sendMessage(sender, PLUGIN_COMMAND_BROADCAST_INFO);
+            return true;
+        }
+
+        Player p = null;
+        if (isPlayer(sender)) {
+            p = (Player) sender; 
+        }
+
+        if (p != null && !Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_BROADCAST_TITLE)) {
+            return broadcast(args, 1, false);
+        } 
+
+        return broadcast(args, 0, true);
     }
 
-    private boolean broadcast(CommandSender sender, String[] args, int start, boolean chat) {
-        if (isPlayer(sender)) {
-            Player p = (Player) sender;
-            if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
-                return true;
-            }
-        }
-
+    private boolean broadcast(String[] args, int start, boolean chat) {
         String message = implode(start, args);
         message = replaceSymbols(replaceColor(message));
 
         if (chat) {
             Bukkit.broadcastMessage(PLUGIN_BROADCAST_NAME + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + message);
-        } else {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                p.sendTitle(PLUGIN_BROADCAST_NAME, message, 5, 80, 5);
-            }
+            return true;
+        }
+
+        for (Player op : Bukkit.getOnlinePlayers()) {
+            op.sendTitle(PLUGIN_BROADCAST_NAME, message, 5, 80, 5);
         }
         return true;
     }
