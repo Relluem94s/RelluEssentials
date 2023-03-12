@@ -253,7 +253,6 @@ public class BetterBags implements Listener {
 
                 if(im.getPersistentDataContainer().has(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER)){
                     int coins = im.getPersistentDataContainer().get(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER) * is.getAmount();
-                    p.sendMessage(" >> " + coins);
                     p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, coins, StringHelper.formatDouble(pe.getPurse()))));
                     pe.setPurse(pe.getPurse() + coins);
                     pe.setUpdatedBy(pe.getID());
