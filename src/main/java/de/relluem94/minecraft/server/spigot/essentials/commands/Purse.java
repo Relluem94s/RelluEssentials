@@ -45,7 +45,7 @@ public class Purse implements CommandExecutor {
                         
                         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(target.getUniqueId());
-                            p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, StringHelper.formatDouble(pe.getPurse())));
+                            p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
                             return true;
                         } else {
                             return false;
