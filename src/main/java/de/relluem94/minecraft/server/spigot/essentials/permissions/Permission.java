@@ -3,6 +3,8 @@ package de.relluem94.minecraft.server.spigot.essentials.permissions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -18,7 +20,7 @@ public class Permission {
      * @return
      */
     public static boolean isAuthorized(Player p, long group) {
-        long id = User.getGroup(p).getId();
+        long id = PlayerAPI.getPlayerEntry(p).getGroup().getId();
         return id >= group;
     }
 

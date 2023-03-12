@@ -8,7 +8,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_QUIT_MESSAGE;
 
@@ -26,7 +25,6 @@ public class BetterPlayerQuit implements Listener {
         }
         
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
-        User.removeUser(p.getName());
         p.teleport(Bukkit.getWorld("lobby").getSpawnLocation());
     }
 }

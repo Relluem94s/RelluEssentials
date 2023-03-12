@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 
 public class GroupManager implements IEnable{
     
@@ -20,9 +20,8 @@ public class GroupManager implements IEnable{
         });
 
         Bukkit.getOnlinePlayers().forEach(p -> {
-            User u = new User(p);
             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-            u.setGroup(pe.getGroup());
+            PlayerHelper.setGroup(p, pe.getGroup());
         });
     }
 }

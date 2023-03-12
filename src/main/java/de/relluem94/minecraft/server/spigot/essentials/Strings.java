@@ -247,4 +247,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_WARP_ERROR_WORLD_UNLOADED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Error, Welt ist nicht geladen!";
     public static final String PLUGIN_COMMAND_WARP_ERROR_NO_WARP_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Kein Warp mit diesem Namen gefunden!";
 
+
+    public static final String PLUGIN_COMMAND_SETGROUP = PLUGIN_COMMAND_COLOR + "Group " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " for Player " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " was set!";
+    public static final String PLUGIN_COMMAND_SETGROUP_GROUP_NOT_FOUND = PLUGIN_COMMAND_COLOR + "Group " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " not found!";
 }

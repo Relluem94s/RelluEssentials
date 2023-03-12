@@ -20,7 +20,6 @@ import com.google.common.collect.Multimap;
 import de.relluem94.rellulib.stores.DoubleStore;
 
 import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
@@ -69,14 +68,13 @@ public class RelluEssentials extends JavaPlugin {
     public static String language;
     public static Banker banker;
 
-    public static HashMap<User, Vector2Location> selections = new HashMap<User, Vector2Location>();
+    public static HashMap<Integer, Vector2Location> selections = new HashMap<Integer, Vector2Location>();
     public static HashMap<UUID, PlayerEntry> sudoers = new HashMap<UUID, PlayerEntry>();
     public static HashMap<UUID, BankAccountEntry> bankInterestMap = new HashMap<UUID, BankAccountEntry>();
     public static HashMap<Material, DoubleStore> dropMap = new HashMap<Material, DoubleStore>();
     public static HashMap<Material, Material> crops = new HashMap<Material, Material>();
     public static Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
 
-    public static List<User> users = new ArrayList<User>();
     public static List<LocationEntry> locationEntryList = new ArrayList<>();
     public static List<GroupEntry> groupEntryList = new ArrayList<>();
     public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();

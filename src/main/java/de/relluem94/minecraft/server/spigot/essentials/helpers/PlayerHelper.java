@@ -9,8 +9,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SPA
 import java.util.Properties;
 import java.util.UUID;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
@@ -115,6 +117,47 @@ public class PlayerHelper {
         }
     }
 
+    public static void setGroup(Player p, GroupEntry g) {
+        p.setCustomName(g.getPrefix() + getCustomName(p));
+        p.setPlayerListName(p.getCustomName());
+        p.setScoreboard(RelluEssentials.board);
+    }
+
+    public static void updateGroup(Player p, GroupEntry g) {
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        pe.setGroup(g);
+        dBH.updatePlayer(pe);
+        setGroup(p, g);
+    }
+
+    public static String getCustomName(Player p) {
+        String name;
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        if (pe.getCustomName() != null && pe.getCustomName() != "null") {
+            name = pe.getCustomName();
+        } 
+        else {
+            if (pe.getName() != null && pe.getName() != "null") {
+                name = pe.getName();
+            } 
+            else {
+                name = p.getName();
+            }
+        }
+
+        return name;
+    }
+
+    public static GroupEntry getGroup(Player p) {
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+
+        if (pe != null) {
+            return pe.getGroup();
+        }
+        else {
+            return Groups.getGroup(1);
+        }
+    }
 
     
 }

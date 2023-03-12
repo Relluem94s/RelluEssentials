@@ -9,7 +9,6 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.User;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
@@ -53,8 +52,6 @@ public class BetterPlayerJoin implements Listener {
         }
 
         PlayerAPI.putPlayerEntry(p.getUniqueId(), pe);
-        User u = new User(p);   
-        u.done();
     }
 
     @EventHandler
