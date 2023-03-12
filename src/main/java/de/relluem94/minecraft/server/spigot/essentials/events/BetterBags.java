@@ -19,17 +19,24 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 public class BetterBags implements Listener {
 
     
@@ -240,8 +247,24 @@ public class BetterBags implements Listener {
             Player p = (Player) e.getEntity();
             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
 
+            ItemStack is = e.getItem().getItemStack();
+            if(CustomItems.coins.almostEquals(is)){
+                ItemMeta im = is.getItemMeta();
+
+                if(im.getPersistentDataContainer().has(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER)){
+                    int coins = im.getPersistentDataContainer().get(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER) * is.getAmount();
+                    p.sendMessage(" >> " + coins);
+                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, coins, StringHelper.formatDouble(pe.getPurse()))));
+                    pe.setPurse(pe.getPurse() + coins);
+                    pe.setUpdatedBy(pe.getID());
+                    pe.setToBeUpdated(false);
+                    e.setCancelled(true);
+                    e.getItem().remove();
+                }
+            }
+
             if(BagHelper.hasBags(pe.getID()) && BagHelper.collectItem(e.getItem(), p, pe)){
-                p.getInventory().remove(e.getItem().getItemStack());
+                p.getInventory().remove(is);
                 p.updateInventory();
                 e.setCancelled(true);
                 e.getItem().remove();

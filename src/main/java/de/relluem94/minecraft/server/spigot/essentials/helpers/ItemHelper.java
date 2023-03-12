@@ -350,6 +350,7 @@ public class ItemHelper implements IItemHelper {
         NPC,
         NPC_GUI,
         ENCHANTMENT,
+        MONEY,
         NONE;
     }
 

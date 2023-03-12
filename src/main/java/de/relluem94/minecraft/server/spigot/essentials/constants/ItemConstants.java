@@ -2,6 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.constants;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
+import org.bukkit.NamespacedKey;
+
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+
 /**
  *
  * @author rellu
@@ -72,6 +77,10 @@ public class ItemConstants {
 
     public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK = PLUGIN_ITEM_NPC_BANKER_COLOR + "Portable Bank";
     public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1 = PLUGIN_ITEM_NPC_BANKER_COLOR + "Opens the Bank Menu";
+
+    public static final String PLUGIN_ITEM_COINS = Strings.PLUGIN_MONEY_NAME;
+    public static final String PLUGIN_ITEM_COINS_LORE =  Strings.PLUGIN_MONEY_COLOR + "%s " + Strings.PLUGIN_MONEY_NAME;
+    public static NamespacedKey PLUGIN_ITEM_COINS_NAMESPACE = new NamespacedKey(RelluEssentials.getInstance(), "coins");
     
     public static final String PLUGIN_ITEM_NPC_LORE1 = "§7Click to Spawn";
 }
