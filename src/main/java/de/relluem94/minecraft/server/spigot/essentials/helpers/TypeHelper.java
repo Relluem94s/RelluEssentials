@@ -42,6 +42,15 @@ public class TypeHelper {
         }
     }
 
+    public static boolean isLong(String s) {
+        try {
+            Long.parseLong(s);
+            return true;
+        } catch (NumberFormatException er) {
+            return false;
+        }
+    }
+
     public static boolean areBlocksMaterial(List<Block> blocks, Material material) {
         boolean isMat = true;
         for (Block b : blocks) {

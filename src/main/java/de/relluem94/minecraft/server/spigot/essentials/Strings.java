@@ -171,7 +171,10 @@ public class Strings {
     public static final String PLUGIN_COMMAND_TO_MANY_ARGUMENTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Zu viele Argumente!";
     public static final String PLUGIN_COMMAND_TARGET_NOT_A_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " ist kein Spieler!";
 
-    public static final String PLUGIN_COMMAND_PURSE_GAIN = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You gained %s and now have " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in your Purse!";
+    public static final String PLUGIN_COMMAND_PURSE_GAIN = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You gained " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " and now have " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in your Purse!";
+    public static final String PLUGIN_COMMAND_PURSE_TO_ITEM = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You put out " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME;
+    public static final String PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_TO_HIGH = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "The value you entered is to high!";
+    public static final String PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Not enough " + PLUGIN_MONEY_NAME;
     public static final String PLUGIN_COMMAND_PURSE_TOTAL = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "You have " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in your Purse!";
     public static final String PLUGIN_COMMAND_PURSE_TOTAL_OTHER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " has " + PLUGIN_MONEY_COLOR + "%s " + PLUGIN_MONEY_NAME + " in the Purse!";
 

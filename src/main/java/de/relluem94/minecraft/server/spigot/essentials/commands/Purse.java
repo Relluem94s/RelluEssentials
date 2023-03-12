@@ -68,11 +68,11 @@ public class Purse implements CommandExecutor {
                     double purse = pe.getPurse();
                     int coins = Math.abs(Integer.parseInt(args[0]));
 
-                    p.sendMessage("Want: " + coins + " Has: " + pe.getPurse() + " Allowed: " + (purse >= coins));
+                    
                     if((purse >= coins)){
                         ItemStack coin = CustomItems.coins.getCustomItem();
                         ItemMeta im = coin.getItemMeta();
-                        im.setLore(Arrays.asList(new String[]{String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, coins)}));
+                        im.setLore(Arrays.asList(new String[]{String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatDouble(coins))}));
                         im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, coins);
 
                         coin.setItemMeta(im);
@@ -82,7 +82,17 @@ public class Purse implements CommandExecutor {
                         pe.setUpdatedBy(pe.getID());
 
                         p.getInventory().addItem(coin);
+                        p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TO_ITEM, StringHelper.formatDouble(coins)));
+                        return true;
                     }
+                    else{
+                        p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY);
+                        return true;
+                    }
+                }
+                else if(TypeHelper.isLong(args[0])){
+                    p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_TO_HIGH);
+                    return true;
                 }
             }
         }
