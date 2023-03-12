@@ -9,10 +9,7 @@ import java.util.ResourceBundle;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -26,7 +23,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistory
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
@@ -54,22 +50,19 @@ public class RelluEssentials extends JavaPlugin {
 
     // TODO add Animal Protection (horse cat dog?)
     // TODO add /trade to trade with player (coins and items)
-    // TODO add Marriage (WIP)
     // TODO Fix Command execution for command Blocks
 
-    public static ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
-    public static Scoreboard board;
-    public static DatabaseHelper dBH;
-    public static PluginInformationEntry pie;
     private static long start;
     private static RelluEssentials instance;
+
+    public static DatabaseHelper dBH;
+    public static PluginInformationEntry pie;
     public static ResourceBundle englishProperties;
     public static ResourceBundle germanProperties;
     public static String language;
     public static Banker banker;
 
     public static HashMap<Integer, Vector2Location> selections = new HashMap<Integer, Vector2Location>();
-    public static HashMap<UUID, PlayerEntry> sudoers = new HashMap<UUID, PlayerEntry>();
     public static HashMap<UUID, BankAccountEntry> bankInterestMap = new HashMap<UUID, BankAccountEntry>();
     public static HashMap<Material, DoubleStore> dropMap = new HashMap<Material, DoubleStore>();
     public static HashMap<Material, Material> crops = new HashMap<Material, Material>();
@@ -92,7 +85,6 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        instance = this;
         startLoading();
         new ConfigManager().enable();
         new ScoreBoardManager().enable();
@@ -141,6 +133,7 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void startLoading() {
+        instance = this;
         start = Calendar.getInstance().getTimeInMillis();
         consoleSendMessage(PLUGIN_COMMAND_COLOR, PLUGIN_BORDER);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);

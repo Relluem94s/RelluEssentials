@@ -9,13 +9,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SPA
 import java.util.Properties;
 import java.util.UUID;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-
+import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.utils.NetworkUtils;
@@ -120,7 +119,7 @@ public class PlayerHelper {
     public static void setGroup(Player p, GroupEntry g) {
         p.setCustomName(g.getPrefix() + getCustomName(p));
         p.setPlayerListName(p.getCustomName());
-        p.setScoreboard(RelluEssentials.board);
+        p.setScoreboard(ScoreBoardManager.board);
     }
 
     public static void updateGroup(Player p, GroupEntry g) {
