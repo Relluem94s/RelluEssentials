@@ -1,10 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -12,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
@@ -201,5 +209,54 @@ public class BankerHelper {
 
 
         
+    }
+
+
+
+    public static void doInterest() {
+        for(Player p : Bukkit.getOnlinePlayers()){
+            checkInterest(p.getUniqueId(), true);
+            doInterest(p);
+        }
+    }
+
+    public static void doInterest(Player p){
+        if(RelluEssentials.bankInterestMap.containsKey(p.getUniqueId())){
+            BankAccountEntry bae = RelluEssentials.bankInterestMap.get(p.getUniqueId());
+
+            double interest = (bae.getValue() / 100) * bae.getTier().getInterest();
+            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_INTEREST, StringHelper.formatDouble(interest)));
+
+            RelluEssentials.dBH.addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(), bae.getTier().getId());
+            RelluEssentials.bankInterestMap.remove(p.getUniqueId());
+        }
+    }
+
+    public static void checkInterest(UUID uuid, boolean midnight){
+        if(Bukkit.getOfflinePlayer(uuid).hasPlayedBefore()){
+            PlayerEntry pe = PlayerAPI.getPlayerEntry(uuid);
+            if(pe != null){
+                BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
+                if(bae != null){
+                    if(midnight){
+                        RelluEssentials.bankInterestMap.put(uuid, bae);
+                        return;
+                    }
+                    
+                    OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+                    long lastPlayedTime = op.getLastPlayed()/1000L;
+                    
+                    LocalDate localDate = LocalDate.now();
+                    ZonedDateTime startOfDayInZone = localDate.atStartOfDay(ZoneId.systemDefault());
+    
+                    Date lastPlayedDate = new Date(lastPlayedTime*1000L); 
+                    Date todayDate = new Date(startOfDayInZone.toInstant().toEpochMilli());
+    
+                    if(lastPlayedDate.before(todayDate)){
+                        RelluEssentials.bankInterestMap.put(uuid, bae);
+                    }
+                }
+            }
+        }        
     }
 }

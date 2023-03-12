@@ -28,7 +28,7 @@ public class AutoSaveManager implements IEnable, IDisable {
             public void run() {               
                 PlayerHelper.savePlayers();
             }
-        }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 * 60 * AUTO_SAVE_MINUTES);
+        }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 * 30);
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_AUTOSAVE_REGISTERED);
     }

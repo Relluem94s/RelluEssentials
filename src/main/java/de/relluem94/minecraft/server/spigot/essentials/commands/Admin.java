@@ -43,7 +43,8 @@ public class Admin implements CommandExecutor {
         }
 
         if (p == null) {
-            return false;
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
         }
 
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
@@ -71,6 +72,7 @@ public class Admin implements CommandExecutor {
                 }
 
                 InventoryHelper.openInventory(sender, inv);
+                return true;
             } 
             else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ADMIN_PING)) {
                 p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_PING, p.getPing()));
@@ -83,6 +85,7 @@ public class Admin implements CommandExecutor {
                     }
                 }
                 p.sendMessage(PLUGIN_COMMAND_ADMIN_CHAT_CLEARED);
+                return true;
             }
             else if (args[0].equals("light")) {
                 PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
@@ -94,6 +97,7 @@ public class Admin implements CommandExecutor {
                     p.sendMessage(Strings.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE);
                     pe.setPlayerState(PlayerState.LIGHT_TOOGLE);
                 }
+                return true;
             }
             else if (args[0].equalsIgnoreCase("cleanProtections")) {
                 HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
@@ -122,6 +126,7 @@ public class Admin implements CommandExecutor {
                     p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
                             ProtectionAPI.getProtectionEntryList().size()));
                 }
+                return true;
             }
             else if (args[0].equals("afk")) {
                 PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
@@ -134,14 +139,17 @@ public class Admin implements CommandExecutor {
                     PlayerHelper.setAFK(p, false);
                     pe.setPlayerState(PlayerState.FAKE_AFK_ACTIVE);
                 }
+                return true;
             }
             else if (args[0].equals("top")) {
                 Location l = p.getWorld().getHighestBlockAt(p.getLocation()).getLocation().add(0, 1, 0);
                 p.sendMessage(PLUGIN_COMMAND_ADMIN_TOP);
                 p.teleport(l);
+                return true;
             }
             else {
                 p.sendMessage(PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND);
+                return true;
             }
         }
         else if (args.length == 2) {

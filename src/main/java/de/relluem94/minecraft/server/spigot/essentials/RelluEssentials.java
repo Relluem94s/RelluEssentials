@@ -28,6 +28,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.types.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.managers.AutoSaveManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.BankManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.BlockHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CleanUpManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
@@ -97,6 +98,7 @@ public class RelluEssentials extends JavaPlugin {
         new RecipeManager().enable();
         new BlockHistoryManager().enable();
         new AutoSaveManager().enable();
+        new BankManager().enable();
         new NPCManager().enable();
         stopLoading();
         new WorldManager().enable();
