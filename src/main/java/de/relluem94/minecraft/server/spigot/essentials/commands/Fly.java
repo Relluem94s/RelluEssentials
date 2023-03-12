@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_FLY;
@@ -53,7 +52,8 @@ public class Fly implements CommandExecutor {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_FLY)) {
             PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
             pe.setFlying(!pe.isFlying());
-            dBH.updatePlayer(pe);
+            pe.setUpdatedBy(pe.getID());
+            pe.setToBeUpdated(true);
             p.setAllowFlight(pe.isFlying());
             p.sendMessage(
                 PLUGIN_COMMAND_PREFIX + 

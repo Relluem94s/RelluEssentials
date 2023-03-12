@@ -28,6 +28,16 @@ public class PlayerEntry {
     private PlayerState playerState;
     private Object playerStateParameter;
 
+    private boolean hasToBeUpdated = false;
+
+    public boolean hasToBeUpdated(){
+        return hasToBeUpdated;
+    }
+
+    public void setToBeUpdated(boolean hasToBeUpdated){
+        this.hasToBeUpdated = hasToBeUpdated;
+    }
+
     public int getID() {
         return id;
     }

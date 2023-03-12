@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_NICK;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -30,7 +29,7 @@ public class Nick implements CommandExecutor {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(target.getUniqueId());
                             pe.setCustomName(args[1]);
                             pe.setUpdatedBy(PlayerAPI.getPlayerEntry(p.getUniqueId()).getID());
-                            dBH.updatePlayer(pe);
+                            pe.setToBeUpdated(true);
                             target.setCustomName(pe.getGroup().getPrefix() + args[1]);
                             target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);
                             p.sendMessage(String.format(PLUGIN_COMMAND_NICK, pe.getGroup().getPrefix() + target.getName()));

@@ -77,7 +77,8 @@ public class BankerHelper {
     
                 RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
                 
-                RelluEssentials.dBH.updatePlayer(pe);
+                pe.setUpdatedBy(pe.getID());
+                pe.setToBeUpdated(true);
     
                 p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
                 p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE, StringHelper.formatDouble(transaction_value)));
@@ -90,7 +91,8 @@ public class BankerHelper {
 
                     RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
                     
-                    RelluEssentials.dBH.updatePlayer(pe);
+                    pe.setUpdatedBy(pe.getID());
+                    pe.setToBeUpdated(true);
         
                     p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
                     p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE, StringHelper.formatDouble(transaction_value)));
@@ -124,7 +126,8 @@ public class BankerHelper {
             pe.setPurse((double)purse + (double)transaction_value);
             RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value*-1, bae.getValue(), bae.getTier().getId());
             
-            RelluEssentials.dBH.updatePlayer(pe);
+            pe.setUpdatedBy(pe.getID());
+            pe.setToBeUpdated(true);
 
             p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
             p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE, StringHelper.formatDouble(transaction_value)));
@@ -164,7 +167,8 @@ public class BankerHelper {
                         double purse = pe.getPurse();
                         if(purse >= costs){
                             pe.setPurse(purse - costs);
-                            RelluEssentials.dBH.updatePlayer(pe);
+                            pe.setUpdatedBy(pe.getID());
+                            pe.setToBeUpdated(true);
                             RelluEssentials.dBH.updateBankAccount(pe.getID(), 0f, bae.getValue(), bt.getId());
                             p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE);
                             p.closeInventory();
@@ -179,7 +183,8 @@ public class BankerHelper {
                             else{
                                 if(purse + account >= costs){
                                     pe.setPurse(0);
-                                    RelluEssentials.dBH.updatePlayer(pe);
+                                    pe.setUpdatedBy(pe.getID());
+                                    pe.setToBeUpdated(true);
                                     RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-(costs-purse), bae.getValue(), bt.getId());
                                     p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH);
                                     p.closeInventory();

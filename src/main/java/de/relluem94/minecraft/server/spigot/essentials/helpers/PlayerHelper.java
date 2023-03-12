@@ -9,8 +9,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SPA
 import java.util.Properties;
 import java.util.UUID;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -69,7 +71,8 @@ public class PlayerHelper {
             if(!join){
                 pe.setUpdatedBy(pe.getID());
                 pe.setAFK(isAFK);
-                dBH.updatePlayer(pe);
+                pe.setUpdatedBy(pe.getID());
+                pe.setToBeUpdated(true);
             }
             p.setInvulnerable(isAFK);
         }
@@ -125,7 +128,8 @@ public class PlayerHelper {
     public static void updateGroup(Player p, GroupEntry g) {
         PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
         pe.setGroup(g);
-        dBH.updatePlayer(pe);
+        pe.setUpdatedBy(pe.getID());
+        pe.setToBeUpdated(true);
         setGroup(p, g);
     }
 
@@ -158,5 +162,30 @@ public class PlayerHelper {
         }
     }
 
-    
+    public static void savePlayers(){
+        int updatedPlayers = 0;
+
+        for(PlayerEntry pe : PlayerAPI.getPlayerEntryMap().values()) {
+            updatedPlayers += savePlayer(pe);
+        };
+
+        if(updatedPlayers != 0){
+            ChatHelper.sendMessageInChannel(String.format(Strings.PLUGIN_PLAYERS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedPlayers), Strings.PLUGIN_CONSOLE_NAME, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+        }
+    }
+
+    public static int savePlayer(Player p){
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        return savePlayer(pe);
+    }
+
+    public static int savePlayer(PlayerEntry pe){
+        if(pe.hasToBeUpdated()){
+            dBH.updatePlayer(pe);
+            pe.setToBeUpdated(false);
+            return 1;
+        }
+
+        return 0;
+    }
 }

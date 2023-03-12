@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_QUIT_MESSAGE;
@@ -23,6 +24,8 @@ public class BetterPlayerQuit implements Listener {
         if(SudoManager.sudoers.containsKey(p.getUniqueId())){
             Sudo.exitSudo(Bukkit.getPlayer(p.getUniqueId()));
         }
+
+        PlayerHelper.savePlayer(p);
         
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
         p.teleport(Bukkit.getWorld("lobby").getSpawnLocation());

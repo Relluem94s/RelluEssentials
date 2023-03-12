@@ -231,6 +231,7 @@ public class Strings {
     public static final String PLUGIN_BAG_RETRIEVE = "Click to retrieve";
 
     public static final String PLUGIN_BAGS_SAVED = "%s%s Bag(s) saved!";
+    public static final String PLUGIN_PLAYERS_SAVED = "%s%s Player(s) saved!";
     public static final String PLUGIN_COMMAND_BAGS_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "The searched Bag " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "was not found!";
 
     public static final String PLUGIN_COMMAND_MARRY_SEND_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast eine Hochzeits Anfrage an " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " geschickt!";

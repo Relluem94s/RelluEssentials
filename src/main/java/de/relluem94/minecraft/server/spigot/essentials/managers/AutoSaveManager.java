@@ -3,13 +3,11 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 
 public class AutoSaveManager implements IEnable, IDisable {
 
@@ -25,14 +23,10 @@ public class AutoSaveManager implements IEnable, IDisable {
             }
         }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 * 60 * AUTO_SAVE_MINUTES);
 
-
         new BukkitRunnable() {
             @Override
             public void run() {               
-                Bukkit.getOnlinePlayers().forEach(p -> {
-                    PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-                    RelluEssentials.dBH.updatePlayer(pe); // TODO remove update in every file, add this to playerhelper same as BagHelper
-                });
+                PlayerHelper.savePlayers();
             }
         }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 * 60 * AUTO_SAVE_MINUTES);
 
@@ -42,8 +36,6 @@ public class AutoSaveManager implements IEnable, IDisable {
     @Override
     public void disable() {
         BagHelper.saveBags();
+        PlayerHelper.savePlayers();
     }
-
-    
-    
 }

@@ -89,7 +89,8 @@ public class BetterNPC implements Listener {
                                 BankTierEntry bte = RelluEssentials.dBH.getBankTier(1);
                                 if(pe.getPurse() > bte.getCost()){
                                     pe.setPurse(pe.getPurse() - bte.getCost());
-                                    RelluEssentials.dBH.updatePlayer(pe);
+                                    pe.setUpdatedBy(pe.getID());
+                                    pe.setToBeUpdated(true);
             
                                     bae = new BankAccountEntry();
                                     bae.setValue(0);
@@ -139,7 +140,8 @@ public class BetterNPC implements Listener {
                 if(!BagHelper.hasBag(bt.getId(), pe)){
                     if(purse >= price){
                         pe.setPurse(purse - price);
-                        RelluEssentials.dBH.updatePlayer(pe);
+                        pe.setUpdatedBy(pe.getID());
+                        pe.setToBeUpdated(true);
                         RelluEssentials.dBH.insertBag(bt.getId(), pe.getID());
                         PlayerAPI.putPlayerBagEntry(pe.getID(), RelluEssentials.dBH.getBag(bt.getId(), pe.getID()));
                         
@@ -180,7 +182,8 @@ public class BetterNPC implements Listener {
                             p.updateInventory();
     
                             pe.setPurse(pe.getPurse() - coins);
-                            RelluEssentials.dBH.updatePlayer(pe);
+                            pe.setUpdatedBy(pe.getID());
+                            pe.setToBeUpdated(true);
     
                             p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY, item_displayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                             p.playSound(p, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
@@ -225,7 +228,8 @@ public class BetterNPC implements Listener {
                     p.updateInventory();
 
                     pe.setPurse(pe.getPurse() + coins);
-                    RelluEssentials.dBH.updatePlayer(pe);
+                    pe.setUpdatedBy(pe.getID());
+                    pe.setToBeUpdated(true);
 
                     p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SELL, item_displayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                     p.playSound(p, Sound.ENTITY_WANDERING_TRADER_NO, SoundCategory.MASTER, 1f, 1f);
