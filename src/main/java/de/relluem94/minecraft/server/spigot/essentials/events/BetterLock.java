@@ -35,6 +35,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
@@ -62,13 +63,21 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dB
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.*;
 
 
-
 /**
  *
  * @author rellu
  */
 public class BetterLock implements Listener {
-    // TODO prevent water flow destroy protected block
+    @EventHandler
+    public void onWaterMove(BlockFromToEvent e) {
+        List<Material> unBreakable = ProtectionAPI.getMaterialProtectionList();
+        Block block = e.getToBlock();
+        if (unBreakable.contains(block.getType())){
+            if(ProtectionAPI.getProtectionEntry(block.getLocation()) != null){
+                e.setCancelled(true); 
+            }
+        }
+    }
 
     private boolean handleMoveItemEvent(Inventory inventory) {
         Location location;
