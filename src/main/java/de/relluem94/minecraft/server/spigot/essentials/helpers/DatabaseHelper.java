@@ -1,22 +1,25 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -24,20 +27,23 @@ import org.json.JSONObject;
 
 import de.relluem94.rellulib.utils.TypeUtils;
 
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLockEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupInventoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
@@ -46,7 +52,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransact
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
@@ -385,6 +390,79 @@ public class DatabaseHelper {
     }
 
 
+    public void insertPlayerPartner(PlayerPartnerEntry ppe) {
+        try (
+            Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayerPartner.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, ppe.getCreatedBy());
+            ps.setInt(2, ppe.getFirstPlayerID());
+            ps.setInt(3, ppe.getSecondPlayerID());
+            ps.setBoolean(4, ppe.getShareProtections());
+
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void deletePlayerPartner(PlayerPartnerEntry ppe) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/deletePlayerPartner.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, ppe.getDeletedBy());
+            ps.setInt(2, ppe.getID());
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void updatePlayerPartner(PlayerPartnerEntry ppe) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayerPartner.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, ppe.getUpdatedBy());
+            ps.setBoolean(2, ppe.getShareProtections());
+            ps.setInt(1, ppe.getID());
+            ps.execute();
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public PlayerPartnerEntry getPlayerPartner(int player_fk) {
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayerPartner.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, player_fk);
+            ps.setInt(2, player_fk);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    PlayerPartnerEntry ppe = new PlayerPartnerEntry();
+                    ppe.setID(rs.getInt("id"));
+                    ppe.setCreated(rs.getString("created"));
+                    ppe.setCreatedby(rs.getInt("createdby"));
+                    ppe.setUpdated(rs.getString("updated"));
+                    ppe.setUpdatedBy(rs.getInt("updatedby"));
+                    ppe.setDeleted(rs.getString("deleted"));
+                    ppe.setDeletedBy(rs.getInt("deletedby"));
+                    ppe.setFirstPlayerID(rs.getInt("first_partner_fk"));
+                    ppe.setSecondPlayerID(rs.getInt("second_partner_fk"));
+                    ppe.setShareProtections(rs.getBoolean("shareProtections"));
+                    
+                    return ppe;
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+
+
+
 
     public List<WorldGroupEntry> getWorldGroups() {
         List<WorldGroupEntry> lbte = new ArrayList<>();
@@ -716,6 +794,8 @@ public class DatabaseHelper {
                     p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
                     p.setID(rs.getInt("id"));
                     p.setUUID(rs.getString("uuid"));
+                    PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt("id"));
+                    p.setPartner(ppe);
                     p.setPlayerState(PlayerState.DEFAULT);
                     return p;
                 }
@@ -725,25 +805,6 @@ public class DatabaseHelper {
         }
         return null;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public BankAccountEntry getPlayerBankAccount(int player_fk) {
@@ -1034,26 +1095,6 @@ public class DatabaseHelper {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public List<PlayerEntry> getPlayers() {
         List<PlayerEntry> pel = new ArrayList<>();
         try (
@@ -1061,7 +1102,7 @@ public class DatabaseHelper {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayers.sql", StandardCharsets.UTF_8));
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
-                while (rs.next()) {
+                while (rs.next()) {  
                     PlayerEntry p = new PlayerEntry();
                     p.setCreated(rs.getString("created"));
                     p.setCreatedby(rs.getInt("createdby"));
@@ -1077,6 +1118,8 @@ public class DatabaseHelper {
                     p.setGroup(de.relluem94.minecraft.server.spigot.essentials.permissions.Groups.getGroup(rs.getInt("group_fk")));
                     p.setID(rs.getInt("id"));
                     p.setUUID(rs.getString("uuid"));
+                    PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt("id"));
+                    p.setPartner(ppe);
                     p.setPlayerState(PlayerState.DEFAULT);
 
                     pel.add(p);
@@ -1641,18 +1684,6 @@ public class DatabaseHelper {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public List<NPCEntry> getNPCs() {
