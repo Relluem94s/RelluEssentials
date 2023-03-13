@@ -276,9 +276,32 @@ public class BetterLock implements Listener {
                 bpe.setMaterialName(b.getType().name());
                 bpe.setLocationEntry(le);
 
+                int playerpartner_fk = -1;
+
+                if(pe.getPartner() != null){
+                    if(pe.getID() != pe.getPartner().getFirstPlayerID()){
+                        playerpartner_fk = pe.getPartner().getFirstPlayerID();
+                    }
+                    else{
+                        playerpartner_fk = pe.getPartner().getSecondPlayerID();
+                    }
+                    
+                }
+
+                int right_length = 1;
+
+                if(playerpartner_fk != -1){
+                    right_length = 2;
+                }
+
                 JSONObject rights = new JSONObject();
-                int[] right = new int[1];
+                int[] right = new int[right_length];
                 right[0] = pe.getID();
+
+                if(playerpartner_fk != -1){
+                    right[1] = playerpartner_fk;
+                }
+
                 rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, right);
                 bpe.setRights(rights);
 
@@ -511,29 +534,11 @@ public class BetterLock implements Listener {
             ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
                 e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
-                if(pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)){
-                    JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
+                
+                UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
+                int id = PlayerAPI.getPlayerEntry(uuid).getID();
 
-                    List<Object> list = rightJSON.toList();
-
-                    UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
-                    int id = PlayerAPI.getPlayerEntry(uuid).getID();
-                    if(!list.contains(id)){
-                        list.add((Object)id);
-                        
-                        JSONObject rights = new JSONObject();
-                        rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, list);
-                        pre.setRights(rights);
-                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD);
-
-                        dBH.updateProtectionRight(pre);
-                        ProtectionAPI.removeProtectionEntry(l);
-                        ProtectionAPI.putProtectionEntry(l, pre);
-                    }
-                    else{
-                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED);
-                    }                 
-                }
+                addRight(e.getPlayer(), pre, id, false);
 
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
@@ -551,29 +556,11 @@ public class BetterLock implements Listener {
             ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
                 e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
-                if(pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)){
-                    JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
-
-                    List<Object> list = rightJSON.toList();
-
-                    UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
-                    int id = PlayerAPI.getPlayerEntry(uuid).getID();
-                    if(list.contains(id)){
-                        list.remove((Object)id);
-                        
-                        JSONObject rights = new JSONObject();
-                        rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, list);
-                        pre.setRights(rights);
-
-                        dBH.updateProtectionRight(pre);
-                        ProtectionAPI.removeProtectionEntry(l);
-                        ProtectionAPI.putProtectionEntry(l, pre);
-                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE);
-                    }
-                    else{
-                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED);
-                    }
-                }
+                
+                UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
+                int id = PlayerAPI.getPlayerEntry(uuid).getID();
+                
+                removeRight(e.getPlayer(), pre, id, false);
 
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
@@ -583,6 +570,66 @@ public class BetterLock implements Listener {
                 e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
+            }
+        }
+    }
+
+    public static void addRight(Player p, ProtectionEntry pre, int id, boolean silent) {
+        Location l = pre.getLocation().getLocation();
+        if(pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)){
+            JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
+
+            List<Object> list = rightJSON.toList();
+
+            if(!list.contains(id)){
+                list.add((Object)id);
+                
+                JSONObject rights = new JSONObject();
+                rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, list);
+                pre.setRights(rights);
+                if(!silent){
+                    p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD);
+                }
+                
+
+                dBH.updateProtectionRight(pre);
+                ProtectionAPI.removeProtectionEntry(l);
+                ProtectionAPI.putProtectionEntry(l, pre);
+            }
+            else{
+                if(!silent){
+                    p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED);
+                }
+            }                 
+        }
+    }
+
+    public static void removeRight(Player p, ProtectionEntry pre, int id, boolean silent) {
+        Location l = pre.getLocation().getLocation();
+        if(pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)){
+            JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
+
+            List<Object> list = rightJSON.toList();
+
+            if(list.contains(id)){
+                list.remove((Object)id);
+                
+                JSONObject rights = new JSONObject();
+                rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, list);
+                pre.setRights(rights);
+
+                dBH.updateProtectionRight(pre);
+                ProtectionAPI.removeProtectionEntry(l);
+                ProtectionAPI.putProtectionEntry(l, pre);
+                
+                if(!silent){
+                    p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE);
+                }
+            }
+            else{
+                if(!silent){
+                    p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED);
+                }
             }
         }
     }
