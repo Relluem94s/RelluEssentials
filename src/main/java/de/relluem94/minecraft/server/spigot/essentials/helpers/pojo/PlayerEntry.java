@@ -25,6 +25,7 @@ public class PlayerEntry {
     private String name;
     private String customName;
     private LocationEntry[] homes;
+    private PlayerPartnerEntry partner;
     private PlayerState playerState;
     private Object playerStateParameter;
 
@@ -172,6 +173,14 @@ public class PlayerEntry {
 
     public void setPlayerStateParameter(Object o) {
         this.playerStateParameter = o;
+    }
+
+    public PlayerPartnerEntry getPartner() {
+        return partner;
+    }
+
+    public void setPartner(PlayerPartnerEntry partner) {
+        this.partner = partner;
     }
 
     public PlayerEntry clone(){
