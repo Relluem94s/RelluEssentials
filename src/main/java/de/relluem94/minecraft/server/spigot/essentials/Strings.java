@@ -226,7 +226,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_TP_REQUEST_EXPIRED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Teleport Anfrage ist abgelaufen!";
     public static final String PLUGIN_COMMAND_TP = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest zu " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "teleportiert!";
     public static final String PLUGIN_COMMAND_TP_TO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "zu  dir teleportiert!";
-    public static final String PLUGIN_COMMAND_TP_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/teleport <name> " + PLUGIN_COMMAND_COLOR + "," + PLUGIN_COMMAND_ARG_COLOR + "/teleport <name>" + PLUGIN_COMMAND_COLOR + " oder " + PLUGIN_COMMAND_ARG_COLOR + "/teleport <x> <y> <z> " + PLUGIN_COMMAND_COLOR + ",";
+    public static final String PLUGIN_COMMAND_TP_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/teleport <name> " + PLUGIN_COMMAND_COLOR + "," + PLUGIN_COMMAND_ARG_COLOR + "/teleport accept"+ PLUGIN_COMMAND_COLOR + ", " + PLUGIN_COMMAND_ARG_COLOR + "/teleport to <name>" + PLUGIN_COMMAND_COLOR + " oder " + PLUGIN_COMMAND_ARG_COLOR + "/teleport <x> <y> <z>";
     public static final String PLUGIN_COMMAND_TP_ACCEPT_NO_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Keine offene Teleport Anfrage!";
     public static final String PLUGIN_COMMAND_TP_SEND_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast eine Teleport Anfrage an " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " geschickt!";
 
@@ -237,9 +237,15 @@ public class Strings {
     public static final String PLUGIN_PLAYERS_SAVED = "%s%s Player(s) saved!";
     public static final String PLUGIN_COMMAND_BAGS_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "The searched Bag " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "was not found!";
 
-    public static final String PLUGIN_COMMAND_MARRY_SEND_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast eine Hochzeits Anfrage an " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " geschickt!";
+    public static final String PLUGIN_COMMAND_MARRY_SEND_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast eine Hochzeitsanfrage an " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " geschickt!";
     public static final String PLUGIN_COMMAND_MARRY_MARRIED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "geheiratet!";
-    public static final String PLUGIN_COMMAND_MARRY_ACCEPT_NO_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Keine offene Hochzeits Anfrage!";
+    public static final String PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Hochzeitsanfrage ist abgelaufen!";
+    public static final String PLUGIN_COMMAND_MARRY_REQUEST_IS_MAARIED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Hochzeitsanfrage ist ungültig, Spieler ist bereits verheitratet!";
+    public static final String PLUGIN_COMMAND_MARRY_ACCEPT_NO_REQUEST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Keine offene Hochzeitsanfrage!";
+    public static final String PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du bist nicht verheiratet!";
+    public static final String PLUGIN_COMMAND_MARRY_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/marry <name> " + PLUGIN_COMMAND_COLOR + "oder " + PLUGIN_COMMAND_ARG_COLOR + "/marry accept";
+    public static final String PLUGIN_COMMAND_MARRY_DIVORCED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast dich von " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "getrennt!";
+
 
     public static final String PLUGIN_COMMAND_BACK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest zurück teleportiert!";
     public static final String PLUGIN_COMMAND_BACK_NO_LOCATION = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast kein Back Punkt gesetzt!";
