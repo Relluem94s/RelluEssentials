@@ -16,7 +16,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 public class PlayerAPI {
 
     private static HashMap<UUID, PlayerEntry> playerEntryMap = new HashMap<>();
-   // private static HashMap<Integer, BagEntry> playerBagEntryMap = new  HashMap<>();
     private static Multimap<Integer, BagEntry> playerBagEntryMap = ArrayListMultimap.create();
 
 
@@ -33,6 +32,15 @@ public class PlayerAPI {
 
     public static PlayerEntry getPlayerEntry(UUID uuid){
         return playerEntryMap.get(uuid);
+    }
+
+    public static PlayerEntry getPlayerEntry(int id){
+        for(PlayerEntry pe : playerEntryMap.values()){
+            if(pe.getID() == id){
+                return pe;
+            }
+        }
+        return null;
     }
 
     public static PlayerEntry getPlayerEntry(Player p){
