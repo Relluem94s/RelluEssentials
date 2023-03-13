@@ -176,6 +176,17 @@ public class Marry implements CommandExecutor {
                 return true;
             }
 
+            if(args[0].equals(PLUGIN_COMMAND_NAME_MARRY_DIVORCE)){
+                PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                if(PlayerAPI.getPlayerEntry(p).getPartner() != null){
+                    divorce(pe);
+                    return true;
+                }
+
+                p.sendMessage(PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED);
+                return true;
+            }
+
             Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
                 p.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
@@ -187,18 +198,7 @@ public class Marry implements CommandExecutor {
             return true;
         }
 
-        if (args.length == 2) {
-            if(args[0].equals(PLUGIN_COMMAND_NAME_MARRY_DIVORCE)){
-                PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-                if(PlayerAPI.getPlayerEntry(p).getPartner() != null){
-                    divorce(pe);
-                    return true;
-                }
-
-                p.sendMessage(PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED);
-                return true;
-            }
-        }
-        return false;
+        p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+        return true;
     }
 }
