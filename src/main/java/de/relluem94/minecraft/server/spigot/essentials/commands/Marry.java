@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -100,14 +101,20 @@ public class Marry implements CommandExecutor {
     private void divorce(PlayerEntry pe) {
         PlayerPartnerEntry ppe = pe.getPartner();
 
-        PlayerEntry secondPlayerEntry = PlayerAPI.getPlayerEntry((ppe.getSecondPlayerID() == pe.getID() ? ppe.getSecondPlayerID() : ppe.getFirstPlayerID()));
+        PlayerEntry secondPlayerEntry = PlayerAPI.getPlayerEntry((ppe.getSecondPlayerID() != pe.getID() ? ppe.getSecondPlayerID() : ppe.getFirstPlayerID()));
 
         Player firstPlayer = Bukkit.getPlayer(UUID.fromString(pe.getUUID()));
-        Player secondPlayer = Bukkit.getPlayer(UUID.fromString(secondPlayerEntry.getUUID()));
+        OfflinePlayer secondOfflinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUUID()));
 
-        if(firstPlayer != null && secondPlayer != null){
-            firstPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, secondPlayer.getCustomName()));
-            secondPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, firstPlayer.getCustomName()));
+        if(firstPlayer != null && secondOfflinePlayer != null){
+            if(secondOfflinePlayer.isOnline()){
+                Player secondPlayer = Bukkit.getPlayer(secondOfflinePlayer.getName());
+                firstPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, secondPlayer.getCustomName()));
+                secondPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, firstPlayer.getCustomName()));
+            }
+            else{
+                firstPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, secondOfflinePlayer.getName()));
+            }
 
             ppe.setDeletedBy(pe.getID());
             pe.setPartner(null);
@@ -124,7 +131,7 @@ public class Marry implements CommandExecutor {
                 }
     
                 if(pre.getCreatedBy() == secondPlayerEntry.getID()){
-                    BetterLock.removeRight(secondPlayer, pre, pe.getID(), true);
+                    BetterLock.removeRight(secondOfflinePlayer, pre, pe.getID());
                 }
                 
             }
