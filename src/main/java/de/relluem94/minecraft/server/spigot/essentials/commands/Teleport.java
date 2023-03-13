@@ -131,7 +131,7 @@ public class Teleport implements CommandExecutor {
 
             Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
-                p.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
+                p.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
                 return false;
             }
 
