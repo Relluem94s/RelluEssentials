@@ -634,6 +634,10 @@ public class BetterLock implements Listener {
         }
     }
 
+    public static void removeRight(OfflinePlayer p, ProtectionEntry pre, int id) {
+        removeRight(null, pre, id, true);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent e) {
         Block b = e.getClickedBlock();
