@@ -100,4 +100,5 @@ public class CommandNameConstants {
     public static final String PLUGIN_COMMAND_NAME_SIGN_COPY = "copy";
     public static final String PLUGIN_COMMAND_NAME_MARRY = "marry";
     public static final String PLUGIN_COMMAND_NAME_MARRY_ACCEPT = "accept";
+    public static final String PLUGIN_COMMAND_NAME_MARRY_DIVORCE = "divorce";
 }
