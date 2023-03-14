@@ -36,7 +36,7 @@ public class CustomHead implements CommandExecutor {
             return true;
         }
             
-        org.bukkit.inventory.Inventory inv = InventoryHelper.createInventory(54, "Heads");
+        org.bukkit.inventory.Inventory inv = InventoryHelper.createInventory(54, PLUGIN_COMMAND_CUSTOMHEADS_TITLE);
         inv = InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
 
         inv.setItem(10, getCustomSkull(CustomHeads.BOOK1));
