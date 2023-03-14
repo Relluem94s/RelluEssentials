@@ -157,4 +157,6 @@ commands:
     marry:
         description: Marry Player
         usage: /marry
-
+    customheads:
+        description: Gives a overview of Custom Heads
+        usage: /customheads

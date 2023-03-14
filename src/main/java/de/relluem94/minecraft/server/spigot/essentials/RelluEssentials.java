@@ -49,10 +49,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 public class RelluEssentials extends JavaPlugin {
 
-    // TODO add Animal Protection (horse cat dog?)
-    // TODO add /trade to trade with player (coins and items)
-    // TODO Fix Command execution for command Blocks
-
     private static long start;
     private static RelluEssentials instance;
 
