@@ -183,17 +183,31 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 * [x] Fix flags and Rights problem on modify (reload that protectionentry)
 * [x] Add /bags 1,2,3,4 or /bags miner, farmer, etc 
 * [x] Add API with methods to access lists etc and use it internally too
+* [x] /head 3 args to /customheads
+* [x] Add /warp
+* [x] Add /back Command
+* [x] Add /teleport
+* [x] Add /marry <Player>
+* [x] Add /purse <INTEGER> to get Coins as Item (plus Listener for pickup)
+* [x] Remove old User Class as it is obsolete
+* [x] Add Managers to reduce Main class size
+* [x] Fix Vanish
+* [x] Add Crops and Drops to Database
+* [x] Add ExpHelper to save and load exp per world group
+* [x] Fix Flag Error (JSONArray vs JSONObject vs NULL)
+* [x] Fix Door destroy without unregister Door
+* [x] Fix piston breaking Protections 
+* [x] Add Protection cleanUp for corrupted Protections
 * [ ] Add Bank on deposit or withdraw show balance
 * [ ] Fix Bambus and Sugarcane drops on telekinesis
 * [ ] Add Price for enchantments
 * [ ] May Add Toggle for Replenishment and Autosmelt
 * [ ] Delicate add torches to non break list
-* [ ] /head 3 args to /customheads
-* [ ] Head info user
+* [ ] Remove custom crafting custom smelter stuff
+* [ ] Add Animal Protection (horse cat dog?)
+* [ ] Fix Command execution for command Blocks
 * [ ] Add Death Chests
 * [ ] Add Config (DB) for Deathchests, Ore Restore, etc
-* [ ] Remove custom crafting custom smelter stuff
-
 
 
 ## LONG TERM TODOS
