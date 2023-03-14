@@ -338,6 +338,13 @@ public class BetterNPC implements Listener {
                 }
                 e.setCancelled(true);
             }
+            else if(e.getView().getTitle().equals(Strings.PLUGIN_COMMAND_CUSTOMHEADS_TITLE)){
+                if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
+                    p.getInventory().addItem(e.getCurrentItem().clone());
+                    p.updateInventory();
+                }
+                e.setCancelled(true);
+            }
         }
     }
 
