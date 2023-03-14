@@ -261,4 +261,6 @@ public class Strings {
     public static final String PLUGIN_COMMAND_SETGROUP = PLUGIN_COMMAND_COLOR + "Group " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " for Player " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " was set!";
     public static final String PLUGIN_COMMAND_SETGROUP_GROUP_NOT_FOUND = PLUGIN_COMMAND_COLOR + "Group " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " not found!";
     public static final String PLUGIN_BANK_INTEREST_NEXT_RUN = PLUGIN_COMMAND_COLOR + "Next Interest Payment Run in: " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " seconds!";
+
+    public static final String PLUGIN_COMMAND_CUSTOMHEADS_TITLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Heads";
 }
