@@ -54,6 +54,7 @@ public class Admin implements CommandExecutor {
 
         if (args.length == 0) {
             p.sendMessage(Strings.PLUGIN_COMMAND_ADMIN_INFO);
+            return true;
         } else if (args.length == 1) {
             if (args[0].equals("npc")) {
                 if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
