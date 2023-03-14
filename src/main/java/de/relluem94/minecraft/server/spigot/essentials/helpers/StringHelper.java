@@ -50,13 +50,13 @@ public class StringHelper {
 
     public static String formatInt(int i) {
         if(i >= 1000000000){
-            return String.format("%sB", i / 1000000000.0);
+            return String.format("%sB", i / 1000000000);
         }
         else if(i >= 1000000){
-            return String.format("%sM", i / 1000000.0);
+            return String.format("%sM", i / 1000000);
         }
         else if(i >= 1000){
-            return String.format("%sK", i / 1000.0);
+            return String.format("%sK", i / 1000);
         }
         else{
             return String.format("%s", i);

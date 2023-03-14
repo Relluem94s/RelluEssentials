@@ -11,6 +11,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelp
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -85,5 +87,14 @@ public class ChatHelper {
                 sendMessage(op, sender + group.getPrefix() + PLUGIN_SPACER_CHANNEL + PLUGIN_MESSAGE_COLOR + replaceColor(message));
             }
         }
+    }
+
+    /**
+     * 
+     * @param p Player
+     * @param message String
+     */
+    public static void sendMessageInActionBar(Player p, String message){
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
     }
 }

@@ -15,9 +15,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
@@ -248,7 +245,7 @@ public class BagHelper {
                     if(slot != -1){
                         be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
                         be.setToBeUpdated(true);
-                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName())));
+                        ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName()));
                         p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
                         lio.add(i);
                     }
@@ -272,7 +269,7 @@ public class BagHelper {
                     if(slot != -1){
                         be.setSlotValue(slot, be.getSlotValue(slot) + i.getAmount());
                         be.setToBeUpdated(true);
-                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(), i.getType().name().replace("_", " ").toLowerCase())));
+                        ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(), i.getType().name().replace("_", " ").toLowerCase()));
                         p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
                         lio.add(i);
                     }
@@ -292,7 +289,7 @@ public class BagHelper {
                 if(slot != -1){
                     be.setSlotValue(slot, be.getSlotValue(slot) + item.getItemStack().getAmount());
                     be.setToBeUpdated(true);
-                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(), item.getName())));
+                    ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(), item.getName()));
                     p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
                     item.getItemStack().setAmount(0);
                     return true;
