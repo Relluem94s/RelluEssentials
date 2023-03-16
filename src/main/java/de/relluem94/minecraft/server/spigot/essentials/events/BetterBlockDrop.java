@@ -92,8 +92,10 @@ public class BetterBlockDrop implements Listener {
                 ItemStack is = new ItemStack(b2d, 1);
                 Player p = (Player) e.getPlayer();
                 if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-                    p.getWorld().dropItem(e.getBlock().getLocation(), is);
-                    e.setDropItems(false);
+                    if(!e.isCancelled()){
+                        p.getWorld().dropItem(e.getBlock().getLocation(), is);
+                        e.setDropItems(false);
+                    }
                 }
             }
         }
