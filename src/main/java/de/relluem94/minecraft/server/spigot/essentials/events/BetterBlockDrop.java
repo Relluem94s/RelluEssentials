@@ -94,7 +94,7 @@ public class BetterBlockDrop implements Listener {
                 if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                     if(!e.isCancelled()){
                         p.getWorld().dropItem(e.getBlock().getLocation(), is);
-                        e.setDropItems(false);
+                        e.setDropItems(false); // TODO drops block in protections.. 
                     }
                 }
             }
