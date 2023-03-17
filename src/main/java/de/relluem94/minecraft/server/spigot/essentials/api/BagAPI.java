@@ -9,11 +9,19 @@ public class BagAPI {
     
     private static List<BagTypeEntry> bagTypeEntryList = new ArrayList<BagTypeEntry>();
 
-
+    /**
+     * 
+     * @param bagTypes List of BagTypeEntry
+     */
     public BagAPI(List<BagTypeEntry> bagTypes) {
         bagTypeEntryList.addAll(bagTypes);
     }
 
+    /**
+     * 
+     * Gives back a List of all BagTypes
+     * @return List of BagTypeEntry
+     */
     public static List<BagTypeEntry> getBagTypeEntryList(){
         return bagTypeEntryList;
     }
