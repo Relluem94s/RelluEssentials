@@ -43,10 +43,18 @@ public class NPCAPI {
         }
     }
 
+    /**
+     * Gives back a List of NPCs
+     * @return List of NPC
+     */
     public static List<NPC> getNPCs(){
         return npcs;
     }
 
+    /**
+     * Adds a NPC
+     * @param npc NPC
+     */
     public static void addNPC(NPC npc){
         npcs.add(npc);
         npc_itemstack.add(npc.getItemHelper().getCustomItem());
@@ -57,19 +65,36 @@ public class NPCAPI {
         }
     }
 
+    /**
+     * Gives back a List of ItemStacks (Spawn Eggs)
+     * @return List of ItemStack
+     */
     public static List<ItemStack> getNPCItemStackList(){
         return npc_itemstack;
     }
 
+    /**
+     * Gives back a List of Strings with NPC Names
+     * @return List of Strings
+     */
     public static List<String> getNPCNameList(){
         return npc_name;
     }
 
+    /**
+     * Gives back a List of Strings with Trader NPC GUI Titles
+     * @return List of Strings
+     */
     public static List<String> getNPCTraderTitleList(){
         return npc_trader_title;
     }
 
-    public static NPC getNPC(int i) {
-        return npcs.get(i);
+    /**
+     * Gives back a NPC from index
+     * @param index int
+     * @return NPC
+     */
+    public static NPC getNPC(int index) {
+        return npcs.get(index);
     }
 }
