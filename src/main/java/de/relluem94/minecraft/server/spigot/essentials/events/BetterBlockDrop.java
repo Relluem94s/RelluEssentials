@@ -3,14 +3,9 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
-
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 import java.util.Arrays;
 
@@ -33,7 +28,7 @@ public class BetterBlockDrop implements Listener {
         Material.NETHER_QUARTZ_ORE
     };
 
-    private final Material[] blocks2Drop = {
+   /* private final Material[] blocks2Drop = {
         Material.GLASS,
         Material.GLASS_PANE,
         Material.BLACK_STAINED_GLASS,
@@ -69,6 +64,8 @@ public class BetterBlockDrop implements Listener {
         Material.YELLOW_STAINED_GLASS,
         Material.YELLOW_STAINED_GLASS_PANE
     };
+ */
+
 
     public void runLater(Runnable r, long d) {
         Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), r, d);
@@ -87,6 +84,7 @@ public class BetterBlockDrop implements Listener {
             }
         }
 
+        /*
         for (Material b2d : blocks2Drop) {
             if (m == b2d) {
                 ItemStack is = new ItemStack(b2d, 1);
@@ -99,6 +97,8 @@ public class BetterBlockDrop implements Listener {
                 }
             }
         }
+
+         */
      /* PlayerEntry p = RelluEssentials.playerEntryList.get(e.getPlayer().getUniqueId());
         BlockHistoryEntry bh = new BlockHistoryEntry();
 
