@@ -15,6 +15,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -58,6 +60,19 @@ public class BetterBags implements Listener {
                 }
             }
         }
+
+        /*
+        if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchants() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.telekinesis)){
+            Block block = e.getBlock();
+            int dropCount = 2;
+            while(block.getRelative(BlockFace.UP).getType().equals(Material.SUGAR_CANE) || block.getRelative(BlockFace.UP).getType().equals(Material.BAMBOO)){
+                dropCount++;
+                block.setType(Material.AIR);
+                block = block.getRelative(BlockFace.UP);
+            }
+            e.getBlock().getDrops().add(new ItemStack(block.getType(), dropCount));
+        }
+         */
     }
 
     private Random r = new Random();
@@ -269,5 +284,15 @@ public class BetterBags implements Listener {
             }
         }
     }
+/*
+    @EventHandler
+    public void test5555(BlockFromToEvent e){
+        System.out.println(e.getEventName() + " " + e.getToBlock().getType().name() + " << " + e.getBlock().getType().name());
+    }
 
+    @EventHandler
+    public void test8888(BlockPhysicsEvent e){
+        System.out.println(e.getEventName() + " " + e.getSourceBlock() + " >> " + e.getBlock().getType().name());
+    }
+ */
 }
