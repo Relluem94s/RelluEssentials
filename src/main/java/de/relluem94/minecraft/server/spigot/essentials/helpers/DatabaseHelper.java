@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
