@@ -36,7 +36,6 @@ public class Vanish implements CommandExecutor {
                             canSee = false;
                         }
 
-                        // TODO test with other players // EntityTargetEvent
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (canSee) {
                                 onlinePlayer.hidePlayer(RelluEssentials.getInstance(), p);
