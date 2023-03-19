@@ -160,3 +160,6 @@ commands:
     customheads:
         description: Gives a overview of Custom Heads
         usage: /customheads
+    playerinfo:
+        description: Gives Information about players
+        usage: /playerinfo

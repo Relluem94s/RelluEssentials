@@ -60,10 +60,6 @@ public class DatabaseManager implements IEnable{
             }
         }
 
-        RelluEssentials.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(RelluEssentials.getInstance(), () -> {
-            RelluEssentials.locationEntryList.addAll(dBH.getLocations());
-        });
-
         RelluEssentials.groupEntryList.addAll(dBH.getGroups());
 
         for(int i = 0; i < BagAPI.getBagTypeEntryList().size(); i++){

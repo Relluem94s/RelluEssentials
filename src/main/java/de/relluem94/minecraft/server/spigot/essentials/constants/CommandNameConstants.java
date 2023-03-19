@@ -63,6 +63,7 @@ public class CommandNameConstants {
     public static final String PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER = "player";
     public static final String PLUGIN_COMMAND_NAME_SPAWN = "spawn";
     public static final String PLUGIN_COMMAND_NAME_BACK = "back";
+    public static final String PLUGIN_COMMAND_NAME_PLAYERINFO = "playerinfo";
     public static final String PLUGIN_COMMAND_NAME_BAGS = "bags";
     public static final String PLUGIN_COMMAND_NAME_WORLD = "world";
     public static final String PLUGIN_COMMAND_NAME_WORLD_CREATE = "create";

@@ -15,10 +15,10 @@ import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH_TP;
@@ -38,10 +38,12 @@ public class NoDeathMessage implements Listener {
         LocationEntry le = new LocationEntry();
         le.setLocation(p.getLocation());
         le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, (int) (Math.random() * 94 - 1) + 1));
-        le.setLocationType(locationTypeEntryList.get(1));
+        LocationTypeEntry location_type = locationTypeEntryList.get(1);
+        le.setLocationType(location_type);
         le.setPlayerId(pe.getID());
         dBH.insertLocation(le);
-        locationEntryList.add(le);
+        le = dBH.getLocation(p.getLocation(), location_type.getId());
+        pe.getHomes().add(le);
 
         for(ItemStack is : p.getInventory().getContents()){
             if(CustomItems.coins.almostEquals(is)){

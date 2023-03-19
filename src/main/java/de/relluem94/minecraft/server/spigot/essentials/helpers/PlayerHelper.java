@@ -22,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.utils.NetworkUtils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.json.JSONObject;
 
@@ -187,5 +188,25 @@ public class PlayerHelper {
         }
 
         return 0;
+    }
+
+    public static OfflinePlayer getOfflinePlayer(String name){
+        for(OfflinePlayer op : Bukkit.getOfflinePlayers()){
+            if(op.getName().equals(name)){
+                return op;
+            }
+        }
+
+        return null;
+    }
+
+    public static PlayerEntry getPlayer(String name){
+        for(PlayerEntry pe : PlayerAPI.getPlayerEntryMap().values()){
+            if(pe.getName().equals(name)){
+                return pe;
+            }
+        }
+
+        return null;
     }
 }

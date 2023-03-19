@@ -10,8 +10,10 @@ import org.bukkit.entity.Player;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
 
 public class PlayerAPI {
 
@@ -43,25 +45,45 @@ public class PlayerAPI {
         return null;
     }
 
-    public static PlayerEntry getPlayerEntry(Player p){
-        return playerEntryMap.get(p.getUniqueId());
+    public static PlayerEntry getPlayerEntry(Player player){
+        return playerEntryMap.get(player.getUniqueId());
     }
 
     public static HashMap<UUID, PlayerEntry> getPlayerEntryMap(){
         return playerEntryMap;
     }
 
+    /**
+     * 
+     * @param player_fk
+     * @return Collection of BagEntries
+     */
     public static Collection<BagEntry> getPlayerBagList(int player_fk){
         return playerBagEntryMap.get(player_fk);
     }
 
-    public static void putPlayerBagEntry(int player_fk, BagEntry be){
-        playerBagEntryMap.put(player_fk, be);
+    /**
+     * Adds Player Bag to internal List
+     * @param player_fk
+     * @param bagEntry
+     */
+    public static void putPlayerBagEntry(int player_fk, BagEntry bagEntry){
+        playerBagEntryMap.put(player_fk, bagEntry);
     }
 
-    public static  Multimap<Integer, BagEntry> getPlayerBagMap() {
+    /**
+     * Gives back Multimap of Integer (Player ID) and BagEntry of Player
+     * @return Multimap of Integer and BagEntry
+     */
+    public static Multimap<Integer, BagEntry> getPlayerBagMap() {
         return playerBagEntryMap;
     }
 
-
+    public static PlayerPartnerEntry getPartner(PlayerEntry pe){
+        if(pe.getPartner() == null){
+            return RelluEssentials.dBH.getPlayerPartner(pe.getID());
+        }
+        
+        return pe.getPartner();
+    }
 }

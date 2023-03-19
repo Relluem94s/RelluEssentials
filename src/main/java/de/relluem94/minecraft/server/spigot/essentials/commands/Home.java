@@ -12,7 +12,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntr
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
@@ -52,17 +51,22 @@ public class Home implements CommandExecutor {
                             Player p = (Player) sender;
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
 
-                            if (hasHomes(pe)) {
+                            if (pe.getHomes().size() != 0) {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
-                                locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationType().getId() == 1)).forEachOrdered(fle -> {
+                                pe.getHomes().stream().forEachOrdered(fle -> {
                                     p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation())));
-                                });
-                                locationEntryList.stream().filter(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationType().getId() == 2)).forEachOrdered(fle -> {
-                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS, fle.getLocationName(), locationToString(fle.getLocation())));
                                 });
                             } else {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
                             }
+
+                            if(pe.getDeaths().size() != 0){
+                                p.sendMessage(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS);
+                                pe.getDeaths().stream().forEachOrdered(fle -> {
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation())));
+                                });
+                            }
+
                             return true;
                         }
                     } else {
@@ -103,7 +107,7 @@ public class Home implements CommandExecutor {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
                             } else if (!args[1].startsWith("death_")) {
                                 dBH.insertLocation(le);
-                                locationEntryList.add(le);
+                                pe.getHomes().add(le);
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
                             } else {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_RESERVED, args[1]));
@@ -113,10 +117,17 @@ public class Home implements CommandExecutor {
                             if (homeExists(pe, le)) {
                                 le = getLocationEntry(pe, le);
                                 dBH.deleteLocation(le);
-                                locationEntryList.remove(le);
+                                pe.getHomes().remove(le);
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DELETE, args[1]));
                                 return true;
-                            } else {
+                            }
+                            else if(deathExists(pe, le)){
+                                le = getLocationEntry(pe, le);
+                                dBH.deleteLocation(le);
+                                pe.getDeaths().remove(le);
+                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, args[1]));
+                            }
+                            else {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[1]));
                                 return true;
                             }
@@ -131,16 +142,22 @@ public class Home implements CommandExecutor {
     }
 
     private boolean homeExists(PlayerEntry pe, LocationEntry le) {
-        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getID() && fle.getLocationName().equals(le.getLocationName()) && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)));
+        return pe.getHomes().stream().anyMatch(fle -> (fle.getLocationName().equals(le.getLocationName())));
     }
 
-    private boolean hasHomes(PlayerEntry pe) {
-        return locationEntryList.stream().anyMatch(fle -> (fle.getPlayerId() == pe.getID() && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)));
+    private boolean deathExists(PlayerEntry pe, LocationEntry le) {
+        return pe.getDeaths().stream().anyMatch(fle -> (fle.getLocationName().equals(le.getLocationName())));
     }
 
     private LocationEntry getLocationEntry(PlayerEntry pe, LocationEntry le) {
-        for (LocationEntry fle : locationEntryList) {
-            if (fle.getPlayerId() == pe.getID() && fle.getLocationName().equals(le.getLocationName()) && (fle.getLocationType().getId() == 1 | fle.getLocationType().getId() == 2)) {
+        for (LocationEntry fle : pe.getHomes()) {
+            if (fle.getLocationName().equals(le.getLocationName())) {
+                return fle;
+            }
+        }
+
+        for (LocationEntry fle : pe.getDeaths()) {
+            if (fle.getLocationName().equals(le.getLocationName())) {
                 return fle;
             }
         }

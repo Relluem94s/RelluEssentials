@@ -21,7 +21,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
@@ -65,7 +64,6 @@ public class RelluEssentials extends JavaPlugin {
     public static HashMap<Material, Material> crops = new HashMap<Material, Material>();
     public static Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
 
-    public static List<LocationEntry> locationEntryList = new ArrayList<>();
     public static List<GroupEntry> groupEntryList = new ArrayList<>();
     public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();

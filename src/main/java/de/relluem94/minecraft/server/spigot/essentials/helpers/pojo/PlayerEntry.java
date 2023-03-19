@@ -1,5 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 
 /**
@@ -24,7 +27,8 @@ public class PlayerEntry {
     private boolean fly;
     private String name;
     private String customName;
-    private LocationEntry[] homes;
+    private List<LocationEntry> homes = new ArrayList<>();
+    private List<LocationEntry> deaths = new ArrayList<>();
     private PlayerPartnerEntry partner;
     private PlayerState playerState;
     private Object playerStateParameter;
@@ -143,12 +147,20 @@ public class PlayerEntry {
         this.customName = customName;
     }
 
-    public LocationEntry[] getHomes() {
+    public List<LocationEntry> getHomes() {
         return homes;
     }
 
-    public void setHomes(LocationEntry[] homes) {
+    public void setHomes(List<LocationEntry> homes) {
         this.homes = homes;
+    }
+
+    public List<LocationEntry> getDeaths() {
+        return deaths;
+    }
+
+    public void setDeaths(List<LocationEntry> deaths) {
+        this.deaths = deaths;
     }
 
     public double getPurse() {

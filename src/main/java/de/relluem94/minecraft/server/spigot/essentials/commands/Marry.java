@@ -75,7 +75,7 @@ public class Marry implements CommandExecutor {
         playerPartnerEntry.setSecondPlayerID(secondPlayer.getID());
 
         RelluEssentials.dBH.insertPlayerPartner(playerPartnerEntry);
-        playerPartnerEntry = RelluEssentials.dBH.getPlayerPartner(firstPlayer.getID());
+        playerPartnerEntry = PlayerAPI.getPartner(firstPlayer);
 
         firstPlayer.setPartner(playerPartnerEntry);
         secondPlayer.setPartner(playerPartnerEntry);
@@ -190,7 +190,12 @@ public class Marry implements CommandExecutor {
             Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
                 p.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
-                return false;
+                return true;
+            }
+
+            if(target.getName().equals(p.getName())){
+                p.sendMessage(PLUGIN_COMMAND_MARRY_SELF_MARRIGE);
+                return true;
             }
 
             addMarryEntry(p, target);

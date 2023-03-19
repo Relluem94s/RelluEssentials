@@ -687,6 +687,38 @@ public class DatabaseHelper {
         return null;
     }
 
+    public List<LocationEntry> getLocations(PlayerEntry pe, int type) {
+        List<LocationEntry> lle = new ArrayList<>();
+        try (
+                Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/ByPlayer.sql", StandardCharsets.UTF_8));
+            ps.setInt(1, pe.getID());
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    if(type != rs.getInt("location_type_fk")){
+                        continue;
+                    }
+                    LocationEntry le = new LocationEntry();
+                    le.setId(rs.getInt("id"));
+                    le.setPlayerId(rs.getInt("player_fk"));
+                    le.setLocationName(rs.getString("location_name"));
+                    le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"), rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                    for(LocationTypeEntry lte : locationTypeEntryList){
+                        if(type == lte.getId()){
+                            le.setLocationType(lte);
+                        }
+                    }
+                    System.out.println(rs.getString("world"));
+                    lle.add(le);
+                }
+            }
+        } catch (SQLException | IOException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return lle;
+    }
+
     public LocationEntry getLocation(Location l, int type) {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
@@ -795,6 +827,8 @@ public class DatabaseHelper {
                     p.setID(rs.getInt("id"));
                     p.setUUID(rs.getString("uuid"));
                     PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt("id"));
+                    p.setHomes(getLocations(p, 1));
+                    p.setDeaths(getLocations(p, 2));
                     p.setPartner(ppe);
                     p.setPlayerState(PlayerState.DEFAULT);
                     return p;
@@ -1119,6 +1153,8 @@ public class DatabaseHelper {
                     p.setID(rs.getInt("id"));
                     p.setUUID(rs.getString("uuid"));
                     PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt("id"));
+                    p.setHomes(getLocations(p, 1));
+                    p.setDeaths(getLocations(p, 2));
                     p.setPartner(ppe);
                     p.setPlayerState(PlayerState.DEFAULT);
 

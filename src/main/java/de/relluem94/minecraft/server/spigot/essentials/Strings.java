@@ -98,14 +98,16 @@ public class Strings {
 
     public static final String PLUGIN_COMMAND_HOME_LIST = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast folgende Homes:";
     public static final String PLUGIN_COMMAND_HOME_LIST_NAME =  PLUGIN_COMMAND_COLOR + "Name: " + PLUGIN_COMMAND_ARG_COLOR + "%s" + " §7(" + PLUGIN_COMMAND_ARG_COLOR + "%s§7)";
-    public static final String PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS =  PLUGIN_COMMAND_COLOR + "Todespunkt: " + PLUGIN_COMMAND_ARG_COLOR + "%s" + " §7(" + PLUGIN_COMMAND_ARG_COLOR + "%s§7)";
+    public static final String PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast folgende Todespunkte:";
+    public static final String PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME =  PLUGIN_COMMAND_COLOR + "Todespunkt: " + PLUGIN_COMMAND_ARG_COLOR + "%s" + " §7(" + PLUGIN_COMMAND_ARG_COLOR + "%s§7)";
 
     public static final String PLUGIN_COMMAND_HOME_NOT_FOUND = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast kein Home mit dem Namen " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "!";
     public static final String PLUGIN_COMMAND_HOME_EXISTS = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast bereits ein Home mit dem Namen " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + "!";
     public static final String PLUGIN_COMMAND_HOME_RESERVED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du kannst kein Home mit dem Namen " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " speichern!";
     public static final String PLUGIN_COMMAND_HOME_NO_BED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast kein Bett in der Welt " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + " an das du teleportiert werden kannst!";
     public static final String PLUGIN_COMMAND_HOME_SET = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast dein Home " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "gesetzt!";
-    public static final String PLUGIN_COMMAND_HOME_DELETE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast dein Home " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "gel§scht!";
+    public static final String PLUGIN_COMMAND_HOME_DELETE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast dein Home " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "gelöscht!";
+    public static final String PLUGIN_COMMAND_HOME_DEATH_DELETE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast dein Todespunkt " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "gelöscht!";
 
     public static final String PLUGIN_COMMAND_SUN = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du lässt die Sonne in der Welt " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "scheinen!";
     public static final String PLUGIN_COMMAND_SUN_PLAYER = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Die Sonne die Sonne scheint nur für dich!";
@@ -245,7 +247,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du bist nicht verheiratet!";
     public static final String PLUGIN_COMMAND_MARRY_INFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Nutze " + PLUGIN_COMMAND_ARG_COLOR + "/marry <name>" + PLUGIN_COMMAND_COLOR + ", " + PLUGIN_COMMAND_ARG_COLOR + "/marry accept"+ PLUGIN_COMMAND_COLOR + " oder " + PLUGIN_COMMAND_ARG_COLOR + "/marry divorce";
     public static final String PLUGIN_COMMAND_MARRY_DIVORCED = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast dich von " + PLUGIN_COMMAND_ARG_COLOR + "%s " + PLUGIN_COMMAND_COLOR + "getrennt!";
-
+    public static final String PLUGIN_COMMAND_MARRY_SELF_MARRIGE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du kannst dich nicht selbst heiraten!";
 
     public static final String PLUGIN_COMMAND_BACK = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du wurdest zurück teleportiert!";
     public static final String PLUGIN_COMMAND_BACK_NO_LOCATION = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Du hast kein Back Punkt gesetzt!";
@@ -263,4 +265,6 @@ public class Strings {
     public static final String PLUGIN_BANK_INTEREST_NEXT_RUN = PLUGIN_COMMAND_COLOR + "Next Interest Payment Run in: " + PLUGIN_COMMAND_ARG_COLOR + "%s" + PLUGIN_COMMAND_COLOR + " seconds!";
 
     public static final String PLUGIN_COMMAND_CUSTOMHEADS_TITLE = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Heads";
+
+    public static final String PLUGIN_COMMAND_PLAYERINFO = PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + "Player Information: " + PLUGIN_COMMAND_ARG_COLOR + "%s";
 }
