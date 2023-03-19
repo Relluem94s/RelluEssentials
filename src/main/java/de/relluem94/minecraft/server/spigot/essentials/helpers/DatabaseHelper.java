@@ -2,6 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -94,7 +96,7 @@ public class DatabaseHelper {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql", StandardCharsets.UTF_8));
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -306,7 +308,7 @@ public class DatabaseHelper {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, StandardCharsets.UTF_8));
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -318,12 +320,12 @@ public class DatabaseHelper {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script, StandardCharsets.UTF_8));
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public String readResource(final String fileName, Charset charset) throws IOException {
+    public String readResource(final String fileName, Charset charset) throws FileNotFoundException {
 
         String out = "";
         try (InputStream is = getClass().getResourceAsStream("/" + fileName); InputStreamReader isr = new InputStreamReader(is); BufferedReader br = new BufferedReader(isr)) {
@@ -331,6 +333,9 @@ public class DatabaseHelper {
             while ((line = br.readLine()) != null) {
                 out += line + System.lineSeparator();
             }
+        }
+        catch(IOException | NullPointerException e){
+            throw new FileNotFoundException(String.format("File %s was not found!", fileName));
         }
 
         return out;
@@ -360,7 +365,7 @@ public class DatabaseHelper {
                     lce.add(ce);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lce;
@@ -383,7 +388,7 @@ public class DatabaseHelper {
                     lde.add(de);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lde;
@@ -400,7 +405,7 @@ public class DatabaseHelper {
             ps.setBoolean(4, ppe.getShareProtections());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -412,7 +417,7 @@ public class DatabaseHelper {
             ps.setInt(1, ppe.getDeletedBy());
             ps.setInt(2, ppe.getID());
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -425,7 +430,7 @@ public class DatabaseHelper {
             ps.setBoolean(2, ppe.getShareProtections());
             ps.setInt(1, ppe.getID());
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -454,7 +459,7 @@ public class DatabaseHelper {
                     return ppe;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -485,7 +490,7 @@ public class DatabaseHelper {
                     lbte.add(wge);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lbte;
@@ -514,7 +519,7 @@ public class DatabaseHelper {
                     lwe.add(we);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lwe;
@@ -533,7 +538,7 @@ public class DatabaseHelper {
             ps.setInt(7, wgie.getTotalExperience());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -551,7 +556,7 @@ public class DatabaseHelper {
             ps.setInt(7, wgie.getWorldGroupEntry().getId());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -583,7 +588,7 @@ public class DatabaseHelper {
                     return wgie;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -600,7 +605,7 @@ public class DatabaseHelper {
             ps.setInt(4, we.getBuildGroup().getId());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -613,7 +618,7 @@ public class DatabaseHelper {
             ps.setString(2, wge.getName());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -639,7 +644,7 @@ public class DatabaseHelper {
                     return wge;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -681,7 +686,7 @@ public class DatabaseHelper {
                     return le;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -691,7 +696,7 @@ public class DatabaseHelper {
         List<LocationEntry> lle = new ArrayList<>();
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            PreparedStatement ps = connection.prepareStatement(readResource("sqls/ByPlayer.sql", StandardCharsets.UTF_8));
+            PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationsByPlayer.sql", StandardCharsets.UTF_8)); 
             ps.setInt(1, pe.getID());
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -709,11 +714,10 @@ public class DatabaseHelper {
                             le.setLocationType(lte);
                         }
                     }
-                    System.out.println(rs.getString("world"));
                     lle.add(le);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lle;
@@ -742,7 +746,7 @@ public class DatabaseHelper {
                     return le;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -769,7 +773,7 @@ public class DatabaseHelper {
                     return le;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -795,7 +799,7 @@ public class DatabaseHelper {
                     return pie;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             consoleSendMessage(ex.getClass().getName(), ex.getMessage());
             pie.setDbVersion(-1); // standard pie if no Database version was found
             return pie;
@@ -834,7 +838,7 @@ public class DatabaseHelper {
                     return p;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -864,7 +868,7 @@ public class DatabaseHelper {
                     return bae;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -889,7 +893,7 @@ public class DatabaseHelper {
                     return bte;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -912,7 +916,7 @@ public class DatabaseHelper {
                     lbte.add(bte);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return lbte;
@@ -929,7 +933,7 @@ public class DatabaseHelper {
             ps.setInt(4, bae.getTier().getId());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -944,7 +948,7 @@ public class DatabaseHelper {
 
             ps.execute();
             updateBankAccount(player_fk, transaction_value, bankaccount_total, tier);
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -961,7 +965,7 @@ public class DatabaseHelper {
             ps.execute();
 
 
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -989,7 +993,7 @@ public class DatabaseHelper {
                     bte.add(b);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return bte;
@@ -1021,7 +1025,7 @@ public class DatabaseHelper {
                     return pe;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -1041,7 +1045,7 @@ public class DatabaseHelper {
 
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1055,7 +1059,7 @@ public class DatabaseHelper {
             ps.setInt(1, pe.getLocation().getPlayerId());
             ps.setInt(2, pe.getId());
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1070,7 +1074,7 @@ public class DatabaseHelper {
             ps.setString(2, pe.getFlags().toString());
             ps.setInt(3, pe.getId());
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1085,7 +1089,7 @@ public class DatabaseHelper {
             ps.setString(2, pe.getRights().toString());
             ps.setInt(3, pe.getId());
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1121,7 +1125,7 @@ public class DatabaseHelper {
                     
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return pel;
@@ -1161,7 +1165,7 @@ public class DatabaseHelper {
                     pel.add(p);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return pel;
@@ -1178,7 +1182,7 @@ public class DatabaseHelper {
             ps.setInt(5, pe.getGroup().getId());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1192,7 +1196,7 @@ public class DatabaseHelper {
             ps.setString(3, ge.getPrefix());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1210,7 +1214,7 @@ public class DatabaseHelper {
             ps.setDouble(7, pe.getPurse());
             ps.setString(8, pe.getUUID());
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1229,7 +1233,7 @@ public class DatabaseHelper {
                     ll.add(lte);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ll;
@@ -1253,7 +1257,7 @@ public class DatabaseHelper {
                     ll.add(p);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ll;
@@ -1277,7 +1281,7 @@ public class DatabaseHelper {
                     ll.add(p);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ll;
@@ -1301,7 +1305,7 @@ public class DatabaseHelper {
             ps.setInt(10, le.getPlayerId());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1313,7 +1317,7 @@ public class DatabaseHelper {
             ps.setInt(1, le.getPlayerId());
             ps.setInt(2, le.getId());
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1349,7 +1353,7 @@ public class DatabaseHelper {
                     return bh;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -1365,7 +1369,7 @@ public class DatabaseHelper {
             ps.setString(3, bh.getMaterial());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1400,7 +1404,7 @@ public class DatabaseHelper {
                     bhe.add(bh);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -1462,7 +1466,7 @@ public class DatabaseHelper {
                     bhe.add(bh);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return bhe;
@@ -1476,7 +1480,7 @@ public class DatabaseHelper {
             ps.setInt(2, bh.getLocation().getId());
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1496,7 +1500,7 @@ public class DatabaseHelper {
                     gel.add(g);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return gel;
@@ -1535,7 +1539,7 @@ public class DatabaseHelper {
                     return bte;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -1581,7 +1585,7 @@ public class DatabaseHelper {
                     return be;
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -1596,7 +1600,7 @@ public class DatabaseHelper {
             ps.setInt(3,type);
 
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1636,7 +1640,7 @@ public class DatabaseHelper {
                     btel.add(bte);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return btel;
@@ -1684,7 +1688,7 @@ public class DatabaseHelper {
                     bel.add(be);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return bel;
@@ -1716,7 +1720,7 @@ public class DatabaseHelper {
 
   
             ps.execute();
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1777,7 +1781,7 @@ public class DatabaseHelper {
                     bel.add(be);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return bel;
@@ -1807,7 +1811,7 @@ public class DatabaseHelper {
                     bel.add(be);
                 }
             }
-        } catch (SQLException | IOException ex) {
+        } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return bel;
