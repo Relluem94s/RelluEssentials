@@ -52,7 +52,7 @@ public class TestCommand implements CommandExecutor {
                 Player p = (Player) sender;
                 if (p.getName().equalsIgnoreCase("Relluem94")) {
                     if (args.length == 1) {
-                        if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB)) {
+                        if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB)) {
                             MobHelper mh = new MobHelper(p.getLocation(), EntityType.ZOMBIE, "§aX Æ A-XII", true);
                             mh.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 1000000, 1));
                             mh.setCanPickupItems(true);
@@ -65,24 +65,24 @@ public class TestCommand implements CommandExecutor {
                                     new ItemStack(Material.LEATHER_LEGGINGS, 1),
                                     new ItemStack(Material.LEATHER_BOOTS, 1)
                             );
-                        }else if (args[0].equals("pick"))  {
+                        }else if (args[0].equalsIgnoreCase("pick"))  {
                             p.getInventory().addItem(CustomItems.relluPickAxe.getCustomItem());
                         }
-                        else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR)) {
+                        else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR)) {
                             p.getInventory().addItem(CustomItems.cloudSailor.getCustomItem());
                             p.getInventory().addItem(CustomItems.cloudBoots.getCustomItem());
-                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_RELLU)) {
+                        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_RELLU)) {
                             p.getInventory().addItem(CustomItems.relluHelmet.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluChestPlate.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluLeggings.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluBoots.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluShield.getCustomItem());
                             p.getInventory().addItem(CustomItems.relluSword.getCustomItem());
-                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT)) {
+                        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT)) {
                             CustomEnchants.autosmelt.addTo(p.getInventory().getItemInMainHand());
-                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE)) {
+                        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE)) {
                             CustomEnchants.telekinesis.addTo(p.getInventory().getItemInMainHand());
-                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT)) {
+                        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT)) {
                             CustomEnchants.autosmelt.removeFrom(p.getInventory().getItemInMainHand());
                             CustomEnchants.telekinesis.removeFrom(p.getInventory().getItemInMainHand());
 
@@ -104,7 +104,7 @@ public class TestCommand implements CommandExecutor {
                             //                                                          //
                             //FOR TEST FINISHED                                         //
                             //////////////////////////////////////////////////////////////
-                        } else if (args[0].equals(PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS)) {
+                        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS)) {
                             try {
                                 WorldHelper.cloneWorld("world2", "world");
                             } catch (WorldNotFoundException ex) {
@@ -112,23 +112,23 @@ public class TestCommand implements CommandExecutor {
                             }
                             p.teleport(Bukkit.getWorld("world2").getSpawnLocation());
                         }
-                        else if (args[0].equals("bc")) {
+                        else if (args[0].equalsIgnoreCase("bc")) {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             RelluEssentials.dBH.insertBag(1, pe.getID());
                         }
-                        else if (args[0].equals("bo")) {
+                        else if (args[0].equalsIgnoreCase("bo")) {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             p.openInventory(BagHelper.getBag(1, pe));
                         }
-                        else if (args[0].equals("bc2")) {
+                        else if (args[0].equalsIgnoreCase("bc2")) {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             RelluEssentials.dBH.insertBag(2, pe.getID());
                         }
-                        else if (args[0].equals("bo2")) {
+                        else if (args[0].equalsIgnoreCase("bo2")) {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             p.openInventory(BagHelper.getBag(2, pe)); 
                         }
-                        else if(args[0].equals("di")){
+                        else if(args[0].equalsIgnoreCase("di")){
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             if(pe.getPlayerState().equals(PlayerState.DEFAULT)){
                                 pe.setPlayerState(PlayerState.DAMAGE_INFO);
@@ -137,12 +137,12 @@ public class TestCommand implements CommandExecutor {
                                 pe.setPlayerState(PlayerState.DEFAULT);
                             }
                         }
-                        else if(args[0].equals("pl")){
+                        else if(args[0].equalsIgnoreCase("pl")){
                             p.sendMessage("Health: " + p.getHealth());
                             p.sendMessage("Food: " + p.getFoodLevel());
                             p.sendMessage("Exp: " + p.getExp());
                         }
-                        else if(args[0].equals("cp")){
+                        else if(args[0].equalsIgnoreCase("cp")){
                             HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
 
                             p.sendMessage(ProtectionAPI.getProtectionEntryList().size() + " << list size");
@@ -160,7 +160,7 @@ public class TestCommand implements CommandExecutor {
                                 ProtectionAPI.removeProtectionEntry(l);
                             }
                         }
-                        else if (args[0].equals("sk")) {
+                        else if (args[0].equalsIgnoreCase("sk")) {
                             p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG_OF_COINS));
                             p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.MONEY_BAG));
                         }

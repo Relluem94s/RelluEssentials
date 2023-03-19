@@ -40,7 +40,7 @@ public class Worlds implements CommandExecutor {
                         p.sendMessage(PLUGIN_COMMAND_WORLD_INFO);
                         return true;
                     case 1:
-                        if (args[0].equals(PLUGIN_COMMAND_NAME_WORLD_LIST)) {
+                        if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_LIST)) {
                             if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                                 sendMessage(p, PLUGIN_COMMAND_WORLD);
                                 Bukkit.getWorlds().forEach(w -> {
@@ -105,7 +105,7 @@ public class Worlds implements CommandExecutor {
                         }
                     case 5:
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                            if (args[0].equals(PLUGIN_COMMAND_NAME_WORLD_CREATE)) {
+                            if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_CREATE)) {
                                 if(WorldType.getByName(args[2].toUpperCase()) != null && World.Environment.valueOf(args[3].toUpperCase()) != null && Boolean.valueOf(args[4]) != null){
                                     WorldType type = WorldType.getByName(args[2].toUpperCase());
                                     World.Environment world_environment = World.Environment.valueOf(args[3].toUpperCase());

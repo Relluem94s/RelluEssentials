@@ -28,13 +28,13 @@ public class Sign implements CommandExecutor {
                         p.sendMessage(PLUGIN_COMMAND_SIGN_INFO);
                     }
                     else if (args.length == 1) {
-                        if(args[0].equals(PLUGIN_COMMAND_NAME_SIGN_EDIT)){
+                        if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_SIGN_EDIT)){
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             pe.setPlayerState(PlayerState.SIGNEDIT);
                             p.sendMessage(PLUGIN_COMMAND_SIGN_EDIT);
                         }
                         else 
-                        if(args[0].equals(PLUGIN_COMMAND_NAME_SIGN_COPY)){
+                        if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_SIGN_COPY)){
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             pe.setPlayerState(PlayerState.SIGNCOPY);
                             p.sendMessage(PLUGIN_COMMAND_SIGN_COPY);

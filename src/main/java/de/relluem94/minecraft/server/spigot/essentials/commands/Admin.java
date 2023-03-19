@@ -79,7 +79,7 @@ public class Admin implements CommandExecutor {
                 p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_PING, p.getPing()));
                 return true;
             }
-            else if (args[0].equals("chat")) {
+            else if (args[0].equalsIgnoreCase("chat")) {
                 for (Player bp : Bukkit.getOnlinePlayers()) {
                     for (int i = 0; i < 100; i++) {
                         bp.sendMessage("");
@@ -88,7 +88,7 @@ public class Admin implements CommandExecutor {
                 p.sendMessage(PLUGIN_COMMAND_ADMIN_CHAT_CLEARED);
                 return true;
             }
-            else if (args[0].equals("light")) {
+            else if (args[0].equalsIgnoreCase("light")) {
                 PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
 
                 if (pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE)) {
@@ -129,7 +129,7 @@ public class Admin implements CommandExecutor {
                 }
                 return true;
             }
-            else if (args[0].equals("afk")) {
+            else if (args[0].equalsIgnoreCase("afk")) {
                 PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
 
                 if (pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)) {
@@ -142,7 +142,7 @@ public class Admin implements CommandExecutor {
                 }
                 return true;
             }
-            else if (args[0].equals("top")) {
+            else if (args[0].equalsIgnoreCase("top")) {
                 Location l = p.getWorld().getHighestBlockAt(p.getLocation()).getLocation().add(0, 1, 0);
                 p.sendMessage(PLUGIN_COMMAND_ADMIN_TOP);
                 p.teleport(l);

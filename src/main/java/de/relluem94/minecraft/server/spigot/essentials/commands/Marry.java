@@ -165,7 +165,7 @@ public class Marry implements CommandExecutor {
         }
         
         if (args.length == 1) {
-            if(args[0].equals(PLUGIN_COMMAND_NAME_MARRY_ACCEPT)){
+            if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_MARRY_ACCEPT)){
                 if(hasMarryEntry(p)){
                     marry(p, marryAcceptList.get(p));
                     removeMarryEntry(p);
@@ -176,7 +176,7 @@ public class Marry implements CommandExecutor {
                 return true;
             }
 
-            if(args[0].equals(PLUGIN_COMMAND_NAME_MARRY_DIVORCE)){
+            if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_MARRY_DIVORCE)){
                 PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                 if(PlayerAPI.getPlayerEntry(p).getPartner() != null){
                     divorce(pe);
@@ -193,7 +193,7 @@ public class Marry implements CommandExecutor {
                 return true;
             }
 
-            if(target.getName().equals(p.getName())){
+            if(target.getName().equalsIgnoreCase(p.getName())){
                 p.sendMessage(PLUGIN_COMMAND_MARRY_SELF_MARRIGE);
                 return true;
             }

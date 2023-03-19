@@ -42,21 +42,21 @@ public class Protect implements CommandExecutor {
                         p.sendMessage(PLUGIN_COMMAND_PROTECT_COMMAND_INFO);
                     }
                     else if (args.length == 1) {
-                        if(args[0].equals(PLUGIN_COMMAND_NAME_PROTECT_ADD)){
+                        if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_ADD)){
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_ADD);
                             pe.setPlayerState(PlayerState.PROTECTION_ADD);
                         }
-                        else if(args[0].equals(PLUGIN_COMMAND_NAME_PROTECT_REMOVE)){
+                        else if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_REMOVE)){
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_REMOVE);
                             pe.setPlayerState(PlayerState.PROTECTION_REMOVE);
                         }
-                        else if(args[0].equals(PLUGIN_COMMAND_NAME_PROTECT_FLAG)){
+                        else if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG)){
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG);
                         }
-                        else if(args[0].equals(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)){
+                        else if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)){
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT);
                         }
-                        else if(args[0].equals(PLUGIN_COMMAND_NAME_PROTECT_INFO)){
+                        else if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_INFO)){
                             pe.setPlayerState(PlayerState.PROTECTION_INFO);
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_INFO);
                         }
@@ -65,8 +65,8 @@ public class Protect implements CommandExecutor {
                         }
                     }
                     else if (args.length == 3) {
-                        if(args[0].equals(PLUGIN_COMMAND_NAME_PROTECT_FLAG)){
-                            if(args[1].equals(PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD)){
+                        if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG)){
+                            if(args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD)){
                                 try {
                                     if(ProtectionFlags.valueOf(args[2].toUpperCase()) != null){
                                         p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_ADD);
@@ -78,7 +78,7 @@ public class Protect implements CommandExecutor {
                                     p.sendMessage(getFlags());
                                 }        
                             }
-                            else if(args[1].equals(PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE)){
+                            else if(args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE)){
                                 try {
                                     if(ProtectionFlags.valueOf(args[2].toUpperCase()) != null){
                                         p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_REMOVE);
@@ -94,8 +94,8 @@ public class Protect implements CommandExecutor {
                                 p.sendMessage(PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND);
                             }
                         }
-                        else if(args[0].equals(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)){
-                            if(args[1].equals(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD)){
+                        else if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)){
+                            if(args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD)){
                                 OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
 
                                 if(player != null){
@@ -107,7 +107,7 @@ public class Protect implements CommandExecutor {
                                     p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND, args[2]));
                                 }
                             }
-                            else if(args[1].equals(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE)){
+                            else if(args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE)){
                                 OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
 
                                 if(player != null){

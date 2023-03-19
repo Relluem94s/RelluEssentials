@@ -112,7 +112,7 @@ public class Teleport implements CommandExecutor {
         }
         
         if (args.length == 1) {
-            if(args[0].equals(PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT)){
+            if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT)){
                 if(hasTeleportEntry(p)){
                     teleport(p, telportAcceptList.get(p));
                     removeTeleportEntry(p);
@@ -153,7 +153,7 @@ public class Teleport implements CommandExecutor {
                 return false;
             }
 
-            if(!args[0].equals(PLUGIN_COMMAND_NAME_TELEPORT_TO)){
+            if(!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TELEPORT_TO)){
                 p.sendMessage(PLUGIN_COMMAND_TP_INFO);
                 return true;
             }
