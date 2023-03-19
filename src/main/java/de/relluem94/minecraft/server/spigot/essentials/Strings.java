@@ -50,7 +50,9 @@ public class Strings {
 
     public static final String PLUGIN_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
 
-    public static final String PLUGIN_CONSOLE_NAME = "§cConsole";
+    public static final String PLUGIN_CONSOLE_COLOR = "§c";
+    public static final String PLUGIN_COMMAND_BLOCK_COLOR = "§8";
+    public static final String PLUGIN_CONSOLE_NAME = PLUGIN_CONSOLE_COLOR + "Console";
     public static final String PLUGIN_MONEY_COLOR = "§6"; 
     public static final String PLUGIN_MONEY_NAME = PLUGIN_MONEY_COLOR + "Coins" + PLUGIN_MESSAGE_COLOR; 
 

@@ -10,10 +10,12 @@ import org.bukkit.command.BlockCommandSender;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+
+import static de.relluem94.rellulib.utils.StringUtils.*;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PRINT;
-import static de.relluem94.rellulib.utils.StringUtils.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer; 
@@ -36,12 +38,12 @@ public class Print implements CommandExecutor {
 
         if (isCMDBlock(sender)) {
             BlockCommandSender bcs = (BlockCommandSender) sender;
-            name = bcs.getName();
+            name = PLUGIN_COMMAND_BLOCK_COLOR + bcs.getName();
         }
 
         if (isConsole(sender)) {
             ConsoleCommandSender ccs = (ConsoleCommandSender) sender;
-            name = ccs.getName();
+            name = PLUGIN_CONSOLE_COLOR + StringHelper.firstCharToUpper(ccs.getName().toLowerCase());
         }
 
         if (isPlayer(sender)) {
@@ -65,6 +67,5 @@ public class Print implements CommandExecutor {
 
         Bukkit.broadcastMessage(name + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + message);
         return true;
-
     }
 }
