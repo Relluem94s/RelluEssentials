@@ -25,9 +25,18 @@ public class TypeHelperTest {
     }
 
     @Test
-    public void testIsDouble() {
+    public void testIsDouble1() {
         Assert.assertEquals(true, TypeHelper.isDouble("12.12"));
+    }
+
+    @Test
+    public void testIsDouble2() {
         Assert.assertEquals(false, TypeHelper.isDouble("12,12"));
+    }
+
+    @Test
+    public void testIsDouble3() {
+        Assert.assertEquals(true, TypeHelper.isDouble("12.12F"));
     }
 
     @Test
