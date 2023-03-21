@@ -1,7 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import org.bukkit.Material;
 
 public class TypeHelperTest {
     @Test
@@ -88,13 +93,39 @@ public class TypeHelperTest {
 
     @Test
     public void testIsMaterialInArray() {
-
+       
     }
 
     @Test
-    public void testIsMaterialInList() {
+    public void testIsMaterialInList1() {
+        List<Material> test = new ArrayList<>();
+        test.add(Material.STONE);
+        test.add(Material.COBBLESTONE);
+        test.add(Material.STRIPPED_DARK_OAK_WOOD);
 
+        Assert.assertEquals(true, TypeHelper.isMaterialInList(Material.STONE, test));
     }
+
+    @Test
+    public void testIsMaterialInList2() {
+        List<Material> test = new ArrayList<>();
+        test.add(Material.STONE);
+        test.add(Material.COBBLESTONE);
+        test.add(Material.STRIPPED_DARK_OAK_WOOD);
+
+        Assert.assertEquals(true, TypeHelper.isMaterialInList(Material.STRIPPED_DARK_OAK_WOOD, test));
+    }
+
+    @Test
+    public void testIsMaterialInList3() {
+        List<Material> test = new ArrayList<>();
+        test.add(Material.STONE);
+        test.add(Material.COBBLESTONE);
+        test.add(Material.STRIPPED_DARK_OAK_WOOD);
+
+        Assert.assertEquals(false, TypeHelper.isMaterialInList(Material.AIR, test));
+    }
+
 
     @Test
     public void testIsPlayer() {
