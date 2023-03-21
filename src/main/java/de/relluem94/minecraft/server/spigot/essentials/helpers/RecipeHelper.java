@@ -18,18 +18,34 @@ public class RecipeHelper {
 
     Shaped shape;
 
+    /**
+     * 
+     * @param name String
+     * @param shape Shaped
+     * @param result ItemStack
+     */
     public RecipeHelper(String name, Shaped shape, ItemStack result){
         this.shape = shape;
         this.result = result;
         nameSpacedKey = new NamespacedKey(RelluEssentials.getInstance(), name);
     }
 
+    /**
+     * 
+     * @param name String
+     * @param ingredients Material[]
+     * @param result ItemStack
+     */
     public RecipeHelper(String name, Material[] ingredients, ItemStack result){
         this.result = result;
         this.ingredients = ingredients;
         nameSpacedKey = new NamespacedKey(RelluEssentials.getInstance(), name);
     }
 
+    /**
+     * creates Recipe from Helper
+     * @return Recipe
+     */
     public Recipe getRecipe(){
         if(shape != null){
             recipe = new ShapedRecipe(nameSpacedKey, result);
