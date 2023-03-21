@@ -210,7 +210,7 @@ public class BankerHelper {
                 p.closeInventory();
                 return;
             }
-            
+
             p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS);
         }        
     }
@@ -237,30 +237,36 @@ public class BankerHelper {
     }
 
     public static void checkInterest(UUID uuid, boolean midnight){
-        if(Bukkit.getOfflinePlayer(uuid).hasPlayedBefore()){
-            PlayerEntry pe = PlayerAPI.getPlayerEntry(uuid);
-            if(pe != null){
-                BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
-                if(bae != null){
-                    if(midnight){
-                        RelluEssentials.bankInterestMap.put(uuid, bae);
-                        return;
-                    }
-                    
-                    OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-                    long lastPlayedTime = op.getLastPlayed()/1000L;
-                    
-                    LocalDate localDate = LocalDate.now();
-                    ZonedDateTime startOfDayInZone = localDate.atStartOfDay(ZoneId.systemDefault());
-    
-                    Date lastPlayedDate = new Date(lastPlayedTime*1000L); 
-                    Date todayDate = new Date(startOfDayInZone.toInstant().toEpochMilli());
-    
-                    if(lastPlayedDate.before(todayDate)){
-                        RelluEssentials.bankInterestMap.put(uuid, bae);
-                    }
-                }
-            }
-        }        
+        if(!Bukkit.getOfflinePlayer(uuid).hasPlayedBefore()){
+            return;
+        } 
+        
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(uuid);
+        if(pe == null){
+            return;
+        }
+
+        BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
+        if(bae == null){
+            return;
+        }
+
+        if(midnight){
+            RelluEssentials.bankInterestMap.put(uuid, bae);
+            return;
+        }
+        
+        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+        long lastPlayedTime = op.getLastPlayed()/1000L;
+        
+        LocalDate localDate = LocalDate.now();
+        ZonedDateTime startOfDayInZone = localDate.atStartOfDay(ZoneId.systemDefault());
+
+        Date lastPlayedDate = new Date(lastPlayedTime*1000L); 
+        Date todayDate = new Date(startOfDayInZone.toInstant().toEpochMilli());
+
+        if(lastPlayedDate.before(todayDate)){
+            RelluEssentials.bankInterestMap.put(uuid, bae);
+        }
     }
 }
