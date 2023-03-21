@@ -90,12 +90,6 @@ public class TypeHelperTest {
         Assert.assertEquals(true, TypeHelper.isLong("192910291929192910"));
     }
 
-
-    @Test
-    public void testIsMaterialInArray() {
-       
-    }
-
     @Test
     public void testIsMaterialInList1() {
         List<Material> test = new ArrayList<>();
@@ -124,11 +118,5 @@ public class TypeHelperTest {
         test.add(Material.STRIPPED_DARK_OAK_WOOD);
 
         Assert.assertEquals(false, TypeHelper.isMaterialInList(Material.AIR, test));
-    }
-
-
-    @Test
-    public void testIsPlayer() {
-
     }
 }
