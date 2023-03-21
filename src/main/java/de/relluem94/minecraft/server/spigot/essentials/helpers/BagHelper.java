@@ -282,8 +282,11 @@ public class BagHelper {
     public static boolean collectItem(Item item, Player p, PlayerEntry pe) {
         ItemStack checkWithoutAmount = item.getItemStack().clone();
         checkWithoutAmount.setAmount(1);
-        if(RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
-            Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
+        if(!RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
+            return false;
+        }
+
+        Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
             for(BagEntry be: bel){
                 int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
                 if(slot != -1){
@@ -295,7 +298,7 @@ public class BagHelper {
                     return true;
                 }
             }
-        }
+
         return false;
     }
 
