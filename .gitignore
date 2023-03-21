@@ -4,12 +4,6 @@
 # Log file
 *.log
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
 # Package Files #
 *.jar
 *.war
@@ -24,5 +18,3 @@ hs_err_pid*
 /target/
 
 rellu_essentials_db_model.mwb.bak
-nb-configuration.xml
-empty.txt
