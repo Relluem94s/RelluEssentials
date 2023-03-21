@@ -69,12 +69,22 @@ public class TypeHelperTest {
         Assert.assertEquals(false, TypeHelper.isInt("19.94F"));
     }
 
+    @Test
+    public void testIsLong1() {
+        Assert.assertEquals(false, TypeHelper.isLong("19.94F"));
+    }
+
+    @Test
+    public void testIsLong2() {
+        Assert.assertEquals(true, TypeHelper.isLong("1994"));
+    }
 
 
     @Test
-    public void testIsLong() {
-
+    public void testIsLong3() {
+        Assert.assertEquals(true, TypeHelper.isLong("192910291929192910"));
     }
+
 
     @Test
     public void testIsMaterialInArray() {
