@@ -225,15 +225,17 @@ public class BankerHelper {
     }
 
     public static void doInterest(Player p){
-        if(RelluEssentials.bankInterestMap.containsKey(p.getUniqueId())){
-            BankAccountEntry bae = RelluEssentials.bankInterestMap.get(p.getUniqueId());
-
-            double interest = (bae.getValue() / 100) * bae.getTier().getInterest();
-            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_INTEREST, StringHelper.formatDouble(interest)));
-
-            RelluEssentials.dBH.addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(), bae.getTier().getId());
-            RelluEssentials.bankInterestMap.remove(p.getUniqueId());
+        if(!RelluEssentials.bankInterestMap.containsKey(p.getUniqueId())){
+            return;
         }
+        
+        BankAccountEntry bae = RelluEssentials.bankInterestMap.get(p.getUniqueId());
+
+        double interest = (bae.getValue() / 100) * bae.getTier().getInterest();
+        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_INTEREST, StringHelper.formatDouble(interest)));
+
+        RelluEssentials.dBH.addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(), bae.getTier().getId());
+        RelluEssentials.bankInterestMap.remove(p.getUniqueId());
     }
 
     public static void checkInterest(UUID uuid, boolean midnight){
