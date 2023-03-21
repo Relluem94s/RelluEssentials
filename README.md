@@ -157,12 +157,12 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 - NPCHelper
 - PlayerHeadHelper
 - [PlayerHelper](./docs/helpers/PlayerHelper.md)
-- ProtectionHelper
-- RecipeHelper
+- [ProtectionHelper](./docs/helpers/ProtectionHelper.md)
+- [RecipeHelper](./docs/helpers/RecipeHelper.md)
 - [SignHelper](./docs/helpers/SignHelper.md)
 - [StringHelper](./docs/helpers/StringHelper.md)
 - [TypeHelper](./docs/helpers/TypeHelper.md)
-- UUIDHelper
+- [UUIDHelper](./docs/helpers/UUIDHelper.md)
 - [WorldHelper](./docs/helpers/WorldHelper.md)
 - others
   - [Vector2Location](./docs/helpers/Vector2Location.md)
