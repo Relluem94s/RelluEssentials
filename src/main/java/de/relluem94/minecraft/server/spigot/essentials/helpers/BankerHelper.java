@@ -190,29 +190,28 @@ public class BankerHelper {
                 RelluEssentials.dBH.updateBankAccount(pe.getID(), 0f, bae.getValue(), bt.getId());
                 p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE);
                 p.closeInventory();
+                return;
             }
-            else{
-                double account = bae.getValue();
-                if(account >= costs){
-                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-costs, bae.getValue(), bt.getId());
-                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK);
-                    p.closeInventory();
-                }
-                else{
-                    if(purse + account >= costs){
-                        pe.setPurse(0);
-                        pe.setUpdatedBy(pe.getID());
-                        pe.setToBeUpdated(true);
-                        RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-(costs-purse), bae.getValue(), bt.getId());
-                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH);
-                        p.closeInventory();
-                    }
-                    else{
-                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS);
-                    }
-                    
-                }
+
+            double account = bae.getValue();
+            if(account >= costs){
+                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-costs, bae.getValue(), bt.getId());
+                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK);
+                p.closeInventory();
+                return;
             }
+
+            if(purse + account >= costs){
+                pe.setPurse(0);
+                pe.setUpdatedBy(pe.getID());
+                pe.setToBeUpdated(true);
+                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-(costs-purse), bae.getValue(), bt.getId());
+                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH);
+                p.closeInventory();
+                return;
+            }
+            
+            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS);
         }        
     }
 
