@@ -68,6 +68,12 @@ Creates a new World for the Bukkit Server
    * `world_environment` — World.Environment
    * `structures` — boolean
 
+## `public static boolean worldExists(String worldName)`
+
+Creates a World for the Bukkit Server
+
+ * **Parameters:** `worldName` — String
+
 ## `public static void loadWorld(String worldName)`
 
 Creates a World for the Bukkit Server
@@ -81,7 +87,9 @@ Unloads a World from the Bukkit Server
  * **Parameters:**
    * `worldName` — String
    * `save` — boolean
- * **Exceptions:** `de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException` — if World is not loaded
+ * **Exceptions:** `*` — de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException
+
+     if World is not loaded
 
 ## `public static void cloneWorld(String worldName, String copyWorldName) throws WorldNotFoundException`
 
@@ -90,4 +98,7 @@ Copies a World from another from the Bukkit Server
  * **Parameters:**
    * `worldName` — String
    * `copyWorldName` — String
- * **Exceptions:** `de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException` — if World was not found
+ * **Exceptions:** `*` — de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException
+
+     if World was not found
+
