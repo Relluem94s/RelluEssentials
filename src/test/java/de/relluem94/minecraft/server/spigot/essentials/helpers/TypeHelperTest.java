@@ -40,8 +40,18 @@ public class TypeHelperTest {
     }
 
     @Test
-    public void testIsFloat() {
+    public void testIsFloat1() {
+        Assert.assertEquals(true, TypeHelper.isFloat("12.12F"));
+    }
 
+    @Test
+    public void testIsFloat2() {
+        Assert.assertEquals(true, TypeHelper.isFloat("12.12"));
+    }
+
+    @Test
+    public void testIsFloat3() {
+        Assert.assertEquals(false, TypeHelper.isFloat("test"));
     }
 
     @Test
