@@ -98,7 +98,7 @@ public class PlayerHelper {
     }
 
     public static OfflinePlayerEntry getOfflinePlayerByUUID(UUID uuid){
-        JSONObject json = NetworkUtils.getJSON("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString().replaceAll("-", "") + "?unsigned=false");
+        JSONObject json = NetworkUtils.getJSON("https://sessionserver.mojang.com/session/minecraft/profile/" + UUIDHelper.unDashed(uuid) + "?unsigned=false");
         OfflinePlayerEntry ope = new OfflinePlayerEntry();
 
         if(json.has("name")){
