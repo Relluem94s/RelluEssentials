@@ -153,65 +153,67 @@ public class BankerHelper {
     }
 
     public static void upgradeAccount(ItemStack itemStack, Player p, PlayerEntry pe, BankAccountEntry bae){
-       
-
-
         for(ItemHelper ih : getBankTiers()){
-            if(ih.getCustomItem().equals(itemStack)){
-                Long costs = Long.parseLong(ih.getLore().get(0).replace("Costs: ", ""));
-                BankTierEntry bt = bae.getTier();
-                for(BankTierEntry bte: BankAPI.getBankTiers()){
-                    if(bte.getCost() == costs){
-                        bt = bte;
-                        break;
-                    }
-                }
+            if(!ih.getCustomItem().equals(itemStack)){
+                continue;
+            }
 
-                if(bae.getTier().getCost() > costs){
-                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_LOWER_ACCOUNT);
-                }
-                else if(bae.getTier().getCost() == costs){
-                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_ALREADY_BOUGHT);
-                }
-                else{
-                    if(bt.getId() != bae.getTier().getId()){
-                        double purse = pe.getPurse();
-                        if(purse >= costs){
-                            pe.setPurse(purse - costs);
-                            pe.setUpdatedBy(pe.getID());
-                            pe.setToBeUpdated(true);
-                            RelluEssentials.dBH.updateBankAccount(pe.getID(), 0f, bae.getValue(), bt.getId());
-                            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE);
-                            p.closeInventory();
-                        }
-                        else{
-                            double account = bae.getValue();
-                            if(account >= costs){
-                                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-costs, bae.getValue(), bt.getId());
-                                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK);
-                                p.closeInventory();
-                            }
-                            else{
-                                if(purse + account >= costs){
-                                    pe.setPurse(0);
-                                    pe.setUpdatedBy(pe.getID());
-                                    pe.setToBeUpdated(true);
-                                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-(costs-purse), bae.getValue(), bt.getId());
-                                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH);
-                                    p.closeInventory();
-                                }
-                                else{
-                                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS);
-                                }
-                            }
-                        }
-                    }
+            Long costs = Long.parseLong(ih.getLore().get(0).replace("Costs: ", ""));
+            BankTierEntry bt = bae.getTier();
+            for(BankTierEntry bte: BankAPI.getBankTiers()){
+                if(bte.getCost() == costs){
+                    bt = bte;
+                    break;
                 }
             }
-        }
 
+            if(bae.getTier().getCost() > costs){
+                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_LOWER_ACCOUNT);
+                return;
+            }
+            
+            if(bae.getTier().getCost() == costs){
+                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_ALREADY_BOUGHT);
+                return;
+            }
 
-        
+         
+            if(bt.getId() == bae.getTier().getId()){
+                return;
+            }
+
+            double purse = pe.getPurse();
+            if(purse >= costs){
+                pe.setPurse(purse - costs);
+                pe.setUpdatedBy(pe.getID());
+                pe.setToBeUpdated(true);
+                RelluEssentials.dBH.updateBankAccount(pe.getID(), 0f, bae.getValue(), bt.getId());
+                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE);
+                p.closeInventory();
+            }
+            else{
+                double account = bae.getValue();
+                if(account >= costs){
+                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-costs, bae.getValue(), bt.getId());
+                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK);
+                    p.closeInventory();
+                }
+                else{
+                    if(purse + account >= costs){
+                        pe.setPurse(0);
+                        pe.setUpdatedBy(pe.getID());
+                        pe.setToBeUpdated(true);
+                        RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-(costs-purse), bae.getValue(), bt.getId());
+                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH);
+                        p.closeInventory();
+                    }
+                    else{
+                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS);
+                    }
+                    
+                }
+            }
+        }        
     }
 
 
