@@ -55,9 +55,21 @@ public class TypeHelperTest {
     }
 
     @Test
-    public void testIsInt() {
-
+    public void testIsInt1() {
+        Assert.assertEquals(false, TypeHelper.isInt("test"));
     }
+
+    @Test
+    public void testIsInt2() {
+        Assert.assertEquals(true, TypeHelper.isInt("123456"));
+    }
+
+    @Test
+    public void testIsInt3() {
+        Assert.assertEquals(false, TypeHelper.isInt("19.94F"));
+    }
+
+
 
     @Test
     public void testIsLong() {
