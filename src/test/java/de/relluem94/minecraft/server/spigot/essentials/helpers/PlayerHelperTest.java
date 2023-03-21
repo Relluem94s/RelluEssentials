@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -21,6 +23,22 @@ public class PlayerHelperTest {
     }
 
     @Test
+    public void testGetOfflinePlayerByName3() {
+        PrintStream sysOut = System.out;
+
+        PrintStream noOut = new PrintStream(new OutputStream(){
+            public void write(int b) {}
+        });
+
+        System.setOut(noOut); // To disable Error Message from NetworkUtils
+
+        OfflinePlayerEntry ope = PlayerHelper.getOfflinePlayerByName("Relluem9494");
+        Assert.assertEquals(false, ope != null);
+
+        System.setOut(sysOut);
+    }
+
+    @Test
     public void testGetOfflinePlayerByUUID1() {
         OfflinePlayerEntry ope = PlayerHelper.getOfflinePlayerByUUID(UUID.fromString("ec0149f9-8b21-44ee-9731-8bff508087e7"));
         Assert.assertEquals(true, ope != null);
@@ -30,5 +48,11 @@ public class PlayerHelperTest {
     public void testGetOfflinePlayerByUUID2() {
         OfflinePlayerEntry ope = PlayerHelper.getOfflinePlayerByUUID(UUID.fromString("ec0149f9-8b21-44ee-9731-8bff508087e7"));
         Assert.assertEquals("Relluem94", ope.getName());
+    }
+
+    @Test
+    public void testGetOfflinePlayerByUUID3() {
+        OfflinePlayerEntry ope = PlayerHelper.getOfflinePlayerByUUID(UUID.fromString("00000000-AAAA-AAAA-0000-AAFFAAAAAAAA"));
+        Assert.assertEquals(false, ope != null);
     }
 }
