@@ -100,7 +100,7 @@ public class BagHelper {
     public static ItemHelper getItem(BagTypeEntry bte, boolean npc){
         String[] lore;
         if(npc){
-            lore = new String[]{"Click to buy this Bag", "Costs: " + bte.getCost()};
+            lore = new String[]{"Click to buy this Bag", "Costs: " + bte.getCost()}; //TODO add to Strings
         }
         else{
             lore = new String[]{"Click to open"};
@@ -287,17 +287,17 @@ public class BagHelper {
         }
 
         Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
-            for(BagEntry be: bel){
-                int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
-                if(slot != -1){
-                    be.setSlotValue(slot, be.getSlotValue(slot) + item.getItemStack().getAmount());
-                    be.setToBeUpdated(true);
-                    ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(), item.getName()));
-                    p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
-                    item.getItemStack().setAmount(0);
-                    return true;
-                }
+        for(BagEntry be: bel){
+            int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
+            if(slot != -1){
+                be.setSlotValue(slot, be.getSlotValue(slot) + item.getItemStack().getAmount());
+                be.setToBeUpdated(true);
+                ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(), item.getName()));
+                p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
+                item.getItemStack().setAmount(0);
+                return true;
             }
+        }
 
         return false;
     }
