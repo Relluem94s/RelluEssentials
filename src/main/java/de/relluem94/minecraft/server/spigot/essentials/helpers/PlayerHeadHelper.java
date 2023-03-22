@@ -3,21 +3,28 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 
 public class PlayerHeadHelper {
+
+    private PlayerHeadHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
+
     private static final ItemStack PLAYER_HEAD = new ItemStack(Material.PLAYER_HEAD, 1);
 
     public static ItemStack createSkull(String name){
@@ -29,7 +36,7 @@ public class PlayerHeadHelper {
  
             sm.setOwnerProfile(pp);
             sm.setDisplayName(player.getName());
-            is.setItemMeta((ItemMeta) sm);
+            is.setItemMeta(sm);
         }
         return is;
     }
@@ -54,7 +61,7 @@ public class PlayerHeadHelper {
             m.invoke(sm, profile);
         }
         catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            System.out.println(e.getMessage());
+            Logger.getLogger(PlayerHeadHelper.class.getName()).log(Level.WARNING, e.getMessage());
         }
 
         ph.setItemMeta(sm);
