@@ -19,15 +19,17 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity
 
 public class CustomEnchants {
 
-    public static List<EnchantmentHelper> customEnchantments = new ArrayList<>();
+    private CustomEnchants(){
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
 
-    // Enchantment Ideas: Scavengers (get more coins), Nightvision for helmets
+    public static final List<EnchantmentHelper> customEnchantments = new ArrayList<>();
 
     public static final EnchantmentHelper autosmelt = new EnchantmentHelper(
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT, EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_DISPLAYNAME), 
         EnchantmentTarget.TOOL, 
         new EnchantLevel(1, 1), 
-        Arrays.asList(new Enchantment[]{Enchantment.SILK_TOUCH}), 
+        Arrays.asList(Enchantment.SILK_TOUCH), 
         EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute()
@@ -37,7 +39,7 @@ public class CustomEnchants {
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS_DISPLAYNAME), 
         EnchantmentTarget.BREAKABLE, 
         new EnchantLevel(1, 1), 
-        Arrays.asList(new Enchantment[]{Enchantment.SILK_TOUCH}), 
+        Arrays.asList(Enchantment.SILK_TOUCH), 
         EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute()
@@ -47,7 +49,7 @@ public class CustomEnchants {
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT, EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT_DISPLAYNAME), 
         EnchantmentTarget.TOOL, 
         new EnchantLevel(1, 1), 
-        Arrays.asList(new Enchantment[]{Enchantment.SILK_TOUCH}), 
+        Arrays.asList(Enchantment.SILK_TOUCH), 
         EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute()
@@ -57,7 +59,7 @@ public class CustomEnchants {
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE, EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE_DISPLAYNAME), 
         EnchantmentTarget.TOOL, 
         new EnchantLevel(1, 1), 
-        Arrays.asList(new Enchantment[]{Enchantment.SILK_TOUCH}), 
+        Arrays.asList(Enchantment.SILK_TOUCH), 
         EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute()
@@ -67,7 +69,7 @@ public class CustomEnchants {
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_DISPLAYNAME), 
         EnchantmentTarget.WEAPON, 
         new EnchantLevel(1,1), 
-        Arrays.asList(new Enchantment[]{Enchantment.FIRE_ASPECT}), 
+        Arrays.asList(Enchantment.FIRE_ASPECT), 
         EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute(
@@ -79,7 +81,4 @@ public class CustomEnchants {
             50
         )
     );
-
-   
 }
-  
