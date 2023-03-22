@@ -12,7 +12,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.recipe.Shaped;
 
 public class RecipeHelper {
     private NamespacedKey nameSpacedKey;
-    private Recipe recipe;
     private ItemStack result;
     private Material[] ingredients;
 
@@ -48,7 +47,7 @@ public class RecipeHelper {
      */
     public Recipe getRecipe(){
         if(shape != null){
-            recipe = new ShapedRecipe(nameSpacedKey, result);
+            Recipe recipe = new ShapedRecipe(nameSpacedKey, result);
 
             recipe = ((ShapedRecipe) recipe).shape(shape.getRows());
             for(char cr : shape.getIngredients().keySet()){
@@ -59,7 +58,7 @@ public class RecipeHelper {
             return recipe;
         }
         
-        recipe = new ShapelessRecipe(nameSpacedKey, result);
+        Recipe recipe = new ShapelessRecipe(nameSpacedKey, result);
         for(Material m : ingredients){
             ((ShapelessRecipe) recipe).addIngredient(m);
         }
