@@ -204,7 +204,7 @@ public class ItemHelper implements IItemHelper {
      * @param compare
      * @return boolean
      */
-    public boolean equals(ItemStack compare) {
+    public boolean equalsExact(ItemStack compare) {
         ItemStack item = this.getCustomItem();
         if (item == null || compare == null) {
             return false;
@@ -218,11 +218,7 @@ public class ItemHelper implements IItemHelper {
             return false;
         }
 
-        if (item.hasItemMeta() && !item.getItemMeta().equals(compare.getItemMeta())) {
-            return false;
-        }
-
-        return true;
+        return item.hasItemMeta() && item.getItemMeta().equals(compare.getItemMeta());
     }
 
     /**
@@ -240,21 +236,17 @@ public class ItemHelper implements IItemHelper {
             return false;
         }
 
-        if (item.hasItemMeta() != compare.hasItemMeta()) {
-            return false;
-        }
-
-        return true;
+        return item.hasItemMeta() == compare.hasItemMeta();
     }
 
     @Override
     public void init() {
-
+        throw new UnsupportedOperationException("Unimplemented method 'init'");
     }
 
     @Override
     public void postInit() {
-
+        throw new UnsupportedOperationException("Unimplemented method 'init'");
     }
 
     private void addItemRarity() {
