@@ -9,7 +9,7 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.potion.PotionEffect;
 
-import de.relluem94.minecraft.server.spigot.essentials.NPC.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 
 /**
  *

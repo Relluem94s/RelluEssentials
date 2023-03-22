@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.NPC;
+package de.relluem94.minecraft.server.spigot.essentials.npc;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.interfaces.IBanker;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.npc.interfaces.IBanker;
 
 public class Banker extends NPC implements IBanker {
    

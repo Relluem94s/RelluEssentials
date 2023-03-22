@@ -8,11 +8,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.NPC;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.NPC.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.npc.NPC.Type;
 
 public class NPCAPI {
     

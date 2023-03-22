@@ -1,22 +1,23 @@
-package de.relluem94.minecraft.server.spigot.essentials.NPC;
+package de.relluem94.minecraft.server.spigot.essentials.npc;
 
 import java.util.Arrays;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Villager.Profession;
+import org.bukkit.inventory.Inventory;
 
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.NPC.interfaces.INPC;
 import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npc.interfaces.INPC;
 
-public abstract class NPC implements INPC {
+public class NPC implements INPC {
 
     private String name;
-    private ItemHelper npc;
+    private ItemHelper npcSpawnItem;
     private Profession profession;
     private Type type;
 
@@ -28,7 +29,7 @@ public abstract class NPC implements INPC {
         this.name = name;
         this.profession = profession;
         this.type = type;
-        this.npc = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, getName(), de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{ItemConstants.PLUGIN_ITEM_NPC_LORE1}));
+        this.npcSpawnItem = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, getName(), de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{ItemConstants.PLUGIN_ITEM_NPC_LORE1}));
         NPCAPI.addNPC(this);
     }
 
@@ -44,7 +45,7 @@ public abstract class NPC implements INPC {
 
     @Override
     public ItemHelper getItemHelper() {
-        return npc;
+        return npcSpawnItem;
     }
 
     @Override
@@ -63,5 +64,10 @@ public abstract class NPC implements INPC {
         CHAT,
         ENCHANTER,
         OTHER;
+    }
+
+    @Override
+    public Inventory getMainGUI() {
+        throw new UnsupportedOperationException("Unimplemented method 'getMainGUI'");
     }
 }

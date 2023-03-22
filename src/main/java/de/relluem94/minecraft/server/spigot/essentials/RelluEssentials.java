@@ -16,8 +16,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import de.relluem94.rellulib.stores.DoubleStore;
-
-import de.relluem94.minecraft.server.spigot.essentials.NPC.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
@@ -43,6 +41,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManage
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
+import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
@@ -57,7 +56,7 @@ public class RelluEssentials extends JavaPlugin {
     public static ResourceBundle englishProperties;
     public static ResourceBundle germanProperties;
     public static String language;
-    public static Banker banker;
+    private static Banker banker;
 
     public static final Map<Integer, Vector2Location> selections = new HashMap<>();
     public static final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
@@ -81,6 +80,14 @@ public class RelluEssentials extends JavaPlugin {
 
     private static synchronized void setInstance(RelluEssentials re){
         instance = re;
+    }
+
+    public static void setBanker(Banker banker){
+        RelluEssentials.banker = banker;
+    }
+
+    public static Banker getBanker(){
+        return RelluEssentials.banker;
     }
 
     @Override

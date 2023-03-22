@@ -79,11 +79,11 @@ public class BetterNPC implements Listener {
                 String customName = e.getRightClicked().getCustomName();
                 for(int i = 0; i < NPCAPI.getNPCNameList().size(); i++){
                     if(NPCAPI.getNPCNameList().get(i).equals(customName)){
-                        if(customName.equals(RelluEssentials.banker.getName())){
+                        if(customName.equals(RelluEssentials.getBanker().getName())){
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                             BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
                             if(bae != null){
-                                InventoryHelper.openInventory(p, RelluEssentials.banker.getMainGUI());
+                                InventoryHelper.openInventory(p, RelluEssentials.getBanker().getMainGUI());
                             }
                             else{
                                 BankTierEntry bte = RelluEssentials.dBH.getBankTier(1);
@@ -265,11 +265,11 @@ public class BetterNPC implements Listener {
         if(e.getWhoClicked() instanceof Player && e.getCurrentItem() != null){
             Player p = (Player) e.getWhoClicked();
             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-            if (e.getView().getTitle().equals(RelluEssentials.banker.getTitle())) {
+            if (e.getView().getTitle().equals(RelluEssentials.getBanker().getTitle())) {
                 BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
                 if(e.getCurrentItem().equals(BankerHelper.npc_gui_deposit.getCustomItem())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, RelluEssentials.banker.getDepositGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getDepositGUI());
                 }
                 else if(e.getCurrentItem().getType().equals(BankerHelper.UPGRADE_MATERIAL)){
                     BankerHelper.upgradeAccount(e.getCurrentItem(), p, pe, bae);
@@ -300,11 +300,11 @@ public class BetterNPC implements Listener {
                 }
                 else if(BankerHelper.npc_gui_withdraw.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, RelluEssentials.banker.getWithdrawGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getWithdrawGUI());
                 }
                 else if(BankerHelper.npc_gui_balance.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, RelluEssentials.banker.getBalanceGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getBalanceGUI());
                 }
                 else if(BankerHelper.npc_gui_balance_total.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
@@ -320,7 +320,7 @@ public class BetterNPC implements Listener {
                 }
                 else if(BankerHelper.npc_gui_upgrade.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, RelluEssentials.banker.getUpgradeGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getUpgradeGUI());
                 }
                 else if(CustomItems.npc_gui_close.equals(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);

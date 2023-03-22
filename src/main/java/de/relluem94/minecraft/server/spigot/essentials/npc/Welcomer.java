@@ -1,9 +1,9 @@
-package de.relluem94.minecraft.server.spigot.essentials.NPC;
+package de.relluem94.minecraft.server.spigot.essentials.npc;
 
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
-import de.relluem94.minecraft.server.spigot.essentials.NPC.interfaces.IChat;
+import de.relluem94.minecraft.server.spigot.essentials.npc.interfaces.IChat;
 
 public class Welcomer extends NPC implements IChat {
 

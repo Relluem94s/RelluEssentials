@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.NPC;
+package de.relluem94.minecraft.server.spigot.essentials.npc;
 
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
