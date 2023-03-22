@@ -1,6 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.groupEntryList;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -10,6 +12,10 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
  * @author rellu
  */
 public class Groups {
+
+    private Groups() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
 
     /**
      * Returns a GroupEntry if a Group is found by name<br>

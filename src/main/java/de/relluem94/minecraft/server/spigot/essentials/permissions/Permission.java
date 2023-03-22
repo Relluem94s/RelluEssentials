@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.permissions;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
@@ -10,6 +11,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Permission {
+
+    private Permission() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
 
     /**
      * Checks if Player is Authorized Player has to be in a Group with id >=
