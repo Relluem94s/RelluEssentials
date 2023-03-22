@@ -4,11 +4,17 @@ import static java.lang.Math.round;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WHERE_STRING;
 import org.bukkit.Location;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+
 /**
  *
  * @author rellu
  */
 public class StringHelper {
+
+    private StringHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
 
     /**
      *
@@ -16,7 +22,7 @@ public class StringHelper {
      * @return String replaces & with § to trigger the ChatColor codes
      */
     public static String replaceColor(String message) {
-        return message.replaceAll("&", "§");
+        return message.replace("&", "§");
     }
 
     /**
@@ -89,6 +95,4 @@ public class StringHelper {
             return String.format("%.2f", d);
         }
     }
-
-
 }
