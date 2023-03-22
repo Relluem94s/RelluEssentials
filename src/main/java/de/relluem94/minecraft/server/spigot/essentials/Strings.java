@@ -4,6 +4,10 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameCons
 
 public class Strings {
 
+    private Strings() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
+
     /**
      * *****************************************************************************
      */
