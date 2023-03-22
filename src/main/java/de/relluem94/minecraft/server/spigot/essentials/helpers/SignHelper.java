@@ -17,10 +17,10 @@ import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCus
  */
 public class SignHelper {
 
-    private final String line0 = PLUGIN_NAME_SIGN;
+    private static final String LINE0 = PLUGIN_NAME_SIGN;
     private final String line1;
     private final String line2;
-    private final String line3 = PLUGIN_CLICK_SIGN;
+    private static final String LINE3 = PLUGIN_CLICK_SIGN;
     private final ActionType signActionType;
 
     public SignHelper(ActionType signActionType, String customInput) {
@@ -47,7 +47,7 @@ public class SignHelper {
     }
 
     public String getLine0() {
-        return line0;
+        return LINE0;
     }
 
     public String getLine1() {
@@ -59,7 +59,7 @@ public class SignHelper {
     }
 
     public String getLine3() {
-        return line3;
+        return LINE3;
     }
 
     public static boolean isSign(SignHelper sh, String line0, String line1, String line3) {
