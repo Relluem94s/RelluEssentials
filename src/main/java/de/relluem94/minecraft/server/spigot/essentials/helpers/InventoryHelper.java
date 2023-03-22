@@ -12,11 +12,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.json.JSONObject;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+
 /**
  *
  * @author rellu
  */
 public class InventoryHelper {
+
+    private InventoryHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
+
+    private static final String SLOT_NAME_ITEMSTACK = "itemStack";
+    private static final String SLOT_NAME_ID = "id";
 
     /**
      *
@@ -97,7 +106,7 @@ public class InventoryHelper {
         return inv;
     }
 
-    private static List<Integer> INVENTORY_SKIPS = Arrays.asList(new Integer[]{0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53});
+    private static final List<Integer> INVENTORY_SKIPS = Arrays.asList(0,1,2,3,4,5,6,7,8,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53);
 
     public static int getSkipsSize(){
         return INVENTORY_SKIPS.size();
@@ -127,9 +136,9 @@ public class InventoryHelper {
             for (int i=p.getInventory().getSize(); i >= 0; i--) {
                 JSONObject slot = invJson.getJSONObject(i+"");
                                 
-                if (slot.has("itemStack")) {
-                    int slotID = slot.getInt("id");
-                    ItemStack stack = ItemHelper.itemFrom64(slot.getString("itemStack"));
+                if (slot.has(SLOT_NAME_ITEMSTACK)) {
+                    int slotID = slot.getInt(SLOT_NAME_ID);
+                    ItemStack stack = ItemHelper.itemFrom64(slot.getString(SLOT_NAME_ITEMSTACK));
                     
                     if(stack != null){
                         p.getInventory().setItem(slotID, stack);
@@ -150,18 +159,10 @@ public class InventoryHelper {
         for (int i=inventory.getSize(); i >= 0; i--) {
             ItemStack stack = inventory.getItem(i);
             JSONObject slot = new JSONObject();
-            slot.put("id",Integer.valueOf(i));
-            slot.put("itemStack", ItemHelper.itemTo64(stack));
+            slot.put(SLOT_NAME_ID ,Integer.valueOf(i));
+            slot.put(SLOT_NAME_ITEMSTACK, ItemHelper.itemTo64(stack));
             inv.put(Integer.valueOf(i) + "", slot);
         }
         return inv;
     }
-
-
-
-
-
-
-
-
 }
