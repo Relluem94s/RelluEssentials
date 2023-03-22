@@ -2,7 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import org.bukkit.entity.Player;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+
 public class ExperienceHelper {
+
+    private ExperienceHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
     
     public static int getTotalExperience(int level) {
         int xp = 0;
@@ -10,9 +16,9 @@ public class ExperienceHelper {
         if (level >= 0 && level <= 15) {
             xp = (int) Math.round(Math.pow(level, 2) + 6 * level);
         } else if (level > 15 && level <= 30) {
-            xp = (int) Math.round((2.5 * Math.pow(level, 2) - 40.5 * level + 360));
+            xp = (int) Math.round(2.5 * Math.pow(level, 2) - 40.5 * level + 360);
         } else if (level > 30) {
-            xp = (int) Math.round(((4.5 * Math.pow(level, 2) - 162.5 * level + 2220)));
+            xp = (int) Math.round(4.5 * Math.pow(level, 2) - 162.5 * level + 2220);
         }
         return xp;
     }
@@ -24,7 +30,7 @@ public class ExperienceHelper {
     public static void setTotalExperience(Player player, int amount) {
         int level = 0;
         int xp = 0;
-        float a = 0;
+        float a = 1;
         float b = 0;
         float c = -amount;
 
@@ -40,6 +46,7 @@ public class ExperienceHelper {
             b = -162.5f;
             c += 2220;
         }
+        
         level = (int) Math.floor((-b + Math.sqrt(Math.pow(b, 2) - (4 * a * c))) / (2 * a));
         xp = amount - getTotalExperience(level);
         player.setLevel(level);
