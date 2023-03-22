@@ -17,30 +17,37 @@ public class Speed implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SPEED)) {
-            if (args.length == 1) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                        if (args[0].matches("^\\d+$")) {
-                            float speed = parseSpeed(args[0]);
-                            if (p.isFlying()) {
-                                p.setFlySpeed(speed);
-                            } else {
-                                p.setWalkSpeed(speed);
-                            }
-                            p.sendMessage(String.format(PLUGIN_COMMAND_SPEED, args[0]));
-                            return true;
-                        } else {
-                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                            return true;
-                        }
-                    }
-                }
-            } else {
-                sender.sendMessage(PLUGIN_COMMAND_SPEED_INFO);
-            }
+            return false;
         }
-        return false;
+
+        if (args.length != 1) {
+            sender.sendMessage(PLUGIN_COMMAND_SPEED_INFO);
+            return true;
+        } 
+
+        if (isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if (!args[0].matches("^\\d+$")) {
+            p.sendMessage(PLUGIN_COMMAND_INVALID);
+        } 
+
+        float speed = parseSpeed(args[0]);
+        if (p.isFlying()) {
+            p.setFlySpeed(speed);
+        } else {
+            p.setWalkSpeed(speed);
+        }
+        p.sendMessage(String.format(PLUGIN_COMMAND_SPEED, args[0]));
+        return true;
     }
 
     private float parseSpeed(String arg) {
