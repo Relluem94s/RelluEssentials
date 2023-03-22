@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.Calendar;
 import java.util.ResourceBundle;
@@ -48,7 +49,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
 public class RelluEssentials extends JavaPlugin {
 
-    private static long start;
+    private long start;
     private static RelluEssentials instance;
 
     public static DatabaseHelper dBH;
@@ -58,24 +59,28 @@ public class RelluEssentials extends JavaPlugin {
     public static String language;
     public static Banker banker;
 
-    public static HashMap<Integer, Vector2Location> selections = new HashMap<Integer, Vector2Location>();
-    public static HashMap<UUID, BankAccountEntry> bankInterestMap = new HashMap<UUID, BankAccountEntry>();
-    public static HashMap<Material, DoubleStore> dropMap = new HashMap<Material, DoubleStore>();
-    public static HashMap<Material, Material> crops = new HashMap<Material, Material>();
-    public static Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
+    public static final Map<Integer, Vector2Location> selections = new HashMap<>();
+    public static final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
+    public static final Map<Material, DoubleStore> dropMap = new HashMap<>();
+    public static final Map<Material, Material> crops = new HashMap<>();
+    public static final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
 
-    public static List<GroupEntry> groupEntryList = new ArrayList<>();
-    public static List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
-    public static List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
-    public static List<ItemStack> bagBlocks2collect = new ArrayList<>();
+    public static final List<GroupEntry> groupEntryList = new ArrayList<>();
+    public static final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
+    public static final List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
+    public static final List<ItemStack> bagBlocks2collect = new ArrayList<>();
 
-    public static String[] ore_respawn = new String[]{"world_nether", "123_nether"}; //TODO has to be done in Config (new Table?) #IsComming
-    public static boolean moneyLostOnDeath = true;
-    public final static String[] worlds = new String[]{"123", "123_nether", "123_the_end", "world", "world_nether", "world_the_end", "lobby"};
-    public final String[][] worlds_group = new String[][]{new String[]{"123", "123_nether", "123_the_end"}, new String[]{"world", "world_nether", "world_the_end"}, new String[]{"lobby"}};
+    public static final String[] ore_respawn = new String[]{PLUGIN_WORLD_WORLD_NETHER}; //TODO has to be done in Config (new Table?) #IsComming
+    public static final boolean MONEY_LOST_ON_DEATH = true;
+    public static final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
+    public final String[][] worldsGroup = new String[][]{new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END}, new String[]{PLUGIN_WORLD_LOBBY}};
     
-    public static RelluEssentials getInstance() {
+    public static synchronized RelluEssentials getInstance() {
         return instance;
+    }
+
+    private static synchronized void setInstance(RelluEssentials re){
+        instance = re;
     }
 
     @Override
@@ -129,7 +134,7 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     private void startLoading() {
-        instance = this;
+        setInstance(this);
         start = Calendar.getInstance().getTimeInMillis();
         consoleSendMessage(PLUGIN_COMMAND_COLOR, PLUGIN_BORDER);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);

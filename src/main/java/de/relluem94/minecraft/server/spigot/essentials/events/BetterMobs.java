@@ -38,7 +38,7 @@ public class BetterMobs implements Listener {
     
     @EventHandler
     public void onKill(PlayerDeathEvent e) {
-        if(RelluEssentials.moneyLostOnDeath){
+        if(RelluEssentials.MONEY_LOST_ON_DEATH){
             Player p = e.getEntity();
             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
             

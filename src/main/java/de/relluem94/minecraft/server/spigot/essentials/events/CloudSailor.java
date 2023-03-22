@@ -29,15 +29,13 @@ import org.bukkit.util.Vector;
 
 public class CloudSailor implements Listener {
 
-    
+    private Random random = new Random();
 
     @EventHandler
     public void mobDeath(EntityDeathEvent event) {
         LivingEntity e = event.getEntity();
         if (e instanceof Chicken) {
-            Random r = new Random();
-
-            int i = r.nextInt(150);
+            int i = random.nextInt(150);
 
             if (i == 19 || i == 94) {
                 event.getDrops().clear();

@@ -37,6 +37,10 @@ public class Strings {
     public static final String PLUGIN_BROADCAST_NAME = "§5Broadcast";
     public static final String PLUGIN_EOL = System.getProperty("line.separator");
     public static final String PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR = "This is a Utility Class";
+    public static final String PLUGIN_WORLD_LOBBY = "lobby";
+    public static final String PLUGIN_WORLD_WORLD = "world";
+    public static final String PLUGIN_WORLD_WORLD_NETHER = "world_nether";
+    public static final String PLUGIN_WORLD_WORLD_THE_END = "world_the_end";
 
     public static final String LANG_REGISTER_SKILLS = "Registriere Skills!";
     public static final String LANG_SKILLS_REGISTERED = "Skills erfolgreich registriert!";
