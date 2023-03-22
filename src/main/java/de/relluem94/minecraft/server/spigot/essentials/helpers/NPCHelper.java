@@ -17,10 +17,9 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
  */
 public class NPCHelper {
 
-    private LivingEntity livingEntity;
     private final Location location;
     private final EntityType entityType;
-    private final Collection<PotionEffect> potionEffects = new HashSet<PotionEffect>();
+    private final Collection<PotionEffect> potionEffects = new HashSet<>();
     private final String customName;
     private final boolean isCustomNameVisible;
     private boolean isInvisible;
@@ -44,7 +43,6 @@ public class NPCHelper {
 
         this.isCustomNameVisible = true;
     }
-
 
     public NPCHelper(Location location, String customName, Profession profession, boolean isCustomNameVisible) {
         this.location = location;
@@ -72,9 +70,8 @@ public class NPCHelper {
         this.isCollidable = b;
     }
 
-
     public void spawn() {
-        livingEntity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
+        LivingEntity livingEntity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
         livingEntity.setCustomName(customName);
         livingEntity.setCustomNameVisible(isCustomNameVisible);
         livingEntity.setAI(false);
