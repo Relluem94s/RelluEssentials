@@ -17,23 +17,30 @@ public class Storm implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_STORM)) {
-            if (args.length == 0) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                        p.getWorld().setWeatherDuration(0);
-                        p.getWorld().setStorm(true);
-                        p.getWorld().setThundering(true);
-                        p.getWorld().setWeatherDuration(1000000);
-                        p.sendMessage(String.format(PLUGIN_COMMAND_STORM, p.getWorld().getName()));
-                        return true;
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-            }
+            return false;
         }
-        return false;
+
+        if (args.length != 0) {
+            sender.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+            return true;
+        }
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+        
+        p.getWorld().setWeatherDuration(0);
+        p.getWorld().setStorm(true);
+        p.getWorld().setThundering(true);
+        p.getWorld().setWeatherDuration(1000000);
+        p.sendMessage(String.format(PLUGIN_COMMAND_STORM, p.getWorld().getName()));
+        return true;
     }
 }
