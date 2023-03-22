@@ -32,6 +32,10 @@ import org.json.JSONObject;
  */
 public class PlayerHelper {
 
+    private PlayerHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
+
     /**
      *
      * @param p Player to set Flying
@@ -134,11 +138,11 @@ public class PlayerHelper {
     public static String getCustomName(Player p) {
         String name;
         PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
-        if (pe.getCustomName() != null && pe.getCustomName() != "null") {
+        if (pe.getCustomName() != null && pe.getCustomName().equals("null")) {
             name = pe.getCustomName();
         } 
         else {
-            if (pe.getName() != null && pe.getName() != "null") {
+            if (pe.getName() != null && pe.getName().equals("null")) {
                 name = pe.getName();
             } 
             else {
@@ -165,7 +169,7 @@ public class PlayerHelper {
 
         for(PlayerEntry pe : PlayerAPI.getPlayerEntryMap().values()) {
             updatedPlayers += savePlayer(pe);
-        };
+        }
 
         if(updatedPlayers != 0){
             ChatHelper.sendMessageInChannel(String.format(Strings.PLUGIN_PLAYERS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedPlayers), Strings.PLUGIN_CONSOLE_NAME, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
