@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
@@ -20,6 +21,10 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 
 public class ProtectionHelper {
+
+    private ProtectionHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
     
     /**
      * Use this Method to check if Block is protectable
@@ -50,12 +55,7 @@ public class ProtectionHelper {
         PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
         ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
         if (pre != null) {
-            if(pre.getLocation().getPlayerId() != pe.getID()){
-                return false;
-            }
-            else{
-                return true;
-            }
+            return pre.getLocation().getPlayerId() == pe.getID();
         }
         else{
             return true;
@@ -71,12 +71,7 @@ public class ProtectionHelper {
     public static boolean hasPermission(ProtectionEntry pre, Player p){
         PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
         if (pre != null) {
-            if(pre.getLocation().getPlayerId() != pe.getID()){
-                return false;
-            }
-            else{
-                return true;
-            }
+            return pre.getLocation().getPlayerId() == pe.getID();
         }
         else{
             return true;
@@ -91,15 +86,10 @@ public class ProtectionHelper {
      */
     public static boolean hasFlag(ProtectionEntry protection, ProtectionFlags flag) {
         JSONObject flags = protection.getFlags();
-        if(
+        return(
             (!flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(PLUGIN_EVENT_PROTECT_FLAGS) instanceof JSONArray && flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(flag.getName())) ||
             !flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(PLUGIN_EVENT_PROTECT_FLAGS) instanceof String && flags.get(PLUGIN_EVENT_PROTECT_FLAGS).equals(flag.getName())
-        ){
-            return true; 
-        }
-        else{
-            return false;
-        }
+        );
     }
 
     /**
@@ -111,12 +101,7 @@ public class ProtectionHelper {
     public static boolean hasRights(ProtectionEntry protection, int player_fk) {
         JSONObject rights = protection.getRights();
         if(!rights.isEmpty() && rights.has(PLUGIN_EVENT_PROTECT_RIGHTS)){
-            if(rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(player_fk)){
-                return true; 
-            }
-            else{
-                return false;
-            }
+            return (rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(player_fk));
         }
         else{
             return false;
@@ -155,63 +140,31 @@ public class ProtectionHelper {
         Location l = block.getLocation().clone();
         if(door != null){
             if(door.getHinge().equals(Hinge.LEFT)){
-                if(door.isOpen()){
-                    if(door.getFacing().equals(BlockFace.EAST)){
-                        l = l.add(0, 0, 1);
-                    }
-                    if(door.getFacing().equals(BlockFace.WEST)){
-                        l = l.add(0, 0, -1);
-                    }
-                    if(door.getFacing().equals(BlockFace.SOUTH)){
-                        l = l.add(-1, 0, 0);
-                    }
-                    if(door.getFacing().equals(BlockFace.NORTH)){
-                        l = l.add(1, 0, 0);
-                    }
+                if(door.getFacing().equals(BlockFace.EAST)){
+                    l = l.add(0, 0, 1);
                 }
-                else{
-                    if(door.getFacing().equals(BlockFace.EAST)){
-                        l = l.add(0, 0, 1);
-                    }
-                    if(door.getFacing().equals(BlockFace.WEST)){
-                        l = l.add(0, 0, -1);
-                    }
-                    if(door.getFacing().equals(BlockFace.SOUTH)){
-                        l = l.add(-1, 0, 0);
-                    }
-                    if(door.getFacing().equals(BlockFace.NORTH)){
-                        l = l.add(1, 0, 0);
-                    }
+                if(door.getFacing().equals(BlockFace.WEST)){
+                    l = l.add(0, 0, -1);
+                }
+                if(door.getFacing().equals(BlockFace.SOUTH)){
+                    l = l.add(-1, 0, 0);
+                }
+                if(door.getFacing().equals(BlockFace.NORTH)){
+                    l = l.add(1, 0, 0);
                 }
             }
             else{
-                if(door.isOpen()){
-                    if(door.getFacing().equals(BlockFace.EAST)){
-                        l = l.add(0, 0, -1);
-                    }
-                    if(door.getFacing().equals(BlockFace.WEST)){
-                        l = l.add(0, 0, 1);
-                    }
-                    if(door.getFacing().equals(BlockFace.SOUTH)){
-                        l = l.add(1, 0, 0);
-                    }
-                    if(door.getFacing().equals(BlockFace.NORTH)){
-                        l = l.add(-1, 0, 0);
-                    }
+                if(door.getFacing().equals(BlockFace.EAST)){
+                    l = l.add(0, 0, -1);
                 }
-                else{
-                    if(door.getFacing().equals(BlockFace.EAST)){
-                        l = l.add(0, 0, -1);
-                    }
-                    if(door.getFacing().equals(BlockFace.WEST)){
-                        l = l.add(0, 0, 1);
-                    }
-                    if(door.getFacing().equals(BlockFace.SOUTH)){
-                        l = l.add(1, 0, 0);
-                    }
-                    if(door.getFacing().equals(BlockFace.NORTH)){
-                        l = l.add(-1, 0, 0);
-                    }
+                if(door.getFacing().equals(BlockFace.WEST)){
+                    l = l.add(0, 0, 1);
+                }
+                if(door.getFacing().equals(BlockFace.SOUTH)){
+                    l = l.add(1, 0, 0);
+                }
+                if(door.getFacing().equals(BlockFace.NORTH)){
+                    l = l.add(-1, 0, 0);
                 }
             }
         }
