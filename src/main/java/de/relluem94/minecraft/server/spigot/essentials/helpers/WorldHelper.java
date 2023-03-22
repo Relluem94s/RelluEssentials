@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
@@ -30,6 +31,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Exceptio
  * @author rellu
  */
 public class WorldHelper {
+
+    private WorldHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
 
     /**
      * Checks if Player is in World with Name
@@ -161,7 +166,7 @@ public class WorldHelper {
      */
     public static void unloadWorld(String worldName, boolean save) throws WorldNotLoadedException {
         if (Bukkit.getWorld(worldName) != null) {
-            Bukkit.unloadWorld(worldName, true);
+            Bukkit.unloadWorld(worldName, save);
         } else {
             throw new WorldNotLoadedException(String.format(PLUGIN_EXCEPTION_WORLD_NOT_LOADED, worldName));
         }
