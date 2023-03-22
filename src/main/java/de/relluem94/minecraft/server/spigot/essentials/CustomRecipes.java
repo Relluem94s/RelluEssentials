@@ -10,6 +10,11 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.recipe.Shaped;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.*;
 
 public class CustomRecipes {
+
+    private CustomRecipes() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
+
     public static RecipeHelper smelterFurnace = new RecipeHelper(
         PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE,
         new Shaped(
