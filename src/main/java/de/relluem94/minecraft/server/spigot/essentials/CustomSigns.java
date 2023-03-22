@@ -12,7 +12,11 @@ import java.util.logging.Logger;
  */
 public class CustomSigns {
 
-    public static SignHelper spawn;
+    private CustomSigns() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+    }
+
+    public static final SignHelper spawn;
 
     static {
         SignHelper temp = null;
@@ -24,7 +28,7 @@ public class CustomSigns {
         spawn = temp;
     }
 
-    public static SignHelper up;
+    public static final SignHelper up;
 
     static {
         SignHelper temp = null;
@@ -36,7 +40,7 @@ public class CustomSigns {
         up = temp;
     }
 
-    public static SignHelper down;
+    public static final SignHelper down;
 
     static {
         SignHelper temp = null;
@@ -48,7 +52,7 @@ public class CustomSigns {
         down = temp;
     }
 
-    public static SignHelper command = new SignHelper(ActionType.COMMAND, "");
-    public static SignHelper teleport = new SignHelper(ActionType.TELEPORT, "");
-    public static SignHelper home = new SignHelper(ActionType.HOME, "");
+    public static final SignHelper command = new SignHelper(ActionType.COMMAND, "");
+    public static final SignHelper teleport = new SignHelper(ActionType.TELEPORT, "");
+    public static final SignHelper home = new SignHelper(ActionType.HOME, "");
 }
