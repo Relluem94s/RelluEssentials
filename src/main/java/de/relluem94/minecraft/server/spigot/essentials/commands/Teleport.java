@@ -37,7 +37,7 @@ public class Teleport implements CommandExecutor {
                 }
             }
             
-        }, 20*60*2);
+        }, 20*60*2L);
     }
 
    
@@ -54,7 +54,7 @@ public class Teleport implements CommandExecutor {
                 }
             }
             
-        }, 20*60*2);
+        }, 20*60*2L);
     }
 
     private void removeTeleportEntry(Player t) {

@@ -32,75 +32,77 @@ public class Worlds implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD)) {
-
-            if (!isPlayer(sender)) {
-                sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
-                return true;
-            }
-
-            Player p = (Player) sender;
-
-            if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                return true;
-            }
-
-            if(args.length == 0){
-                p.sendMessage(PLUGIN_COMMAND_WORLD_INFO);
-                return true;
-            }
-
-            if(args.length == 1){
-                if (!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_LIST)) {
-                    teleportWorld(p, args[0]);
-                    return true;
-                }
-
-                if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                    p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                    return true;
-                }
-
-                sendMessage(p, PLUGIN_COMMAND_WORLD);
-                Bukkit.getWorlds().forEach(w -> sendMessage(p, w.getName()));
-                return true;
-            }
-
-            if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                return true;
-            }
-
-            if(args.length == 2){
-                switch (args[0]) {
-                    case PLUGIN_COMMAND_NAME_WORLD_LOAD:
-                        WorldHelper.loadWorld(args[1]);
-                        p.sendMessage(PLUGIN_COMMAND_WORLD_LOAD_WORLD);
-                        return true;
-                    case PLUGIN_COMMAND_NAME_WORLD_UNLOAD:
-                        return unloadWorld(p, args[1], true);
-                    case PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE:
-                        return unloadWorld(p, args[1], false);
-                    case PLUGIN_COMMAND_NAME_WORLD_CREATE:
-                    default:
-                        p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_INFO);
-                        return true;
-                }
-            }
-
-            if(args.length == 5){
-                if (!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_CREATE)) {
-                    p.sendMessage(PLUGIN_COMMAND_WORLD_WRONG_SUBCOMMAND);
-                    return true;
-                }
-
-                createWorld(p, args);
-                return true;
-            }
-
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD)) {
+            return false;
         }
-        return false;
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if(args.length == 0){
+            p.sendMessage(PLUGIN_COMMAND_WORLD_INFO);
+            return true;
+        }
+
+        if(args.length == 1){
+            if (!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_LIST)) {
+                teleportWorld(p, args[0]);
+                return true;
+            }
+
+            if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                return true;
+            }
+
+            sendMessage(p, PLUGIN_COMMAND_WORLD);
+            Bukkit.getWorlds().forEach(w -> sendMessage(p, w.getName()));
+            return true;
+        }
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if(args.length == 2){
+            switch (args[0]) {
+                case PLUGIN_COMMAND_NAME_WORLD_LOAD:
+                    WorldHelper.loadWorld(args[1]);
+                    p.sendMessage(PLUGIN_COMMAND_WORLD_LOAD_WORLD);
+                    return true;
+                case PLUGIN_COMMAND_NAME_WORLD_UNLOAD:
+                    return unloadWorld(p, args[1], true);
+                case PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE:
+                    return unloadWorld(p, args[1], false);
+                case PLUGIN_COMMAND_NAME_WORLD_CREATE:
+                default:
+                    p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_INFO);
+                    return true;
+            }
+        }
+
+        if(args.length > 5){
+            p.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+            return true;
+        }
+
+        if (!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_CREATE)) {
+            p.sendMessage(PLUGIN_COMMAND_WORLD_WRONG_SUBCOMMAND);
+            return true;
+        }
+
+        createWorld(p, args);
+        return true;
     }
 
     private void createWorld(Player p, String[] args){

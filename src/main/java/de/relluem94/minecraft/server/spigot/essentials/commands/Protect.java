@@ -22,11 +22,13 @@ public class Protect implements CommandExecutor {
 
     private String getFlags(){
         ProtectionFlags[] flags = ProtectionFlags.values();
-        String availableFlags = "Available Flags: ";
+        
+        StringBuilder sb = new StringBuilder();
+        sb.append("Available Flags: ");
         for(ProtectionFlags flag : flags){
-            availableFlags += flag.getName() + " ";
+            sb.append(flag.getName() + " ");
         }
-        return availableFlags;
+        return sb.toString();
     }
 
     @Override
