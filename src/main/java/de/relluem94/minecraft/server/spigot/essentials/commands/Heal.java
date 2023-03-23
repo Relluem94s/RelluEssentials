@@ -28,7 +28,7 @@ public class Heal implements CommandExecutor {
 
         Player p = (Player) sender;
         
-        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         }

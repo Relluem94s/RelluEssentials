@@ -32,7 +32,7 @@ public class Bags implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
+        if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         }
