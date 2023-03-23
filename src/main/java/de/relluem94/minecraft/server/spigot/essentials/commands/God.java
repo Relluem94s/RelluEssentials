@@ -16,21 +16,30 @@ public class God implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GOD)) {
-            if (args.length == 0) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                        p.sendMessage(!p.isInvulnerable() ? PLUGIN_COMMAND_GOD_ON : PLUGIN_COMMAND_GOD_OFF);
-                        p.setInvulnerable(!p.isInvulnerable());
-                        return true;
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-            }
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GOD)) {
+            return false;
         }
-        return false;
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+            
+        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+            
+        }
+
+        if (args.length > 0) {
+            p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+            return true;   
+        }
+
+        p.sendMessage(!p.isInvulnerable() ? PLUGIN_COMMAND_GOD_ON : PLUGIN_COMMAND_GOD_OFF);
+        p.setInvulnerable(!p.isInvulnerable());
+        return true;
     }
 }
