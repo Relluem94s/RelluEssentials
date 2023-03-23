@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,9 @@ import java.util.ResourceBundle;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -155,5 +158,13 @@ public class RelluEssentials extends JavaPlugin {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_STARTTIME_MESSAGE, Calendar.getInstance().getTimeInMillis() - start));
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
         consoleSendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
+    }
+
+    public RelluEssentials(){
+        super();
+    }
+
+    protected RelluEssentials(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file){
+        super(loader, description, dataFolder, file);
     }
 }

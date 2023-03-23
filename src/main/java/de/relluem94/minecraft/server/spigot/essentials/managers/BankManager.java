@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Bukkit;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
@@ -20,14 +20,11 @@ public class BankManager implements IEnable {
     }
 
     private void triggerNext(){
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                BankerHelper.doInterest();
-                ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_BANK_INTEREST_NEXT_RUN, getSecondsUntilMidnight()));
-                triggerNext();
-            }
-        }.runTaskLater(RelluEssentials.getInstance(), 20 *  getSecondsUntilMidnight());
+        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+            BankerHelper.doInterest();
+            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_BANK_INTEREST_NEXT_RUN, getSecondsUntilMidnight()));
+            triggerNext();
+        }, 20 *  getSecondsUntilMidnight());
     }
 
     private long getSecondsUntilMidnight(){

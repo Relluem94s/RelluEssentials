@@ -12,7 +12,7 @@ public class BlockHistoryManager implements IEnable {
     @Override
     public void enable() {
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        scheduler.scheduleSyncRepeatingTask(RelluEssentials.getInstance(), () -> {
+        scheduler.runTaskTimer(RelluEssentials.getInstance(), () -> {
             if (!RelluEssentials.blockHistoryList.isEmpty()) {
                 BlockHistoryEntry bh = RelluEssentials.blockHistoryList.get(0);
                 BlockHelper.setBlock(bh);

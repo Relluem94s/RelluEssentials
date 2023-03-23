@@ -206,9 +206,11 @@ public class BankerHelper {
 
 
     public static void doInterest() {
-        for(Player p : Bukkit.getOnlinePlayers()){
-            checkInterest(p.getUniqueId(), true);
-            doInterest(p);
+        if(!Bukkit.getOnlinePlayers().isEmpty()){
+            for(Player p : Bukkit.getOnlinePlayers()){
+                checkInterest(p.getUniqueId(), true);
+                doInterest(p);
+            }
         }
     }
 
