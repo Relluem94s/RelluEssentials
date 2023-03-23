@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
@@ -50,22 +49,22 @@ public class ConfigHelper {
      * @return Returns List of all Players from config file
      */
     public List<PlayerEntry> getPlayers() {
-        List<PlayerEntry> list = new ArrayList<PlayerEntry>();
+        List<PlayerEntry> list = new ArrayList<>();
         ConfigurationSection cs = config.getConfigurationSection("player");
 
         for (String uuid : cs.getKeys(false)) {
             ConfigurationSection player = cs.getConfigurationSection(uuid);
 
-            String group_name = player.getString("group").toLowerCase();
-            int group_fk = Groups.getGroup(group_name).getId();
+            String groupName = player.getString("group").toLowerCase();
+            int groupFK = Groups.getGroup(groupName).getId();
             boolean fly = player.getBoolean("fly");
             boolean afk = player.getBoolean("afk");
             String customname = player.getString("customname");
 
-            consoleSendMessage(PLUGIN_NAME_CONSOLE, "Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly + " group id:" + group_fk + " group:" + group_name);
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, "Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly + " group id:" + groupFK + " group:" + groupName);
 
             PlayerEntry p = new PlayerEntry();
-            p.setGroup(Groups.getGroup(group_name));
+            p.setGroup(Groups.getGroup(groupName));
             p.setAFK(afk);
             p.setFlying(fly);
             p.setCreatedby(1);
@@ -83,7 +82,7 @@ public class ConfigHelper {
      * @return List of Homes as LocationEntry
      */
     public List<LocationEntry> getHomes(PlayerEntry p) {
-        List<LocationEntry> list = new ArrayList<LocationEntry>();
+        List<LocationEntry> list = new ArrayList<>();
         ConfigurationSection homes = config.getConfigurationSection("player." + p.getUUID() + ".home");
         for (String home : homes.getKeys(false)) {
             ConfigurationSection h = homes.getConfigurationSection(home);
@@ -95,9 +94,9 @@ public class ConfigHelper {
             yaw = (float) h.getDouble("yaw");
             pitch = (float) h.getDouble("pitch");
             int type = home.equals("death") ? 2 : 1;
-            String world_name = h.getString("world");
+            String worldName = h.getString("world");
 
-            World world = Bukkit.getServer().getWorld(world_name);
+            World world = Bukkit.getServer().getWorld(worldName);
 
             consoleSendMessage(PLUGIN_NAME_CONSOLE, "Found Home: " + home + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
 
@@ -154,10 +153,9 @@ public class ConfigHelper {
      * Reloads the Config
      *
      * @throws IOException
-     * @throws FileNotFoundException
      * @throws InvalidConfigurationException
      */
-    public void reload() throws IOException, FileNotFoundException, InvalidConfigurationException {
+    public void reload() throws IOException, InvalidConfigurationException {
         config.load(file);
     }
 

@@ -68,8 +68,5 @@ public class DatabaseManager implements IEnable{
                 RelluEssentials.bagBlocks2collect.add(is);
             }
         }
-
-        System.gc();
     }
-    
 }

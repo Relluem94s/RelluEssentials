@@ -98,10 +98,10 @@ public class ProtectionHelper {
      * @param player_fk
      * @return
      */
-    public static boolean hasRights(ProtectionEntry protection, int player_fk) {
+    public static boolean hasRights(ProtectionEntry protection, int playerFK) {
         JSONObject rights = protection.getRights();
         if(!rights.isEmpty() && rights.has(PLUGIN_EVENT_PROTECT_RIGHTS)){
-            return (rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(player_fk));
+            return (rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(playerFK));
         }
         else{
             return false;
@@ -139,39 +139,36 @@ public class ProtectionHelper {
     public static Block getOtherPart(Door door, Block block) {
         Location l = block.getLocation().clone();
         if(door != null){
-            if(door.getHinge().equals(Hinge.LEFT)){
-                if(door.getFacing().equals(BlockFace.EAST)){
-                    l = l.add(0, 0, 1);
-                }
-                if(door.getFacing().equals(BlockFace.WEST)){
-                    l = l.add(0, 0, -1);
-                }
-                if(door.getFacing().equals(BlockFace.SOUTH)){
-                    l = l.add(-1, 0, 0);
-                }
-                if(door.getFacing().equals(BlockFace.NORTH)){
-                    l = l.add(1, 0, 0);
-                }
-            }
-            else{
-                if(door.getFacing().equals(BlockFace.EAST)){
-                    l = l.add(0, 0, -1);
-                }
-                if(door.getFacing().equals(BlockFace.WEST)){
-                    l = l.add(0, 0, 1);
-                }
-                if(door.getFacing().equals(BlockFace.SOUTH)){
-                    l = l.add(1, 0, 0);
-                }
-                if(door.getFacing().equals(BlockFace.NORTH)){
-                    l = l.add(-1, 0, 0);
-                }
-            }
+            l = addLoccationFromOtherPart(l, door.getFacing(), door.getHinge());
         }
         if(isOpenable(l.getBlock())){
             return l.getBlock();
         }
 
         return null;
+    }
+
+    private static Location addLoccationFromOtherPart(Location location, BlockFace blockFace, Hinge hinge){
+        int plus = 1;
+        int minus = -1;
+
+        if(hinge.equals(Hinge.RIGHT)){
+            plus = -1;
+            minus = 1;
+        }
+
+        if(blockFace.equals(BlockFace.EAST)){
+            location = location.add(0, 0, plus);
+        }
+        if(blockFace.equals(BlockFace.WEST)){
+            location = location.add(0, 0, minus);
+        }
+        if(blockFace.equals(BlockFace.SOUTH)){
+            location = location.add(minus, 0, 0);
+        }
+        if(blockFace.equals(BlockFace.NORTH)){
+            location = location.add(plus, 0, 0);
+        }
+        return location;
     }
 }

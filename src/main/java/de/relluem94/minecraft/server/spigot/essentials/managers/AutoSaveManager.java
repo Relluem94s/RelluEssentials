@@ -11,7 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 
 public class AutoSaveManager implements IEnable, IDisable {
 
-    public static final int AUTO_SAVE_MINUTES = 2;
+    public static final long AUTO_SAVE_MINUTES = 2;
 
     @Override
     public void enable() {
@@ -28,7 +28,7 @@ public class AutoSaveManager implements IEnable, IDisable {
             public void run() {               
                 PlayerHelper.savePlayers();
             }
-        }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 * 30);
+        }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 *  60 * AUTO_SAVE_MINUTES);
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_AUTOSAVE_REGISTERED);
     }

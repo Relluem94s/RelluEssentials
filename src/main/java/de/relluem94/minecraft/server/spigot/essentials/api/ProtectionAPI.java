@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.api;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +17,7 @@ public class ProtectionAPI {
     private static HashMap<Location, ProtectionEntry> protectionEntryMap = new HashMap<>();
 
 
-    public ProtectionAPI(List<ProtectionLockEntry> protectionLocksEntryList, HashMap<Location, ProtectionEntry> protectionEntryMap){
+    public ProtectionAPI(List<ProtectionLockEntry> protectionLocksEntryList, Map<Location, ProtectionEntry> protectionEntryMap){
         for(ProtectionLockEntry ple: protectionLocksEntryList){
             addProtectionMaterial(ple.getValue());
         }

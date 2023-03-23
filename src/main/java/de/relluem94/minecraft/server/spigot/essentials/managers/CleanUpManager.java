@@ -10,8 +10,5 @@ public class CleanUpManager implements IDisable {
         RelluEssentials.blockHistoryList.clear();
         RelluEssentials.groupEntryList.clear();
         RelluEssentials.selections.clear();
-
-        System.gc();
     }
-    
 }

@@ -10,7 +10,14 @@ import org.bukkit.inventory.EquipmentSlot;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+
 public class AttributeHelper {
+
+    private AttributeHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
+
     public static Multimap<Attribute, AttributeModifier> addAttribute(){
         Multimap<Attribute, AttributeModifier> attributes = ArrayListMultimap.create();
         return attributes;

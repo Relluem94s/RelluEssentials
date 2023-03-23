@@ -25,29 +25,17 @@ public class WorldManager implements IEnable, IDisable {
     @Override
     public void enable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
-
         for (WorldGroupEntry wge : worldsMap.keySet()) {
             for(WorldEntry we: worldsMap.get(wge)){
-                if(WorldHelper.worldExists(we.getName())){
-                    // TODO seems like double fors
-                    for(World w: Bukkit.getWorlds()){
-                        if(!w.getName().equals(we.getName())){
-                            WorldHelper.loadWorld(we.getName());
-                            setStandardGameRules(we.getName());
-                        }
-                    }                    
+                if(!WorldHelper.worldExists(we.getName())){
+                    createWorld(we);
+                    continue;        
                 }
-                else{
-                    WorldType type = WorldType.NORMAL;
-                    World.Environment worldEnvironment = getEnvironment(we.getName());
 
-                    if(we.getName().equals("lobby")){
-                        WorldHelper.createWorld(we.getName(), type, worldEnvironment, false, 6203818585396731238L);
+                for(World w: Bukkit.getWorlds()){ // TODO seems like double fors
+                    if(!w.getName().equals(we.getName())){
+                        WorldHelper.loadWorld(we.getName());
                         setStandardGameRules(we.getName());
-                        setLobbySpawnLocation(we.getName());
-                    }
-                    else{
-                        WorldHelper.createWorld(we.getName(), type, worldEnvironment, false);
                     }
                 }
             }
@@ -65,6 +53,20 @@ public class WorldManager implements IEnable, IDisable {
                     Logger.getLogger(WorldManager.class.getName()).log(Level.WARNING, e.getMessage());
                 }
             }
+        }
+    }
+
+    private void createWorld(WorldEntry we) {
+        WorldType type = WorldType.NORMAL;
+        World.Environment worldEnvironment = getEnvironment(we.getName());
+
+        if(we.getName().equals("lobby")){
+            WorldHelper.createWorld(we.getName(), type, worldEnvironment, false, 6203818585396731238L);
+            setStandardGameRules(we.getName());
+            setLobbySpawnLocation(we.getName());
+        }
+        else{
+            WorldHelper.createWorld(we.getName(), type, worldEnvironment, false);
         }
     }
 
