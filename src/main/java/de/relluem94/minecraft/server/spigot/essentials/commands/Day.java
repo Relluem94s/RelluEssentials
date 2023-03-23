@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,18 +30,26 @@ public class Day implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (args.length != 0) {
-             p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS); 
-             return true;
-        }
-
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
             sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         } 
 
-        p.getWorld().setTime(0L);
-        sendMessage(p, String.format(PLUGIN_COMMAND_DAY, p.getWorld().getName()));
+        if (args.length == 0) {
+            p.getWorld().setTime(0L);
+            p.sendMessage(String.format(PLUGIN_COMMAND_DAY, p.getWorld().getName()));
+            return true;
+        }
+
+        World world = Bukkit.getWorld(args[0]);
+
+        if(world == null){
+            p.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, args[0]));
+            return true;
+        }
+
+        world.setTime(0L);
+        p.sendMessage(String.format(PLUGIN_COMMAND_DAY, world.getName()));
         return true;
     }
 }
