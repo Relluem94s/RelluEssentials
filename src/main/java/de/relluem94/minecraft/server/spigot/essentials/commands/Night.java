@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,21 +18,37 @@ public class Night implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_NIGHT)) {
-            if (args.length == 0) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                        p.getWorld().setTime(18000L);
-                        p.sendMessage(String.format(PLUGIN_COMMAND_NIGHT, p.getWorld().getName()));
-                        return true;
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-            }
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_NIGHT)) {
+            return false;
         }
-        return false;
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if (args.length == 0) {
+            p.getWorld().setTime(18000L);
+            p.sendMessage(String.format(PLUGIN_COMMAND_NIGHT, p.getWorld().getName()));
+            return true;
+        }
+
+        World world = Bukkit.getWorld(args[0]);
+
+        if(world == null){
+            p.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, args[0]));
+            return true;
+        }
+
+        world.setTime(18000L);
+        p.sendMessage(String.format(PLUGIN_COMMAND_NIGHT, world.getName()));
+        return true;
     }
 }
