@@ -166,19 +166,9 @@ public class BankerHelper {
             Long costs = Long.parseLong(ih.getLore().get(0).replace("Costs: ", ""));
             BankTierEntry bt = getBankTierEntryByCost(costs);
 
-            if(checkIfLowerAccount(p, bae, costs)){
+            if(!checkAccount(p, bae, bt, costs)){
                 return;
             }
-
-            if(checkIfSameAccount(p, bae, bt, costs)){
-                return;
-            }
-
-            if(bt == null){
-                return;
-            }
-
-            
 
             double purse = pe.getPurse();
             if(purse >= costs){
@@ -279,27 +269,25 @@ public class BankerHelper {
         return null;
     }
 
-    private static boolean checkIfLowerAccount(Player p, BankAccountEntry bae, long costs){
-        if(bae.getTier().getCost() > costs){
-            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT);
+
+
+    private static boolean checkAccount(Player p, BankAccountEntry bae, BankTierEntry bt, long costs){     
+        if(bt == null){
             return false;
         }
 
-        return true;
-    }
-
-    private static boolean checkIfSameAccount(Player p, BankAccountEntry bae, BankTierEntry bt, long costs){       
         if(bae.getTier().getCost() == costs){
             p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT);
             return false;
         }
 
-        if(bt == null){
+        if(bt.getId() == bae.getTier().getId()){
+            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT);
             return false;
         }
 
-        if(bt.getId() == bae.getTier().getId()){
-            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT);
+        if(bae.getTier().getCost() > costs){
+            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT);
             return false;
         }
         

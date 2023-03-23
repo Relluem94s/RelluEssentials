@@ -118,10 +118,10 @@ public class BetterNPC implements Listener {
 
 
     private void trade(ItemStack is, Inventory inv, Player p, PlayerEntry pe, int slot, boolean isRigthClicked){
-        if(CustomItems.npc_gui_close.equals(is)){
+        if(CustomItems.npc_gui_close.equalsExact(is)){
             InventoryHelper.closeInventory(p);
         }
-        else if(CustomItems.npc_gui_disabled.equals(is)){
+        else if(CustomItems.npc_gui_disabled.equalsExact(is)){
             // DISABLED DOES NOTHING. COULD BE AN EASTER EGG!
         }
         else if(is.getType().equals(Material.PLAYER_HEAD) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && ((SkullMeta) is.getItemMeta()).getOwnerProfile().getName().equals(CustomHeads.BAG.getName()) ){
@@ -274,43 +274,43 @@ public class BetterNPC implements Listener {
                 else if(e.getCurrentItem().getType().equals(BankerHelper.UPGRADE_MATERIAL)){
                     BankerHelper.upgradeAccount(e.getCurrentItem(), p, pe, bae);
                 }
-                else if(BankerHelper.npc_gui_deposit_5_percent.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_deposit_5_percent.equalsExact(e.getCurrentItem())){
                     BankerHelper.deposit(pe, p, bae, 5f);
                 }
-                else if(BankerHelper.npc_gui_deposit_20_percent.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_deposit_20_percent.equalsExact(e.getCurrentItem())){
                     BankerHelper.deposit(pe, p, bae, 20f);
                 }
-                else if(BankerHelper.npc_gui_deposit_50_percent.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_deposit_50_percent.equalsExact(e.getCurrentItem())){
                     BankerHelper.deposit(pe, p, bae, 50f);
                 }
-                else if(BankerHelper.npc_gui_deposit_all.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_deposit_all.equalsExact(e.getCurrentItem())){
                     BankerHelper.deposit(pe, p, bae, 100f);
                 }
-                else if(BankerHelper.npc_gui_withdraw_5_percent.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_withdraw_5_percent.equalsExact(e.getCurrentItem())){
                     BankerHelper.withdraw(pe, p, bae, 5f);
                 }
-                else if(BankerHelper.npc_gui_withdraw_20_percent.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_withdraw_20_percent.equalsExact(e.getCurrentItem())){
                     BankerHelper.withdraw(pe, p, bae, 20f);
                 }
-                else if(BankerHelper.npc_gui_withdraw_50_percent.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_withdraw_50_percent.equalsExact(e.getCurrentItem())){
                     BankerHelper.withdraw(pe, p, bae, 50f);
                 }
-                else if(BankerHelper.npc_gui_withdraw_all.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_withdraw_all.equalsExact(e.getCurrentItem())){
                     BankerHelper.withdraw(pe, p, bae, 100f);
                 }
-                else if(BankerHelper.npc_gui_withdraw.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_withdraw.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                     InventoryHelper.openInventory(p, RelluEssentials.getBanker().getWithdrawGUI());
                 }
-                else if(BankerHelper.npc_gui_balance.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_balance.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                     InventoryHelper.openInventory(p, RelluEssentials.getBanker().getBalanceGUI());
                 }
-                else if(BankerHelper.npc_gui_balance_total.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_balance_total.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                     p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue())));
                 }
-                else if(BankerHelper.npc_gui_balance_transactions.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_balance_transactions.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                     p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION);
                     List<BankTransactionEntry> btel = RelluEssentials.dBH.getTransactionsToBankFromPlayer(bae.getId());
@@ -318,11 +318,11 @@ public class BetterNPC implements Listener {
                         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST, bte.getValue() > 1 ? EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE : EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE, StringHelper.formatDouble(bte.getValue()), bte.getCreated()));
                     }
                 }
-                else if(BankerHelper.npc_gui_upgrade.equals(e.getCurrentItem())){
+                else if(BankerHelper.npc_gui_upgrade.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                     InventoryHelper.openInventory(p, RelluEssentials.getBanker().getUpgradeGUI());
                 }
-                else if(CustomItems.npc_gui_close.equals(e.getCurrentItem())){
+                else if(CustomItems.npc_gui_close.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                 }
                 e.setCancelled(true);
@@ -331,14 +331,10 @@ public class BetterNPC implements Listener {
                     trade(e.getCurrentItem(), e.getClickedInventory(), p, pe, e.getSlot(), e.isRightClick());
                     e.setCancelled(true);
             }
-            else if(e.getView().getTitle().equals(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+"§dNPCs")){
-                if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
-                    p.getInventory().addItem(e.getCurrentItem().clone());
-                    p.updateInventory();
-                }
-                e.setCancelled(true);
-            }
-            else if(e.getView().getTitle().equals(Strings.PLUGIN_COMMAND_CUSTOMHEADS_TITLE)){
+            else if(
+                e.getView().getTitle().equals(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+"§dNPCs") || 
+                e.getView().getTitle().equals(Strings.PLUGIN_COMMAND_CUSTOMHEADS_TITLE)
+            ){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     p.getInventory().addItem(e.getCurrentItem().clone());
                     p.updateInventory();

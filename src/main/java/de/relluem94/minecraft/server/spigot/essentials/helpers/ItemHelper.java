@@ -132,6 +132,7 @@ public class ItemHelper implements IItemHelper {
         init();
         addItemRarity();
         postInit();
+        
         return is;
     }
 
@@ -241,47 +242,47 @@ public class ItemHelper implements IItemHelper {
 
     @Override
     public void init() {
-        throw new UnsupportedOperationException("Unimplemented method 'init'");
+        // has to be overwritten
     }
 
     @Override
     public void postInit() {
-        throw new UnsupportedOperationException("Unimplemented method 'init'");
+        // has to be overwritten
     }
 
     private void addItemRarity() {
         ItemMeta im;
         if (is.hasItemMeta()) {
             im = is.getItemMeta();
-            List<String> loc_lore;
+            List<String> locLore;
             if (im.getLore() != null) {
-                loc_lore = im.getLore();
+                locLore = im.getLore();
             } else {
-                loc_lore = new ArrayList<String>();
+                locLore = new ArrayList<>();
             }
 
-            loc_lore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
-            loc_lore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
-            loc_lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
-            loc_lore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
-            loc_lore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
+            locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
+            locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
+            locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
+            locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
+            locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
             
             if(ir.level != -1){
-                loc_lore.add(ir.getPrefix() + "" + ir.getDisplayName());
+                locLore.add(ir.getPrefix() + "" + ir.getDisplayName());
             }
 
-            im.setLore(loc_lore);
+            im.setLore(locLore);
             is.setItemMeta(im);
         }
     }
 
-    public static List<String> remove(List<String> loc_lore){
-        loc_lore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
-        loc_lore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
-        loc_lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
-        loc_lore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
-        loc_lore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
-        return loc_lore;
+    public static List<String> remove(List<String> locLore){
+        locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
+        locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
+        locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
+        locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
+        locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
+        return locLore;
     }
 
     public enum Rarity {

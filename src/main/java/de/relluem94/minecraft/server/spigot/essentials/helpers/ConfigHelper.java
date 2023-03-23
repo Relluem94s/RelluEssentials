@@ -87,7 +87,11 @@ public class ConfigHelper {
         for (String home : homes.getKeys(false)) {
             ConfigurationSection h = homes.getConfigurationSection(home);
 
-            float x, y, z, yaw, pitch;
+            float x;
+            float y;
+            float z;
+            float yaw;
+            float pitch;
             x = (float) h.getDouble("x");
             y = (float) h.getDouble("y");
             z = (float) h.getDouble("z");
