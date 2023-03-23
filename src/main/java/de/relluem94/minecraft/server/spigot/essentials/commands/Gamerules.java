@@ -19,38 +19,41 @@ public class Gamerules implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMERULES)) {
-            if (args.length == 0) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                        World world = p.getWorld();
-                        String[] gamerules = world.getGameRules();
-                        sendMessage(p, String.format(PLUGIN_COMMAND_GAMERULES, world.getName()));
-                        for (String gamerule : gamerules) {
-                            Object value = world.getGameRuleValue(GameRule.getByName(gamerule));
-                            String color;
-                            if (value instanceof Boolean) {
-                                if ((boolean) value == true) {
-                                    color = "§a";
-                                } else {
-                                    color = "§c";
-                                }
-                            } else {
-                                color = "§7";
-                            }
-
-                            sendMessage(p, "        §d" + gamerule + "§f = " + color + value);
-                        }
-
-                        return true;
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-            }
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMERULES)) {
+            return false;
         }
-        return false;
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;   
+        }
+
+        if (args.length > 0) {
+            p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+            return true;   
+        }
+
+        World world = p.getWorld();
+        String[] gamerules = world.getGameRules();
+        sendMessage(p, String.format(PLUGIN_COMMAND_GAMERULES, world.getName()));
+        for (String gamerule : gamerules) {
+            Object value = world.getGameRuleValue(GameRule.getByName(gamerule));
+            String color;
+            if (value instanceof Boolean) {
+                color = ((boolean)value ? PLUGIN_COLOR_POSITIVE : PLUGIN_COLOR_NEGATIVE);
+            } else {
+                color = "§7";
+            }
+
+            sendMessage(p, "        §d" + gamerule + "§f = " + color + value);
+        }
+        return true;
     }
 }

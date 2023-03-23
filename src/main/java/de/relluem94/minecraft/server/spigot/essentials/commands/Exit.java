@@ -22,35 +22,39 @@ public class Exit implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_EXIT)) {
-            if (args.length == 0) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-                        p.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_KICK_MESSAGE);
-                        return true;
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-                else if (isConsole(sender)) {
-                    Bukkit.broadcastMessage(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN);
- 
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            
-                            Bukkit.getOnlinePlayers().forEach(op -> {
-                                op.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN);
-                            });
-            
-                        }
-                    }.runTaskLater(RelluEssentials.getInstance(),  10l);
-
-                    Bukkit.getServer().getScheduler().runTaskLater(RelluEssentials.getInstance(), Bukkit.getServer()::shutdown, 20L);
-                }
-            }
+            return false;
         }
-        return false;
+
+        if (isConsole(sender)){
+            Bukkit.broadcastMessage(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN);
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        
+                        Bukkit.getOnlinePlayers().forEach(op -> {
+                            op.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN);
+                        });
+        
+                    }
+                }.runTaskLater(RelluEssentials.getInstance(),  10l);
+
+                Bukkit.getServer().getScheduler().runTaskLater(RelluEssentials.getInstance(), Bukkit.getServer()::shutdown, 20L);
+                return true;
+        }
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+        if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        } 
+
+        p.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_KICK_MESSAGE);
+        return true;
     }
 }

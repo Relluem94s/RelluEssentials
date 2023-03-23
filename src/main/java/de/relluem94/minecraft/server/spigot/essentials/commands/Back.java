@@ -36,15 +36,12 @@ public class Back implements CommandExecutor {
             return false;
         }
 
-        Player p = null;
-
-        if (isPlayer(sender)) {
-            p = (Player) sender;
-        }
-
-        if(p == null){
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
         }
+
+        Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

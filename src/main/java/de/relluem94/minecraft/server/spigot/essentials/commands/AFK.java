@@ -23,15 +23,12 @@ public class AFK implements CommandExecutor {
             return false;
         }
 
-        Player p = null;
-
-        if (isPlayer(sender)) {
-            p = (Player) sender;
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
         }
 
-        if(p == null){
-            return false;
-        }
+        Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
             sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);

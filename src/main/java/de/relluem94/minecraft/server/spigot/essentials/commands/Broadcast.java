@@ -30,10 +30,12 @@ public class Broadcast implements CommandExecutor {
             return true;
         }
 
-        Player p = null;
-        if (isPlayer(sender)) {
-            p = (Player) sender; 
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
         }
+
+        Player p = (Player) sender;
 
         if (p != null && !Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
             sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -41,24 +43,25 @@ public class Broadcast implements CommandExecutor {
         }
 
         if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_BROADCAST_TITLE)) {
-            return broadcast(args, 1, false);
+            broadcast(args, 1, false);
+            return true;
         } 
 
-        return broadcast(args, 0, true);
+        broadcast(args, 0, true);
+        return true;
     }
 
-    private boolean broadcast(String[] args, int start, boolean chat) {
+    private void broadcast(String[] args, int start, boolean chat) {
         String message = implode(start, args);
         message = replaceSymbols(replaceColor(message));
 
         if (chat) {
             Bukkit.broadcastMessage(PLUGIN_NAME_BROADCAST + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_MESSAGE + message);
-            return true;
+            return;
         }
 
         for (Player op : Bukkit.getOnlinePlayers()) {
             op.sendTitle(PLUGIN_NAME_BROADCAST, message, 5, 80, 5);
         }
-        return true;
     }
 }

@@ -20,56 +20,61 @@ public class Fly implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 0) {
-            if (isPlayer(sender)) {
-                Player p = (Player) sender;
-                if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-                    return flyMode(command, p);
-                } else {
-                    p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                    return true;
-                }
-            }
-        } else {
-            Player target = Bukkit.getPlayer(args[0]);
-            if (target != null) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                        p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, target.getCustomName(), !target.getAllowFlight() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
-                        return flyMode(command, target);
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean flyMode(Command command, Player p) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_FLY)) {
-            PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
-            pe.setFlying(!pe.isFlying());
-            pe.setUpdatedBy(pe.getID());
-            pe.setToBeUpdated(true);
-            p.setAllowFlight(pe.isFlying());
-            p.sendMessage(
-                PLUGIN_FORMS_COMMAND_PREFIX + 
-                String.format(
-                    getText("PLUGIN_COMMAND_FLYMODE"), 
-                    p.getCustomName() + PLUGIN_COLOR_COMMAND, 
-                    PLUGIN_COLOR_COMMAND_ARG + 
-                    (pe.isFlying() ? 
-                        getText("PLUGIN_COMMAND_FLYMODE_ACTIVATED") : 
-                        getText("PLUGIN_COMMAND_FLYMODE_DEACTIVATED")
-                    ) + PLUGIN_COLOR_COMMAND
-                )
-            );
-            return true;
-        } else {
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_FLY)) {
             return false;
         }
+
+        if (!isPlayer(sender)){
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if (args.length == 0) {
+            flyMode(p);
+            return true;
+        }
+
+        Player target = Bukkit.getPlayer(args[0]);
+
+        if(target == null){
+            p.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
+            return true;
+        }
+        
+        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, target.getCustomName(), !target.getAllowFlight() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
+            flyMode(target);
+            return true;
+        } else {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+    }
+
+    private void flyMode(Player p) {
+        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        pe.setFlying(!pe.isFlying());
+        pe.setUpdatedBy(pe.getID());
+        pe.setToBeUpdated(true);
+        p.setAllowFlight(pe.isFlying());
+        p.sendMessage(
+            PLUGIN_FORMS_COMMAND_PREFIX + 
+            String.format(
+                getText("PLUGIN_COMMAND_FLYMODE"), 
+                p.getCustomName() + PLUGIN_COLOR_COMMAND, 
+                PLUGIN_COLOR_COMMAND_ARG + 
+                (pe.isFlying() ? 
+                    getText("PLUGIN_COMMAND_FLYMODE_ACTIVATED") : 
+                    getText("PLUGIN_COMMAND_FLYMODE_DEACTIVATED")
+                ) + PLUGIN_COLOR_COMMAND
+            )
+        );
     }
 }

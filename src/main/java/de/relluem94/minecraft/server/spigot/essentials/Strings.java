@@ -49,7 +49,7 @@ public class Strings {
     public static final String PLUGIN_WORLD_WORLD_THE_END = "world_the_end";
 
     public static final String PLUGIN_FORMS_SPACER_CHANNEL = " >> " + PLUGIN_COLOR_COMMAND;
-    public static final String PLUGIN_FORMS_SPACER_MESSAGE= PLUGIN_COLOR_MESSAGE_SPACER + " >> " + PLUGIN_COLOR_MESSAGE;
+    public static final String PLUGIN_FORMS_SPACER_MESSAGE = PLUGIN_COLOR_MESSAGE_SPACER + " >> " + PLUGIN_COLOR_MESSAGE;
     public static final String PLUGIN_FORMS_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
     public static final String PLUGIN_FORMS_SHORT_BORDER = "<><><><><><><><><><><><><><><><><><>";
     public static final String PLUGIN_FORMS_WHITESPACE = "               ";

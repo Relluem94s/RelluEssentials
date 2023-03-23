@@ -23,24 +23,34 @@ public class Cookies implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (isPlayer(sender)) {
-            Player p = (Player) sender;
-            if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-                if (args.length == 0) {
-                    return getCookies(command, getCookie(p), p);
-                } else {
-                    Player target = Bukkit.getPlayer(args[0]);
-                    if (target != null) {
-                        sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES_PLAYER, target.getCustomName()));
-                        return getCookies(command, getCookie(p), target);
-                    }
-                }
-            } else {
-                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                return true;
-            }
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_COOCKIE)) {
+            return false;
         }
-        return false;
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if (args.length == 0) {
+            return getCookies(command, getCookie(p), p);
+        }
+
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target == null) {
+            p.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
+            return true;
+        }
+
+        sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES_PLAYER, target.getCustomName()));
+        return getCookies(command, getCookie(p), target);
     }
 
     private boolean getCookies(Command command, ItemStack is, Player p) {

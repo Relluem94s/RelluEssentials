@@ -19,12 +19,12 @@ public class EventConstants {
     //==============================================================================//
     public static final String PLUGIN_EVENT_JOIN_MESSAGE = PLUGIN_COLOR_POSITIVE + "[" + PLUGIN_SYMBOL_BLACK_FOUR_POINTED_STAR + "] " + PLUGIN_COLOR_MESSAGE + "%s" + PLUGIN_COLOR_COMMAND + " hat den Server betreten.";
     public static final String PLUGIN_EVENT_QUIT_MESSAGE = PLUGIN_COLOR_NEGATIVE + "[" + PLUGIN_SYMBOL_CROSS_MARK + "] " + PLUGIN_COLOR_MESSAGE + "%s" + PLUGIN_COLOR_COMMAND + " hat den Server verlassen.";
-    public static final String PLUGIN_EVENT_DEATH = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Du starbst bei " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + PLUGIN_COMMAND_WHERE_STRING + PLUGIN_COLOR_COMMAND;
-    public static final String PLUGIN_EVENT_DEATH_TP = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Klicke diese Nachricht um dich zum Todespunkt zu teleportieren!";
+    public static final String PLUGIN_EVENT_DEATH = PLUGIN_FORMS_COMMAND_PREFIX + "Du starbst bei " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + PLUGIN_COMMAND_WHERE_STRING + PLUGIN_COLOR_COMMAND;
+    public static final String PLUGIN_EVENT_DEATH_TP = PLUGIN_FORMS_COMMAND_PREFIX + "Klicke diese Nachricht um dich zum Todespunkt zu teleportieren!";
 
-    public static final String PLUGIN_EVENT_SKILL_REPAIR_DONE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Du hast den Gegenstand repariert!";
-    public static final String PLUGIN_EVENT_SKILL_REPAIR_WARNING = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Du benötigst mehr" + PLUGIN_COLOR_COMMAND_ARG + " %s " + PLUGIN_COLOR_COMMAND + "um diesen Gegenstand zu reparieren!";
-    public static final String PLUGIN_EVENT_SKILL_SALVAGE_DONE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Du hast" + PLUGIN_COLOR_COMMAND_ARG + " %s " + PLUGIN_COLOR_COMMAND + "erhalten!";
+    public static final String PLUGIN_EVENT_SKILL_REPAIR_DONE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast den Gegenstand repariert!";
+    public static final String PLUGIN_EVENT_SKILL_REPAIR_WARNING = PLUGIN_FORMS_COMMAND_PREFIX + "Du benötigst mehr" + PLUGIN_COLOR_COMMAND_ARG + " %s " + PLUGIN_COLOR_COMMAND + "um diesen Gegenstand zu reparieren!";
+    public static final String PLUGIN_EVENT_SKILL_SALVAGE_DONE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast" + PLUGIN_COLOR_COMMAND_ARG + " %s " + PLUGIN_COLOR_COMMAND + "erhalten!";
     
     public static final String PLUGIN_EVENT_SKULL_INFO_SPACER = "§8~~~~~~~~~~~~~~~~~~~~~~~";
     
@@ -39,7 +39,7 @@ public class EventConstants {
     public static final String PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_SYMBOL_BLACK_LARGE_CIRCLE + PLUGIN_COLOR_COMMAND + " Auto Closed!";
 
     
-    public static final String PLUGIN_EVENT_PROTECTED_BLOCK_INFO = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Protection Info:";
+    public static final String PLUGIN_EVENT_PROTECTED_BLOCK_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Protection Info:";
     public static final String PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID = "Protection ID: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     public static final String PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED = "Created: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     public static final String PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED = "Updated: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
@@ -69,56 +69,56 @@ public class EventConstants {
 
     public static final String PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN = PLUGIN_COLOR_NEGATIVE + "Der Server ist leider voll";
 
-    public static final String PLUGIN_EVENT_SIGN_COPY = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Sign Copied";
-    public static final String PLUGIN_EVENT_SIGN_COPY_TO_PASTE_MESSAGE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Click to paste copied Sign";
-    public static final String PLUGIN_EVENT_SIGN_PASTE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Sign Pasted";
-    public static final String PLUGIN_EVENT_SIGN_EDIT = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Sign Opened";
-    public static final String PLUGIN_EVENT_NPC_BAGS_NO_COINS = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "To less " + PLUGIN_NAME_MONEY;
-    public static final String PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Error no Bag found";
+    public static final String PLUGIN_EVENT_SIGN_COPY = PLUGIN_FORMS_COMMAND_PREFIX + "Sign Copied";
+    public static final String PLUGIN_EVENT_SIGN_COPY_TO_PASTE_MESSAGE = PLUGIN_FORMS_COMMAND_PREFIX + "Click to paste copied Sign";
+    public static final String PLUGIN_EVENT_SIGN_PASTE = PLUGIN_FORMS_COMMAND_PREFIX + "Sign Pasted";
+    public static final String PLUGIN_EVENT_SIGN_EDIT = PLUGIN_FORMS_COMMAND_PREFIX + "Sign Opened";
+    public static final String PLUGIN_EVENT_NPC_BAGS_NO_COINS = PLUGIN_FORMS_COMMAND_PREFIX + "To less " + PLUGIN_NAME_MONEY;
+    public static final String PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Error no Bag found";
 
-    public static final String PLUGIN_EVENT_NPC_BAGS_BOUGHT = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You bought a %s";
-    public static final String PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You already Bought a %s";
+    public static final String PLUGIN_EVENT_NPC_BAGS_BOUGHT = PLUGIN_FORMS_COMMAND_PREFIX + "You bought a %s";
+    public static final String PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT = PLUGIN_FORMS_COMMAND_PREFIX + "You already Bought a %s";
 
-    public static final String PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND  + "You have deposited " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " to your Bank Account";
-    public static final String PLUGIN_EVENT_NPC_BANKER_DEPOIST_NO_COINS_MESSAGE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND  + "To less " + PLUGIN_NAME_MONEY + " to do a transaction";
-    public static final String PLUGIN_EVENT_NPC_BANKER_DEPOIST_LIMIT_MESSAGE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND  + "Your Bank Account is full. Consider Upgrading it!";
-    public static final String PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND  + "You have withdrawn " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " from your Bank Account";
-    public static final String PLUGIN_EVENT_NPC_BANKER_WITHDRAW_NO_COINS_MESSAGE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND  + "To less " + PLUGIN_NAME_MONEY + " to do a transaction";
+    public static final String PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE = PLUGIN_FORMS_COMMAND_PREFIX  + "You have deposited " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " to your Bank Account";
+    public static final String PLUGIN_EVENT_NPC_BANKER_DEPOIST_NO_COINS_MESSAGE = PLUGIN_FORMS_COMMAND_PREFIX  + "To less " + PLUGIN_NAME_MONEY + " to do a transaction";
+    public static final String PLUGIN_EVENT_NPC_BANKER_DEPOIST_LIMIT_MESSAGE = PLUGIN_FORMS_COMMAND_PREFIX  + "Your Bank Account is full. Consider Upgrading it!";
+    public static final String PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE = PLUGIN_FORMS_COMMAND_PREFIX  + "You have withdrawn " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " from your Bank Account";
+    public static final String PLUGIN_EVENT_NPC_BANKER_WITHDRAW_NO_COINS_MESSAGE = PLUGIN_FORMS_COMMAND_PREFIX  + "To less " + PLUGIN_NAME_MONEY + " to do a transaction";
 
-    public static final String PLUGIN_EVENT_NPC_BANKER_TRANSACTION = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND  + "Your transactions are:";
+    public static final String PLUGIN_EVENT_NPC_BANKER_TRANSACTION = PLUGIN_FORMS_COMMAND_PREFIX  + "Your transactions are:";
     
 
 
     public static final String PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE = PLUGIN_SYMBOL_RIGHT_POINTING_ANGLE_BRACKET + PLUGIN_COLOR_MESSAGE;
     public static final String PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE = PLUGIN_SYMBOL_LEFT_POINTING_ANGLE_BRACKET + PLUGIN_COLOR_MESSAGE;
     public static final String PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST = Strings.PLUGIN_FORMS_WHITESPACE_SHORT + "%s Transaction with " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " on %s";
-    public static final String PLUGIN_EVENT_NPC_BANKER_TOTAL = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Bank!";
+    public static final String PLUGIN_EVENT_NPC_BANKER_TOTAL = PLUGIN_FORMS_COMMAND_PREFIX + "You have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Bank!";
 
-    public static final String PLUGIN_EVENT_NPC_BUY = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Bought %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You now have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
-    public static final String PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND  + "Can't buy %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You only have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
-    public static final String PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND  + "Can't buy %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You have not enough Inventory Space left!";
-    public static final String PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND  + "Can't buy this Item";
+    public static final String PLUGIN_EVENT_NPC_BUY = PLUGIN_FORMS_COMMAND_PREFIX + "Bought %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You now have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
+    public static final String PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS = PLUGIN_FORMS_COMMAND_PREFIX  + "Can't buy %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You only have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
+    public static final String PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL = PLUGIN_FORMS_COMMAND_PREFIX  + "Can't buy %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You have not enough Inventory Space left!";
+    public static final String PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE = PLUGIN_FORMS_COMMAND_PREFIX  + "Can't buy this Item";
 
-    public static final String PLUGIN_EVENT_NPC_SELL = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Sold %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You now have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
-    public static final String PLUGIN_EVENT_NPC_SELL_ENCHANTED = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You can't sell enchanted Items!";
-    public static final String PLUGIN_EVENT_NPC_SELL_NO_PRICE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You can't sell this Item!";
-    public static final String PLUGIN_EVENT_NPC_SELL_RENAMED = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You can't sell this Item!";
-    public static final String PLUGIN_EVENT_NPC_SELL_USED_ITEM = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You can't sell used Item!";
+    public static final String PLUGIN_EVENT_NPC_SELL = PLUGIN_FORMS_COMMAND_PREFIX + "Sold %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You now have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
+    public static final String PLUGIN_EVENT_NPC_SELL_ENCHANTED = PLUGIN_FORMS_COMMAND_PREFIX + "You can't sell enchanted Items!";
+    public static final String PLUGIN_EVENT_NPC_SELL_NO_PRICE = PLUGIN_FORMS_COMMAND_PREFIX + "You can't sell this Item!";
+    public static final String PLUGIN_EVENT_NPC_SELL_RENAMED = PLUGIN_FORMS_COMMAND_PREFIX + "You can't sell this Item!";
+    public static final String PLUGIN_EVENT_NPC_SELL_USED_ITEM = PLUGIN_FORMS_COMMAND_PREFIX + "You can't sell used Item!";
     public static final String PLUGIN_EVENT_BAG_COLLECT = "Added %sx %s to your Bag";
-    public static final String PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You don't have enough " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "The initial Account costs %sCoins!";
-    public static final String PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Welcome to your new Bank Account";
-    public static final String PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS =  PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "Du hast " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " verloren!";
-    public static final String PLUGIN_EVENT_NPC_SPAWN =  PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "A %s " + PLUGIN_COLOR_COMMAND + "NPC was placed!";
-    public static final String PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "No End Point found! Can't teleport.";
-    public static final String PLUGIN_EVENT_LIGHTS_TOOGLE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You toogled the Light";
-    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You already have a greater Tier";
-    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT =  PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "It's already your Account Tier";
-    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You Bought the Upgrade with your Purse";
-    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You Bought the Upgrade with your Bank Account";
-    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You Bought the Upgrade with your Purse and Bank Account";
-    public static final String PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "To less " + PLUGIN_NAME_MONEY;
-    public static final String PLUGIN_EVENT_NPC_BANKER_INTEREST = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + "You earnd " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in interest!";
+    public static final String PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS = PLUGIN_FORMS_COMMAND_PREFIX + "You don't have enough " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "The initial Account costs %sCoins!";
+    public static final String PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT = PLUGIN_FORMS_COMMAND_PREFIX + "Welcome to your new Bank Account";
+    public static final String PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS =  PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " verloren!";
+    public static final String PLUGIN_EVENT_NPC_SPAWN =  PLUGIN_FORMS_COMMAND_PREFIX + "A %s " + PLUGIN_COLOR_COMMAND + "NPC was placed!";
+    public static final String PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT = PLUGIN_FORMS_COMMAND_PREFIX + "No End Point found! Can't teleport.";
+    public static final String PLUGIN_EVENT_LIGHTS_TOOGLE = PLUGIN_FORMS_COMMAND_PREFIX + "You toogled the Light";
+    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT = PLUGIN_FORMS_COMMAND_PREFIX + "You already have a greater Tier";
+    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT =  PLUGIN_FORMS_COMMAND_PREFIX + "It's already your Account Tier";
+    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE = PLUGIN_FORMS_COMMAND_PREFIX + "You Bought the Upgrade with your Purse";
+    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK = PLUGIN_FORMS_COMMAND_PREFIX + "You Bought the Upgrade with your Bank Account";
+    public static final String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH = PLUGIN_FORMS_COMMAND_PREFIX + "You Bought the Upgrade with your Purse and Bank Account";
+    public static final String PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS = PLUGIN_FORMS_COMMAND_PREFIX + "To less " + PLUGIN_NAME_MONEY;
+    public static final String PLUGIN_EVENT_NPC_BANKER_INTEREST = PLUGIN_FORMS_COMMAND_PREFIX + "You earnd " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in interest!";
 
-    public static final String PLUGIN_EVENT_DAMAGE_SHOW = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND +  "Damage: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Last Damage: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Health: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
+    public static final String PLUGIN_EVENT_DAMAGE_SHOW = PLUGIN_FORMS_COMMAND_PREFIX +  "Damage: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Last Damage: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Health: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
 
 }

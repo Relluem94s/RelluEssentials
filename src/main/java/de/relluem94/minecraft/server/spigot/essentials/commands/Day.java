@@ -17,19 +17,16 @@ public class Day implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Player p = null;
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_DAY)) {
             return false;
         }
         
-        if (isPlayer(sender)) {
-            p = (Player) sender;
-        }
-
-        if(p == null){
+        if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
         }
+
+        Player p = (Player) sender;
 
         if (args.length != 0) {
              p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS); 
@@ -44,6 +41,5 @@ public class Day implements CommandExecutor {
         p.getWorld().setTime(0L);
         sendMessage(p, String.format(PLUGIN_COMMAND_DAY, p.getWorld().getName()));
         return true;
-        
     }
 }
