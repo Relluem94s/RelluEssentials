@@ -17,37 +17,37 @@ public class Inventory implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_INVENTORY)) {
-            if (args.length == 0) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-                        p.openInventory(p.getInventory());
-                        p.sendMessage(PLUGIN_COMMAND_INVENTORY);
-                        return true; // TODO BUGS Clicked Items will be placed anywhere and overwrite other items..  
-                    } else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-            } else {
-                Player target = Bukkit.getPlayer(args[0]).getPlayer();
-                if (target != null) {
-                    if (isPlayer(sender)) {
-                        Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                            p.openInventory(target.getInventory());
-                            p.sendMessage(String.format(PLUGIN_COMMAND_INVENTORY_PLAYER, target.getCustomName()));
-                            return true;
-                        } else {
-                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                            return true;
-                        }
-                    }
-
-                }
-            }
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_INVENTORY)) {
+            return false;
         }
-        return false;
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+        
+        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true; 
+        }
+
+
+        if (args.length == 0) {
+            p.openInventory(p.getInventory());
+                p.sendMessage(PLUGIN_COMMAND_INVENTORY);
+                return true; // TODO BUGS Clicked Items will be placed anywhere and overwrite other items..  
+        }
+        
+        Player target = Bukkit.getPlayer(args[0]).getPlayer();
+        if (target == null) {
+            sender.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
+            return true;
+        }
+        
+        p.openInventory(target.getInventory());
+        p.sendMessage(String.format(PLUGIN_COMMAND_INVENTORY_PLAYER, target.getCustomName()));
+        return true;
     }
 }

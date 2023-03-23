@@ -51,22 +51,17 @@ public class Home implements CommandExecutor {
                             Player p = (Player) sender;
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
 
-                            if (pe.getHomes().size() != 0) {
+                            if (!pe.getHomes().isEmpty()) {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
-                                pe.getHomes().stream().forEachOrdered(fle -> {
-                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation())));
-                                });
+                                pe.getHomes().stream().forEachOrdered(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
                             } else {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
                             }
 
-                            if(pe.getDeaths().size() != 0){
+                            if(!pe.getDeaths().isEmpty()){
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS);
-                                pe.getDeaths().stream().forEachOrdered(fle -> {
-                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation())));
-                                });
+                                pe.getDeaths().stream().forEachOrdered(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
                             }
-
                             return true;
                         }
                     } else {

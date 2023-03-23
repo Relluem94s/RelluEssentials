@@ -40,17 +40,13 @@ public class Marry implements CommandExecutor {
         player.sendMessage(String.format(PLUGIN_COMMAND_MARRY_SEND_REQUEST, target.getCustomName()));
 
         marryAcceptList.put(target, player);
-        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
-    
-            @Override
-            public void run() {
-                if(hasMarryEntry(target)){
-                    player.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED);
-                    target.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED);
-                    removeMarryEntry(target);
-                }
+        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+            if(hasMarryEntry(target)){
+                player.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED);
+                target.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED);
+                removeMarryEntry(target);
             }
-        }, 20*60*2);
+        }, 20*60*2L);
     }
 
     private boolean hasMarryEntry(Player target) {
@@ -80,7 +76,7 @@ public class Marry implements CommandExecutor {
         firstPlayer.setPartner(playerPartnerEntry);
         secondPlayer.setPartner(playerPartnerEntry);
 
-        Collection<ProtectionEntry> protectionEntryList = new ArrayList<ProtectionEntry> ();
+        Collection<ProtectionEntry> protectionEntryList = new ArrayList<> ();
         protectionEntryList.addAll(ProtectionAPI.getProtectionEntryList().values());
 
         for(ProtectionEntry pre : protectionEntryList){ 
@@ -122,7 +118,7 @@ public class Marry implements CommandExecutor {
         
             RelluEssentials.dBH.deletePlayerPartner(ppe);
 
-            Collection<ProtectionEntry> protectionEntryList = new ArrayList<ProtectionEntry> ();
+            Collection<ProtectionEntry> protectionEntryList = new ArrayList<> ();
             protectionEntryList.addAll(ProtectionAPI.getProtectionEntryList().values());
 
             for(ProtectionEntry pre : protectionEntryList){
