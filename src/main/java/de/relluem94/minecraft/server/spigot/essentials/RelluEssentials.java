@@ -20,11 +20,13 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import de.relluem94.rellulib.stores.DoubleStore;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
@@ -62,6 +64,8 @@ public class RelluEssentials extends JavaPlugin {
     public static String language;
     private static Banker banker;
 
+    public boolean isUnitTest = false;
+
     public static final Map<Integer, Vector2Location> selections = new HashMap<>();
     public static final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
     public static final Map<Material, DoubleStore> dropMap = new EnumMap<>(Material.class);
@@ -79,6 +83,7 @@ public class RelluEssentials extends JavaPlugin {
     public final String[][] worldsGroup = new String[][]{new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END}, new String[]{PLUGIN_WORLD_LOBBY}};
     
     public static synchronized RelluEssentials getInstance() {
+        
         return instance;
     }
 
@@ -166,5 +171,7 @@ public class RelluEssentials extends JavaPlugin {
 
     protected RelluEssentials(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file){
         super(loader, description, dataFolder, file);
+        this.getConfig().set("database.host", "172.17.0.2");
+        isUnitTest = true;
     }
 }

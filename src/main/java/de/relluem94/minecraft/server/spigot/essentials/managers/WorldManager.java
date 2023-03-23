@@ -9,6 +9,7 @@ import org.bukkit.WorldType;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
@@ -24,6 +25,9 @@ public class WorldManager implements IEnable, IDisable {
 
     @Override
     public void enable() {
+        if(RelluEssentials.getInstance().isUnitTest){
+            return;
+        }
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
         for (WorldGroupEntry wge : worldsMap.keySet()) {
             for(WorldEntry we: worldsMap.get(wge)){
@@ -44,6 +48,9 @@ public class WorldManager implements IEnable, IDisable {
 
     @Override
     public void disable() {
+        if(RelluEssentials.getInstance().isUnitTest){
+            return;
+        }
         for (WorldGroupEntry wge : worldsMap.keySet()) {
             for(WorldEntry we: worldsMap.get(wge)){
                 try{

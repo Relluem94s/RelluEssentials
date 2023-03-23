@@ -16,6 +16,9 @@ public class BankManager implements IEnable {
 
     @Override
     public void enable() {
+        if(RelluEssentials.getInstance().isUnitTest){
+            return;
+        }
         triggerNext();   
     }
 
