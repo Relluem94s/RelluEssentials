@@ -161,39 +161,39 @@ public class BetterNPC implements Listener {
         }
         else{
             String item = is.getType().name();
-            String item_displayname = item.toLowerCase().replace('_', ' ');
+            String itemDisplayname = item.toLowerCase().replace('_', ' ');
             int amountOfItem = is.getAmount();
             int buyPricePerItem = ItemPrice.valueOf(item).getBuyPrice();
             int sellPricePerItem = ItemPrice.valueOf(item).getSellPrice();
 
 
             if(inv.getType().equals(InventoryType.CHEST)){
-                ItemStack is_item = is.clone();
+                ItemStack itemStack = is.clone();
                 if(isRigthClicked){
                     amountOfItem = 64;
-                    is_item.setAmount(64);
+                    itemStack.setAmount(64);
                 }
 
-                double coins = buyPricePerItem * amountOfItem;
+                double coins = buyPricePerItem * (double) amountOfItem;
                 if(buyPricePerItem > 0){
                     if(pe.getPurse() - buyPricePerItem * amountOfItem >= 0){
                         if(p.getInventory().firstEmpty() != -1){
-                            p.getInventory().addItem(is_item);
+                            p.getInventory().addItem(itemStack);
                             p.updateInventory();
     
                             pe.setPurse(pe.getPurse() - coins);
                             pe.setUpdatedBy(pe.getID());
                             pe.setToBeUpdated(true);
     
-                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY, item_displayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
+                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                             p.playSound(p, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
                         }
                         else{
-                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL, item_displayname, StringHelper.formatDouble(coins)));
+                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL, itemDisplayname, StringHelper.formatDouble(coins)));
                         }
                     }
                     else{
-                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS, item_displayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
+                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                     }
                 }
                 else{
@@ -216,12 +216,12 @@ public class BetterNPC implements Listener {
                                 p.getInventory().remove(lis);
                             }
                         }
-                        coins = sellPricePerItem * amountOfItem;
+                        coins = sellPricePerItem * (double) amountOfItem;
                         
 
                     }
                     else{
-                        coins = sellPricePerItem * amountOfItem;
+                        coins = sellPricePerItem * (double) amountOfItem;
                         p.getInventory().getItem(slot).setAmount(0);
                     }
                     
@@ -231,7 +231,7 @@ public class BetterNPC implements Listener {
                     pe.setUpdatedBy(pe.getID());
                     pe.setToBeUpdated(true);
 
-                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SELL, item_displayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
+                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SELL, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                     p.playSound(p, Sound.ENTITY_WANDERING_TRADER_NO, SoundCategory.MASTER, 1f, 1f);
                 }
                 else {
@@ -367,7 +367,6 @@ public class BetterNPC implements Listener {
 
         if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
             e.setCancelled(true);
-            return;
         }
     }
 }

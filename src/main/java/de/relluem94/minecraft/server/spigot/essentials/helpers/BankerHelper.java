@@ -183,7 +183,7 @@ public class BankerHelper {
 
             double account = bae.getValue();
             if(account >= costs){
-                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-costs, bae.getValue(), bt.getId());
+                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), -costs, bae.getValue(), bt.getId());
                 p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK);
                 p.closeInventory();
                 return;
@@ -193,7 +193,7 @@ public class BankerHelper {
                 pe.setPurse(0);
                 pe.setUpdatedBy(pe.getID());
                 pe.setToBeUpdated(true);
-                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), (double)-(costs-purse), bae.getValue(), bt.getId());
+                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), -(costs-purse), bae.getValue(), bt.getId());
                 p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH);
                 p.closeInventory();
                 return;

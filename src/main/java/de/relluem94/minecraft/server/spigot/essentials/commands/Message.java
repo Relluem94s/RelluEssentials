@@ -21,7 +21,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 public class Message implements CommandExecutor {
 
-    public static Map<Player, Player> reply = new HashMap<>();
+    public static final Map<Player, Player> reply = new HashMap<>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

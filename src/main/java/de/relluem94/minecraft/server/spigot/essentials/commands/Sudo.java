@@ -36,7 +36,7 @@ public class Sudo implements CommandExecutor {
                         PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                         if (target != null && PlayerAPI.getPlayerEntry(target.getID()) != null) {
                             PlayerEntry tpe = PlayerAPI.getPlayerEntry(target.getID());
-                            SudoManager.sudoers.put(p.getUniqueId(), pe.clone());
+                            SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
                             WorldHelper.saveWorldGroupInventory(p);
                             pe.setID(tpe.getID());
                             pe.setCustomName(tpe.getCustomName());

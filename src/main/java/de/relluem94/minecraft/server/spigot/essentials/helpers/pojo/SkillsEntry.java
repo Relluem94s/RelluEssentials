@@ -6,12 +6,18 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  */
 public class SkillsEntry {
 
-    public SkillsEntry() {}
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_CREATED = "created";
+    public static final String FIELD_CREATEDBY = "createdby";
+    public static final String FIELD_UPDATED = "updated";
+    public static final String FIELD_UPDATEDBY = "updatedby";
+    public static final String FIELD_DELETED = "deleted";
+    public static final String FIELD_DELETEDBY = "deletedby";
 
     private int id;
     private String name;
     private String displayname;
-    private int max_level;
+    private int maxLevel;
 
     public int getId() {
         return id;
@@ -25,8 +31,8 @@ public class SkillsEntry {
         return name;
     }
 
-    public void setName(String displayname) {
-        this.displayname = displayname;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDisplayName() {
@@ -38,10 +44,10 @@ public class SkillsEntry {
     }
 
     public int getMaxLevel() {
-        return max_level;
+        return maxLevel;
     }
 
-    public void setMaxLevel(int max_level) {
-        this.max_level = max_level;
+    public void setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
     }
 }

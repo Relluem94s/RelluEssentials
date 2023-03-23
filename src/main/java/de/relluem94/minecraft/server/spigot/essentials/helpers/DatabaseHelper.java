@@ -153,13 +153,16 @@ public class DatabaseHelper {
         }
     }
 
+    private static final String INSERT_NEW_DB_VERSION = "insertNewDBVersion.sql";
+    private static final String UPDATE_OLD_PLUGIN_INFORMATION = "updateOldPluginInformation.sql";
+
     private void patch2() {
         String v = "patches/v2/";
         consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "dropBlockHistory.sql");
         executeScript(v + "createBlockHistory.sql");
-        executeScript(v + "insertNewDBVersion.sql");
-        executeScript(v + "updateOldPluginInformation.sql");
+        executeScript(v + INSERT_NEW_DB_VERSION);
+        executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     private void patch3() {
@@ -172,8 +175,8 @@ public class DatabaseHelper {
         executeScript(v + "updateModGroupPlayer.sql"); // changed id of Mod
         executeScript(v + "updateVipGroupPlayer.sql"); // changed id of Vip
         executeScript(v + "addPlayerConstraint.sql");
-        executeScript(v + "insertNewDBVersion.sql");
-        executeScript(v + "updateOldPluginInformation.sql");
+        executeScript(v + INSERT_NEW_DB_VERSION);
+        executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     private void patch4() {
@@ -202,9 +205,9 @@ public class DatabaseHelper {
         executeScript(v + "alterBankAccount.sql");
         executeScript(v + "alterBankTier.sql");
         executeScript(v + "alterBankTransaction.sql");
-        executeScript(v + "insertNewDBVersion.sql");
         executeScript(v + "updatePlayer.sql");
-        executeScript(v + "updateOldPluginInformation.sql");
+        executeScript(v + INSERT_NEW_DB_VERSION);
+        executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     private void patch5() {
@@ -232,8 +235,8 @@ public class DatabaseHelper {
         executeScript(v + "addPlayerName.sql");
         executeScript(v + "changePlayerCustomName.sql");
 
-        executeScript(v + "insertNewDBVersion.sql");
-        executeScript(v + "updateOldPluginInformation.sql");
+        executeScript(v + INSERT_NEW_DB_VERSION);
+        executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     public void init() {
@@ -406,16 +409,16 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         PlayerPartnerEntry ppe = new PlayerPartnerEntry();
-                        ppe.setID(rs.getInt("id"));
-                        ppe.setCreated(rs.getString("created"));
-                        ppe.setCreatedby(rs.getInt("createdby"));
-                        ppe.setUpdated(rs.getString("updated"));
-                        ppe.setUpdatedBy(rs.getInt("updatedby"));
-                        ppe.setDeleted(rs.getString("deleted"));
-                        ppe.setDeletedBy(rs.getInt("deletedby"));
-                        ppe.setFirstPlayerID(rs.getInt("first_partner_fk"));
-                        ppe.setSecondPlayerID(rs.getInt("second_partner_fk"));
-                        ppe.setShareProtections(rs.getBoolean("shareProtections"));
+                        ppe.setID(rs.getInt(PlayerPartnerEntry.FIELD_ID));
+                        ppe.setCreated(rs.getString(PlayerPartnerEntry.FIELD_CREATED));
+                        ppe.setCreatedby(rs.getInt(PlayerPartnerEntry.FIELD_CREATEDBY));
+                        ppe.setUpdated(rs.getString(PlayerPartnerEntry.FIELD_UPDATED));
+                        ppe.setUpdatedBy(rs.getInt(PlayerPartnerEntry.FIELD_UPDATEDBY));
+                        ppe.setDeleted(rs.getString(PlayerPartnerEntry.FIELD_DELETED));
+                        ppe.setDeletedBy(rs.getInt(PlayerPartnerEntry.FIELD_DELETEDBY));
+                        ppe.setFirstPlayerID(rs.getInt(PlayerPartnerEntry.FIELD_FIRST_PARTNER_FK));
+                        ppe.setSecondPlayerID(rs.getInt(PlayerPartnerEntry.FIELD_SECOND_PARTNER_FK));
+                        ppe.setShareProtections(rs.getBoolean(PlayerPartnerEntry.FIELD_SHARE_PROTECTIONS));
 
                         return ppe;
                     }
@@ -435,14 +438,14 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         WorldGroupEntry wge = new WorldGroupEntry();
-                        wge.setId(rs.getInt("id"));
-                        wge.setCreated(rs.getString("created"));
-                        wge.setCreatedby(rs.getInt("createdby"));
-                        wge.setUpdated(rs.getString("updated"));
-                        wge.setUpdatedBy(rs.getInt("updatedby"));
-                        wge.setDeleted(rs.getString("deleted"));
-                        wge.setDeletedBy(rs.getInt("deletedby"));
-                        wge.setName(rs.getString("name"));
+                        wge.setId(rs.getInt(WorldGroupEntry.FIELD_ID));
+                        wge.setCreated(rs.getString(WorldGroupEntry.FIELD_CREATED));
+                        wge.setCreatedby(rs.getInt(WorldGroupEntry.FIELD_CREATEDBY));
+                        wge.setUpdated(rs.getString(WorldGroupEntry.FIELD_UPDATED));
+                        wge.setUpdatedBy(rs.getInt(WorldGroupEntry.FIELD_UPDATEDBY));
+                        wge.setDeleted(rs.getString(WorldGroupEntry.FIELD_DELETED));
+                        wge.setDeletedBy(rs.getInt(WorldGroupEntry.FIELD_DELETEDBY));
+                        wge.setName(rs.getString(WorldGroupEntry.FIELD_NAME));
 
                         lbte.add(wge);
                     }
@@ -463,14 +466,14 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         WorldEntry we = new WorldEntry();
-                        we.setId(rs.getInt("id"));
-                        we.setCreated(rs.getString("created"));
-                        we.setCreatedby(rs.getInt("createdby"));
-                        we.setUpdated(rs.getString("updated"));
-                        we.setUpdatedBy(rs.getInt("updatedby"));
-                        we.setDeleted(rs.getString("deleted"));
-                        we.setDeletedBy(rs.getInt("deletedby"));
-                        we.setName(rs.getString("name"));
+                        we.setId(rs.getInt(WorldEntry.FIELD_ID));
+                        we.setCreated(rs.getString(WorldEntry.FIELD_CREATED));
+                        we.setCreatedby(rs.getInt(WorldEntry.FIELD_CREATEDBY));
+                        we.setUpdated(rs.getString(WorldEntry.FIELD_UPDATED));
+                        we.setUpdatedBy(rs.getInt(WorldEntry.FIELD_UPDATEDBY));
+                        we.setDeleted(rs.getString(WorldEntry.FIELD_DELETED));
+                        we.setDeletedBy(rs.getInt(WorldEntry.FIELD_DELETEDBY));
+                        we.setName(rs.getString(WorldEntry.FIELD_NAME));
                         we.setWorldGroup(wge);
                         lwe.add(we);
                     }
@@ -529,19 +532,19 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         WorldGroupInventoryEntry wgie = new WorldGroupInventoryEntry();
-                        wgie.setId(rs.getInt("id"));
-                        wgie.setCreated(rs.getString("created"));
-                        wgie.setCreatedby(rs.getInt("createdby"));
-                        wgie.setUpdated(rs.getString("updated"));
-                        wgie.setUpdatedBy(rs.getInt("updatedby"));
-                        wgie.setDeleted(rs.getString("deleted"));
-                        wgie.setDeletedBy(rs.getInt("deletedby"));
-                        wgie.setPlayerId(rs.getInt("player_fk"));
-                        wgie.setHealth(rs.getInt("health"));
-                        wgie.setTotalExperience(rs.getInt("totalExperience"));
-                        wgie.setFoodLevel(rs.getInt("food"));
+                        wgie.setId(rs.getInt(WorldGroupInventoryEntry.FIELD_ID));
+                        wgie.setCreated(rs.getString(WorldGroupInventoryEntry.FIELD_CREATED));
+                        wgie.setCreatedby(rs.getInt(WorldGroupInventoryEntry.FIELD_CREATEDBY));
+                        wgie.setUpdated(rs.getString(WorldGroupInventoryEntry.FIELD_UPDATED));
+                        wgie.setUpdatedBy(rs.getInt(WorldGroupInventoryEntry.FIELD_UPDATEDBY));
+                        wgie.setDeleted(rs.getString(WorldGroupInventoryEntry.FIELD_DELETED));
+                        wgie.setDeletedBy(rs.getInt(WorldGroupInventoryEntry.FIELD_DELETEDBY));
+                        wgie.setPlayerId(rs.getInt(WorldGroupInventoryEntry.FIELD_PLAYER_FK));
+                        wgie.setHealth(rs.getInt(WorldGroupInventoryEntry.FIELD_HEALTH));
+                        wgie.setTotalExperience(rs.getInt(WorldGroupInventoryEntry.FIELD_TOTAL_EXPERIENCE));
+                        wgie.setFoodLevel(rs.getInt(WorldGroupInventoryEntry.FIELD_FOOD));
                         wgie.setWorldGroup(wge);
-                        wgie.setInventory(new JSONObject(rs.getString("inventory")));
+                        wgie.setInventory(new JSONObject(rs.getString(WorldGroupInventoryEntry.FIELD_INVENTORY)));
 
                         return wgie;
                     }
@@ -592,14 +595,14 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         WorldGroupEntry wge = new WorldGroupEntry();
-                        wge.setId(rs.getInt("id"));
-                        wge.setCreated(rs.getString("created"));
-                        wge.setCreatedby(rs.getInt("createdby"));
-                        wge.setUpdated(rs.getString("updated"));
-                        wge.setUpdatedBy(rs.getInt("updatedby"));
-                        wge.setDeleted(rs.getString("deleted"));
-                        wge.setDeletedBy(rs.getInt("deletedby"));
-                        wge.setName(rs.getString("name"));
+                        wge.setId(rs.getInt(WorldGroupEntry.FIELD_ID));
+                        wge.setCreated(rs.getString(WorldGroupEntry.FIELD_CREATED));
+                        wge.setCreatedby(rs.getInt(WorldGroupEntry.FIELD_CREATEDBY));
+                        wge.setUpdated(rs.getString(WorldGroupEntry.FIELD_UPDATED));
+                        wge.setUpdatedBy(rs.getInt(WorldGroupEntry.FIELD_UPDATEDBY));
+                        wge.setDeleted(rs.getString(WorldGroupEntry.FIELD_DELETED));
+                        wge.setDeletedBy(rs.getInt(WorldGroupEntry.FIELD_DELETEDBY));
+                        wge.setName(rs.getString(WorldGroupEntry.FIELD_NAME));
 
                         return wge;
                     }
@@ -619,11 +622,11 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt("id"));
-                        le.setPlayerId(rs.getInt("player_fk"));
-                        le.setLocationName(rs.getString("location_name"));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"),
-                                rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
+                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
+                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
                         for (LocationTypeEntry lte : locationTypeEntryList) {
                             if (lte.getId() == type) {
                                 le.setLocationType(lte);
@@ -647,15 +650,15 @@ public class DatabaseHelper {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
-                        if (type != rs.getInt("location_type_fk")) {
+                        if (type != rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK)) {
                             continue;
                         }
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt("id"));
-                        le.setPlayerId(rs.getInt("player_fk"));
-                        le.setLocationName(rs.getString("location_name"));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"),
-                                rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
+                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
+                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
+                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
                         for (LocationTypeEntry lte : locationTypeEntryList) {
                             if (type == lte.getId()) {
                                 le.setLocationType(lte);
@@ -682,10 +685,11 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt("id"));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"),
-                                rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                        le.setPlayerId(rs.getInt("player_fk"));
+                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
+                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
+                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
                         for (LocationTypeEntry lte : locationTypeEntryList) {
                             if (lte.getId() == type) {
                                 le.setLocationType(lte);
@@ -710,12 +714,13 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt("id"));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"),
-                                rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                        le.setPlayerId(rs.getInt("player_fk"));
+                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
+                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
+                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
                         for (LocationTypeEntry lte : locationTypeEntryList) {
-                            if (lte.getId() == rs.getInt("location_type_fk")) {
+                            if (lte.getId() == rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK)) {
                                 le.setLocationType(lte);
                             }
                         }
@@ -737,14 +742,14 @@ public class DatabaseHelper {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
-                        pie.setId(rs.getInt("id"));
-                        pie.setCreated(rs.getString("created"));
-                        pie.setCreatedby(rs.getInt("createdby"));
-                        pie.setTabheader(rs.getString("tab_header"));
-                        pie.setTabfooter(rs.getString("tab_footer"));
-                        pie.setMotdMessage(rs.getString("motd_message"));
-                        pie.setMotdPlayers(rs.getInt("motd_players"));
-                        pie.setDbVersion(rs.getInt("db_version"));
+                        pie.setId(rs.getInt(PluginInformationEntry.FIELD_ID));
+                        pie.setCreated(rs.getString(PluginInformationEntry.FIELD_CREATED));
+                        pie.setCreatedby(rs.getInt(PluginInformationEntry.FIELD_CREATEDBY));
+                        pie.setTabheader(rs.getString(PluginInformationEntry.FIELD_TAB_HEADER));
+                        pie.setTabfooter(rs.getString(PluginInformationEntry.FIELD_TAB_FOOTER));
+                        pie.setMotdMessage(rs.getString(PluginInformationEntry.FIELD_MOTD_MESSAGE));
+                        pie.setMotdPlayers(rs.getInt(PluginInformationEntry.FIELD_MOTD_PLAYERS));
+                        pie.setDbVersion(rs.getInt(PluginInformationEntry.FIELD_DB_VERSION));
                         return pie;
                     }
                 }
@@ -757,29 +762,29 @@ public class DatabaseHelper {
         return null;
     }
 
-    public PlayerEntry getPlayer(String UUID) {
+    public PlayerEntry getPlayer(String uuid) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayer.sql"))) {
-                ps.setString(1, UUID);
+                ps.setString(1, uuid);
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         PlayerEntry p = new PlayerEntry();
-                        p.setCreated(rs.getString("created"));
-                        p.setCreatedby(rs.getInt("createdby"));
-                        p.setUpdated(rs.getString("updated"));
-                        p.setUpdatedBy(rs.getInt("updatedby"));
-                        p.setDeleted(rs.getString("deleted"));
-                        p.setDeletedBy(rs.getInt("deletedby"));
-                        p.setName(rs.getString("name"));
-                        p.setCustomName(rs.getString("customname"));
-                        p.setPurse(rs.getDouble("purse"));
-                        p.setFlying(rs.getBoolean("fly"));
-                        p.setAFK(rs.getBoolean("afk"));
-                        p.setGroup(Groups.getGroup(rs.getInt("group_fk")));
-                        p.setID(rs.getInt("id"));
-                        p.setUUID(rs.getString("uuid"));
-                        PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt("id"));
+                        p.setID(rs.getInt(PlayerEntry.FIELD_ID));
+                        p.setUUID(rs.getString(PlayerEntry.FIELD_UUID));
+                        p.setCreated(rs.getString(PlayerEntry.FIELD_CREATED));
+                        p.setCreatedby(rs.getInt(PlayerEntry.FIELD_CREATEDBY));
+                        p.setUpdated(rs.getString(PlayerEntry.FIELD_UPDATED));
+                        p.setUpdatedBy(rs.getInt(PlayerEntry.FIELD_UPDATEDBY));
+                        p.setDeleted(rs.getString(PlayerEntry.FIELD_DELETED));
+                        p.setDeletedBy(rs.getInt(PlayerEntry.FIELD_DELETEDBY));
+                        p.setName(rs.getString(PlayerEntry.FIELD_NAME));
+                        p.setCustomName(rs.getString(PlayerEntry.FIELD_CUSTOM_NAME));
+                        p.setPurse(rs.getDouble(PlayerEntry.FIELD_PURSE));
+                        p.setFlying(rs.getBoolean(PlayerEntry.FIELD_FLY));
+                        p.setAFK(rs.getBoolean(PlayerEntry.FIELD_AFK));
+                        p.setGroup(Groups.getGroup(rs.getInt(PlayerEntry.FIELD_GROUP_FK)));
+                        PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt(PlayerEntry.FIELD_ID));
                         p.setHomes(getLocations(p, 1));
                         p.setDeaths(getLocations(p, 2));
                         p.setPartner(ppe);
@@ -802,16 +807,16 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BankAccountEntry bae = new BankAccountEntry();
-                        bae.setId(rs.getInt("id"));
-                        bae.setCreated(rs.getString("created"));
-                        bae.setCreatedby(rs.getInt("createdby"));
-                        bae.setUpdated(rs.getString("updated"));
-                        bae.setUpdatedBy(rs.getInt("updatedby"));
-                        bae.setDeleted(rs.getString("deleted"));
-                        bae.setDeletedBy(rs.getInt("deletedby"));
-                        bae.setValue(rs.getDouble("value"));
-                        bae.setPlayerId(rs.getInt("player_fk"));
-                        bae.setTier(getBankTier(rs.getInt("bank_tier_fk")));
+                        bae.setId(rs.getInt(BankAccountEntry.FIELD_ID));
+                        bae.setCreated(rs.getString(BankAccountEntry.FIELD_CREATED));
+                        bae.setCreatedby(rs.getInt(BankAccountEntry.FIELD_CREATEDBY));
+                        bae.setUpdated(rs.getString(BankAccountEntry.FIELD_UPDATED));
+                        bae.setUpdatedBy(rs.getInt(BankAccountEntry.FIELD_UPDATEDBY));
+                        bae.setDeleted(rs.getString(BankAccountEntry.FIELD_DELETED));
+                        bae.setDeletedBy(rs.getInt(BankAccountEntry.FIELD_DELETEDBY));
+                        bae.setValue(rs.getDouble(BankAccountEntry.FIELD_VALUE));
+                        bae.setPlayerId(rs.getInt(BankAccountEntry.FIELD_PLAYER_FK));
+                        bae.setTier(getBankTier(rs.getInt(BankAccountEntry.FIELD_BANK_TIER_FK)));
 
                         return bae;
                     }
@@ -831,11 +836,11 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BankTierEntry bte = new BankTierEntry();
-                        bte.setId(rs.getInt("id"));
-                        bte.setName(rs.getString("name"));
-                        bte.setLimit(rs.getLong("limit"));
-                        bte.setInterest(rs.getDouble("interest"));
-                        bte.setCost(rs.getLong("cost"));
+                        bte.setId(rs.getInt(BankTierEntry.FIELD_ID));
+                        bte.setName(rs.getString(BankTierEntry.FIELD_NAME));
+                        bte.setLimit(rs.getLong(BankTierEntry.FIELD_LIMIT));
+                        bte.setInterest(rs.getDouble(BankTierEntry.FIELD_INTEREST));
+                        bte.setCost(rs.getLong(BankTierEntry.FIELD_COST));
                         return bte;
                     }
                 }
@@ -854,11 +859,11 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BankTierEntry bte = new BankTierEntry();
-                        bte.setId(rs.getInt("id"));
-                        bte.setName(rs.getString("name"));
-                        bte.setLimit(rs.getLong("limit"));
-                        bte.setInterest(rs.getDouble("interest"));
-                        bte.setCost(rs.getLong("cost"));
+                        bte.setId(rs.getInt(BankTierEntry.FIELD_ID));
+                        bte.setName(rs.getString(BankTierEntry.FIELD_NAME));
+                        bte.setLimit(rs.getLong(BankTierEntry.FIELD_LIMIT));
+                        bte.setInterest(rs.getDouble(BankTierEntry.FIELD_INTEREST));
+                        bte.setCost(rs.getLong(BankTierEntry.FIELD_COST));
                         lbte.add(bte);
                     }
                 }
@@ -929,15 +934,15 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         BankTransactionEntry b = new BankTransactionEntry();
 
-                        b.setID(rs.getInt("id"));
-                        b.setCreated(rs.getString("created"));
-                        b.setCreatedby(rs.getInt("createdby"));
-                        b.setUpdated(rs.getString("updated"));
-                        b.setUpdatedBy(rs.getInt("updatedby"));
-                        b.setDeleted(rs.getString("deleted"));
-                        b.setDeletedBy(rs.getInt("deletedby"));
-                        b.setBankAccountId(rs.getInt("bank_account_fk"));
-                        b.setValue(rs.getDouble("value"));
+                        b.setID(rs.getInt(BankTransactionEntry.FIELD_ID));
+                        b.setCreated(rs.getString(BankTransactionEntry.FIELD_CREATED));
+                        b.setCreatedby(rs.getInt(BankTransactionEntry.FIELD_CREATEDBY));
+                        b.setUpdated(rs.getString(BankTransactionEntry.FIELD_UPDATED));
+                        b.setUpdatedBy(rs.getInt(BankTransactionEntry.FIELD_UPDATEDBY));
+                        b.setDeleted(rs.getString(BankTransactionEntry.FIELD_DELETED));
+                        b.setDeletedBy(rs.getInt(BankTransactionEntry.FIELD_DELETEDBY));
+                        b.setBankAccountId(rs.getInt(BankTransactionEntry.FIELD_BANK_ACCOUNT_FK));
+                        b.setValue(rs.getDouble(BankTransactionEntry.FIELD_VALUE));
                         bte.add(b);
                     }
                 }
@@ -958,15 +963,16 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         ProtectionEntry pe = new ProtectionEntry();
-                        pe.setId(rs.getInt("id"));
-                        pe.setCreated(rs.getString("created"));
-                        pe.setCreatedby(rs.getInt("createdby"));
-                        pe.setUpdated(rs.getString("updated"));
-                        pe.setUpdatedBy(rs.getInt("updatedby"));
-                        pe.setDeletedBy(rs.getInt("deletedby"));
-                        pe.setFlags(new JSONObject(rs.getString("flags")));
-                        pe.setRights(new JSONObject(rs.getString("rights")));
-                        pe.setMaterialName(rs.getString("material_name"));
+                        pe.setId(rs.getInt(ProtectionEntry.FIELD_ID));
+                        pe.setCreated(rs.getString(ProtectionEntry.FIELD_CREATED));
+                        pe.setCreatedby(rs.getInt(ProtectionEntry.FIELD_CREATEDBY));
+                        pe.setUpdated(rs.getString(ProtectionEntry.FIELD_UPDATED));
+                        pe.setUpdatedBy(rs.getInt(ProtectionEntry.FIELD_UPDATEDBY));
+                        pe.setDeleted(rs.getString(ProtectionEntry.FIELD_DELETED));
+                        pe.setDeletedBy(rs.getInt(ProtectionEntry.FIELD_DELETEDBY));
+                        pe.setFlags(new JSONObject(rs.getString(ProtectionEntry.FIELD_FLAGS)));
+                        pe.setRights(new JSONObject(rs.getString(ProtectionEntry.FIELD_RIGHTS)));
+                        pe.setMaterialName(rs.getString(ProtectionEntry.FIELD_MATERIAL_NAME));
                         pe.setLocationEntry(getLocation(l, 5));
 
                         return pe;
@@ -1051,15 +1057,16 @@ public class DatabaseHelper {
 
                         if (loc != null) {
                             ProtectionEntry pe = new ProtectionEntry();
-                            pe.setId(rs.getInt("id"));
-                            pe.setCreated(rs.getString("created"));
-                            pe.setCreatedby(rs.getInt("createdby"));
-                            pe.setUpdated(rs.getString("updated"));
-                            pe.setUpdatedBy(rs.getInt("updatedby"));
-                            pe.setDeletedBy(rs.getInt("deletedby"));
-                            pe.setFlags(new JSONObject(rs.getString("flags")));
-                            pe.setRights(new JSONObject(rs.getString("rights")));
-                            pe.setMaterialName(rs.getString("material_name"));
+                            pe.setId(rs.getInt(ProtectionEntry.FIELD_ID));
+                            pe.setCreated(rs.getString(ProtectionEntry.FIELD_CREATED));
+                            pe.setCreatedby(rs.getInt(ProtectionEntry.FIELD_CREATEDBY));
+                            pe.setUpdated(rs.getString(ProtectionEntry.FIELD_UPDATED));
+                            pe.setUpdatedBy(rs.getInt(ProtectionEntry.FIELD_UPDATEDBY));
+                            pe.setDeleted(rs.getString(ProtectionEntry.FIELD_DELETED));
+                            pe.setDeletedBy(rs.getInt(ProtectionEntry.FIELD_DELETEDBY));
+                            pe.setFlags(new JSONObject(rs.getString(ProtectionEntry.FIELD_FLAGS)));
+                            pe.setRights(new JSONObject(rs.getString(ProtectionEntry.FIELD_RIGHTS)));
+                            pe.setMaterialName(rs.getString(ProtectionEntry.FIELD_MATERIAL_NAME));
                             pe.setLocationEntry(loc);
                             pel.put(loc.getLocation(), pe);
                         } else {
@@ -1084,22 +1091,21 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         PlayerEntry p = new PlayerEntry();
-                        p.setCreated(rs.getString("created"));
-                        p.setCreatedby(rs.getInt("createdby"));
-                        p.setUpdated(rs.getString("updated"));
-                        p.setUpdatedBy(rs.getInt("updatedby"));
-                        p.setDeleted(rs.getString("deleted"));
-                        p.setDeletedBy(rs.getInt("deletedby"));
-                        p.setName(rs.getString("name"));
-                        p.setCustomName(rs.getString("customname"));
-                        p.setPurse(rs.getDouble("purse"));
-                        p.setFlying(rs.getBoolean("fly"));
-                        p.setAFK(rs.getBoolean("afk"));
-                        p.setGroup(de.relluem94.minecraft.server.spigot.essentials.permissions.Groups
-                                .getGroup(rs.getInt("group_fk")));
-                        p.setID(rs.getInt("id"));
-                        p.setUUID(rs.getString("uuid"));
-                        PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt("id"));
+                        p.setID(rs.getInt(PlayerEntry.FIELD_ID));
+                        p.setUUID(rs.getString(PlayerEntry.FIELD_UUID));
+                        p.setCreated(rs.getString(PlayerEntry.FIELD_CREATED));
+                        p.setCreatedby(rs.getInt(PlayerEntry.FIELD_CREATEDBY));
+                        p.setUpdated(rs.getString(PlayerEntry.FIELD_UPDATED));
+                        p.setUpdatedBy(rs.getInt(PlayerEntry.FIELD_UPDATEDBY));
+                        p.setDeleted(rs.getString(PlayerEntry.FIELD_DELETED));
+                        p.setDeletedBy(rs.getInt(PlayerEntry.FIELD_DELETEDBY));
+                        p.setName(rs.getString(PlayerEntry.FIELD_NAME));
+                        p.setCustomName(rs.getString(PlayerEntry.FIELD_CUSTOM_NAME));
+                        p.setPurse(rs.getDouble(PlayerEntry.FIELD_PURSE));
+                        p.setFlying(rs.getBoolean(PlayerEntry.FIELD_FLY));
+                        p.setAFK(rs.getBoolean(PlayerEntry.FIELD_AFK));
+                        p.setGroup(Groups.getGroup(rs.getInt(PlayerEntry.FIELD_GROUP_FK)));
+                        PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt(PlayerEntry.FIELD_ID));
                         p.setHomes(getLocations(p, 1));
                         p.setDeaths(getLocations(p, 2));
                         p.setPartner(ppe);
@@ -1190,14 +1196,16 @@ public class DatabaseHelper {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
-                        LocationEntry p = new LocationEntry();
-                        p.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"),
-                                rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                        p.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk") - 1));
-                        p.setPlayerId(rs.getInt("player_fk"));
-                        p.setLocationName(rs.getString("location_name"));
-                        p.setId(rs.getInt("id"));
-                        ll.add(p);
+                        LocationEntry le = new LocationEntry();
+                        
+                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
+                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
+                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        
+                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        ll.add(le);
                     }
                 }
             }
@@ -1214,14 +1222,15 @@ public class DatabaseHelper {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
-                        LocationEntry p = new LocationEntry();
-                        p.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"),
-                                rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                        p.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk") - 1));
-                        p.setPlayerId(rs.getInt("player_fk"));
-                        p.setLocationName(rs.getString("location_name"));
-                        p.setId(rs.getInt("id"));
-                        ll.add(p);
+                        LocationEntry le = new LocationEntry();
+                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
+                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
+                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        
+                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        ll.add(le);
                     }
                 }
             }
@@ -1279,22 +1288,23 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BlockHistoryEntry bh = new BlockHistoryEntry();
-                        bh.setId(rs.getInt("id"));
-                        bh.setCreated(rs.getString("created"));
-                        bh.setCreatedby(rs.getInt("createdby"));
-                        bh.setDeleted(rs.getString("deleted"));
-                        bh.setDeletedby(rs.getInt("deletedby"));
+                        bh.setId(rs.getInt(BlockHistoryEntry.FIELD_ID));
+                        bh.setCreated(rs.getString(BlockHistoryEntry.FIELD_CREATED));
+                        bh.setCreatedby(rs.getInt(BlockHistoryEntry.FIELD_CREATEDBY));
+                        bh.setDeleted(rs.getString(BlockHistoryEntry.FIELD_DELETED));
+                        bh.setDeletedby(rs.getInt(BlockHistoryEntry.FIELD_DELETEDBY));
 
                         LocationEntry le = new LocationEntry();
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"),
-                                rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                        le.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk") - 1));
-                        le.setPlayerId(rs.getInt("player_fk"));
-                        le.setLocationName(rs.getString("location_name"));
-                        le.setId(rs.getInt("l.id"));
+                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
+                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
+                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        
+                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
 
                         bh.setLocation(le);
-                        bh.setMaterial(rs.getString("material"));
+                        bh.setMaterial(rs.getString(BlockHistoryEntry.FIELD_MATERIAL));
                         return bh;
                     }
                 }
@@ -1331,22 +1341,24 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BlockHistoryEntry bh = new BlockHistoryEntry();
-                        bh.setId(rs.getInt("id"));
-                        bh.setCreated(rs.getString("created"));
-                        bh.setCreatedby(rs.getInt("createdby"));
-                        bh.setDeleted(rs.getString("deleted"));
-                        bh.setDeletedby(rs.getInt("deletedby"));
+                        bh.setId(rs.getInt(BlockHistoryEntry.FIELD_ID));
+                        bh.setCreated(rs.getString(BlockHistoryEntry.FIELD_CREATED));
+                        bh.setCreatedby(rs.getInt(BlockHistoryEntry.FIELD_CREATEDBY));
+                        bh.setDeleted(rs.getString(BlockHistoryEntry.FIELD_DELETED));
+                        bh.setDeletedby(rs.getInt(BlockHistoryEntry.FIELD_DELETEDBY));
 
                         LocationEntry le = new LocationEntry();
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"),
-                                rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                        le.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk") - 1));
-                        le.setPlayerId(rs.getInt("player_fk"));
-                        le.setLocationName(rs.getString("location_name"));
-                        le.setId(rs.getInt("l.id"));
+                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
+                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
+                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        
+                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+
 
                         bh.setLocation(le);
-                        bh.setMaterial(rs.getString("material"));
+                        bh.setMaterial(rs.getString(BlockHistoryEntry.FIELD_MATERIAL));
                         bhe.add(bh);
                     }
                 }
@@ -1357,6 +1369,8 @@ public class DatabaseHelper {
 
         return bhe;
     }
+
+    private static final String BLOCK_HISTORY_BY_PLAYER_TIME_REGEX = "[^\\d.]";
 
     public List<BlockHistoryEntry> getBlockHistoryByPlayerAndTime(PlayerEntry p, String time, boolean deleted) {
         List<BlockHistoryEntry> bhe = new ArrayList<>();
@@ -1369,19 +1383,19 @@ public class DatabaseHelper {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource(deleted ? "sqls/getBlockHistoryByPlayerAndTimeIsDeleted.sql"
                             : "sqls/getBlockHistoryByPlayerAndTime.sql"))) {
-                String[] times = time.split("(?<!\\d){1,6}");
+                String[] times = time.split("(\s+/?<!\\d){1,6}");
 
                 for (String t : times) {
-                    if (t.endsWith("Y") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))) {
-                        year += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
-                    } else if (t.endsWith("M") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))) {
-                        month += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
-                    } else if (t.endsWith("D") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))) {
-                        day += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
-                    } else if (t.endsWith("h") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))) {
-                        hour += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
-                    } else if (t.endsWith("m") && TypeUtils.isInt(t.replaceAll("[^\\d.]", ""))) {
-                        minute += Integer.parseInt(t.replaceAll("[^\\d.]", ""));
+                    if (t.endsWith("Y") && TypeUtils.isInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""))) {
+                        year += Integer.parseInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""));
+                    } else if (t.endsWith("M") && TypeUtils.isInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""))) {
+                        month += Integer.parseInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""));
+                    } else if (t.endsWith("D") && TypeUtils.isInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""))) {
+                        day += Integer.parseInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""));
+                    } else if (t.endsWith("h") && TypeUtils.isInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""))) {
+                        hour += Integer.parseInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""));
+                    } else if (t.endsWith("m") && TypeUtils.isInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""))) {
+                        minute += Integer.parseInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""));
                     }
                 }
 
@@ -1397,24 +1411,24 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BlockHistoryEntry bh = new BlockHistoryEntry();
-                        bh.setId(rs.getInt("id"));
-                        bh.setCreated(rs.getString("created"));
-                        bh.setCreatedby(rs.getInt("createdby"));
-                        if (!deleted) {
-                            bh.setDeleted(rs.getString("deleted"));
-                            bh.setDeletedby(rs.getInt("deletedby"));
-                        }
+                        bh.setId(rs.getInt(BlockHistoryEntry.FIELD_ID));
+                        bh.setCreated(rs.getString(BlockHistoryEntry.FIELD_CREATED));
+                        bh.setCreatedby(rs.getInt(BlockHistoryEntry.FIELD_CREATEDBY));
+                        bh.setDeleted(rs.getString(BlockHistoryEntry.FIELD_DELETED));
+                        bh.setDeletedby(rs.getInt(BlockHistoryEntry.FIELD_DELETEDBY));
 
                         LocationEntry le = new LocationEntry();
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString("world")), rs.getFloat("x"),
-                                rs.getFloat("y"), rs.getFloat("z"), rs.getFloat("yaw"), rs.getFloat("pitch")));
-                        le.setLocationType(locationTypeEntryList.get(rs.getInt("location_type_fk") - 1));
-                        le.setPlayerId(rs.getInt("player_fk"));
-                        le.setLocationName(rs.getString("location_name"));
-                        le.setId(rs.getInt("l.id"));
+                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
+                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
+                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        
+                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+
 
                         bh.setLocation(le);
-                        bh.setMaterial(rs.getString("material"));
+                        bh.setMaterial(rs.getString(BlockHistoryEntry.FIELD_MATERIAL));
                         bhe.add(bh);
                     }
                 }
@@ -1446,9 +1460,9 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         GroupEntry g = new GroupEntry();
-                        g.setId(rs.getInt("id"));
-                        g.setName(rs.getString("name"));
-                        g.setPrefix(rs.getString("prefix"));
+                        g.setId(rs.getInt(GroupEntry.FIELD_ID));
+                        g.setName(rs.getString(GroupEntry.FIELD_NAME));
+                        g.setPrefix(rs.getString(GroupEntry.FIELD_PREFIX));
                         gel.add(g);
                     }
                 }
@@ -1468,13 +1482,13 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         BagTypeEntry bte = new BagTypeEntry();
 
-                        bte.setId(rs.getInt("id"));
-                        bte.setDisplayName(rs.getString("displayname"));
-                        bte.setName(rs.getString("name"));
-                        bte.setCost(rs.getInt("cost"));
+                        bte.setId(rs.getInt(BagTypeEntry.FIELD_ID));
+                        bte.setDisplayName(rs.getString(BagTypeEntry.FIELD_DISPLAY_NAME));
+                        bte.setName(rs.getString(BagTypeEntry.FIELD_NAME));
+                        bte.setCost(rs.getInt(BagTypeEntry.FIELD_COST));
 
                         for (int i = 0; i <= 13; i++) {
-                            bte.setSlotName(i, rs.getString("slot_" + (i + 1) + "_name"));
+                            bte.setSlotName(i, rs.getString(String.format(BagTypeEntry.FIELD_SLOT_VAR_NAME, (i + 1))));
                         }
                         return bte;
                     }
@@ -1495,20 +1509,19 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BagEntry be = new BagEntry();
-                        be.setId(rs.getInt("id"));
-                        be.setCreated(rs.getString("created"));
-                        be.setCreatedby(rs.getInt("createdby"));
-                        be.setUpdated(rs.getString("updated"));
-                        be.setUpdatedBy(rs.getInt("updatedby"));
-                        be.setDeletedBy(rs.getInt("deletedby"));
-
-                        be.setBagTypeId(rs.getInt("bag_type_fk"));
-                        be.setPlayerId(rs.getInt("player_fk"));
-
-                        be.setBagType(getBagType(type));
+                        be.setId(rs.getInt(BagEntry.FIELD_ID));
+                        be.setCreated(rs.getString(BagEntry.FIELD_CREATED));
+                        be.setCreatedby(rs.getInt(BagEntry.FIELD_CREATEDBY));
+                        be.setUpdated(rs.getString(BagEntry.FIELD_UPDATED));
+                        be.setUpdatedBy(rs.getInt(BagEntry.FIELD_UPDATEDBY));
+                        be.setDeleted(rs.getString(BagEntry.FIELD_DELETED));
+                        be.setDeletedBy(rs.getInt(BagEntry.FIELD_DELETEDBY));
+                        be.setPlayerId(rs.getInt(BagEntry.FIELD_PLAYER_FK));
+                        be.setBagTypeId(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK));
+                        be.setBagType(getBagType(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK)));
 
                         for (int i = 0; i <= 13; i++) {
-                            be.setSlotValue(i, rs.getInt("slot_" + (i + 1) + "_value"));
+                            be.setSlotValue(i, rs.getInt(String.format(BagEntry.FIELD_SLOT_VAR_VALUE, (i + 1))));
                         }
 
                         return be;
@@ -1551,7 +1564,7 @@ public class DatabaseHelper {
                         bte.setCost(rs.getInt("cost"));
 
                         for (int i = 0; i <= 13; i++) {
-                            bte.setSlotName(i, rs.getString("slot_" + (i + 1) + "_name"));
+                            bte.setSlotName(i, rs.getString(String.format(BagTypeEntry.FIELD_SLOT_VAR_NAME, (i + 1))));
                         }
 
                         btel.add(bte);
@@ -1574,20 +1587,19 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         BagEntry be = new BagEntry();
 
-                        be.setId(rs.getInt("id"));
-                        be.setCreated(rs.getString("created"));
-                        be.setCreatedby(rs.getInt("createdby"));
-                        be.setUpdated(rs.getString("updated"));
-                        be.setUpdatedBy(rs.getInt("updatedby"));
-                        be.setDeletedBy(rs.getInt("deletedby"));
-
-                        be.setBagTypeId(rs.getInt("bag_type_fk"));
-                        be.setPlayerId(rs.getInt("player_fk"));
-
-                        be.setBagType(getBagType(rs.getInt("bag_type_fk")));
+                        be.setId(rs.getInt(BagEntry.FIELD_ID));
+                        be.setCreated(rs.getString(BagEntry.FIELD_CREATED));
+                        be.setCreatedby(rs.getInt(BagEntry.FIELD_CREATEDBY));
+                        be.setUpdated(rs.getString(BagEntry.FIELD_UPDATED));
+                        be.setUpdatedBy(rs.getInt(BagEntry.FIELD_UPDATEDBY));
+                        be.setDeleted(rs.getString(BagEntry.FIELD_DELETED));
+                        be.setDeletedBy(rs.getInt(BagEntry.FIELD_DELETEDBY));
+                        be.setPlayerId(rs.getInt(BagEntry.FIELD_PLAYER_FK));
+                        be.setBagTypeId(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK));
+                        be.setBagType(getBagType(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK)));
 
                         for (int i = 0; i <= 13; i++) {
-                            be.setSlotValue(i, rs.getInt("slot_" + (i + 1) + "_value"));
+                            be.setSlotValue(i, rs.getInt(String.format(BagEntry.FIELD_SLOT_VAR_VALUE, (i + 1))));
                         }
 
                         bel.add(be);
@@ -1629,19 +1641,20 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         NPCEntry be = new NPCEntry();
 
-                        be.setId(rs.getInt("id"));
-                        be.setCreated(rs.getString("created"));
-                        be.setCreatedby(rs.getInt("createdby"));
-                        be.setUpdated(rs.getString("updated"));
-                        be.setUpdatedBy(rs.getInt("updatedby"));
-                        be.setDeletedBy(rs.getInt("deletedby"));
+                        be.setId(rs.getInt(NPCEntry.FIELD_ID));
+                        be.setCreated(rs.getString(NPCEntry.FIELD_CREATED));
+                        be.setCreatedby(rs.getInt(NPCEntry.FIELD_CREATEDBY));
+                        be.setUpdated(rs.getString(NPCEntry.FIELD_UPDATED));
+                        be.setUpdatedBy(rs.getInt(NPCEntry.FIELD_UPDATEDBY));
+                        be.setDeleted(rs.getString(NPCEntry.FIELD_DELETED));
+                        be.setDeletedBy(rs.getInt(NPCEntry.FIELD_DELETEDBY));
 
-                        be.setName(rs.getString("name"));
-                        be.setProfession(rs.getString("profession"));
-                        be.setType(rs.getString("type"));
+                        be.setName(rs.getString(NPCEntry.FIELD_NAME));
+                        be.setProfession(rs.getString(NPCEntry.FIELD_PROFESSION));
+                        be.setType(rs.getString(NPCEntry.FIELD_TYPE));
 
                         for (int i = 0; i <= 27; i++) {
-                            be.setSlotName(i, rs.getString("slot_" + (i + 1) + "_name"));
+                            be.setSlotName(i, rs.getString(String.format(NPCEntry.FIELD_SLOT_VAR_NAME, (i + 1))));
                         }
 
                         bel.add(be);
@@ -1664,13 +1677,14 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         ProtectionLockEntry be = new ProtectionLockEntry();
 
-                        be.setId(rs.getInt("id"));
-                        be.setCreated(rs.getString("created"));
-                        be.setCreatedby(rs.getInt("createdby"));
-                        be.setUpdated(rs.getString("updated"));
-                        be.setUpdatedBy(rs.getInt("updatedby"));
-                        be.setDeletedBy(rs.getInt("deletedby"));
-                        be.setValue(rs.getString("value"));
+                        be.setId(rs.getInt(ProtectionLockEntry.FIELD_ID));
+                        be.setCreated(rs.getString(ProtectionLockEntry.FIELD_CREATED));
+                        be.setCreatedby(rs.getInt(ProtectionLockEntry.FIELD_CREATEDBY));
+                        be.setUpdated(rs.getString(ProtectionLockEntry.FIELD_UPDATED));
+                        be.setUpdatedBy(rs.getInt(ProtectionLockEntry.FIELD_UPDATEDBY));
+                        be.setDeleted(rs.getString(ProtectionLockEntry.FIELD_DELETED));
+                        be.setDeletedBy(rs.getInt(ProtectionLockEntry.FIELD_DELETEDBY));
+                        be.setValue(rs.getString(ProtectionLockEntry.FIELD_VALUE));
 
                         bel.add(be);
                     }

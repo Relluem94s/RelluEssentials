@@ -50,9 +50,9 @@ public class RecipeHelper {
             Recipe recipe = new ShapedRecipe(nameSpacedKey, result);
 
             recipe = ((ShapedRecipe) recipe).shape(shape.getRows());
-            for(char cr : shape.getIngredients().keySet()){
+            for(Character cr : shape.getIngredients().keySet()){
                 Material mat = shape.getIngredients().get(cr);
-                ((ShapedRecipe) recipe).setIngredient((char)cr, mat);
+                ((ShapedRecipe) recipe).setIngredient(cr, mat);
             }
             
             return recipe;

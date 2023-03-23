@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.Calendar;
+import java.util.EnumMap;
 import java.util.ResourceBundle;
 
 import org.bukkit.Material;
@@ -60,8 +61,8 @@ public class RelluEssentials extends JavaPlugin {
 
     public static final Map<Integer, Vector2Location> selections = new HashMap<>();
     public static final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
-    public static final Map<Material, DoubleStore> dropMap = new HashMap<>();
-    public static final Map<Material, Material> crops = new HashMap<>();
+    public static final Map<Material, DoubleStore> dropMap = new EnumMap<>(Material.class);
+    public static final Map<Material, Material> crops = new EnumMap<>(Material.class);
     public static final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
 
     public static final List<GroupEntry> groupEntryList = new ArrayList<>();

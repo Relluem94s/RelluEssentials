@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Material;
 
@@ -15,7 +15,7 @@ public class CustomRecipes {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
-    public static RecipeHelper smelterFurnace = new RecipeHelper(
+    public static final RecipeHelper smelterFurnace = new RecipeHelper(
         PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE,
         new Shaped(
             new String[]{
@@ -23,39 +23,36 @@ public class CustomRecipes {
                 "BCB",
                 "AGA"
             },
-            new HashMap<Character, Material>() {
-                {
-                    put('A', Material.OBSIDIAN);
-                    put('B', Material.COMPARATOR);
-                    put('C', Material.FURNACE);
-                    put('G', Material.GLASS);
-                }
-            }),
+            Map.of(
+                'A', Material.OBSIDIAN,
+                'B', Material.COMPARATOR,
+                'C', Material.FURNACE,
+                'G', Material.GLASS
+            )),
             CustomItems.autoSmeltFurnace.getCustomItem()
+        
     );
 
-    public static RecipeHelper smelterFuel = new RecipeHelper(
+    public static final RecipeHelper smelterFuel = new RecipeHelper(
         PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL,
         new Material[]{CustomItems.autoSmeltNetheritePickAxe.getMaterial(), Material.LAVA_BUCKET},
         CustomItems.autoSmeltNetheritePickAxe.getCustomItem()
     );
 
-    public static RecipeHelper cloudBoots = new RecipeHelper(
+    public static final RecipeHelper cloudBoots = new RecipeHelper(
         PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS,
         new Shaped(
             new String[]{
                 "F F",
                 "F F",
             },
-            new HashMap<Character, Material>() {
-                {
-                    put('F', CustomItems.cloudSailor.getMaterial());
-                }
-            }),
+            Map.of(
+                'F', CustomItems.cloudSailor.getMaterial()
+            )),
             CustomItems.cloudBoots.getCustomItem()
     );
 
-    public static RecipeHelper smelterTank =  new RecipeHelper(
+    public static final RecipeHelper smelterTank =  new RecipeHelper(
         PLUGIN_ITEM_NAMESPACE_SMELTER_TANK,
         new Shaped(
             new String[]{
@@ -63,16 +60,14 @@ public class CustomRecipes {
                 "GCG",
                 "GGG"
             },
-            new HashMap<Character, Material>() {
-                {
-                    put('G', Material.GLASS);
-                    put('C', Material.CAULDRON);
-                }
-            }),
+            Map.of(
+                'G', Material.GLASS,
+                'C', Material.CAULDRON
+            )),
             CustomItems.autoSmeltTank.getCustomItem()
     );
 
-    public static RecipeHelper autoSmeltFurnace = new RecipeHelper(
+    public static final RecipeHelper autoSmeltFurnace = new RecipeHelper(
         PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE,
         new Material[]{Material.NETHERITE_PICKAXE, CustomItems.autoSmeltTank.getMaterial(), CustomItems.autoSmeltFurnace.getMaterial()},
         CustomItems.autoSmeltNetheritePickAxe.getCustomItem()

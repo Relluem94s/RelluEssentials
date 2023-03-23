@@ -6,7 +6,15 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  */
 public class BankTransactionEntry {
 
-    public BankTransactionEntry() {}
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_CREATED = "created";
+    public static final String FIELD_CREATEDBY = "createdby";
+    public static final String FIELD_UPDATED = "updated";
+    public static final String FIELD_UPDATEDBY = "updatedby";
+    public static final String FIELD_DELETED = "deleted";
+    public static final String FIELD_DELETEDBY = "deletedby";
+    public static final String FIELD_BANK_ACCOUNT_FK = "bank_account_fk";
+    public static final String FIELD_VALUE = "value";
 
     private int id;
     private String created;
@@ -15,7 +23,7 @@ public class BankTransactionEntry {
     private int updatedBy;
     private String deleted;
     private int deletedBy;
-    private int bank_account_fk;
+    private int bankAccountFK;
     private double value;
 
     public int getID() {
@@ -75,11 +83,11 @@ public class BankTransactionEntry {
     }
 
     public int getBankAccountId() {
-        return bank_account_fk;
+        return bankAccountFK;
     }
 
-    public void setBankAccountId(int bank_account_fk) {
-        this.bank_account_fk = bank_account_fk;
+    public void setBankAccountId(int bankAccountFK) {
+        this.bankAccountFK = bankAccountFK;
     }
 
     public double getValue() {

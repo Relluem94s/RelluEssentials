@@ -34,7 +34,7 @@ public class ToolCrafting implements Listener {
                 if (e.getResult().getType().equals(m)) {
 
                     List<String> lore = im.getLore();
-                    lore.addAll(Arrays.asList(new String[]{Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName()}));
+                    lore.addAll(Arrays.asList(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName()));
                     lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
 
                     im.setLore(lore);
@@ -51,35 +51,35 @@ public class ToolCrafting implements Listener {
 
             for (Material m : diamond) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName()}));
+                    im.setLore(Arrays.asList(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName()));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
 
             for (Material m : iron) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName()}));
+                    im.setLore(Arrays.asList(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName()));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
 
             for (Material m : gold) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName()}));
+                    im.setLore(Arrays.asList(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName()));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
 
             for (Material m : chainmail) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName()}));
+                    im.setLore(Arrays.asList(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName()));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }
 
             for (Material m : leather) {
                 if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(new String[]{Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName()}));
+                    im.setLore(Arrays.asList(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName()));
                     e.getInventory().getResult().setItemMeta(im);
                 }
             }

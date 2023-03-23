@@ -19,7 +19,7 @@ public class SignEdit implements Listener {
     @EventHandler
     public void onChangeSignEditSign(PlayerInteractEvent e) {
         PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getPlayer().getUniqueId());
-        if (!pe.getPlayerState().equals(PlayerState.DEFAULT) && e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && e.getPlayer().isSneaking() == false) {
+        if (!pe.getPlayerState().equals(PlayerState.DEFAULT) && e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && !e.getPlayer().isSneaking()) {
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
                 Block b =  e.getClickedBlock();
                 if (SignHelper.isBlockASign(b)) {

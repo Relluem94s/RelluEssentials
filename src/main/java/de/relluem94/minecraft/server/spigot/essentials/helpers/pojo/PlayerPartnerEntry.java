@@ -5,8 +5,17 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  * @author rellu
  */
 public class PlayerPartnerEntry {
-    // `created`,`createdby`,`first_partner_fk`,`first_partner_fk`,`shareProtections`
-    public PlayerPartnerEntry() {}
+
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_CREATED = "created";
+    public static final String FIELD_CREATEDBY = "createdby";
+    public static final String FIELD_UPDATED = "updated";
+    public static final String FIELD_UPDATEDBY = "updatedby";
+    public static final String FIELD_DELETED = "deleted";
+    public static final String FIELD_DELETEDBY = "deletedby";
+    public static final String FIELD_FIRST_PARTNER_FK = "first_partner_fk";
+    public static final String FIELD_SECOND_PARTNER_FK = "second_partner_fk";
+    public static final String FIELD_SHARE_PROTECTIONS = "shareProtections";
 
     private int id;
     private String created;
@@ -16,8 +25,8 @@ public class PlayerPartnerEntry {
     private String deleted;
     private int deletedBy;
     private boolean shareProtections;
-    private int first_partner_fk;
-    private int second_partner_fk;
+    private int firstPartnerFK;
+    private int secondPartnerFK;
 
     public int getID() {
         return id;
@@ -84,19 +93,19 @@ public class PlayerPartnerEntry {
     }
 
     public int getFirstPlayerID() {
-        return first_partner_fk;
+        return firstPartnerFK;
     }
 
-    public void setFirstPlayerID(int first_partner_fk) {
-        this.first_partner_fk = first_partner_fk;
+    public void setFirstPlayerID(int firstPartnerFK) {
+        this.firstPartnerFK = firstPartnerFK;
     }
 
     public int getSecondPlayerID() {
-        return second_partner_fk;
+        return secondPartnerFK;
     }
 
-    public void setSecondPlayerID(int second_partner_fk) {
-        this.second_partner_fk = second_partner_fk;
+    public void setSecondPlayerID(int secondPartnerFK) {
+        this.secondPartnerFK = secondPartnerFK;
     }
 
 }

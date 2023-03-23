@@ -11,7 +11,20 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
  */
 public class PlayerEntry {
 
-    public PlayerEntry() {}
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_CREATED = "created";
+    public static final String FIELD_CREATEDBY = "createdby";
+    public static final String FIELD_UPDATED = "updated";
+    public static final String FIELD_UPDATEDBY = "updatedby";
+    public static final String FIELD_DELETED = "deleted";
+    public static final String FIELD_DELETEDBY = "deletedby";
+    public static final String FIELD_NAME = "name";
+    public static final String FIELD_CUSTOM_NAME = "customname";
+    public static final String FIELD_PURSE = "purse";
+    public static final String FIELD_FLY = "fly";
+    public static final String FIELD_AFK = "afk";
+    public static final String FIELD_GROUP_FK = "group_fk";
+    public static final String FIELD_UUID = "uuid";
 
     private int id;
     private String created;
@@ -195,25 +208,27 @@ public class PlayerEntry {
         this.partner = partner;
     }
 
-    public PlayerEntry clone(){
-        PlayerEntry pe = new PlayerEntry();
-        pe.setAFK(afk);
-        pe.setCreated(created);
-        pe.setCreatedby(createdBy);
-        pe.setCustomName(customName);
-        pe.setDeleted(deleted);
-        pe.setDeletedBy(deletedBy);
-        pe.setFlying(fly);
-        pe.setGroup(group);
-        pe.setHomes(homes);
-        pe.setID(id);
-        pe.setPlayerState(playerState);
-        pe.setPlayerStateParameter(playerStateParameter);
-        pe.setPurse(purse);
-        pe.setUUID(uuid);
-        pe.setUpdated(updated);
-        pe.setUpdatedBy(updatedBy);
+    public PlayerEntry(){
+        
+    }
 
-        return pe;
+    public PlayerEntry(PlayerEntry pe){
+        PlayerEntry peCopy = new PlayerEntry();
+        peCopy.setAFK(pe.afk);
+        peCopy.setCreated(pe.created);
+        peCopy.setCreatedby(pe.createdBy);
+        peCopy.setCustomName(pe.customName);
+        peCopy.setDeleted(pe.deleted);
+        peCopy.setDeletedBy(pe.deletedBy);
+        peCopy.setFlying(pe.fly);
+        peCopy.setGroup(pe.group);
+        peCopy.setHomes(pe.homes);
+        peCopy.setID(pe.id);
+        peCopy.setPlayerState(pe.playerState);
+        peCopy.setPlayerStateParameter(pe.playerStateParameter);
+        peCopy.setPurse(pe.purse);
+        peCopy.setUUID(pe.uuid);
+        peCopy.setUpdated(pe.updated);
+        peCopy.setUpdatedBy(pe.updatedBy);
     }
 }

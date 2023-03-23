@@ -1,10 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+
 /**
  *
  * @author rellu
  */
 public class ExceptionConstants {
+
+    private ExceptionConstants() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
 
     //==============================================================================//
     //                         EXCEPTION   STUFF                                    //

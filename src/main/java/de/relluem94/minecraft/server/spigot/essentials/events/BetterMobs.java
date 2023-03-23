@@ -59,15 +59,15 @@ public class BetterMobs implements Listener {
 
     @EventHandler
     public void onDeath(EntityDeathEvent e) {
-        if(e.getEntity().getKiller() != null && e.getEntity().getKiller() instanceof Player){
-            int COINS_PER_DEATH = EntityCoins.valueOf(e.getEntity().getType().name()).getCoins();
-            if(COINS_PER_DEATH > 0){
+        if(e.getEntity().getKiller() instanceof Player){
+            int coinsPerDeath = EntityCoins.valueOf(e.getEntity().getType().name()).getCoins();
+            if(coinsPerDeath > 0){
                 Player p = e.getEntity().getKiller();
                 PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-                pe.setPurse(pe.getPurse() + COINS_PER_DEATH);
+                pe.setPurse(pe.getPurse() + coinsPerDeath);
                 pe.setUpdatedBy(pe.getID());
                 pe.setToBeUpdated(true);
-                ChatHelper.sendMessageInActionBar(p, String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, COINS_PER_DEATH, StringHelper.formatDouble(pe.getPurse())));
+                ChatHelper.sendMessageInActionBar(p, String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, coinsPerDeath, StringHelper.formatDouble(pe.getPurse())));
 
 
                 if(BagHelper.hasBags(pe.getID())){
@@ -102,9 +102,6 @@ public class BetterMobs implements Listener {
             }
             if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.thunderstrike)){
                 m.getLocation().getWorld().strikeLightningEffect(m.getLocation());
-                
-                
-            
             }
         }
     }

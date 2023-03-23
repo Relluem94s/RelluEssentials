@@ -15,7 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_EXIT;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 
 public class Exit implements CommandExecutor {
 
@@ -32,9 +32,7 @@ public class Exit implements CommandExecutor {
                     @Override
                     public void run() {
                         
-                        Bukkit.getOnlinePlayers().forEach(op -> {
-                            op.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN);
-                        });
+                        Bukkit.getOnlinePlayers().forEach(op ->  op.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN));
         
                     }
                 }.runTaskLater(RelluEssentials.getInstance(),  10l);

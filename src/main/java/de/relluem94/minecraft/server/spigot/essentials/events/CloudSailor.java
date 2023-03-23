@@ -47,11 +47,11 @@ public class CloudSailor implements Listener {
 
     @EventHandler
     public void cloudBootsCrafting(PrepareItemCraftEvent e) {
-        if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.cloudBoots.equals(e.getRecipe().getResult())) {
+        if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.cloudBoots.equalsExact(e.getRecipe().getResult())) {
             for (ItemStack is : e.getInventory().getMatrix()) {
                 if (is != null) {
                     if (is.hasItemMeta()) {
-                        if (!CustomItems.cloudSailor.equals(is)) {
+                        if (!CustomItems.cloudSailor.equalsExact(is)) {
                             e.getInventory().setResult(null);
                         }
                     }
@@ -88,7 +88,7 @@ public class CloudSailor implements Listener {
                 if (p.getInventory().getItemInOffHand().equals(CustomItems.cloudSailor.getCustomItem()) || (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem()))) {
                     if (!p.isFlying() && !p.isSneaking()) {
 
-                        List<Block> blocks = new ArrayList<Block>();
+                        List<Block> blocks = new ArrayList<>();
                         blocks.add(p.getLocation().getBlock().getRelative(BlockFace.DOWN));
                         blocks.add(blocks.get(0).getRelative(BlockFace.DOWN));
 

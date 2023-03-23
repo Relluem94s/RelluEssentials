@@ -6,16 +6,12 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 public class ScoreBoardManager implements IEnable {
 
-    public static ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
-    public static Scoreboard board;
+    public static final ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
+    public static final Scoreboard board = sm.getNewScoreboard();
 
     @Override
     public void enable() {
-        if (sm == null) {
-            sm = Bukkit.getServer().getScoreboardManager();
-        }
-
-        board = sm.getNewScoreboard();
+        // TODO in the future
     }
     
 }

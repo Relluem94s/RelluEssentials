@@ -24,7 +24,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.EventCon
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH_TP;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
 
+import java.util.Random;
+
 public class NoDeathMessage implements Listener {
+
+    private Random random = new Random();
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
@@ -37,19 +41,17 @@ public class NoDeathMessage implements Listener {
         PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
         LocationEntry le = new LocationEntry();
         le.setLocation(p.getLocation());
-        le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, (int) (Math.random() * 94 - 1) + 1));
-        LocationTypeEntry location_type = locationTypeEntryList.get(1);
-        le.setLocationType(location_type);
+        le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(94)));
+        LocationTypeEntry locationType = locationTypeEntryList.get(1);
+        le.setLocationType(locationType);
         le.setPlayerId(pe.getID());
         dBH.insertLocation(le);
-        le = dBH.getLocation(p.getLocation(), location_type.getId());
+        le = dBH.getLocation(p.getLocation(), locationType.getId());
         pe.getHomes().add(le);
 
         for(ItemStack is : p.getInventory().getContents()){
-            if(CustomItems.coins.almostEquals(is)){
-                if(is.getItemMeta().getPersistentDataContainer().has(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER)){
-                    p.getInventory().remove(is);
-                }
+            if(CustomItems.coins.almostEquals(is) && is.getItemMeta().getPersistentDataContainer().has(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER)){
+                p.getInventory().remove(is);
             }
         }
 

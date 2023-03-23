@@ -1,10 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+
 /**
  *
  * @author rellu
  */
 public class EnchantmentConstants {
+
+    private EnchantmentConstants() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
 
     //==============================================================================//
     //                          ENCHANTMENT   STUFF                                 //

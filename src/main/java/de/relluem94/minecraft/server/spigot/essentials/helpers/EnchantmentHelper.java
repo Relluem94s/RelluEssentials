@@ -166,7 +166,7 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
                 itemStackLore.add(getDisplayName());
                 Collections.reverse(itemStackLore);
             } else {
-                itemStackLore = new ArrayList<String>();
+                itemStackLore = new ArrayList<>();
                 itemStackLore.add(getDisplayName());
                 itemStackLore.add(getLore());
                 itemStackLore.add(getRarity().getPrefix() + getRarity().getDisplayName());

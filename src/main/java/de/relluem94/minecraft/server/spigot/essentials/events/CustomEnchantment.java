@@ -1,5 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -15,23 +18,14 @@ public class CustomEnchantment implements Listener {
 
     @EventHandler
     public void enchantApply(PrepareAnvilEvent e){
-        if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null &&  e.getInventory().getRenameText() != ItemHelper.getItemName(e.getInventory().getItem(0))){
-            if(e.getInventory().getItem(1).equals(CustomEnchants.autosmelt.getBook().getCustomItem())){
-                e.setResult(null);
-            }
-            else if(e.getInventory().getItem(1).equals(CustomEnchants.autosmelt.getBook().getCustomItem())){
-                e.setResult(null);
-            }
-            else if(e.getInventory().getItem(1).equals(CustomEnchants.telekinesis.getBook().getCustomItem())){
-                e.setResult(null);
-            }
-            else if(e.getInventory().getItem(1).equals(CustomEnchants.delicate.getBook().getCustomItem())){
-                e.setResult(null);
-            }
-            else if(e.getInventory().getItem(1).equals(CustomEnchants.replenishment.getBook().getCustomItem())){
-                e.setResult(null);
-            }
-            else if(e.getInventory().getItem(1).equals(CustomEnchants.thunderstrike.getBook().getCustomItem())){
+        if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null &&  !e.getInventory().getRenameText().equals(ItemHelper.getItemName(e.getInventory().getItem(0)))){
+            if(
+                e.getInventory().getItem(1).equals(CustomEnchants.autosmelt.getBook().getCustomItem()) ||
+                e.getInventory().getItem(1).equals(CustomEnchants.telekinesis.getBook().getCustomItem()) ||
+                e.getInventory().getItem(1).equals(CustomEnchants.delicate.getBook().getCustomItem()) ||
+                e.getInventory().getItem(1).equals(CustomEnchants.replenishment.getBook().getCustomItem()) || 
+                e.getInventory().getItem(1).equals(CustomEnchants.thunderstrike.getBook().getCustomItem())
+            ){
                 e.setResult(null);
             }
             
@@ -98,6 +92,8 @@ public class CustomEnchantment implements Listener {
                 e.setResult(is);
             }
         }
-        catch(IllegalArgumentException ex){}
+        catch(IllegalArgumentException ex){
+            Logger.getLogger(CustomEnchantment.class.getName()).log(Level.SEVERE, ex.getMessage());
+        }
     }
 }

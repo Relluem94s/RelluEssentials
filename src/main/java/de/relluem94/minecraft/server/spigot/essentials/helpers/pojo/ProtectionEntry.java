@@ -8,6 +8,17 @@ import org.json.JSONObject;
  */
 public class ProtectionEntry {
 
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_CREATED = "created";
+    public static final String FIELD_CREATEDBY = "createdby";
+    public static final String FIELD_UPDATED = "updated";
+    public static final String FIELD_UPDATEDBY = "updatedby";
+    public static final String FIELD_DELETED = "deleted";
+    public static final String FIELD_DELETEDBY = "deletedby";
+    public static final String FIELD_FLAGS = "flags";
+    public static final String FIELD_RIGHTS = "rights";
+    public static final String FIELD_MATERIAL_NAME = "material_name";
+
     private int id;
     private String created;
     private int createdBy;
@@ -16,13 +27,10 @@ public class ProtectionEntry {
     private String deleted;
     private int deletedBy;
     private LocationEntry location;
-    private String material_name;
+    private String materialName;
 
     private JSONObject flags;
     private JSONObject rights;
-
-    public ProtectionEntry() {
-    }
 
     public int getId() {
         return id;
@@ -89,11 +97,11 @@ public class ProtectionEntry {
     }
 
     public String getMaterialName() {
-        return material_name;
+        return materialName;
     }
 
-    public void setMaterialName(String material_name) {
-        this.material_name = material_name;
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
     }
 
     public JSONObject getRights() {

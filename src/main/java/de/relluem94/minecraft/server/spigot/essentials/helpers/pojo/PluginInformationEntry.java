@@ -6,6 +6,19 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  */
 public class PluginInformationEntry {
 
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_CREATED = "created";
+    public static final String FIELD_CREATEDBY = "createdby";
+    public static final String FIELD_UPDATED = "updated";
+    public static final String FIELD_UPDATEDBY = "updatedby";
+    public static final String FIELD_DELETED = "deleted";
+    public static final String FIELD_DELETEDBY = "deletedby";
+    public static final String FIELD_TAB_HEADER = "tab_header";
+    public static final String FIELD_TAB_FOOTER = "tab_footer";
+    public static final String FIELD_MOTD_MESSAGE = "motd_message";
+    public static final String FIELD_MOTD_PLAYERS = "motd_players";
+    public static final String FIELD_DB_VERSION = "db_version";
+
     private int id;
     private String created;
     private int createdby;
@@ -13,14 +26,11 @@ public class PluginInformationEntry {
     private int updatedby;
     private String deleted;
     private int deletedby;
-    private String tab_header;
-    private String tab_footer;
-    private String motd_message;
-    private int motd_players;
-    private int db_version;
-
-    public PluginInformationEntry() {
-    }
+    private String tabHeader;
+    private String tabFooter;
+    private String motdMessage;
+    private int motdPlayers;
+    private int dbVersion;
 
     public int getId() {
         return id;
@@ -71,43 +81,43 @@ public class PluginInformationEntry {
     }
 
     public String getTabheader() {
-        return tab_header;
+        return tabHeader;
     }
 
-    public void setTabheader(String tab_header) {
-        this.tab_header = tab_header;
+    public void setTabheader(String tabHeader) {
+        this.tabHeader = tabHeader;
     }
 
     public String getTabfooter() {
-        return tab_footer;
+        return tabFooter;
     }
 
-    public void setTabfooter(String tab_footer) {
-        this.tab_footer = tab_footer;
+    public void setTabfooter(String tabFooter) {
+        this.tabFooter = tabFooter;
     }
 
     public String getMotdMessage() {
-        return motd_message;
+        return motdMessage;
     }
 
-    public void setMotdMessage(String motd_message) {
-        this.motd_message = motd_message;
+    public void setMotdMessage(String motdMessage) {
+        this.motdMessage = motdMessage;
     }
 
     public int getMotdPlayers() {
-        return motd_players;
+        return motdPlayers;
     }
 
-    public void setMotdPlayers(int motd_players) {
-        this.motd_players = motd_players;
+    public void setMotdPlayers(int motdPlayers) {
+        this.motdPlayers = motdPlayers;
     }
 
     public int getDbVersion() {
-        return db_version;
+        return dbVersion;
     }
 
-    public void setDbVersion(int db_version) {
-        this.db_version = db_version;
+    public void setDbVersion(int dbVersion) {
+        this.dbVersion = dbVersion;
     }
 
 }

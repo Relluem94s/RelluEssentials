@@ -179,11 +179,11 @@ public class BagHelper {
         return RelluEssentials.dBH.getBag(type, pe.getID()) != null;
     }
 
-    public static boolean hasBag(int player_fk, int bag_type){
-        if(PlayerAPI.getPlayerBagMap().containsKey(player_fk)){
-            Collection<BagEntry> cbe = PlayerAPI.getPlayerBagMap().get(player_fk);
+    public static boolean hasBag(int playerFK, int bagType){
+        if(PlayerAPI.getPlayerBagMap().containsKey(playerFK)){
+            Collection<BagEntry> cbe = PlayerAPI.getPlayerBagMap().get(playerFK);
             for(BagEntry be : cbe){
-                if(be.getPlayerId() == player_fk && be.getBagType().getId() == bag_type){
+                if(be.getPlayerId() == playerFK && be.getBagType().getId() == bagType){
                     return true;
                 }
             }
@@ -192,16 +192,16 @@ public class BagHelper {
         return false;
     }
 
-    public static boolean hasBags(int player_fk){
-        return PlayerAPI.getPlayerBagMap().containsKey(player_fk);
+    public static boolean hasBags(int playerFK){
+        return PlayerAPI.getPlayerBagMap().containsKey(playerFK);
     }
 
 
-    public static BagEntry getBag(int player_fk, int bag_type){
-        if(PlayerAPI.getPlayerBagMap().containsKey(player_fk)){
-            Collection<BagEntry> cbe = PlayerAPI.getPlayerBagMap().get(player_fk);
+    public static BagEntry getBag(int playerFK, int bagType){
+        if(PlayerAPI.getPlayerBagMap().containsKey(playerFK)){
+            Collection<BagEntry> cbe = PlayerAPI.getPlayerBagMap().get(playerFK);
             for(BagEntry be : cbe){
-                if(be.getPlayerId() == player_fk && be.getBagType().getId() == bag_type){
+                if(be.getPlayerId() == playerFK && be.getBagType().getId() == bagType){
                     return be;
                 }
             }
@@ -218,11 +218,11 @@ public class BagHelper {
         return null;
     }
 
-    public static Collection<BagEntry> getBags(int player_fk){
+    public static Collection<BagEntry> getBags(int playerFK){
         Collection<BagEntry> cbe = new ArrayList<>();
 
-        if(PlayerAPI.getPlayerBagMap().containsKey(player_fk)){
-            cbe = PlayerAPI.getPlayerBagMap().get(player_fk);
+        if(PlayerAPI.getPlayerBagMap().containsKey(playerFK)){
+            cbe = PlayerAPI.getPlayerBagMap().get(playerFK);
         }
 
         return cbe;

@@ -9,6 +9,17 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 
 public class BagEntry {
 
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_CREATED = "created";
+    public static final String FIELD_CREATEDBY = "createdby";
+    public static final String FIELD_UPDATED = "updated";
+    public static final String FIELD_UPDATEDBY = "updatedby";
+    public static final String FIELD_DELETED = "deleted";
+    public static final String FIELD_DELETEDBY = "deletedby";
+    public static final String FIELD_BAG_TYPE_FK = "bag_type_fk";
+    public static final String FIELD_PLAYER_FK = "player_fk";
+    public static final String FIELD_SLOT_VAR_VALUE = "slot_%s_value";
+
     private int id;
     private String created;
     private int createdBy;
@@ -18,8 +29,8 @@ public class BagEntry {
     private int deletedBy;
 
 
-    private int player_fk;
-    private int bag_type_fk;
+    private int playerFK;
+    private int bagTypeFK;
 
 
     private int[] slotValues;
@@ -88,19 +99,19 @@ public class BagEntry {
     }
 
     public int getPlayerId() {
-        return player_fk;
+        return playerFK;
     }
 
     public void setPlayerId(int playerId) {
-        this.player_fk = playerId;
+        this.playerFK = playerId;
     }
 
     public int getBagTypeId() {
-        return bag_type_fk;
+        return bagTypeFK;
     }
 
-    public void setBagTypeId(int bag_type_fk) {
-        this.bag_type_fk = bag_type_fk;
+    public void setBagTypeId(int bagTypeFK) {
+        this.bagTypeFK = bagTypeFK;
     }
 
     public BagTypeEntry getBagType(){

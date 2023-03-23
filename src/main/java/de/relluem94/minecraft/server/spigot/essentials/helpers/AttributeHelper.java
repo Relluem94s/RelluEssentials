@@ -19,8 +19,7 @@ public class AttributeHelper {
     }
 
     public static Multimap<Attribute, AttributeModifier> addAttribute(){
-        Multimap<Attribute, AttributeModifier> attributes = ArrayListMultimap.create();
-        return attributes;
+        return ArrayListMultimap.create();
     }
 
     public static Multimap<Attribute, AttributeModifier> addAttribute(String uuid, Attribute attribute, Operation operation, EquipmentSlot slot, String name, double multiplyer){

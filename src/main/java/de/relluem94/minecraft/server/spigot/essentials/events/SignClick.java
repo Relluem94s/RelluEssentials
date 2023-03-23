@@ -27,7 +27,7 @@ public class SignClick implements Listener {
     @EventHandler
     public void onChangeSignCreateActionSign(PlayerInteractEvent e) {
         PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getPlayer().getUniqueId());
-        if (pe.getPlayerState().equals(PlayerState.DEFAULT) && e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && e.getPlayer().isSneaking() == false) {
+        if (pe.getPlayerState().equals(PlayerState.DEFAULT) && e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && !e.getPlayer().isSneaking()) {
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
                 Block b =  e.getClickedBlock();
                 if (SignHelper.isBlockASign(b)) {
@@ -36,19 +36,19 @@ public class SignClick implements Listener {
                         e.getPlayer().performCommand(PLUGIN_COMMAND_NAME_SPAWN);
                     } else if (isSign(CustomSigns.up, sign.getLine(0), sign.getLine(1), sign.getLine(3))) {
                         Location l = b.getLocation();
-                        int max_height = l.getWorld().getMaxHeight();
-                        boolean end_point = false;
+                        int maxHeight = l.getWorld().getMaxHeight();
+                        boolean endPoint = false;
 
-                        for(int y = l.getBlockY(); y <= max_height; y++){
-                            Block end_sign_block = l.add(0, 1, 0).getBlock();
-                            if (SignHelper.isBlockASign(end_sign_block)) {
+                        for(int y = l.getBlockY(); y <= maxHeight; y++){
+                            Block endSignBlock = l.add(0, 1, 0).getBlock();
+                            if (SignHelper.isBlockASign(endSignBlock)) {
                                 if (isSign(CustomSigns.up, sign.getLine(0), sign.getLine(1), sign.getLine(3)) || isSign(CustomSigns.down, sign.getLine(0), sign.getLine(1), sign.getLine(3))) {
                                     Location loc = e.getPlayer().getLocation().clone();
                                     loc.setY(y);
                                     Location stand = loc.clone();
                                     stand.add(0,-1,0);
                                     if(!stand.getBlock().getType().equals(Material.AIR)){
-                                        end_point = true;
+                                        endPoint = true;
                                         e.getPlayer().teleport(loc, TeleportCause.COMMAND);
                                         break;
                                     }
@@ -56,24 +56,24 @@ public class SignClick implements Listener {
                             }
                         }
                         
-                        if(!end_point){
+                        if(!endPoint){
                             e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT);
                         }
 
                     } else if (isSign(CustomSigns.down, sign.getLine(0), sign.getLine(1), sign.getLine(3))) {
                         Location l = b.getLocation();
-                        int min_height = l.getWorld().getMinHeight();
-                        boolean end_point = false;
-                        for(int y = l.getBlockY(); y >= min_height; y--){
-                            Block end_sign_block = l.add(0, -1, 0).getBlock();
-                            if (SignHelper.isBlockASign(end_sign_block)) {
+                        int minHeight = l.getWorld().getMinHeight();
+                        boolean endPoint = false;
+                        for(int y = l.getBlockY(); y >= minHeight; y--){
+                            Block endSignBlock = l.add(0, -1, 0).getBlock();
+                            if (SignHelper.isBlockASign(endSignBlock)) {
                                 if (isSign(CustomSigns.up, sign.getLine(0), sign.getLine(1), sign.getLine(3)) || isSign(CustomSigns.down, sign.getLine(0), sign.getLine(1), sign.getLine(3))) {
                                     Location loc = e.getPlayer().getLocation().clone();
-                                    loc.setY(y-2);
+                                    loc.setY((double)y-2);
                                     Location stand = loc.clone();
                                     stand.add(0,-1,0);
                                     if(!stand.getBlock().getType().equals(Material.AIR)){
-                                        end_point = true;
+                                        endPoint = true;
                                         e.getPlayer().teleport(loc, TeleportCause.COMMAND);
                                         break;
                                     }
@@ -81,7 +81,7 @@ public class SignClick implements Listener {
                             }
                         }
 
-                        if(!end_point){
+                        if(!endPoint){
                             e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT);
                         }
                         

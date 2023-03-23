@@ -276,30 +276,30 @@ public class BetterLock implements Listener {
                 bpe.setMaterialName(b.getType().name());
                 bpe.setLocationEntry(le);
 
-                int playerpartner_fk = -1;
+                int playerPartnerFK = -1;
 
                 if(pe.getPartner() != null){
                     if(pe.getID() != pe.getPartner().getFirstPlayerID()){
-                        playerpartner_fk = pe.getPartner().getFirstPlayerID();
+                        playerPartnerFK = pe.getPartner().getFirstPlayerID();
                     }
                     else{
-                        playerpartner_fk = pe.getPartner().getSecondPlayerID();
+                        playerPartnerFK = pe.getPartner().getSecondPlayerID();
                     }
                     
                 }
 
-                int right_length = 1;
+                int rightLength = 1;
 
-                if(playerpartner_fk != -1){
-                    right_length = 2;
+                if(playerPartnerFK != -1){
+                    rightLength = 2;
                 }
 
                 JSONObject rights = new JSONObject();
-                int[] right = new int[right_length];
+                int[] right = new int[rightLength];
                 right[0] = pe.getID();
 
-                if(playerpartner_fk != -1){
-                    right[1] = playerpartner_fk;
+                if(playerPartnerFK != -1){
+                    right[1] = playerPartnerFK;
                 }
 
                 rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, right);
@@ -582,7 +582,7 @@ public class BetterLock implements Listener {
             List<Object> list = rightJSON.toList();
 
             if(!list.contains(id)){
-                list.add((Object)id);
+                list.add(id);
                 
                 JSONObject rights = new JSONObject();
                 rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, list);
@@ -694,19 +694,14 @@ public class BetterLock implements Listener {
                                             door2.setOpen(true);
     
                                             if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
-                                           Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
-    
-                                                    @Override
-                                                    public void run() {
-                                                        door.setOpen(false);
-                                                        door2.setOpen(false);
-    
-                                                        b.setBlockData(door);
-                                                        b2.setBlockData(door2);
-                                                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                                    }
-                                                    
-                                                }, 50);
+                                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                                door.setOpen(false);
+                                                door2.setOpen(false);
+
+                                                b.setBlockData(door);
+                                                b2.setBlockData(door2);
+                                                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
+                                           }, 50);
                                             }
                                         }
                                         b2.setBlockData(door2);
@@ -715,16 +710,11 @@ public class BetterLock implements Listener {
                             }
                             else{
                                 if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
-                                    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
+                                    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                        door.setOpen(false);
 
-                                        @Override
-                                        public void run() {
-                                            door.setOpen(false);
-
-                                            b.setBlockData(door);
-                                            e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                        }
-                                        
+                                        b.setBlockData(door);
+                                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
                                     }, 50);
                                 }
                             }                        
@@ -732,32 +722,22 @@ public class BetterLock implements Listener {
                         else if(openable instanceof TrapDoor){
                             TrapDoor door = (TrapDoor) b.getBlockData();
                             if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
-                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
+                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                    door.setOpen(false);
 
-                                    @Override
-                                    public void run() {
-                                        door.setOpen(false);
-
-                                        b.setBlockData(door);
-                                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                    }
-                                    
+                                    b.setBlockData(door);
+                                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
                                 }, 50);
                             }
                         }
                         else if(openable instanceof Gate){
                             Gate door = (Gate) b.getBlockData();
                             if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
-                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
+                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                    door.setOpen(false);
 
-                                    @Override
-                                    public void run() {
-                                        door.setOpen(false);
-
-                                        b.setBlockData(door);
-                                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                    }
-                                    
+                                    b.setBlockData(door);
+                                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
                                 }, 50);
                             }
                         }
@@ -852,9 +832,9 @@ public class BetterLock implements Listener {
                     return;
                 } 
                 else{
-                    Block block_lower = e.getBlock().getRelative(direction).getRelative(BlockFace.DOWN);
-                    ProtectionEntry protection_lower = ProtectionAPI.getProtectionEntry(block_lower.getLocation());
-                    if (protection_lower != null) {
+                    Block blockLower = e.getBlock().getRelative(direction).getRelative(BlockFace.DOWN);
+                    ProtectionEntry protectionLower = ProtectionAPI.getProtectionEntry(blockLower.getLocation());
+                    if (protectionLower != null) {
                         e.setCancelled(true);
                         return;
                     } 
@@ -879,9 +859,9 @@ public class BetterLock implements Listener {
             ProtectionEntry protection = ProtectionAPI.getProtectionEntry(block.getLocation());
 
             if(hasSlimeBlock){
-                Block block_upper = piston.getRelative(direction, i+1).getRelative(BlockFace.UP);
-                ProtectionEntry protection_upper = ProtectionAPI.getProtectionEntry(block_upper.getLocation());
-                if (protection_upper != null) {
+                Block blockUpper = piston.getRelative(direction, i+1).getRelative(BlockFace.UP);
+                ProtectionEntry protectionUpper = ProtectionAPI.getProtectionEntry(blockUpper.getLocation());
+                if (protectionUpper != null) {
                     e.setCancelled(true);
                     return;
                 } 

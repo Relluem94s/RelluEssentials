@@ -115,20 +115,20 @@ public class WorldHelper {
      *
      * @param worldName String
      * @param type WorldType
-     * @param world_environment World.Environment
+     * @param worldEnvironment World.Environment
      * @param structures boolean
      */
-    public static void createWorld(String worldName, WorldType type, World.Environment world_environment, boolean structures) {
+    public static void createWorld(String worldName, WorldType type, World.Environment worldEnvironment, boolean structures) {
         WorldCreator wc = new WorldCreator(worldName);
-        wc.environment(world_environment);
+        wc.environment(worldEnvironment);
         wc.type(type);
         wc.generateStructures(structures);
         Bukkit.createWorld(wc);
     }
 
-    public static void createWorld(String worldName, WorldType type, World.Environment world_environment, boolean structures, long seed) {
+    public static void createWorld(String worldName, WorldType type, World.Environment worldEnvironment, boolean structures, long seed) {
         WorldCreator wc = new WorldCreator(worldName);
-        wc.environment(world_environment);
+        wc.environment(worldEnvironment);
         wc.type(type);
         wc.generateStructures(structures);
         wc.seed(seed);

@@ -72,7 +72,7 @@ public class Purse implements CommandExecutor {
                     if((purse >= coins)){
                         ItemStack coin = CustomItems.coins.getCustomItem();
                         ItemMeta im = coin.getItemMeta();
-                        im.setLore(Arrays.asList(new String[]{String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))}));
+                        im.setLore(Arrays.asList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));
                         im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, coins);
 
                         coin.setItemMeta(im);

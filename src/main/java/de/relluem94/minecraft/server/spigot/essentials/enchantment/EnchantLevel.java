@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.enchantment;
 
 public class EnchantLevel {
-    private int startLevel, maxLevel;
-
+    private int startLevel;
+    private int maxLevel;
 
     public EnchantLevel(int startLevel, int maxLevel){
         this.startLevel = startLevel;

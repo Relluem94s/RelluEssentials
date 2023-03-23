@@ -17,7 +17,7 @@ public class MobHelper {
     private LivingEntity livingEntity;
     private final Location location;
     private final EntityType entityType;
-    private final Collection<PotionEffect> potionEffects = new HashSet<PotionEffect>();
+    private final Collection<PotionEffect> potionEffects = new HashSet<>();
     private final String customName;
     private final boolean isCustomNameVisible;
     private boolean isInvisible;

@@ -9,9 +9,6 @@ import java.util.UUID;
  */
 public class OfflinePlayerEntry {
 
-    public OfflinePlayerEntry() {
-    }
-
     private UUID id;
     private String name;
     private Properties properties;
