@@ -112,7 +112,7 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_STOP_MESSAGE);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_MANAGER_STOP_MESSAGE);
         new SudoManager().disable();
         new AutoSaveManager().disable();
         new WorldManager().disable();
@@ -143,16 +143,16 @@ public class RelluEssentials extends JavaPlugin {
     private void startLoading() {
         setInstance(this);
         start = Calendar.getInstance().getTimeInMillis();
-        consoleSendMessage(PLUGIN_COMMAND_COLOR, PLUGIN_BORDER);
+        consoleSendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_START_MESSAGE);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_MANAGER_START_MESSAGE);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     }
 
     private void stopLoading() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + String.format(PLUGIN_STARTTIME, Calendar.getInstance().getTimeInMillis() - start));
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_STARTTIME_MESSAGE, Calendar.getInstance().getTimeInMillis() - start));
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
-        consoleSendMessage(PLUGIN_COMMAND_COLOR + PLUGIN_BORDER, "");
+        consoleSendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
     }
 }

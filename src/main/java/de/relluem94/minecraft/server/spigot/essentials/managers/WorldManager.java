@@ -24,7 +24,7 @@ public class WorldManager implements IEnable, IDisable {
 
     @Override
     public void enable() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + "Worlds Size: " + worldsMap.size());
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
 
         for (WorldGroupEntry wge : worldsMap.keySet()) {
             for(WorldEntry we: worldsMap.get(wge)){

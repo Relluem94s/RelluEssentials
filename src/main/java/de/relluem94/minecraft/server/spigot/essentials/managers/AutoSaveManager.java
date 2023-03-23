@@ -15,7 +15,7 @@ public class AutoSaveManager implements IEnable, IDisable {
 
     @Override
     public void enable() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_AUTOSAVE);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_REGISTER_AUTOSAVE);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -30,7 +30,7 @@ public class AutoSaveManager implements IEnable, IDisable {
             }
         }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 * 30);
 
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_AUTOSAVE_REGISTERED);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_AUTOSAVE_REGISTERED);
     }
 
     @Override

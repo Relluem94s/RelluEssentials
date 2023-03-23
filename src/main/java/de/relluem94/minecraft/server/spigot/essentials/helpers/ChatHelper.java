@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import net.md_5.bungee.api.ChatMessageType;
@@ -19,6 +20,10 @@ import net.md_5.bungee.api.chat.TextComponent;
  * @author rellu
  */
 public class ChatHelper {
+
+    private ChatHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
 
     /**
      *
@@ -68,7 +73,7 @@ public class ChatHelper {
         message = message.replaceFirst(channel, "");
         for (Player op : Bukkit.getOnlinePlayers()) {
             if (Permission.isAuthorized(op, group.getId())) {
-                sendMessage(op, p.getCustomName() + group.getPrefix() + PLUGIN_SPACER_CHANNEL + PLUGIN_MESSAGE_COLOR + replaceColor(message));
+                sendMessage(op, p.getCustomName() + group.getPrefix() + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE + replaceColor(message));
             }
         }
     }
@@ -84,7 +89,7 @@ public class ChatHelper {
         message = message.replaceFirst(channel, "");
         for (Player op : Bukkit.getOnlinePlayers()) {
             if (Permission.isAuthorized(op, group.getId())) {
-                sendMessage(op, sender + group.getPrefix() + PLUGIN_SPACER_CHANNEL + PLUGIN_MESSAGE_COLOR + replaceColor(message));
+                sendMessage(op, sender + group.getPrefix() + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE + replaceColor(message));
             }
         }
     }

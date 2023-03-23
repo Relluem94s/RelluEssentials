@@ -6,8 +6,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
  */
 public class BankAccountEntry {
 
-    public BankAccountEntry() {}
-
     private int id;
     private String created;
     private int createdBy;
@@ -15,7 +13,7 @@ public class BankAccountEntry {
     private int updatedBy;
     private String deleted;
     private int deletedBy;
-    private int player_fk;
+    private int playerFK;
     private double value;
     private BankTierEntry tier;
 
@@ -76,11 +74,11 @@ public class BankAccountEntry {
     }
 
     public int getPlayerId() {
-        return player_fk;
+        return playerFK;
     }
 
     public void setPlayerId(int playerId) {
-        this.player_fk = playerId;
+        this.playerFK = playerId;
     }
 
     public double getValue() {

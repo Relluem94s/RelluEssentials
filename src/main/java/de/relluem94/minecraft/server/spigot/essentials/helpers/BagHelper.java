@@ -37,12 +37,20 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 public class BagHelper {
 
+    private BagHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
+
     public static final int BAG_SIZE = 14;
 
     public static Inventory getBag(int type, PlayerEntry pe) {
         BagEntry be = getBag(pe.getID(), type);
 
-        Inventory inv = InventoryHelper.createInventory(36, Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + be.getBagType().getDisplayName());
+        if(be == null){
+            return null;
+        }
+
+        Inventory inv = InventoryHelper.createInventory(36, Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ be.getBagType().getDisplayName());
         inv = InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
 
         inv.setItem(10, getItemStack(be, 0));
@@ -61,11 +69,10 @@ public class BagHelper {
         inv.setItem(24, getItemStack(be,12));
         inv.setItem(25, getItemStack(be,13));
 
-
         return inv;
     }
 
-    public static final String MAIN_GUI = Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + "Bags";
+    public static final String MAIN_GUI = Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ "Bags";
 
     public static Inventory getBags(boolean npc, String title){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title), CustomItems.npc_gui_disabled.getCustomItem());
@@ -313,7 +320,7 @@ public class BagHelper {
             }
         }
         if(updatedBags != 0){
-            sendMessageInChannel(String.format(Strings.PLUGIN_BAGS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedBags), Strings.PLUGIN_CONSOLE_NAME, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+            sendMessageInChannel(String.format(Strings.PLUGIN_BAGS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedBags), Strings.PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
         }
     }
 }

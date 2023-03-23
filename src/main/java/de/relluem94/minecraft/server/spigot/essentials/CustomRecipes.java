@@ -12,7 +12,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 public class CustomRecipes {
 
     private CustomRecipes() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static RecipeHelper smelterFurnace = new RecipeHelper(

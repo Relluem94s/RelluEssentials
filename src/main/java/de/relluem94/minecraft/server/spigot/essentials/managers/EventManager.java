@@ -37,7 +37,7 @@ public class EventManager implements IEnable{
     @Override
     public void enable() {
         PluginManager pm = Bukkit.getServer().getPluginManager();
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_REGISTER_EVENTS);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_REGISTER_EVENTS);
 
         int eventCount = 0;
         pm.registerEvents(new BetterChatFormat(), RelluEssentials.getInstance());           eventCount++;
@@ -63,6 +63,6 @@ public class EventManager implements IEnable{
         pm.registerEvents(new SignEdit(), RelluEssentials.getInstance());                   eventCount++;
         pm.registerEvents(new ToolCrafting(), RelluEssentials.getInstance());               eventCount++;
         pm.registerEvents(new CustomEnchantment(), RelluEssentials.getInstance());          eventCount++;
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + String.format(LANG_EVENTS_REGISTERED, eventCount));
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_EVENTS_REGISTERED, eventCount));
     }
 }

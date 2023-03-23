@@ -23,7 +23,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEn
 public class ProtectionHelper {
 
     private ProtectionHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
     
     /**

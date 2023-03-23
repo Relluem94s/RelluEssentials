@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
@@ -31,36 +32,43 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 
 public class BankerHelper {
 
+    private BankerHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
+
  
-    public static ItemHelper npc_portable_bank = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK, Type.TOOL, Rarity.LEGENDARY, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1}));
+    public static final ItemHelper npc_portable_bank = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK, Type.TOOL, Rarity.LEGENDARY, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1));
 
-    public static ItemHelper npc_gui_deposit = new ItemHelper(Material.GREEN_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1}));
-    public static ItemHelper npc_gui_withdraw = new ItemHelper(Material.RED_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1}));
-    public static ItemHelper npc_gui_balance = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1}));
-    public static ItemHelper npc_gui_upgrade = new ItemHelper(Material.DIAMOND_BLOCK, 1, PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE_LORE1}));
+    public static final ItemHelper npc_gui_deposit = new ItemHelper(Material.GREEN_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT, Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1));
+    public static final ItemHelper npc_gui_withdraw = new ItemHelper(Material.RED_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW, Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1));
+    public static final ItemHelper npc_gui_balance = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE, Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1));
+    public static final ItemHelper npc_gui_upgrade = new ItemHelper(Material.DIAMOND_BLOCK, 1, PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE, Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE_LORE1));
 
-    public static ItemHelper npc_gui_deposit_all = new ItemHelper(Material.GOLD_BLOCK, 1, PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1}));
-    public static ItemHelper npc_gui_deposit_5_percent = new ItemHelper(Material.GOLD_NUGGET, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 5), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1}));
-    public static ItemHelper npc_gui_deposit_20_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 20), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1}));
-    public static ItemHelper npc_gui_deposit_50_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 50), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1}));
+    public static final ItemHelper npc_gui_deposit_all = new ItemHelper(Material.GOLD_BLOCK, 1, PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL, Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1));
+    public static final ItemHelper npc_gui_deposit_5_percent = new ItemHelper(Material.GOLD_NUGGET, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 5), Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1));
+    public static final ItemHelper npc_gui_deposit_20_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 20), Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1));
+    public static final ItemHelper npc_gui_deposit_50_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 50), Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1));
 
-    public static ItemHelper npc_gui_withdraw_all = new ItemHelper(Material.GOLD_BLOCK, 1, PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1}));
-    public static ItemHelper npc_gui_withdraw_5_percent = new ItemHelper(Material.GOLD_NUGGET, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 5), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1}));
-    public static ItemHelper npc_gui_withdraw_20_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 20), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1}));
-    public static ItemHelper npc_gui_withdraw_50_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 50), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1}));
+    public static final ItemHelper npc_gui_withdraw_all = new ItemHelper(Material.GOLD_BLOCK, 1, PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL, Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
+    public static final ItemHelper npc_gui_withdraw_5_percent = new ItemHelper(Material.GOLD_NUGGET, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 5), Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
+    public static final ItemHelper npc_gui_withdraw_20_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 20), Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
+    public static final ItemHelper npc_gui_withdraw_50_percent = new ItemHelper(Material.GOLD_INGOT, 1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 50), Type.NPC_GUI, Rarity.NONE, Arrays.asList(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
 
-    public static ItemHelper npc_gui_balance_total = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{}));
-    public static ItemHelper npc_gui_balance_transactions = new ItemHelper(Material.MAP, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS, Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{}));
+    public static final ItemHelper npc_gui_balance_total = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL, Type.NPC_GUI, Rarity.NONE);
+    public static final ItemHelper npc_gui_balance_transactions = new ItemHelper(Material.MAP, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS, Type.NPC_GUI, Rarity.NONE);
 
 
 
-    public static Material UPGRADE_MATERIAL = Material.AMETHYST_SHARD;
+    public static final Material UPGRADE_MATERIAL = Material.AMETHYST_SHARD;
 
     public static List<ItemHelper> getBankTiers(){
         List<ItemHelper> lih = new ArrayList<>();
         for(int i = 0; i < BankAPI.getBankTiers().size(); i++){
             BankTierEntry bte = BankAPI.getBankTiers().get(i);
-            lih.add(new ItemHelper(new ItemStack(UPGRADE_MATERIAL, 1), bte.getName(), Type.NPC_GUI, Rarity.NONE, Arrays.asList(new String[]{"Costs: " + bte.getCost(), "Interest: " + bte.getInterest(), "Limit: " + bte.getLimit()})));
+            String lore1 = "Costs: " + bte.getCost();
+            String lore2 = "Interest: " + bte.getInterest();
+            String lore3 = "Limit: " + bte.getLimit();
+            lih.add(new ItemHelper(new ItemStack(UPGRADE_MATERIAL, 1), bte.getName(), Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore1, lore2, lore3)));
         }
         return lih;
     }
@@ -70,42 +78,39 @@ public class BankerHelper {
     public static void deposit(PlayerEntry pe, Player p, BankAccountEntry bae, float percentage){
         double purse = pe.getPurse();
         if(purse >= 1){
-            double transaction_value = (double)((double)purse / (double)100)  * (double)percentage;
+            double transactionValue = (purse / 100)  * percentage;
 
-            if(bae.getTier().getLimit() >= transaction_value + bae.getValue()){
+            if(bae.getTier().getLimit() >= transactionValue + bae.getValue()){
                 if(percentage == 100){
-                    transaction_value = purse;
+                    transactionValue = purse;
                     pe.setPurse(0);
                 }
                 else{
-                    pe.setPurse((double)purse - (double)transaction_value);
+                    pe.setPurse(purse - transactionValue);
                 }
     
-                
-    
-                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
+                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transactionValue, bae.getValue(), bae.getTier().getId());
                 
                 pe.setUpdatedBy(pe.getID());
                 pe.setToBeUpdated(true);
     
                 p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-                p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE, StringHelper.formatDouble(transaction_value)));
-                p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue()+transaction_value)));
-    
+                p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE, StringHelper.formatDouble(transactionValue)));
+                p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue()+transactionValue)));
             }
             else{
-                transaction_value = bae.getTier().getLimit() - bae.getValue();
-                if(transaction_value > 0){
-                    pe.setPurse((double)purse - (double)transaction_value);
+                transactionValue = bae.getTier().getLimit() - bae.getValue();
+                if(transactionValue > 0){
+                    pe.setPurse(purse - transactionValue);
 
-                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value, bae.getValue(), bae.getTier().getId());
+                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transactionValue, bae.getValue(), bae.getTier().getId());
                     
                     pe.setUpdatedBy(pe.getID());
                     pe.setToBeUpdated(true);
         
                     p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE, StringHelper.formatDouble(transaction_value)));
-                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue()+transaction_value)));
+                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_DEPOIST_MESSAGE, StringHelper.formatDouble(transactionValue)));
+                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue()+transactionValue)));
                     p.sendMessage();
                 }
                 
@@ -127,21 +132,21 @@ public class BankerHelper {
         double bank = bae.getValue();
         double purse = pe.getPurse();
         if(bank >= 1){
-            double transaction_value = ((bank / 100)  * percentage);
+            double transactionValue = ((bank / 100)  * percentage);
 
             if(percentage == 100){
-                transaction_value = bank;
+                transactionValue = bank;
             }
 
-            pe.setPurse((double)purse + (double)transaction_value);
-            RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transaction_value*-1, bae.getValue(), bae.getTier().getId());
+            pe.setPurse(purse + transactionValue);
+            RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transactionValue*-1, bae.getValue(), bae.getTier().getId());
             
             pe.setUpdatedBy(pe.getID());
             pe.setToBeUpdated(true);
 
             p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE, StringHelper.formatDouble(transaction_value)));
-            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue()-transaction_value)));
+            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE, StringHelper.formatDouble(transactionValue)));
+            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue()-transactionValue)));
             InventoryHelper.closeInventory(p);
         }
         else{
@@ -159,28 +164,21 @@ public class BankerHelper {
             }
 
             Long costs = Long.parseLong(ih.getLore().get(0).replace("Costs: ", ""));
-            BankTierEntry bt = bae.getTier();
-            for(BankTierEntry bte: BankAPI.getBankTiers()){
-                if(bte.getCost() == costs){
-                    bt = bte;
-                    break;
-                }
-            }
+            BankTierEntry bt = getBankTierEntryByCost(costs);
 
-            if(bae.getTier().getCost() > costs){
-                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_LOWER_ACCOUNT);
+            if(checkIfLowerAccount(p, bae, costs)){
                 return;
             }
+
+            if(checkIfSameAccount(p, bae, bt, costs)){
+                return;
+            }
+
+            if(bt == null){
+                return;
+            }
+
             
-            if(bae.getTier().getCost() == costs){
-                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_ALREADY_BOUGHT);
-                return;
-            }
-
-         
-            if(bt.getId() == bae.getTier().getId()){
-                return;
-            }
 
             double purse = pe.getPurse();
             if(purse >= costs){
@@ -270,5 +268,41 @@ public class BankerHelper {
         if(lastPlayedDate.before(todayDate)){
             RelluEssentials.bankInterestMap.put(uuid, bae);
         }
+    }
+
+    public static BankTierEntry getBankTierEntryByCost(long costs){
+        for(BankTierEntry bte: BankAPI.getBankTiers()){
+            if(bte.getCost() == costs){
+                return bte;
+            }
+        }
+        return null;
+    }
+
+    private static boolean checkIfLowerAccount(Player p, BankAccountEntry bae, long costs){
+        if(bae.getTier().getCost() > costs){
+            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT);
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean checkIfSameAccount(Player p, BankAccountEntry bae, BankTierEntry bt, long costs){       
+        if(bae.getTier().getCost() == costs){
+            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT);
+            return false;
+        }
+
+        if(bt == null){
+            return false;
+        }
+
+        if(bt.getId() == bae.getTier().getId()){
+            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT);
+            return false;
+        }
+        
+        return true;
     }
 }

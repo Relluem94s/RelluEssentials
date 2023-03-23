@@ -24,7 +24,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 public class CustomItems {
 
     private CustomItems() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static final ItemHelper coins = new ItemHelper(Material.GOLD_NUGGET, 1, PLUGIN_ITEM_COINS, Type.MONEY, Rarity.COMMON, Arrays.asList(PLUGIN_ITEM_COINS_LORE));

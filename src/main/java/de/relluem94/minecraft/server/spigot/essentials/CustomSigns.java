@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class CustomSigns {
 
     private CustomSigns() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static final SignHelper spawn;

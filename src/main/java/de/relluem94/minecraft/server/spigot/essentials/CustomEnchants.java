@@ -20,7 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity
 public class CustomEnchants {
 
     private CustomEnchants(){
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static final List<EnchantmentHelper> customEnchantments = new ArrayList<>();

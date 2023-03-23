@@ -38,12 +38,12 @@ public class Print implements CommandExecutor {
 
         if (isCMDBlock(sender)) {
             BlockCommandSender bcs = (BlockCommandSender) sender;
-            name = PLUGIN_COMMAND_BLOCK_COLOR + bcs.getName();
+            name = PLUGIN_COLOR_COMMAND_BLOCK + bcs.getName();
         }
 
         if (isConsole(sender)) {
             ConsoleCommandSender ccs = (ConsoleCommandSender) sender;
-            name = PLUGIN_CONSOLE_COLOR + StringHelper.firstCharToUpper(ccs.getName().toLowerCase());
+            name = PLUGIN_COLOR_CONSOLE + StringHelper.firstCharToUpper(ccs.getName().toLowerCase());
         }
 
         if (isPlayer(sender)) {
@@ -65,7 +65,7 @@ public class Print implements CommandExecutor {
         String message = implode(0, args);
         message = replaceSymbols(replaceColor(message));
 
-        Bukkit.broadcastMessage(name + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + message);
+        Bukkit.broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_MESSAGE + message);
         return true;
     }
 }

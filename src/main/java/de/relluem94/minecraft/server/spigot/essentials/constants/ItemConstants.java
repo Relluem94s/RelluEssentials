@@ -13,6 +13,10 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
  */
 public class ItemConstants {
 
+    private ItemConstants() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
+
     //==============================================================================//
     //                              ITEM   STUFF                                    //
     //==============================================================================//
@@ -49,19 +53,19 @@ public class ItemConstants {
 
     public static final String PLUGIN_ITEM_NPC_BANKER_COLOR = "§d";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT = PLUGIN_ITEM_NPC_BANKER_COLOR + "Deposit " + PLUGIN_MONEY_NAME;
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT = PLUGIN_ITEM_NPC_BANKER_COLOR + "Deposit " + PLUGIN_NAME_MONEY;
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL = PLUGIN_ITEM_NPC_BANKER_COLOR + "Deposit all " + PLUGIN_MONEY_NAME;
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT = PLUGIN_ITEM_NPC_BANKER_COLOR + "Deposit " + PLUGIN_MONEY_COLOR + "%s" + PLUGIN_ITEM_NPC_BANKER_COLOR + " percent of " + PLUGIN_MONEY_NAME;
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL = PLUGIN_ITEM_NPC_BANKER_COLOR + "Deposit all " + PLUGIN_NAME_MONEY;
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT = PLUGIN_ITEM_NPC_BANKER_COLOR + "Deposit " + PLUGIN_COLOR_MONEY + "%s" + PLUGIN_ITEM_NPC_BANKER_COLOR + " percent of " + PLUGIN_NAME_MONEY;
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1 = "Click to deposit";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL = PLUGIN_ITEM_NPC_BANKER_COLOR + "Withdraw all " + PLUGIN_MONEY_NAME;
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT = PLUGIN_ITEM_NPC_BANKER_COLOR + "Withdraw " + PLUGIN_MONEY_COLOR + "%s" + PLUGIN_ITEM_NPC_BANKER_COLOR + " percent of " + PLUGIN_MONEY_NAME;
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL = PLUGIN_ITEM_NPC_BANKER_COLOR + "Withdraw all " + PLUGIN_NAME_MONEY;
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT = PLUGIN_ITEM_NPC_BANKER_COLOR + "Withdraw " + PLUGIN_COLOR_MONEY + "%s" + PLUGIN_ITEM_NPC_BANKER_COLOR + " percent of " + PLUGIN_NAME_MONEY;
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1 = "Click to withdraw";
 
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1 = "Click to open";
 
-    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW = PLUGIN_ITEM_NPC_BANKER_COLOR + "Withdraw " + PLUGIN_MONEY_NAME;
+    public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW = PLUGIN_ITEM_NPC_BANKER_COLOR + "Withdraw " + PLUGIN_NAME_MONEY;
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1 = "Click to open";
 
     public static final String PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE = PLUGIN_ITEM_NPC_BANKER_COLOR + "Show Balance";
@@ -78,9 +82,9 @@ public class ItemConstants {
     public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK = PLUGIN_ITEM_NPC_BANKER_COLOR + "Portable Bank";
     public static final String PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1 = PLUGIN_ITEM_NPC_BANKER_COLOR + "Opens the Bank Menu";
 
-    public static final String PLUGIN_ITEM_COINS = Strings.PLUGIN_MONEY_NAME;
-    public static final String PLUGIN_ITEM_COINS_LORE =  Strings.PLUGIN_MONEY_COLOR + "%s " + Strings.PLUGIN_MONEY_NAME;
-    public static NamespacedKey PLUGIN_ITEM_COINS_NAMESPACE = new NamespacedKey(RelluEssentials.getInstance(), "coins");
+    public static final String PLUGIN_ITEM_COINS = Strings.PLUGIN_NAME_MONEY;
+    public static final String PLUGIN_ITEM_COINS_LORE =  Strings.PLUGIN_COLOR_MONEY + "%s " + Strings.PLUGIN_NAME_MONEY;
+    public static final NamespacedKey PLUGIN_ITEM_COINS_NAMESPACE = new NamespacedKey(RelluEssentials.getInstance(), "coins");
     
     public static final String PLUGIN_ITEM_NPC_LORE1 = "§7Click to Spawn";
 }

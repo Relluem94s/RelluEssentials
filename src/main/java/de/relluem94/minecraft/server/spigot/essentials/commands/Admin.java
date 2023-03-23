@@ -64,7 +64,7 @@ public class Admin implements CommandExecutor {
 
                 org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
                     InventoryHelper.createInventory(18,
-                    Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + "§dNPCs"),
+                    Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ "§dNPCs"),
                     CustomItems.npc_gui_disabled.getCustomItem()
                 );
 

@@ -56,15 +56,15 @@ public class Fly implements CommandExecutor {
             pe.setToBeUpdated(true);
             p.setAllowFlight(pe.isFlying());
             p.sendMessage(
-                PLUGIN_COMMAND_PREFIX + 
+                PLUGIN_FORMS_COMMAND_PREFIX + 
                 String.format(
                     getText("PLUGIN_COMMAND_FLYMODE"), 
-                    p.getCustomName() + PLUGIN_COMMAND_COLOR, 
-                    PLUGIN_COMMAND_ARG_COLOR + 
+                    p.getCustomName() + PLUGIN_COLOR_COMMAND, 
+                    PLUGIN_COLOR_COMMAND_ARG + 
                     (pe.isFlying() ? 
                         getText("PLUGIN_COMMAND_FLYMODE_ACTIVATED") : 
                         getText("PLUGIN_COMMAND_FLYMODE_DEACTIVATED")
-                    ) + PLUGIN_COMMAND_COLOR
+                    ) + PLUGIN_COLOR_COMMAND
                 )
             );
             return true;

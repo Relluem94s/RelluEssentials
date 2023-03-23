@@ -181,8 +181,11 @@ public class ConfigHelper {
      * @return Location from the Config Path
      */
     public Location getLocation(String path) {
-        double x, y, z;
-        float yaw, pitch;
+        double x;
+        double y;
+        double z;
+        float yaw;
+        float pitch;
         String world;
         x = config.getDouble(path + ".x");
         y = config.getDouble(path + ".y");

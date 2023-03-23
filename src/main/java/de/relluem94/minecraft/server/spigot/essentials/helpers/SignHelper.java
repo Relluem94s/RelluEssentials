@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_CLICK_SIGN;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_SIGN;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SIGN_CLICK;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SIGN_NAME;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.HangingSign;
@@ -17,10 +17,9 @@ import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCus
  */
 public class SignHelper {
 
-    private static final String LINE0 = PLUGIN_NAME_SIGN;
     private final String line1;
     private final String line2;
-    private static final String LINE3 = PLUGIN_CLICK_SIGN;
+    
     private final ActionType signActionType;
 
     public SignHelper(ActionType signActionType, String customInput) {
@@ -47,7 +46,7 @@ public class SignHelper {
     }
 
     public String getLine0() {
-        return LINE0;
+        return PLUGIN_SIGN_NAME;
     }
 
     public String getLine1() {
@@ -59,7 +58,7 @@ public class SignHelper {
     }
 
     public String getLine3() {
-        return LINE3;
+        return PLUGIN_SIGN_CLICK;
     }
 
     public static boolean isSign(SignHelper sh, String line0, String line1, String line3) {

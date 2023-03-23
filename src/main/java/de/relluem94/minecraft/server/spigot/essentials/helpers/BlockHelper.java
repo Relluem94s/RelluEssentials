@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import org.bukkit.Material;
 
@@ -8,6 +9,10 @@ import org.bukkit.Material;
  * @author rellu
  */
 public class BlockHelper {
+
+    private BlockHelper() {
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
 
     /**
      * Sets a Block on the Location of the BlockHistoryEntry (bh) with the

@@ -12,7 +12,7 @@ public class ConfigManager implements IEnable, IDisable {
 
     @Override
     public void enable() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_LOADING_CONFIGS);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_LOADING_CONFIGS);
 
         if (!RelluEssentials.getInstance().getDataFolder().exists()) {
             RelluEssentials.getInstance().getDataFolder().mkdir();
@@ -24,7 +24,7 @@ public class ConfigManager implements IEnable, IDisable {
         RelluEssentials.germanProperties = ResourceBundle.getBundle("lang", new Locale("de", "DE"));
         RelluEssentials.englishProperties = ResourceBundle.getBundle("lang", new Locale("en", "US"));
 
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COMMAND_COLOR + LANG_CONFIGS_LOADED);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_CONFIGS_LOADED);
     }
 
     @Override

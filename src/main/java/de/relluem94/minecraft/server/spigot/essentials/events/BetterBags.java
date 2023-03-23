@@ -151,7 +151,7 @@ public class BetterBags implements Listener {
     public void onInventoryClickItem(InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player && e.getCurrentItem() != null){
             Player p = (Player) e.getWhoClicked();
-            if (e.getView().getTitle().startsWith(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER) && e.getView().getTitle().endsWith(" Bag")) {
+            if (e.getView().getTitle().startsWith(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE) && e.getView().getTitle().endsWith(" Bag")) {
 
                 PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
                 BagEntry be = BagHelper.getBag(pe.getID(), BagHelper.getBagTypeByName(e.getView().getTitle()).getId());

@@ -952,15 +952,15 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateBankAccount(int player_fk, double transaction_value, double bankaccount_total, int tier) {
+    public void updateBankAccount(int playerFK, double transactionValue, double bankaccountTotal, int tier) {
         try (
             Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateBankAccount.sql", StandardCharsets.UTF_8));
 
-            ps.setInt(1, player_fk);
-            ps.setDouble(2, (double)((double)bankaccount_total + (double)transaction_value));
+            ps.setInt(1, playerFK);
+            ps.setDouble(2, (double)((double)bankaccountTotal + (double)transactionValue));
             ps.setInt(3, tier);
-            ps.setInt(4, player_fk);
+            ps.setInt(4, playerFK);
             ps.execute();
 
 

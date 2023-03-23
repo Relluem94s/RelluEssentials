@@ -331,7 +331,7 @@ public class BetterNPC implements Listener {
                     trade(e.getCurrentItem(), e.getClickedInventory(), p, pe, e.getSlot(), e.isRightClick());
                     e.setCancelled(true);
             }
-            else if(e.getView().getTitle().equals(Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER +"§dNPCs")){
+            else if(e.getView().getTitle().equals(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+"§dNPCs")){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     p.getInventory().addItem(e.getCurrentItem().clone());
                     p.updateInventory();

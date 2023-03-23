@@ -33,10 +33,10 @@ public class BetterChatFormat implements Listener {
             } else if (e.getMessage().startsWith(ADMIN_CHANNEL) && Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                 sendMessageInChannel(e.getMessage(), p, ADMIN_CHANNEL, Groups.getGroup("admin"));
             } else {
-                Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + replaceColor(e.getMessage()));
+                Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_MESSAGE + replaceColor(e.getMessage()));
             }
         } else {
-            Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + e.getMessage());
+            Bukkit.broadcastMessage(p.getCustomName() + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_MESSAGE + e.getMessage());
         }
     }
 }

@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
 public class ExperienceHelper {
 
     private ExperienceHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
     
     public static int getTotalExperience(int level) {

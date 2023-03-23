@@ -57,19 +57,19 @@ public class GameMode implements CommandExecutor {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMEMODE_0)) {
             p.setGameMode(org.bukkit.GameMode.SURVIVAL);
             PlayerHelper.setFlying(p);
-            p.sendMessage(PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + String.format(getText("PLUGIN_COMMAND_GAMEMODE"), p.getCustomName() + PLUGIN_COMMAND_COLOR, PLUGIN_COMMAND_NAME_COLOR + PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME + PLUGIN_COMMAND_COLOR));
+            p.sendMessage(PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + String.format(getText("PLUGIN_COMMAND_GAMEMODE"), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME + PLUGIN_COLOR_COMMAND));
             return true;
         } else if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMEMODE_1)) {
             p.setGameMode(org.bukkit.GameMode.CREATIVE);
-            p.sendMessage(PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + String.format(getText("PLUGIN_COMMAND_GAMEMODE"), p.getCustomName() + PLUGIN_COMMAND_COLOR, PLUGIN_COMMAND_NAME_COLOR + PLUGIN_COMMAND_NAME_GAMEMODE_1_NAME + PLUGIN_COMMAND_COLOR));
+            p.sendMessage(PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + String.format(getText("PLUGIN_COMMAND_GAMEMODE"), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAMEMODE_1_NAME + PLUGIN_COLOR_COMMAND));
             return true;
         } else if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMEMODE_2)) {
             p.setGameMode(org.bukkit.GameMode.ADVENTURE);
-            p.sendMessage(PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + String.format(getText("PLUGIN_COMMAND_GAMEMODE"), p.getCustomName() + PLUGIN_COMMAND_COLOR, PLUGIN_COMMAND_NAME_COLOR + PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME + PLUGIN_COMMAND_COLOR));
+            p.sendMessage(PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + String.format(getText("PLUGIN_COMMAND_GAMEMODE"), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME + PLUGIN_COLOR_COMMAND));
             return true;
         } else if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMEMODE_3)) {
             p.setGameMode(org.bukkit.GameMode.SPECTATOR);
-            p.sendMessage(PLUGIN_PREFIX + PLUGIN_SPACER + PLUGIN_COMMAND_COLOR + String.format(getText("PLUGIN_COMMAND_GAMEMODE"), p.getCustomName() + PLUGIN_COMMAND_COLOR, PLUGIN_COMMAND_NAME_COLOR + PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME + PLUGIN_COMMAND_COLOR));
+            p.sendMessage(PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_COMMAND + String.format(getText("PLUGIN_COMMAND_GAMEMODE"), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME + PLUGIN_COLOR_COMMAND));
             return true;
         } else {
             return false;

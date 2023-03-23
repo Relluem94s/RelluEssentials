@@ -22,7 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlaye
 public class PlayerHeadHelper {
 
     private PlayerHeadHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     private static final ItemStack PLAYER_HEAD = new ItemStack(Material.PLAYER_HEAD, 1);

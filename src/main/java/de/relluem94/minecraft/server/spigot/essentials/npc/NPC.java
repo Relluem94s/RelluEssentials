@@ -40,7 +40,7 @@ public class NPC implements INPC {
 
     @Override
     public String getTitle() {
-        return Strings.PLUGIN_PREFIX + Strings.PLUGIN_SPACER + getName();
+        return Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ getName();
     }
 
     @Override

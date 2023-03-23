@@ -21,7 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
 public class InventoryHelper {
 
     private InventoryHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     private static final String SLOT_NAME_ITEMSTACK = "itemStack";

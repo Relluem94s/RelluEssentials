@@ -36,7 +36,7 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
     private EnchantName enchantName;
     private Multimap<Attribute, AttributeModifier> attributes;
     private double multiply;
-    private int actual_level;
+    private int actualLevel;
 
     public EnchantmentHelper(NamespacedKey id) {
         super(id);
@@ -49,10 +49,10 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
         this.target = target;
         this.level = level;
         this.lore = lore;   
-        this.conflicts = new ArrayList<Enchantment>();   
+        this.conflicts = new ArrayList<>();   
         this.conflicts = conflicts;
         this.attributes = attributes;
-        this.actual_level = level.getStartLevel();
+        this.actualLevel = level.getStartLevel();
 
         CustomEnchants.customEnchantments.add(this);
     }
@@ -115,7 +115,6 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
         for(Enchantment e : item.getEnchantments().keySet()){
             if(conflictsWith(e)){
                 canEnchantItem = false;
-                System.out.println(e.getKey());
             }
         }
 
@@ -141,13 +140,13 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
     }
 
     public void addTo(ItemStack i, int level){
-        actual_level = level;
+        actualLevel = level;
         addTo(i);
     }
 
     @Override
     public void addTo(ItemStack i) {
-        i.addEnchantment(this, actual_level);
+        i.addEnchantment(this, actualLevel);
 
         if(i.hasItemMeta()){
             ItemMeta im = i.getItemMeta();
@@ -159,22 +158,21 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
             }
 
 
-            List<String> lore;
+            List<String> itemStackLore;
             if (im.getLore() != null) {
-                lore = im.getLore();
-                Collections.reverse(lore);
-                lore.add(getLore());
-                lore.add(getDisplayName());
-                Collections.reverse(lore);
+                itemStackLore = im.getLore();
+                Collections.reverse(itemStackLore);
+                itemStackLore.add(getLore());
+                itemStackLore.add(getDisplayName());
+                Collections.reverse(itemStackLore);
             } else {
-                lore = new ArrayList<String>();
-                lore.add(getDisplayName());
-                lore.add(getLore());
-                lore.add(getRarity().getPrefix() + getRarity().getDisplayName());
+                itemStackLore = new ArrayList<String>();
+                itemStackLore.add(getDisplayName());
+                itemStackLore.add(getLore());
+                itemStackLore.add(getRarity().getPrefix() + getRarity().getDisplayName());
             }
 
-            im.setLore(lore);
-
+            im.setLore(itemStackLore);
             i.setItemMeta(im);
         }
     }
@@ -191,11 +189,11 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
                 }
             }
 
-            List<String> lore = im.getLore();
-            lore.remove(getDisplayName());
-            lore.remove(getLore());
-            lore.remove(getRarity().getPrefix() + getRarity().getDisplayName());
-            im.setLore(lore);
+            List<String> itemStackLore = im.getLore();
+            itemStackLore.remove(getDisplayName());
+            itemStackLore.remove(getLore());
+            itemStackLore.remove(getRarity().getPrefix() + getRarity().getDisplayName());
+            im.setLore(itemStackLore);
             i.setItemMeta(im);
         }
     }
@@ -207,9 +205,32 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
             f.setAccessible(true);
             f.set(null, true);
             Enchantment.registerEnchantment(ench);
-            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_REGISTER_ENCHANTMENT, ench.getKey().getNamespace(), ench.getKey().toString()));
+            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_MANAGER_REGISTER_ENCHANTMENT, ench.getKey().getNamespace(), ench.getKey().toString()));
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
             ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + ench.getKey().toString());
         }
+    }
+
+    @Override
+    public boolean equals(Object o){
+        return (o instanceof EnchantmentHelper) && o.hashCode() == this.hashCode();
+    }
+
+    @Override
+    public int hashCode(){
+        int hash = 7;
+
+        hash = 19 * hash + actualLevel;
+
+        hash = 31 * hash + (enchantName == null ? 0 : enchantName.hashCode());
+        hash = 31 * hash + (rarity == null ? 0 : rarity.hashCode());
+        hash = 31 * hash + (target == null ? 0 : target.hashCode());
+        hash = 31 * hash + (level == null ? 0 : level.hashCode());
+        hash = 31 * hash + (lore == null ? 0 : lore.hashCode());
+        hash = 31 * hash + (conflicts == null ? 0 : conflicts.hashCode());
+        hash = 31 * hash + (attributes == null ? 0 : attributes.hashCode());
+        hash = 31 * hash + (super.getKey() == null ? 0 : super.getKey().hashCode());
+        
+        return hash;
     }
 }

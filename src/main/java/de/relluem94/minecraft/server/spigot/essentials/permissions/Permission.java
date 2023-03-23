@@ -13,7 +13,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 public class Permission {
 
     private Permission() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_CLASS_PRIVATE_CONSTRUCTOR);
+        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     /**

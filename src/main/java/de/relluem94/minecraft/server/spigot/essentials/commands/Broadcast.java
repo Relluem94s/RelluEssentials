@@ -52,12 +52,12 @@ public class Broadcast implements CommandExecutor {
         message = replaceSymbols(replaceColor(message));
 
         if (chat) {
-            Bukkit.broadcastMessage(PLUGIN_BROADCAST_NAME + PLUGIN_SPACER + PLUGIN_MESSAGE_COLOR + message);
+            Bukkit.broadcastMessage(PLUGIN_NAME_BROADCAST + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_MESSAGE + message);
             return true;
         }
 
         for (Player op : Bukkit.getOnlinePlayers()) {
-            op.sendTitle(PLUGIN_BROADCAST_NAME, message, 5, 80, 5);
+            op.sendTitle(PLUGIN_NAME_BROADCAST, message, 5, 80, 5);
         }
         return true;
     }
