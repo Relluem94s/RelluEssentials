@@ -11,11 +11,11 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
@@ -24,14 +24,15 @@ import org.bukkit.inventory.ItemStack;
 
 public class DatabaseManager implements IEnable{
 
+    private DatabaseHelper dBH;
+    private PluginInformationEntry pie;
+
+    public DatabaseManager(String host, String user, String password, int port){
+        dBH = new DatabaseHelper(host, user, password, port);
+    }
+
     @Override
     public void enable() {
-        RelluEssentials.getInstance().setDatabaseHelper(new DatabaseHelper(
-            RelluEssentials.getInstance().getConfig().getString("database.host"), 
-            RelluEssentials.getInstance().getConfig().getString("database.user"), 
-            RelluEssentials.getInstance().getConfig().getString("database.password"), 
-            RelluEssentials.getInstance().getConfig().getInt("database.port")
-        ));
         pie = RelluEssentials.getInstance().getDatabaseHelper().getPluginInformation();
         RelluEssentials.getInstance().getDatabaseHelper().init();
 
@@ -68,4 +69,14 @@ public class DatabaseManager implements IEnable{
             }
         }
     }
+
+    public DatabaseHelper getDatabaseHelper() {
+        return dBH;
+    }
+
+    public PluginInformationEntry getPluginInformation() {
+        return pie;
+    }
+
+    
 }

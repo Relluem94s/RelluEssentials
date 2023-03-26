@@ -56,7 +56,7 @@ public class RelluEssentials extends JavaPlugin {
     private static RelluEssentials instance;
 
     private DatabaseHelper dBH;
-    public static PluginInformationEntry pie;
+    private PluginInformationEntry pie;
     public static ResourceBundle englishProperties;
     public static ResourceBundle germanProperties;
     public static String language;
@@ -103,7 +103,17 @@ public class RelluEssentials extends JavaPlugin {
         new ConfigManager().enable();
         new ScoreBoardManager().enable();
         new CommandManager().enable();
-        new DatabaseManager().enable();
+        DatabaseManager dm = new DatabaseManager(
+            getConfig().getString("database.host"), 
+            getConfig().getString("database.user"), 
+            getConfig().getString("database.password"), 
+            getConfig().getInt("database.port")
+        );
+
+        dm.enable();
+        dBH = dm.getDatabaseHelper();
+        pie = dm.getPluginInformation();
+
         new EnchantmentManager().enable();
         new GroupManager().enable();
         new EventManager().enable();
@@ -181,7 +191,11 @@ public class RelluEssentials extends JavaPlugin {
         return dBH;
     }
 
-    public void setDatabaseHelper(DatabaseHelper dBH){
-        this.dBH = dBH;
+    public PluginInformationEntry getPluginInformation(){
+        return pie;
+    }
+
+    public void setPluginInformation(PluginInformationEntry pie){
+        this.pie = pie;
     }
 }

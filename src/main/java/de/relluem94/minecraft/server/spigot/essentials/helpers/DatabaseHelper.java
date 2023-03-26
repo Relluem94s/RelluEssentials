@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import de.relluem94.rellulib.utils.TypeUtils;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
@@ -55,7 +56,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 
 /**
  *
@@ -128,7 +128,7 @@ public class DatabaseHelper {
         executeScript(v + "insertLocationTypes.sql");
         executeScript(v + "insertPluginInformation.sql");
 
-        pie = getPluginInformation();
+        RelluEssentials.getInstance().setPluginInformation(getPluginInformation());
 
         List<PlayerEntry> pel = getPlayers();
         pel.forEach(p -> PlayerAPI.putPlayerEntry(UUID.fromString(p.getUUID()), p));
@@ -240,7 +240,7 @@ public class DatabaseHelper {
     }
 
     public void init() {
-        applyPatch(pie.getDbVersion());
+        applyPatch(RelluEssentials.getInstance().getPluginInformation().getDbVersion());
     }
 
     private boolean insertScripts = false; // To add Scripts in Development without its own patch version

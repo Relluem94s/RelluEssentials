@@ -16,8 +16,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_JOIN_MESSAGE;
 
 public class BetterPlayerJoin implements Listener {
@@ -56,6 +56,7 @@ public class BetterPlayerJoin implements Listener {
         Player p = e.getPlayer();
         addPlayer(p);
 
+        PluginInformationEntry pie = RelluEssentials.getInstance().getPluginInformation();
         p.setPlayerListHeader(pie.getTabheader());
         p.setPlayerListFooter(pie.getTabfooter());
 

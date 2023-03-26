@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.api;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -49,7 +50,7 @@ public class PlayerAPI {
         return playerEntryMap.get(player.getUniqueId());
     }
 
-    public static HashMap<UUID, PlayerEntry> getPlayerEntryMap(){
+    public static Map<UUID, PlayerEntry> getPlayerEntryMap(){
         return playerEntryMap;
     }
 
@@ -58,8 +59,8 @@ public class PlayerAPI {
      * @param player_fk
      * @return Collection of BagEntries
      */
-    public static Collection<BagEntry> getPlayerBagList(int player_fk){
-        return playerBagEntryMap.get(player_fk);
+    public static Collection<BagEntry> getPlayerBagList(int playerFK){
+        return playerBagEntryMap.get(playerFK);
     }
 
     /**
@@ -67,8 +68,8 @@ public class PlayerAPI {
      * @param player_fk
      * @param bagEntry
      */
-    public static void putPlayerBagEntry(int player_fk, BagEntry bagEntry){
-        playerBagEntryMap.put(player_fk, bagEntry);
+    public static void putPlayerBagEntry(int playerFK, BagEntry bagEntry){
+        playerBagEntryMap.put(playerFK, bagEntry);
     }
 
     /**
