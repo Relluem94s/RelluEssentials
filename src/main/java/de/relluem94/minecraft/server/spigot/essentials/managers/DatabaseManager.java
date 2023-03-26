@@ -15,7 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
@@ -27,40 +26,40 @@ public class DatabaseManager implements IEnable{
 
     @Override
     public void enable() {
-        dBH = new DatabaseHelper(
+        RelluEssentials.getInstance().setDatabaseHelper(new DatabaseHelper(
             RelluEssentials.getInstance().getConfig().getString("database.host"), 
             RelluEssentials.getInstance().getConfig().getString("database.user"), 
             RelluEssentials.getInstance().getConfig().getString("database.password"), 
             RelluEssentials.getInstance().getConfig().getInt("database.port")
-        );
-        pie = dBH.getPluginInformation();
-        dBH.init();
+        ));
+        pie = RelluEssentials.getInstance().getDatabaseHelper().getPluginInformation();
+        RelluEssentials.getInstance().getDatabaseHelper().init();
 
-        RelluEssentials.locationTypeEntryList.addAll(dBH.getLocationTypes());
+        RelluEssentials.locationTypeEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getLocationTypes());
 
-        for(DropEntry de : dBH.getDrops()){
+        for(DropEntry de : RelluEssentials.getInstance().getDatabaseHelper().getDrops()){
             RelluEssentials.dropMap.put(de.getMaterial(), new DoubleStore(de.getMin(), de.getMax()));
         }
 
-        for(CropEntry ce : dBH.getCrops()){
+        for(CropEntry ce : RelluEssentials.getInstance().getDatabaseHelper().getCrops()){
             RelluEssentials.crops.put(ce.getSeed(), ce.getPlant());
         }
 
-        new PlayerAPI(dBH.getBags());
-        new ProtectionAPI(dBH.getProtectionLocks(), dBH.getProtections());
-        new NPCAPI(dBH.getNPCs());
-        new BagAPI(dBH.getBagTypes());
-        new BankAPI(dBH.getBankTiers());
-        new WarpAPI(dBH.getWarps());
+        new PlayerAPI(RelluEssentials.getInstance().getDatabaseHelper().getBags());
+        new ProtectionAPI(RelluEssentials.getInstance().getDatabaseHelper().getProtectionLocks(), RelluEssentials.getInstance().getDatabaseHelper().getProtections());
+        new NPCAPI(RelluEssentials.getInstance().getDatabaseHelper().getNPCs());
+        new BagAPI(RelluEssentials.getInstance().getDatabaseHelper().getBagTypes());
+        new BankAPI(RelluEssentials.getInstance().getDatabaseHelper().getBankTiers());
+        new WarpAPI(RelluEssentials.getInstance().getDatabaseHelper().getWarps());
 
-        for(WorldGroupEntry wge: dBH.getWorldGroups()){
-            for(WorldEntry we: dBH.getWorldByGroup(wge)){
+        for(WorldGroupEntry wge: RelluEssentials.getInstance().getDatabaseHelper().getWorldGroups()){
+            for(WorldEntry we: RelluEssentials.getInstance().getDatabaseHelper().getWorldByGroup(wge)){
                 consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName());
                 RelluEssentials.worldsMap.put(wge, we);
             }
         }
 
-        RelluEssentials.groupEntryList.addAll(dBH.getGroups());
+        RelluEssentials.groupEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
 
         for(int i = 0; i < BagAPI.getBagTypeEntryList().size(); i++){
             ItemStack[] isa = BagHelper.getItemStacks(BagAPI.getBagTypeEntryList().get(i));

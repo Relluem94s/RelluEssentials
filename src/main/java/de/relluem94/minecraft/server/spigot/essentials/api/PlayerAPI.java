@@ -81,7 +81,7 @@ public class PlayerAPI {
 
     public static PlayerPartnerEntry getPartner(PlayerEntry pe){
         if(pe.getPartner() == null){
-            return RelluEssentials.dBH.getPlayerPartner(pe.getID());
+            return RelluEssentials.getInstance().getDatabaseHelper().getPlayerPartner(pe.getID());
         }
         
         return pe.getPartner();

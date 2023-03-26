@@ -7,11 +7,11 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
@@ -101,7 +101,7 @@ public class Home implements CommandExecutor {
                             if (homeExists(pe, le)) {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
                             } else if (!args[1].startsWith("death_")) {
-                                dBH.insertLocation(le);
+                                RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
                                 pe.getHomes().add(le);
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
                             } else {
@@ -111,14 +111,14 @@ public class Home implements CommandExecutor {
                         } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_DELETE)) {
                             if (homeExists(pe, le)) {
                                 le = getLocationEntry(pe, le);
-                                dBH.deleteLocation(le);
+                                RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
                                 pe.getHomes().remove(le);
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DELETE, args[1]));
                                 return true;
                             }
                             else if(deathExists(pe, le)){
                                 le = getLocationEntry(pe, le);
-                                dBH.deleteLocation(le);
+                                RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
                                 pe.getDeaths().remove(le);
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, args[1]));
                             }

@@ -113,7 +113,7 @@ public class TestCommand implements CommandExecutor {
                         }
                         else if (args[0].equalsIgnoreCase("bc")) {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-                            RelluEssentials.dBH.insertBag(1, pe.getID());
+                            RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getID());
                         }
                         else if (args[0].equalsIgnoreCase("bo")) {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
@@ -121,7 +121,7 @@ public class TestCommand implements CommandExecutor {
                         }
                         else if (args[0].equalsIgnoreCase("bc2")) {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-                            RelluEssentials.dBH.insertBag(2, pe.getID());
+                            RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getID());
                         }
                         else if (args[0].equalsIgnoreCase("bo2")) {
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
@@ -151,7 +151,7 @@ public class TestCommand implements CommandExecutor {
                                     p.sendMessage(pe.getId() + " >> " + l.getBlock().getType().name() + " != " + pe.getMaterialName() + " >> wrong");
                                     removeMap.put(l, pe);
                                     
-                                    RelluEssentials.dBH.deleteProtection(pe);
+                                    RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(pe);
                                 }
                             }
 

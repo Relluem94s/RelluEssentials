@@ -219,7 +219,7 @@ public class WorldHelper {
         for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
             for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
                 if(p.getWorld().getName().equals(we.getName())){
-                    WorldGroupInventoryEntry wgie = RelluEssentials.dBH.getWorldGroupInventory(pe, wge);
+                    WorldGroupInventoryEntry wgie = RelluEssentials.getInstance().getDatabaseHelper().getWorldGroupInventory(pe, wge);
                     if(wgie != null){
                         InventoryHelper.createInventory(wgie.getInventory().toString(), p); 
                         p.setFoodLevel(wgie.getFoodLevel());
@@ -236,7 +236,7 @@ public class WorldHelper {
                         wgie.setHealth(p.getHealth());
                         wgie.setTotalExperience(ExperienceHelper.getTotalExperience(p));
 
-                        RelluEssentials.dBH.insertWorldGroupInventory(wgie);
+                        RelluEssentials.getInstance().getDatabaseHelper().insertWorldGroupInventory(wgie);
                     }
                 }
             }
@@ -255,7 +255,7 @@ public class WorldHelper {
         for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
             for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
                 if(w.getName().equals(we.getName())){
-                    WorldGroupInventoryEntry wgie = RelluEssentials.dBH.getWorldGroupInventory(pe, wge);
+                    WorldGroupInventoryEntry wgie = RelluEssentials.getInstance().getDatabaseHelper().getWorldGroupInventory(pe, wge);
                     if(wgie == null){
                         wgie = new WorldGroupInventoryEntry();
                         wgie.setCreatedby(pe.getID());
@@ -271,7 +271,7 @@ public class WorldHelper {
                         p.setLevel(0);
                         p.setExp(0);
 
-                        RelluEssentials.dBH.insertWorldGroupInventory(wgie);
+                        RelluEssentials.getInstance().getDatabaseHelper().insertWorldGroupInventory(wgie);
                     }
                     else{
                         wgie.setInventory(InventoryHelper.saveInventoryToJSON(p));
@@ -285,7 +285,7 @@ public class WorldHelper {
                         p.setLevel(0);
                         p.setExp(0);
 
-                        RelluEssentials.dBH.updateWorldGroupInventory(wgie);
+                        RelluEssentials.getInstance().getDatabaseHelper().updateWorldGroupInventory(wgie);
                         p.getInventory().clear();
                         entryUpdated = true;
                     }
@@ -301,7 +301,7 @@ public class WorldHelper {
         for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
             for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
                 if(w.getName().equals(we.getName())){
-                    WorldGroupInventoryEntry wgie = RelluEssentials.dBH.getWorldGroupInventory(pe, wge);
+                    WorldGroupInventoryEntry wgie = RelluEssentials.getInstance().getDatabaseHelper().getWorldGroupInventory(pe, wge);
                     if(wgie != null){
                         hasInvInWorldGroup = true;
                     }

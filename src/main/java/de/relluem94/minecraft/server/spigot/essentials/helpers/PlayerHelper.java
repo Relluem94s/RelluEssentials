@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_PREFIX;
@@ -9,6 +8,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FOR
 import java.util.Properties;
 import java.util.UUID;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
@@ -183,7 +183,7 @@ public class PlayerHelper {
 
     public static int savePlayer(PlayerEntry pe){
         if(pe.hasToBeUpdated()){
-            dBH.updatePlayer(pe);
+            RelluEssentials.getInstance().getDatabaseHelper().updatePlayer(pe);
             pe.setToBeUpdated(false);
             return 1;
         }

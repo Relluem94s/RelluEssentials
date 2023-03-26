@@ -25,7 +25,7 @@ public class WorldManager implements IEnable, IDisable {
 
     @Override
     public void enable() {
-        if(RelluEssentials.getInstance().isUnitTest){
+        if(RelluEssentials.getInstance().isUnitTest()){
             return;
         }
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
@@ -48,7 +48,7 @@ public class WorldManager implements IEnable, IDisable {
 
     @Override
     public void disable() {
-        if(RelluEssentials.getInstance().isUnitTest){
+        if(RelluEssentials.getInstance().isUnitTest()){
             return;
         }
         for (WorldGroupEntry wge : worldsMap.keySet()) {

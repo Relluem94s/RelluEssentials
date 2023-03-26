@@ -17,9 +17,9 @@ public class BlockHistoryManager implements IEnable {
                 BlockHistoryEntry bh = RelluEssentials.blockHistoryList.get(0);
                 BlockHelper.setBlock(bh);
                 if (bh.getDeleted() == null) {
-                    RelluEssentials.dBH.insertBlockHistory(bh);
+                    RelluEssentials.getInstance().getDatabaseHelper().insertBlockHistory(bh);
                 } else {
-                    RelluEssentials.dBH.deleteBlockHistory(bh);
+                    RelluEssentials.getInstance().getDatabaseHelper().deleteBlockHistory(bh);
                 }
                 RelluEssentials.blockHistoryList.remove(0);
             }

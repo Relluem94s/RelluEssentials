@@ -17,14 +17,13 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.pie;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_JOIN_MESSAGE;
 
 public class BetterPlayerJoin implements Listener {
 
     private void addPlayer(Player p) {
-        PlayerEntry pe = dBH.getPlayer(p.getUniqueId().toString());
+        PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
         if (pe == null) {
             pe = new PlayerEntry();
             pe.setCreatedby(1);
@@ -32,15 +31,15 @@ public class BetterPlayerJoin implements Listener {
             pe.setCustomName(p.getDisplayName());
             pe.setGroup(Groups.getGroup("user"));
             pe.setUUID(p.getUniqueId().toString());
-            dBH.insertPlayer(pe);
+            RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
 
-            pe = dBH.getPlayer(p.getUniqueId().toString());
+            pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
         }
         else{
             if(pe.getName() == null){
                 pe.setName(p.getName());
-                dBH.updatePlayer(pe);
-                pe = dBH.getPlayer(p.getUniqueId().toString());
+                RelluEssentials.getInstance().getDatabaseHelper().updatePlayer(pe);
+                pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
             }
         }
 
@@ -49,7 +48,7 @@ public class BetterPlayerJoin implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        if(RelluEssentials.getInstance().isUnitTest){
+        if(RelluEssentials.getInstance().isUnitTest()){
             return;
         }
 

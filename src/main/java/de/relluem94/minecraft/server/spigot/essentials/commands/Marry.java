@@ -70,7 +70,7 @@ public class Marry implements CommandExecutor {
         playerPartnerEntry.setFirstPlayerID(firstPlayer.getID());
         playerPartnerEntry.setSecondPlayerID(secondPlayer.getID());
 
-        RelluEssentials.dBH.insertPlayerPartner(playerPartnerEntry);
+        RelluEssentials.getInstance().getDatabaseHelper().insertPlayerPartner(playerPartnerEntry);
         playerPartnerEntry = PlayerAPI.getPartner(firstPlayer);
 
         firstPlayer.setPartner(playerPartnerEntry);
@@ -116,7 +116,7 @@ public class Marry implements CommandExecutor {
             pe.setPartner(null);
             secondPlayerEntry.setPartner(null);
         
-            RelluEssentials.dBH.deletePlayerPartner(ppe);
+            RelluEssentials.getInstance().getDatabaseHelper().deletePlayerPartner(ppe);
 
             Collection<ProtectionEntry> protectionEntryList = new ArrayList<> ();
             protectionEntryList.addAll(ProtectionAPI.getProtectionEntryList().values());

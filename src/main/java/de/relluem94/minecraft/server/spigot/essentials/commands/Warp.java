@@ -80,9 +80,9 @@ public class Warp implements CommandExecutor {
                     le.setLocationName(args[1]);
                     le.setLocationType(RelluEssentials.locationTypeEntryList.get(typeId - 1));
                     le.setPlayerId(PlayerAPI.getPlayerEntry(p).getID());
-                    RelluEssentials.dBH.insertLocation(le);
-                    if(RelluEssentials.dBH.getLocation(p.getLocation(), typeId) != null){
-                        le = RelluEssentials.dBH.getLocation(p.getLocation(), typeId);
+                    RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
+                    if(RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId) != null){
+                        le = RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId);
                     }
 
                     WarpAPI.addWarp(le);
@@ -91,7 +91,7 @@ public class Warp implements CommandExecutor {
             else if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WARP_REMOVE)){
                 LocationEntry le = WarpAPI.getWarp(args[0]);
                 if(le != null){
-                    RelluEssentials.dBH.deleteLocation(le);
+                    RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
                     WarpAPI.removeWarp(le);
                 }
             }

@@ -108,7 +108,7 @@ public class Admin implements CommandExecutor {
                         removeMap.put(l, pe);
                         p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS, pe.getId(),
                                 pe.getMaterialName(), l.getBlock().getType().name()));
-                        RelluEssentials.dBH.deleteProtection(pe);
+                        RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(pe);
                     }
                 }
 

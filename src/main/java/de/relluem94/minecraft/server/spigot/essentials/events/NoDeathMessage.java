@@ -12,13 +12,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH_TP;
@@ -45,8 +45,8 @@ public class NoDeathMessage implements Listener {
         LocationTypeEntry locationType = locationTypeEntryList.get(1);
         le.setLocationType(locationType);
         le.setPlayerId(pe.getID());
-        dBH.insertLocation(le);
-        le = dBH.getLocation(p.getLocation(), locationType.getId());
+        RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
+        le = RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), locationType.getId());
         pe.getHomes().add(le);
 
         for(ItemStack is : p.getInventory().getContents()){

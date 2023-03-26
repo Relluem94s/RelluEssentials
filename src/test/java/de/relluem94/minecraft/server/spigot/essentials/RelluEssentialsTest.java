@@ -46,7 +46,7 @@ public class RelluEssentialsTest {
 
         PlayerEntry pe = getPlayerEntry();
 
-        RelluEssentials.dBH.insertPlayer(pe);
+        RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
         PlayerAPI.putPlayerEntry(UUID.fromString(pe.getUUID()), pe);
 
         

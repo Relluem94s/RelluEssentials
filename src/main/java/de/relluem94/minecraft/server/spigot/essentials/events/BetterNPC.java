@@ -81,12 +81,12 @@ public class BetterNPC implements Listener {
                     if(NPCAPI.getNPCNameList().get(i).equals(customName)){
                         if(customName.equals(RelluEssentials.getBanker().getName())){
                             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-                            BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
+                            BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getID());
                             if(bae != null){
                                 InventoryHelper.openInventory(p, RelluEssentials.getBanker().getMainGUI());
                             }
                             else{
-                                BankTierEntry bte = RelluEssentials.dBH.getBankTier(1);
+                                BankTierEntry bte = RelluEssentials.getInstance().getDatabaseHelper().getBankTier(1);
                                 if(pe.getPurse() > bte.getCost()){
                                     pe.setPurse(pe.getPurse() - bte.getCost());
                                     pe.setUpdatedBy(pe.getID());
@@ -97,7 +97,7 @@ public class BetterNPC implements Listener {
                                     bae.setTier(bte);
                                     bae.setPlayerId(pe.getID());
                 
-                                    RelluEssentials.dBH.insertBankAccount(bae);
+                                    RelluEssentials.getInstance().getDatabaseHelper().insertBankAccount(bae);
                                     p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT);
                                 }
                                 else{
@@ -142,8 +142,8 @@ public class BetterNPC implements Listener {
                         pe.setPurse(purse - price);
                         pe.setUpdatedBy(pe.getID());
                         pe.setToBeUpdated(true);
-                        RelluEssentials.dBH.insertBag(bt.getId(), pe.getID());
-                        PlayerAPI.putPlayerBagEntry(pe.getID(), RelluEssentials.dBH.getBag(bt.getId(), pe.getID()));
+                        RelluEssentials.getInstance().getDatabaseHelper().insertBag(bt.getId(), pe.getID());
+                        PlayerAPI.putPlayerBagEntry(pe.getID(), RelluEssentials.getInstance().getDatabaseHelper().getBag(bt.getId(), pe.getID()));
                         
                         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
                     }
@@ -266,7 +266,7 @@ public class BetterNPC implements Listener {
             Player p = (Player) e.getWhoClicked();
             PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
             if (e.getView().getTitle().equals(RelluEssentials.getBanker().getTitle())) {
-                BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
+                BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getID());
                 if(e.getCurrentItem().equals(BankerHelper.npc_gui_deposit.getCustomItem())){
                     InventoryHelper.closeInventory(p);
                     InventoryHelper.openInventory(p, RelluEssentials.getBanker().getDepositGUI());
@@ -313,7 +313,7 @@ public class BetterNPC implements Listener {
                 else if(BankerHelper.npc_gui_balance_transactions.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                     p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION);
-                    List<BankTransactionEntry> btel = RelluEssentials.dBH.getTransactionsToBankFromPlayer(bae.getId());
+                    List<BankTransactionEntry> btel = RelluEssentials.getInstance().getDatabaseHelper().getTransactionsToBankFromPlayer(bae.getId());
                     for(BankTransactionEntry bte: btel){
                         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST, bte.getValue() > 1 ? EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE : EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE, StringHelper.formatDouble(bte.getValue()), bte.getCreated()));
                     }

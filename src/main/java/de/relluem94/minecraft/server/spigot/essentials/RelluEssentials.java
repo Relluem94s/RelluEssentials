@@ -20,13 +20,11 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import de.relluem94.rellulib.stores.DoubleStore;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
@@ -57,14 +55,14 @@ public class RelluEssentials extends JavaPlugin {
     private long start;
     private static RelluEssentials instance;
 
-    public static DatabaseHelper dBH;
+    private DatabaseHelper dBH;
     public static PluginInformationEntry pie;
     public static ResourceBundle englishProperties;
     public static ResourceBundle germanProperties;
     public static String language;
     private static Banker banker;
 
-    public boolean isUnitTest = false;
+    private boolean isUnitTest = false;
 
     public static final Map<Integer, Vector2Location> selections = new HashMap<>();
     public static final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
@@ -173,5 +171,17 @@ public class RelluEssentials extends JavaPlugin {
         super(loader, description, dataFolder, file);
         this.getConfig().set("database.host", "172.17.0.2");
         isUnitTest = true;
+    }
+
+    public boolean isUnitTest(){
+        return isUnitTest;
+    }
+
+    public DatabaseHelper getDatabaseHelper(){
+        return dBH;
+    }
+
+    public void setDatabaseHelper(DatabaseHelper dBH){
+        this.dBH = dBH;
     }
 }

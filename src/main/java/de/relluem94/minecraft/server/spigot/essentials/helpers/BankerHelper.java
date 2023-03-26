@@ -89,7 +89,7 @@ public class BankerHelper {
                     pe.setPurse(purse - transactionValue);
                 }
     
-                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transactionValue, bae.getValue(), bae.getTier().getId());
+                RelluEssentials.getInstance().getDatabaseHelper().addTransactionToBank(pe.getID(), bae.getId(), transactionValue, bae.getValue(), bae.getTier().getId());
                 
                 pe.setUpdatedBy(pe.getID());
                 pe.setToBeUpdated(true);
@@ -103,7 +103,7 @@ public class BankerHelper {
                 if(transactionValue > 0){
                     pe.setPurse(purse - transactionValue);
 
-                    RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transactionValue, bae.getValue(), bae.getTier().getId());
+                    RelluEssentials.getInstance().getDatabaseHelper().addTransactionToBank(pe.getID(), bae.getId(), transactionValue, bae.getValue(), bae.getTier().getId());
                     
                     pe.setUpdatedBy(pe.getID());
                     pe.setToBeUpdated(true);
@@ -139,7 +139,7 @@ public class BankerHelper {
             }
 
             pe.setPurse(purse + transactionValue);
-            RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), transactionValue*-1, bae.getValue(), bae.getTier().getId());
+            RelluEssentials.getInstance().getDatabaseHelper().addTransactionToBank(pe.getID(), bae.getId(), transactionValue*-1, bae.getValue(), bae.getTier().getId());
             
             pe.setUpdatedBy(pe.getID());
             pe.setToBeUpdated(true);
@@ -175,7 +175,7 @@ public class BankerHelper {
                 pe.setPurse(purse - costs);
                 pe.setUpdatedBy(pe.getID());
                 pe.setToBeUpdated(true);
-                RelluEssentials.dBH.updateBankAccount(pe.getID(), 0f, bae.getValue(), bt.getId());
+                RelluEssentials.getInstance().getDatabaseHelper().updateBankAccount(pe.getID(), 0f, bae.getValue(), bt.getId());
                 p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE);
                 p.closeInventory();
                 return;
@@ -183,7 +183,7 @@ public class BankerHelper {
 
             double account = bae.getValue();
             if(account >= costs){
-                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), -costs, bae.getValue(), bt.getId());
+                RelluEssentials.getInstance().getDatabaseHelper().addTransactionToBank(pe.getID(), bae.getId(), -costs, bae.getValue(), bt.getId());
                 p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK);
                 p.closeInventory();
                 return;
@@ -193,7 +193,7 @@ public class BankerHelper {
                 pe.setPurse(0);
                 pe.setUpdatedBy(pe.getID());
                 pe.setToBeUpdated(true);
-                RelluEssentials.dBH.addTransactionToBank(pe.getID(), bae.getId(), -(costs-purse), bae.getValue(), bt.getId());
+                RelluEssentials.getInstance().getDatabaseHelper().addTransactionToBank(pe.getID(), bae.getId(), -(costs-purse), bae.getValue(), bt.getId());
                 p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH);
                 p.closeInventory();
                 return;
@@ -224,7 +224,7 @@ public class BankerHelper {
         double interest = (bae.getValue() / 100) * bae.getTier().getInterest();
         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_INTEREST, StringHelper.formatDouble(interest)));
 
-        RelluEssentials.dBH.addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(), bae.getTier().getId());
+        RelluEssentials.getInstance().getDatabaseHelper().addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(), bae.getTier().getId());
         RelluEssentials.bankInterestMap.remove(p.getUniqueId());
     }
 
@@ -238,7 +238,7 @@ public class BankerHelper {
             return;
         }
 
-        BankAccountEntry bae = RelluEssentials.dBH.getPlayerBankAccount(pe.getID());
+        BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getID());
         if(bae == null){
             return;
         }

@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.permissions;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.dBH;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.groupEntryList;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 
@@ -57,8 +56,9 @@ public class Groups {
      */
     public static boolean addGroup(GroupEntry groupEntry) {
         if (getGroup(groupEntry.getName()) == null) {
-            dBH.insertGroup(groupEntry);
-            groupEntryList.addAll(dBH.getGroups());
+
+            RelluEssentials.getInstance().getDatabaseHelper().insertGroup(groupEntry);
+            groupEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
             return true;
         } else {
             return false;

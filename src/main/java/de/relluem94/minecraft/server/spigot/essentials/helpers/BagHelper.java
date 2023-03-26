@@ -176,7 +176,7 @@ public class BagHelper {
     }
 
     public static boolean hasBag(int type, PlayerEntry pe){
-        return RelluEssentials.dBH.getBag(type, pe.getID()) != null;
+        return RelluEssentials.getInstance().getDatabaseHelper().getBag(type, pe.getID()) != null;
     }
 
     public static boolean hasBag(int playerFK, int bagType){
@@ -314,7 +314,7 @@ public class BagHelper {
 
         for(BagEntry be : PlayerAPI.getPlayerBagMap().values()){
             if(be.hasToBeUpdated()){
-                RelluEssentials.dBH.updateBagEntry(be);
+                RelluEssentials.getInstance().getDatabaseHelper().updateBagEntry(be);
                 be.setToBeUpdated(false);
                 updatedBags++;
             }
