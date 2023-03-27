@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.utils.TypeUtils;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -38,7 +38,7 @@ public class Bags implements CommandExecutor {
         }
 
         if (args.length != 1) {
-            p.openInventory(BagHelper.getBags(PlayerAPI.getPlayerEntry(p)));
+            p.openInventory(BagHelper.getBags(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p)));
             return true;   
         }
 
@@ -51,7 +51,7 @@ public class Bags implements CommandExecutor {
         }
 
         if(bte != null){
-            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if(BagHelper.hasBag(pe.getID(), bte.getId())){
                 p.openInventory(BagHelper.getBag(bte.getId(), pe));
                 return true;

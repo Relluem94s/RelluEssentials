@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
@@ -26,9 +26,9 @@ public class Nick implements CommandExecutor {
                     if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         Player target = Bukkit.getPlayer(args[0]).getPlayer();
                         if (target != null) {
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(target.getUniqueId());
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
                             pe.setCustomName(args[1]);
-                            pe.setUpdatedBy(PlayerAPI.getPlayerEntry(p.getUniqueId()).getID());
+                            pe.setUpdatedBy(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getID());
                             pe.setToBeUpdated(true);
                             target.setCustomName(pe.getGroup().getPrefix() + args[1]);
                             target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);

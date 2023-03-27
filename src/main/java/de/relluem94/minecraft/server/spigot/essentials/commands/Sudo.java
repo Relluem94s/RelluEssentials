@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
@@ -33,9 +33,9 @@ public class Sudo implements CommandExecutor {
                     }
                     else if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         OfflinePlayerEntry target = PlayerHelper.getOfflinePlayerByName((args[0]));
-                        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-                        if (target != null && PlayerAPI.getPlayerEntry(target.getID()) != null) {
-                            PlayerEntry tpe = PlayerAPI.getPlayerEntry(target.getID());
+                        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
+                        if (target != null && RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID()) != null) {
+                            PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID());
                             SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
                             WorldHelper.saveWorldGroupInventory(p);
                             pe.setID(tpe.getID());
@@ -67,7 +67,7 @@ public class Sudo implements CommandExecutor {
 
     public static void exitSudo(Player p){
         PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         WorldHelper.saveWorldGroupInventory(p);
         pe.setID(tpe.getID());
         pe.setCustomName(tpe.getCustomName());

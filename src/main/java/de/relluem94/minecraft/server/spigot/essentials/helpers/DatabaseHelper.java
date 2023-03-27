@@ -29,7 +29,6 @@ import de.relluem94.rellulib.utils.TypeUtils;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -131,7 +130,7 @@ public class DatabaseHelper {
         RelluEssentials.getInstance().setPluginInformation(getPluginInformation());
 
         List<PlayerEntry> pel = getPlayers();
-        pel.forEach(p -> PlayerAPI.putPlayerEntry(UUID.fromString(p.getUUID()), p));
+        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUUID()), p));
 
         ConfigHelper ch = new ConfigHelper("players");
 
@@ -140,7 +139,7 @@ public class DatabaseHelper {
             pe.forEach(this::insertPlayer);
 
             for (PlayerEntry p : pe) {
-                PlayerEntry pu = PlayerAPI.getPlayerEntry(UUID.fromString(p.getUUID()));
+                PlayerEntry pu = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(UUID.fromString(p.getUUID()));
                 pu.setAFK(p.isAFK());
                 pu.setFlying(p.isFlying());
                 pu.setCustomName(p.getCustomName());

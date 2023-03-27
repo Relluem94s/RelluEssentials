@@ -26,8 +26,6 @@ import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
@@ -52,15 +50,15 @@ public class BetterNPC implements Listener {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
 
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if(e.getItem() != null && NPCAPI.getNPCItemStackList().contains(e.getItem())){
+                if(e.getItem() != null && RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().contains(e.getItem())){
                     e.setCancelled(true);
 
                     Location location = e.getClickedBlock().getLocation().add(0, 1, 0);
                     location.setYaw(e.getPlayer().getLocation().getYaw());
 
-                    for(int i = 0; i < NPCAPI.getNPCItemStackList().size(); i++){
-                        if(NPCAPI.getNPCItemStackList().get(i).equals(e.getItem())){
-                            NPCHelper nh = new NPCHelper(location, NPCAPI.getNPC(i));
+                    for(int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().size(); i++){
+                        if(RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().get(i).equals(e.getItem())){
+                            NPCHelper nh = new NPCHelper(location, RelluEssentials.getInstance().getNpcAPI().getNPC(i));
                             nh.spawn();
                             e.getPlayer().sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
                         }
@@ -77,10 +75,10 @@ public class BetterNPC implements Listener {
         if(e.getRightClicked() instanceof Villager){
             if(e.getRightClicked().getCustomName() != null) {
                 String customName = e.getRightClicked().getCustomName();
-                for(int i = 0; i < NPCAPI.getNPCNameList().size(); i++){
-                    if(NPCAPI.getNPCNameList().get(i).equals(customName)){
+                for(int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCNameList().size(); i++){
+                    if(RelluEssentials.getInstance().getNpcAPI().getNPCNameList().get(i).equals(customName)){
                         if(customName.equals(RelluEssentials.getBanker().getName())){
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                             BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getID());
                             if(bae != null){
                                 InventoryHelper.openInventory(p, RelluEssentials.getBanker().getMainGUI());
@@ -107,7 +105,7 @@ public class BetterNPC implements Listener {
                             e.setCancelled(true);
                         }
                         else{
-                            InventoryHelper.openInventory(p, NPCAPI.getNPC(i).getMainGUI());
+                            InventoryHelper.openInventory(p, RelluEssentials.getInstance().getNpcAPI().getNPC(i).getMainGUI());
                             e.setCancelled(true);
                         }
                     }
@@ -143,7 +141,7 @@ public class BetterNPC implements Listener {
                         pe.setUpdatedBy(pe.getID());
                         pe.setToBeUpdated(true);
                         RelluEssentials.getInstance().getDatabaseHelper().insertBag(bt.getId(), pe.getID());
-                        PlayerAPI.putPlayerBagEntry(pe.getID(), RelluEssentials.getInstance().getDatabaseHelper().getBag(bt.getId(), pe.getID()));
+                        RelluEssentials.getInstance().getPlayerAPI().putPlayerBagEntry(pe.getID(), RelluEssentials.getInstance().getDatabaseHelper().getBag(bt.getId(), pe.getID()));
                         
                         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
                     }
@@ -264,7 +262,7 @@ public class BetterNPC implements Listener {
     public void onInventoryClickItem(InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player && e.getCurrentItem() != null){
             Player p = (Player) e.getWhoClicked();
-            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if (e.getView().getTitle().equals(RelluEssentials.getBanker().getTitle())) {
                 BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getID());
                 if(e.getCurrentItem().equals(BankerHelper.npc_gui_deposit.getCustomItem())){
@@ -327,7 +325,7 @@ public class BetterNPC implements Listener {
                 }
                 e.setCancelled(true);
             }
-            else if(NPCAPI.getNPCTraderTitleList().contains(e.getView().getTitle())){
+            else if(RelluEssentials.getInstance().getNpcAPI().getNPCTraderTitleList().contains(e.getView().getTitle())){
                     trade(e.getCurrentItem(), e.getClickedInventory(), p, pe, e.getSlot(), e.isRightClick());
                     e.setCancelled(true);
             }
@@ -354,7 +352,7 @@ public class BetterNPC implements Listener {
             return;
         }
 
-        if(!NPCAPI.getNPCNameList().contains(e.getEntity().getCustomName())){
+        if(!RelluEssentials.getInstance().getNpcAPI().getNPCNameList().contains(e.getEntity().getCustomName())){
             return;
         }
 

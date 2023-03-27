@@ -26,7 +26,6 @@ import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
@@ -79,7 +78,7 @@ public class BetterBags implements Listener {
     public void onBlockDrop(BlockDropItemEvent e) {
         Player p = e.getPlayer();
        
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
         for(Item i : e.getItems()){
             if(RelluEssentials.dropMap.containsKey(i.getItemStack().getType())){
@@ -153,7 +152,7 @@ public class BetterBags implements Listener {
             Player p = (Player) e.getWhoClicked();
             if (e.getView().getTitle().startsWith(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE) && e.getView().getTitle().endsWith(" Bag")) {
 
-                PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                 BagEntry be = BagHelper.getBag(pe.getID(), BagHelper.getBagTypeByName(e.getView().getTitle()).getId());
 
                 ItemStack is = e.getCurrentItem();
@@ -206,7 +205,6 @@ public class BetterBags implements Listener {
                                     }
                                     else{
                                         cleanIS.setAmount(value);
-                                        value = 0;
                                         be.setSlotValue(slot, 0);
                                         be.setToBeUpdated(true);
                                         p.getInventory().addItem(cleanIS);
@@ -245,7 +243,7 @@ public class BetterBags implements Listener {
                 String name = e.getCurrentItem().getItemMeta().getDisplayName();
                 BagTypeEntry bte = BagHelper.getBagTypeByName(name);
                 if(bte != null){
-                    PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getWhoClicked().getUniqueId());
+                    PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getWhoClicked().getUniqueId());
                     e.getWhoClicked().openInventory(BagHelper.getBag(bte.getId(), pe));
                 }
             }
@@ -257,7 +255,7 @@ public class BetterBags implements Listener {
     public void onItemCollect(EntityPickupItemEvent e) {
         if(e.getEntity() instanceof Player){
             Player p = (Player) e.getEntity();
-            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
             ItemStack is = e.getItem().getItemStack();
             if(CustomItems.coins.almostEquals(is)){

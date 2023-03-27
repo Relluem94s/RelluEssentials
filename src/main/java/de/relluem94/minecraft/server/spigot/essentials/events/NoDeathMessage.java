@@ -13,7 +13,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
@@ -38,7 +37,7 @@ public class NoDeathMessage implements Listener {
 
         Player p = e.getEntity().getPlayer();
 
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         LocationEntry le = new LocationEntry();
         le.setLocation(p.getLocation());
         le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(94)));
@@ -62,7 +61,7 @@ public class NoDeathMessage implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         p.setAllowFlight(pe.isFlying());
         p.setFlying(pe.isFlying());
     }
@@ -70,7 +69,7 @@ public class NoDeathMessage implements Listener {
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent e) {
         Player p = e.getPlayer();
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         p.setAllowFlight(pe.isFlying());
         p.setFlying(pe.isFlying());
     }
@@ -78,7 +77,7 @@ public class NoDeathMessage implements Listener {
     @EventHandler
     public void onWorldChange(PlayerTeleportEvent e) {
         Player p = e.getPlayer();
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         p.setAllowFlight(pe.isFlying());
         p.setFlying(pe.isFlying());
     }

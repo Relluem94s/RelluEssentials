@@ -18,8 +18,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartne
 
 public class PlayerAPI {
 
-    private static HashMap<UUID, PlayerEntry> playerEntryMap = new HashMap<>();
-    private static Multimap<Integer, BagEntry> playerBagEntryMap = ArrayListMultimap.create();
+    private Map<UUID, PlayerEntry> playerEntryMap = new HashMap<>();
+    private Multimap<Integer, BagEntry> playerBagEntryMap = ArrayListMultimap.create();
 
 
     public PlayerAPI(List<BagEntry> bagEntries){
@@ -29,15 +29,15 @@ public class PlayerAPI {
 
     }
 
-    public static void putPlayerEntry(UUID uuid, PlayerEntry pe){
+    public void putPlayerEntry(UUID uuid, PlayerEntry pe){
         playerEntryMap.put(uuid, pe);
     }
 
-    public static PlayerEntry getPlayerEntry(UUID uuid){
+    public PlayerEntry getPlayerEntry(UUID uuid){
         return playerEntryMap.get(uuid);
     }
 
-    public static PlayerEntry getPlayerEntry(int id){
+    public PlayerEntry getPlayerEntry(int id){
         for(PlayerEntry pe : playerEntryMap.values()){
             if(pe.getID() == id){
                 return pe;
@@ -46,11 +46,11 @@ public class PlayerAPI {
         return null;
     }
 
-    public static PlayerEntry getPlayerEntry(Player player){
+    public PlayerEntry getPlayerEntry(Player player){
         return playerEntryMap.get(player.getUniqueId());
     }
 
-    public static Map<UUID, PlayerEntry> getPlayerEntryMap(){
+    public Map<UUID, PlayerEntry> getPlayerEntryMap(){
         return playerEntryMap;
     }
 
@@ -59,8 +59,8 @@ public class PlayerAPI {
      * @param player_fk
      * @return Collection of BagEntries
      */
-    public static Collection<BagEntry> getPlayerBagList(int playerFK){
-        return playerBagEntryMap.get(playerFK);
+    public Collection<BagEntry> getPlayerBagList(int player_fk){
+        return playerBagEntryMap.get(player_fk);
     }
 
     /**
@@ -68,19 +68,19 @@ public class PlayerAPI {
      * @param player_fk
      * @param bagEntry
      */
-    public static void putPlayerBagEntry(int playerFK, BagEntry bagEntry){
-        playerBagEntryMap.put(playerFK, bagEntry);
+    public void putPlayerBagEntry(int player_fk, BagEntry bagEntry){
+        playerBagEntryMap.put(player_fk, bagEntry);
     }
 
     /**
      * Gives back Multimap of Integer (Player ID) and BagEntry of Player
      * @return Multimap of Integer and BagEntry
      */
-    public static Multimap<Integer, BagEntry> getPlayerBagMap() {
+    public Multimap<Integer, BagEntry> getPlayerBagMap() {
         return playerBagEntryMap;
     }
 
-    public static PlayerPartnerEntry getPartner(PlayerEntry pe){
+    public PlayerPartnerEntry getPartner(PlayerEntry pe){
         if(pe.getPartner() == null){
             return RelluEssentials.getInstance().getDatabaseHelper().getPlayerPartner(pe.getID());
         }

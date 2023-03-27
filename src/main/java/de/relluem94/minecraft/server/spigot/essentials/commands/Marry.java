@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterLock;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
@@ -32,7 +30,7 @@ public class Marry implements CommandExecutor {
     HashMap<Player, Player> marryAcceptList = new HashMap<>();
 
     private void addMarryEntry(Player player, Player target){
-        if(PlayerAPI.getPlayerEntry(player).getPartner() != null || PlayerAPI.getPlayerEntry(target).getPartner() != null){
+        if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player).getPartner() != null || RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target).getPartner() != null){
             player.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_IS_MAARIED);
             return;
         }
@@ -62,8 +60,8 @@ public class Marry implements CommandExecutor {
         target.sendMessage(String.format(PLUGIN_COMMAND_MARRY_MARRIED, player.getCustomName()));
         player.sendMessage(String.format(PLUGIN_COMMAND_MARRY_MARRIED, target.getCustomName()));
 
-        PlayerEntry firstPlayer = PlayerAPI.getPlayerEntry(target);
-        PlayerEntry secondPlayer = PlayerAPI.getPlayerEntry(player);
+        PlayerEntry firstPlayer = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target);
+        PlayerEntry secondPlayer = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player);
 
         PlayerPartnerEntry playerPartnerEntry = new PlayerPartnerEntry();
         playerPartnerEntry.setCreatedby(firstPlayer.getID());
@@ -71,13 +69,13 @@ public class Marry implements CommandExecutor {
         playerPartnerEntry.setSecondPlayerID(secondPlayer.getID());
 
         RelluEssentials.getInstance().getDatabaseHelper().insertPlayerPartner(playerPartnerEntry);
-        playerPartnerEntry = PlayerAPI.getPartner(firstPlayer);
+        playerPartnerEntry = RelluEssentials.getInstance().getPlayerAPI().getPartner(firstPlayer);
 
         firstPlayer.setPartner(playerPartnerEntry);
         secondPlayer.setPartner(playerPartnerEntry);
 
         Collection<ProtectionEntry> protectionEntryList = new ArrayList<> ();
-        protectionEntryList.addAll(ProtectionAPI.getProtectionEntryList().values());
+        protectionEntryList.addAll(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
 
         for(ProtectionEntry pre : protectionEntryList){ 
             if(pre.getCreatedBy() == firstPlayer.getID()){
@@ -97,7 +95,7 @@ public class Marry implements CommandExecutor {
     private void divorce(PlayerEntry pe) {
         PlayerPartnerEntry ppe = pe.getPartner();
 
-        PlayerEntry secondPlayerEntry = PlayerAPI.getPlayerEntry((ppe.getSecondPlayerID() != pe.getID() ? ppe.getSecondPlayerID() : ppe.getFirstPlayerID()));
+        PlayerEntry secondPlayerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry((ppe.getSecondPlayerID() != pe.getID() ? ppe.getSecondPlayerID() : ppe.getFirstPlayerID()));
 
         Player firstPlayer = Bukkit.getPlayer(UUID.fromString(pe.getUUID()));
         OfflinePlayer secondOfflinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUUID()));
@@ -119,7 +117,7 @@ public class Marry implements CommandExecutor {
             RelluEssentials.getInstance().getDatabaseHelper().deletePlayerPartner(ppe);
 
             Collection<ProtectionEntry> protectionEntryList = new ArrayList<> ();
-            protectionEntryList.addAll(ProtectionAPI.getProtectionEntryList().values());
+            protectionEntryList.addAll(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
 
             for(ProtectionEntry pre : protectionEntryList){
                 if(pre.getCreatedBy() == pe.getID()){
@@ -173,8 +171,8 @@ public class Marry implements CommandExecutor {
             }
 
             if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_MARRY_DIVORCE)){
-                PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-                if(PlayerAPI.getPlayerEntry(p).getPartner() != null){
+                PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
+                if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p).getPartner() != null){
                     divorce(pe);
                     return true;
                 }

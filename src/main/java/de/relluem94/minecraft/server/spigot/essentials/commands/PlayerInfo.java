@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -67,7 +67,7 @@ public class PlayerInfo implements CommandExecutor {
             return true;
         }
 
-        PlayerEntry pet = PlayerAPI.getPlayerEntry(p);
+        PlayerEntry pet = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
         if(pet == null){
             p.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
@@ -80,7 +80,7 @@ public class PlayerInfo implements CommandExecutor {
         p.sendMessage(String.format("Group: %s", pet.getGroup().getPrefix() + pet.getGroup().getName()));
 
         if(pet.getPartner() != null){
-            p.sendMessage(String.format("Married: %s $4\u2665§f %s",  PlayerAPI.getPlayerEntry(pet.getPartner().getFirstPlayerID()).getName(), PlayerAPI.getPlayerEntry(pet.getPartner().getSecondPlayerID())));
+            p.sendMessage(String.format("Married: %s $4\u2665§f %s",  RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getFirstPlayerID()).getName(), RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getSecondPlayerID())));
             p.sendMessage(String.format("Married since: %s", pet.getPartner().getCreated()));
         }
 

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -79,7 +78,7 @@ public class Warp implements CommandExecutor {
                     le.setLocation(p.getLocation());
                     le.setLocationName(args[1]);
                     le.setLocationType(RelluEssentials.locationTypeEntryList.get(typeId - 1));
-                    le.setPlayerId(PlayerAPI.getPlayerEntry(p).getID());
+                    le.setPlayerId(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p).getID());
                     RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
                     if(RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId) != null){
                         le = RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId);

@@ -20,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
@@ -233,7 +232,7 @@ public class BankerHelper {
             return;
         } 
         
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(uuid);
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(uuid);
         if(pe == null){
             return;
         }

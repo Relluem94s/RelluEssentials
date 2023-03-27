@@ -11,9 +11,8 @@ import org.bukkit.entity.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.*;
@@ -32,7 +31,7 @@ public class ProtectionHelper {
      * @return boolean
      */
     public static boolean isLockable(Block b){
-        return (ProtectionAPI.getMaterialProtectionList().contains(b.getType()));
+        return (RelluEssentials.getInstance().getProtectionAPI().getMaterialProtectionList().contains(b.getType()));
     }
 
     /**
@@ -52,8 +51,8 @@ public class ProtectionHelper {
      */
     public static boolean hasPermission(Block b, Player p){
         Location l = getLocationFromBlockAlternateForDoor(b);
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
-        ProtectionEntry pre = ProtectionAPI.getProtectionEntry(l);
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
+        ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
         if (pre != null) {
             return pre.getLocation().getPlayerId() == pe.getID();
         }
@@ -69,7 +68,7 @@ public class ProtectionHelper {
      * @return boolean
      */
     public static boolean hasPermission(ProtectionEntry pre, Player p){
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         if (pre != null) {
             return pre.getLocation().getPlayerId() == pe.getID();
         }

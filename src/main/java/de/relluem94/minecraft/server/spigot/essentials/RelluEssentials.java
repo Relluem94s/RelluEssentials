@@ -21,6 +21,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import de.relluem94.rellulib.stores.DoubleStore;
+import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
@@ -63,6 +66,10 @@ public class RelluEssentials extends JavaPlugin {
 
     private boolean isUnitTest = false;
 
+    private PlayerAPI playerAPI;
+    private ProtectionAPI protectionAPI;
+    private NPCAPI npcAPI;
+
     public static final Map<Integer, Vector2Location> selections = new HashMap<>();
     public static final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
     public static final Map<Material, DoubleStore> dropMap = new EnumMap<>(Material.class);
@@ -78,6 +85,7 @@ public class RelluEssentials extends JavaPlugin {
     public static final boolean MONEY_LOST_ON_DEATH = true;
     public static final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
     public final String[][] worldsGroup = new String[][]{new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END}, new String[]{PLUGIN_WORLD_LOBBY}};
+    
     
     public static synchronized RelluEssentials getInstance() {
         
@@ -112,6 +120,9 @@ public class RelluEssentials extends JavaPlugin {
         dm.enable();
         dBH = dm.getDatabaseHelper();
         pie = dm.getPluginInformation();
+        playerAPI = dm.getPlayerAPI();
+        protectionAPI = dm.getProtectionAPI();
+        npcAPI = dm.getNpcAPI();
 
         new EnchantmentManager().enable();
         new GroupManager().enable();
@@ -183,5 +194,17 @@ public class RelluEssentials extends JavaPlugin {
 
     public void setPluginInformation(PluginInformationEntry pie){
         this.pie = pie;
+    }
+
+    public PlayerAPI getPlayerAPI() {
+        return playerAPI;
+    }
+
+    public ProtectionAPI getProtectionAPI() {
+        return protectionAPI;
+    }
+
+    public NPCAPI getNpcAPI() {
+        return npcAPI;
     }
 }

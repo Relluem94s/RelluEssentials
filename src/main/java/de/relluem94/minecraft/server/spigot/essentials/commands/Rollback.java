@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.Bukkit;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
@@ -61,7 +60,7 @@ public class Rollback implements CommandExecutor {
                             UUID targetUUID = Bukkit.getPlayer(args[1]).getUniqueId();
                             PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(targetUUID.toString());
                             if (pe != null && args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER)) {
-                                int id = PlayerAPI.getPlayerEntry(p.getUniqueId()).getID();
+                                int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getID();
                                 List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayer(pe);
                                 for (BlockHistoryEntry bh : list) {
                                     bh.setDeletedby(id);
@@ -85,7 +84,7 @@ public class Rollback implements CommandExecutor {
                                 PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
-                                    int id = PlayerAPI.getPlayerEntry(p.getUniqueId()).getID();
+                                    int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getID();
                                     List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayerAndTime(pe, args[2], false);
                                     for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);
@@ -113,7 +112,7 @@ public class Rollback implements CommandExecutor {
                                 PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
-                                    int id = PlayerAPI.getPlayerEntry(p.getUniqueId()).getID();
+                                    int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getID();
                                     List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayerAndTime(pe, args[3], true);
                                     for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);

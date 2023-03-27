@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
@@ -49,7 +48,7 @@ public class Home implements CommandExecutor {
                     if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_LIST)) {
                         if (isPlayer(sender)) {
                             Player p = (Player) sender;
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
 
                             if (!pe.getHomes().isEmpty()) {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
@@ -67,7 +66,7 @@ public class Home implements CommandExecutor {
                     } else {
                         if (isPlayer(sender)) {
                             Player p = (Player) sender;
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
                             LocationEntry le = new LocationEntry();
                             le.setLocationName(args[0]);
                             le.setLocationType(locationTypeEntryList.get(0));
@@ -89,7 +88,7 @@ public class Home implements CommandExecutor {
                 case 2:
                     if (isPlayer(sender)) {
                         Player p = (Player) sender;
-                        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+                        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
 
                         LocationEntry le = new LocationEntry();
                         le.setLocation(p.getLocation());

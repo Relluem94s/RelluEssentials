@@ -27,6 +27,10 @@ public class DatabaseManager implements IEnable{
     private DatabaseHelper dBH;
     private PluginInformationEntry pie;
 
+    private PlayerAPI playerAPI;
+    private ProtectionAPI protectionAPI;
+    private NPCAPI npcAPI;
+
     public DatabaseManager(String host, String user, String password, int port){
         dBH = new DatabaseHelper(host, user, password, port);
     }
@@ -46,9 +50,9 @@ public class DatabaseManager implements IEnable{
             RelluEssentials.crops.put(ce.getSeed(), ce.getPlant());
         }
 
-        new PlayerAPI(RelluEssentials.getInstance().getDatabaseHelper().getBags());
-        new ProtectionAPI(RelluEssentials.getInstance().getDatabaseHelper().getProtectionLocks(), RelluEssentials.getInstance().getDatabaseHelper().getProtections());
-        new NPCAPI(RelluEssentials.getInstance().getDatabaseHelper().getNPCs());
+        playerAPI = new PlayerAPI(RelluEssentials.getInstance().getDatabaseHelper().getBags());
+        protectionAPI = new ProtectionAPI(RelluEssentials.getInstance().getDatabaseHelper().getProtectionLocks(), RelluEssentials.getInstance().getDatabaseHelper().getProtections());
+        npcAPI = new NPCAPI(RelluEssentials.getInstance().getDatabaseHelper().getNPCs());
         new BagAPI(RelluEssentials.getInstance().getDatabaseHelper().getBagTypes());
         new BankAPI(RelluEssentials.getInstance().getDatabaseHelper().getBankTiers());
         new WarpAPI(RelluEssentials.getInstance().getDatabaseHelper().getWarps());
@@ -78,5 +82,15 @@ public class DatabaseManager implements IEnable{
         return pie;
     }
 
-    
+    public PlayerAPI getPlayerAPI() {
+        return playerAPI;
+    }
+
+    public ProtectionAPI getProtectionAPI() {
+        return protectionAPI;
+    }
+
+    public NPCAPI getNpcAPI() {
+        return npcAPI;
+    }
 }

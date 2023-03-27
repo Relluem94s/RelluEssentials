@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -42,7 +41,7 @@ public class PlayerHelper {
      */
     public static void setFlying(Player p) {
         if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-            PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
             if (pe.isFlying()) {
                 p.setAllowFlight(true);
                 p.setFlying(true);
@@ -57,7 +56,7 @@ public class PlayerHelper {
      * @return Boolean
      */
     public static boolean setAFK(Player p, boolean join) {
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         boolean isAFK = pe.isAFK();
 
         if(pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)){
@@ -128,7 +127,7 @@ public class PlayerHelper {
     }
 
     public static void updateGroup(Player p, GroupEntry g) {
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         pe.setGroup(g);
         pe.setUpdatedBy(pe.getID());
         pe.setToBeUpdated(true);
@@ -137,7 +136,7 @@ public class PlayerHelper {
 
     public static String getCustomName(Player p) {
         String name;
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         if (pe.getCustomName() != null && pe.getCustomName().equals("null")) {
             name = pe.getCustomName();
         } 
@@ -154,7 +153,7 @@ public class PlayerHelper {
     }
 
     public static GroupEntry getGroup(Player p) {
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
 
         if (pe != null) {
             return pe.getGroup();
@@ -167,7 +166,7 @@ public class PlayerHelper {
     public static void savePlayers(){
         int updatedPlayers = 0;
 
-        for(PlayerEntry pe : PlayerAPI.getPlayerEntryMap().values()) {
+        for(PlayerEntry pe : RelluEssentials.getInstance().getPlayerAPI().getPlayerEntryMap().values()) {
             updatedPlayers += savePlayer(pe);
         }
 
@@ -177,7 +176,7 @@ public class PlayerHelper {
     }
 
     public static int savePlayer(Player p){
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         return savePlayer(pe);
     }
 
@@ -202,7 +201,7 @@ public class PlayerHelper {
     }
 
     public static PlayerEntry getPlayer(String name){
-        for(PlayerEntry pe : PlayerAPI.getPlayerEntryMap().values()){
+        for(PlayerEntry pe : RelluEssentials.getInstance().getPlayerAPI().getPlayerEntryMap().values()){
             if(pe.getName().equals(name)){
                 return pe;
             }

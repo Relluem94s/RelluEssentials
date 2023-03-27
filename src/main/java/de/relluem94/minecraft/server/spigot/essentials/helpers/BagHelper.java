@@ -19,7 +19,6 @@ import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
@@ -180,8 +179,8 @@ public class BagHelper {
     }
 
     public static boolean hasBag(int playerFK, int bagType){
-        if(PlayerAPI.getPlayerBagMap().containsKey(playerFK)){
-            Collection<BagEntry> cbe = PlayerAPI.getPlayerBagMap().get(playerFK);
+        if(RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().containsKey(playerFK)){
+            Collection<BagEntry> cbe = RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().get(playerFK);
             for(BagEntry be : cbe){
                 if(be.getPlayerId() == playerFK && be.getBagType().getId() == bagType){
                     return true;
@@ -193,13 +192,13 @@ public class BagHelper {
     }
 
     public static boolean hasBags(int playerFK){
-        return PlayerAPI.getPlayerBagMap().containsKey(playerFK);
+        return RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().containsKey(playerFK);
     }
 
 
     public static BagEntry getBag(int playerFK, int bagType){
-        if(PlayerAPI.getPlayerBagMap().containsKey(playerFK)){
-            Collection<BagEntry> cbe = PlayerAPI.getPlayerBagMap().get(playerFK);
+        if(RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().containsKey(playerFK)){
+            Collection<BagEntry> cbe = RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().get(playerFK);
             for(BagEntry be : cbe){
                 if(be.getPlayerId() == playerFK && be.getBagType().getId() == bagType){
                     return be;
@@ -221,8 +220,8 @@ public class BagHelper {
     public static Collection<BagEntry> getBags(int playerFK){
         Collection<BagEntry> cbe = new ArrayList<>();
 
-        if(PlayerAPI.getPlayerBagMap().containsKey(playerFK)){
-            cbe = PlayerAPI.getPlayerBagMap().get(playerFK);
+        if(RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().containsKey(playerFK)){
+            cbe = RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().get(playerFK);
         }
 
         return cbe;
@@ -312,7 +311,7 @@ public class BagHelper {
     public static void saveBags(){
         int updatedBags = 0;
 
-        for(BagEntry be : PlayerAPI.getPlayerBagMap().values()){
+        for(BagEntry be : RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().values()){
             if(be.hasToBeUpdated()){
                 RelluEssentials.getInstance().getDatabaseHelper().updateBagEntry(be);
                 be.setToBeUpdated(false);

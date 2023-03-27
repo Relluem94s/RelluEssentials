@@ -12,7 +12,7 @@ import org.bukkit.persistence.PersistentDataType;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper;
@@ -33,7 +33,7 @@ public class Purse implements CommandExecutor {
                 Player p = (Player) sender;
                 if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                     if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
-                        PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+                        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
                         p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL, StringHelper.formatDouble(pe.getPurse())));
                         return true;
                     } else {
@@ -52,7 +52,7 @@ public class Purse implements CommandExecutor {
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         
                         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(target.getUniqueId());
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
                             p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
                             return true;
                         } else {
@@ -64,7 +64,7 @@ public class Purse implements CommandExecutor {
                     }
                 }
                 if(TypeHelper.isInt(args[0])){
-                    PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+                    PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
                     double purse = pe.getPurse();
                     int coins = Math.abs(Integer.parseInt(args[0]));
 

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -38,7 +38,7 @@ public class Protect implements CommandExecutor {
             Player p = (Player) sender;
             if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                 if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT)) {
-                    PlayerEntry pe = PlayerAPI.getPlayerEntry(p.getUniqueId());
+                    PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
 
                     if (args.length == 0) {
                         p.sendMessage(PLUGIN_COMMAND_PROTECT_COMMAND_INFO);

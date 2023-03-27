@@ -13,15 +13,15 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLo
 
 public class ProtectionAPI {
 
-    private static List<Material> protectionLocksList = new ArrayList<>();
-    private static HashMap<Location, ProtectionEntry> protectionEntryMap = new HashMap<>();
+    private List<Material> protectionLocksList = new ArrayList<>();
+    private HashMap<Location, ProtectionEntry> protectionEntryMap = new HashMap<>();
 
 
     public ProtectionAPI(List<ProtectionLockEntry> protectionLocksEntryList, Map<Location, ProtectionEntry> protectionEntryMap){
         for(ProtectionLockEntry ple: protectionLocksEntryList){
             addProtectionMaterial(ple.getValue());
         }
-        ProtectionAPI.protectionEntryMap.putAll(protectionEntryMap);
+        protectionEntryMap.putAll(protectionEntryMap);
     }
 
     /**
@@ -29,7 +29,7 @@ public class ProtectionAPI {
      * @param l
      * @return
      */
-    public static ProtectionEntry getProtectionEntry(Location l){
+    public ProtectionEntry getProtectionEntry(Location l){
         return protectionEntryMap.get(l);
     }
 
@@ -37,11 +37,11 @@ public class ProtectionAPI {
      * 
      * @param l
      */
-    public static void removeProtectionEntry(Location l){
+    public void removeProtectionEntry(Location l){
         protectionEntryMap.remove(l);
     }
 
-    public static void putProtectionEntry(Location l, ProtectionEntry pe){
+    public void putProtectionEntry(Location l, ProtectionEntry pe){
         protectionEntryMap.put(l, pe);
     }
     
@@ -49,7 +49,7 @@ public class ProtectionAPI {
      * Use this Method to add a Material that should be protectable via API
      * @param m Material
      */
-    public static void addProtectionMaterial(Material m){
+    public void addProtectionMaterial(Material m){
         protectionLocksList.add(m);
     }
 
@@ -57,7 +57,7 @@ public class ProtectionAPI {
      * Use this Method to get a List of all protectable Materials
      * @return List<Material> 
      */
-    public static List<Material> getMaterialProtectionList(){
+    public List<Material> getMaterialProtectionList(){
         return protectionLocksList;
     }
 
@@ -65,7 +65,7 @@ public class ProtectionAPI {
      * 
      * @return
      */
-    public static HashMap<Location, ProtectionEntry> getProtectionEntryList(){
+    public HashMap<Location, ProtectionEntry> getProtectionEntryList(){
         return protectionEntryMap;
     }
 

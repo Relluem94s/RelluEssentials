@@ -6,8 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
@@ -30,7 +30,7 @@ public class NPC implements INPC {
         this.profession = profession;
         this.type = type;
         this.npcSpawnItem = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, getName(), de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type.NPC, Rarity.LEGENDARY, Arrays.asList(new String[]{ItemConstants.PLUGIN_ITEM_NPC_LORE1}));
-        NPCAPI.addNPC(this);
+        RelluEssentials.getInstance().getNpcAPI().addNPC(this);
     }
 
     @Override

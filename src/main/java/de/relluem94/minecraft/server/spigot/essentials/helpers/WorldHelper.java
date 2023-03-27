@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -215,7 +214,7 @@ public class WorldHelper {
 
 
     public static void loadWorldGroupInventory(Player p){
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
             for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
                 if(p.getWorld().getName().equals(we.getName())){
@@ -251,7 +250,7 @@ public class WorldHelper {
 
     public static boolean saveWorldGroupInventory(Player p, World w){
         boolean entryUpdated = false;
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
             for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
                 if(w.getName().equals(we.getName())){
@@ -297,7 +296,7 @@ public class WorldHelper {
 
     public static boolean hasWorldGroupInventory(Player p, World w){
         boolean hasInvInWorldGroup = false;
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
             for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
                 if(w.getName().equals(we.getName())){

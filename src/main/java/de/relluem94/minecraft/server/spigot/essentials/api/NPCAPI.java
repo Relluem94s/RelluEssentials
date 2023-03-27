@@ -16,10 +16,10 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.NPC.Type;
 
 public class NPCAPI {
     
-    private static List<ItemStack> npc_itemstack = new ArrayList<>();
-    private static List<String> npc_name = new ArrayList<>();
-    private static List<String> npc_trader_title = new ArrayList<>();
-    private static List<NPC> npcs = new ArrayList<>();
+    private List<ItemStack> npc_itemstack = new ArrayList<>();
+    private List<String> npc_name = new ArrayList<>();
+    private List<String> npc_trader_title = new ArrayList<>();
+    private List<NPC> npcs = new ArrayList<>();
 
 
     public NPCAPI(List<NPCEntry> npcEntryList) {
@@ -47,7 +47,7 @@ public class NPCAPI {
      * Gives back a List of NPCs
      * @return List of NPC
      */
-    public static List<NPC> getNPCs(){
+    public List<NPC> getNPCs(){
         return npcs;
     }
 
@@ -55,7 +55,7 @@ public class NPCAPI {
      * Adds a NPC
      * @param npc NPC
      */
-    public static void addNPC(NPC npc){
+    public void addNPC(NPC npc){
         npcs.add(npc);
         npc_itemstack.add(npc.getItemHelper().getCustomItem());
         npc_name.add(npc.getName());
@@ -69,7 +69,7 @@ public class NPCAPI {
      * Gives back a List of ItemStacks (Spawn Eggs)
      * @return List of ItemStack
      */
-    public static List<ItemStack> getNPCItemStackList(){
+    public List<ItemStack> getNPCItemStackList(){
         return npc_itemstack;
     }
 
@@ -77,7 +77,7 @@ public class NPCAPI {
      * Gives back a List of Strings with NPC Names
      * @return List of Strings
      */
-    public static List<String> getNPCNameList(){
+    public List<String> getNPCNameList(){
         return npc_name;
     }
 
@@ -85,7 +85,7 @@ public class NPCAPI {
      * Gives back a List of Strings with Trader NPC GUI Titles
      * @return List of Strings
      */
-    public static List<String> getNPCTraderTitleList(){
+    public List<String> getNPCTraderTitleList(){
         return npc_trader_title;
     }
 
@@ -94,7 +94,7 @@ public class NPCAPI {
      * @param index int
      * @return NPC
      */
-    public static NPC getNPC(int index) {
+    public NPC getNPC(int index) {
         return npcs.get(index);
     }
 }

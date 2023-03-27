@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -21,7 +20,7 @@ public class BetterLights implements Listener {
 
     @EventHandler
     public void onChangeSignCreateActionSign(PlayerInteractEvent e) {
-        PlayerEntry pe = PlayerAPI.getPlayerEntry(e.getPlayer().getUniqueId());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer().getUniqueId());
         Block b = e.getClickedBlock();
         if(pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE)){
             if(b != null && b.getType().equals(Material.REDSTONE_LAMP) && b.getBlockData() instanceof Lightable){

@@ -25,8 +25,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEn
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
@@ -112,23 +110,23 @@ public class TestCommand implements CommandExecutor {
                             p.teleport(Bukkit.getWorld("world2").getSpawnLocation());
                         }
                         else if (args[0].equalsIgnoreCase("bc")) {
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                             RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getID());
                         }
                         else if (args[0].equalsIgnoreCase("bo")) {
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                             p.openInventory(BagHelper.getBag(1, pe));
                         }
                         else if (args[0].equalsIgnoreCase("bc2")) {
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                             RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getID());
                         }
                         else if (args[0].equalsIgnoreCase("bo2")) {
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                             p.openInventory(BagHelper.getBag(2, pe)); 
                         }
                         else if(args[0].equalsIgnoreCase("di")){
-                            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                             if(pe.getPlayerState().equals(PlayerState.DEFAULT)){
                                 pe.setPlayerState(PlayerState.DAMAGE_INFO);
                             }
@@ -144,9 +142,9 @@ public class TestCommand implements CommandExecutor {
                         else if(args[0].equalsIgnoreCase("cp")){
                             HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
 
-                            p.sendMessage(ProtectionAPI.getProtectionEntryList().size() + " << list size");
-                            for(Location l : ProtectionAPI.getProtectionEntryList().keySet()){
-                                ProtectionEntry pe = ProtectionAPI.getProtectionEntryList().get(l);
+                            p.sendMessage(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size() + " << list size");
+                            for(Location l : RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().keySet()){
+                                ProtectionEntry pe = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().get(l);
                                 if(!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))){
                                     p.sendMessage(pe.getId() + " >> " + l.getBlock().getType().name() + " != " + pe.getMaterialName() + " >> wrong");
                                     removeMap.put(l, pe);
@@ -156,7 +154,7 @@ public class TestCommand implements CommandExecutor {
                             }
 
                             for(Location l : removeMap.keySet()){
-                                ProtectionAPI.removeProtectionEntry(l);
+                                RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(l);
                             }
                         }
                         else if (args[0].equalsIgnoreCase("sk")) {

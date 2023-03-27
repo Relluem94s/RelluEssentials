@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -43,7 +42,7 @@ public class BetterPlayerJoin implements Listener {
             }
         }
 
-        PlayerAPI.putPlayerEntry(p.getUniqueId(), pe);
+        RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(p.getUniqueId(), pe);
     }
 
     @EventHandler

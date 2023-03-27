@@ -17,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
@@ -40,7 +39,7 @@ public class BetterMobs implements Listener {
     public void onKill(PlayerDeathEvent e) {
         if(RelluEssentials.MONEY_LOST_ON_DEATH){
             Player p = e.getEntity();
-            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             
             double purse = pe.getPurse();
             double losses = purse / 2;
@@ -63,7 +62,7 @@ public class BetterMobs implements Listener {
             int coinsPerDeath = EntityCoins.valueOf(e.getEntity().getType().name()).getCoins();
             if(coinsPerDeath > 0){
                 Player p = e.getEntity().getKiller();
-                PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                 pe.setPurse(pe.getPurse() + coinsPerDeath);
                 pe.setUpdatedBy(pe.getID());
                 pe.setToBeUpdated(true);
@@ -96,7 +95,7 @@ public class BetterMobs implements Listener {
         if (e.getEntity() instanceof Monster && e.getDamager() instanceof Player) {
             Monster m = (Monster) e.getEntity();
             Player p = (Player) e.getDamager();
-            PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if(pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)){
                 p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(), m.getLastDamage(), m.getHealth()));
             }

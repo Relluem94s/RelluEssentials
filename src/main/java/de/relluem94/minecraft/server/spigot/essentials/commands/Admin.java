@@ -12,9 +12,6 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -65,8 +62,8 @@ public class Admin implements CommandExecutor {
                     CustomItems.npc_gui_disabled.getCustomItem()
                 );
 
-                for (int i = 0; i < NPCAPI.getNPCs().size(); i++) {
-                    inv.setItem(i, NPCAPI.getNPCs().get(i).getItemHelper().getCustomItem());
+                for (int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCs().size(); i++) {
+                    inv.setItem(i, RelluEssentials.getInstance().getNpcAPI().getNPCs().get(i).getItemHelper().getCustomItem());
                 }
 
                 InventoryHelper.openInventory(sender, inv);
@@ -86,7 +83,7 @@ public class Admin implements CommandExecutor {
                 return true;
             }
             else if (args[0].equalsIgnoreCase("light")) {
-                PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
                 if (pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE)) {
                     pe.setPlayerState(PlayerState.DEFAULT);
@@ -101,9 +98,9 @@ public class Admin implements CommandExecutor {
                 HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
 
                 p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
-                        ProtectionAPI.getProtectionEntryList().size()));
-                for (Location l : ProtectionAPI.getProtectionEntryList().keySet()) {
-                    ProtectionEntry pe = ProtectionAPI.getProtectionEntryList().get(l);
+                        RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size()));
+                for (Location l : RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().keySet()) {
+                    ProtectionEntry pe = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().get(l);
                     if (!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))) {
                         removeMap.put(l, pe);
                         p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS, pe.getId(),
@@ -119,15 +116,15 @@ public class Admin implements CommandExecutor {
                 else {
                     p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP, removeMap.size()));
                     for (Location l : removeMap.keySet()) {
-                        ProtectionAPI.removeProtectionEntry(l);
+                        RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(l);
                     }
                     p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
-                            ProtectionAPI.getProtectionEntryList().size()));
+                            RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size()));
                 }
                 return true;
             }
             else if (args[0].equalsIgnoreCase("afk")) {
-                PlayerEntry pe = PlayerAPI.getPlayerEntry(p);
+                PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
                 if (pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)) {
                     PlayerHelper.setAFK(p, false);
