@@ -20,11 +20,8 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
 import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class RelluEssentialsTest {
 
