@@ -191,8 +191,8 @@ public class WorldHelper {
     }
 
     public static WorldGroupEntry getWorldGroupEntry(Player p){
-        for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
-            for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
+        for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+            for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 if(p.getWorld().getName().equals(we.getName())){
                     return wge;
                 }
@@ -202,8 +202,8 @@ public class WorldHelper {
     }
 
     public static WorldEntry getWorldEntry(Player p){
-        for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
-            for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
+        for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+            for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 if(p.getWorld().getName().equals(we.getName())){
                     return we;
                 }
@@ -215,8 +215,8 @@ public class WorldHelper {
 
     public static void loadWorldGroupInventory(Player p){
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-        for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
-            for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
+        for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+            for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 if(p.getWorld().getName().equals(we.getName())){
                     WorldGroupInventoryEntry wgie = RelluEssentials.getInstance().getDatabaseHelper().getWorldGroupInventory(pe, wge);
                     if(wgie != null){
@@ -251,8 +251,8 @@ public class WorldHelper {
     public static boolean saveWorldGroupInventory(Player p, World w){
         boolean entryUpdated = false;
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-        for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
-            for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
+        for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+            for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 if(w.getName().equals(we.getName())){
                     WorldGroupInventoryEntry wgie = RelluEssentials.getInstance().getDatabaseHelper().getWorldGroupInventory(pe, wge);
                     if(wgie == null){
@@ -297,8 +297,8 @@ public class WorldHelper {
     public static boolean hasWorldGroupInventory(Player p, World w){
         boolean hasInvInWorldGroup = false;
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-        for (WorldGroupEntry wge : RelluEssentials.worldsMap.keySet()) {
-            for(WorldEntry we: RelluEssentials.worldsMap.get(wge)){
+        for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+            for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 if(w.getName().equals(we.getName())){
                     WorldGroupInventoryEntry wgie = RelluEssentials.getInstance().getDatabaseHelper().getWorldGroupInventory(pe, wge);
                     if(wgie != null){

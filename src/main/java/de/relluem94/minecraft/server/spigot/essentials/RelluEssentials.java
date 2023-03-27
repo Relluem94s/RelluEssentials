@@ -21,9 +21,12 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import de.relluem94.rellulib.stores.DoubleStore;
+import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
@@ -69,21 +72,24 @@ public class RelluEssentials extends JavaPlugin {
     private PlayerAPI playerAPI;
     private ProtectionAPI protectionAPI;
     private NPCAPI npcAPI;
+    private BagAPI bagAPI;
+    private BankAPI bankAPI;
+    private WarpAPI warpAPI;
 
-    public static final Map<Integer, Vector2Location> selections = new HashMap<>();
-    public static final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
-    public static final Map<Material, DoubleStore> dropMap = new EnumMap<>(Material.class);
-    public static final Map<Material, Material> crops = new EnumMap<>(Material.class);
-    public static final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
+    public final Map<Integer, Vector2Location> selections = new HashMap<>();
+    public final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
+    public final Map<Material, DoubleStore> dropMap = new EnumMap<>(Material.class);
+    public final Map<Material, Material> crops = new EnumMap<>(Material.class);
+    public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
 
-    public static final List<GroupEntry> groupEntryList = new ArrayList<>();
-    public static final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
-    public static final List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
-    public static final List<ItemStack> bagBlocks2collect = new ArrayList<>();
+    public final List<GroupEntry> groupEntryList = new ArrayList<>();
+    public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
+    public final List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
+    public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
 
-    public static final String[] ore_respawn = new String[]{PLUGIN_WORLD_WORLD_NETHER}; //TODO has to be done in Config (new Table?) #IsComming
+    public final String[] oreRespawn = new String[]{PLUGIN_WORLD_WORLD_NETHER}; //TODO has to be done in Config (new Table?) #IsComming
     public static final boolean MONEY_LOST_ON_DEATH = true;
-    public static final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
+    public final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
     public final String[][] worldsGroup = new String[][]{new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END}, new String[]{PLUGIN_WORLD_LOBBY}};
     
     
@@ -123,6 +129,10 @@ public class RelluEssentials extends JavaPlugin {
         playerAPI = dm.getPlayerAPI();
         protectionAPI = dm.getProtectionAPI();
         npcAPI = dm.getNpcAPI();
+        bagAPI = dm.getBagAPI();
+        bankAPI = dm.getBankAPI();
+        warpAPI = dm.getWarpAPI();
+
 
         new EnchantmentManager().enable();
         new GroupManager().enable();
@@ -206,5 +216,17 @@ public class RelluEssentials extends JavaPlugin {
 
     public NPCAPI getNpcAPI() {
         return npcAPI;
+    }
+
+    public BagAPI getBagAPI() {
+        return bagAPI;
+    }
+
+    public BankAPI getBankAPI() {
+        return bankAPI;
+    }
+
+    public WarpAPI getWarpAPI() {
+        return warpAPI;
     }
 }

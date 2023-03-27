@@ -65,7 +65,7 @@ public class ProtectionAPI {
      * 
      * @return
      */
-    public HashMap<Location, ProtectionEntry> getProtectionEntryList(){
+    public Map<Location, ProtectionEntry> getProtectionEntryList(){
         return protectionEntryMap;
     }
 

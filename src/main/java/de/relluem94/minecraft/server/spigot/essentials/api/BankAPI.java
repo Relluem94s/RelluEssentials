@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntr
 
 public class BankAPI {
     
-    private static List<BankTierEntry> bankTiersList = new ArrayList<>();
+    private List<BankTierEntry> bankTiersList = new ArrayList<>();
 
     /**
      * 
@@ -22,7 +22,7 @@ public class BankAPI {
      * Gives back a List of all BankTiers
      * @return List of BankTierEntry
      */
-    public static List<BankTierEntry> getBankTiers(){
+    public List<BankTierEntry> getBankTiers(){
         return bankTiersList;
     }
 }

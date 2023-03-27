@@ -15,7 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.blockHistoryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ROLLBACK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER;
@@ -64,7 +63,7 @@ public class Rollback implements CommandExecutor {
                                 List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayer(pe);
                                 for (BlockHistoryEntry bh : list) {
                                     bh.setDeletedby(id);
-                                    blockHistoryList.add(bh);
+                                    RelluEssentials.getInstance().blockHistoryList.add(bh);
                                 }
                                 p.sendMessage("Added: " + list.size());
                             }
@@ -88,7 +87,7 @@ public class Rollback implements CommandExecutor {
                                     List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayerAndTime(pe, args[2], false);
                                     for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);
-                                        blockHistoryList.add(bh);
+                                        RelluEssentials.getInstance().blockHistoryList.add(bh);
                                     }
                                     p.sendMessage("Added: " + list.size());
                                 }
@@ -116,7 +115,7 @@ public class Rollback implements CommandExecutor {
                                     List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayerAndTime(pe, args[3], true);
                                     for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);
-                                        blockHistoryList.add(bh);
+                                        RelluEssentials.getInstance().blockHistoryList.add(bh);
                                     }
                                     p.sendMessage("Added: " + list.size());
                                 }

@@ -25,7 +25,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
@@ -125,7 +124,7 @@ public class BetterNPC implements Listener {
         else if(is.getType().equals(Material.PLAYER_HEAD) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && ((SkullMeta) is.getItemMeta()).getOwnerProfile().getName().equals(CustomHeads.BAG.getName()) ){
             BagTypeEntry bt = null;
 
-            for(BagTypeEntry bte : BagAPI.getBagTypeEntryList()){
+            for(BagTypeEntry bte : RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList()){
                 if(bte.getDisplayName().equals(is.getItemMeta().getDisplayName())){
                     bt = bte;
                 }

@@ -13,15 +13,15 @@ public class BlockHistoryManager implements IEnable {
     public void enable() {
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
         scheduler.runTaskTimer(RelluEssentials.getInstance(), () -> {
-            if (!RelluEssentials.blockHistoryList.isEmpty()) {
-                BlockHistoryEntry bh = RelluEssentials.blockHistoryList.get(0);
+            if (!RelluEssentials.getInstance().blockHistoryList.isEmpty()) {
+                BlockHistoryEntry bh = RelluEssentials.getInstance().blockHistoryList.get(0);
                 BlockHelper.setBlock(bh);
                 if (bh.getDeleted() == null) {
                     RelluEssentials.getInstance().getDatabaseHelper().insertBlockHistory(bh);
                 } else {
                     RelluEssentials.getInstance().getDatabaseHelper().deleteBlockHistory(bh);
                 }
-                RelluEssentials.blockHistoryList.remove(0);
+                RelluEssentials.getInstance().blockHistoryList.remove(0);
             }
         }, 0L, 2L);
     }

@@ -81,9 +81,9 @@ public class BetterBags implements Listener {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
         for(Item i : e.getItems()){
-            if(RelluEssentials.dropMap.containsKey(i.getItemStack().getType())){
+            if(RelluEssentials.getInstance().dropMap.containsKey(i.getItemStack().getType())){
                 if(i.getItemStack().getAmount() == 1){ 
-                    DoubleStore ds = RelluEssentials.dropMap.get(i.getItemStack().getType());
+                    DoubleStore ds = RelluEssentials.getInstance().dropMap.get(i.getItemStack().getType());
                     i.getItemStack().setAmount(r.nextInt((int)ds.getSecondValue()) + (int)ds.getValue());
                 }
             }            
@@ -91,8 +91,8 @@ public class BetterBags implements Listener {
 
         if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchants() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.replenishment)){
             for(int i = 0; i < e.getItems().size(); i++){
-                if(e.getItems().get(i) != null && RelluEssentials.crops.containsKey(e.getItems().get(i).getItemStack().getType())){
-                    e.getBlock().setType(RelluEssentials.crops.get(e.getItems().get(i).getItemStack().getType()));
+                if(e.getItems().get(i) != null && RelluEssentials.getInstance().crops.containsKey(e.getItems().get(i).getItemStack().getType())){
+                    e.getBlock().setType(RelluEssentials.getInstance().crops.get(e.getItems().get(i).getItemStack().getType()));
 
                     if(e.getBlock().getBlockData() instanceof Cocoa){
                         Cocoa c = (Cocoa) e.getBlock().getBlockData();

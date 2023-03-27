@@ -52,7 +52,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistory
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -626,7 +625,7 @@ public class DatabaseHelper {
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
                         le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
                                 rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
-                        for (LocationTypeEntry lte : locationTypeEntryList) {
+                        for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (lte.getId() == type) {
                                 le.setLocationType(lte);
                             }
@@ -658,7 +657,7 @@ public class DatabaseHelper {
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
                         le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
                                 rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
-                        for (LocationTypeEntry lte : locationTypeEntryList) {
+                        for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (type == lte.getId()) {
                                 le.setLocationType(lte);
                             }
@@ -689,7 +688,7 @@ public class DatabaseHelper {
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
                         le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
                                 rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
-                        for (LocationTypeEntry lte : locationTypeEntryList) {
+                        for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (lte.getId() == type) {
                                 le.setLocationType(lte);
                             }
@@ -718,7 +717,7 @@ public class DatabaseHelper {
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
                         le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
                                 rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
-                        for (LocationTypeEntry lte : locationTypeEntryList) {
+                        for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (lte.getId() == rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK)) {
                                 le.setLocationType(lte);
                             }
@@ -1203,7 +1202,7 @@ public class DatabaseHelper {
                         le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
                                 rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
                         
-                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
                         ll.add(le);
                     }
                 }
@@ -1228,7 +1227,7 @@ public class DatabaseHelper {
                         le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
                                 rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
                         
-                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
                         ll.add(le);
                     }
                 }
@@ -1300,7 +1299,7 @@ public class DatabaseHelper {
                         le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
                                 rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
                         
-                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
 
                         bh.setLocation(le);
                         bh.setMaterial(rs.getString(BlockHistoryEntry.FIELD_MATERIAL));
@@ -1353,7 +1352,7 @@ public class DatabaseHelper {
                         le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
                                 rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
                         
-                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
 
 
                         bh.setLocation(le);
@@ -1423,7 +1422,7 @@ public class DatabaseHelper {
                         le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
                                 rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
                         
-                        le.setLocationType(locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
 
 
                         bh.setLocation(le);

@@ -18,7 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
@@ -75,7 +74,7 @@ public class BagHelper {
 
     public static Inventory getBags(boolean npc, String title){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title), CustomItems.npc_gui_disabled.getCustomItem());
-        ListIterator<BagTypeEntry> bteli = BagAPI.getBagTypeEntryList().listIterator();
+        ListIterator<BagTypeEntry> bteli = RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().listIterator();
 
         int slot = 0;
         while(bteli.hasNext()){
@@ -89,7 +88,7 @@ public class BagHelper {
 
     public static Inventory getBags(PlayerEntry pe){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI), CustomItems.npc_gui_disabled.getCustomItem());
-        ListIterator<BagTypeEntry> bteli = BagAPI.getBagTypeEntryList().listIterator();
+        ListIterator<BagTypeEntry> bteli = RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().listIterator();
 
         int slot = 0;
         while(bteli.hasNext()){
@@ -209,7 +208,7 @@ public class BagHelper {
     }
 
     public static BagTypeEntry getBagTypeByName(String name){
-        for(BagTypeEntry bte : BagAPI.getBagTypeEntryList()){
+        for(BagTypeEntry bte : RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList()){
             if(name.contains(bte.getDisplayName()) || bte.getDisplayName().contains(name)){
                 return bte;
             }
@@ -228,7 +227,7 @@ public class BagHelper {
     }
 
     public static BagTypeEntry getBagTypeById(int id) {
-        for(BagTypeEntry bte : BagAPI.getBagTypeEntryList()){
+        for(BagTypeEntry bte : RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList()){
             if(bte.getId() == id){
                 return bte;
             }
@@ -244,7 +243,7 @@ public class BagHelper {
             Item i = lii.next();
             ItemStack checkWithoutAmount = i.getItemStack().clone();
             checkWithoutAmount.setAmount(1);
-            if(RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
+            if(RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)){
                 Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
                 for(BagEntry be: bel){
                     int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
@@ -268,7 +267,7 @@ public class BagHelper {
             ItemStack i = lii.next();
             ItemStack checkWithoutAmount = i.clone();
             checkWithoutAmount.setAmount(1);
-            if(RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
+            if(RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)){
                 Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
                 for(BagEntry be: bel){
                     int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
@@ -288,7 +287,7 @@ public class BagHelper {
     public static boolean collectItem(Item item, Player p, PlayerEntry pe) {
         ItemStack checkWithoutAmount = item.getItemStack().clone();
         checkWithoutAmount.setAmount(1);
-        if(!RelluEssentials.bagBlocks2collect.contains(checkWithoutAmount)){
+        if(!RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)){
             return false;
         }
 

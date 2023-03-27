@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_DELETE;
@@ -69,7 +68,7 @@ public class Home implements CommandExecutor {
                             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
                             LocationEntry le = new LocationEntry();
                             le.setLocationName(args[0]);
-                            le.setLocationType(locationTypeEntryList.get(0));
+                            le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
                             le.setPlayerId(pe.getID());
 
                             if (homeExists(pe, le)) {
@@ -93,7 +92,7 @@ public class Home implements CommandExecutor {
                         LocationEntry le = new LocationEntry();
                         le.setLocation(p.getLocation());
                         le.setLocationName(args[1]);
-                        le.setLocationType(locationTypeEntryList.get(0));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
                         le.setPlayerId(pe.getID());
 
                         if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_SET)) {

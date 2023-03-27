@@ -16,7 +16,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.worldsMap;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 public class WorldManager implements IEnable, IDisable {
@@ -28,9 +27,9 @@ public class WorldManager implements IEnable, IDisable {
         if(RelluEssentials.getInstance().isUnitTest()){
             return;
         }
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
-        for (WorldGroupEntry wge : worldsMap.keySet()) {
-            for(WorldEntry we: worldsMap.get(wge)){
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + "Worlds Size: " + RelluEssentials.getInstance().worldsMap.size());
+        for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+            for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 if(!WorldHelper.worldExists(we.getName())){
                     createWorld(we);
                     continue;        
@@ -51,8 +50,8 @@ public class WorldManager implements IEnable, IDisable {
         if(RelluEssentials.getInstance().isUnitTest()){
             return;
         }
-        for (WorldGroupEntry wge : worldsMap.keySet()) {
-            for(WorldEntry we: worldsMap.get(wge)){
+        for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+            for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 try{
                     WorldHelper.unloadWorld(we.getName(), true);
                 }

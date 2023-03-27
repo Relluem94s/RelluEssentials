@@ -6,9 +6,9 @@ public class CleanUpManager implements IDisable {
 
     @Override
     public void disable() {
-        RelluEssentials.locationTypeEntryList.clear();
-        RelluEssentials.blockHistoryList.clear();
-        RelluEssentials.groupEntryList.clear();
-        RelluEssentials.selections.clear();
+        RelluEssentials.getInstance().locationTypeEntryList.clear();
+        RelluEssentials.getInstance().blockHistoryList.clear();
+        RelluEssentials.getInstance().groupEntryList.clear();
+        RelluEssentials.getInstance().selections.clear();
     }
 }

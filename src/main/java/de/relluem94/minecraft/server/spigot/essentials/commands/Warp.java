@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
@@ -35,7 +34,7 @@ public class Warp implements CommandExecutor {
 
         if (args.length == 0) {
             p.sendMessage(PLUGIN_COMMAND_WARP_LIST_INFO);
-            for(LocationEntry le : WarpAPI.getWarps(p.getWorld())){
+            for(LocationEntry le : RelluEssentials.getInstance().getWarpAPI().getWarps(p.getWorld())){
                 p.sendMessage(String.format(PLUGIN_COMMAND_WARP_LIST, le.getLocationName()));
             }
 
@@ -47,7 +46,7 @@ public class Warp implements CommandExecutor {
                 return true;
             } 
 
-            LocationEntry le = WarpAPI.getWarp(args[0], p.getWorld());
+            LocationEntry le = RelluEssentials.getInstance().getWarpAPI().getWarp(args[0], p.getWorld());
 
             if(le == null){
                 p.sendMessage(PLUGIN_COMMAND_WARP_ERROR_NO_WARP_FOUND);
@@ -71,27 +70,27 @@ public class Warp implements CommandExecutor {
             } 
 
             if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WARP_ADD)){
-                LocationEntry le = WarpAPI.getWarp(args[0]);
+                LocationEntry le = RelluEssentials.getInstance().getWarpAPI().getWarp(args[0]);
                 if(le == null){
                     int typeId = 3;
                     le = new LocationEntry();
                     le.setLocation(p.getLocation());
                     le.setLocationName(args[1]);
-                    le.setLocationType(RelluEssentials.locationTypeEntryList.get(typeId - 1));
+                    le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(typeId - 1));
                     le.setPlayerId(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p).getID());
                     RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
                     if(RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId) != null){
                         le = RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId);
                     }
 
-                    WarpAPI.addWarp(le);
+                    RelluEssentials.getInstance().getWarpAPI().addWarp(le);
                 }
             }
             else if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WARP_REMOVE)){
-                LocationEntry le = WarpAPI.getWarp(args[0]);
+                LocationEntry le = RelluEssentials.getInstance().getWarpAPI().getWarp(args[0]);
                 if(le != null){
                     RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
-                    WarpAPI.removeWarp(le);
+                    RelluEssentials.getInstance().getWarpAPI().removeWarp(le);
                 }
             }
             return true;

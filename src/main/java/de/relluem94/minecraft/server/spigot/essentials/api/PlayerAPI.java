@@ -56,20 +56,20 @@ public class PlayerAPI {
 
     /**
      * 
-     * @param player_fk
+     * @param playerFK
      * @return Collection of BagEntries
      */
-    public Collection<BagEntry> getPlayerBagList(int player_fk){
-        return playerBagEntryMap.get(player_fk);
+    public Collection<BagEntry> getPlayerBagList(int playerFK){
+        return playerBagEntryMap.get(playerFK);
     }
 
     /**
      * Adds Player Bag to internal List
-     * @param player_fk
+     * @param playerFK
      * @param bagEntry
      */
-    public void putPlayerBagEntry(int player_fk, BagEntry bagEntry){
-        playerBagEntryMap.put(player_fk, bagEntry);
+    public void putPlayerBagEntry(int playerFK, BagEntry bagEntry){
+        playerBagEntryMap.put(playerFK, bagEntry);
     }
 
     /**

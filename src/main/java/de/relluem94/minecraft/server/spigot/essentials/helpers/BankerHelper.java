@@ -19,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
@@ -62,8 +61,8 @@ public class BankerHelper {
 
     public static List<ItemHelper> getBankTiers(){
         List<ItemHelper> lih = new ArrayList<>();
-        for(int i = 0; i < BankAPI.getBankTiers().size(); i++){
-            BankTierEntry bte = BankAPI.getBankTiers().get(i);
+        for(int i = 0; i < RelluEssentials.getInstance().getBankAPI().getBankTiers().size(); i++){
+            BankTierEntry bte = RelluEssentials.getInstance().getBankAPI().getBankTiers().get(i);
             String lore1 = "Costs: " + bte.getCost();
             String lore2 = "Interest: " + bte.getInterest();
             String lore3 = "Limit: " + bte.getLimit();
@@ -214,17 +213,17 @@ public class BankerHelper {
     }
 
     public static void doInterest(Player p){
-        if(!RelluEssentials.bankInterestMap.containsKey(p.getUniqueId())){
+        if(!RelluEssentials.getInstance().bankInterestMap.containsKey(p.getUniqueId())){
             return;
         }
         
-        BankAccountEntry bae = RelluEssentials.bankInterestMap.get(p.getUniqueId());
+        BankAccountEntry bae = RelluEssentials.getInstance().bankInterestMap.get(p.getUniqueId());
 
         double interest = (bae.getValue() / 100) * bae.getTier().getInterest();
         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_INTEREST, StringHelper.formatDouble(interest)));
 
         RelluEssentials.getInstance().getDatabaseHelper().addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(), bae.getTier().getId());
-        RelluEssentials.bankInterestMap.remove(p.getUniqueId());
+        RelluEssentials.getInstance().bankInterestMap.remove(p.getUniqueId());
     }
 
     public static void checkInterest(UUID uuid, boolean midnight){
@@ -243,7 +242,7 @@ public class BankerHelper {
         }
 
         if(midnight){
-            RelluEssentials.bankInterestMap.put(uuid, bae);
+            RelluEssentials.getInstance().bankInterestMap.put(uuid, bae);
             return;
         }
         
@@ -257,12 +256,12 @@ public class BankerHelper {
         Date todayDate = new Date(startOfDayInZone.toInstant().toEpochMilli());
 
         if(lastPlayedDate.before(todayDate)){
-            RelluEssentials.bankInterestMap.put(uuid, bae);
+            RelluEssentials.getInstance().bankInterestMap.put(uuid, bae);
         }
     }
 
     public static BankTierEntry getBankTierEntryByCost(long costs){
-        for(BankTierEntry bte: BankAPI.getBankTiers()){
+        for(BankTierEntry bte: RelluEssentials.getInstance().getBankAPI().getBankTiers()){
             if(bte.getCost() == costs){
                 return bte;
             }

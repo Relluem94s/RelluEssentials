@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.permissions;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.groupEntryList;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 
 /**
@@ -24,7 +23,7 @@ public class Groups {
      * @return GroupEntry
      */
     public static GroupEntry getGroup(String name) {
-        for (GroupEntry ge : RelluEssentials.groupEntryList) {
+        for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
             if (ge.getName().equalsIgnoreCase(name)) {
                 return ge;
             }
@@ -40,7 +39,7 @@ public class Groups {
      * @return GroupEntry
      */
     public static GroupEntry getGroup(int id) {
-        for (GroupEntry ge : RelluEssentials.groupEntryList) {
+        for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
             if (ge.getId() == id) {
                 return ge;
             }
@@ -58,7 +57,7 @@ public class Groups {
         if (getGroup(groupEntry.getName()) == null) {
 
             RelluEssentials.getInstance().getDatabaseHelper().insertGroup(groupEntry);
-            groupEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
+            RelluEssentials.getInstance().groupEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
             return true;
         } else {
             return false;

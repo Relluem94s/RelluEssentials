@@ -37,7 +37,7 @@ public class BetterBlockDrop implements Listener {
 
         Material m = e.getBlock().getBlockData().getMaterial();
         for (Material ore : ores) {
-            if (m == ore && Arrays.asList(RelluEssentials.ore_respawn).contains(e.getBlock().getLocation().getWorld().getName())) {
+            if (m == ore && Arrays.asList(RelluEssentials.getInstance().oreRespawn).contains(e.getBlock().getLocation().getWorld().getName())) {
                 runLater(() -> e.getBlock().setType(m), 10000L);
                 break;
             }

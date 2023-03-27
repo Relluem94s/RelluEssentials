@@ -16,9 +16,9 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.NPC.Type;
 
 public class NPCAPI {
     
-    private List<ItemStack> npc_itemstack = new ArrayList<>();
-    private List<String> npc_name = new ArrayList<>();
-    private List<String> npc_trader_title = new ArrayList<>();
+    private List<ItemStack> npcItemstack = new ArrayList<>();
+    private List<String> npcName = new ArrayList<>();
+    private List<String> npcTraderTitle = new ArrayList<>();
     private List<NPC> npcs = new ArrayList<>();
 
 
@@ -57,11 +57,11 @@ public class NPCAPI {
      */
     public void addNPC(NPC npc){
         npcs.add(npc);
-        npc_itemstack.add(npc.getItemHelper().getCustomItem());
-        npc_name.add(npc.getName());
+        npcItemstack.add(npc.getItemHelper().getCustomItem());
+        npcName.add(npc.getName());
 
         if(npc.getType().equals(Type.TRADER)){
-            npc_trader_title.add(npc.getTitle());
+            npcTraderTitle.add(npc.getTitle());
         }
     }
 
@@ -70,7 +70,7 @@ public class NPCAPI {
      * @return List of ItemStack
      */
     public List<ItemStack> getNPCItemStackList(){
-        return npc_itemstack;
+        return npcItemstack;
     }
 
     /**
@@ -78,7 +78,7 @@ public class NPCAPI {
      * @return List of Strings
      */
     public List<String> getNPCNameList(){
-        return npc_name;
+        return npcName;
     }
 
     /**
@@ -86,7 +86,7 @@ public class NPCAPI {
      * @return List of Strings
      */
     public List<String> getNPCTraderTitleList(){
-        return npc_trader_title;
+        return npcTraderTitle;
     }
 
     /**

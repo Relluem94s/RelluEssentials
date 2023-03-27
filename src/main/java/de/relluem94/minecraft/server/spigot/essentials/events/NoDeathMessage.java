@@ -18,7 +18,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntr
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.locationTypeEntryList;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH_TP;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
@@ -41,7 +40,7 @@ public class NoDeathMessage implements Listener {
         LocationEntry le = new LocationEntry();
         le.setLocation(p.getLocation());
         le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(94)));
-        LocationTypeEntry locationType = locationTypeEntryList.get(1);
+        LocationTypeEntry locationType = RelluEssentials.getInstance().locationTypeEntryList.get(1);
         le.setLocationType(locationType);
         le.setPlayerId(pe.getID());
         RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
