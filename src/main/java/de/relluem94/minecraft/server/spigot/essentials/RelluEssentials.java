@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.Calendar;
@@ -57,9 +58,7 @@ public class RelluEssentials extends JavaPlugin {
 
     private DatabaseHelper dBH;
     private PluginInformationEntry pie;
-    public static ResourceBundle englishProperties;
-    public static ResourceBundle germanProperties;
-    public static String language;
+
     private static Banker banker;
 
     private boolean isUnitTest = false;
@@ -138,23 +137,10 @@ public class RelluEssentials extends JavaPlugin {
     }
 
     public static String getText(String language, String key) {
-        if (language.equals("eng")) {
-            return englishProperties.getString(key);
+        if (language.equals("de_DE")) {
+            return ResourceBundle.getBundle("lang", new Locale("de", "DE")).getString(key);
         }
-        if (language.equals("de")) {
-            return germanProperties.getString(key);
-        }
-        return null;
-    }
-
-    public static String getText(String key) {
-        if (language.equals("eng")) {
-            return englishProperties.getString(key);
-        }
-        if (language.equals("de")) {
-            return germanProperties.getString(key);
-        }
-        return null;
+        return ResourceBundle.getBundle("lang", new Locale("en", "US")).getString(key);
     }
 
     private void startLoading() {
