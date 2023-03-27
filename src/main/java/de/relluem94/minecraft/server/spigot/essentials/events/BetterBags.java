@@ -216,8 +216,8 @@ public class BetterBags implements Listener {
                             else{
                                 if(p.getInventory().firstEmpty() != -1){
                                     if(value >= is.getMaxStackSize()){
-                                        cleanIS.setAmount(64);
-                                        be.setSlotValue(slot, value-64);
+                                        cleanIS.setAmount(is.getMaxStackSize());
+                                        be.setSlotValue(slot, value-is.getMaxStackSize());
                                         be.setToBeUpdated(true);
                                         p.getInventory().addItem(cleanIS);
                                         p.updateInventory();
