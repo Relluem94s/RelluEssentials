@@ -61,6 +61,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
  */
 public class DatabaseHelper {
 
+    public static final int DB_TEST_PORT = 65065;
+
     private final String host;
     private final String user;
     private final String password;
@@ -71,14 +73,24 @@ public class DatabaseHelper {
     private final String connectorStringInit;
 
     public DatabaseHelper(String host, String user, String password, int port) {
+        if(RelluEssentials.getInstance().isUnitTest()){
+            this.user = "root";
+            this.password = "";
+            this.port = DB_TEST_PORT;
+        }
+        else{
+            this.user = user;
+            this.password = password;
+            this.port = port;
+        }       
+
         this.host = host;
-        this.user = user;
-        this.password = password;
-        this.port = port;
         connectorString = CONNECTOR + "://" + this.host + ":" + this.port + "/" + PLUGIN_DATABASE_NAME
                 + "?useSSL=false&allowPublicKeyRetrieval=true";
         connectorStringInit = CONNECTOR + "://" + this.host + ":" + this.port
                 + "?useSSL=false&allowPublicKeyRetrieval=true";
+
+        
     }
 
     public String readResource(final String fileName) throws FileNotFoundException {
@@ -238,7 +250,7 @@ public class DatabaseHelper {
     }
 
     public void init() {
-        applyPatch(RelluEssentials.getInstance().getPluginInformation().getDbVersion());
+        applyPatch(getPluginInformation().getDbVersion());
     }
 
     private boolean insertScripts = false; // To add Scripts in Development without its own patch version

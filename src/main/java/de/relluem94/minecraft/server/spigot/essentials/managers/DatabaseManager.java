@@ -27,47 +27,41 @@ public class DatabaseManager implements IEnable{
     private DatabaseHelper dBH;
     private PluginInformationEntry pie;
 
-    private PlayerAPI playerAPI;
-    private ProtectionAPI protectionAPI;
-    private NPCAPI npcAPI;
-    private BagAPI bagAPI;
-    private BankAPI bankAPI;
-    private WarpAPI warpAPI;
-
     public DatabaseManager(String host, String user, String password, int port){
         dBH = new DatabaseHelper(host, user, password, port);
     }
 
     @Override
     public void enable() {
-        pie = RelluEssentials.getInstance().getDatabaseHelper().getPluginInformation();
-        RelluEssentials.getInstance().getDatabaseHelper().init();
+        pie = dBH.getPluginInformation();
+        dBH.init();
 
-        RelluEssentials.getInstance().locationTypeEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getLocationTypes());
+        RelluEssentials.getInstance().locationTypeEntryList.addAll(dBH.getLocationTypes());
 
-        for(DropEntry de : RelluEssentials.getInstance().getDatabaseHelper().getDrops()){
+        for(DropEntry de : dBH.getDrops()){
             RelluEssentials.getInstance().dropMap.put(de.getMaterial(), new DoubleStore(de.getMin(), de.getMax()));
         }
 
-        for(CropEntry ce : RelluEssentials.getInstance().getDatabaseHelper().getCrops()){
+        for(CropEntry ce : dBH.getCrops()){
             RelluEssentials.getInstance().crops.put(ce.getSeed(), ce.getPlant());
         }
 
-        playerAPI = new PlayerAPI(RelluEssentials.getInstance().getDatabaseHelper().getBags());
-        protectionAPI = new ProtectionAPI(RelluEssentials.getInstance().getDatabaseHelper().getProtectionLocks(), RelluEssentials.getInstance().getDatabaseHelper().getProtections());
-        npcAPI = new NPCAPI(RelluEssentials.getInstance().getDatabaseHelper().getNPCs());
-        bagAPI = new BagAPI(RelluEssentials.getInstance().getDatabaseHelper().getBagTypes());
-        bankAPI = new BankAPI(RelluEssentials.getInstance().getDatabaseHelper().getBankTiers());
-        warpAPI = new WarpAPI(RelluEssentials.getInstance().getDatabaseHelper().getWarps());
+        RelluEssentials.getInstance().setPlayerAPI(new PlayerAPI(dBH.getBags()));
+        RelluEssentials.getInstance().setProtectionAPI(new ProtectionAPI(dBH.getProtectionLocks(), dBH.getProtections()));
+        RelluEssentials.getInstance().setNpcAPI(new NPCAPI());
+        RelluEssentials.getInstance().getNpcAPI().init(dBH.getNPCs());
+        RelluEssentials.getInstance().setBagAPI(new BagAPI(dBH.getBagTypes()));
+        RelluEssentials.getInstance().setBankAPI(new BankAPI(dBH.getBankTiers()));
+        RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));
 
-        for(WorldGroupEntry wge: RelluEssentials.getInstance().getDatabaseHelper().getWorldGroups()){
-            for(WorldEntry we: RelluEssentials.getInstance().getDatabaseHelper().getWorldByGroup(wge)){
+        for(WorldGroupEntry wge: dBH.getWorldGroups()){
+            for(WorldEntry we: dBH.getWorldByGroup(wge)){
                 consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName());
                 RelluEssentials.getInstance().worldsMap.put(wge, we);
             }
         }
 
-        RelluEssentials.getInstance().groupEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
+        RelluEssentials.getInstance().groupEntryList.addAll(dBH.getGroups());
 
         for(int i = 0; i < RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().size(); i++){
             ItemStack[] isa = BagHelper.getItemStacks(RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().get(i));
@@ -84,29 +78,4 @@ public class DatabaseManager implements IEnable{
     public PluginInformationEntry getPluginInformation() {
         return pie;
     }
-
-    public PlayerAPI getPlayerAPI() {
-        return playerAPI;
-    }
-
-    public ProtectionAPI getProtectionAPI() {
-        return protectionAPI;
-    }
-
-    public NPCAPI getNpcAPI() {
-        return npcAPI;
-    }
-
-    public BagAPI getBagAPI() {
-        return bagAPI;
-    }
-
-    public BankAPI getBankAPI() {
-        return bankAPI;
-    }
-
-    public WarpAPI getWarpAPI() {
-        return warpAPI;
-    }
-    
 }

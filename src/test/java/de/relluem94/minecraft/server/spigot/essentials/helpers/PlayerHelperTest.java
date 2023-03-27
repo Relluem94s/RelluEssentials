@@ -33,9 +33,9 @@ public class PlayerHelperTest {
         System.setOut(noOut); // To disable Error Message from NetworkUtils
 
         OfflinePlayerEntry ope = PlayerHelper.getOfflinePlayerByName("Relluem9494");
-        Assert.assertEquals(false, ope != null);
-
         System.setOut(sysOut);
+
+        Assert.assertEquals(false, ope != null);
     }
 
     @Test

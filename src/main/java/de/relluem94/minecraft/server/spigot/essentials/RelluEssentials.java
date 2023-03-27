@@ -125,13 +125,7 @@ public class RelluEssentials extends JavaPlugin {
 
         dm.enable();
         dBH = dm.getDatabaseHelper();
-        pie = dm.getPluginInformation();
-        playerAPI = dm.getPlayerAPI();
-        protectionAPI = dm.getProtectionAPI();
-        npcAPI = dm.getNpcAPI();
-        bagAPI = dm.getBagAPI();
-        bankAPI = dm.getBankAPI();
-        warpAPI = dm.getWarpAPI();
+        
 
 
         new EnchantmentManager().enable();
@@ -186,7 +180,6 @@ public class RelluEssentials extends JavaPlugin {
 
     protected RelluEssentials(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file){
         super(loader, description, dataFolder, file);
-        this.getConfig().set("database.host", "172.17.0.2");
         isUnitTest = true;
     }
 
@@ -229,4 +222,30 @@ public class RelluEssentials extends JavaPlugin {
     public WarpAPI getWarpAPI() {
         return warpAPI;
     }
+
+    public void setPlayerAPI(PlayerAPI playerAPI) {
+        this.playerAPI = playerAPI;
+    }
+
+    public void setProtectionAPI(ProtectionAPI protectionAPI) {
+        this.protectionAPI = protectionAPI;
+    }
+
+    public void setNpcAPI(NPCAPI npcAPI) {
+        this.npcAPI = npcAPI;
+    }
+
+    public void setBagAPI(BagAPI bagAPI) {
+        this.bagAPI = bagAPI;
+    }
+
+    public void setBankAPI(BankAPI bankAPI) {
+        this.bankAPI = bankAPI;
+    }
+
+    public void setWarpAPI(WarpAPI warpAPI) {
+        this.warpAPI = warpAPI;
+    }
+
+    
 }

@@ -21,8 +21,7 @@ public class NPCAPI {
     private List<String> npcTraderTitle = new ArrayList<>();
     private List<NPC> npcs = new ArrayList<>();
 
-
-    public NPCAPI(List<NPCEntry> npcEntryList) {
+    public void init(List<NPCEntry> npcEntryList){
         for(NPCEntry ne : npcEntryList){
             new NPC(ne){
                 @Override
