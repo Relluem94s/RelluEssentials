@@ -3,6 +3,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -12,6 +13,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import com.google.common.collect.Multimap;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
@@ -232,5 +234,31 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
         hash = 31 * hash + (super.getKey() == null ? 0 : super.getKey().hashCode());
         
         return hash;
+    }
+
+    public static boolean hasEnchant(ItemStack is, Enchantment e){
+        if(!is.hasItemMeta()){
+            return false;
+        }
+
+        if(!is.getItemMeta().hasEnchants()){
+            return false;
+        }
+
+        if(!hasEnchantment(is, e)){
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean hasEnchantment(ItemStack is, Enchantment e){
+        for(Entry<Enchantment, Integer> en : is.getItemMeta().getEnchants().entrySet()){
+            if(en.getKey().getKey().equals(e.getKey())){
+                return true;
+            }
+        }
+
+        return is.getItemMeta().hasEnchant(e);
     }
 }
