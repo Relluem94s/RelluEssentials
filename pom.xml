@@ -39,6 +39,10 @@
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -67,8 +71,8 @@
         </dependency>
         <dependency>
             <groupId>com.github.seeseemelk</groupId>
-            <artifactId>MockBukkit-v1.18</artifactId>
-            <version>1.15.5</version>
+            <artifactId>MockBukkit-v1.18</artifactId> <!-- v1.19-->
+            <version>2.85.2</version> <!--2.145.0 -->
             <scope>test</scope>
             <exclusions>
                 <exclusion>
