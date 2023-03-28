@@ -1,21 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
-
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.UUID;
-import java.util.logging.Logger;
 
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -27,7 +19,6 @@ import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import ch.vorburger.exec.ManagedProcessException;
 import ch.vorburger.mariadb4j.DB;
 import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerJoin;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -57,13 +48,8 @@ public class RelluEssentialsTest {
         System.setOut(sysOut);
 
         db.createDB(DatabaseConstants.PLUGIN_DATABASE_NAME);
-        
-        
-
         db.source("de/relluem94/minecraft/server/spigot/essentials/rellu_essentials.sql");
 
-
-        
         server = MockBukkit.mock();
         plugin = MockBukkit.load(RelluEssentials.class);
 
