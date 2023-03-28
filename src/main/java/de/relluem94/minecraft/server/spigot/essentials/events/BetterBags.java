@@ -58,6 +58,10 @@ public class BetterBags implements Listener {
                     e.setCancelled(true);
                 }
             }
+
+            if(e.getBlock().getType().equals(Material.TORCH) || e.getBlock().getType().equals(Material.LILY_PAD)){
+                e.setCancelled(true);
+            }
         }
 
         
