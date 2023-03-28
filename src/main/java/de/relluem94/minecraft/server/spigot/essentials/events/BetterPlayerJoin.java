@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_JOIN_MESSAGE;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,7 +10,6 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
@@ -16,8 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_JOIN_MESSAGE;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
 public class BetterPlayerJoin implements Listener {
 
@@ -80,6 +80,10 @@ public class BetterPlayerJoin implements Listener {
 
     @EventHandler
     public void checkInterest(AsyncPlayerPreLoginEvent e){
+        if(RelluEssentials.getInstance().isUnitTest()){
+            return;
+        }
+
         BankerHelper.checkInterest(e.getUniqueId(), false);
     }
 }

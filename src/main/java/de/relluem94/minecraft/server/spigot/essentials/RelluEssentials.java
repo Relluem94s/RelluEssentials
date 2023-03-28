@@ -1,15 +1,27 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_BORDER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_STARTTIME_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_START_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_STOP_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_WORLD_LOBBY;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_WORLD_WORLD;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_WORLD_WORLD_NETHER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_WORLD_WORLD_THE_END;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
-import java.util.Calendar;
-import java.util.EnumMap;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -20,7 +32,6 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-import de.relluem94.rellulib.stores.DoubleStore;
 import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
@@ -53,9 +64,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
 import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
-
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import de.relluem94.rellulib.stores.DoubleStore;
 
 public class RelluEssentials extends JavaPlugin {
 

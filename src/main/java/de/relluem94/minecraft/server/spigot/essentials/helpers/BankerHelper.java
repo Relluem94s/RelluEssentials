@@ -1,5 +1,24 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -25,8 +44,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.*;
 
 public class BankerHelper {
 
@@ -227,7 +244,13 @@ public class BankerHelper {
     }
 
     public static void checkInterest(UUID uuid, boolean midnight){
-        if(!Bukkit.getOfflinePlayer(uuid).hasPlayedBefore()){
+        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+
+        if(op == null){
+            return;
+        } 
+
+        if(!op.hasPlayedBefore()){
             return;
         } 
         
@@ -246,7 +269,6 @@ public class BankerHelper {
             return;
         }
         
-        OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
         long lastPlayedTime = op.getLastPlayed()/1000L;
         
         LocalDate localDate = LocalDate.now();

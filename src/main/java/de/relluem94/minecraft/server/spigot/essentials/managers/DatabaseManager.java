@@ -1,5 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+
+import org.bukkit.inventory.ItemStack;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
@@ -16,12 +21,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-
-import org.bukkit.inventory.ItemStack;
-
 public class DatabaseManager implements IEnable{
 
     private DatabaseHelper dBH;
@@ -34,6 +33,7 @@ public class DatabaseManager implements IEnable{
     @Override
     public void enable() {
         pie = dBH.getPluginInformation();
+        RelluEssentials.getInstance().setPluginInformation(pie);
         dBH.init();
 
         RelluEssentials.getInstance().locationTypeEntryList.addAll(dBH.getLocationTypes());
