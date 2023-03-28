@@ -106,13 +106,17 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
     * Lumberjack Bag
 
 ## Functional Block Protections
-* Add aditional Blocks via Database or via API
+* Add additional Blocks via Database or via API
+
+## Enchantments
+* Replenishment (Auto Replant Seeds)
+* Autosmelt  (Smelts all Blocks)
+* Telekinesis (Teleports item into Inventory)
+* Delicate (Prevents breaking immature Crops and Stems)
+* Thunderstrike (Strikes Entity with a Lightning Bolt)
 
 ## Skills
 * Skills will be reworked. Some as Enchant some as Skill. (WIP)
-    * Auto Replant Seeds
-    * Auto Smelt  [small tweaks for attached Blocks needed]
-    * Telekinesis
     * TreeFeller (Fell the whole Tree) [he is dead jim]
     * Repair (Repair Tools and Armor) [the lost son]
     * Salvage (Salvage Tools and Armor and get back resources and enchantments) [needs some love]

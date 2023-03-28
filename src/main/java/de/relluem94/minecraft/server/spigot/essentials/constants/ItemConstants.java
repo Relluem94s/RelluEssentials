@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_MONEY;
 
 import org.bukkit.NamespacedKey;
 
@@ -21,10 +22,6 @@ public class ItemConstants {
     //                              ITEM   STUFF                                    //
     //==============================================================================//
     public static final String PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS = "cloud_boots";
-    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_PICKAXE = "smelter_pickaxe";
-    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_TANK = "smelter_tank";
-    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_FURNACE = "smelter_furnace";
-    public static final String PLUGIN_ITEM_NAMESPACE_SMELTER_FUEL = "smelter_fuel";
 
     public static final String PLUGIN_ITEM_RELLU_HELMET = "§6Rellu's Helmet";
     public static final String PLUGIN_ITEM_RELLU_CHESTPLATE = "§3Rellu's Chestplate";
@@ -35,10 +32,6 @@ public class ItemConstants {
     public static final String PLUGIN_ITEM_RELLU_PICKAXE = "§eRellu's Pickaxe";
 
     public static final String PLUGIN_ITEM_INGREDIENT = "§4§l§oThis is a crafting ingredient";
-
-    public static final String PLUGIN_ITEM_AUTOSMELTER = "§cSmelter Pickaxe";
-    public static final String PLUGIN_ITEM_AUTOSMELTER_TANK = "§cSmelter Tank";
-    public static final String PLUGIN_ITEM_AUTOSMELTER_FURNACE = "§cSmelter Furnace";
 
     public static final String PLUGIN_ITEM_CLOUDBOOTS = "§bCloud Boots";
     public static final String PLUGIN_ITEM_CLOUDBOOTS_LORE1 = "§bGrants gliding abillity if worn.";

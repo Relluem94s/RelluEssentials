@@ -1,6 +1,23 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDBOOTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDBOOTS_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDBOOTS_LORE2;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDSAILOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDSAILOR_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDSAILOR_LORE2;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_COINS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_COINS_LORE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_BOOTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_CHESTPLATE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_HELMET;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_LEGGINGS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_PICKAXE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_SHIELD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_SWORD;
+
 import java.util.Arrays;
+
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -11,10 +28,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
-
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 
 
 /**
@@ -41,19 +56,6 @@ public class CustomItems {
             setItemMeta(cloudBootsMeta);
         }
     };
-
-    public static final ItemHelper autoSmeltNetheritePickAxe = new ItemHelper(Material.NETHERITE_PICKAXE, 1, PLUGIN_ITEM_AUTOSMELTER, Type.TOOL, Rarity.LEGENDARY) {
-        @Override
-        public void init() {
-            ItemMeta im = getItemMeta();
-            im.setUnbreakable(true);
-            setItemMeta(im);
-            CustomEnchants.autosmelt.addTo(getItemStack());
-        }
-    };
-
-    public static final ItemHelper autoSmeltTank = new ItemHelper(Material.GLASS_BOTTLE, 1, PLUGIN_ITEM_AUTOSMELTER_TANK, Type.INGREDIENT, Rarity.RARE, Arrays.asList(PLUGIN_ITEM_INGREDIENT));
-    public static final ItemHelper autoSmeltFurnace = new ItemHelper(Material.FURNACE, 1, PLUGIN_ITEM_AUTOSMELTER_FURNACE, Type.INGREDIENT, Rarity.RARE, Arrays.asList(PLUGIN_ITEM_INGREDIENT));
 
     /**
      *

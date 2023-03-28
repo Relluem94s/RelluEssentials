@@ -21,18 +21,6 @@ public class EnchantmentConstants {
     public static final String PLUGIN_ENCHANTMENT_COLOR_WEAPON = "§c";
     public static final String PLUGIN_ENCHANTMENT_COLOR_HOE = "§a";
 
-    
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK = PLUGIN_ENCHANTMENT_LORE_COLOR + "Your Lava Tank is filled: ";
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR = "§f/§2";
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LOW_COLOR = "§6";
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_FULL_COLOR = "§2";
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_COLOR = "§4";
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_EMPTY_MESSAGE = "§4Your Lava Tank is empty. You can't smelt any longer";
-    public static final int PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX = 1000;
-    public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT = "%s" + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_LEFT_SEPERATOR + PLUGIN_ENCHANTMENT_AUTOSMELT_LAVA_TANK_FUEL_MAX;
-
-
-
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT = "autosmelt";
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_UUID = "6e4cb9cf-69fb-4a2a-8a9e-787882bdc92d";
     public static final String PLUGIN_ENCHANTMENT_AUTOSMELT_DISPLAYNAME = PLUGIN_ENCHANTMENT_COLOR + "Autosmelt";
