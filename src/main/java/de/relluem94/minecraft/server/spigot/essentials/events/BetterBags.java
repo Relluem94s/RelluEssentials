@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -29,6 +30,7 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
@@ -43,33 +45,50 @@ public class BetterBags implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
         Player p = e.getPlayer();
-        if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchants() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.delicate)){
+        Material m = e.getBlock().getType();
+        
+        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.delicate)){
             if(e.getBlock().getType().equals(Material.PUMPKIN_STEM) || e.getBlock().getType().equals(Material.MELON_STEM)){
                 e.setCancelled(true);
             } 
             
             if(e.getBlock().getBlockData() instanceof Ageable){
                 Ageable age = (Ageable) e.getBlock().getBlockData();
-                if(age.getAge() != age.getMaximumAge()){
-                    if(!e.getBlock().getType().equals(Material.SUGAR_CANE)){
-                        e.setCancelled(true);
-                    }
+                if(age.getAge() != age.getMaximumAge() && (!e.getBlock().getType().equals(Material.SUGAR_CANE))){
+                    e.setCancelled(true);
                 }
             }
         }
 
-        /*
-        if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchants() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.telekinesis)){
+        
+        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
             Block block = e.getBlock();
-            int dropCount = 2;
-            while(block.getRelative(BlockFace.UP).getType().equals(Material.SUGAR_CANE) || block.getRelative(BlockFace.UP).getType().equals(Material.BAMBOO)){
-                dropCount++;
-                block.setType(Material.AIR);
-                block = block.getRelative(BlockFace.UP);
+            int dropCount = 0;
+
+            if(isSugarCaneOrIsBamboo(block)){
+                while(isSugarCaneOrIsBamboo(block.getRelative(BlockFace.UP))){
+                    dropCount++;
+                    block.setType(Material.AIR);
+                    block = block.getRelative(BlockFace.UP);
+                }
+    
+                if(isSugarCaneOrIsBamboo(block)){
+                    block.setType(Material.AIR);
+                    dropCount++;
+                }
+    
+                if(!m.equals(Material.AIR)){
+                    Item item = e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(m, dropCount));
+
+                    EntityPickupItemEvent epie = new EntityPickupItemEvent(p, item, dropCount);
+                    Bukkit.getPluginManager().callEvent(epie);
+                }
             }
-            e.getBlock().getDrops().add(new ItemStack(block.getType(), dropCount));
-        }
-         */
+        }        
+    }
+
+    private boolean isSugarCaneOrIsBamboo(Block b){
+        return b.getType().equals(Material.SUGAR_CANE) || b.getType().equals(Material.BAMBOO);
     }
 
     private Random r = new Random();
@@ -89,7 +108,7 @@ public class BetterBags implements Listener {
             }            
         }
 
-        if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchants() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.replenishment)){
+        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.replenishment)){
             for(int i = 0; i < e.getItems().size(); i++){
                 if(e.getItems().get(i) != null && RelluEssentials.getInstance().crops.containsKey(e.getItems().get(i).getItemStack().getType())){
                     e.getBlock().setType(RelluEssentials.getInstance().crops.get(e.getItems().get(i).getItemStack().getType()));
@@ -118,7 +137,7 @@ public class BetterBags implements Listener {
                 }
             }
         }
-        else if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchants() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.autosmelt)){
+        else if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.autosmelt)){
             for(int i = 0; i < e.getItems().size(); i++){
                 ItemStack is = e.getItems().get(i).getItemStack().clone();
                 if(e.getItems().get(i) != null && ItemHelper.getSmeltedItemStack(is) != null){
@@ -133,7 +152,7 @@ public class BetterBags implements Listener {
             e.getItems().removeAll(BagHelper.collectItems(li, p, pe));
         }
 
-        if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchants() && p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.telekinesis)){
+        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
             List<Item> lis = new ArrayList<>();
             for(Item i: e.getItems()){
                 if(p.getInventory().firstEmpty() != -1){
@@ -255,6 +274,7 @@ public class BetterBags implements Listener {
     public void onItemCollect(EntityPickupItemEvent e) {
         if(e.getEntity() instanceof Player){
             Player p = (Player) e.getEntity();
+
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
             ItemStack is = e.getItem().getItemStack();
@@ -278,17 +298,12 @@ public class BetterBags implements Listener {
                 e.setCancelled(true);
                 e.getItem().remove();
             }
+            else{
+                p.getInventory().addItem(is);
+                p.updateInventory();
+                e.setCancelled(true);
+                e.getItem().remove();
+            }
         }
     }
-/*
-    @EventHandler
-    public void test5555(BlockFromToEvent e){
-        System.out.println(e.getEventName() + " " + e.getToBlock().getType().name() + " << " + e.getBlock().getType().name());
-    }
-
-    @EventHandler
-    public void test8888(BlockPhysicsEvent e){
-        System.out.println(e.getEventName() + " " + e.getSourceBlock() + " >> " + e.getBlock().getType().name());
-    }
- */
 }
