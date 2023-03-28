@@ -19,8 +19,7 @@ public class SignEdit implements Listener {
     @EventHandler
     public void onChangeSignEditSign(PlayerInteractEvent e) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer().getUniqueId());
-        if (!pe.getPlayerState().equals(PlayerState.DEFAULT) && e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && !e.getPlayer().isSneaking()) {
-            if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+        if (!pe.getPlayerState().equals(PlayerState.DEFAULT) && e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && !e.getPlayer().isSneaking() && (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK)) {
                 Block b =  e.getClickedBlock();
                 if (SignHelper.isBlockASign(b)) {
                     Sign sign = (Sign) e.getClickedBlock().getState();
@@ -38,20 +37,21 @@ public class SignEdit implements Listener {
                     }
                     else if(pe.getPlayerState().equals(PlayerState.SIGNPASTE)){
                         if(pe.getPlayerStateParameter() instanceof Sign){
-                            Sign copiedSign = (Sign) pe.getPlayerStateParameter();
-                            sign.setLine(0, copiedSign.getLine(0));
-                            sign.setLine(1, copiedSign.getLine(1));
-                            sign.setLine(2, copiedSign.getLine(2));
-                            sign.setLine(3, copiedSign.getLine(3));
-                            sign.update();
-
+                            updateSign(sign, (Sign) pe.getPlayerStateParameter());
                             e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_PASTE);
                         }
                         pe.setPlayerState(PlayerState.DEFAULT);
                     }
-                    
                 }
-            }
+            
         }
+    }
+
+    private void updateSign(Sign sign, Sign copiedSign){
+        sign.setLine(0, copiedSign.getLine(0));
+        sign.setLine(1, copiedSign.getLine(1));
+        sign.setLine(2, copiedSign.getLine(2));
+        sign.setLine(3, copiedSign.getLine(3));
+        sign.update();
     }
 }
