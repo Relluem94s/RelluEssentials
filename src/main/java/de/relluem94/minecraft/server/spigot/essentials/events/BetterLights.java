@@ -22,20 +22,18 @@ public class BetterLights implements Listener {
     public void onChangeSignCreateActionSign(PlayerInteractEvent e) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer().getUniqueId());
         Block b = e.getClickedBlock();
-        if(pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE)){
-            if(b != null && b.getType().equals(Material.REDSTONE_LAMP) && b.getBlockData() instanceof Lightable){
-                Lightable lightable = (Lightable) b.getBlockData();
-                lightable.setLit(!lightable.isLit());
-                b.setBlockData(lightable);
-                e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_LIGHTS_TOOGLE);
-                pe.setPlayerState(PlayerState.DEFAULT);
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        pe.setPlayerState(PlayerState.LIGHT_TOOGLE);
-                    }
-                }.runTaskLater(RelluEssentials.getInstance(), 2);
-            }
+        if(pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE) && b != null && b.getType().equals(Material.REDSTONE_LAMP) && b.getBlockData() instanceof Lightable){
+            Lightable lightable = (Lightable) b.getBlockData();
+            lightable.setLit(!lightable.isLit());
+            b.setBlockData(lightable);
+            e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_LIGHTS_TOOGLE);
+            pe.setPlayerState(PlayerState.DEFAULT);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    pe.setPlayerState(PlayerState.LIGHT_TOOGLE);
+                }
+            }.runTaskLater(RelluEssentials.getInstance(), 2);
         }
     }
 }

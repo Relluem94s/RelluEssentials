@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
@@ -44,45 +45,26 @@ public class ToolCrafting implements Listener {
         }
     }
 
+    private ItemMeta addRarity(Material[] mats, ItemStack is, Rarity rarity){
+        ItemMeta im = is.getItemMeta();
+        for (Material m : mats) {
+            if (is.getType().equals(m)) {
+                im.setLore(Arrays.asList(rarity.getPrefix() + rarity.getDisplayName()));
+                is.setItemMeta(im);
+            }
+        }
+        return im;
+    }
+
     @EventHandler
     public void addRarityToTools(PrepareItemCraftEvent e) {
         if (e.getRecipe() != null) {
-            ItemMeta im = e.getRecipe().getResult().getItemMeta();
-
-            for (Material m : diamond) {
-                if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName()));
-                    e.getInventory().getResult().setItemMeta(im);
-                }
-            }
-
-            for (Material m : iron) {
-                if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName()));
-                    e.getInventory().getResult().setItemMeta(im);
-                }
-            }
-
-            for (Material m : gold) {
-                if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName()));
-                    e.getInventory().getResult().setItemMeta(im);
-                }
-            }
-
-            for (Material m : chainmail) {
-                if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName()));
-                    e.getInventory().getResult().setItemMeta(im);
-                }
-            }
-
-            for (Material m : leather) {
-                if (e.getRecipe().getResult().getType().equals(m)) {
-                    im.setLore(Arrays.asList(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName()));
-                    e.getInventory().getResult().setItemMeta(im);
-                }
-            }
+            addRarity(netherite, e.getRecipe().getResult(), Rarity.EPIC);
+            addRarity(diamond, e.getRecipe().getResult(), Rarity.RARE);
+            addRarity(iron, e.getRecipe().getResult(), Rarity.UNCOMMON);
+            addRarity(gold, e.getRecipe().getResult(), Rarity.COMMON);
+            addRarity(chainmail, e.getRecipe().getResult(), Rarity.UNCOMMON);
+            addRarity(leather, e.getRecipe().getResult(), Rarity.COMMON);
         }
     }
 }
