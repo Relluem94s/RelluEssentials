@@ -29,6 +29,7 @@ public class Where implements CommandExecutor {
 
         if (isCMDBlock(sender) || isConsole(sender)) {
             where(args[0], sender);
+            return true;
         }
 
         
