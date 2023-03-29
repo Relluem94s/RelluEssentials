@@ -1,36 +1,41 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import java.io.IOException;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.json.JSONObject;
 
-import de.relluem94.rellulib.utils.TypeUtils;
-
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
@@ -43,17 +48,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLo
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupInventoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
-
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.rellulib.utils.TypeUtils;
 
 /**
  *
@@ -1057,7 +1053,7 @@ public class DatabaseHelper {
     }
 
     public Map<Location, ProtectionEntry> getProtections() {
-        HashMap<Location, ProtectionEntry> pel = new HashMap<>();
+        Map<Location, ProtectionEntry> pel = new HashMap<>();
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getProtections.sql"))) {
                 ps.execute();

@@ -1,5 +1,24 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CHAT_CLEARED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING_OTHER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_TOP;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN_PING;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,7 +27,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
@@ -18,13 +36,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN_PING;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
-
-import java.util.HashMap;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Admin implements CommandExecutor {
 
