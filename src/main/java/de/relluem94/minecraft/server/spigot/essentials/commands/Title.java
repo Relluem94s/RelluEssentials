@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
@@ -23,8 +24,6 @@ public class Title implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Player p = null;
-
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TITLE)) {
             return false;
         }
@@ -37,14 +36,13 @@ public class Title implements CommandExecutor {
         if (isCMDBlock(sender) || isConsole(sender)) {
             title(args, sender);
         }
-        
-        if (isPlayer(sender)) {
-            p = (Player) sender;
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
         }
 
-        if(p == null){
-            return false;
-        }
+        Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
