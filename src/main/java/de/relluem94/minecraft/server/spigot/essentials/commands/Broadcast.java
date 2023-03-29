@@ -1,21 +1,25 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_BROADCAST_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_SPACER_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_BROADCAST;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BROADCAST;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BROADCAST_TITLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+import static de.relluem94.rellulib.utils.StringUtils.implode;
+import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-
-import static de.relluem94.rellulib.utils.StringUtils.*;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BROADCAST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BROADCAST_TITLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Broadcast implements CommandExecutor {
 
@@ -30,15 +34,8 @@ public class Broadcast implements CommandExecutor {
             return true;
         }
 
-        if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
-            return true;
-        }
-
-        Player p = (Player) sender;
-
-        if (p != null && !Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
+        if (!Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
+            sendMessage(sender, PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         }
 
