@@ -1,18 +1,22 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WHERE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WHERE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WHERE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Where implements CommandExecutor {
 
@@ -20,6 +24,10 @@ public class Where implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_WHERE)) {
             return false;
+        }
+
+        if (isCMDBlock(sender) || isConsole(sender)) {
+            where(args[0], sender);
         }
 
         Player p = null;
@@ -46,14 +54,17 @@ public class Where implements CommandExecutor {
             return true;
         }
 
-        Player target = Bukkit.getPlayer(args[0]);
+        where(args[0], sender);
+        return true;
+    }
+
+    private void where(String targetArg, CommandSender commandSender){
+        Player target = Bukkit.getPlayer(targetArg);
         if (target == null) {
-            p.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
-            return true;
+            commandSender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, targetArg));
+            return;
         }
 
-        p.sendMessage(String.format(PLUGIN_COMMAND_WHERE, target.getCustomName(), locationToString(target.getLocation())));
-
-        return false;
+        commandSender.sendMessage(String.format(PLUGIN_COMMAND_WHERE, target.getCustomName(), locationToString(target.getLocation())));
     }
 }
