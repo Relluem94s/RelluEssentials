@@ -1,5 +1,23 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_INVALID;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_ACCEPT_NO_REQUEST;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_REQUEST_EXPIRED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_SEND_REQUEST;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_TO;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT_TO;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -7,17 +25,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.rellulib.utils.TypeUtils;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT_TO;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
-
-import java.util.HashMap;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.rellulib.utils.TypeUtils;
 
 public class Teleport implements CommandExecutor {
 
@@ -26,34 +37,24 @@ public class Teleport implements CommandExecutor {
 
     private void addTeleportEntry(Player p, Player t){
         telportAcceptList.put(t, p);
-        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
-    
-            @Override
-            public void run() {
-                if(hasTeleportEntry(t)){
-                    p.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
-                    t.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
-                    removeTeleportEntry(t);
-                }
-            }
-            
+        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+            if(hasTeleportEntry(t)){
+                p.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
+                t.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
+                removeTeleportEntry(t);
+            } 
         }, 20*60*2L);
     }
 
    
     private void addTeleportToEntry(Player p, Player t){
         telportToAcceptList.put(t, p);
-        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), new Runnable() {
-    
-            @Override
-            public void run() {
-                if(hasToTeleportEntry(t)){
-                    p.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
-                    t.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
-                    removeToTeleportEntry(t);
-                }
+        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+            if(hasToTeleportEntry(t)){
+                p.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
+                t.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
+                removeToTeleportEntry(t);
             }
-            
         }, 20*60*2L);
     }
 
@@ -91,15 +92,13 @@ public class Teleport implements CommandExecutor {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TELEPORT)) {
             return false;
         }
-
-        Player p = null;
-        if (isPlayer(sender)) {
-            p = (Player) sender;
+        
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
         }
 
-        if(p == null){
-            return false;
-        }
+        Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -150,7 +149,8 @@ public class Teleport implements CommandExecutor {
         if (args.length == 2) {
             Player target = Bukkit.getPlayer(args[1]);
             if (target == null) {
-                return false;
+                p.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[1]));
+                return true;
             }
 
             if(!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TELEPORT_TO)){
@@ -167,37 +167,42 @@ public class Teleport implements CommandExecutor {
         }
         
         if (args.length == 3) {
-            if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                return true;
-            }
-
-            if (!TypeUtils.isInt(args[0])) {
-                return false;
-            }
-
-            if (!TypeUtils.isInt(args[1])) {
-                return false;
-            }
-
-            if (!TypeUtils.isInt(args[2])) {
-                return false;
-            }
-
-
-
-            Location l = p.getLocation().clone();
-            
-            l.setX(Integer.parseInt(args[0]));
-            l.setY(Integer.parseInt(args[1]));
-            l.setZ(Integer.parseInt(args[2]));
-
-            Back.addBackPoint(p);
-            p.teleport(l);
-            p.sendMessage(String.format(PLUGIN_COMMAND_TP, l.getX() + ", " + l.getY() + ", " + l.getZ()));
-
+            teleportToLocation(p, args[0], args[1], args[2]);
+            return true;
         }
 
-        return false;
+        p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+        return true;
+    }
+
+    private void teleportToLocation(Player p, String x, String y, String z){
+        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return;
+        }
+
+        if (!TypeUtils.isInt(x)) {
+            p.sendMessage(PLUGIN_COMMAND_INVALID);
+            return;
+        }
+
+        if (!TypeUtils.isInt(y)) {
+            return;
+        }
+
+        if (!TypeUtils.isInt(z)) {
+            return;
+        }
+
+        Location l = p.getLocation().clone();
+        
+        l.setX(Integer.parseInt(x));
+        l.setY(Integer.parseInt(y));
+        l.setZ(Integer.parseInt(z));
+
+        Back.addBackPoint(p);
+        p.teleport(l);
+        p.sendMessage(String.format(PLUGIN_COMMAND_TP, l.getX() + ", " + l.getY() + ", " + l.getZ()));
+
     }
 }
