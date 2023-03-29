@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WHERE;
@@ -30,14 +31,13 @@ public class Where implements CommandExecutor {
             where(args[0], sender);
         }
 
-        Player p = null;
-        if (isPlayer(sender)) {
-            p = (Player) sender;
+        
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
         }
 
-        if(p == null){
-            return false;
-        }
+        Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
