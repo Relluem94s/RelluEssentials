@@ -62,7 +62,8 @@ public class Strings {
     public static final String PLUGIN_SYMBOL_RIGHT_POINTING_ANGLE_BRACKET = PLUGIN_COLOR_POSITIVE + "\u232A";
     public static final String PLUGIN_SYMBOL_LEFT_POINTING_ANGLE_BRACKET = PLUGIN_COLOR_NEGATIVE + "\u2329";
     public static final String PLUGIN_SYMBOL_CROSS_MARK = PLUGIN_COLOR_NEGATIVE + "\u274C";
-    public static final String PLUGIN_SYMBOL_BLACK_FOUR_POINTED_STAR = PLUGIN_COLOR_POSITIVE + "\u2726";
+    public static final String PLUGIN_SYMBOL_BLACK_FOUR_POINTED_STAR = PLUGIN_COLOR_POSITIVE + "\u2726"; 
+    public static final String PLUGIN_SYMBOL_HEART = PLUGIN_COLOR_NEGATIVE + "\u2665"; 
     // \u274C Cross Mark (U+274C)
     // \u2726 Black Four Pointed Star (U+2726)
 
@@ -156,7 +157,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_GOD_ON = PLUGIN_FORMS_COMMAND_PREFIX + "Du bist der Gott!";
     public static final String PLUGIN_COMMAND_GOD_OFF = PLUGIN_FORMS_COMMAND_PREFIX + "Du bist wieder sterblich!";
 
-    public static final String PLUGIN_COMMAND_HEAL = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast dich geheilt!";
+    public static final String PLUGIN_COMMAND_HEAL = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest geheilt!"; 
 
     public static final String PLUGIN_COMMAND_NIGHT = PLUGIN_FORMS_COMMAND_PREFIX + "Es ist jetzt Nacht in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "!";
 
@@ -302,4 +303,15 @@ public class Strings {
     public static final String PLUGIN_COMMAND_CUSTOMHEADS_TITLE = PLUGIN_FORMS_COMMAND_PREFIX + "Heads";
 
     public static final String PLUGIN_COMMAND_PLAYERINFO = PLUGIN_FORMS_COMMAND_PREFIX + "Player Information: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_HOMES = "Homes: %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_DEATHPOINTS = "DeathPoints: %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_GROUP = "Group: %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_MARRIED_TO = "Married: %s " + PLUGIN_SYMBOL_HEART + PLUGIN_COLOR_COMMAND + " %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_MARRIED_SINCE = "Married since: %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_LAST_ONLINE = "Last Online: %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_FIRST_ONLINE = "First Online: %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_MINED = "%s mined: %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_DEATHS = "Deaths: %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_JUMPED = "Jumped: %s";
+    public static final String PLUGIN_COMMAND_PLAYERINFO_LEFT_GAME = "Left Game: %s";
 }
