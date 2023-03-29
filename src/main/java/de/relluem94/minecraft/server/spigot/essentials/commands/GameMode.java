@@ -1,17 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_COMMAND_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_0;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_1;
@@ -22,12 +17,37 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+
 public class GameMode implements CommandExecutor {
 
     private static final String LANG_KEY = "PLUGIN_COMMAND_GAMEMODE";
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
+            sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if (args.length == 1) {
+            Player target = Bukkit.getPlayer(args[0]);
+
+            if (target == null) {
+                sender.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
+                return true;
+            }
+            return gameMode(command, target);
+        }
+
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
@@ -35,23 +55,7 @@ public class GameMode implements CommandExecutor {
 
         Player p = (Player) sender;
 
-        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-            return true;
-        }
-
-        if (args.length == 0) {
-            return gameMode(command, p);
-        }
-
-        Player target = Bukkit.getPlayer(args[0]);
-
-        if (target == null) {
-            p.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
-            return true;
-        }
-
-        return gameMode(command, target);
+        return gameMode(command, p);
     }
 
     private boolean gameMode(Command command, Player p) {
