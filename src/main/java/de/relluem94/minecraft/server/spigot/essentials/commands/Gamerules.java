@@ -1,19 +1,29 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_NEGATIVE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_POSITIVE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_GAMERULES;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMERULES;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
+import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.GameRule;
-import org.bukkit.World;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMERULES;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Gamerules implements CommandExecutor {
 
@@ -22,6 +32,24 @@ public class Gamerules implements CommandExecutor {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMERULES)) {
             return false;
         }
+
+        if (isCMDBlock(sender) || isConsole(sender)) {
+            if (args.length < 1) {
+                sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+                return true;   
+            }
+
+
+            World world = Bukkit.getWorld(args[0]);
+            if (world == null) {
+                sender.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, args[0]));
+                return true;
+            }
+
+            showGameRule(sender, world);
+            return true;
+        }
+
 
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
@@ -40,9 +68,13 @@ public class Gamerules implements CommandExecutor {
             return true;   
         }
 
-        World world = p.getWorld();
+        showGameRule(sender, p.getWorld());
+        return true;
+    }
+
+    private void showGameRule(CommandSender sender, World world) {
         String[] gamerules = world.getGameRules();
-        sendMessage(p, String.format(PLUGIN_COMMAND_GAMERULES, world.getName()));
+        sendMessage(sender, String.format(PLUGIN_COMMAND_GAMERULES, world.getName()));
         for (String gamerule : gamerules) {
             Object value = world.getGameRuleValue(GameRule.getByName(gamerule));
             String color;
@@ -52,8 +84,7 @@ public class Gamerules implements CommandExecutor {
                 color = "§7";
             }
 
-            sendMessage(p, "        §d" + gamerule + "§f = " + color + value);
+            sendMessage(sender, "        §d" + gamerule + "§f = " + color + value);
         }
-        return true;
     }
 }
