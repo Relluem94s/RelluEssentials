@@ -3,12 +3,9 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WHERE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WHERE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import org.bukkit.Bukkit;
@@ -28,17 +25,16 @@ public class Where implements CommandExecutor {
             return false;
         }
 
-        if (isCMDBlock(sender) || isConsole(sender)) {
-            if (args.length < 1) {
-                sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
-                return true;   
+        if (args.length > 0) {
+            if (!Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
+                sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                return true;
             }
 
-            where(args[0], sender);
+            where(sender, args[0]);
             return true;
-        }
+        } 
 
-        
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
@@ -51,27 +47,21 @@ public class Where implements CommandExecutor {
             return true;
         }
 
-        if (args.length == 0) {
-            p.sendMessage(String.format(PLUGIN_COMMAND_WHERE, p.getCustomName(), locationToString(p.getLocation())));
-            return true;
-        } 
-
-        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-            return true;
-        }
-
-        where(args[0], sender);
+        where(sender, p);
         return true;
     }
 
-    private void where(String targetArg, CommandSender commandSender){
+    private void where(CommandSender commandSender, String targetArg){
         Player target = Bukkit.getPlayer(targetArg);
         if (target == null) {
             commandSender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, targetArg));
             return;
         }
 
-        commandSender.sendMessage(String.format(PLUGIN_COMMAND_WHERE, target.getCustomName(), locationToString(target.getLocation())));
+        where(commandSender, target);
+    }
+
+    private void where(CommandSender sender, Player target){
+        sender.sendMessage(String.format(PLUGIN_COMMAND_WHERE, target.getCustomName(), locationToString(target.getLocation())));
     }
 }
