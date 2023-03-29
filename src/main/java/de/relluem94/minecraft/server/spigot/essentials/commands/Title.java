@@ -1,14 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TITLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import static de.relluem94.rellulib.utils.StringUtils.implode;
 
 import org.bukkit.Bukkit;
@@ -33,19 +29,8 @@ public class Title implements CommandExecutor {
             return true;
         } 
 
-        if (isCMDBlock(sender) || isConsole(sender)) {
-            title(args, sender);
-        }
-
-        if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
-            return true;
-        }
-
-        Player p = (Player) sender;
-
-        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+        if (!Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
+            sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         } 
 

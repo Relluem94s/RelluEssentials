@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WHERE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WHERE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
@@ -28,6 +29,11 @@ public class Where implements CommandExecutor {
         }
 
         if (isCMDBlock(sender) || isConsole(sender)) {
+            if (args.length < 1) {
+                sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+                return true;   
+            }
+
             where(args[0], sender);
             return true;
         }
