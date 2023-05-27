@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -92,6 +93,9 @@ public class BetterMobs implements Listener {
 
     @EventHandler
     public void onHit(EntityDamageByEntityEvent e) {
+        if(e.getDamager() instanceof Creeper){
+            e.setCancelled(true);
+        }
         if (e.getEntity() instanceof Monster && e.getDamager() instanceof Player) {
             Monster m = (Monster) e.getEntity();
             Player p = (Player) e.getDamager();
