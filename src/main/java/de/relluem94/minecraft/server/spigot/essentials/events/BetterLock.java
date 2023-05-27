@@ -1,13 +1,41 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW_ADMIN_OVERWRITE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_FLAGS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_MATERIAL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN_DATE_FORMAT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_UUID;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_RIGHTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_ADD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD_FAILED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE_FAILED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_FLAGS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_RIGHTS;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,18 +46,15 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.block.data.BlockData;
-
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Chest;
+import org.bukkit.block.data.type.Chest.Type;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.Gate;
 import org.bukkit.block.data.type.Sign;
 import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.block.data.type.WallHangingSign;
 import org.bukkit.block.data.type.WallSign;
-
-import org.bukkit.block.data.type.Piston;
-import org.bukkit.block.data.type.Door;
-import org.bukkit.block.data.type.Gate;
-import org.bukkit.block.data.type.Chest.Type;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -37,6 +62,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
@@ -45,6 +71,8 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
@@ -56,8 +84,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.*;
 
 
 /**
@@ -815,59 +841,31 @@ public class BetterLock implements Listener {
 
     @EventHandler
     public void onBlockPistonExtend(BlockPistonExtendEvent e) {
-        Block piston = e.getBlock();        
-        BlockFace direction = null;
-
-        if (piston.getBlockData() instanceof Piston){
-            direction = ((Piston)piston.getBlockData()).getFacing(); 
-            Block block = e.getBlock().getRelative(direction);
-
-            if(RelluEssentials.getInstance().getProtectionAPI().getMaterialProtectionList().contains(block.getType())){
-                ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
-                if (protection != null) {
-                    e.setCancelled(true);
-                    return;
-                } 
-                else{
-                    Block blockLower = e.getBlock().getRelative(direction).getRelative(BlockFace.DOWN);
-                    ProtectionEntry protectionLower = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(blockLower.getLocation());
-                    if (protectionLower != null) {
-                        e.setCancelled(true);
-                        return;
-                    } 
-                }
-            }
-        }
-        if (direction == null){
-            return; 
-        }
-        
-        boolean hasSlimeBlock = false;
-        
-        for (int i = 0; i <  e.getBlocks().size() + 2; i++) {
-            Block block = piston.getRelative(direction, i);
-            if(block.getType().equals(Material.SLIME_BLOCK)){
-                hasSlimeBlock = true;
-            }
-        } 
-
-        for (int i = 0; i <  e.getBlocks().size() + 2; i++) {
-            Block block = piston.getRelative(direction, i);
-            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
-
-            if(hasSlimeBlock){
-                Block blockUpper = piston.getRelative(direction, i+1).getRelative(BlockFace.UP);
-                ProtectionEntry protectionUpper = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(blockUpper.getLocation());
-                if (protectionUpper != null) {
-                    e.setCancelled(true);
-                    return;
-                } 
-            }
-
-            if (block.getType() == Material.AIR){
+        for (Block b : e.getBlocks()) {
+            Bukkit.broadcastMessage(b.getType().name() + " >> ");
+            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
+            if (protection != null) {
+                e.setCancelled(true);
                 break;
             }
+            if(isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)){
+                e.setCancelled(true);
+                break;
+            } 
+        } 
+    }
+
+    @EventHandler
+    public void onBlockPistonRetract(BlockPistonRetractEvent e) {    
+        for (Block b : e.getBlocks()) {
+            Bukkit.broadcastMessage(b.getType().name() + " << ");
+            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
             if (protection != null) {
+                e.setCancelled(true);
+                break;
+            } 
+
+            if(isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)){
                 e.setCancelled(true);
                 break;
             } 
@@ -884,6 +882,14 @@ public class BetterLock implements Listener {
             } 
             event.setCancelled(true);
         } 
+    }
+
+    private boolean isProtected(Block b, BlockFace bf){
+        if(!isAttachedToBlock(b, bf)){
+            return false;
+        }
+
+        return RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getRelative(bf).getLocation()) == null;
     }
 
 }

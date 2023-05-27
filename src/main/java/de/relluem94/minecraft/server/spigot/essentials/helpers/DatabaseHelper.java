@@ -21,7 +21,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.json.JSONObject;
 
@@ -631,8 +630,12 @@ public class DatabaseHelper {
                         le.setId(rs.getInt(LocationEntry.FIELD_ID));
                         le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
-                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
+                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
+                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
                         for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (lte.getId() == type) {
                                 le.setLocationType(lte);
@@ -663,8 +666,12 @@ public class DatabaseHelper {
                         le.setId(rs.getInt(LocationEntry.FIELD_ID));
                         le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
-                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
+                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
+                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
                         for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (type == lte.getId()) {
                                 le.setLocationType(lte);
@@ -694,8 +701,12 @@ public class DatabaseHelper {
                         le.setId(rs.getInt(LocationEntry.FIELD_ID));
                         le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
-                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
+                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
+                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
                         for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (lte.getId() == type) {
                                 le.setLocationType(lte);
@@ -723,8 +734,14 @@ public class DatabaseHelper {
                         le.setId(rs.getInt(LocationEntry.FIELD_ID));
                         le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
-                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+
+                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
+                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
+                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+
                         for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (lte.getId() == rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK)) {
                                 le.setLocationType(lte);
@@ -1207,8 +1224,12 @@ public class DatabaseHelper {
                         le.setId(rs.getInt(LocationEntry.FIELD_ID));
                         le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
-                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
+                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
+                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
                         
                         le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
                         ll.add(le);
@@ -1232,8 +1253,12 @@ public class DatabaseHelper {
                         le.setId(rs.getInt(LocationEntry.FIELD_ID));
                         le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
-                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
+                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
+                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
                         
                         le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
                         ll.add(le);
@@ -1304,8 +1329,12 @@ public class DatabaseHelper {
                         le.setId(rs.getInt(LocationEntry.FIELD_ID));
                         le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
-                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
+                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
+                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
                         
                         le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
 
@@ -1357,8 +1386,12 @@ public class DatabaseHelper {
                         le.setId(rs.getInt(LocationEntry.FIELD_ID));
                         le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
-                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
+                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
+                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
                         
                         le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
 
@@ -1427,8 +1460,12 @@ public class DatabaseHelper {
                         le.setId(rs.getInt(LocationEntry.FIELD_ID));
                         le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
                         le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setLocation(new Location(Bukkit.getWorld(rs.getString(LocationEntry.FIELD_WORLD)), rs.getFloat(LocationEntry.FIELD_POS_X),
-                                rs.getFloat(LocationEntry.FIELD_POS_Y), rs.getFloat(LocationEntry.FIELD_POS_Z), rs.getFloat(LocationEntry.FIELD_YAW), rs.getFloat(LocationEntry.FIELD_PITCH)));
+                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
+                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
+                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
                         
                         le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
@@ -22,6 +23,9 @@ public class ProtectionAPI {
             addProtectionMaterial(ple.getValue());
         }
         protectionEntryMap.putAll(protectionEntryMap);
+        for(ProtectionEntry pe : protectionEntryMap.values()){
+            System.out.println(pe.getMaterialName() + " " + pe.getLocation().getId() + " " + pe.getLocation().getWorld() + " " + (Bukkit.getWorld(pe.getLocation().getWorld()) != null));
+        }
     }
 
     /**

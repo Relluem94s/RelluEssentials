@@ -148,6 +148,7 @@ public class RelluEssentials extends JavaPlugin {
         new NPCManager().enable();
         stopLoading();
         new WorldManager().enable();
+        dm.afterWorldLoaded();
     }
 
     @Override

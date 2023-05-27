@@ -71,6 +71,11 @@ public class DatabaseManager implements IEnable{
         }
     }
 
+    public void afterWorldLoaded(){
+        RelluEssentials.getInstance().setProtectionAPI(new ProtectionAPI(dBH.getProtectionLocks(), dBH.getProtections()));
+        RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));
+    }
+
     public DatabaseHelper getDatabaseHelper() {
         return dBH;
     }
