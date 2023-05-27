@@ -9,6 +9,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_ACCEPT_NO_REQUEST;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_INFO;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_REQUEST_EXPIRED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_REQUEST_TARGET;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_SEND_REQUEST;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TP_TO;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT;
@@ -37,6 +38,7 @@ public class Teleport implements CommandExecutor {
 
     private void addTeleportEntry(Player p, Player t){
         telportAcceptList.put(t, p);
+        t.sendMessage(String.format(PLUGIN_COMMAND_TP_REQUEST_TARGET, p.getCustomName()));
         Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
             if(hasTeleportEntry(t)){
                 p.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
@@ -49,6 +51,7 @@ public class Teleport implements CommandExecutor {
    
     private void addTeleportToEntry(Player p, Player t){
         telportToAcceptList.put(t, p);
+        t.sendMessage(String.format(PLUGIN_COMMAND_TP_REQUEST_TARGET, p.getCustomName()));
         Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
             if(hasToTeleportEntry(t)){
                 p.sendMessage(PLUGIN_COMMAND_TP_REQUEST_EXPIRED);
