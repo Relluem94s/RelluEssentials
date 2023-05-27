@@ -736,7 +736,7 @@ public enum ItemPrice {
   SCUTE(10,10),
   FLINT_AND_STEEL(0,0),
   APPLE(2,2),
-  BOW(0,0),
+  BOW(36,36),
   ARROW(3,3),
   COAL(8,8),
   CHARCOAL(0,0),

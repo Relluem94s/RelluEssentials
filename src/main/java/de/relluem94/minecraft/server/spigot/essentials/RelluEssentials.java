@@ -138,7 +138,6 @@ public class RelluEssentials extends JavaPlugin {
 
 
         new EnchantmentManager().enable();
-        new GroupManager().enable();
         new EventManager().enable();
         new SkillManager().enable();
         new RecipeManager().enable();
@@ -148,6 +147,7 @@ public class RelluEssentials extends JavaPlugin {
         new NPCManager().enable();
         stopLoading();
         new WorldManager().enable();
+        new GroupManager().enable();
         dm.afterWorldLoaded();
     }
 

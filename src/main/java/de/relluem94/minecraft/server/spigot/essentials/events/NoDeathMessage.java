@@ -1,5 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH_TP;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
+
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,12 +23,6 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH_TP;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
-
-import java.util.Random;
 
 public class NoDeathMessage implements Listener {
 
@@ -61,23 +61,29 @@ public class NoDeathMessage implements Listener {
     public void onRespawn(PlayerRespawnEvent e) {
         Player p = e.getPlayer();
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-        p.setAllowFlight(pe.isFlying());
-        p.setFlying(pe.isFlying());
+        if(pe != null){
+            p.setAllowFlight(pe.isFlying());
+            p.setFlying(pe.isFlying());
+        }
     }
 
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent e) {
         Player p = e.getPlayer();
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-        p.setAllowFlight(pe.isFlying());
-        p.setFlying(pe.isFlying());
+        if(pe != null){
+            p.setAllowFlight(pe.isFlying());
+            p.setFlying(pe.isFlying());
+        }
     }
 
     @EventHandler
     public void onWorldChange(PlayerTeleportEvent e) {
         Player p = e.getPlayer();
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-        p.setAllowFlight(pe.isFlying());
-        p.setFlying(pe.isFlying());
+        if(pe != null){
+            p.setAllowFlight(pe.isFlying());
+            p.setFlying(pe.isFlying());
+        }
     }
 }

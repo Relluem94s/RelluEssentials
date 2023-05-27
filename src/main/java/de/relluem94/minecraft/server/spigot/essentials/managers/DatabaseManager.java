@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAM
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
@@ -72,8 +73,19 @@ public class DatabaseManager implements IEnable{
     }
 
     public void afterWorldLoaded(){
-        RelluEssentials.getInstance().setProtectionAPI(new ProtectionAPI(dBH.getProtectionLocks(), dBH.getProtections()));
-        RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));
+        
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                RelluEssentials.getInstance().setProtectionAPI(new ProtectionAPI(dBH.getProtectionLocks(), dBH.getProtections()));
+                RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));
+                RelluEssentials.getInstance().getPlayerAPI().reloadPlayerHomes();
+            }
+        }.runTaskLater(RelluEssentials.getInstance(),  1l);
+
+
+       
     }
 
     public DatabaseHelper getDatabaseHelper() {

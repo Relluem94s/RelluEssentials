@@ -14,6 +14,8 @@ public class PlayerMove implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
-        e.setCancelled(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer().getUniqueId()).isAFK());
-    }
+        if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer().getUniqueId()) != null){
+            e.setCancelled(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer().getUniqueId()).isAFK());
+        }
+    }   
 }

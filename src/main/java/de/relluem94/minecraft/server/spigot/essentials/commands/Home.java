@@ -85,7 +85,7 @@ public class Home implements CommandExecutor {
                             le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
                             le.setPlayerId(pe.getID());
 
-                            if (homeExists(pe, le)) {
+                            if (homeExists(pe, le) || deathExists(pe, le)) {
                                 le = getLocationEntry(pe, le);
                                 Back.addBackPoint(p);
                                 p.teleport(le.getLocation());

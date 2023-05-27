@@ -87,4 +87,12 @@ public class PlayerAPI {
         
         return pe.getPartner();
     }
+
+    public void reloadPlayerHomes() {
+        List<PlayerEntry> pel = RelluEssentials.getInstance().getDatabaseHelper().getPlayers();
+
+        playerEntryMap.clear();
+
+        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUUID()), p));
+    }
 }
