@@ -842,7 +842,6 @@ public class BetterLock implements Listener {
     @EventHandler
     public void onBlockPistonExtend(BlockPistonExtendEvent e) {
         for (Block b : e.getBlocks()) {
-            Bukkit.broadcastMessage(b.getType().name() + " >> ");
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
             if (protection != null) {
                 e.setCancelled(true);
@@ -858,7 +857,6 @@ public class BetterLock implements Listener {
     @EventHandler
     public void onBlockPistonRetract(BlockPistonRetractEvent e) {    
         for (Block b : e.getBlocks()) {
-            Bukkit.broadcastMessage(b.getType().name() + " << ");
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
             if (protection != null) {
                 e.setCancelled(true);
@@ -885,10 +883,6 @@ public class BetterLock implements Listener {
     }
 
     private boolean isProtected(Block b, BlockFace bf){
-        if(!isAttachedToBlock(b, bf)){
-            return false;
-        }
-
         return RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getRelative(bf).getLocation()) == null;
     }
 
