@@ -1,23 +1,37 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_DEATH_DELETE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_DELETE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_EXISTS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_LIST;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_LIST_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_NONE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_NO_BED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_RESERVED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_SET;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_HOME_TP;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_DELETE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_LIST;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_SET;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Home implements CommandExecutor {
 
@@ -119,6 +133,7 @@ public class Home implements CommandExecutor {
                                 RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
                                 pe.getDeaths().remove(le);
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, args[1]));
+                                return true;
                             }
                             else {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[1]));
