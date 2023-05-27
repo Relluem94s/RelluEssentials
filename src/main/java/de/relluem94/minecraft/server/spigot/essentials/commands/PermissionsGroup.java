@@ -1,21 +1,26 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_SETGROUP;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_SETGROUP_GROUP_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SETGROUP;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SETGROUP;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class PermissionsGroup implements CommandExecutor {
 
@@ -56,7 +61,7 @@ public class PermissionsGroup implements CommandExecutor {
                 return true;
             }
 
-            p.sendMessage(PLUGIN_COMMAND_SETGROUP);
+            p.sendMessage(String.format(PLUGIN_COMMAND_SETGROUP, g.getPrefix() + g.getName(), target.getDisplayName()));
             PlayerHelper.updateGroup(target, g);
             return true;
         }
@@ -68,7 +73,7 @@ public class PermissionsGroup implements CommandExecutor {
                 return true;
             }
 
-            sender.sendMessage(PLUGIN_COMMAND_SETGROUP);
+            sender.sendMessage(String.format(PLUGIN_COMMAND_SETGROUP, g.getPrefix() + g.getName(), target.getDisplayName()));
             PlayerHelper.updateGroup(target, g);
             return true;
         }
