@@ -50,7 +50,8 @@ public class BetterBags implements Listener {
         Material m = e.getBlock().getType();
         
         if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.delicate)){
-            if(e.getBlock().getType().equals(Material.PUMPKIN_STEM) || e.getBlock().getType().equals(Material.MELON_STEM)){
+            if(e.getBlock().getType().equals(Material.PUMPKIN_STEM) || e.getBlock().getType().equals(Material.MELON_STEM) ||
+            e.getBlock().getType().equals(Material.ATTACHED_PUMPKIN_STEM) || e.getBlock().getType().equals(Material.ATTACHED_MELON_STEM)){
                 e.setCancelled(true);
             } 
             
