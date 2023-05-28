@@ -56,6 +56,7 @@ public class Suicide implements CommandExecutor {
 
         if (args.length == 0) {
             suicide(p);
+            return true;
         } 
 
         Player target = Bukkit.getPlayer(args[0]);
