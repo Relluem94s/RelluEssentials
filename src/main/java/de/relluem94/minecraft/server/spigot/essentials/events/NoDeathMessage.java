@@ -7,6 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.EventCon
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,26 +36,32 @@ public class NoDeathMessage implements Listener {
         e.setDeathMessage(null);
 
         Player p = e.getEntity().getPlayer();
+        Location ploc = p.getLocation();
+        Location location = new Location(ploc.getWorld(), ploc.getBlockX(), ploc.getBlockY(), ploc.getBlockZ(), ploc.getYaw(), ploc.getPitch());
 
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         LocationEntry le = new LocationEntry();
-        le.setLocation(p.getLocation());
-        le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(94)));
+        le.setLocation(location);
+        le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(994)));
         LocationTypeEntry locationType = RelluEssentials.getInstance().locationTypeEntryList.get(1);
         le.setLocationType(locationType);
         le.setPlayerId(pe.getID());
-        RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
-        le = RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), locationType.getId());
-        pe.getHomes().add(le);
 
+        p.sendMessage(String.format(PLUGIN_EVENT_DEATH, le.getLocationName(), (int) le.getLocation().getX(), (int) le.getLocation().getY(), (int) le.getLocation().getZ(), le.getLocation().getWorld().getName()));
+        Bukkit.getConsoleSender().getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + p.getName() + " [\"\",{\"text\":\"" + PLUGIN_EVENT_DEATH_TP + "\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/home " + le.getLocationName() + "\"}}]");
+        
+        RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
+        le = RelluEssentials.getInstance().getDatabaseHelper().getLocation(location, locationType.getId());
+
+        if(le != null){
+            pe.getHomes().add(le);
+        }
+       
         for(ItemStack is : p.getInventory().getContents()){
             if(CustomItems.coins.almostEquals(is) && is.getItemMeta().getPersistentDataContainer().has(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER)){
                 p.getInventory().remove(is);
             }
         }
-
-        p.sendMessage(String.format(PLUGIN_EVENT_DEATH, le.getLocationName(), (int) le.getLocation().getX(), (int) le.getLocation().getY(), (int) le.getLocation().getZ(), le.getLocation().getWorld().getName()));
-        Bukkit.getConsoleSender().getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + p.getName() + " [\"\",{\"text\":\"" + PLUGIN_EVENT_DEATH_TP + "\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/home " + le.getLocationName() + "\"}}]");
     }
 
     @EventHandler

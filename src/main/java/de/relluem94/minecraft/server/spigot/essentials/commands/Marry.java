@@ -1,20 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterLock;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_ACCEPT_NO_REQUEST;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_DIVORCED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_MARRIED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_RECEIVE_REQUEST;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_REQUEST_IS_MAARIED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_SELF_MARRIGE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_SEND_REQUEST;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MARRY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MARRY_ACCEPT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MARRY_DIVORCE;
@@ -24,6 +22,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterLock;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Marry implements CommandExecutor {
 
@@ -36,6 +49,7 @@ public class Marry implements CommandExecutor {
         }
 
         player.sendMessage(String.format(PLUGIN_COMMAND_MARRY_SEND_REQUEST, target.getCustomName()));
+        target.sendMessage(String.format(PLUGIN_COMMAND_MARRY_RECEIVE_REQUEST, player.getCustomName()));
 
         marryAcceptList.put(target, player);
         Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {

@@ -97,7 +97,7 @@ public class BetterLock implements Listener {
         Block block = e.getToBlock();
         if (unBreakable.contains(block.getType())){
             if(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation()) != null){
-                e.setCancelled(true); 
+                e.setCancelled(true);
             }
         }
     }
@@ -843,14 +843,10 @@ public class BetterLock implements Listener {
     public void onBlockPistonExtend(BlockPistonExtendEvent e) {
         for (Block b : e.getBlocks()) {
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
-            if (protection != null) {
-                e.setCancelled(true);
+            if (protection != null || isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)) {
+                e.setCancelled(!b.getType().equals(Material.WATER));
                 break;
             }
-            if(isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)){
-                e.setCancelled(true);
-                break;
-            } 
         } 
     }
 
@@ -858,15 +854,10 @@ public class BetterLock implements Listener {
     public void onBlockPistonRetract(BlockPistonRetractEvent e) {    
         for (Block b : e.getBlocks()) {
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
-            if (protection != null) {
+            if (protection != null || isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)) {
                 e.setCancelled(true);
                 break;
-            } 
-
-            if(isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)){
-                e.setCancelled(true);
-                break;
-            } 
+            }
         } 
     }
 

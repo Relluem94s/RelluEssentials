@@ -135,6 +135,15 @@ public class Home implements CommandExecutor {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, args[1]));
                                 return true;
                             }
+                            else if(le.getLocationName().startsWith("death_") && le.getLocationName().contains("*")){
+                                for(LocationEntry dle : pe.getDeaths()){
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, dle.getLocationName()));
+                                    RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(dle);
+                                }
+
+                                pe.getDeaths().clear();
+                                return true;
+                            }
                             else {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[1]));
                                 return true;
