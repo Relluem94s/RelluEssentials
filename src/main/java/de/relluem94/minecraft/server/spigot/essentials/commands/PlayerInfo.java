@@ -102,7 +102,7 @@ public class PlayerInfo implements CommandExecutor {
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MINED, Material.SAND.name(), target.getStatistic(Statistic.MINE_BLOCK, Material.SAND)));
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MINED, Material.COBBLESTONE.name(), target.getStatistic(Statistic.MINE_BLOCK, Material.COBBLESTONE)));
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MINED, Material.DEEPSLATE.name(), target.getStatistic(Statistic.MINE_BLOCK, Material.DEEPSLATE)));
-        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MINED, Material.DIAMOND.name(), target.getStatistic(Statistic.MINE_BLOCK, Material.DIAMOND)));
+        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MINED, Material.DIAMOND_ORE.name(), target.getStatistic(Statistic.MINE_BLOCK, Material.DIAMOND_ORE) + target.getStatistic(Statistic.MINE_BLOCK, Material.DEEPSLATE_DIAMOND_ORE)));
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_DEATHS, target.getStatistic(Statistic.DEATHS)));
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_JUMPED, target.getStatistic(Statistic.JUMP)));
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_LEFT_GAME, target.getStatistic(Statistic.LEAVE_GAME)));
