@@ -251,7 +251,7 @@ public class BagHelper {
                         be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
                         be.setToBeUpdated(true);
                         ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName()));
-                        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
+                        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
                         lio.add(i);
                     }
                 }
@@ -275,7 +275,7 @@ public class BagHelper {
                         be.setSlotValue(slot, be.getSlotValue(slot) + i.getAmount());
                         be.setToBeUpdated(true);
                         ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(), i.getType().name().replace("_", " ").toLowerCase()));
-                        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
+                        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
                         lio.add(i);
                     }
                 }
@@ -298,7 +298,7 @@ public class BagHelper {
                 be.setSlotValue(slot, be.getSlotValue(slot) + item.getItemStack().getAmount());
                 be.setToBeUpdated(true);
                 ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(), item.getName()));
-                p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
+                p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
                 item.getItemStack().setAmount(0);
                 return true;
             }
