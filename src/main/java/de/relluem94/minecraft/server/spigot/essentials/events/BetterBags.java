@@ -314,6 +314,7 @@ public class BetterBags implements Listener {
                 p.updateInventory();
                 e.setCancelled(true);
                 e.getItem().remove();
+                p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5f, 1f);
             }
         }
     }
