@@ -80,13 +80,14 @@ public class Teleport implements CommandExecutor {
     public void teleport(Player p, Player t){
         Back.addBackPoint(t);
         t.teleport(p);
-        p.sendMessage(String.format(PLUGIN_COMMAND_TP, t.getCustomName()));
+        t.sendMessage(String.format(PLUGIN_COMMAND_TP, t.getCustomName()));
     }
 
     public void teleportTo(Player p, Player t){
         Back.addBackPoint(p);
         p.teleport(t);
-        t.sendMessage(String.format(PLUGIN_COMMAND_TP_TO, p.getCustomName()));
+        p.sendMessage(String.format(PLUGIN_COMMAND_TP_TO, p.getCustomName()));
+        t.sendMessage(String.format(PLUGIN_COMMAND_TP, t.getCustomName()));
     }
 
 
