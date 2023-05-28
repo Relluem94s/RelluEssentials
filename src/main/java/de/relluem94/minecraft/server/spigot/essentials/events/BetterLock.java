@@ -97,7 +97,7 @@ public class BetterLock implements Listener {
         Block block = e.getToBlock();
         if (unBreakable.contains(block.getType())){
             if(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation()) != null){
-                e.setCancelled(true); 
+                e.setCancelled(true);
             }
         }
     }
@@ -844,7 +844,7 @@ public class BetterLock implements Listener {
         for (Block b : e.getBlocks()) {
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
             if (protection != null || isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)) {
-                e.setCancelled(true);
+                e.setCancelled(!b.getType().equals(Material.WATER));
                 break;
             }
         } 
