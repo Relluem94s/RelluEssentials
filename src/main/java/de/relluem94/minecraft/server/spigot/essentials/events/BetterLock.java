@@ -874,7 +874,7 @@ public class BetterLock implements Listener {
     }
 
     private boolean isProtected(Block b, BlockFace bf){
-        return RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getRelative(bf).getLocation()) == null;
+        return RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getRelative(bf).getLocation()) != null;
     }
 
 }
