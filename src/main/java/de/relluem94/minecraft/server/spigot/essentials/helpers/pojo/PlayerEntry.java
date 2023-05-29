@@ -213,22 +213,21 @@ public class PlayerEntry {
     }
 
     public PlayerEntry(PlayerEntry pe){
-        PlayerEntry peCopy = new PlayerEntry();
-        peCopy.setAFK(pe.afk);
-        peCopy.setCreated(pe.created);
-        peCopy.setCreatedby(pe.createdBy);
-        peCopy.setCustomName(pe.customName);
-        peCopy.setDeleted(pe.deleted);
-        peCopy.setDeletedBy(pe.deletedBy);
-        peCopy.setFlying(pe.fly);
-        peCopy.setGroup(pe.group);
-        peCopy.setHomes(pe.homes);
-        peCopy.setID(pe.id);
-        peCopy.setPlayerState(pe.playerState);
-        peCopy.setPlayerStateParameter(pe.playerStateParameter);
-        peCopy.setPurse(pe.purse);
-        peCopy.setUUID(pe.uuid);
-        peCopy.setUpdated(pe.updated);
-        peCopy.setUpdatedBy(pe.updatedBy);
+        setAFK(pe.isAFK());
+        setCreated(pe.getCreated());
+        setCreatedby(pe.getCreatedBy());
+        setCustomName(pe.getCustomName());
+        setDeleted(pe.getDeleted());
+        setDeletedBy(pe.getDeletedBy());
+        setFlying(pe.isFlying());
+        setGroup(pe.getGroup());
+        setHomes(pe.getHomes());
+        setID(pe.getID());
+        setPlayerState(pe.getPlayerState());
+        setPlayerStateParameter(pe.getPlayerStateParameter());
+        setPurse(pe.getPurse());
+        setUUID(pe.getUUID());
+        setUpdated(pe.getUpdated());
+        setUpdatedBy(pe.getUpdatedBy());
     }
 }
