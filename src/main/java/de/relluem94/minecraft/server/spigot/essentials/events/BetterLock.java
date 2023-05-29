@@ -845,6 +845,7 @@ public class BetterLock implements Listener {
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
             if (protection != null || isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)) {
                 e.setCancelled(!b.getType().equals(Material.WATER));
+                Bukkit.broadcastMessage("Piston! >> isProtected: " + (protection != null) + " isProtectedUp: " + (isProtected(b, BlockFace.UP)) + " isProtectedDown: " + (isProtected(b, BlockFace.DOWN)) + " isWater: " + (b.getType().equals(Material.WATER)));
                 break;
             }
         } 
