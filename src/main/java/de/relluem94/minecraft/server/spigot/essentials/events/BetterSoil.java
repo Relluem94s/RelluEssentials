@@ -68,7 +68,5 @@ public class BetterSoil implements Listener {
             }
             e.getItemsHarvested().clear();
         }
-
-
     }
 }
