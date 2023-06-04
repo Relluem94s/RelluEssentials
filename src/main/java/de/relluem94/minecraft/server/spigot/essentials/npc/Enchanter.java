@@ -24,6 +24,8 @@ public class Enchanter extends NPC {
             slot++;
         }
 
+        inv.setItem(slot,CustomItems.magic_water_bucket.getCustomItem());
+
         
         return inv;
     }    

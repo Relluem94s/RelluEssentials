@@ -8,6 +8,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_CLOUDSAILOR_LORE2;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_COINS_LORE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_MAGIC_WATER_BUCKET;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_BOOTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_CHESTPLATE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_HELMET;
@@ -41,6 +43,14 @@ public class CustomItems {
     private CustomItems() {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
+
+    public static final ItemHelper magic_water_bucket = new ItemHelper(Material.WATER_BUCKET, 1, PLUGIN_ITEM_MAGIC_WATER_BUCKET, Type.MONEY, Rarity.EPIC, Arrays.asList(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE)){
+        @Override
+        public void init() {
+            ItemMeta im = getItemMeta();
+            im.addEnchant(Enchantment.ARROW_INFINITE, 1, false);
+        }
+    };
 
     public static final ItemHelper coins = new ItemHelper(Material.GOLD_NUGGET, 1, PLUGIN_ITEM_COINS, Type.MONEY, Rarity.COMMON, Arrays.asList(PLUGIN_ITEM_COINS_LORE));
 
