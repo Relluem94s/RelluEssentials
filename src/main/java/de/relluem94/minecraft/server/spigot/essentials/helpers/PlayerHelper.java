@@ -2,11 +2,17 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_SPACER_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_PREFIX;
 
 import java.util.Properties;
 import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
@@ -19,11 +25,6 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManage
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.utils.NetworkUtils;
-
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.json.JSONObject;
 
 /**
  *
@@ -209,4 +210,17 @@ public class PlayerHelper {
 
         return null;
     }
+
+    public static Player getTargetedPlayer(Location loc){
+        Player nearestPlayer = null;
+        double lastDistance = Double.MAX_VALUE;
+        for(Player p : loc.getWorld().getPlayers()){
+             double distanceSquared = loc.distanceSquared(p.getLocation());
+             if(distanceSquared < lastDistance){
+                  lastDistance = distanceSquared;
+                  nearestPlayer = p;
+             }
+        }
+        return nearestPlayer;
+   }
 }
