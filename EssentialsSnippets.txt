@@ -37,57 +37,6 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-
-	 public void DoPlayerJoinSilence(Player p){
-		 setPlayerGroup(p);
-		 p.setScoreboard(main.sb);
-		 sendTabTitle(p,"         §c--- §aWillkommen auf dem §c---         ","         §c--- §dmc.cloudsailor.de §c---         ");
-		 DoFeuerwerk(p);	 
-
-      	if (p.getName().equals("Stellachen") || p.getName().equals("Relluem94")) {
-      		if(rellu.dotpandclear){
-      			 if (isInWorld(p, worldLobby) == true) {
-    				 p.getInventory().clear(); 
-    				 p.getInventory().addItem(rellu.getById(19));
-    				 p.getInventory().addItem(rellu.getById(21));
-    				 p.getInventory().addItem(rellu.getById(23));
-    				 p.getInventory().addItem(rellu.getById(22));
-    				 DoFeuerwerk(p);
-    				 DoFeuerwerk(p);
-    				 DoFeuerwerk(p);
-    				 DoFeuerwerk(p);
-    				 p.getWorld().spawnEntity(p.getLocation(), EntityType.ENDER_SIGNAL);
-    			 }
-    			 else{
-    				 Location tp = worldLobby.getSpawnLocation();
-    				 p.teleport(tp);
-    				 DoPlayerJoinSilence(p);
-    			 }
-      		}
-      	}
-      	else{
-      		if(rellu.dotpandclear){
-      			 if (isInWorld(p, worldLobby) == true) {
-    				 p.getInventory().clear();     				 
-    				 p.getInventory().addItem(rellu.getById(21));
-    				 p.getInventory().addItem(rellu.getById(22));
-    				 p.getInventory().addItem(rellu.getById(23));
-    				 
-    				 if(getPlayerGroup(p).equals("Mod")){
-    					 p.getInventory().addItem(rellu.getById(19));
-    				 }
-    				 else if(getPlayerGroup(p).equals("sMod")){
-    					 p.getInventory().addItem(rellu.getById(19));
-    				 }
-    				 else if(getPlayerGroup(p).equals("Geek")){
-    					 p.getInventory().addItem(rellu.getById(20));
-    					 p.getInventory().addItem(rellu.getById(19));
-    				 }
-    				 else if(getPlayerGroup(p).equals("Admin")){
-    					 p.getInventory().addItem(rellu.getById(20));
-    					 p.getInventory().addItem(rellu.getById(19));
-    				 }
-    			 }
              	else{
     				 Location tp = worldLobby.getSpawnLocation();
     				 p.teleport(tp);
