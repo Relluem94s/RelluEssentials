@@ -171,25 +171,3 @@ else if (cmd.getName().equalsIgnoreCase("love")) {
 				SendMessage(sender, noPerm);
 			}
 		}
-
-
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-else if (cmd.getName().equalsIgnoreCase("list")) {
-			if (hasPermission(sender, permuser + "list") == true){
-				String Spielerliste = "";
-				
-				for (Player p : Bukkit.getOnlinePlayers()) {
-					Spielerliste = Spielerliste + ", " + getGroupPrefix(p) + "[" + getPlayerGroup(p) + "] " + p.getDisplayName();
-				}
-				SendMessage(sender, prefix + "§6Zurzeit Online");
-				SendMessage(sender, Spielerliste.replaceFirst(", ", ""));
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-		
