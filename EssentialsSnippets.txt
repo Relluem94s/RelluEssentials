@@ -645,28 +645,3 @@ if (cmd.getName().equalsIgnoreCase("i")) {
 			return true;
 		}
 
-
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-else if (cmd.getName().equalsIgnoreCase("team")) {
-			if (hasPermission(p, permbase + "info") == true) {
-				if (args.length == 0) {
-					SendMessage(p, "§5Das Team von Cloudsailor");
-					SendMessage(p, "§3Probe Mods §7>> §bStellachen, Vettelfrank");
-					SendMessage(p, "§3Mods §7>> §6Morsmorse, AliceNex");
-					SendMessage(p, "§3Super Mods §7>> Nightmare47");
-					SendMessage(p, "§3Geek §7>> §5Relluem94");
-					SendMessage(p, "§3Admin §7>> §5Kaimar1995");
-				}
-			}
-			else 
-			{
-					SendMessage(p, noPerm);
-					return true;
-			}
-			return true;
-		}
