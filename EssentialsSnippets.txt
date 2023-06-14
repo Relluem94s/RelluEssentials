@@ -193,22 +193,3 @@ else if (cmd.getName().equalsIgnoreCase("list")) {
 			}
 		}
 		
-		
-
-
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-else if (cmd.getName().equalsIgnoreCase("rcmd")) {
-			if (hasPermission(sender, permadmin + "cmd") == true){
-				String m = ArryToString(args);
-				consoleCMD(m);
-				SendMessage(sender, prefix + "§6Dein Befehl wurde ausgef§hrt");
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-
