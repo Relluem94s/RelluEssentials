@@ -670,39 +670,3 @@ else if (cmd.getName().equalsIgnoreCase("team")) {
 			}
 			return true;
 		}
-
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-
-else if (cmd.getName().equalsIgnoreCase("rang")) {
-			if (hasPermission(p, permbase + "info") == true) {
-				if (args.length == 0) {
-					SendMessage(p, "§c--------------------------------------");
-					SendMessage(p, "§5Alle R§nge");
-					SendMessage(p, "");
-					SendMessage(p, "§8    User und StarGateBuilder");
-					SendMessage(p, "§a    VIP und Builder");
-					SendMessage(p, "§b    Probe Mod");
-					SendMessage(p, "§6    Mod und SuperMod");
-					SendMessage(p, "§f    [V] Visitor (Besucher)");
-					SendMessage(p, "§5    Geek und Admin");
-					SendMessage(p, "");
-					SendMessage(p, "§c--------------------------------------");
-				}
-			}
-			else 
-			{
-					SendMessage(p, noPerm);
-					return true;
-			}
-			return true;
-		}
-
-
-
-
-
