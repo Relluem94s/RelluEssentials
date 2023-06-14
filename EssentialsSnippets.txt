@@ -212,13 +212,3 @@ else if (cmd.getName().equalsIgnoreCase("rcmd")) {
 			}
 		}
 
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-				else if (args[0].equals("version")) {
-						SendMessage(p, "§c--------------------------------------");
-						SendMessage(p, prefix + "§5Version " + Bukkit.getServer().getPluginManager().getPlugin("RelluAPI").getDescription().getVersion() + "!");
-						SendMessage(p, "§6" + updatedate + " §5Relluem94");
-						SendMessage(p, "§c--------------------------------------");
-						// SendMessage(p, "§6");
-				}
