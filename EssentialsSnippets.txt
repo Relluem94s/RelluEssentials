@@ -32,17 +32,3 @@
 			return fw;
 			
 		}
-	 
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-             	else{
-    				 Location tp = worldLobby.getSpawnLocation();
-    				 p.teleport(tp);
-    				 DoPlayerJoinSilence(p);
-    			 }
-      		}
-         	
-      	}
-	 }
