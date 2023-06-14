@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -25,7 +24,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
@@ -66,55 +64,29 @@ public class BetterBags implements Listener {
             if(m.equals(Material.TORCH) || m.equals(Material.LILY_PAD)){
                 e.setCancelled(true);
             }
+        }
 
-            if(m.equals(Material.BAMBOO) || m.equals(Material.SUGAR_CANE)){
-                List<Block> blocks = new ArrayList<>();
+        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
+            Block block = e.getBlock();
+            int dropCount = 0;
 
-                if(e.isCancelled()){
-                    e.setCancelled(false);
-                    Block block = e.getBlock();
-                    Bukkit.broadcastMessage("inverted cancle on block on Y: " + block.getLocation().getBlockY());
-                    e.getPlayer().breakBlock(block);
+            if(isSugarCaneOrIsBamboo(block)){
+                while(isSugarCaneOrIsBamboo(block.getRelative(BlockFace.UP))){
+                    dropCount++;
+                    block.setType(Material.AIR);
+                    block = block.getRelative(BlockFace.UP);
                 }
-                else{
-                    if(!pl.contains(p)){
-                        e.setCancelled(true);
-                        pl.add(p);
-                        Block block = e.getBlock();
-                        while(isSugarCaneOrIsBamboo(block.getRelative(BlockFace.UP))){
-        
-                            block = block.getRelative(BlockFace.UP);
-                            blocks.add(block);
-                            Bukkit.broadcastMessage("added block on Y: " + block.getLocation().getBlockY());
-                        }
-                    }
-                    else{
-                        e.setCancelled(false);
-                    }                    
+
+                if(isSugarCaneOrIsBamboo(block)){
+                    block.setType(Material.AIR);
+                    dropCount++;
                 }
-                
 
-                Collections.reverse(blocks);
+                if(!m.equals(Material.AIR)){
+                    Item item = e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(m, dropCount));
 
-                for(int i = 0; i < blocks.size(); i++){
-                    final Block block = blocks.get(i);
-                    final int size = blocks.size();
-                    final int index = i;
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            
-                            BlockBreakEvent bbe = new BlockBreakEvent(block, p);
-                            bbe.setCancelled(true);
-                            Bukkit.getPluginManager().callEvent(bbe);
-                            
-                            Bukkit.broadcastMessage("called event (" + index + ") for block on Y: " + block.getLocation().getBlockY());
-                            if(index == size-1){
-                                pl.remove(p);
-                                Bukkit.broadcastMessage("Removed lock");
-                            }
-                        }
-                    }.runTaskLater(RelluEssentials.getInstance(),  0L);
+                    EntityPickupItemEvent epie = new EntityPickupItemEvent(p, item, dropCount);
+                    Bukkit.getPluginManager().callEvent(epie);
                 }
             }
         }
