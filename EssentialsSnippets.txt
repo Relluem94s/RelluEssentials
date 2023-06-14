@@ -1,27 +1,4 @@
 
-	public Inventory houseInv(Player p) throws IOException, InvalidConfigurationException{
-		Inventory inv;
-		FileConfiguration Haus = getHomes();
-		ArrayList <String> homes = new ArrayList<String>();
-		if(Haus.contains("Homes." + p.getName())){
-			homes.addAll(Haus.getConfigurationSection("Homes." + p.getName()).getKeys(false));
-		}
-		
-		for(int i = 0; i < homes.size(); i++){
-			ItemStack item = new ItemStack(Material.COMPASS, 1);
-			ItemMeta meta = item.getItemMeta();
-			meta.setDisplayName("§a" + homes.get(i));
-			meta.setLore(Arrays.asList("§aKlicken zum schnellreisen"));
-			item.setItemMeta(meta);
-			inv.setItem(i, item);
-		}
-		
-		return inv;
-	}
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 
  public Firework DoFeuerwerk(Player p){
 			
