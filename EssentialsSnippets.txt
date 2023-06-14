@@ -706,32 +706,3 @@ else if (cmd.getName().equalsIgnoreCase("rang")) {
 
 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-// TP and back
-
-else if (cmd.getName().equalsIgnoreCase("back")) {
-			if (hasPermission(sender, permvip + "back") == true){
-				if(isPlayer(sender) == true){
-					Player p = (Player)sender;
-					if(r.PlayerLastPostition.containsKey(p)){
-						Location l = r.PlayerLastPostition.get(p);
-						
-						SendMessage(sender, prefix + "§6Kehre zur§ck..");
-						teleport(p, l);
-					}
-					else{
-						SendMessage(sender, prefix + "§6Kein Punkt gesetz..");
-					}
-					
-				}
-				
-			}
-			else {
-				SendMessage(sender, noPerm);
-				
-			}
-		}
-
