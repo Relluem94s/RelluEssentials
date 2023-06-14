@@ -148,26 +148,3 @@
 				SendMessage(sender, noPerm);
 			}
 		}
-
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-else if (cmd.getName().equalsIgnoreCase("love")) {
-			if (hasPermission(sender, permuser + "love") == true){
-				if(isPlayer(sender) == true){
-					Player p = (Player)sender;
-					Bukkit.broadcastMessage(p.getDisplayName() + " §7>> §4\u2764");
-				}
-				else{
-					ConsoleCommandSender console;
-					console = r.server.getConsoleSender();
-					
-					r.server.dispatchCommand(console, "say §7>> §4\u2764");
-					
-				}
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
