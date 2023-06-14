@@ -80,4 +80,7 @@ public class ItemConstants {
     public static final NamespacedKey PLUGIN_ITEM_COINS_NAMESPACE = new NamespacedKey(RelluEssentials.getInstance(), "coins");
     
     public static final String PLUGIN_ITEM_NPC_LORE1 = "§7Click to Spawn";
+
+    public static final String PLUGIN_ITEM_MAGIC_WATER_BUCKET = "§dMagic Water Bucket";
+    public static final String PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE = "§7Refills immediately";
 }

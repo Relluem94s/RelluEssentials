@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_SPAWN;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_CREATE_INFO;
@@ -22,6 +23,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_UNLOAD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.logging.Level;
@@ -30,12 +32,15 @@ import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldType;
+import org.bukkit.block.CommandBlock;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
@@ -48,7 +53,20 @@ public class Worlds implements CommandExecutor {
             return false;
         }
 
-        if (!isPlayer(sender)) {
+        if (isCMDBlock(sender) && args.length == 2 && !args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_LIST) && args[1].equals("@p")) {
+            BlockCommandSender bcs = (BlockCommandSender) sender;
+            CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
+            Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
+            if(p == null){
+                sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, "No Player in Reach"));
+                return true;
+            }
+
+            teleportWorld(p, args[0]);
+            return true;
+        }
+
+        if(!isPlayer(sender)){
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
         }

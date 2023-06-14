@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
@@ -30,7 +31,17 @@ public class BetterSoil implements Listener {
             if (b.getType().equals(Material.FARMLAND) && (!e.getPlayer().isSneaking())) {
                     e.setUseInteractedBlock(Event.Result.DENY);
                     e.setCancelled(true);
-                
+            }
+        }
+        else{
+            if(CustomItems.magic_water_bucket.almostEquals(e.getPlayer().getInventory().getItemInMainHand())){
+                e.setCancelled(true);
+                if(e.getClickedBlock() != null){
+                    Block b = e.getClickedBlock().getRelative(e.getBlockFace());
+                    if(b.getType().equals(Material.AIR)){
+                        b.setType(Material.WATER, false);
+                    }
+                }
             }
         }
     }
@@ -57,7 +68,5 @@ public class BetterSoil implements Listener {
             }
             e.getItemsHarvested().clear();
         }
-
-
     }
 }
