@@ -793,51 +793,6 @@ else if (cmd.getName().equalsIgnoreCase("willkommen")) {
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
-else if (cmd.getName().equalsIgnoreCase("swn")) {
-			if (hasPermission(sender, permvip + "weather") == true){
-				if(isPlayer(sender) == true){
-					Player p = (Player)sender;
-					p.resetPlayerWeather();
-					SendMessage(sender, prefix + "§6Das Wetter ist wieder Normal!");
-					
-				}
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-		else if (cmd.getName().equalsIgnoreCase("swr")) {
-			if (hasPermission(sender, permvip + "weather") == true){
-				if(isPlayer(sender) == true){
-					Player p = (Player)sender;
-					p.setPlayerWeather(WeatherType.DOWNFALL);
-					SendMessage(sender, prefix + "§6Es Regnet nur f§r dich!");
-				}
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-		else if (cmd.getName().equalsIgnoreCase("sws")) {
-			if (hasPermission(sender, permvip + "weather") == true){
-				if(isPlayer(sender) == true){
-					Player p = (Player)sender;
-					p.setPlayerWeather(WeatherType.CLEAR);
-					SendMessage(sender, prefix + "§6Die Sonne scheint nur f§r Dich!");
-				}
-			}
-			else {
-				SendMessage(sender, noPerm);
-			}
-		}
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
 else if (cmd.getName().equalsIgnoreCase("noob")) {
 			if (hasPermission(sender, permmod + "noob") == true){
 				if (args.length == 0) {
