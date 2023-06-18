@@ -1,7 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
 public enum EntityCoins {
-    DROPPED_ITEM(0),
+  /**
+   * Reg Ex to Replace all () to compare and add new Entries
+   * \((.*?)\)
+   */
+  DROPPED_ITEM(0),
   EXPERIENCE_ORB(0),
   AREA_EFFECT_CLOUD(0),
   ELDER_GUARDIAN(500),
@@ -120,7 +124,12 @@ public enum EntityCoins {
   FISHING_HOOK(0),
   LIGHTNING(0),
   PLAYER(50),
-  UNKNOWN(0);
+  UNKNOWN(0),
+  TEXT_DISPLAY(0),
+  SNIFFER(0),
+  ITEM_DISPLAY(0),
+  INTERACTION(0),
+  BLOCK_DISPLAY(0);
 
 
   private int coins;
