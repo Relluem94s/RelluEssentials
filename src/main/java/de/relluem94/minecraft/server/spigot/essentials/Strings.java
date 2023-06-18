@@ -276,6 +276,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_BAGS_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "The searched Bag " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "was not found!";
 
     public static final String PLUGIN_COMMAND_MARRY_SEND_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast eine Hochzeitsanfrage an " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " geschickt!";
+    public static final String PLUGIN_COMMAND_MARRY_RECEIVE_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast eine Hochzeitsanfrage von " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " bekommen!";
     public static final String PLUGIN_COMMAND_MARRY_MARRIED = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "geheiratet!";
     public static final String PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED = PLUGIN_FORMS_COMMAND_PREFIX + "Hochzeitsanfrage ist abgelaufen!";
     public static final String PLUGIN_COMMAND_MARRY_REQUEST_IS_MAARIED = PLUGIN_FORMS_COMMAND_PREFIX + "Hochzeitsanfrage ist ungültig, Spieler ist bereits verheitratet!";

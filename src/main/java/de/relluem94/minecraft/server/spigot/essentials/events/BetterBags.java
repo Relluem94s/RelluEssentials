@@ -6,6 +6,8 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
@@ -39,32 +41,31 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 public class BetterBags implements Listener {
 
-    
+    private List<Player> pl = new ArrayList<>();
 
-    
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
         Player p = e.getPlayer();
-        Material m = e.getBlock().getType();
+        Block b = e.getBlock();
+        Material m = b.getType();
         
         if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.delicate)){
-            if(e.getBlock().getType().equals(Material.PUMPKIN_STEM) || e.getBlock().getType().equals(Material.MELON_STEM)){
+            if(m.equals(Material.PUMPKIN_STEM) || m.equals(Material.MELON_STEM) || m.equals(Material.ATTACHED_PUMPKIN_STEM) || m.equals(Material.ATTACHED_MELON_STEM)){
                 e.setCancelled(true);
             } 
             
             if(e.getBlock().getBlockData() instanceof Ageable){
                 Ageable age = (Ageable) e.getBlock().getBlockData();
-                if(age.getAge() != age.getMaximumAge() && (!e.getBlock().getType().equals(Material.SUGAR_CANE))){
+                if(age.getAge() != age.getMaximumAge() && (!m.equals(Material.SUGAR_CANE))){
                     e.setCancelled(true);
                 }
             }
 
-            if(e.getBlock().getType().equals(Material.TORCH) || e.getBlock().getType().equals(Material.LILY_PAD)){
+            if(m.equals(Material.TORCH) || m.equals(Material.LILY_PAD)){
                 e.setCancelled(true);
             }
         }
 
-        
         if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
             Block block = e.getBlock();
             int dropCount = 0;
@@ -75,12 +76,12 @@ public class BetterBags implements Listener {
                     block.setType(Material.AIR);
                     block = block.getRelative(BlockFace.UP);
                 }
-    
+
                 if(isSugarCaneOrIsBamboo(block)){
                     block.setType(Material.AIR);
                     dropCount++;
                 }
-    
+
                 if(!m.equals(Material.AIR)){
                     Item item = e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(m, dropCount));
 
@@ -88,7 +89,7 @@ public class BetterBags implements Listener {
                     Bukkit.getPluginManager().callEvent(epie);
                 }
             }
-        }        
+        }
     }
 
     private boolean isSugarCaneOrIsBamboo(Block b){
@@ -100,7 +101,6 @@ public class BetterBags implements Listener {
     @EventHandler
     public void onBlockDrop(BlockDropItemEvent e) {
         Player p = e.getPlayer();
-       
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
         for(Item i : e.getItems()){
@@ -141,19 +141,10 @@ public class BetterBags implements Listener {
                 }
             }
         }
-        else if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.autosmelt)){
-            for(int i = 0; i < e.getItems().size(); i++){
-                ItemStack is = e.getItems().get(i).getItemStack().clone();
-                if(e.getItems().get(i) != null && ItemHelper.getSmeltedItemStack(is) != null){
-                    e.getItems().get(i).getItemStack().setType(ItemHelper.getSmeltedItemStack(is).getType());
-                }
-            }
-        }
-
+        
         if(BagHelper.hasBags(pe.getID())){
-            List<Item> li = new ArrayList<>();
-            li.addAll(e.getItems());
-            e.getItems().removeAll(BagHelper.collectItems(li, p, pe));
+            List<Item> lis = BagHelper.collectItems(e.getItems(), e.getPlayer(), pe);
+            e.getItems().removeAll(lis);  
         }
 
         if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
@@ -166,7 +157,15 @@ public class BetterBags implements Listener {
             }
             e.getItems().removeAll(lis);
         }
-        
+
+        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.autosmelt)){
+            for(int i = 0; i < e.getItems().size(); i++){
+                ItemStack is = e.getItems().get(i).getItemStack().clone();
+                if(e.getItems().get(i) != null && ItemHelper.getSmeltedItemStack(is) != null){
+                    e.getItems().get(i).getItemStack().setType(ItemHelper.getSmeltedItemStack(is).getType());
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -289,10 +288,14 @@ public class BetterBags implements Listener {
                     int coins = im.getPersistentDataContainer().get(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER) * is.getAmount();
                     ChatHelper.sendMessageInActionBar(p, String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
                     pe.setPurse(pe.getPurse() + coins);
+
+                    p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);
+
                     pe.setUpdatedBy(pe.getID());
                     pe.setToBeUpdated(false);
+
+                    e.getItem().getItemStack().setAmount(0);
                     e.setCancelled(true);
-                    e.getItem().remove();
                 }
             }
 
@@ -307,6 +310,7 @@ public class BetterBags implements Listener {
                 p.updateInventory();
                 e.setCancelled(true);
                 e.getItem().remove();
+                p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5f, 1f);
             }
         }
     }

@@ -1,11 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SUDO;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -14,10 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlaye
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SUDO;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Sudo implements CommandExecutor {
 
@@ -82,5 +82,4 @@ public class Sudo implements CommandExecutor {
         SudoManager.sudoers.remove(p.getUniqueId());
         p.sendMessage(Strings.PLUGIN_COMMAND_SUDO_DEACTIVATED);
     }
-
 }

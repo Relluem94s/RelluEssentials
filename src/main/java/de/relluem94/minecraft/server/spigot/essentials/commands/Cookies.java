@@ -1,9 +1,24 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_COOKIES;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_COOKIES_DISPLAYNAME;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_COOKIES_LORE_1;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_COOKIES_LORE_3;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_COOKIES_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_COOCKIE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
 import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.CommandBlock;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,13 +26,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_COOCKIE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Cookies implements CommandExecutor {
 
@@ -27,10 +38,23 @@ public class Cookies implements CommandExecutor {
             return false;
         }
 
-        if (!isPlayer(sender)) {
+        if (isCMDBlock(sender) && args.length == 1 && args[0].equals("@p")) {
+            BlockCommandSender bcs = (BlockCommandSender) sender;
+            CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
+            Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
+            if(p == null){
+                sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, "No Player in Reach"));
+                return true;
+            }
+
+            return getCookies(command, getCookie(p), p);
+        }
+
+        if(!isPlayer(sender)){
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
         }
+
 
         Player p = (Player) sender;
 
