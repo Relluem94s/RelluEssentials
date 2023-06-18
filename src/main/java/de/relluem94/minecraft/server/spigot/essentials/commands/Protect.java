@@ -1,22 +1,44 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_ADD;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_COMMAND_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_FLAG;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_FLAG_ADD;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_FLAG_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_FLAG_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_RIGHT;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_RIGHT_ADD;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PROTECT_RIGHT_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_ADD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_FLAG;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_RIGHT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Protect implements CommandExecutor {
 
@@ -63,7 +85,7 @@ public class Protect implements CommandExecutor {
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_INFO);
                         }
                         else{
-                            p.sendMessage(PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND);
+                            p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                         }
                     }
                     else if (args.length == 3) {
@@ -93,7 +115,7 @@ public class Protect implements CommandExecutor {
                                 }
                             }
                             else{
-                                p.sendMessage(PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND);
+                                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                             }
                         }
                         else if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)){
@@ -122,15 +144,15 @@ public class Protect implements CommandExecutor {
                                 }
                             }
                             else{
-                                p.sendMessage(PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND);
+                                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                             }
                         }
                         else{
-                            p.sendMessage(PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND);
+                            p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                         }
                     }
                     else{
-                        p.sendMessage(PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND);
+                        p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                     }
                     return true;
                 } else {

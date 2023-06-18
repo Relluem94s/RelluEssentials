@@ -15,7 +15,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_WRONG_SUBCOMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_CREATE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_LIST;
@@ -127,7 +127,7 @@ public class Worlds implements CommandExecutor {
         }
 
         if (!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_CREATE)) {
-            p.sendMessage(PLUGIN_COMMAND_WORLD_WRONG_SUBCOMMAND);
+            p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
             return true;
         }
 
