@@ -315,4 +315,6 @@ public class Strings {
     public static final String PLUGIN_COMMAND_PLAYERINFO_DEATHS = "Deaths: %s";
     public static final String PLUGIN_COMMAND_PLAYERINFO_JUMPED = "Jumped: %s";
     public static final String PLUGIN_COMMAND_PLAYERINFO_LEFT_GAME = "Left Game: %s";
+
+    public static final String PLUGIN_COMMAND_TEAM_TITLE = PLUGIN_FORMS_COMMAND_PREFIX + "Team:";
 }

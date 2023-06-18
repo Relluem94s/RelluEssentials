@@ -163,3 +163,6 @@ commands:
     playerinfo:
         description: Gives Information about players
         usage: /playerinfo
+    team:
+        description: Shows Team Members
+        usage: /team
