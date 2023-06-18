@@ -28,7 +28,8 @@ public class Sudo implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SUDO)) {
-            if(Bukkit.getCommandAliases().containsKey(args[0])){
+            
+            if(RelluEssentials.getInstance().getCommand(args[0]) != null){
                 dispatchCommand(args);
                 return true;
             }
