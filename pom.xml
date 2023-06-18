@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.github.Relluem94s</groupId>
             <artifactId>RelluLib</artifactId>
-            <version>0.11</version>
+            <version>0.12</version>
             <scope>compile</scope>
 	    </dependency>
         <dependency>
