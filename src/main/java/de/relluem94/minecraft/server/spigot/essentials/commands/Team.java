@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TEAM_TITLE;
@@ -44,7 +45,7 @@ public class Team implements CommandExecutor  {
         for(Map.Entry<UUID, PlayerEntry> e : RelluEssentials.getInstance().getPlayerAPI().getPlayerEntryMap().entrySet()){
             PlayerEntry pe = e.getValue();
             if(pe.getGroup().getId() >= Groups.getGroup("mod").getId()){
-                p.sendMessage(pe.getGroup().getPrefix() + pe.getCustomName() + PLUGIN_FORMS_SPACER_CHANNEL + pe.getGroup().getPrefix() + pe.getGroup().getName());
+                p.sendMessage(pe.getGroup().getPrefix() + pe.getCustomName() + PLUGIN_COLOR_MESSAGE + PLUGIN_FORMS_SPACER_CHANNEL + pe.getGroup().getPrefix() + pe.getGroup().getName());
             }
         }
         return true;
