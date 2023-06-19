@@ -81,4 +81,14 @@ public class CustomEnchants {
             50
         )
     );
+
+    public static final EnchantmentHelper scavengers = new EnchantmentHelper(
+        new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS, EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS_DISPLAYNAME), 
+        EnchantmentTarget.WEAPON, 
+        new EnchantLevel(1, 3), 
+        Arrays.asList(Enchantment.VANISHING_CURSE), 
+        EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS_LORE, 
+        Rarity.EPIC,
+        AttributeHelper.addAttribute()
+    );
 }
