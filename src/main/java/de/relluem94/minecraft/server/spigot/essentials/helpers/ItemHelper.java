@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,6 +18,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+
+import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
 
 /**
  *
@@ -130,10 +130,8 @@ public class ItemHelper implements IItemHelper {
      */
     public ItemStack getCustomItem() {
         init();
-        addItemRarity();
-        postInit();
-        
-        return is;
+        addItemRarity();        
+        return postInit(is);
     }
 
     /**
@@ -246,8 +244,9 @@ public class ItemHelper implements IItemHelper {
     }
 
     @Override
-    public void postInit() {
+    public ItemStack postInit(ItemStack is) {
         // has to be overwritten
+        return is;
     }
 
     private void addItemRarity() {
