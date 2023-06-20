@@ -44,7 +44,7 @@ public class CustomItems {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
-    public static final ItemHelper magic_water_bucket = new ItemHelper(Material.WATER_BUCKET, 1, PLUGIN_ITEM_MAGIC_WATER_BUCKET, Type.MONEY, Rarity.EPIC, Arrays.asList(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE)){
+    public static final ItemHelper magic_water_bucket = new ItemHelper(Material.WATER_BUCKET, 1, PLUGIN_ITEM_MAGIC_WATER_BUCKET, Type.GADGET, Rarity.EPIC, Arrays.asList(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE)){
         @Override
         public void init() {
             ItemMeta im = getItemMeta();
