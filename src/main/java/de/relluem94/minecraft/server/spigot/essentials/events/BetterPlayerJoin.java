@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -66,6 +67,10 @@ public class BetterPlayerJoin implements Listener {
         WorldHelper.loadWorldGroupInventory(p);
 
         BankerHelper.doInterest(e.getPlayer());
+
+         if(WorldHelper.isInWorld(p,Strings.PLUGIN_WORLD_LOBBY)){
+            PlayerHelper.setLobbyItems(p);
+        }
     }
 
     @EventHandler

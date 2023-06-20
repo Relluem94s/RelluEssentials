@@ -266,6 +266,8 @@ public class Strings {
     public static final String PLUGIN_COMMAND_TP_ACCEPT_NO_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Keine offene Teleport Anfrage!";
     public static final String PLUGIN_COMMAND_TP_SEND_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast eine Teleport Anfrage an " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " geschickt!";
 
+    public static final String PLUGIN_GRAPPLINGHOOK_COOLDOWN = PLUGIN_COLOR_NEGATIVE + "Please Slow down..";
+
     public static final String PLUGIN_BAG_AMOUNT = "Amount: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     public static final String PLUGIN_BAG_RETRIEVE = "Click to retrieve";
 

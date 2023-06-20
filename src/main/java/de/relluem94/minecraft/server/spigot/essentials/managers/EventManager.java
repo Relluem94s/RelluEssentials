@@ -25,6 +25,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.BetterWorlds;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
 import de.relluem94.minecraft.server.spigot.essentials.events.CloudSailor;
 import de.relluem94.minecraft.server.spigot.essentials.events.CustomEnchantment;
+import de.relluem94.minecraft.server.spigot.essentials.events.GrapplingHockEvent;
 import de.relluem94.minecraft.server.spigot.essentials.events.MOTD;
 import de.relluem94.minecraft.server.spigot.essentials.events.NoDeathMessage;
 import de.relluem94.minecraft.server.spigot.essentials.events.PlayerMove;
@@ -65,6 +66,7 @@ public class EventManager implements IEnable{
         pm.registerEvents(new SignEdit(), RelluEssentials.getInstance());                   eventCount++;
         pm.registerEvents(new ToolCrafting(), RelluEssentials.getInstance());               eventCount++;
         pm.registerEvents(new CustomEnchantment(), RelluEssentials.getInstance());          eventCount++;
+        pm.registerEvents(new GrapplingHockEvent(), RelluEssentials.getInstance());         eventCount++;
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_EVENTS_REGISTERED, eventCount));
     }
 }
