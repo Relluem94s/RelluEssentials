@@ -38,8 +38,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -80,6 +87,25 @@ public class Worlds implements CommandExecutor {
 
         if(args.length == 0){
             p.sendMessage(PLUGIN_COMMAND_WORLD_INFO);
+
+            org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
+                    InventoryHelper.createInventory(18,
+                    Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ "§dWorlds"),
+                    CustomItems.npc_gui_disabled.getCustomItem()
+                );
+
+                for (int i = 0; i < Bukkit.getWorlds().size(); i++) {
+                    ItemStack is = PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE);
+                    ItemMeta im = is.getItemMeta();
+
+                    im.setDisplayName(Bukkit.getWorlds().get(i).getName());
+
+                    is.setItemMeta(im);
+                    inv.setItem(i, is);
+                }
+
+                InventoryHelper.openInventory(sender, inv);
+
             return true;
         }
 
