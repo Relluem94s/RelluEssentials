@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -335,6 +336,16 @@ public class BetterNPC implements Listener {
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     p.getInventory().addItem(e.getCurrentItem().clone());
                     p.updateInventory();
+                }
+                e.setCancelled(true);
+            }
+            else if(
+                e.getView().getTitle().equals(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+"§dWorlds")
+            ){
+                if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
+                    String worldName = e.getCurrentItem().getItemMeta().getDisplayName();
+                    p.teleport(Bukkit.getWorld(worldName).getSpawnLocation());
+                    e.setCancelled(true);
                 }
                 e.setCancelled(true);
             }
