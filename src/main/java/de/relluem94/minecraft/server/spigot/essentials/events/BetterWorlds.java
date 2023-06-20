@@ -6,8 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
-import de.relluem94.minecraft.server.spigot.essentials.items.RelluSword;
 
 public class BetterWorlds implements Listener {
 
@@ -19,9 +19,8 @@ public class BetterWorlds implements Listener {
         WorldHelper.loadWorldGroupInventory(p);
 
 
-        p.sendMessage(e.getFrom().getName() + " " + p.getWorld().getName());
         if(WorldHelper.isInWorld(p,Strings.PLUGIN_WORLD_LOBBY)){
-            p.getInventory().addItem(new RelluSword().getCustomItem());
+            PlayerHelper.setLobbyItems(p);
         }
     }
 }
