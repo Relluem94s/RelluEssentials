@@ -14,6 +14,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.json.JSONObject;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
@@ -21,7 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.items.RelluSword;
+import de.relluem94.minecraft.server.spigot.essentials.items.GrapplingHook;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
@@ -234,6 +235,8 @@ public class PlayerHelper {
     }
 
     public static void setLobbyItems(Player p){
-        p.getInventory().setItem(0, new RelluSword().getCustomItem());
+        p.getInventory().setItem(0, new GrapplingHook().getCustomItem());
+
+        p.getInventory().setBoots(CustomItems.cloudBoots.getCustomItem());
     }
 }
