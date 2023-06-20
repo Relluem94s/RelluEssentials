@@ -21,6 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.items.RelluSword;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
@@ -223,12 +224,16 @@ public class PlayerHelper {
         Player nearestPlayer = null;
         double lastDistance = Double.MAX_VALUE;
         for(Player p : loc.getWorld().getPlayers()){
-             double distanceSquared = loc.distanceSquared(p.getLocation());
-             if(distanceSquared < lastDistance){
-                  lastDistance = distanceSquared;
-                  nearestPlayer = p;
-             }
+            double distanceSquared = loc.distanceSquared(p.getLocation());
+            if(distanceSquared < lastDistance){
+                lastDistance = distanceSquared;
+                nearestPlayer = p;
+            }
         }
         return nearestPlayer;
-   }
+    }
+
+    public static void setLobbyItems(Player p){
+        p.getInventory().setItem(0, new RelluSword().getCustomItem());
+    }
 }
