@@ -244,6 +244,12 @@ public class DatabaseHelper {
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
+    private void patch6() {
+        String v = "patches/v6/";
+      
+        executeScript(v + "updateNPC.sql");
+    }
+
     public void init() {
         applyPatch(getPluginInformation().getDbVersion());
     }
@@ -259,29 +265,37 @@ public class DatabaseHelper {
                 patch3();
                 patch4();
                 patch5();
+                patch6();
                 break;
             case 1:
                 patch2();
                 patch3();
                 patch4();
                 patch5();
+                patch6();
                 break;
             case 2:
                 patch3();
                 patch4();
                 patch5();
+                patch6();
                 break;
             case 3:
                 patch4();
                 patch5();
+                patch6();
                 break;
             case 4:
                 patch5();
+                patch6();
+                break;
+            case 5:
+                patch6();
                 break;
             default:
 
                 if (insertScripts) {
-                    String v = "patches/v5/";
+                    String v = "patches/v6/";
                     executeScript(v + "script.sql");
                 }
                 break;
