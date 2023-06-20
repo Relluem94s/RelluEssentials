@@ -236,7 +236,6 @@ public class PlayerHelper {
 
     public static void setLobbyItems(Player p){
         p.getInventory().setItem(0, new GrapplingHook().getCustomItem());
-
-        p.getInventory().setBoots(CustomItems.cloudBoots.getCustomItem());
+        p.getInventory().setItem(1, CustomItems.cloudSailor.getCustomItem());
     }
 }
