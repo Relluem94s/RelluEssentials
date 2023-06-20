@@ -33,6 +33,7 @@ public class ItemConstants {
 
 
     public static final String PLUGIN_ITEM_GRAPPLINGHOCK = "§cGrappling Hook";
+    public static final String PLUGIN_ITEM_WORLDSELECTOR = "§eWorld Selector";
 
     public static final String PLUGIN_ITEM_INGREDIENT = "§4§l§oThis is a crafting ingredient";
 

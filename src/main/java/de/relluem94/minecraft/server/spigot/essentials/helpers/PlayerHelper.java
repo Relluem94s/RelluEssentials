@@ -23,6 +23,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.items.GrapplingHook;
+import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
@@ -237,5 +238,7 @@ public class PlayerHelper {
     public static void setLobbyItems(Player p){
         p.getInventory().setItem(0, new GrapplingHook().getCustomItem());
         p.getInventory().setItem(1, CustomItems.cloudSailor.getCustomItem());
+
+        p.getInventory().setItem(4, new WorldSelector().getCustomItem());
     }
 }

@@ -35,7 +35,7 @@ public class ItemHelper implements IItemHelper {
     private final Rarity ir;
 
     private List<String> lore;
-
+    
     /**
      *
      * @param material Bukkit Material

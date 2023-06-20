@@ -87,25 +87,7 @@ public class Worlds implements CommandExecutor {
 
         if(args.length == 0){
             p.sendMessage(PLUGIN_COMMAND_WORLD_INFO);
-
-            org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
-                    InventoryHelper.createInventory(18,
-                    Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ "§dWorlds"),
-                    CustomItems.npc_gui_disabled.getCustomItem()
-                );
-
-                for (int i = 0; i < Bukkit.getWorlds().size(); i++) {
-                    ItemStack is = PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE);
-                    ItemMeta im = is.getItemMeta();
-
-                    im.setDisplayName(Bukkit.getWorlds().get(i).getName());
-
-                    is.setItemMeta(im);
-                    inv.setItem(i, is);
-                }
-
-                InventoryHelper.openInventory(sender, inv);
-
+            openWorldMenu(p);
             return true;
         }
 
@@ -196,5 +178,25 @@ public class Worlds implements CommandExecutor {
         Back.addBackPoint(p);
         p.teleport(w.getSpawnLocation());
         p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
+    }
+
+    public static void openWorldMenu(Player p){
+        org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
+            InventoryHelper.createInventory(18,
+            Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ "§dWorlds"),
+            CustomItems.npc_gui_disabled.getCustomItem()
+        );
+
+        for (int i = 0; i < Bukkit.getWorlds().size(); i++) {
+            ItemStack is = PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE);
+            ItemMeta im = is.getItemMeta();
+
+            im.setDisplayName(Bukkit.getWorlds().get(i).getName());
+
+            is.setItemMeta(im);
+            inv.setItem(i, is);
+        }
+
+        InventoryHelper.openInventory(p, inv);
     }
 }
