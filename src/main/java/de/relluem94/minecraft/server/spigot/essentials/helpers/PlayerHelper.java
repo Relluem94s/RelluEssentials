@@ -135,6 +135,14 @@ public class PlayerHelper {
         setGroup(p, g);
     }
 
+    public static void updateGroup(OfflinePlayer p, GroupEntry g) {
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
+        pe.setGroup(g);
+        pe.setUpdatedBy(pe.getID());
+        pe.setToBeUpdated(true);
+    }
+
+
     public static String getCustomName(Player p) {
         String name;
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
