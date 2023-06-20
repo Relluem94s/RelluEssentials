@@ -25,6 +25,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Banner;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -134,10 +135,16 @@ public class CustomItems {
             im.addEnchant(Enchantment.SWEEPING_EDGE, 94, true);
             im.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
             im.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 94, true);
-            im.addEnchant(CustomEnchants.telekinesis, 1, false);
-            im.addEnchant(CustomEnchants.thunderstrike, 1, false);
+            
             im.setUnbreakable(true);
             setItemMeta(im);
+        }
+
+        @Override
+        public ItemStack postInit(ItemStack is){
+            CustomEnchants.telekinesis.addTo(is);
+            CustomEnchants.thunderstrike.addTo(is);
+            return is;
         }
     };
 
@@ -147,9 +154,14 @@ public class CustomItems {
             ItemMeta im = getItemMeta();
             im.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 94, true);
             im.addEnchant(Enchantment.DIG_SPEED, 94, true);
-            im.addEnchant(CustomEnchants.telekinesis, 1, false);
             im.setUnbreakable(true);
             setItemMeta(im);
+        }
+
+        @Override
+        public ItemStack postInit(ItemStack is){
+            CustomEnchants.telekinesis.addTo(is);
+            return is;
         }
     };
 
