@@ -18,7 +18,6 @@ public class RelluSword extends ItemHelper{
     @Override
     public void init() {
         ItemMeta im = getItemMeta();
-        im.addEnchant(Enchantment.FIRE_ASPECT, 94, true);
         im.addEnchant(Enchantment.DAMAGE_ALL, 94, true);
         im.addEnchant(Enchantment.SWEEPING_EDGE, 94, true);
         im.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
