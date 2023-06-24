@@ -50,7 +50,7 @@ public class BetterNPC implements Listener {
     @EventHandler
     public void onNPCPlacement(PlayerInteractEvent e) {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
-            if((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && (e.getItem() != null && new WorldSelector().almostEquals(e.getItem()))){
+            if((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && e.getItem() != null && new WorldSelector().almostEquals(e.getItem())){
                 Worlds.openWorldMenu(e.getPlayer());
                 e.setCancelled(true);
             }
