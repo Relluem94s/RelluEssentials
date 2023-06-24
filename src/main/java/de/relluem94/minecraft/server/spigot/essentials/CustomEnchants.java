@@ -81,4 +81,14 @@ public class CustomEnchants {
             50
         )
     );
+
+    public static final EnchantmentHelper lifesteal = new EnchantmentHelper(
+        new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL, EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL_DISPLAYNAME), 
+        EnchantmentTarget.WEAPON, 
+        new EnchantLevel(1, 1), 
+        Arrays.asList(Enchantment.SILK_TOUCH), 
+        EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL_LORE, 
+        Rarity.LEGENDARY,
+        AttributeHelper.addAttribute()
+    );
 }
