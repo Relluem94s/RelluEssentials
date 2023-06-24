@@ -247,7 +247,10 @@ public class DatabaseHelper {
     private void patch6() {
         String v = "patches/v6/";
       
-        executeScript(v + "updateNPC.sql");
+        executeScript(v + "updateNPCStick.sql");
+        executeScript(v + "updateNPCRedSand.sql");
+        executeScript(v + "updateNPCBambooBlock.sql");
+        executeScript(v + "updateNPCBamboo.sql");
     }
 
     public void init() {
