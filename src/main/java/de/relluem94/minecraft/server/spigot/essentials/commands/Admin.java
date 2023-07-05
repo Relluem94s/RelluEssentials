@@ -10,9 +10,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING_OTHER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_TOP;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN_PING;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -155,7 +155,7 @@ public class Admin implements CommandExecutor {
                 return true;
             }
             else {
-                p.sendMessage(PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND);
+                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }
         }
@@ -174,7 +174,7 @@ public class Admin implements CommandExecutor {
             }
         }
         else {
-            p.sendMessage(PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND);
+            p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
             return true;
         }
         return false;

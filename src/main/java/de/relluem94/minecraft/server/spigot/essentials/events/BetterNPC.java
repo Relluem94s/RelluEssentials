@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -25,6 +26,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
@@ -38,6 +40,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountE
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
@@ -47,20 +50,21 @@ public class BetterNPC implements Listener {
     @EventHandler
     public void onNPCPlacement(PlayerInteractEvent e) {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
+            if((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && (e.getItem() != null && new WorldSelector().almostEquals(e.getItem()))){
+                Worlds.openWorldMenu(e.getPlayer());
+                e.setCancelled(true);
+            }
+            else if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) && (e.getItem() != null && RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().contains(e.getItem()))){
+                e.setCancelled(true);
 
-            if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if(e.getItem() != null && RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().contains(e.getItem())){
-                    e.setCancelled(true);
+                Location location = e.getClickedBlock().getLocation().add(0, 1, 0);
+                location.setYaw(e.getPlayer().getLocation().getYaw());
 
-                    Location location = e.getClickedBlock().getLocation().add(0, 1, 0);
-                    location.setYaw(e.getPlayer().getLocation().getYaw());
-
-                    for(int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().size(); i++){
-                        if(RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().get(i).equals(e.getItem())){
-                            NPCHelper nh = new NPCHelper(location, RelluEssentials.getInstance().getNpcAPI().getNPC(i));
-                            nh.spawn();
-                            e.getPlayer().sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
-                        }
+                for(int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().size(); i++){
+                    if(RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().get(i).equals(e.getItem())){
+                        NPCHelper nh = new NPCHelper(location, RelluEssentials.getInstance().getNpcAPI().getNPC(i));
+                        nh.spawn();
+                        e.getPlayer().sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
                     }
                 }
             }
@@ -335,6 +339,16 @@ public class BetterNPC implements Listener {
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     p.getInventory().addItem(e.getCurrentItem().clone());
                     p.updateInventory();
+                }
+                e.setCancelled(true);
+            }
+            else if(
+                e.getView().getTitle().equals(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+"§dWorlds")
+            ){
+                if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
+                    String worldName = e.getCurrentItem().getItemMeta().getDisplayName();
+                    p.teleport(Bukkit.getWorld(worldName).getSpawnLocation());
+                    e.setCancelled(true);
                 }
                 e.setCancelled(true);
             }

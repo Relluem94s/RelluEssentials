@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -48,10 +49,10 @@ public class SignEdit implements Listener {
     }
 
     private void updateSign(Sign sign, Sign copiedSign){
-        sign.setLine(0, copiedSign.getLine(0));
-        sign.setLine(1, copiedSign.getLine(1));
-        sign.setLine(2, copiedSign.getLine(2));
-        sign.setLine(3, copiedSign.getLine(3));
+        sign.getSide(Side.FRONT).setLine(0, copiedSign.getSide(Side.FRONT).getLine(0));
+        sign.getSide(Side.FRONT).setLine(1, copiedSign.getSide(Side.FRONT).getLine(1));
+        sign.getSide(Side.FRONT).setLine(2, copiedSign.getSide(Side.FRONT).getLine(2));
+        sign.getSide(Side.FRONT).setLine(3, copiedSign.getSide(Side.FRONT).getLine(3));
         sign.update();
     }
 }

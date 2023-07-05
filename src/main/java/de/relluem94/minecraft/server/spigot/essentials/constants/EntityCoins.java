@@ -1,7 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
 public enum EntityCoins {
-    DROPPED_ITEM(0),
+  /**
+   * Reg Ex to Replace all () to compare and add new Entries
+   * \((.*?)\)
+   */
+  DROPPED_ITEM(0),
   EXPERIENCE_ORB(0),
   AREA_EFFECT_CLOUD(0),
   ELDER_GUARDIAN(500),
@@ -27,17 +31,17 @@ public enum EntityCoins {
   SPECTRAL_ARROW(0),
   SHULKER_BULLET(0),
   DRAGON_FIREBALL(0),
-  ZOMBIE_VILLAGER(0),
-  SKELETON_HORSE(0),
-  ZOMBIE_HORSE(0),
+  ZOMBIE_VILLAGER(20),
+  SKELETON_HORSE(150),
+  ZOMBIE_HORSE(150),
   ARMOR_STAND(0),
   DONKEY(0),
   MULE(0),
   EVOKER_FANGS(0),
-  EVOKER(100),
-  VEX(100),
-  VINDICATOR(100),
-  ILLUSIONER(100),
+  EVOKER(150),
+  VEX(150),
+  VINDICATOR(150),
+  ILLUSIONER(150),
   MINECART_COMMAND(0),
   BOAT(0),
   MINECART(0),
@@ -91,12 +95,12 @@ public enum EntityCoins {
   SALMON(0),
   PUFFERFISH(0),
   TROPICAL_FISH(0),
-  DROWNED(0),
+  DROWNED(20),
   DOLPHIN(0),
   CAT(0),
   PANDA(0),
-  PILLAGER(0),
-  RAVAGER(0),
+  PILLAGER(200),
+  RAVAGER(1000),
   TRADER_LLAMA(0),
   WANDERING_TRADER(0),
   FOX(0),
@@ -111,7 +115,7 @@ public enum EntityCoins {
   GLOW_SQUID(0),
   GOAT(0),
   MARKER(0),
-  ALLAY(0),
+  ALLAY(20),
   CHEST_BOAT(0),
   FROG(0),
   TADPOLE(0),
@@ -120,7 +124,12 @@ public enum EntityCoins {
   FISHING_HOOK(0),
   LIGHTNING(0),
   PLAYER(50),
-  UNKNOWN(0);
+  UNKNOWN(0),
+  TEXT_DISPLAY(0),
+  SNIFFER(0),
+  ITEM_DISPLAY(0),
+  INTERACTION(0),
+  BLOCK_DISPLAY(0);
 
 
   private int coins;

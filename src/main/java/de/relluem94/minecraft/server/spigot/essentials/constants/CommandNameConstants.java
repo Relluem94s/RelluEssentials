@@ -109,4 +109,5 @@ public class CommandNameConstants {
     public static final String PLUGIN_COMMAND_NAME_MARRY_ACCEPT = "accept";
     public static final String PLUGIN_COMMAND_NAME_MARRY_DIVORCE = "divorce";
     public static final String PLUGIN_COMMAND_NAME_CUSTOMHEADS = "customheads";
+    public static final String PLUGIN_COMMAND_NAME_TEAM = "team";
 }

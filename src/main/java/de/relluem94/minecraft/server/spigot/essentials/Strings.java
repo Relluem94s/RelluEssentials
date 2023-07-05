@@ -208,6 +208,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_TO_LESS_ARGUMENTS = PLUGIN_FORMS_COMMAND_PREFIX + "Zu wenig Argumente!";
     public static final String PLUGIN_COMMAND_TO_MANY_ARGUMENTS = PLUGIN_FORMS_COMMAND_PREFIX + "Zu viele Argumente!";
     public static final String PLUGIN_COMMAND_TARGET_NOT_A_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "%s" + PLUGIN_COLOR_COMMAND + " ist kein Spieler!";
+    public static final String PLUGIN_COMMAND_WRONG_SUB_COMMAND = PLUGIN_FORMS_COMMAND_PREFIX + "Wrong Sub Command";   
 
     public static final String PLUGIN_COMMAND_PURSE_GAIN = PLUGIN_FORMS_COMMAND_PREFIX + "You gained " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " and now have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
     public static final String PLUGIN_COMMAND_PURSE_TO_ITEM = PLUGIN_FORMS_COMMAND_PREFIX + "You put out " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY;
@@ -228,7 +229,6 @@ public class Strings {
     public static final String PLUGIN_COMMAND_PROTECT_RIGHT_ADD = PLUGIN_FORMS_COMMAND_PREFIX + "Click your Protected Block to add the Player";
     public static final String PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND = PLUGIN_FORMS_COMMAND_PREFIX + "No Player found with Name: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     public static final String PLUGIN_COMMAND_PROTECT_RIGHT_REMOVE = PLUGIN_FORMS_COMMAND_PREFIX + "Click your Protected Block to remove the Player";
-    public static final String PLUGIN_COMMAND_PROTECT_WRONG_SUB_COMMAND = PLUGIN_FORMS_COMMAND_PREFIX + "Wrong Sub Command";   
 
     public static final String PLUGIN_COMMAND_SIGN_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use " + PLUGIN_COLOR_COMMAND_NAME + "/" + CommandNameConstants.PLUGIN_COMMAND_NAME_SIGN + " " + PLUGIN_COLOR_COMMAND_ARG + CommandNameConstants.PLUGIN_COMMAND_NAME_SIGN_COPY + PLUGIN_COLOR_MESSAGE + " or " + PLUGIN_COLOR_COMMAND_ARG + CommandNameConstants.PLUGIN_COMMAND_NAME_SIGN_EDIT;
     public static final String PLUGIN_COMMAND_SIGN_COPY = PLUGIN_FORMS_COMMAND_PREFIX + "Click the Sign you want to copy";
@@ -243,10 +243,8 @@ public class Strings {
     public static final String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP = PLUGIN_FORMS_COMMAND_PREFIX + "Cleaning Up " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Protections";
     public static final String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END = PLUGIN_FORMS_COMMAND_PREFIX + "Reduced to " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Protections";
     public static final String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE = PLUGIN_FORMS_COMMAND_PREFIX + "No Protections to Clean Up";
-    public static final String PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND = PLUGIN_FORMS_COMMAND_PREFIX + "Wrong Subcommand";
     public static final String PLUGIN_COMMAND_WORLD_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use this command with the following Subcommands: list load unload unloadNoSave";
     public static final String PLUGIN_COMMAND_WORLD_CREATE_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use this command with the following arguments: name(String) type(WordType String) environment (Environment as String) structures (boolean)";
-    public static final String PLUGIN_COMMAND_WORLD_WRONG_SUBCOMMAND = PLUGIN_FORMS_COMMAND_PREFIX + "Wrong Subcommand";
     public static final String PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED = "World not loaded. Can't unload this World.";
     public static final String PLUGIN_COMMAND_WORLD_UNLOAD_WORLD = PLUGIN_FORMS_COMMAND_PREFIX + "World get's saved and unloaded.";
     public static final String PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE = PLUGIN_FORMS_COMMAND_PREFIX + "World get's unloaded without saving it.";
@@ -267,6 +265,8 @@ public class Strings {
     public static final String PLUGIN_COMMAND_TP_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Nutze " + PLUGIN_COLOR_COMMAND_ARG + "/teleport <name> " + PLUGIN_COLOR_COMMAND + "," + PLUGIN_COLOR_COMMAND_ARG + "/teleport accept"+ PLUGIN_COLOR_COMMAND + ", " + PLUGIN_COLOR_COMMAND_ARG + "/teleport to <name>" + PLUGIN_COLOR_COMMAND + " oder " + PLUGIN_COLOR_COMMAND_ARG + "/teleport <x> <y> <z>";
     public static final String PLUGIN_COMMAND_TP_ACCEPT_NO_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Keine offene Teleport Anfrage!";
     public static final String PLUGIN_COMMAND_TP_SEND_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast eine Teleport Anfrage an " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " geschickt!";
+
+    public static final String PLUGIN_GRAPPLINGHOOK_COOLDOWN = PLUGIN_COLOR_NEGATIVE + "Please Slow down..";
 
     public static final String PLUGIN_BAG_AMOUNT = "Amount: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     public static final String PLUGIN_BAG_RETRIEVE = "Click to retrieve";
@@ -315,4 +315,6 @@ public class Strings {
     public static final String PLUGIN_COMMAND_PLAYERINFO_DEATHS = "Deaths: %s";
     public static final String PLUGIN_COMMAND_PLAYERINFO_JUMPED = "Jumped: %s";
     public static final String PLUGIN_COMMAND_PLAYERINFO_LEFT_GAME = "Left Game: %s";
+
+    public static final String PLUGIN_COMMAND_TEAM_TITLE = PLUGIN_FORMS_COMMAND_PREFIX + "Team:";
 }

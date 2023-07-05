@@ -14,6 +14,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.json.JSONObject;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
@@ -21,6 +22,8 @@ import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.items.GrapplingHook;
+import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
@@ -135,6 +138,14 @@ public class PlayerHelper {
         setGroup(p, g);
     }
 
+    public static void updateGroup(OfflinePlayer p, GroupEntry g) {
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
+        pe.setGroup(g);
+        pe.setUpdatedBy(pe.getID());
+        pe.setToBeUpdated(true);
+    }
+
+
     public static String getCustomName(Player p) {
         String name;
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
@@ -215,12 +226,19 @@ public class PlayerHelper {
         Player nearestPlayer = null;
         double lastDistance = Double.MAX_VALUE;
         for(Player p : loc.getWorld().getPlayers()){
-             double distanceSquared = loc.distanceSquared(p.getLocation());
-             if(distanceSquared < lastDistance){
-                  lastDistance = distanceSquared;
-                  nearestPlayer = p;
-             }
+            double distanceSquared = loc.distanceSquared(p.getLocation());
+            if(distanceSquared < lastDistance){
+                lastDistance = distanceSquared;
+                nearestPlayer = p;
+            }
         }
         return nearestPlayer;
-   }
+    }
+
+    public static void setLobbyItems(Player p){
+        p.getInventory().setItem(0, new GrapplingHook().getCustomItem());
+        p.getInventory().setItem(1, CustomItems.cloudSailor.getCustomItem());
+
+        p.getInventory().setItem(4, new WorldSelector().getCustomItem());
+    }
 }
