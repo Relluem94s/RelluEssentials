@@ -168,6 +168,10 @@ public class BagHelper {
             mat = Material.matchMaterial(name);
         }
 
+        if(mat.equals(Material.AIR)){
+            return CustomItems.npc_gui_disabled.getCustomItem();
+        }
+
         ItemStack is = new ItemStack(mat, 1);
         ItemMeta im = is.getItemMeta();
 
@@ -176,12 +180,7 @@ public class BagHelper {
         lore.add(Strings.PLUGIN_BAG_RETRIEVE);
 
         im.setLore(lore);
-
         is.setItemMeta(im);
-
-        if(mat.equals(Material.AIR)){
-            is = CustomItems.npc_gui_disabled.getCustomItem();
-        }
 
         return is;
     }
