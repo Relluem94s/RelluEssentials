@@ -1685,11 +1685,11 @@ public class DatabaseHelper {
 
                 ps.setInt(1, be.getPlayerId());
 
-                for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
+                for (int i = 0; i < BagHelper.BAG_SIZE; i++) {
                     ps.setInt(i+2, be.getSlotValue(i));
                 }
 
-                ps.setInt(16, be.getId());
+                ps.setInt(BagHelper.BAG_SIZE+2, be.getId());
 
                 ps.execute();
             }
