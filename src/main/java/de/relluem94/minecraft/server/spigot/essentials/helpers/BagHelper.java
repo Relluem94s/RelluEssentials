@@ -143,6 +143,10 @@ public class BagHelper {
         String name = bte.getSlotName(slot);
         Material mat = Material.AIR;
 
+        if(name == null){
+            return CustomItems.npc_gui_disabled.getCustomItem();
+        }
+
         if(Material.matchMaterial(name) != null){
             mat = Material.matchMaterial(name);
         }
@@ -156,11 +160,13 @@ public class BagHelper {
 
         Material mat = Material.AIR;
 
+        if(name == null){
+            return CustomItems.npc_gui_disabled.getCustomItem();
+        }
+
         if(Material.matchMaterial(name) != null){
             mat = Material.matchMaterial(name);
         }
-
-        
 
         ItemStack is = new ItemStack(mat, 1);
         ItemMeta im = is.getItemMeta();
