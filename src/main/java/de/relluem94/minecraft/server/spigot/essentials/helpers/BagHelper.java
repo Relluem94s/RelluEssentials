@@ -48,7 +48,7 @@ public class BagHelper {
             return null;
         }
 
-        Inventory inv = InventoryHelper.createInventory(36, Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ be.getBagType().getDisplayName());
+        Inventory inv = InventoryHelper.createInventory(54, Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ be.getBagType().getDisplayName());
         inv = InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
 
         inv.setItem(10, getItemStack(be, 0));
@@ -66,6 +66,23 @@ public class BagHelper {
         inv.setItem(23, getItemStack(be,11));
         inv.setItem(24, getItemStack(be,12));
         inv.setItem(25, getItemStack(be,13));
+
+        inv.setItem(28, getItemStack(be, 14));
+        inv.setItem(29, getItemStack(be, 15));
+        inv.setItem(30, getItemStack(be,16));
+        inv.setItem(31, getItemStack(be,17));
+        inv.setItem(32, getItemStack(be,18));
+        inv.setItem(33, getItemStack(be,19));
+        inv.setItem(34, getItemStack(be,20));
+
+        inv.setItem(37, getItemStack(be,21));
+        inv.setItem(38, getItemStack(be,22));
+        inv.setItem(39, getItemStack(be,23));
+        inv.setItem(40, getItemStack(be,24));
+        inv.setItem(41, getItemStack(be,25));
+        inv.setItem(42, getItemStack(be,26));
+        inv.setItem(43, getItemStack(be,27));
+
 
         return inv;
     }
@@ -143,6 +160,8 @@ public class BagHelper {
             mat = Material.matchMaterial(name);
         }
 
+        
+
         ItemStack is = new ItemStack(mat, 1);
         ItemMeta im = is.getItemMeta();
 
@@ -153,6 +172,11 @@ public class BagHelper {
         im.setLore(lore);
 
         is.setItemMeta(im);
+
+        if(mat.equals(Material.AIR)){
+            is = CustomItems.npc_gui_disabled.getCustomItem();
+        }
+
         return is;
     }
 
