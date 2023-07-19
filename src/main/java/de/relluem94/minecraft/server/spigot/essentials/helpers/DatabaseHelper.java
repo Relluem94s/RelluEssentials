@@ -251,6 +251,9 @@ public class DatabaseHelper {
         executeScript(v + "updateNPCRedSand.sql");
         executeScript(v + "updateNPCBambooBlock.sql");
         executeScript(v + "updateNPCBamboo.sql");
+        
+        executeScript(v + INSERT_NEW_DB_VERSION);
+        executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     public void init() {
