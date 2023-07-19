@@ -1552,7 +1552,7 @@ public class DatabaseHelper {
                         bte.setName(rs.getString(BagTypeEntry.FIELD_NAME));
                         bte.setCost(rs.getInt(BagTypeEntry.FIELD_COST));
 
-                        for (int i = 0; i <= 13; i++) {
+                        for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
                             bte.setSlotName(i, rs.getString(String.format(BagTypeEntry.FIELD_SLOT_VAR_NAME, (i + 1))));
                         }
                         return bte;
@@ -1585,7 +1585,7 @@ public class DatabaseHelper {
                         be.setBagTypeId(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK));
                         be.setBagType(getBagType(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK)));
 
-                        for (int i = 0; i <= 13; i++) {
+                        for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
                             be.setSlotValue(i, rs.getInt(String.format(BagEntry.FIELD_SLOT_VAR_VALUE, (i + 1))));
                         }
 
@@ -1628,7 +1628,7 @@ public class DatabaseHelper {
                         bte.setName(rs.getString("name"));
                         bte.setCost(rs.getInt("cost"));
 
-                        for (int i = 0; i <= 13; i++) {
+                        for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
                             bte.setSlotName(i, rs.getString(String.format(BagTypeEntry.FIELD_SLOT_VAR_NAME, (i + 1))));
                         }
 
@@ -1663,7 +1663,7 @@ public class DatabaseHelper {
                         be.setBagTypeId(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK));
                         be.setBagType(getBagType(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK)));
 
-                        for (int i = 0; i <= 13; i++) {
+                        for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
                             be.setSlotValue(i, rs.getInt(String.format(BagEntry.FIELD_SLOT_VAR_VALUE, (i + 1))));
                         }
 
@@ -1683,7 +1683,7 @@ public class DatabaseHelper {
 
                 ps.setInt(1, be.getPlayerId());
 
-                for (int i = 0; i <= 13; i++) {
+                for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
                     ps.setInt(i+2, be.getSlotValue(i));
                 }
 
