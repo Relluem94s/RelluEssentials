@@ -251,7 +251,7 @@ public class DatabaseHelper {
         executeScript(v + "updateNPCRedSand.sql");
         executeScript(v + "updateNPCBambooBlock.sql");
         executeScript(v + "updateNPCBamboo.sql");
-        executeScript(v + "alterBagType.sql.sql");
+        executeScript(v + "alterBagType.sql");
         executeScript(v + "alterBag.sql.sql");
     }
 
