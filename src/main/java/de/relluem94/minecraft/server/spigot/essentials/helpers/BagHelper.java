@@ -39,7 +39,7 @@ public class BagHelper {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
-    public static final int BAG_SIZE = 14;
+    public static final int BAG_SIZE = 28;
 
     public static Inventory getBag(int type, PlayerEntry pe) {
         BagEntry be = getBag(pe.getID(), type);
