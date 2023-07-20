@@ -255,6 +255,7 @@ public class DatabaseHelper {
         executeScript(v + "alterBag.sql");
         executeScript(v + "alterLumberjackBag.sql");
         executeScript(v + "alterLumberjackNPC.sql");
+        executeScript(v + "alterFarmingBag.sql");
 
 
         executeScript(v + INSERT_NEW_DB_VERSION);
