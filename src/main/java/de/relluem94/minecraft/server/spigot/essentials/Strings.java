@@ -273,6 +273,7 @@ public class Strings {
 
     public static final String PLUGIN_BAGS_SAVED = "%s%s Bag(s) saved!";
     public static final String PLUGIN_PLAYERS_SAVED = "%s%s Player(s) saved!";
+    public static final String PLUGIN_PLAYERS_INVENTORY_SAVED = "%s%s Player(s) Inventory saved!";
     public static final String PLUGIN_COMMAND_BAGS_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "The searched Bag " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "was not found!";
 
     public static final String PLUGIN_COMMAND_MARRY_SEND_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast eine Hochzeitsanfrage an " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " geschickt!";
