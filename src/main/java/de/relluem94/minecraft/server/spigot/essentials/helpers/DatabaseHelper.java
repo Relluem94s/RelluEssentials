@@ -255,6 +255,10 @@ public class DatabaseHelper {
         executeScript(v + "alterBag.sql");
         executeScript(v + "alterLumberjackBag.sql");
         executeScript(v + "insertNetherBagType.sql");
+        executeScript(v + "alterLumberjackNPC.sql");
+        executeScript(v + "alterFarmingBag.sql"); 
+        executeScript(v + "alterMiningBag.sql");
+
 
         executeScript(v + INSERT_NEW_DB_VERSION);
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
