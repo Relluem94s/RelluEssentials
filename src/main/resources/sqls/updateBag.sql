@@ -20,6 +20,20 @@ SET
 `slot_11_value` = ?,
 `slot_12_value` = ?,
 `slot_13_value` = ?,
-`slot_14_value` = ? 
+`slot_14_value` = ?, 
+`slot_15_value` = ?, 
+`slot_16_value` = ?, 
+`slot_17_value` = ?, 
+`slot_18_value` = ?, 
+`slot_19_value` = ?,
+`slot_20_value` = ?, 
+`slot_21_value` = ?, 
+`slot_22_value` = ?, 
+`slot_23_value` = ?,
+`slot_24_value` = ?,
+`slot_25_value` = ?,
+`slot_26_value` = ?,
+`slot_27_value` = ?,
+`slot_28_value` = ?   
 
 WHERE `bag`.`id` = ?; 
