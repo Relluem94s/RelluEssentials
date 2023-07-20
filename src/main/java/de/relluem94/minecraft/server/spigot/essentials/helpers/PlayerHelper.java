@@ -190,8 +190,8 @@ public class PlayerHelper {
     public static void savePlayersInv(){
         int updatedPlayers = 0;
 
-        for(PlayerEntry pe : RelluEssentials.getInstance().getPlayerAPI().getPlayerEntryMap().values()) {
-            updatedPlayers += WorldHelper.saveWorldGroupInventory(Bukkit.getPlayer(pe.getUUID())) ? 1 : 0;
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            updatedPlayers += WorldHelper.saveWorldGroupInventory(p) ? 1 : 0;
         }
 
         if(updatedPlayers != 0){
