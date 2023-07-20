@@ -187,6 +187,19 @@ public class PlayerHelper {
         }
     }
 
+    public static void savePlayersInv(){
+        int updatedPlayers = 0;
+
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            updatedPlayers += WorldHelper.saveWorldGroupInventory(p) ? 1 : 0;
+        }
+
+        if(updatedPlayers != 0){
+            ChatHelper.sendMessageInChannel(String.format(Strings.PLUGIN_PLAYERS_INVENTORY_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedPlayers), Strings.PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+        }
+    }
+
+
     public static int savePlayer(Player p){
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         return savePlayer(pe);
