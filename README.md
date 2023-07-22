@@ -182,4 +182,4 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 - WarpAPI
 
 ## Database Model
-![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.png)
+![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.svg)
