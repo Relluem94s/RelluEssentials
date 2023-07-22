@@ -2,6 +2,17 @@
 
 ### a Spigot Plugin compatible with Spigot 1.19.4
 
+# First Steps
+Find out how to get the plugin and how to use it.
+
+## Usage of Plugin
+1. [Download](https://github.com/Relluem94s/RelluEssentials/packages) or [Build](https://github.com/Relluem94s/RelluEssentials#build) the plugin jar 
+1. Copy the jar into the `plugin` Directory
+1. Start and Stop the Server
+1. Set Host, User and Password of your MySQL Server in the config.yml
+1. Start your Server again
+1. Enjoy
+
 ## Build
 1. ```shell
    git clone https://github.com/Relluem94/RelluEssentials.git
@@ -17,7 +28,7 @@
 
 
 ## Deploy Package
-1. make sure that your github token is in your maven settings.xml (~/.m2/settings.xml)
+1. Make sure that your github token is in your maven settings.xml (~/.m2/settings.xml)
 1. ```shell
     mvn --batch-mode deploy
    ```
@@ -29,12 +40,8 @@
 ```
 it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [RelluBash-Script-Collection](https://github.com/Relluem94s/RelluBash-Script-Collection)
 
-## First Steps
-1. Copy the jar into the `plugin` Directory
-1. Start and Stop the Server
-1. Set User and Password of your MySQL Server in the config.yml
-1. Start your Server again
-1. Enjoy
+# Functionality 
+What does the plugin include?
 
 ## Commands
 * Admin gives Clearing Chat, Fake AFK, Teleport to highest Block and Custom NPCs  (`/admin`) 
@@ -106,6 +113,7 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [Rell
     * Beekeeper
     * Enchanter (WIP)
 
+
 ## Bags
 * Custom Bags via Database
     * Mining Bag
@@ -114,8 +122,10 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [Rell
     * Shepherd Bag
     * Lumberjack Bag
 
+
 ## Functional Block Protections
 * Add additional Blocks via Database or via API
+
 
 ## Enchantments
 * Replenishment (Auto Replant Seeds)
@@ -123,6 +133,7 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [Rell
 * Telekinesis (Teleports item into Inventory)
 * Delicate (Prevents breaking immature Crops and Stems)
 * Thunderstrike (Strikes Entity with a Lightning Bolt)
+
 
 ## Skills
 * Skills will be reworked. Some as Enchant some as Skill. (WIP)
@@ -153,6 +164,9 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [Rell
 * No Death Message
   * Save Death Location as Home
   * Show Location in Chat (private)
+
+# Documentation
+How it is working? What's under the hood?
 
 ## Helpers
 - AttributeHelper
@@ -188,6 +202,7 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [Rell
 - PlayerAPI
 - ProtectionAPI
 - WarpAPI
+
 
 ## Database Model
 ![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.svg)
