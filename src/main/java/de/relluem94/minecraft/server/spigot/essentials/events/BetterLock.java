@@ -32,6 +32,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.EventCon
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_RIGHTS;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Nameable;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -71,13 +73,21 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -102,7 +112,7 @@ public class BetterLock implements Listener {
         }
     }
 
-    private boolean handleMoveItemEvent(Inventory inventory) {
+    private boolean handleMoveItemEvent(Inventory inventory, ItemStack is, boolean isSource) {
         Location location;
         InventoryHolder holder;
         if(inventory != null){
@@ -124,6 +134,44 @@ public class BetterLock implements Listener {
                 return false; 
             }
             else{
+                BlockState state = location.getBlock().getState();
+                if((state instanceof Nameable)) {
+                    String name = ((Nameable)state).getCustomName();
+                    
+                    if(name.contains("Auto-Seller")){
+                        int sellPriceItem = ItemPrice.valueOf(is.getType().name()).getSellPrice() * is.getAmount();
+                        
+
+                        if(!isSource){
+                            Bukkit.broadcastMessage(name + " " + sellPriceItem);
+                       
+                            ItemStack coin = CustomItems.coins.getCustomItem();
+                            ItemMeta im = coin.getItemMeta();
+                            im.setLore(Arrays.asList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
+                            im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, sellPriceItem);
+
+                            coin.setItemMeta(im);
+
+                            inventory.addItem(coin);
+
+                            new BukkitRunnable() {
+                            @Override
+                                public void run() {
+                                    inventory.remove(is);
+                                }
+                            }.runTaskLater(RelluEssentials.getInstance(),  1l);
+
+                            return false;
+                        }
+                        else{
+                            return false;
+                        }
+                    }
+                }
+
+
+
+
                 return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOWHOPPER);
             }
         }
@@ -804,7 +852,7 @@ public class BetterLock implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onMoveItem(InventoryMoveItemEvent e) {
-        if (handleMoveItemEvent(e.getSource()) || handleMoveItemEvent(e.getDestination())){
+        if (handleMoveItemEvent(e.getSource(), e.getItem(), true) || handleMoveItemEvent(e.getDestination(), e.getItem(), false)){
             e.setCancelled(true); 
         }
     }
