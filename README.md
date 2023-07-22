@@ -2,7 +2,7 @@
 
 ### a Spigot Plugin compatible with Spigot 1.19.4
 
-## Development / Build
+## Build
 1. ```shell
    git clone https://github.com/Relluem94/RelluEssentials.git
    ```
@@ -15,11 +15,19 @@
    mvn clean install
    ```
 
-For Development you can use 
+
+## Deploy Package
+1. make sure that your github token is in your maven settings.xml (~/.m2/settings.xml)
+1. ```shell
+    mvn --batch-mode deploy
+   ```
+
+
+## Development
 ```shell
 ./MinecraftDevelopmentEnvironment.sh
 ```
-it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
+it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [RelluBash-Script-Collection](https://github.com/Relluem94s/RelluBash-Script-Collection)
 
 ## First Steps
 1. Copy the jar into the `plugin` Directory
