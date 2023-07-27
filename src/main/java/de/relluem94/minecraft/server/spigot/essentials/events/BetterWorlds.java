@@ -15,7 +15,7 @@ public class BetterWorlds implements Listener {
     public void onWorldChange(PlayerChangedWorldEvent e){
         Player p = e.getPlayer();
         
-        WorldHelper.saveWorldGroupInventory(p, e.getFrom());
+        WorldHelper.saveWorldGroupInventory(p, e.getFrom(), true);
         WorldHelper.loadWorldGroupInventory(p);
 
 

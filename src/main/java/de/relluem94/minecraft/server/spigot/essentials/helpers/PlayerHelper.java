@@ -5,6 +5,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COL
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_SPACER_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_PREFIX;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -12,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
@@ -191,7 +194,7 @@ public class PlayerHelper {
         int updatedPlayers = 0;
 
         for(Player p : Bukkit.getOnlinePlayers()) {
-            updatedPlayers += WorldHelper.saveWorldGroupInventory(p) ? 1 : 0;
+            updatedPlayers += WorldHelper.saveWorldGroupInventory(p, false) ? 1 : 0;
         }
 
         if(updatedPlayers != 0){
@@ -249,9 +252,36 @@ public class PlayerHelper {
     }
 
     public static void setLobbyItems(Player p){
-        p.getInventory().setItem(0, new GrapplingHook().getCustomItem());
-        p.getInventory().setItem(1, CustomItems.cloudSailor.getCustomItem());
+        GrapplingHook gh = new GrapplingHook();
+        WorldSelector ws = new WorldSelector();
 
-        p.getInventory().setItem(4, new WorldSelector().getCustomItem());
+        List<ItemStack> lis = new ArrayList<>();
+
+        for(ItemStack i : p.getInventory().getContents()){
+            if(i == null){
+                continue;
+            }
+
+            if(i.isSimilar(gh.getCustomItem())){
+                p.getInventory().remove(i);
+            }
+
+            if(i.isSimilar(CustomItems.cloudSailor.getCustomItem())){
+                p.getInventory().remove(i);
+            }
+
+            if(i.getType().equals(ws.getCustomItem().getType()) && i.hasItemMeta() && i.getItemMeta().getDisplayName().equals(ws.getDisplayName())){
+                p.getInventory().remove(i);
+            }
+        }
+    
+        p.getInventory().setArmorContents(new ItemStack[]{null, null, null, null});
+        p.getInventory().setItemInOffHand(null);
+    
+        
+
+        p.getInventory().setItem(0, gh.getCustomItem());
+        p.getInventory().setItem(1, CustomItems.cloudSailor.getCustomItem());
+        p.getInventory().setItem(4, ws.getCustomItem());
     }
 }
