@@ -191,7 +191,7 @@ public class PlayerHelper {
         int updatedPlayers = 0;
 
         for(Player p : Bukkit.getOnlinePlayers()) {
-            updatedPlayers += WorldHelper.saveWorldGroupInventory(p) ? 1 : 0;
+            updatedPlayers += WorldHelper.saveWorldGroupInventory(p, false) ? 1 : 0;
         }
 
         if(updatedPlayers != 0){
