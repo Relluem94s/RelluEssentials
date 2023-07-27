@@ -47,7 +47,7 @@ public class Sudo implements CommandExecutor {
                         if (target != null && RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID()) != null) {
                             PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID());
                             SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
-                            WorldHelper.saveWorldGroupInventory(p);
+                            WorldHelper.saveWorldGroupInventory(p, true);
                             pe.setID(tpe.getID());
                             pe.setCustomName(tpe.getCustomName());
                             pe.setGroup(tpe.getGroup());
@@ -88,7 +88,7 @@ public class Sudo implements CommandExecutor {
     public static void exitSudo(Player p){
         PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-        WorldHelper.saveWorldGroupInventory(p);
+        WorldHelper.saveWorldGroupInventory(p, true);
         pe.setID(tpe.getID());
         pe.setCustomName(tpe.getCustomName());
         pe.setGroup(tpe.getGroup());
