@@ -244,17 +244,17 @@ public class WorldHelper {
         
     }
 
-    public static boolean saveWorldGroupInventory(Player p){
-        return saveWorldGroupInventory(p, p.getWorld());
+    public static boolean saveWorldGroupInventory(Player p, boolean clear){
+        return saveWorldGroupInventory(p, p.getWorld(), clear);
     }
 
-    public static boolean saveWorldGroupInventory(Player p, World w){
+    public static boolean saveWorldGroupInventory(Player p, World w, boolean clear){
         boolean entryUpdated = false;
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
             for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 if(w.getName().equals(we.getName())){
-                    entryUpdated = savePlayerInv(wge, pe, p);
+                    entryUpdated = savePlayerInv(wge, pe, p, clear);
                 }
             }
         }
@@ -277,7 +277,7 @@ public class WorldHelper {
         return hasInvInWorldGroup;
     }
 
-    private static boolean savePlayerInv(WorldGroupEntry wge, PlayerEntry pe, Player p){
+    private static boolean savePlayerInv(WorldGroupEntry wge, PlayerEntry pe, Player p, boolean clear){
         WorldGroupInventoryEntry wgie = RelluEssentials.getInstance().getDatabaseHelper().getWorldGroupInventory(pe, wge);
         if(wgie == null){
             wgie = new WorldGroupInventoryEntry();
@@ -290,9 +290,13 @@ public class WorldHelper {
             wgie.setHealth(p.getHealth());
 
             wgie.setTotalExperience(ExperienceHelper.getTotalExperience(p));
-            p.setTotalExperience(0);
-            p.setLevel(0);
-            p.setExp(0);
+
+            if(clear){
+                p.setTotalExperience(0);
+                p.setLevel(0);
+                p.setExp(0);
+                p.getInventory().clear();
+            }
 
             RelluEssentials.getInstance().getDatabaseHelper().insertWorldGroupInventory(wgie);
             return false;
@@ -305,9 +309,13 @@ public class WorldHelper {
         wgie.setUpdatedBy(pe.getID());
 
         wgie.setTotalExperience(ExperienceHelper.getTotalExperience(p));
-        p.setTotalExperience(0);
-        p.setLevel(0);
-        p.setExp(0);
+       
+        if(clear){
+            p.setTotalExperience(0);
+            p.setLevel(0);
+            p.setExp(0);
+            p.getInventory().clear();
+        }
 
         RelluEssentials.getInstance().getDatabaseHelper().updateWorldGroupInventory(wgie);
         return true;
