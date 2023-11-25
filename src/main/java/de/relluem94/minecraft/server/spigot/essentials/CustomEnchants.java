@@ -81,4 +81,34 @@ public class CustomEnchants {
             50
         )
     );
+
+    public static final EnchantmentHelper scavengersI = new EnchantmentHelper(
+        new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS1, EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS1_DISPLAYNAME), 
+        EnchantmentTarget.WEAPON, 
+        new EnchantLevel(1, 1), 
+        Arrays.asList(Enchantment.VANISHING_CURSE), 
+        EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS1_LORE, 
+        Rarity.EPIC,
+        AttributeHelper.addAttribute()
+    );
+
+    public static final EnchantmentHelper scavengersII = new EnchantmentHelper(
+        new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS2, EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS2_DISPLAYNAME), 
+        EnchantmentTarget.WEAPON, 
+        new EnchantLevel(2, 2), 
+        Arrays.asList(Enchantment.VANISHING_CURSE), 
+        EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS2_LORE, 
+        Rarity.EPIC,
+        AttributeHelper.addAttribute()
+    );
+
+    public static final EnchantmentHelper scavengersIII = new EnchantmentHelper(
+        new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS3, EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS3_DISPLAYNAME), 
+        EnchantmentTarget.WEAPON, 
+        new EnchantLevel(3, 3), 
+        Arrays.asList(Enchantment.VANISHING_CURSE), 
+        EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS3_LORE, 
+        Rarity.EPIC,
+        AttributeHelper.addAttribute()
+    );
 }

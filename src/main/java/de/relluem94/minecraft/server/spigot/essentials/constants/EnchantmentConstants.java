@@ -45,4 +45,19 @@ public class EnchantmentConstants {
     public static final String PLUGIN_ENCHANTMENT_THUNDERSTRIKE_UUID = "01277108-fca1-452c-8cf7-de3968f8a636";
     public static final String PLUGIN_ENCHANTMENT_THUNDERSTRIKE_DISPLAYNAME = PLUGIN_ENCHANTMENT_COLOR_WEAPON + "Thunderstrike";
     public static final String PLUGIN_ENCHANTMENT_THUNDERSTRIKE_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Hits Target with a Thunderstrike";
+
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS1 = "scavengers1";
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS1_UUID = "ca9a6433-6e91-4d2c-a6ad-d34a577de1a8";
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS1_DISPLAYNAME = PLUGIN_ENCHANTMENT_COLOR_WEAPON + "Scavengers I";
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS1_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Get 2x Coins for Kills";
+
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS2 = "scavengers2";
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS2_UUID = "340bbc57-2ae5-4a17-b6d9-912241ed645f";
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS2_DISPLAYNAME = PLUGIN_ENCHANTMENT_COLOR_WEAPON + "Scavengers II";
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS2_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Get 3x Coins for Kills";
+
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS3 = "scavengers3";
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS3_UUID = "2c0d4fb2-3ed4-4b81-b1cc-eda6da240ec7";
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS3_DISPLAYNAME = PLUGIN_ENCHANTMENT_COLOR_WEAPON + "Scavengers III";
+    public static final String PLUGIN_ENCHANTMENT_SCAVENGERS3_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Get 4x Coins for Kills";
 }
