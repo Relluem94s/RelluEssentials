@@ -66,13 +66,13 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.0.33</version>
+            <version>8.2.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.seeseemelk</groupId>
-            <artifactId>MockBukkit-v1.18</artifactId> <!-- v1.19-->
-            <version>2.85.2</version> <!--2.145.0 -->
+            <artifactId>MockBukkit-v1.20</artifactId>
+            <version>3.19.1</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>com.github.vorburger</groupId>
             <artifactId>MariaDB4j</artifactId>
-            <version>main-SNAPSHOT</version>
+            <version>main-mariaDB4j-2.6.0-g56dd321-50</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>

@@ -98,8 +98,8 @@
     </dependency>
     <dependency>
       <groupId>com.github.seeseemelk</groupId>
-      <artifactId>MockBukkit-v1.18</artifactId>
-      <version>2.85.2</version>
+      <artifactId>MockBukkit-v1.20</artifactId>
+      <version>3.19.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -115,19 +115,23 @@
           <groupId>org.junit.jupiter</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>hamcrest-library</artifactId>
-          <groupId>org.hamcrest</groupId>
+          <artifactId>adventure-platform-bungeecord</artifactId>
+          <groupId>net.kyori</groupId>
         </exclusion>
         <exclusion>
           <artifactId>annotations</artifactId>
           <groupId>org.jetbrains</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>byte-buddy</artifactId>
+          <groupId>net.bytebuddy</groupId>
         </exclusion>
       </exclusions>
     </dependency>
     <dependency>
       <groupId>com.github.vorburger</groupId>
       <artifactId>MariaDB4j</artifactId>
-      <version>main-SNAPSHOT</version>
+      <version>main-mariaDB4j-2.6.0-g56dd321-50</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
