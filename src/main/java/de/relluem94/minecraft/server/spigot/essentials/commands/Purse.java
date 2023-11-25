@@ -69,11 +69,8 @@ public class Purse implements CommandExecutor {
                         return true;
                     }
                 }
-                if(TypeHelper.isLong(args[0])){
-                    p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_TO_HIGH);
-                    return true;
-                }
-                else if(TypeHelper.isInt(args[0])){
+                
+                if(TypeHelper.isInt(args[0])){
                     PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
                     double purse = pe.getPurse();
                     int coins = Math.abs(Integer.parseInt(args[0]));
@@ -102,6 +99,10 @@ public class Purse implements CommandExecutor {
 
                     p.getInventory().addItem(coin);
                     p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TO_ITEM, StringHelper.formatInt(coins)));
+                    return true;
+                }
+                else if(TypeHelper.isLong(args[0])){
+                    p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_TO_HIGH);
                     return true;
                 }
 
