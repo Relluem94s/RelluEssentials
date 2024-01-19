@@ -1,5 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAGS_SAVED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_AMOUNT;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_CLICK_TO_BUY;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_CLICK_TO_OPEN;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_COST_TO_BUY;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_GUI_TITLE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_RETRIEVE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_SPACER_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_INTERNAL_UTILITY_CLASS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CHAT_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 import java.util.ArrayList;
@@ -19,7 +30,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
@@ -36,7 +46,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 public class BagHelper {
 
     private BagHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static final int BAG_SIZE = 28;
@@ -48,7 +58,7 @@ public class BagHelper {
             return null;
         }
 
-        Inventory inv = InventoryHelper.createInventory(54, Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ be.getBagType().getDisplayName());
+        Inventory inv = InventoryHelper.createInventory(54, PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ be.getBagType().getDisplayName());
         inv = InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
 
         inv.setItem(10, getItemStack(be, 0));
@@ -87,7 +97,7 @@ public class BagHelper {
         return inv;
     }
 
-    public static final String MAIN_GUI = Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ "Bags";
+    public static final String MAIN_GUI = PLUGIN_BAG_GUI_TITLE;
 
     public static Inventory getBags(boolean npc, String title){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title), CustomItems.npc_gui_disabled.getCustomItem());
@@ -122,10 +132,10 @@ public class BagHelper {
     public static ItemHelper getItem(BagTypeEntry bte, boolean npc){
         String[] lore;
         if(npc){
-            lore = new String[]{"Click to buy this Bag", "Costs: " + bte.getCost()}; //TODO add to Strings
+            lore = new String[]{PLUGIN_BAG_CLICK_TO_BUY, String.format(PLUGIN_BAG_COST_TO_BUY,  bte.getCost())};
         }
         else{
-            lore = new String[]{"Click to open"};
+            lore = new String[]{PLUGIN_BAG_CLICK_TO_OPEN};
         }
         return new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG), bte.getDisplayName(), Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore));
     }
@@ -176,8 +186,8 @@ public class BagHelper {
         ItemMeta im = is.getItemMeta();
 
         List<String> lore = new ArrayList<>();
-        lore.add(String.format(Strings.PLUGIN_BAG_AMOUNT, value));
-        lore.add(Strings.PLUGIN_BAG_RETRIEVE);
+        lore.add(String.format(PLUGIN_BAG_AMOUNT, value));
+        lore.add(PLUGIN_BAG_RETRIEVE);
 
         im.setLore(lore);
         is.setItemMeta(im);
@@ -347,7 +357,7 @@ public class BagHelper {
             }
         }
         if(updatedBags != 0){
-            sendMessageInChannel(String.format(Strings.PLUGIN_BAGS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedBags), Strings.PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+            sendMessageInChannel(String.format(PLUGIN_BAGS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedBags), PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
         }
     }
 }

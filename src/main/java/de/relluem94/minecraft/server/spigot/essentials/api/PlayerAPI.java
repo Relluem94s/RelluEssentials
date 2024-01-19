@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
 import org.bukkit.entity.Player;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -68,7 +70,7 @@ public class PlayerAPI {
      * @param playerFK
      * @param bagEntry
      */
-    public void putPlayerBagEntry(int playerFK, BagEntry bagEntry){
+    public void putPlayerBagEntry(int playerFK, @Nonnull BagEntry bagEntry){
         playerBagEntryMap.put(playerFK, bagEntry);
     }
 

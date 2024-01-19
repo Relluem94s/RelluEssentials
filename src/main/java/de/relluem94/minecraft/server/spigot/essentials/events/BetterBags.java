@@ -41,8 +41,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 public class BetterBags implements Listener {
 
-    private List<Player> pl = new ArrayList<>();
-
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
         Player p = e.getPlayer();

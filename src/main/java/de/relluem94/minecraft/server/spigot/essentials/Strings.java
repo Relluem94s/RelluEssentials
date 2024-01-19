@@ -270,6 +270,10 @@ public class Strings {
 
     public static final String PLUGIN_BAG_AMOUNT = "Amount: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     public static final String PLUGIN_BAG_RETRIEVE = "Click to retrieve";
+    public static final String PLUGIN_BAG_CLICK_TO_OPEN = "Click to open";
+    public static final String PLUGIN_BAG_CLICK_TO_BUY = "Click to buy this Bag";
+    public static final String PLUGIN_BAG_COST_TO_BUY = "Costs: %s";
+    public static final String PLUGIN_BAG_GUI_TITLE =  PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE + "Bags";
 
     public static final String PLUGIN_BAGS_SAVED = "%s%s Bag(s) saved!";
     public static final String PLUGIN_PLAYERS_SAVED = "%s%s Player(s) saved!";

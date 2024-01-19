@@ -5,8 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COL
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_SPACER_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_PREFIX;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -254,8 +252,6 @@ public class PlayerHelper {
     public static void setLobbyItems(Player p){
         GrapplingHook gh = new GrapplingHook();
         WorldSelector ws = new WorldSelector();
-
-        List<ItemStack> lis = new ArrayList<>();
 
         for(ItemStack i : p.getInventory().getContents()){
             if(i == null){

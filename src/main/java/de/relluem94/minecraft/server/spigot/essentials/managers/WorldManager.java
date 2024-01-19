@@ -28,15 +28,19 @@ public class WorldManager implements IEnable, IDisable {
         if(RelluEssentials.getInstance().isUnitTest()){
             return;
         }
+
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + "Worlds Size: " + RelluEssentials.getInstance().worldsMap.size());
         for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+            if(wge == null){
+                continue;
+            }
             for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 if(!WorldHelper.worldExists(we.getName())){
                     createWorld(we);
                     continue;        
                 }
 
-                for(World w: Bukkit.getWorlds()){ // TODO seems like double fors
+                for(World w: Bukkit.getWorlds()){
                     if(!w.getName().equals(we.getName())){
                         WorldHelper.loadWorld(we.getName());
                         setStandardGameRules(we.getName());
@@ -52,6 +56,10 @@ public class WorldManager implements IEnable, IDisable {
             return;
         }
         for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+            if(wge == null){
+                continue;
+            }
+
             for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 try{
                     WorldHelper.unloadWorld(we.getName(), true);
