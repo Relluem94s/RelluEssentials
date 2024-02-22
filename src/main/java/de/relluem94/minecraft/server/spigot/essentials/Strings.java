@@ -213,6 +213,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_PURSE_GAIN = PLUGIN_FORMS_COMMAND_PREFIX + "You gained " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " and now have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
     public static final String PLUGIN_COMMAND_PURSE_TO_ITEM = PLUGIN_FORMS_COMMAND_PREFIX + "You put out " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY;
     public static final String PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_TO_HIGH = PLUGIN_FORMS_COMMAND_PREFIX + "The value you entered is to high!";
+    public static final String PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_INVALID = PLUGIN_FORMS_COMMAND_PREFIX + "The value you entered is invalid!";
     public static final String PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY = PLUGIN_FORMS_COMMAND_PREFIX + "Not enough " + PLUGIN_NAME_MONEY;
     public static final String PLUGIN_COMMAND_PURSE_TOTAL = PLUGIN_FORMS_COMMAND_PREFIX + "You have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
     public static final String PLUGIN_COMMAND_PURSE_TOTAL_OTHER = PLUGIN_FORMS_COMMAND_PREFIX + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " has " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in the Purse!";
