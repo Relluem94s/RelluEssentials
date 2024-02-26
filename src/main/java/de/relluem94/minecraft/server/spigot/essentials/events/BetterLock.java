@@ -68,6 +68,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -107,6 +108,11 @@ public class BetterLock implements Listener {
         InventoryHolder holder;
         if(inventory != null){
             holder = inventory.getHolder();
+            
+            if(inventory.getType().equals(InventoryType.HOPPER)){
+                return false;
+            }
+
             try {
                 if (holder instanceof BlockState) {
                     location = ((BlockState)holder).getLocation();
@@ -118,7 +124,7 @@ public class BetterLock implements Listener {
             } catch (Exception e) {
                 return false;
             } 
-            
+
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(location);
             if (protection == null){
                 return false; 
