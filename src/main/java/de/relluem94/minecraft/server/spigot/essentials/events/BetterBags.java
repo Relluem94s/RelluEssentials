@@ -40,7 +40,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 public class BetterBags implements Listener {
-
+    
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
         Player p = e.getPlayer();
@@ -65,18 +65,51 @@ public class BetterBags implements Listener {
         }
 
         if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
-            Block block = e.getBlock();
             int dropCount = 0;
 
-            if(isSugarCaneOrIsBamboo(block)){
-                while(isSugarCaneOrIsBamboo(block.getRelative(BlockFace.UP))){
-                    dropCount++;
-                    block.setType(Material.AIR);
-                    block = block.getRelative(BlockFace.UP);
+            if(isChorusPlant(b)){
+                List<Block> blocks = new ArrayList<>();
+                List<Block> newBlocks = new ArrayList<>();
+                blocks.add(b);
+
+                newBlocks.addAll(getNextChorusPlantBlock(b));
+                blocks.addAll(newBlocks);
+
+                int upperLimit = 20;
+                int actualLimt = 0;
+
+                while(!newBlocks.isEmpty()){
+                    System.out.println("While >> " + actualLimt + " " + newBlocks.size() + " " + blocks.size());
+
+
+                    actualLimt++;
+
+                    if(actualLimt == upperLimit){
+                        break;
+                    }
+
+                    List<Block> newBlocks2 = getAllChorusPlantBlocks(newBlocks);
+                    newBlocks.clear();
+                    newBlocks.addAll(newBlocks2);
+                    blocks.addAll(newBlocks);
                 }
 
-                if(isSugarCaneOrIsBamboo(block)){
-                    block.setType(Material.AIR);
+                if(blocks.size() <= 30){
+                    for(Block block : blocks){
+                        block.setType(Material.DIAMOND_BLOCK);
+                    }
+                }
+            }
+
+            if(isSugarCaneOrIsBamboo(b)){
+                while(isSugarCaneOrIsBamboo(b.getRelative(BlockFace.UP))){
+                    dropCount++;
+                    b.setType(Material.AIR);
+                    b = b.getRelative(BlockFace.UP);
+                }
+
+                if(isSugarCaneOrIsBamboo(b)){
+                    b.setType(Material.AIR);
                     dropCount++;
                 }
 
@@ -88,6 +121,46 @@ public class BetterBags implements Listener {
                 }
             }
         }
+    }
+
+    private List<Block> getAllChorusPlantBlocks(List<Block> blocks) {
+        List<Block> newBlocks = new ArrayList<>();
+        for(Block block : blocks){
+            newBlocks.addAll(getNextChorusPlantBlock(block));
+        }
+
+        System.out.println("For >> " + blocks.size() + " " + newBlocks.size());
+
+        return newBlocks;
+    }
+
+    private List<Block> getNextChorusPlantBlock(Block block){
+        List<Block> blocks = new ArrayList<>();
+        if(block.getRelative(BlockFace.UP).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.UP).getType().equals(Material.CHORUS_FLOWER)){
+            blocks.add(block.getRelative(BlockFace.UP));
+        }
+
+        if(block.getRelative(BlockFace.WEST).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.WEST).getType().equals(Material.CHORUS_FLOWER)){
+            blocks.add(block.getRelative(BlockFace.WEST));
+        }
+
+        if(block.getRelative(BlockFace.SOUTH).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.SOUTH).getType().equals(Material.CHORUS_FLOWER)){
+            blocks.add(block.getRelative(BlockFace.SOUTH));
+        }
+
+        if(block.getRelative(BlockFace.NORTH).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.NORTH).getType().equals(Material.CHORUS_FLOWER)){
+            blocks.add(block.getRelative(BlockFace.NORTH));
+        }
+
+        if(block.getRelative(BlockFace.EAST).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.EAST).getType().equals(Material.CHORUS_FLOWER)){
+            blocks.add(block.getRelative(BlockFace.EAST));
+        }
+
+        return blocks;
+    }
+
+    private boolean isChorusPlant(Block block){
+        return block.getType().equals(Material.CHORUS_PLANT);
     }
 
     private boolean isSugarCaneOrIsBamboo(Block b){
