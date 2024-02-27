@@ -1,8 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -11,7 +9,10 @@ import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.MultipleFacing;
+import org.bukkit.block.data.type.Chest;
 import org.bukkit.block.data.type.Cocoa;
+import org.bukkit.craftbukkit.v1_20_R1.block.impl.CraftChorusFlower;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -69,30 +70,10 @@ public class BetterBags implements Listener {
 
             if(isChorusPlant(b)){
                 List<Block> blocks = new ArrayList<>();
-                List<Block> newBlocks = new ArrayList<>();
-                blocks.add(b);
 
-                newBlocks.addAll(getNextChorusPlantBlock(b));
-                blocks.addAll(newBlocks);
-
-                int upperLimit = 20;
-                int actualLimt = 0;
-
-                while(!newBlocks.isEmpty()){
-                    System.out.println("While >> " + actualLimt + " " + newBlocks.size() + " " + blocks.size());
+                blocks.addAll(getChorusBlocks(b,0, null));
 
 
-                    actualLimt++;
-
-                    if(actualLimt == upperLimit){
-                        break;
-                    }
-
-                    List<Block> newBlocks2 = getAllChorusPlantBlocks(newBlocks);
-                    newBlocks.clear();
-                    newBlocks.addAll(newBlocks2);
-                    blocks.addAll(newBlocks);
-                }
 
                 if(blocks.size() <= 30){
                     for(Block block : blocks){
@@ -123,44 +104,39 @@ public class BetterBags implements Listener {
         }
     }
 
-    private List<Block> getAllChorusPlantBlocks(List<Block> blocks) {
-        List<Block> newBlocks = new ArrayList<>();
-        for(Block block : blocks){
-            newBlocks.addAll(getNextChorusPlantBlock(block));
-        }
-
-        System.out.println("For >> " + blocks.size() + " " + newBlocks.size());
-
-        return newBlocks;
+    private boolean isChorusPlant(Block block){
+        return block.getType().equals(Material.CHORUS_PLANT);
     }
 
-    private List<Block> getNextChorusPlantBlock(Block block){
-        List<Block> blocks = new ArrayList<>();
-        if(block.getRelative(BlockFace.UP).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.UP).getType().equals(Material.CHORUS_FLOWER)){
-            blocks.add(block.getRelative(BlockFace.UP));
+    private Set<Block> getChorusBlocks(Block b, int count, BlockFace prevBlockFace){
+        Set<Block> blocks = new LinkedHashSet<>();
+
+        count ++;
+        if(count == 30){
+            return blocks;
         }
 
-        if(block.getRelative(BlockFace.WEST).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.WEST).getType().equals(Material.CHORUS_FLOWER)){
-            blocks.add(block.getRelative(BlockFace.WEST));
-        }
+        if(isChorusPlant(b)){
+            if(b.getBlockData() instanceof MultipleFacing bdf){
+                for(BlockFace bf : bdf.getFaces()){
+                    if(bf.equals(BlockFace.DOWN)){
+                        continue;
+                    }
 
-        if(block.getRelative(BlockFace.SOUTH).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.SOUTH).getType().equals(Material.CHORUS_FLOWER)){
-            blocks.add(block.getRelative(BlockFace.SOUTH));
-        }
+                    if((bf.equals(prevBlockFace))){
+                        continue;
+                    }
 
-        if(block.getRelative(BlockFace.NORTH).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.NORTH).getType().equals(Material.CHORUS_FLOWER)){
-            blocks.add(block.getRelative(BlockFace.NORTH));
-        }
+                    Block block = b.getRelative(bf);
+                    blocks.add(block);
 
-        if(block.getRelative(BlockFace.EAST).getType().equals(Material.CHORUS_PLANT) || block.getRelative(BlockFace.EAST).getType().equals(Material.CHORUS_FLOWER)){
-            blocks.add(block.getRelative(BlockFace.EAST));
+                    System.out.println(count + " " + blocks.size() + " " + bf.name());
+                    blocks.addAll(getChorusBlocks(block, 28, bf.getOppositeFace()));
+                }
+            }
         }
 
         return blocks;
-    }
-
-    private boolean isChorusPlant(Block block){
-        return block.getType().equals(Material.CHORUS_PLANT);
     }
 
     private boolean isSugarCaneOrIsBamboo(Block b){
