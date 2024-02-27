@@ -264,6 +264,16 @@ public class DatabaseHelper {
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
+    private void patch7() {
+        String v = "patches/v7/";
+      
+        executeScript(v + "alterFarmingBag.sql"); 
+        executeScript(v + "alterFarmingBagType.sql"); 
+
+        executeScript(v + INSERT_NEW_DB_VERSION);
+        executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
     public void init() {
         applyPatch(getPluginInformation().getDbVersion());
     }
@@ -280,6 +290,7 @@ public class DatabaseHelper {
                 patch4();
                 patch5();
                 patch6();
+                patch7();
                 break;
             case 1:
                 patch2();
@@ -287,29 +298,37 @@ public class DatabaseHelper {
                 patch4();
                 patch5();
                 patch6();
+                patch7();
                 break;
             case 2:
                 patch3();
                 patch4();
                 patch5();
                 patch6();
+                patch7();
                 break;
             case 3:
                 patch4();
                 patch5();
                 patch6();
+                patch7();
                 break;
             case 4:
                 patch5();
                 patch6();
+                patch7();
                 break;
             case 5:
                 patch6();
+                patch7();
+                break;
+            case 6:
+                patch7();
                 break;
             default:
 
                 if (insertScripts) {
-                    String v = "patches/v6/";
+                    String v = "patches/v7/";
                     executeScript(v + "script.sql");
                 }
                 break;
