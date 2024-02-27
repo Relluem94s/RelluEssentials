@@ -269,6 +269,7 @@ public class DatabaseHelper {
       
         executeScript(v + "alterFarmingBag.sql"); 
         executeScript(v + "alterFarmingBagType.sql"); 
+        executeScript(v + "alterMiningBagType.sql"); 
 
         executeScript(v + INSERT_NEW_DB_VERSION);
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
