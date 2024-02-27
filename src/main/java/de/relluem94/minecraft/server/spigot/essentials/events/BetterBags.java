@@ -10,9 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.MultipleFacing;
-import org.bukkit.block.data.type.Chest;
 import org.bukkit.block.data.type.Cocoa;
-import org.bukkit.craftbukkit.v1_20_R1.block.impl.CraftChorusFlower;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,13 +46,12 @@ public class BetterBags implements Listener {
         Block b = e.getBlock();
         Material m = b.getType();
         
-        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.delicate)){
+        if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.delicate)){
             if(m.equals(Material.PUMPKIN_STEM) || m.equals(Material.MELON_STEM) || m.equals(Material.ATTACHED_PUMPKIN_STEM) || m.equals(Material.ATTACHED_MELON_STEM)){
                 e.setCancelled(true);
             } 
             
-            if(e.getBlock().getBlockData() instanceof Ageable){
-                Ageable age = (Ageable) e.getBlock().getBlockData();
+            if(e.getBlock().getBlockData() instanceof Ageable age){
                 if(age.getAge() != age.getMaximumAge() && (!m.equals(Material.SUGAR_CANE))){
                     e.setCancelled(true);
                 }
@@ -65,17 +62,14 @@ public class BetterBags implements Listener {
             }
         }
 
-        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
+        if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
             int dropCount = 0;
 
             if(isChorusPlant(b)){
-                List<Block> blocks = new ArrayList<>();
 
-                blocks.addAll(getChorusBlocks(b,0, null));
+                List<Block> blocks = new ArrayList<>(getChorusBlocks(b, 0, null));
 
-
-
-                if(blocks.size() <= 30){
+                if(blocks.size() <= 50){
                     for(Block block : blocks){
                         block.setType(Material.DIAMOND_BLOCK);
                     }
@@ -97,8 +91,8 @@ public class BetterBags implements Listener {
                 if(!m.equals(Material.AIR)){
                     Item item = e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(m, dropCount));
 
-                    EntityPickupItemEvent epie = new EntityPickupItemEvent(p, item, dropCount);
-                    Bukkit.getPluginManager().callEvent(epie);
+                    EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item, dropCount);
+                    Bukkit.getPluginManager().callEvent(entityPickupItemEvent);
                 }
             }
         }
@@ -128,10 +122,11 @@ public class BetterBags implements Listener {
                     }
 
                     Block block = b.getRelative(bf);
-                    blocks.add(block);
 
-                    System.out.println(count + " " + blocks.size() + " " + bf.name());
-                    blocks.addAll(getChorusBlocks(block, 28, bf.getOppositeFace()));
+                    if(blocks.add(block)){
+                        System.out.println(count + " " + blocks.size() + " " + bf.name());
+                        blocks.addAll(getChorusBlocks(block, 28, bf.getOppositeFace()));
+                    }
                 }
             }
         }
@@ -143,7 +138,7 @@ public class BetterBags implements Listener {
         return b.getType().equals(Material.SUGAR_CANE) || b.getType().equals(Material.BAMBOO);
     }
 
-    private Random r = new Random();
+    private final Random random = new Random();
 
     @EventHandler
     public void onBlockDrop(BlockDropItemEvent e) {
@@ -154,18 +149,17 @@ public class BetterBags implements Listener {
             if(RelluEssentials.getInstance().dropMap.containsKey(i.getItemStack().getType())){
                 if(i.getItemStack().getAmount() == 1){ 
                     DoubleStore ds = RelluEssentials.getInstance().dropMap.get(i.getItemStack().getType());
-                    i.getItemStack().setAmount(r.nextInt((int)ds.getSecondValue()) + (int)ds.getValue());
+                    i.getItemStack().setAmount(random.nextInt((int)ds.getSecondValue()) + (int)ds.getValue());
                 }
             }            
         }
 
-        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.replenishment)){
+        if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.replenishment)){
             for(int i = 0; i < e.getItems().size(); i++){
                 if(e.getItems().get(i) != null && RelluEssentials.getInstance().crops.containsKey(e.getItems().get(i).getItemStack().getType())){
                     e.getBlock().setType(RelluEssentials.getInstance().crops.get(e.getItems().get(i).getItemStack().getType()));
 
-                    if(e.getBlock().getBlockData() instanceof Cocoa){
-                        Cocoa c = (Cocoa) e.getBlock().getBlockData();
+                    if(e.getBlock().getBlockData() instanceof Cocoa c){
                         Block cocoa = e.getBlock();
                         Block wood = cocoa.getRelative(c.getFacing().getOppositeFace());
                         if(!wood.getType().equals(Material.JUNGLE_LOG)){
@@ -194,7 +188,7 @@ public class BetterBags implements Listener {
             e.getItems().removeAll(lis);  
         }
 
-        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
+        if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
             List<Item> lis = new ArrayList<>();
             for(Item i: e.getItems()){
                 if(p.getInventory().firstEmpty() != -1){
@@ -205,7 +199,7 @@ public class BetterBags implements Listener {
             e.getItems().removeAll(lis);
         }
 
-        if(p.getInventory().getItemInMainHand() != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.autosmelt)){
+        if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.autosmelt)){
             for(int i = 0; i < e.getItems().size(); i++){
                 ItemStack is = e.getItems().get(i).getItemStack().clone();
                 if(e.getItems().get(i) != null && ItemHelper.getSmeltedItemStack(is) != null){
@@ -217,8 +211,7 @@ public class BetterBags implements Listener {
 
     @EventHandler
     public void onInventoryClickItem(InventoryClickEvent e) {
-        if(e.getWhoClicked() instanceof Player && e.getCurrentItem() != null){
-            Player p = (Player) e.getWhoClicked();
+        if(e.getWhoClicked() instanceof Player p && e.getCurrentItem() != null){
             if (e.getView().getTitle().startsWith(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE) && e.getView().getTitle().endsWith(" Bag")) {
 
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
@@ -287,17 +280,14 @@ public class BetterBags implements Listener {
                                     if(value >= is.getMaxStackSize()){
                                         cleanIS.setAmount(is.getMaxStackSize());
                                         be.setSlotValue(slot, value-is.getMaxStackSize());
-                                        be.setToBeUpdated(true);
-                                        p.getInventory().addItem(cleanIS);
-                                        p.updateInventory();
                                     }
                                     else{
                                         cleanIS.setAmount(value);
                                         be.setSlotValue(slot, 0);
-                                        be.setToBeUpdated(true);
-                                        p.getInventory().addItem(cleanIS);
-                                        p.updateInventory();
                                     }
+                                    be.setToBeUpdated(true);
+                                    p.getInventory().addItem(cleanIS);
+                                    p.updateInventory();
                                 }
                             }
                         }
