@@ -6,7 +6,7 @@
     <version>4.1.6</version>
     <url>https://github.com/Relluem94s/RelluEssentials</url>
     <properties>
-        <plugin.apiVersion>1.19</plugin.apiVersion>
+        <plugin.apiVersion>1.20</plugin.apiVersion>
         <plugin.author>Relluem94</plugin.author>
         <plugin.website>https://www.relluem94.de</plugin.website>
         <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
@@ -48,13 +48,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <version>1.20.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <version>1.20.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -66,7 +66,7 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.0.33</version>
+            <version>8.3.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
