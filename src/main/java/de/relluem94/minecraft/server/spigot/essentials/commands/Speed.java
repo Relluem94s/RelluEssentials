@@ -13,13 +13,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import lombok.NonNull;
+
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Speed implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SPEED)) {
             return false;
         }

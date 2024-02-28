@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -40,7 +41,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Marry implements CommandExecutor {
 
-    HashMap<Player, Player> marryAcceptList = new HashMap<>();
+    private final HashMap<Player, Player> marryAcceptList = new HashMap<>();
 
     private void addMarryEntry(Player player, Player target){
         if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player).getPartner() != null || RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target).getPartner() != null){
@@ -78,9 +79,9 @@ public class Marry implements CommandExecutor {
         PlayerEntry secondPlayer = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player);
 
         PlayerPartnerEntry playerPartnerEntry = new PlayerPartnerEntry();
-        playerPartnerEntry.setCreatedby(firstPlayer.getID());
-        playerPartnerEntry.setFirstPlayerID(firstPlayer.getID());
-        playerPartnerEntry.setSecondPlayerID(secondPlayer.getID());
+        playerPartnerEntry.setCreatedBy(firstPlayer.getId());
+        playerPartnerEntry.setFirstPartnerId(firstPlayer.getId());
+        playerPartnerEntry.setSecondPartnerId(secondPlayer.getId());
 
         RelluEssentials.getInstance().getDatabaseHelper().insertPlayerPartner(playerPartnerEntry);
         playerPartnerEntry = RelluEssentials.getInstance().getPlayerAPI().getPartner(firstPlayer);
@@ -88,16 +89,15 @@ public class Marry implements CommandExecutor {
         firstPlayer.setPartner(playerPartnerEntry);
         secondPlayer.setPartner(playerPartnerEntry);
 
-        Collection<ProtectionEntry> protectionEntryList = new ArrayList<> ();
-        protectionEntryList.addAll(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
+        Collection<ProtectionEntry> protectionEntryList = new ArrayList<>(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
 
         for(ProtectionEntry pre : protectionEntryList){ 
-            if(pre.getCreatedBy() == firstPlayer.getID()){
-                BetterLock.addRight(target, pre, secondPlayer.getID(), true);
+            if(pre.getCreatedBy() == firstPlayer.getId()){
+                BetterLock.addRight(target, pre, secondPlayer.getId(), true);
             }
 
-            if(pre.getCreatedBy() == secondPlayer.getID()){
-                BetterLock.addRight(player, pre, firstPlayer.getID(), true);
+            if(pre.getCreatedBy() == secondPlayer.getId()){
+                BetterLock.addRight(player, pre, firstPlayer.getId(), true);
             }
             
         }
@@ -109,10 +109,10 @@ public class Marry implements CommandExecutor {
     private void divorce(PlayerEntry pe) {
         PlayerPartnerEntry ppe = pe.getPartner();
 
-        PlayerEntry secondPlayerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry((ppe.getSecondPlayerID() != pe.getID() ? ppe.getSecondPlayerID() : ppe.getFirstPlayerID()));
+        PlayerEntry secondPlayerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry((ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId() : ppe.getFirstPartnerId()));
 
-        Player firstPlayer = Bukkit.getPlayer(UUID.fromString(pe.getUUID()));
-        OfflinePlayer secondOfflinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUUID()));
+        Player firstPlayer = Bukkit.getPlayer(UUID.fromString(pe.getUuid()));
+        OfflinePlayer secondOfflinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUuid()));
 
         if(firstPlayer != null && secondOfflinePlayer != null){
             if(secondOfflinePlayer.isOnline()){
@@ -124,22 +124,21 @@ public class Marry implements CommandExecutor {
                 firstPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, secondOfflinePlayer.getName()));
             }
 
-            ppe.setDeletedBy(pe.getID());
+            ppe.setDeletedBy(pe.getId());
             pe.setPartner(null);
             secondPlayerEntry.setPartner(null);
         
             RelluEssentials.getInstance().getDatabaseHelper().deletePlayerPartner(ppe);
 
-            Collection<ProtectionEntry> protectionEntryList = new ArrayList<> ();
-            protectionEntryList.addAll(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
+            Collection<ProtectionEntry> protectionEntryList = new ArrayList<>(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
 
             for(ProtectionEntry pre : protectionEntryList){
-                if(pre.getCreatedBy() == pe.getID()){
-                    BetterLock.removeRight(firstPlayer, pre, secondPlayerEntry.getID(), true);
+                if(pre.getCreatedBy() == pe.getId()){
+                    BetterLock.removeRight(firstPlayer, pre, secondPlayerEntry.getId(), true);
                 }
     
-                if(pre.getCreatedBy() == secondPlayerEntry.getID()){
-                    BetterLock.removeRight(secondOfflinePlayer, pre, pe.getID());
+                if(pre.getCreatedBy() == secondPlayerEntry.getId()){
+                    BetterLock.removeRight(secondOfflinePlayer, pre, pe.getId());
                 }
                 
             }
@@ -148,7 +147,7 @@ public class Marry implements CommandExecutor {
 
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_MARRY)) {
             return false;
         }

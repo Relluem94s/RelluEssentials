@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -71,18 +73,34 @@ public class RelluEssentials extends JavaPlugin {
     private long start;
     private static RelluEssentials instance;
 
-    private DatabaseHelper dBH;
-    private PluginInformationEntry pie;
+    @Getter
+    private DatabaseHelper databaseHelper;
+    @Setter
+    @Getter
+    private PluginInformationEntry pluginInformation;
 
     private static Banker banker;
 
+    @Getter
     private boolean isUnitTest = false;
 
+    @Setter
+    @Getter
     private PlayerAPI playerAPI;
+    @Setter
+    @Getter
     private ProtectionAPI protectionAPI;
+    @Setter
+    @Getter
     private NPCAPI npcAPI;
+    @Setter
+    @Getter
     private BagAPI bagAPI;
+    @Setter
+    @Getter
     private BankAPI bankAPI;
+    @Setter
+    @Getter
     private WarpAPI warpAPI;
 
     public final Map<Integer, Vector2Location> selections = new HashMap<>();
@@ -99,8 +117,7 @@ public class RelluEssentials extends JavaPlugin {
     public final String[] oreRespawn = new String[]{PLUGIN_WORLD_WORLD_NETHER}; //TODO has to be done in Config (new Table?) #IsComming
     public static final boolean MONEY_LOST_ON_DEATH = true;
     public final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
-    public final String[][] worldsGroup = new String[][]{new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END}, new String[]{PLUGIN_WORLD_LOBBY}};
-    
+
     
     public static synchronized RelluEssentials getInstance() {
         
@@ -133,7 +150,7 @@ public class RelluEssentials extends JavaPlugin {
         );
 
         dm.enable();
-        dBH = dm.getDatabaseHelper();
+        databaseHelper = dm.getDatabaseHelper();
         
 
 
@@ -192,70 +209,4 @@ public class RelluEssentials extends JavaPlugin {
         super(loader, description, dataFolder, file);
         isUnitTest = true;
     }
-
-    public boolean isUnitTest(){
-        return isUnitTest;
-    }
-
-    public DatabaseHelper getDatabaseHelper(){
-        return dBH;
-    }
-
-    public PluginInformationEntry getPluginInformation(){
-        return pie;
-    }
-
-    public void setPluginInformation(PluginInformationEntry pie){
-        this.pie = pie;
-    }
-
-    public PlayerAPI getPlayerAPI() {
-        return playerAPI;
-    }
-
-    public ProtectionAPI getProtectionAPI() {
-        return protectionAPI;
-    }
-
-    public NPCAPI getNpcAPI() {
-        return npcAPI;
-    }
-
-    public BagAPI getBagAPI() {
-        return bagAPI;
-    }
-
-    public BankAPI getBankAPI() {
-        return bankAPI;
-    }
-
-    public WarpAPI getWarpAPI() {
-        return warpAPI;
-    }
-
-    public void setPlayerAPI(PlayerAPI playerAPI) {
-        this.playerAPI = playerAPI;
-    }
-
-    public void setProtectionAPI(ProtectionAPI protectionAPI) {
-        this.protectionAPI = protectionAPI;
-    }
-
-    public void setNpcAPI(NPCAPI npcAPI) {
-        this.npcAPI = npcAPI;
-    }
-
-    public void setBagAPI(BagAPI bagAPI) {
-        this.bagAPI = bagAPI;
-    }
-
-    public void setBankAPI(BankAPI bankAPI) {
-        this.bankAPI = bankAPI;
-    }
-
-    public void setWarpAPI(WarpAPI warpAPI) {
-        this.warpAPI = warpAPI;
-    }
-
-    
 }

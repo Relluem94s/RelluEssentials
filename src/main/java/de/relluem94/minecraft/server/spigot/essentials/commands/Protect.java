@@ -26,6 +26,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -48,13 +49,13 @@ public class Protect implements CommandExecutor {
         StringBuilder sb = new StringBuilder();
         sb.append("Available Flags: ");
         for(ProtectionFlags flag : flags){
-            sb.append(flag.getName() + " ");
+            sb.append(flag.getName()).append(" ");
         }
         return sb.toString();
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
         
         if (isPlayer(sender)) {
             Player p = (Player) sender;
@@ -125,7 +126,7 @@ public class Protect implements CommandExecutor {
                                 if(player != null){
                                     p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT_ADD);
                                     pe.setPlayerState(PlayerState.PROTECTION_RIGHT_ADD);
-                                    pe.setPlayerStateParameter(player.getID().toString());
+                                    pe.setPlayerStateParameter(player.getId().toString());
                                 }
                                 else{
                                     p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND, args[2]));
@@ -137,7 +138,7 @@ public class Protect implements CommandExecutor {
                                 if(player != null){
                                     p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT_REMOVE);
                                     pe.setPlayerState(PlayerState.PROTECTION_RIGHT_REMOVE);
-                                    pe.setPlayerStateParameter(player.getID().toString());
+                                    pe.setPlayerStateParameter(player.getId().toString());
                                 }
                                 else{
                                     p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND, args[2]));

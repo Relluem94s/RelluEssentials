@@ -13,6 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 
+import java.util.Objects;
 
 
 public class BetterPlayerQuit implements Listener {
@@ -23,12 +24,12 @@ public class BetterPlayerQuit implements Listener {
         Player p = e.getPlayer();
 
         if(SudoManager.sudoers.containsKey(p.getUniqueId())){
-            Sudo.exitSudo(Bukkit.getPlayer(p.getUniqueId()));
+            Sudo.exitSudo(Objects.requireNonNull(Bukkit.getPlayer(p.getUniqueId())));
         }
 
         PlayerHelper.savePlayer(p);
         
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
-        p.teleport(Bukkit.getWorld(Strings.PLUGIN_WORLD_LOBBY).getSpawnLocation());
+        p.teleport(Objects.requireNonNull(Bukkit.getWorld(Strings.PLUGIN_WORLD_LOBBY)).getSpawnLocation());
     }
 }
