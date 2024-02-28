@@ -150,16 +150,11 @@ public class PlayerHelper {
     public static String getCustomName(Player p) {
         String name;
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-        if (pe.getCustomName() != null && pe.getCustomName().equals("null")) {
+        if (pe.getCustomName() != null && !pe.getCustomName().equals("null")) {
             name = pe.getCustomName();
         } 
         else {
-            if (pe.getName() != null && pe.getName().equals("null")) {
-                name = pe.getName();
-            } 
-            else {
-                name = p.getName();
-            }
+            name = p.getName();
         }
 
         return name;
