@@ -59,17 +59,20 @@ public class Purse implements CommandExecutor {
             return true;
         }
 
-        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            Player target = Bukkit.getPlayer(args[0]);
-            if (target != null) {
-                PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
-                p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(),
-                StringHelper.formatDouble(pe.getPurse())));
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target != null) {
+            if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+                if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
+                    PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
+                    p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                 return true;
             }
-        } else {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-            return true;
         }
 
         if (TypeHelper.isLong(args[0])) {
