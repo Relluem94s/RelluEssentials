@@ -25,7 +25,7 @@ public class Speed implements CommandExecutor {
             return true;
         } 
 
-        if (isPlayer(sender)) {
+        if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
         }
