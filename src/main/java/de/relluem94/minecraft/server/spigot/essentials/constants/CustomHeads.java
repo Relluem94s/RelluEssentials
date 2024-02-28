@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.constants;
 
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public enum CustomHeads {
     
     BOOKS1("GoodBook1", "2565e12a-e70b-4f64-9398-7d0f108eb53a","ewogICJ0aW1lc3RhbXAiIDogMTY3NTk2OTE2MDIyOCwKICAicHJvZmlsZUlkIiA6ICIyNTY1ZTEyYWU3MGI0ZjY0OTM5ODdkMGYxMDhlYjUzYSIsCiAgInByb2ZpbGVOYW1lIiA6ICJHb29kQm9vazEiLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWNkMDgxMTY4Y2E4NjYwNGZjZjM3ODAwMzQ4Y2MxNzJjZTc0MDczOWRiM2NjMDgwZjA3ZjFhN2ZiZGZmZjQ4OSIKICAgIH0KICB9Cn0"),

@@ -22,7 +22,7 @@ public class Permission {
      *
      * @param p Player
      * @param group long
-     * @return
+     * @return boolean
      */
     public static boolean isAuthorized(Player p, long group) {
         long id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p).getGroup().getId();

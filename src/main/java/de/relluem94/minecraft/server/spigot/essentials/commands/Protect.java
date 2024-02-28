@@ -49,7 +49,7 @@ public class Protect implements CommandExecutor {
         StringBuilder sb = new StringBuilder();
         sb.append("Available Flags: ");
         for(ProtectionFlags flag : flags){
-            sb.append(flag.getName() + " ");
+            sb.append(flag.getName()).append(" ");
         }
         return sb.toString();
     }

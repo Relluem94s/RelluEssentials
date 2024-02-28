@@ -11,7 +11,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PURSE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 

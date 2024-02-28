@@ -44,11 +44,6 @@ public class Head implements CommandExecutor {
         String owner = args[0];
         ItemStack is = createSkull(owner);
 
-        if(is == null){
-            sendMessage(p, PLUGIN_COMMAND_HEAD_NOT_FOUND);
-            return true;
-        }
-        
         p.getInventory().addItem(is);
         p.updateInventory();
         sendMessage(p, String.format(PLUGIN_COMMAND_HEAD, owner));

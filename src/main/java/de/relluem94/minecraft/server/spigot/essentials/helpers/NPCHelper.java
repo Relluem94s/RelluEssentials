@@ -2,6 +2,9 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
+
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -24,6 +27,7 @@ public class NPCHelper {
     private final boolean isCustomNameVisible;
     private boolean isInvisible;
     private boolean isCollidable = true;
+    @Setter
     private double health = 0;
     private final Profession profession;
 
@@ -48,21 +52,13 @@ public class NPCHelper {
         this.entityType = EntityType.VILLAGER;
         this.profession = profession;
 
-        if (customName != null) {
-            this.customName = customName;
-        } else {
-            this.customName = entityType.name();
-        }
+        this.customName = Objects.requireNonNullElseGet(customName, entityType::name);
 
         this.isCustomNameVisible = isCustomNameVisible;
     }
 
     public void setInvisible(boolean isInvisible) {
         this.isInvisible = isInvisible;
-    }
-
-    public void setHealth(double health) {
-        this.health = health;
     }
 
     public void setCollidable(boolean b) {

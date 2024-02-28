@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc;
 
-import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Villager.Profession;
@@ -29,7 +29,7 @@ public class NPC implements INPC {
         this.name = name;
         this.profession = profession;
         this.type = type;
-        this.npcSpawnItem = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, getName(), de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type.NPC, Rarity.LEGENDARY, Arrays.asList(ItemConstants.PLUGIN_ITEM_NPC_LORE1));
+        this.npcSpawnItem = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, getName(), de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type.NPC, Rarity.LEGENDARY, List.of(ItemConstants.PLUGIN_ITEM_NPC_LORE1));
         RelluEssentials.getInstance().getNpcAPI().addNPC(this);
     }
 

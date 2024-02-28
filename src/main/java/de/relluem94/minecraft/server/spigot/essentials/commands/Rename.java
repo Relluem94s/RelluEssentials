@@ -26,7 +26,8 @@ public class Rename implements CommandExecutor {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_RENAME)) {
             if (args.length >= 1) {
                 if (isPlayer(sender)) {
-                    return rename((Player) sender, args);
+                    rename((Player) sender, args);
+                    return true;
                 }
             } else {
                 sender.sendMessage(PLUGIN_COMMAND_RENAME_INFO);
@@ -36,18 +37,18 @@ public class Rename implements CommandExecutor {
         return false;
     }
 
-    private boolean rename(Player p, String[] args) {
+    private void rename(Player p, String[] args) {
 
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-            return true;
+            return;
         }
 
         String message = implode(0, args);
         message = replaceSymbols(replaceColor(message));
         ItemStack is = p.getInventory().getItemInMainHand();
-        if (!is.getType().equals(Material.AIR)) {
-            ItemMeta im = is.getItemMeta();
+        ItemMeta im = is.getItemMeta();
+        if (!is.getType().equals(Material.AIR) && im != null) {
             im.setDisplayName(message);
             is.setItemMeta(im);
             p.sendMessage(PLUGIN_COMMAND_RENAME);
@@ -55,6 +56,5 @@ public class Rename implements CommandExecutor {
         } else {
             p.sendMessage(PLUGIN_COMMAND_RENAME_AIR);
         }
-        return true;
     }
 }

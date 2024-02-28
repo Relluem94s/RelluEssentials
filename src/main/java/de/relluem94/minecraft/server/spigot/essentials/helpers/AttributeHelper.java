@@ -30,6 +30,7 @@ public class AttributeHelper {
         return attributes;
     }
 
+    @SuppressWarnings("unused")
     public static Multimap<Attribute, AttributeModifier> addAttribute(Multimap<Attribute, AttributeModifier> attributes, String uuid, @Nonnull Attribute attribute, Operation operation, EquipmentSlot slot, String name, double multiplyer){
         attributes.put(attribute, new AttributeModifier(UUID.fromString(uuid), name, multiplyer, operation, slot));
         return attributes;

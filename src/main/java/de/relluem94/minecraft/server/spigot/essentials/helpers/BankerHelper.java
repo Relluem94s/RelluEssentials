@@ -51,7 +51,7 @@ public class BankerHelper {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
- 
+    @SuppressWarnings("unused")
     public static final ItemHelper npc_portable_bank = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK, Type.TOOL, Rarity.LEGENDARY, List.of(PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1));
 
     public static final ItemHelper npc_gui_deposit = new ItemHelper(Material.GREEN_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT, Type.NPC_GUI, Rarity.NONE, List.of(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1));
@@ -178,7 +178,7 @@ public class BankerHelper {
                 continue;
             }
 
-            Long costs = Long.parseLong(ih.getLore().get(0).replace("Costs: ", ""));
+            long costs = Long.parseLong(ih.getLore().get(0).replace("Costs: ", ""));
             BankTierEntry bt = getBankTierEntryByCost(costs);
 
             if(!checkAccount(p, bae, bt, costs)){
@@ -245,10 +245,6 @@ public class BankerHelper {
 
     public static void checkInterest(UUID uuid, boolean midnight){
         OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-
-        if(op == null){
-            return;
-        } 
 
         if(!op.hasPlayedBefore()){
             return;

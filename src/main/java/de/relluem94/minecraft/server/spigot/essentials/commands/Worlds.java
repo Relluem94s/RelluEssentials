@@ -148,7 +148,7 @@ public class Worlds implements CommandExecutor {
         if(WorldType.getByName(args[2].toUpperCase()) != null && World.Environment.valueOf(args[3].toUpperCase()) != null && Boolean.valueOf(args[4]) != null){
             WorldType type = WorldType.getByName(args[2].toUpperCase());
             World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
-            Boolean structures = Boolean.valueOf(args[4]);
+            boolean structures = Boolean.parseBoolean(args[4]);
             WorldHelper.createWorld(args[1], type, worldEnvironment, structures);
             p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_WORLD);
         }

@@ -59,7 +59,7 @@ public class PlayerHelper {
      * @param join Boolean
      * @return Boolean
      */
-    public static boolean setAFK(Player p, boolean join) {
+    public static void setAFK(Player p, boolean join) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         boolean isAFK = pe.isAfk();
 
@@ -86,7 +86,6 @@ public class PlayerHelper {
         }
         
         p.setPlayerListName((isAFK ? "§c[AFK] " : "") + p.getCustomName());
-        return true;
     }
 
 
@@ -196,9 +195,9 @@ public class PlayerHelper {
     }
 
 
-    public static int savePlayer(Player p){
+    public static void savePlayer(Player p){
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-        return savePlayer(pe);
+        savePlayer(pe);
     }
 
     public static int savePlayer(PlayerEntry pe){

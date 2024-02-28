@@ -26,20 +26,20 @@ public class ProtectionHelper {
     }
     
     /**
-     * Use this Method to check if Block is protectable
+     * Use this Method to check if Block is protectAble
      * @param b Block
      * @return boolean
      */
-    public static boolean isLockable(Block b){
+    public static boolean isLockAble(Block b){
         return (RelluEssentials.getInstance().getProtectionAPI().getMaterialProtectionList().contains(b.getType()));
     }
 
     /**
-     * Use this Method to check if a Block is a instance of Openable
+     * Use this Method to check if a Block is an instance of OpenAble
      * @param b Block
      * @return boolean
      */
-    public static boolean isOpenable(Block b){
+    public static boolean isOpenAble(Block b){
         return b.getBlockData() instanceof Openable;
     }
 
@@ -54,10 +54,10 @@ public class ProtectionHelper {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
         if (pre != null) {
-            return pre.getLocationEntry().getPlayerId() == pe.getId();
+            return pre.getLocationEntry().getPlayerId() != pe.getId();
         }
         else{
-            return true;
+            return false;
         }
     }
 
@@ -100,22 +100,22 @@ public class ProtectionHelper {
     public static boolean hasRights(ProtectionEntry protection, int playerId) {
         JSONObject rights = protection.getRights();
         if(!rights.isEmpty() && rights.has(PLUGIN_EVENT_PROTECT_RIGHTS)){
-            return (rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(playerId));
+            return (!rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(playerId));
         }
         else{
-            return false;
+            return true;
         }
     }
 
     /**
      * 
-     * @param b
-     * @return
+     * @param b Block
+     * @return Location
      */
     public static Location getLocationFromBlockAlternateForDoor(Block b){
         if(b != null){
             Location l = b.getLocation();
-            if(isOpenable(b)){
+            if(isOpenAble(b)){
                 Openable openable = (Openable) b.getBlockData();
                 if(openable instanceof Door){
                     Door door = (Door) b.getBlockData();
@@ -131,23 +131,23 @@ public class ProtectionHelper {
     
     /**
      * 
-     * @param door
-     * @param block
-     * @return
+     * @param door Door
+     * @param block Block
+     * @return Block
      */
     public static Block getOtherPart(Door door, Block block) {
         Location l = block.getLocation().clone();
         if(door != null){
-            l = addLoccationFromOtherPart(l, door.getFacing(), door.getHinge());
+            l = addLocationFromOtherPart(l, door.getFacing(), door.getHinge());
         }
-        if(isOpenable(l.getBlock())){
+        if(isOpenAble(l.getBlock())){
             return l.getBlock();
         }
 
         return null;
     }
 
-    private static Location addLoccationFromOtherPart(Location location, BlockFace blockFace, Hinge hinge){
+    private static Location addLocationFromOtherPart(Location location, BlockFace blockFace, Hinge hinge){
         int plus = 1;
         int minus = -1;
 

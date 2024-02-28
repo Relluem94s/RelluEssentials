@@ -11,6 +11,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,15 +25,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
  *
  * @author rellu
  */
+@Getter
 public class ConfigHelper {
 
-    private final String name;
     private final File file;
     private YamlConfiguration config;
     private boolean configFound = true;
 
     public ConfigHelper(String name) {
-        this.name = name;
 
         file = new File(RelluEssentials.getInstance().getDataFolder(), name + ".yml");
         if (file.exists()) {
@@ -38,10 +40,6 @@ public class ConfigHelper {
         } else {
             configFound = false;
         }
-    }
-
-    public boolean isConfigFound(){
-        return configFound;
     }
 
     /**
@@ -52,10 +50,10 @@ public class ConfigHelper {
         List<PlayerEntry> list = new ArrayList<>();
         ConfigurationSection cs = config.getConfigurationSection("player");
 
-        for (String uuid : cs.getKeys(false)) {
+        for (String uuid : Objects.requireNonNull(cs).getKeys(false)) {
             ConfigurationSection player = cs.getConfigurationSection(uuid);
 
-            String groupName = player.getString("group").toLowerCase();
+            String groupName = Objects.requireNonNull(Objects.requireNonNull(player).getString("group")).toLowerCase();
             int groupFK = Groups.getGroup(groupName).getId();
             boolean fly = player.getBoolean("fly");
             boolean afk = player.getBoolean("afk");
@@ -84,8 +82,11 @@ public class ConfigHelper {
     public List<LocationEntry> getHomes(PlayerEntry p) {
         List<LocationEntry> list = new ArrayList<>();
         ConfigurationSection homes = config.getConfigurationSection("player." + p.getUuid() + ".home");
-        for (String home : homes.getKeys(false)) {
+        for (String home : Objects.requireNonNull(homes).getKeys(false)) {
             ConfigurationSection h = homes.getConfigurationSection(home);
+            if(h == null){
+                continue;
+            }
 
             float x;
             float y;
@@ -100,7 +101,7 @@ public class ConfigHelper {
             int type = home.equals("death") ? 2 : 1;
             String worldName = h.getString("world");
 
-            World world = Bukkit.getServer().getWorld(worldName);
+            World world = Bukkit.getServer().getWorld(Objects.requireNonNull(worldName));
 
             consoleSendMessage(PLUGIN_NAME_CONSOLE, "Found Home: " + home + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
 
@@ -115,87 +116,5 @@ public class ConfigHelper {
             list.add(l);
         }
         return list;
-    }
-
-    /**
-     * Returns the Config Name
-     *
-     * @return String Config Name
-     */
-    public String getConfigName() {
-        return name;
-    }
-
-    /**
-     * Returns the File
-     *
-     * @return File
-     */
-    public File getFile() {
-        return file;
-    }
-
-    /**
-     * Returns the Config
-     *
-     * @return YamlConfiguration
-     */
-    public YamlConfiguration getConfig() {
-        return config;
-    }
-
-    /**
-     * Saves the Config
-     *
-     * @throws IOException
-     */
-    public void save() throws IOException {
-        config.save(file);
-    }
-
-    /**
-     * Reloads the Config
-     *
-     * @throws IOException
-     * @throws InvalidConfigurationException
-     */
-    public void reload() throws IOException, InvalidConfigurationException {
-        config.load(file);
-    }
-
-    /**
-     *
-     * @param path where the Location gets saved
-     * @param l the Location it self
-     */
-    public void setLocation(String path, Location l) {
-        config.set(path + ".x", l.getX());
-        config.set(path + ".y", l.getBlockY());
-        config.set(path + ".z", l.getBlockZ());
-        config.set(path + ".yaw", l.getYaw());
-        config.set(path + ".pitch", l.getPitch());
-        config.set(path + ".world", l.getWorld().getName());
-    }
-
-    /**
-     *
-     * @param path where the Location is saved
-     * @return Location from the Config Path
-     */
-    public Location getLocation(String path) {
-        double x;
-        double y;
-        double z;
-        float yaw;
-        float pitch;
-        String world;
-        x = config.getDouble(path + ".x");
-        y = config.getDouble(path + ".y");
-        z = config.getDouble(path + ".z");
-        yaw = (float) config.getDouble(path + ".yaw");
-        pitch = (float) config.getDouble(path + ".pitch");
-        world = config.getString(path + ".world");
-
-        return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
     }
 }

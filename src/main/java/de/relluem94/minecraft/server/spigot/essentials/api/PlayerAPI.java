@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -20,6 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartne
 
 public class PlayerAPI {
 
+    @Getter
     private final Map<UUID, PlayerEntry> playerEntryMap = new HashMap<>();
     private final Multimap<Integer, BagEntry> playerBagEntryMap = ArrayListMultimap.create();
 
@@ -52,13 +54,9 @@ public class PlayerAPI {
         return playerEntryMap.get(player.getUniqueId());
     }
 
-    public Map<UUID, PlayerEntry> getPlayerEntryMap(){
-        return playerEntryMap;
-    }
-
     /**
      * 
-     * @param playerFK
+     * @param playerFK int
      * @return Collection of BagEntries
      */
     public Collection<BagEntry> getPlayerBagList(int playerFK){
@@ -67,8 +65,8 @@ public class PlayerAPI {
 
     /**
      * Adds Player Bag to internal List
-     * @param playerFK
-     * @param bagEntry
+     * @param playerFK int
+     * @param bagEntry BagEntry
      */
     public void putPlayerBagEntry(int playerFK, @Nonnull BagEntry bagEntry){
         playerBagEntryMap.put(playerFK, bagEntry);

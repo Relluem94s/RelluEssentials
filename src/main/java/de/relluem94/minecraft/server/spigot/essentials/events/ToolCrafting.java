@@ -31,28 +31,28 @@ public class ToolCrafting implements Listener {
             ItemMeta im = e.getResult().getItemMeta();
 
             for (Material m : netherite) {
-                if (e.getResult().getType().equals(m)) {
-
+                if (e.getResult().getType().equals(m) && im != null) {
                     List<String> lore = im.getLore();
-                    lore.addAll(List.of(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName()));
-                    lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
+                    if (lore != null) {
+                        lore.add(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
+                        lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
+                        im.setLore(lore);
+                    }
 
-                    im.setLore(lore);
                     e.getResult().setItemMeta(im);
                 }
             }
         }
     }
 
-    private ItemMeta addRarity(Material[] mats, ItemStack is, Rarity rarity){
+    private void addRarity(Material[] mats, ItemStack is, Rarity rarity){
         ItemMeta im = is.getItemMeta();
         for (Material m : mats) {
-            if (is.getType().equals(m)) {
+            if (is.getType().equals(m) && im != null) {
                 im.setLore(List.of(rarity.getPrefix() + rarity.getDisplayName()));
                 is.setItemMeta(im);
             }
         }
-        return im;
     }
 
     @EventHandler

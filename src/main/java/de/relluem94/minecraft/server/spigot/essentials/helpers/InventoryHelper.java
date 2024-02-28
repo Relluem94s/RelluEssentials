@@ -3,8 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -159,7 +157,7 @@ public class InventoryHelper {
             JSONObject slot = new JSONObject();
             slot.put(SLOT_NAME_ID ,Integer.valueOf(i));
             slot.put(SLOT_NAME_ITEMSTACK, ItemHelper.itemTo64(stack));
-            inv.put(Integer.valueOf(i) + "", slot);
+            inv.put(i + "", slot);
         }
         return inv;
     }
