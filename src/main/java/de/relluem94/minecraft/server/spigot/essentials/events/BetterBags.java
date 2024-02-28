@@ -70,9 +70,11 @@ public class BetterBags implements Listener {
                 List<Block> blocks = new ArrayList<>(getChorusBlocks(b, 0, null));
 
                 if(blocks.size() <= 50){
-                    for(Block block : blocks){
-                        block.setType(Material.DIAMOND_BLOCK);
-                    }
+                    blocks.forEach(block -> block.setType(Material.AIR));
+
+                    Item item = e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(Material.CHORUS_FRUIT, blocks.size()+1));
+                    EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item, blocks.size()+1);
+                    Bukkit.getPluginManager().callEvent(entityPickupItemEvent);
                 }
             }
 
@@ -113,18 +115,10 @@ public class BetterBags implements Listener {
         if(isChorusPlant(b)){
             if(b.getBlockData() instanceof MultipleFacing bdf){
                 for(BlockFace bf : bdf.getFaces()){
-                    if(bf.equals(BlockFace.DOWN)){
-                        continue;
-                    }
-
-                    if((bf.equals(prevBlockFace))){
-                        continue;
-                    }
-
                     Block block = b.getRelative(bf);
-
+                    if(bf.equals(BlockFace.DOWN)){continue;}
+                    if((bf.equals(prevBlockFace))){continue;}
                     if(blocks.add(block)){
-                        System.out.println(count + " " + blocks.size() + " " + bf.name());
                         blocks.addAll(getChorusBlocks(block, 28, bf.getOppositeFace()));
                     }
                 }
@@ -215,12 +209,22 @@ public class BetterBags implements Listener {
             if (e.getView().getTitle().startsWith(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE) && e.getView().getTitle().endsWith(" Bag")) {
 
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                BagEntry be = BagHelper.getBag(pe.getID(), BagHelper.getBagTypeByName(e.getView().getTitle()).getId());
+                BagTypeEntry bte = BagHelper.getBagTypeByName(e.getView().getTitle());
+
+                if(bte == null){
+                    return;
+                }
+
+                BagEntry be = BagHelper.getBag(pe.getID(), bte.getId());
+
+                if(be == null){
+                    return;
+                }
 
                 ItemStack is = e.getCurrentItem();
 
                 int slot = BagHelper.getSlotByItemStack(be, is);
-                if(slot != -1){
+                if(slot != -1 &&  e.getClickedInventory() != null){
                     int value = be.getSlotValue(slot);
                     boolean isRightClick = e.isRightClick();
                     boolean isBagInventory = e.getClickedInventory().getType().equals(InventoryType.CHEST);
@@ -235,15 +239,13 @@ public class BetterBags implements Listener {
                                     p.getInventory().remove(fis);
                                 }
                             }
-                            p.updateInventory();
                         }
                         else{
                             be.setSlotValue(slot, value + is.getAmount());
                             be.setToBeUpdated(true);
-
-                            p.getInventory().getItem(e.getSlot()).setAmount(0);
-                            p.updateInventory();
+                            Objects.requireNonNull(p.getInventory().getItem(e.getSlot())).setAmount(0);
                         }
+                        p.updateInventory();
                     }
                     else{
                         ItemStack cleanIS = ItemHelper.getCleanItemStack(is);
@@ -293,17 +295,17 @@ public class BetterBags implements Listener {
                         }
                     }
 
-                    p.openInventory(BagHelper.getBag(be.getBagTypeId(), pe));
+                    p.openInventory(Objects.requireNonNull(BagHelper.getBag(be.getBagTypeId(), pe)));
                 }                
                 e.setCancelled(true);
             }
             else if (e.getView().getTitle().equals(BagHelper.MAIN_GUI)) {
                 e.setCancelled(true);
-                String name = e.getCurrentItem().getItemMeta().getDisplayName();
+                String name = Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName();
                 BagTypeEntry bte = BagHelper.getBagTypeByName(name);
                 if(bte != null){
                     PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getWhoClicked().getUniqueId());
-                    e.getWhoClicked().openInventory(BagHelper.getBag(bte.getId(), pe));
+                    e.getWhoClicked().openInventory(Objects.requireNonNull(BagHelper.getBag(bte.getId(), pe)));
                 }
             }
         }
@@ -312,8 +314,7 @@ public class BetterBags implements Listener {
 
     @EventHandler
     public void onItemCollect(EntityPickupItemEvent e) {
-        if(e.getEntity() instanceof Player){
-            Player p = (Player) e.getEntity();
+        if(e.getEntity() instanceof Player p){
 
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
@@ -321,7 +322,7 @@ public class BetterBags implements Listener {
             if(CustomItems.coins.almostEquals(is)){
                 ItemMeta im = is.getItemMeta();
 
-                if(im.getPersistentDataContainer().has(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER)){
+                if(im != null && im.getPersistentDataContainer().has(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER)){
                     int coins = im.getPersistentDataContainer().get(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER) * is.getAmount();
                     ChatHelper.sendMessageInActionBar(p, String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
                     pe.setPurse(pe.getPurse() + coins);
