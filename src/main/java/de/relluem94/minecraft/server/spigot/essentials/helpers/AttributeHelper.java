@@ -2,6 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.util.UUID;
 
+import javax.annotation.Nonnull;
+
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
@@ -22,13 +24,14 @@ public class AttributeHelper {
         return ArrayListMultimap.create();
     }
 
-    public static Multimap<Attribute, AttributeModifier> addAttribute(String uuid, Attribute attribute, Operation operation, EquipmentSlot slot, String name, double multiplyer){
+    public static Multimap<Attribute, AttributeModifier> addAttribute(String uuid, @Nonnull Attribute attribute, Operation operation, EquipmentSlot slot, String name, double multiplyer){
         Multimap<Attribute, AttributeModifier> attributes = ArrayListMultimap.create();
         attributes.put(attribute, new AttributeModifier(UUID.fromString(uuid), name, multiplyer, operation, slot));
         return attributes;
     }
 
-    public static Multimap<Attribute, AttributeModifier> addAttribute(Multimap<Attribute, AttributeModifier> attributes, String uuid, Attribute attribute, Operation operation, EquipmentSlot slot, String name, double multiplyer){
+    @SuppressWarnings("unused")
+    public static Multimap<Attribute, AttributeModifier> addAttribute(Multimap<Attribute, AttributeModifier> attributes, String uuid, @Nonnull Attribute attribute, Operation operation, EquipmentSlot slot, String name, double multiplyer){
         attributes.put(attribute, new AttributeModifier(UUID.fromString(uuid), name, multiplyer, operation, slot));
         return attributes;
     }

@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SUDO;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,7 +27,7 @@ import de.relluem94.rellulib.utils.StringUtils;
 public class Sudo implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SUDO)) {
             
             if(RelluEssentials.getInstance().getCommand(args[0]) != null){
@@ -44,11 +45,11 @@ public class Sudo implements CommandExecutor {
                     else if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         OfflinePlayerEntry target = PlayerHelper.getOfflinePlayerByName((args[0]));
                         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                        if (target != null && RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID()) != null) {
-                            PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID());
+                        if (target != null && RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId()) != null) {
+                            PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId());
                             SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
                             WorldHelper.saveWorldGroupInventory(p, true);
-                            pe.setID(tpe.getID());
+                            pe.setId(tpe.getId());
                             pe.setCustomName(tpe.getCustomName());
                             pe.setGroup(tpe.getGroup());
                             pe.setHomes(tpe.getHomes());
@@ -89,7 +90,7 @@ public class Sudo implements CommandExecutor {
         PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         WorldHelper.saveWorldGroupInventory(p, true);
-        pe.setID(tpe.getID());
+        pe.setId(tpe.getId());
         pe.setCustomName(tpe.getCustomName());
         pe.setGroup(tpe.getGroup());
         pe.setHomes(tpe.getHomes());

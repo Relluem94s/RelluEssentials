@@ -15,6 +15,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import java.util.Arrays;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.CommandBlock;
@@ -33,7 +34,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 public class Cookies implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_COOCKIE)) {
             return false;
         }

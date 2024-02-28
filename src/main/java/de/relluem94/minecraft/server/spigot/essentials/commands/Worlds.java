@@ -29,6 +29,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldType;
@@ -55,7 +56,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 public class Worlds implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD)) {
             return false;
         }
@@ -147,7 +148,7 @@ public class Worlds implements CommandExecutor {
         if(WorldType.getByName(args[2].toUpperCase()) != null && World.Environment.valueOf(args[3].toUpperCase()) != null && Boolean.valueOf(args[4]) != null){
             WorldType type = WorldType.getByName(args[2].toUpperCase());
             World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
-            Boolean structures = Boolean.valueOf(args[4]);
+            boolean structures = Boolean.parseBoolean(args[4]);
             WorldHelper.createWorld(args[1], type, worldEnvironment, structures);
             p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_WORLD);
         }

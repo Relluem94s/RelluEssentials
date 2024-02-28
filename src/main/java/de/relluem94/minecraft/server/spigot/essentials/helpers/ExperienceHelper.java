@@ -28,8 +28,8 @@ public class ExperienceHelper {
     }
 
     public static void setTotalExperience(Player player, int amount) {
-        int level = 0;
-        int xp = 0;
+        int level;
+        int xp;
         float a = 1;
         float b = 0;
         float c = -amount;

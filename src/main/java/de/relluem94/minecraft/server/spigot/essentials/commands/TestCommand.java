@@ -17,6 +17,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -51,7 +52,7 @@ import de.relluem94.minecraft.server.spigot.essentials.items.RelluSword;
 public class TestCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND)) {
             return false;
         }
@@ -98,13 +99,13 @@ public class TestCommand implements CommandExecutor {
             worlds(p);
         } else if (args[0].equalsIgnoreCase("bc")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getID());
+            RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getId());
         } else if (args[0].equalsIgnoreCase("bo")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             p.openInventory(BagHelper.getBag(1, pe));
         } else if (args[0].equalsIgnoreCase("bc2")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getID());
+            RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getId());
         } else if (args[0].equalsIgnoreCase("bo2")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             p.openInventory(BagHelper.getBag(2, pe));

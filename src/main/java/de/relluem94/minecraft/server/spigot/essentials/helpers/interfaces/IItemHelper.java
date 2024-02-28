@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface IItemHelper {
 
-    public void init();
+    void init();
 
-    public ItemStack postInit(ItemStack is);
+    ItemStack postInit(ItemStack is);
 }

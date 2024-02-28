@@ -11,8 +11,8 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.recipe.Shaped;
 
 public class RecipeHelper {
-    private NamespacedKey nameSpacedKey;
-    private ItemStack result;
+    private final NamespacedKey nameSpacedKey;
+    private final ItemStack result;
     private Material[] ingredients;
 
     Shaped shape;
@@ -47,20 +47,20 @@ public class RecipeHelper {
      */
     public Recipe getRecipe(){
         if(shape != null){
-            Recipe recipe = new ShapedRecipe(nameSpacedKey, result);
+            ShapedRecipe recipe = new ShapedRecipe(nameSpacedKey, result);
 
-            recipe = ((ShapedRecipe) recipe).shape(shape.getRows());
-            for(Character cr : shape.getIngredients().keySet()){
-                Material mat = shape.getIngredients().get(cr);
-                ((ShapedRecipe) recipe).setIngredient(cr, mat);
+            recipe = recipe.shape(shape.rows());
+            for(Character cr : shape.ingredients().keySet()){
+                Material mat = shape.ingredients().get(cr);
+                recipe.setIngredient(cr, mat);
             }
             
             return recipe;
         }
-        
-        Recipe recipe = new ShapelessRecipe(nameSpacedKey, result);
+
+        ShapelessRecipe recipe = new ShapelessRecipe(nameSpacedKey, result);
         for(Material m : ingredients){
-            ((ShapelessRecipe) recipe).addIngredient(m);
+            recipe.addIngredient(m);
         }
 
         return recipe;

@@ -13,8 +13,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLo
 
 public class ProtectionAPI {
 
-    private List<Material> protectionLocksList = new ArrayList<>();
-    private HashMap<Location, ProtectionEntry> protectionEntryMap = new HashMap<>();
+    private final List<Material> protectionLocksList = new ArrayList<>();
+    private final HashMap<Location, ProtectionEntry> protectionEntryMap = new HashMap<>();
 
 
     public ProtectionAPI(List<ProtectionLockEntry> protectionLocksEntryList, Map<Location, ProtectionEntry> protectionEntryMap){
@@ -26,8 +26,8 @@ public class ProtectionAPI {
 
     /**
      * 
-     * @param l
-     * @return
+     * @param l Location
+     * @return ProtectionEntry
      */
     public ProtectionEntry getProtectionEntry(Location l){
         return protectionEntryMap.get(l);
@@ -35,7 +35,7 @@ public class ProtectionAPI {
 
     /**
      * 
-     * @param l
+     * @param l Location
      */
     public void removeProtectionEntry(Location l){
         protectionEntryMap.remove(l);
@@ -63,7 +63,7 @@ public class ProtectionAPI {
 
     /**
      * 
-     * @return
+     * @return Map of Location and ProtectionEntry
      */
     public Map<Location, ProtectionEntry> getProtectionEntryList(){
         return protectionEntryMap;

@@ -19,6 +19,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import java.util.HashMap;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,7 +42,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 public class Admin implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_ADMIN)) {
             return false;
         }
@@ -121,7 +122,7 @@ public class Admin implements CommandExecutor {
                     }
                 }
 
-                if (removeMap.size() == 0) {
+                if (removeMap.isEmpty()) {
                     p.sendMessage(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE);
                     
                 }

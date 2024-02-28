@@ -12,6 +12,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -34,7 +35,7 @@ public class CustomItems {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
-    public static final ItemHelper magic_water_bucket = new ItemHelper(Material.WATER_BUCKET, 1, PLUGIN_ITEM_MAGIC_WATER_BUCKET, Type.GADGET, Rarity.EPIC, Arrays.asList(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE)){
+    public static final ItemHelper magic_water_bucket = new ItemHelper(Material.WATER_BUCKET, 1, PLUGIN_ITEM_MAGIC_WATER_BUCKET, Type.GADGET, Rarity.EPIC, List.of(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE)){
         @Override
         public void init() {
             ItemMeta im = getItemMeta();
@@ -42,7 +43,7 @@ public class CustomItems {
         }
     };
 
-    public static final ItemHelper coins = new ItemHelper(Material.GOLD_NUGGET, 1, PLUGIN_ITEM_COINS, Type.MONEY, Rarity.COMMON, Arrays.asList(PLUGIN_ITEM_COINS_LORE));
+    public static final ItemHelper coins = new ItemHelper(Material.GOLD_NUGGET, 1, PLUGIN_ITEM_COINS, Type.MONEY, Rarity.COMMON, List.of(PLUGIN_ITEM_COINS_LORE));
 
     public static final ItemHelper cloudSailor = new ItemHelper(Material.FEATHER, 1, PLUGIN_ITEM_CLOUDSAILOR, Type.GADGET, Rarity.EPIC, Arrays.asList(PLUGIN_ITEM_CLOUDSAILOR_LORE1, PLUGIN_ITEM_CLOUDSAILOR_LORE2));
     public static final ItemHelper cloudBoots = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_CLOUDBOOTS, Type.ARMOR, Rarity.LEGENDARY, Arrays.asList(PLUGIN_ITEM_CLOUDBOOTS_LORE1, PLUGIN_ITEM_CLOUDBOOTS_LORE2)) {
