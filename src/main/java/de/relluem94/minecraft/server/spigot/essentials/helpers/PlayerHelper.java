@@ -1,10 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_SPACER_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_PREFIX;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
+import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -45,7 +44,7 @@ public class PlayerHelper {
      * @param p Player to set Flying
      */
     public static void setFlying(Player p) {
-        if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
+        if (Permission.isAuthorized(p, Objects.requireNonNull(Groups.getGroup("vip")).getId())) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
             if (pe.isFlying()) {
                 p.setAllowFlight(true);
@@ -131,16 +130,17 @@ public class PlayerHelper {
         p.setScoreboard(ScoreBoardManager.board);
     }
 
-    public static void updateGroup(Player p, GroupEntry g) {
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-        pe.setGroup(g);
-        pe.setUpdatedBy(pe.getID());
-        pe.setToBeUpdated(true);
-        setGroup(p, g);
-    }
-
     public static void updateGroup(OfflinePlayer p, GroupEntry g) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
+
+        if(p.isOnline()){
+            Player player = Bukkit.getPlayer(p.getUniqueId());
+            if (player != null) {
+                player.setCustomName(g.getPrefix() + getCustomName(player));
+                player.setPlayerListName(g.getPrefix() + getCustomName(player));
+            }
+        }
+
         pe.setGroup(g);
         pe.setUpdatedBy(pe.getID());
         pe.setToBeUpdated(true);
