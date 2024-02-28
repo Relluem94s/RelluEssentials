@@ -31,6 +31,8 @@
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.block_history" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.player_partner" active-filter-id="" />
+    <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.player" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.npc" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">

@@ -74,7 +74,7 @@ public class PermissionsGroup implements CommandExecutor {
     private static GroupEntry checkGroupExists(String groupName, Player p) {
         GroupEntry g = Groups.getGroup(groupName);
 
-        if(Groups.groupExists(groupName)){
+        if(!Groups.groupExists(groupName)){
             p.sendMessage(PLUGIN_COMMAND_SETGROUP_GROUP_NOT_FOUND);
             return null;
         }
