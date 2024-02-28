@@ -83,7 +83,7 @@ public class Home implements CommandExecutor {
                             LocationEntry le = new LocationEntry();
                             le.setLocationName(args[0]);
                             le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
-                            le.setPlayerId(pe.getID());
+                            le.setPlayerId(pe.getId());
 
                             if (homeExists(pe, le) || deathExists(pe, le)) {
                                 le = getLocationEntry(pe, le);
@@ -107,7 +107,7 @@ public class Home implements CommandExecutor {
                         le.setLocation(p.getLocation());
                         le.setLocationName(args[1]);
                         le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
-                        le.setPlayerId(pe.getID());
+                        le.setPlayerId(pe.getId());
 
                         if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_SET)) {
                             if (homeExists(pe, le)) {

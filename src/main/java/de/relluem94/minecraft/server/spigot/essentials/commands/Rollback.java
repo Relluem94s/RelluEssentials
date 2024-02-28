@@ -59,7 +59,7 @@ public class Rollback implements CommandExecutor {
                             UUID targetUUID = Bukkit.getPlayer(args[1]).getUniqueId();
                             PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(targetUUID.toString());
                             if (pe != null && args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER)) {
-                                int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getID();
+                                int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getId();
                                 List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayer(pe);
                                 for (BlockHistoryEntry bh : list) {
                                     bh.setDeletedby(id);
@@ -83,7 +83,7 @@ public class Rollback implements CommandExecutor {
                                 PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
-                                    int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getID();
+                                    int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getId();
                                     List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayerAndTime(pe, args[2], false);
                                     for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);
@@ -111,7 +111,7 @@ public class Rollback implements CommandExecutor {
                                 PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
-                                    int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getID();
+                                    int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getId();
                                     List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayerAndTime(pe, args[3], true);
                                     for (BlockHistoryEntry bh : list) {
                                         bh.setDeletedby(id);

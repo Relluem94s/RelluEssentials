@@ -84,7 +84,7 @@ public class Warp implements CommandExecutor {
             le.setLocation(p.getLocation());
             le.setLocationName(name);
             le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(typeId - 1));
-            le.setPlayerId(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p).getID());
+            le.setPlayerId(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p).getId());
             RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
             if(RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId) != null){
                 le = RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId);

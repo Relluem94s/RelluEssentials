@@ -177,7 +177,7 @@ public class BetterBags implements Listener {
             }
         }
         
-        if(BagHelper.hasBags(pe.getID())){
+        if(BagHelper.hasBags(pe.getId())){
             List<Item> lis = BagHelper.collectItems(e.getItems(), e.getPlayer(), pe);
             e.getItems().removeAll(lis);  
         }
@@ -215,7 +215,7 @@ public class BetterBags implements Listener {
                     return;
                 }
 
-                BagEntry be = BagHelper.getBag(pe.getID(), bte.getId());
+                BagEntry be = BagHelper.getBag(pe.getId(), bte.getId());
 
                 if(be == null){
                     return;
@@ -235,14 +235,14 @@ public class BetterBags implements Listener {
                                 if(fis != null &&  ItemHelper.getCleanItemStack(fis).equals(ItemHelper.getCleanItemStack(is))){
                                     value = be.getSlotValue(slot);
                                     be.setSlotValue(slot, value + fis.getAmount());
-                                    be.setToBeUpdated(true);
+                                    be.setHasToBeUpdated(true);
                                     p.getInventory().remove(fis);
                                 }
                             }
                         }
                         else{
                             be.setSlotValue(slot, value + is.getAmount());
-                            be.setToBeUpdated(true);
+                            be.setHasToBeUpdated(true);
                             Objects.requireNonNull(p.getInventory().getItem(e.getSlot())).setAmount(0);
                         }
                         p.updateInventory();
@@ -260,7 +260,7 @@ public class BetterBags implements Listener {
                                         value -= is.getMaxStackSize();
                                         cleanIS.setAmount(is.getMaxStackSize());
                                         be.setSlotValue(slot, value);
-                                        be.setToBeUpdated(true);
+                                        be.setHasToBeUpdated(true);
                                         p.getInventory().addItem(cleanIS);
                                         p.updateInventory();
                                         if(p.getInventory().firstEmpty() == -1){
@@ -270,7 +270,7 @@ public class BetterBags implements Listener {
                                     else{
                                         cleanIS.setAmount(value);
                                         be.setSlotValue(slot, 0);
-                                        be.setToBeUpdated(true);
+                                        be.setHasToBeUpdated(true);
                                         p.getInventory().addItem(cleanIS);
                                         p.updateInventory();
                                         break;
@@ -287,7 +287,7 @@ public class BetterBags implements Listener {
                                         cleanIS.setAmount(value);
                                         be.setSlotValue(slot, 0);
                                     }
-                                    be.setToBeUpdated(true);
+                                    be.setHasToBeUpdated(true);
                                     p.getInventory().addItem(cleanIS);
                                     p.updateInventory();
                                 }
@@ -329,15 +329,15 @@ public class BetterBags implements Listener {
 
                     p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);
 
-                    pe.setUpdatedBy(pe.getID());
-                    pe.setToBeUpdated(false);
+                    pe.setUpdatedBy(pe.getId());
+                    pe.setHasToBeUpdated(false);
 
                     e.getItem().getItemStack().setAmount(0);
                     e.setCancelled(true);
                 }
             }
 
-            if(BagHelper.hasBags(pe.getID()) && BagHelper.collectItem(e.getItem(), p, pe)){
+            if(BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(), p, pe)){
                 p.getInventory().remove(is);
                 p.updateInventory();
                 e.setCancelled(true);

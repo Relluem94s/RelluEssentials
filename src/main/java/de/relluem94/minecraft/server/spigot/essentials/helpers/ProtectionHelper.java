@@ -54,7 +54,7 @@ public class ProtectionHelper {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
         if (pre != null) {
-            return pre.getLocation().getPlayerId() == pe.getID();
+            return pre.getLocationEntry().getPlayerId() == pe.getId();
         }
         else{
             return true;
@@ -70,7 +70,7 @@ public class ProtectionHelper {
     public static boolean hasPermission(ProtectionEntry pre, Player p){
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         if (pre != null) {
-            return pre.getLocation().getPlayerId() == pe.getID();
+            return pre.getLocationEntry().getPlayerId() == pe.getId();
         }
         else{
             return true;
@@ -81,7 +81,7 @@ public class ProtectionHelper {
      * Use this with an ProtectionEntry to check ifa Protection has a Specific Flag
      * @param protection ProtectionEntry
      * @param flag ProtectionFlags
-     * @return
+     * @return boolean
      */
     public static boolean hasFlag(ProtectionEntry protection, ProtectionFlags flag) {
         JSONObject flags = protection.getFlags();
@@ -94,13 +94,13 @@ public class ProtectionHelper {
     /**
      * Use this Method to check if Player has Rights to the ProtectionEntry
      * @param protection ProtectionEntry
-     * @param player_fk
-     * @return
+     * @param playerId int
+     * @return boolean
      */
-    public static boolean hasRights(ProtectionEntry protection, int playerFK) {
+    public static boolean hasRights(ProtectionEntry protection, int playerId) {
         JSONObject rights = protection.getRights();
         if(!rights.isEmpty() && rights.has(PLUGIN_EVENT_PROTECT_RIGHTS)){
-            return (rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(playerFK));
+            return (rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(playerId));
         }
         else{
             return false;

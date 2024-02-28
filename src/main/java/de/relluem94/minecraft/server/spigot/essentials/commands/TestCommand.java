@@ -98,13 +98,13 @@ public class TestCommand implements CommandExecutor {
             worlds(p);
         } else if (args[0].equalsIgnoreCase("bc")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getID());
+            RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getId());
         } else if (args[0].equalsIgnoreCase("bo")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             p.openInventory(BagHelper.getBag(1, pe));
         } else if (args[0].equalsIgnoreCase("bc2")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getID());
+            RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getId());
         } else if (args[0].equalsIgnoreCase("bo2")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             p.openInventory(BagHelper.getBag(2, pe));

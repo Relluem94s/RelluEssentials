@@ -44,11 +44,11 @@ public class Sudo implements CommandExecutor {
                     else if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         OfflinePlayerEntry target = PlayerHelper.getOfflinePlayerByName((args[0]));
                         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                        if (target != null && RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID()) != null) {
-                            PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID());
+                        if (target != null && RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId()) != null) {
+                            PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId());
                             SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
                             WorldHelper.saveWorldGroupInventory(p, true);
-                            pe.setID(tpe.getID());
+                            pe.setId(tpe.getId());
                             pe.setCustomName(tpe.getCustomName());
                             pe.setGroup(tpe.getGroup());
                             pe.setHomes(tpe.getHomes());
@@ -89,7 +89,7 @@ public class Sudo implements CommandExecutor {
         PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         WorldHelper.saveWorldGroupInventory(p, true);
-        pe.setID(tpe.getID());
+        pe.setId(tpe.getId());
         pe.setCustomName(tpe.getCustomName());
         pe.setGroup(tpe.getGroup());
         pe.setHomes(tpe.getHomes());

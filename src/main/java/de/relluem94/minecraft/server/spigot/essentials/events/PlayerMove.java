@@ -43,7 +43,7 @@ public class PlayerMove implements Listener {
         }
 
         if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()) != null){
-            e.setCancelled(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).isAFK());
+            e.setCancelled(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).isAfk());
         }
     }   
 }

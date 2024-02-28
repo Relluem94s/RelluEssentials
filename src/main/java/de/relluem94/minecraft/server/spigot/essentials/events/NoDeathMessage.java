@@ -45,7 +45,7 @@ public class NoDeathMessage implements Listener {
         le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(994)));
         LocationTypeEntry locationType = RelluEssentials.getInstance().locationTypeEntryList.get(1);
         le.setLocationType(locationType);
-        le.setPlayerId(pe.getID());
+        le.setPlayerId(pe.getId());
 
         p.sendMessage(String.format(PLUGIN_EVENT_DEATH, le.getLocationName(), (int) le.getLocation().getX(), (int) le.getLocation().getY(), (int) le.getLocation().getZ(), le.getLocation().getWorld().getName()));
         Bukkit.getConsoleSender().getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + p.getName() + " [\"\",{\"text\":\"" + PLUGIN_EVENT_DEATH_TP + "\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/home " + le.getLocationName() + "\"}}]");

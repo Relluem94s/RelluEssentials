@@ -45,8 +45,8 @@ public class Nick implements CommandExecutor {
 
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
         pe.setCustomName(args[1]);
-        pe.setUpdatedBy(isPlayer(sender) ? RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(((Player)sender).getUniqueId()).getID() : 1);
-        pe.setToBeUpdated(true);
+        pe.setUpdatedBy(isPlayer(sender) ? RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(((Player)sender).getUniqueId()).getId() : 1);
+        pe.setHasToBeUpdated(true);
         target.setCustomName(pe.getGroup().getPrefix() + args[1]);
         target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);
         sender.sendMessage(String.format(PLUGIN_COMMAND_NICK, pe.getGroup().getPrefix() + target.getName()));

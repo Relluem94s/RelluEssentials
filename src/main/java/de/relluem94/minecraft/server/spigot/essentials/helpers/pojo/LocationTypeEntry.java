@@ -1,9 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  *
  * @author rellu
  */
+@Setter
+@Getter
 public class LocationTypeEntry {
 
     public static final String FIELD_ID = "id";
@@ -11,21 +16,4 @@ public class LocationTypeEntry {
 
     private int id;
     private String type;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
 }

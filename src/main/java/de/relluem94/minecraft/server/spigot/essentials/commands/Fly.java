@@ -61,8 +61,8 @@ public class Fly implements CommandExecutor {
     private void flyMode(Player p) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         pe.setFlying(!pe.isFlying());
-        pe.setUpdatedBy(pe.getID());
-        pe.setToBeUpdated(true);
+        pe.setUpdatedBy(pe.getId());
+        pe.setHasToBeUpdated(true);
         p.setAllowFlight(pe.isFlying());
         p.sendMessage(
             PLUGIN_FORMS_COMMAND_PREFIX + 

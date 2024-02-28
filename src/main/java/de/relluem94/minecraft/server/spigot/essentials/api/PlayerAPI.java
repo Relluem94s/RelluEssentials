@@ -41,7 +41,7 @@ public class PlayerAPI {
 
     public PlayerEntry getPlayerEntry(int id){
         for(PlayerEntry pe : playerEntryMap.values()){
-            if(pe.getID() == id){
+            if(pe.getId() == id){
                 return pe;
             }
         }
@@ -84,7 +84,7 @@ public class PlayerAPI {
 
     public PlayerPartnerEntry getPartner(PlayerEntry pe){
         if(pe.getPartner() == null){
-            return RelluEssentials.getInstance().getDatabaseHelper().getPlayerPartner(pe.getID());
+            return RelluEssentials.getInstance().getDatabaseHelper().getPlayerPartner(pe.getId());
         }
         
         return pe.getPartner();
@@ -95,6 +95,6 @@ public class PlayerAPI {
 
         playerEntryMap.clear();
 
-        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUUID()), p));
+        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUuid()), p));
     }
 }

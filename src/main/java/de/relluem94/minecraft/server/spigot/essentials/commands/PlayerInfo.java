@@ -90,7 +90,7 @@ public class PlayerInfo implements CommandExecutor {
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_GROUP, pet.getGroup().getPrefix() + pet.getGroup().getName()));
 
         if(pet.getPartner() != null){
-            sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MARRIED_TO,  RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getFirstPlayerID()).getName(), RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getSecondPlayerID())));
+            sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MARRIED_TO,  RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getFirstPartnerId()).getName(), RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getSecondPartnerId())));
             sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MARRIED_SINCE, pet.getPartner().getCreated()));
         }
 

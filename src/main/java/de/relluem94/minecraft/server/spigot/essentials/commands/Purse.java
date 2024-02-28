@@ -95,8 +95,8 @@ public class Purse implements CommandExecutor {
             coin.setItemMeta(im);
 
             pe.setPurse(pe.getPurse() - coins);
-            pe.setToBeUpdated(true);
-            pe.setUpdatedBy(pe.getID());
+            pe.setHasToBeUpdated(true);
+            pe.setUpdatedBy(pe.getId());
 
             p.getInventory().addItem(coin);
             p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TO_ITEM, StringHelper.formatInt(coins)));

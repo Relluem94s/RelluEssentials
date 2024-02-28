@@ -52,7 +52,7 @@ public class Bags implements CommandExecutor {
 
         if(bte != null){
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            if(BagHelper.hasBag(pe.getID(), bte.getId())){
+            if(BagHelper.hasBag(pe.getId(), bte.getId())){
                 p.openInventory(BagHelper.getBag(bte.getId(), pe));
                 return true;
             }

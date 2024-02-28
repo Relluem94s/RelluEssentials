@@ -61,7 +61,7 @@ public class PlayerHelper {
      */
     public static boolean setAFK(Player p, boolean join) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-        boolean isAFK = pe.isAFK();
+        boolean isAFK = pe.isAfk();
 
         if(pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)){
             isAFK = true;
@@ -77,10 +77,10 @@ public class PlayerHelper {
 
         if(pe.getPlayerState().equals(PlayerState.DEFAULT)){
             if(!join){
-                pe.setUpdatedBy(pe.getID());
-                pe.setAFK(isAFK);
-                pe.setUpdatedBy(pe.getID());
-                pe.setToBeUpdated(true);
+                pe.setUpdatedBy(pe.getId());
+                pe.setAfk(isAFK);
+                pe.setUpdatedBy(pe.getId());
+                pe.setHasToBeUpdated(true);
             }
             p.setInvulnerable(isAFK);
         }
@@ -95,7 +95,7 @@ public class PlayerHelper {
         OfflinePlayerEntry ope = new OfflinePlayerEntry();
 
         if(json.has("name")){
-            ope.setID(UUIDHelper.dashed((String)json.get("id")));
+            ope.setId(UUIDHelper.dashed((String)json.get("id")));
             ope.setName(json.get("name").toString());
             return ope;
         }
@@ -108,7 +108,7 @@ public class PlayerHelper {
         JSONObject json = NetworkUtils.getJSON("https://sessionserver.mojang.com/session/minecraft/profile/" + UUIDHelper.unDashed(uuid) + "?unsigned=false");
         OfflinePlayerEntry ope = new OfflinePlayerEntry();
         if(json.has("name")){
-            ope.setID(uuid);
+            ope.setId(uuid);
             ope.setName(json.get("name").toString());
 
             Properties properties = new Properties();
@@ -142,8 +142,8 @@ public class PlayerHelper {
         }
 
         pe.setGroup(g);
-        pe.setUpdatedBy(pe.getID());
-        pe.setToBeUpdated(true);
+        pe.setUpdatedBy(pe.getId());
+        pe.setHasToBeUpdated(true);
     }
 
 
@@ -202,9 +202,9 @@ public class PlayerHelper {
     }
 
     public static int savePlayer(PlayerEntry pe){
-        if(pe.hasToBeUpdated()){
+        if(pe.isHasToBeUpdated()){
             RelluEssentials.getInstance().getDatabaseHelper().updatePlayer(pe);
-            pe.setToBeUpdated(false);
+            pe.setHasToBeUpdated(false);
             return 1;
         }
 

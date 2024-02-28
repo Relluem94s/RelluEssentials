@@ -125,7 +125,7 @@ public class Protect implements CommandExecutor {
                                 if(player != null){
                                     p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT_ADD);
                                     pe.setPlayerState(PlayerState.PROTECTION_RIGHT_ADD);
-                                    pe.setPlayerStateParameter(player.getID().toString());
+                                    pe.setPlayerStateParameter(player.getId().toString());
                                 }
                                 else{
                                     p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND, args[2]));
@@ -137,7 +137,7 @@ public class Protect implements CommandExecutor {
                                 if(player != null){
                                     p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT_REMOVE);
                                     pe.setPlayerState(PlayerState.PROTECTION_RIGHT_REMOVE);
-                                    pe.setPlayerStateParameter(player.getID().toString());
+                                    pe.setPlayerStateParameter(player.getId().toString());
                                 }
                                 else{
                                     p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND, args[2]));

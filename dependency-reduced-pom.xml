@@ -27,6 +27,13 @@
           <source>17</source>
           <target>17</target>
           <encoding>UTF-8</encoding>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.30</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
@@ -129,9 +136,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.github.vorburger</groupId>
-      <artifactId>MariaDB4j</artifactId>
-      <version>main-mariaDB4j-2.6.0-g56dd321-50</version>
+      <groupId>ch.vorburger.mariaDB4j</groupId>
+      <artifactId>mariaDB4j</artifactId>
+      <version>3.0.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -143,26 +150,28 @@
           <groupId>org.springframework.boot</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>mariaDB4j</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mariaDB4j-app</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>mariaDB4j-core</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
+          <groupId>ch.vorburger.mariaDB4j</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>mariaDB4j-maven-plugin</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
+          <artifactId>mariaDB4j-db-linux64</artifactId>
+          <groupId>ch.vorburger.mariaDB4j</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>mariaDB4j-springboot</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
+          <artifactId>mariaDB4j-db-win32</artifactId>
+          <groupId>ch.vorburger.mariaDB4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>mariaDB4j-db-mac64</artifactId>
+          <groupId>ch.vorburger.mariaDB4j</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.30</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <distributionManagement>

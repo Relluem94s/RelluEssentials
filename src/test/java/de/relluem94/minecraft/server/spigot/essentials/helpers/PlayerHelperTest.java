@@ -19,7 +19,7 @@ public class PlayerHelperTest {
     @Test
     public void testGetOfflinePlayerByName2() {
         OfflinePlayerEntry ope = PlayerHelper.getOfflinePlayerByName("Relluem94");
-        Assert.assertEquals(UUID.fromString("ec0149f9-8b21-44ee-9731-8bff508087e7"), ope.getID());
+        Assert.assertEquals(UUID.fromString("ec0149f9-8b21-44ee-9731-8bff508087e7"), ope.getId());
     }
 
     @Test

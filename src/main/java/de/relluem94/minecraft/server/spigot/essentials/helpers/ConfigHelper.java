@@ -65,11 +65,11 @@ public class ConfigHelper {
 
             PlayerEntry p = new PlayerEntry();
             p.setGroup(Groups.getGroup(groupName));
-            p.setAFK(afk);
+            p.setAfk(afk);
             p.setFlying(fly);
-            p.setCreatedby(1);
+            p.setCreatedBy(1);
             p.setCustomName(customname);
-            p.setUUID(uuid);
+            p.setUuid(uuid);
 
             list.add(p);
         }
@@ -83,7 +83,7 @@ public class ConfigHelper {
      */
     public List<LocationEntry> getHomes(PlayerEntry p) {
         List<LocationEntry> list = new ArrayList<>();
-        ConfigurationSection homes = config.getConfigurationSection("player." + p.getUUID() + ".home");
+        ConfigurationSection homes = config.getConfigurationSection("player." + p.getUuid() + ".home");
         for (String home : homes.getKeys(false)) {
             ConfigurationSection h = homes.getConfigurationSection(home);
 
@@ -107,7 +107,7 @@ public class ConfigHelper {
             LocationEntry l = new LocationEntry();
             l.setLocation(new Location(world, x, y, z, yaw, pitch));
             l.setLocationName(home);
-            l.setPlayerId(p.getID());
+            l.setPlayerId(p.getId());
             LocationTypeEntry lt = new LocationTypeEntry();
             lt.setId(type);
             l.setLocationType(lt);

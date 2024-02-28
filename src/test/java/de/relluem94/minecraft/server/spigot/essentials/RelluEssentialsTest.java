@@ -84,7 +84,7 @@ public class RelluEssentialsTest {
      */
     private static void addPlayerToDB(PlayerMock p, String groupName){
         PlayerEntry pe = new PlayerEntry();
-        pe.setUUID(p.getUniqueId().toString());
+        pe.setUuid(p.getUniqueId().toString());
         pe.setName(p.getName());
         pe.setCustomName(p.getName());
         pe.setGroup(Groups.getGroup(groupName));

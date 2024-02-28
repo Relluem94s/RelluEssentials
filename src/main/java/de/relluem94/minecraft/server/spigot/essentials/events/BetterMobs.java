@@ -51,32 +51,31 @@ public class BetterMobs implements Listener {
                 pe.setPurse(0);
             }
 
-            pe.setUpdatedBy(pe.getID());
-            pe.setToBeUpdated(true);
+            pe.setUpdatedBy(pe.getId());
+            pe.setHasToBeUpdated(true);
         }
     }
 
     @EventHandler
     public void onDeath(EntityDeathEvent e) {
-        if(e.getEntity().getKiller() instanceof Player){
+        if(e.getEntity().getKiller() != null){
             int coinsPerDeath = EntityCoins.valueOf(e.getEntity().getType().name()).getCoins();
             if(coinsPerDeath > 0){
                 Player p = e.getEntity().getKiller();
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                 pe.setPurse(pe.getPurse() + coinsPerDeath);
-                pe.setUpdatedBy(pe.getID());
-                pe.setToBeUpdated(true);
+                pe.setUpdatedBy(pe.getId());
+                pe.setHasToBeUpdated(true);
                 ChatHelper.sendMessageInActionBar(p, String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, coinsPerDeath, StringHelper.formatDouble(pe.getPurse())));
 
 
-                if(BagHelper.hasBags(pe.getID())){
-                    List<ItemStack> li = new ArrayList<>();
-                    li.addAll(e.getDrops());
+                if(BagHelper.hasBags(pe.getId())){
+                    List<ItemStack> li = new ArrayList<>(e.getDrops());
                     e.getDrops().removeAll(BagHelper.collectItemStacks(li, p, pe));
                 }
 
 
-                if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.telekinesis)){
+                if(p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.telekinesis)){
                     List<ItemStack> lis = new ArrayList<>();
                     for(ItemStack is: e.getDrops()){
                         if(p.getInventory().firstEmpty() != -1){
@@ -99,7 +98,7 @@ public class BetterMobs implements Listener {
             if(pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)){
                 p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(), m.getLastDamage(), m.getHealth()));
             }
-            if(p.getInventory().getItemInMainHand() != null && p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.thunderstrike)){
+            if(p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.thunderstrike)){
                 m.getLocation().getWorld().strikeLightningEffect(m.getLocation());
             }
         }
