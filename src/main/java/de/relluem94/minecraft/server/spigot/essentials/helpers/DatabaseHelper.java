@@ -328,8 +328,8 @@ public class DatabaseHelper {
                     String v = "patches/v7/";
                     executeScript(v + "script.sql");
                 }
-                break;
                 */
+                break;
         }
     }
 
