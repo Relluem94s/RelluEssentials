@@ -14,18 +14,6 @@ import java.util.Objects;
 @Setter
 @Getter
 public class LocationEntry {
-
-    public static final String FIELD_ID = "id";
-    public static final String FIELD_PLAYER_FK = "player_fk";
-    public static final String FIELD_LOCATION_NAME = "location_name";
-    public static final String FIELD_WORLD = "world";
-    public static final String FIELD_POS_X = "x";
-    public static final String FIELD_POS_Y = "y";
-    public static final String FIELD_POS_Z = "z";
-    public static final String FIELD_YAW = "yaw";
-    public static final String FIELD_PITCH = "pitch";
-    public static final String FIELD_LOCATION_TYPE_FK = "location_type_fk";
-
     private int id;
     private String world;
 

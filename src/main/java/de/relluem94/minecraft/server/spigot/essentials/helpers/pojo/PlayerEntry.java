@@ -14,22 +14,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PlayerEntry {
-
-    public static final String FIELD_ID = "id";
-    public static final String FIELD_CREATED = "created";
-    public static final String FIELD_CREATEDBY = "createdby";
-    public static final String FIELD_UPDATED = "updated";
-    public static final String FIELD_UPDATEDBY = "updatedby";
-    public static final String FIELD_DELETED = "deleted";
-    public static final String FIELD_DELETEDBY = "deletedby";
-    public static final String FIELD_NAME = "name";
-    public static final String FIELD_CUSTOM_NAME = "customname";
-    public static final String FIELD_PURSE = "purse";
-    public static final String FIELD_FLY = "fly";
-    public static final String FIELD_AFK = "afk";
-    public static final String FIELD_GROUP_FK = "group_fk";
-    public static final String FIELD_UUID = "uuid";
-
     private int id;
     private String created;
     private int createdBy;
@@ -67,11 +51,15 @@ public class PlayerEntry {
         setUuid(pe.getUuid());
         setGroup(pe.getGroup());
         setAfk(pe.isAfk());
-
+        setName(pe.getName());
+        setCustomName(pe.getCustomName());
+        setHasToBeUpdated(pe.isHasToBeUpdated());
+        setDeaths(pe.getDeaths());
         setFlying(pe.isFlying());
         setHomes(pe.getHomes());
         setId(pe.getId());
         setPlayerState(pe.getPlayerState());
         setPlayerStateParameter(pe.getPlayerStateParameter());
+        setPartner(pe.getPartner());
     }
 }

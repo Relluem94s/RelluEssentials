@@ -21,6 +21,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.managers.NPCManager;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 import org.bukkit.Location;
@@ -466,16 +467,16 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         PlayerPartnerEntry ppe = new PlayerPartnerEntry();
-                        ppe.setId(rs.getInt(PlayerPartnerEntry.FIELD_ID));
-                        ppe.setCreated(rs.getString(PlayerPartnerEntry.FIELD_CREATED));
-                        ppe.setCreatedBy(rs.getInt(PlayerPartnerEntry.FIELD_CREATEDBY));
-                        ppe.setUpdated(rs.getString(PlayerPartnerEntry.FIELD_UPDATED));
-                        ppe.setUpdatedBy(rs.getInt(PlayerPartnerEntry.FIELD_UPDATEDBY));
-                        ppe.setDeleted(rs.getString(PlayerPartnerEntry.FIELD_DELETED));
-                        ppe.setDeletedBy(rs.getInt(PlayerPartnerEntry.FIELD_DELETEDBY));
-                        ppe.setFirstPartnerId(rs.getInt(PlayerPartnerEntry.FIELD_FIRST_PARTNER_FK));
-                        ppe.setSecondPartnerId(rs.getInt(PlayerPartnerEntry.FIELD_SECOND_PARTNER_FK));
-                        ppe.setShareProtections(rs.getBoolean(PlayerPartnerEntry.FIELD_SHARE_PROTECTIONS));
+                        ppe.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        ppe.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        ppe.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        ppe.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        ppe.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        ppe.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        ppe.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        ppe.setFirstPartnerId(rs.getInt(DatabaseMappings.FIELD_FIRST_PARTNER_FK));
+                        ppe.setSecondPartnerId(rs.getInt(DatabaseMappings.FIELD_SECOND_PARTNER_FK));
+                        ppe.setShareProtections(rs.getBoolean(DatabaseMappings.FIELD_SHARE_PROTECTIONS));
 
                         return ppe;
                     }
@@ -495,14 +496,14 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         WorldGroupEntry wge = new WorldGroupEntry();
-                        wge.setId(rs.getInt(WorldGroupEntry.FIELD_ID));
-                        wge.setCreated(rs.getString(WorldGroupEntry.FIELD_CREATED));
-                        wge.setCreatedBy(rs.getInt(WorldGroupEntry.FIELD_CREATEDBY));
-                        wge.setUpdated(rs.getString(WorldGroupEntry.FIELD_UPDATED));
-                        wge.setUpdatedBy(rs.getInt(WorldGroupEntry.FIELD_UPDATEDBY));
-                        wge.setDeleted(rs.getString(WorldGroupEntry.FIELD_DELETED));
-                        wge.setDeletedBy(rs.getInt(WorldGroupEntry.FIELD_DELETEDBY));
-                        wge.setName(rs.getString(WorldGroupEntry.FIELD_NAME));
+                        wge.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        wge.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        wge.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        wge.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        wge.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        wge.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        wge.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        wge.setName(rs.getString(DatabaseMappings.FIELD_NAME));
 
                         lbte.add(wge);
                     }
@@ -523,14 +524,14 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         WorldEntry we = new WorldEntry();
-                        we.setId(rs.getInt(WorldEntry.FIELD_ID));
-                        we.setCreated(rs.getString(WorldEntry.FIELD_CREATED));
-                        we.setCreatedBy(rs.getInt(WorldEntry.FIELD_CREATEDBY));
-                        we.setUpdated(rs.getString(WorldEntry.FIELD_UPDATED));
-                        we.setUpdatedBy(rs.getInt(WorldEntry.FIELD_UPDATEDBY));
-                        we.setDeleted(rs.getString(WorldEntry.FIELD_DELETED));
-                        we.setDeletedBy(rs.getInt(WorldEntry.FIELD_DELETEDBY));
-                        we.setName(rs.getString(WorldEntry.FIELD_NAME));
+                        we.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        we.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        we.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        we.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        we.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        we.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        we.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        we.setName(rs.getString(DatabaseMappings.FIELD_NAME));
                         we.setWorldGroupEntry(wge);
                         lwe.add(we);
                     }
@@ -589,19 +590,19 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         WorldGroupInventoryEntry wgie = new WorldGroupInventoryEntry();
-                        wgie.setId(rs.getInt(WorldGroupInventoryEntry.FIELD_ID));
-                        wgie.setCreated(rs.getString(WorldGroupInventoryEntry.FIELD_CREATED));
-                        wgie.setCreatedBy(rs.getInt(WorldGroupInventoryEntry.FIELD_CREATEDBY));
-                        wgie.setUpdated(rs.getString(WorldGroupInventoryEntry.FIELD_UPDATED));
-                        wgie.setUpdatedBy(rs.getInt(WorldGroupInventoryEntry.FIELD_UPDATEDBY));
-                        wgie.setDeleted(rs.getString(WorldGroupInventoryEntry.FIELD_DELETED));
-                        wgie.setDeletedBy(rs.getInt(WorldGroupInventoryEntry.FIELD_DELETEDBY));
-                        wgie.setPlayerId(rs.getInt(WorldGroupInventoryEntry.FIELD_PLAYER_FK));
-                        wgie.setHealth(rs.getInt(WorldGroupInventoryEntry.FIELD_HEALTH));
-                        wgie.setTotalExperience(rs.getInt(WorldGroupInventoryEntry.FIELD_TOTAL_EXPERIENCE));
-                        wgie.setFoodLevel(rs.getInt(WorldGroupInventoryEntry.FIELD_FOOD));
+                        wgie.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        wgie.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        wgie.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        wgie.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        wgie.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        wgie.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        wgie.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        wgie.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        wgie.setHealth(rs.getInt(DatabaseMappings.FIELD_HEALTH));
+                        wgie.setTotalExperience(rs.getInt(DatabaseMappings.FIELD_TOTAL_EXPERIENCE));
+                        wgie.setFoodLevel(rs.getInt(DatabaseMappings.FIELD_FOOD));
                         wgie.setWorldGroupEntry(wge);
-                        wgie.setInventory(new JSONObject(rs.getString(WorldGroupInventoryEntry.FIELD_INVENTORY)));
+                        wgie.setInventory(new JSONObject(rs.getString(DatabaseMappings.FIELD_INVENTORY)));
 
                         return wgie;
                     }
@@ -652,14 +653,14 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         WorldGroupEntry wge = new WorldGroupEntry();
-                        wge.setId(rs.getInt(WorldGroupEntry.FIELD_ID));
-                        wge.setCreated(rs.getString(WorldGroupEntry.FIELD_CREATED));
-                        wge.setCreatedBy(rs.getInt(WorldGroupEntry.FIELD_CREATEDBY));
-                        wge.setUpdated(rs.getString(WorldGroupEntry.FIELD_UPDATED));
-                        wge.setUpdatedBy(rs.getInt(WorldGroupEntry.FIELD_UPDATEDBY));
-                        wge.setDeleted(rs.getString(WorldGroupEntry.FIELD_DELETED));
-                        wge.setDeletedBy(rs.getInt(WorldGroupEntry.FIELD_DELETEDBY));
-                        wge.setName(rs.getString(WorldGroupEntry.FIELD_NAME));
+                        wge.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        wge.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        wge.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        wge.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        wge.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        wge.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        wge.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        wge.setName(rs.getString(DatabaseMappings.FIELD_NAME));
 
                         return wge;
                     }
@@ -679,15 +680,15 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
-                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
-                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
-                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
-                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
-                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
-                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
-                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+                        le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(DatabaseMappings.FIELD_LOCATION_NAME));
+                        le.setWorld(rs.getString(DatabaseMappings.FIELD_WORLD));
+                        le.setX(rs.getFloat(DatabaseMappings.FIELD_POS_X));
+                        le.setY(rs.getFloat(DatabaseMappings.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(DatabaseMappings.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(DatabaseMappings.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(DatabaseMappings.FIELD_YAW));
                         for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (lte.getId() == type) {
                                 le.setLocationType(lte);
@@ -711,19 +712,19 @@ public class DatabaseHelper {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
-                        if (type != rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK)) {
+                        if (type != rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK)) {
                             continue;
                         }
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
-                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
-                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
-                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
-                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
-                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
-                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
-                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+                        le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(DatabaseMappings.FIELD_LOCATION_NAME));
+                        le.setWorld(rs.getString(DatabaseMappings.FIELD_WORLD));
+                        le.setX(rs.getFloat(DatabaseMappings.FIELD_POS_X));
+                        le.setY(rs.getFloat(DatabaseMappings.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(DatabaseMappings.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(DatabaseMappings.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(DatabaseMappings.FIELD_YAW));
                         for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (type == lte.getId()) {
                                 le.setLocationType(lte);
@@ -750,15 +751,15 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
-                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
-                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
-                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
-                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
-                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
-                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
-                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+                        le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(DatabaseMappings.FIELD_LOCATION_NAME));
+                        le.setWorld(rs.getString(DatabaseMappings.FIELD_WORLD));
+                        le.setX(rs.getFloat(DatabaseMappings.FIELD_POS_X));
+                        le.setY(rs.getFloat(DatabaseMappings.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(DatabaseMappings.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(DatabaseMappings.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(DatabaseMappings.FIELD_YAW));
                         for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
                             if (lte.getId() == type) {
                                 le.setLocationType(lte);
@@ -783,19 +784,19 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
-                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
-                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
+                        le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(DatabaseMappings.FIELD_LOCATION_NAME));
 
-                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
-                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
-                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
-                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
-                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
-                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+                        le.setWorld(rs.getString(DatabaseMappings.FIELD_WORLD));
+                        le.setX(rs.getFloat(DatabaseMappings.FIELD_POS_X));
+                        le.setY(rs.getFloat(DatabaseMappings.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(DatabaseMappings.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(DatabaseMappings.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(DatabaseMappings.FIELD_YAW));
 
                         for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
-                            if (lte.getId() == rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK)) {
+                            if (lte.getId() == rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK)) {
                                 le.setLocationType(lte);
                             }
                         }
@@ -817,14 +818,14 @@ public class DatabaseHelper {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
-                        pie.setId(rs.getInt(PluginInformationEntry.FIELD_ID));
-                        pie.setCreated(rs.getString(PluginInformationEntry.FIELD_CREATED));
-                        pie.setCreatedby(rs.getInt(PluginInformationEntry.FIELD_CREATEDBY));
-                        pie.setTabHeader(rs.getString(PluginInformationEntry.FIELD_TAB_HEADER));
-                        pie.setTabFooter(rs.getString(PluginInformationEntry.FIELD_TAB_FOOTER));
-                        pie.setMotdMessage(rs.getString(PluginInformationEntry.FIELD_MOTD_MESSAGE));
-                        pie.setMotdPlayers(rs.getInt(PluginInformationEntry.FIELD_MOTD_PLAYERS));
-                        pie.setDbVersion(rs.getInt(PluginInformationEntry.FIELD_DB_VERSION));
+                        pie.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        pie.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        pie.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        pie.setTabHeader(rs.getString(DatabaseMappings.FIELD_TAB_HEADER));
+                        pie.setTabFooter(rs.getString(DatabaseMappings.FIELD_TAB_FOOTER));
+                        pie.setMotdMessage(rs.getString(DatabaseMappings.FIELD_MOTD_MESSAGE));
+                        pie.setMotdPlayers(rs.getInt(DatabaseMappings.FIELD_MOTD_PLAYERS));
+                        pie.setDbVersion(rs.getInt(DatabaseMappings.FIELD_DB_VERSION));
                         return pie;
                     }
                 }
@@ -845,21 +846,21 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         PlayerEntry p = new PlayerEntry();
-                        p.setId(rs.getInt(PlayerEntry.FIELD_ID));
-                        p.setUuid(rs.getString(PlayerEntry.FIELD_UUID));
-                        p.setCreated(rs.getString(PlayerEntry.FIELD_CREATED));
-                        p.setCreatedBy(rs.getInt(PlayerEntry.FIELD_CREATEDBY));
-                        p.setUpdated(rs.getString(PlayerEntry.FIELD_UPDATED));
-                        p.setUpdatedBy(rs.getInt(PlayerEntry.FIELD_UPDATEDBY));
-                        p.setDeleted(rs.getString(PlayerEntry.FIELD_DELETED));
-                        p.setDeletedBy(rs.getInt(PlayerEntry.FIELD_DELETEDBY));
-                        p.setName(rs.getString(PlayerEntry.FIELD_NAME));
-                        p.setCustomName(rs.getString(PlayerEntry.FIELD_CUSTOM_NAME));
-                        p.setPurse(rs.getDouble(PlayerEntry.FIELD_PURSE));
-                        p.setFlying(rs.getBoolean(PlayerEntry.FIELD_FLY));
-                        p.setAfk(rs.getBoolean(PlayerEntry.FIELD_AFK));
-                        p.setGroup(Groups.getGroup(rs.getInt(PlayerEntry.FIELD_GROUP_FK)));
-                        PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt(PlayerEntry.FIELD_ID));
+                        p.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        p.setUuid(rs.getString(DatabaseMappings.FIELD_UUID));
+                        p.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        p.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        p.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        p.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        p.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        p.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        p.setName(rs.getString(DatabaseMappings.FIELD_NAME));
+                        p.setCustomName(rs.getString(DatabaseMappings.FIELD_CUSTOM_NAME));
+                        p.setPurse(rs.getDouble(DatabaseMappings.FIELD_PURSE));
+                        p.setFlying(rs.getBoolean(DatabaseMappings.FIELD_FLY));
+                        p.setAfk(rs.getBoolean(DatabaseMappings.FIELD_AFK));
+                        p.setGroup(Groups.getGroup(rs.getInt(DatabaseMappings.FIELD_GROUP_FK)));
+                        PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt(DatabaseMappings.FIELD_ID));
                         p.setHomes(getLocations(p, 1));
                         p.setDeaths(getLocations(p, 2));
                         p.setPartner(ppe);
@@ -882,16 +883,16 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BankAccountEntry bae = new BankAccountEntry();
-                        bae.setId(rs.getInt(BankAccountEntry.FIELD_ID));
-                        bae.setCreated(rs.getString(BankAccountEntry.FIELD_CREATED));
-                        bae.setCreatedBy(rs.getInt(BankAccountEntry.FIELD_CREATEDBY));
-                        bae.setUpdated(rs.getString(BankAccountEntry.FIELD_UPDATED));
-                        bae.setUpdatedBy(rs.getInt(BankAccountEntry.FIELD_UPDATEDBY));
-                        bae.setDeleted(rs.getString(BankAccountEntry.FIELD_DELETED));
-                        bae.setDeletedBy(rs.getInt(BankAccountEntry.FIELD_DELETEDBY));
-                        bae.setValue(rs.getDouble(BankAccountEntry.FIELD_VALUE));
-                        bae.setPlayerId(rs.getInt(BankAccountEntry.FIELD_PLAYER_FK));
-                        bae.setTier(getBankTier(rs.getInt(BankAccountEntry.FIELD_BANK_TIER_FK)));
+                        bae.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        bae.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        bae.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        bae.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        bae.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        bae.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        bae.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        bae.setValue(rs.getDouble(DatabaseMappings.FIELD_VALUE));
+                        bae.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        bae.setTier(getBankTier(rs.getInt(DatabaseMappings.FIELD_BANK_TIER_FK)));
 
                         return bae;
                     }
@@ -911,11 +912,11 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BankTierEntry bte = new BankTierEntry();
-                        bte.setId(rs.getInt(BankTierEntry.FIELD_ID));
-                        bte.setName(rs.getString(BankTierEntry.FIELD_NAME));
-                        bte.setLimit(rs.getLong(BankTierEntry.FIELD_LIMIT));
-                        bte.setInterest(rs.getDouble(BankTierEntry.FIELD_INTEREST));
-                        bte.setCost(rs.getLong(BankTierEntry.FIELD_COST));
+                        bte.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        bte.setName(rs.getString(DatabaseMappings.FIELD_NAME));
+                        bte.setLimit(rs.getLong(DatabaseMappings.FIELD_LIMIT));
+                        bte.setInterest(rs.getDouble(DatabaseMappings.FIELD_INTEREST));
+                        bte.setCost(rs.getLong(DatabaseMappings.FIELD_COST));
                         return bte;
                     }
                 }
@@ -934,11 +935,11 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BankTierEntry bte = new BankTierEntry();
-                        bte.setId(rs.getInt(BankTierEntry.FIELD_ID));
-                        bte.setName(rs.getString(BankTierEntry.FIELD_NAME));
-                        bte.setLimit(rs.getLong(BankTierEntry.FIELD_LIMIT));
-                        bte.setInterest(rs.getDouble(BankTierEntry.FIELD_INTEREST));
-                        bte.setCost(rs.getLong(BankTierEntry.FIELD_COST));
+                        bte.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        bte.setName(rs.getString(DatabaseMappings.FIELD_NAME));
+                        bte.setLimit(rs.getLong(DatabaseMappings.FIELD_LIMIT));
+                        bte.setInterest(rs.getDouble(DatabaseMappings.FIELD_INTEREST));
+                        bte.setCost(rs.getLong(DatabaseMappings.FIELD_COST));
                         lbte.add(bte);
                     }
                 }
@@ -1009,15 +1010,15 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         BankTransactionEntry b = new BankTransactionEntry();
 
-                        b.setId(rs.getInt(BankTransactionEntry.FIELD_ID));
-                        b.setCreated(rs.getString(BankTransactionEntry.FIELD_CREATED));
-                        b.setCreatedBy(rs.getInt(BankTransactionEntry.FIELD_CREATEDBY));
-                        b.setUpdated(rs.getString(BankTransactionEntry.FIELD_UPDATED));
-                        b.setUpdatedBy(rs.getInt(BankTransactionEntry.FIELD_UPDATEDBY));
-                        b.setDeleted(rs.getString(BankTransactionEntry.FIELD_DELETED));
-                        b.setDeletedBy(rs.getInt(BankTransactionEntry.FIELD_DELETEDBY));
-                        b.setBankAccountId(rs.getInt(BankTransactionEntry.FIELD_BANK_ACCOUNT_FK));
-                        b.setValue(rs.getDouble(BankTransactionEntry.FIELD_VALUE));
+                        b.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        b.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        b.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        b.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        b.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        b.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        b.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        b.setBankAccountId(rs.getInt(DatabaseMappings.FIELD_BANK_ACCOUNT_FK));
+                        b.setValue(rs.getDouble(DatabaseMappings.FIELD_VALUE));
                         bte.add(b);
                     }
                 }
@@ -1038,16 +1039,16 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         ProtectionEntry pe = new ProtectionEntry();
-                        pe.setId(rs.getInt(ProtectionEntry.FIELD_ID));
-                        pe.setCreated(rs.getString(ProtectionEntry.FIELD_CREATED));
-                        pe.setCreatedBy(rs.getInt(ProtectionEntry.FIELD_CREATEDBY));
-                        pe.setUpdated(rs.getString(ProtectionEntry.FIELD_UPDATED));
-                        pe.setUpdatedBy(rs.getInt(ProtectionEntry.FIELD_UPDATEDBY));
-                        pe.setDeleted(rs.getString(ProtectionEntry.FIELD_DELETED));
-                        pe.setDeletedBy(rs.getInt(ProtectionEntry.FIELD_DELETEDBY));
-                        pe.setFlags(new JSONObject(rs.getString(ProtectionEntry.FIELD_FLAGS)));
-                        pe.setRights(new JSONObject(rs.getString(ProtectionEntry.FIELD_RIGHTS)));
-                        pe.setMaterialName(rs.getString(ProtectionEntry.FIELD_MATERIAL_NAME));
+                        pe.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        pe.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        pe.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        pe.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        pe.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        pe.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        pe.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        pe.setFlags(new JSONObject(rs.getString(DatabaseMappings.FIELD_FLAGS)));
+                        pe.setRights(new JSONObject(rs.getString(DatabaseMappings.FIELD_RIGHTS)));
+                        pe.setMaterialName(rs.getString(DatabaseMappings.FIELD_MATERIAL_NAME));
                         pe.setLocationEntry(getLocation(l, 5));
 
                         return pe;
@@ -1132,16 +1133,16 @@ public class DatabaseHelper {
 
                         if (loc != null) {
                             ProtectionEntry pe = new ProtectionEntry();
-                            pe.setId(rs.getInt(ProtectionEntry.FIELD_ID));
-                            pe.setCreated(rs.getString(ProtectionEntry.FIELD_CREATED));
-                            pe.setCreatedBy(rs.getInt(ProtectionEntry.FIELD_CREATEDBY));
-                            pe.setUpdated(rs.getString(ProtectionEntry.FIELD_UPDATED));
-                            pe.setUpdatedBy(rs.getInt(ProtectionEntry.FIELD_UPDATEDBY));
-                            pe.setDeleted(rs.getString(ProtectionEntry.FIELD_DELETED));
-                            pe.setDeletedBy(rs.getInt(ProtectionEntry.FIELD_DELETEDBY));
-                            pe.setFlags(new JSONObject(rs.getString(ProtectionEntry.FIELD_FLAGS)));
-                            pe.setRights(new JSONObject(rs.getString(ProtectionEntry.FIELD_RIGHTS)));
-                            pe.setMaterialName(rs.getString(ProtectionEntry.FIELD_MATERIAL_NAME));
+                            pe.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                            pe.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                            pe.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                            pe.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                            pe.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                            pe.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                            pe.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                            pe.setFlags(new JSONObject(rs.getString(DatabaseMappings.FIELD_FLAGS)));
+                            pe.setRights(new JSONObject(rs.getString(DatabaseMappings.FIELD_RIGHTS)));
+                            pe.setMaterialName(rs.getString(DatabaseMappings.FIELD_MATERIAL_NAME));
                             pe.setLocationEntry(loc);
                             pel.put(loc.getLocation(), pe);
                         } else {
@@ -1166,21 +1167,21 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         PlayerEntry p = new PlayerEntry();
-                        p.setId(rs.getInt(PlayerEntry.FIELD_ID));
-                        p.setUuid(rs.getString(PlayerEntry.FIELD_UUID));
-                        p.setCreated(rs.getString(PlayerEntry.FIELD_CREATED));
-                        p.setCreatedBy(rs.getInt(PlayerEntry.FIELD_CREATEDBY));
-                        p.setUpdated(rs.getString(PlayerEntry.FIELD_UPDATED));
-                        p.setUpdatedBy(rs.getInt(PlayerEntry.FIELD_UPDATEDBY));
-                        p.setDeleted(rs.getString(PlayerEntry.FIELD_DELETED));
-                        p.setDeletedBy(rs.getInt(PlayerEntry.FIELD_DELETEDBY));
-                        p.setName(rs.getString(PlayerEntry.FIELD_NAME));
-                        p.setCustomName(rs.getString(PlayerEntry.FIELD_CUSTOM_NAME));
-                        p.setPurse(rs.getDouble(PlayerEntry.FIELD_PURSE));
-                        p.setFlying(rs.getBoolean(PlayerEntry.FIELD_FLY));
-                        p.setAfk(rs.getBoolean(PlayerEntry.FIELD_AFK));
-                        p.setGroup(Groups.getGroup(rs.getInt(PlayerEntry.FIELD_GROUP_FK)));
-                        PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt(PlayerEntry.FIELD_ID));
+                        p.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        p.setUuid(rs.getString(DatabaseMappings.FIELD_UUID));
+                        p.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        p.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        p.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        p.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        p.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        p.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        p.setName(rs.getString(DatabaseMappings.FIELD_NAME));
+                        p.setCustomName(rs.getString(DatabaseMappings.FIELD_CUSTOM_NAME));
+                        p.setPurse(rs.getDouble(DatabaseMappings.FIELD_PURSE));
+                        p.setFlying(rs.getBoolean(DatabaseMappings.FIELD_FLY));
+                        p.setAfk(rs.getBoolean(DatabaseMappings.FIELD_AFK));
+                        p.setGroup(Groups.getGroup(rs.getInt(DatabaseMappings.FIELD_GROUP_FK)));
+                        PlayerPartnerEntry ppe = getPlayerPartner(rs.getInt(DatabaseMappings.FIELD_ID));
                         p.setHomes(getLocations(p, 1));
                         p.setDeaths(getLocations(p, 2));
                         p.setPartner(ppe);
@@ -1273,17 +1274,17 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         LocationEntry le = new LocationEntry();
                         
-                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
-                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
-                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
-                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
-                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
-                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
-                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
-                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+                        le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(DatabaseMappings.FIELD_LOCATION_NAME));
+                        le.setWorld(rs.getString(DatabaseMappings.FIELD_WORLD));
+                        le.setX(rs.getFloat(DatabaseMappings.FIELD_POS_X));
+                        le.setY(rs.getFloat(DatabaseMappings.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(DatabaseMappings.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(DatabaseMappings.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(DatabaseMappings.FIELD_YAW));
                         
-                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK) - 1));
                         ll.add(le);
                     }
                 }
@@ -1302,17 +1303,17 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
-                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
-                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
-                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
-                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
-                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
-                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
-                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+                        le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(DatabaseMappings.FIELD_LOCATION_NAME));
+                        le.setWorld(rs.getString(DatabaseMappings.FIELD_WORLD));
+                        le.setX(rs.getFloat(DatabaseMappings.FIELD_POS_X));
+                        le.setY(rs.getFloat(DatabaseMappings.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(DatabaseMappings.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(DatabaseMappings.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(DatabaseMappings.FIELD_YAW));
                         
-                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK) - 1));
                         ll.add(le);
                     }
                 }
@@ -1371,27 +1372,27 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BlockHistoryEntry bh = new BlockHistoryEntry();
-                        bh.setId(rs.getInt(BlockHistoryEntry.FIELD_ID));
-                        bh.setCreated(rs.getString(BlockHistoryEntry.FIELD_CREATED));
-                        bh.setCreatedby(rs.getInt(BlockHistoryEntry.FIELD_CREATEDBY));
-                        bh.setDeleted(rs.getString(BlockHistoryEntry.FIELD_DELETED));
-                        bh.setDeletedby(rs.getInt(BlockHistoryEntry.FIELD_DELETEDBY));
+                        bh.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        bh.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        bh.setCreatedby(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        bh.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        bh.setDeletedby(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
 
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
-                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
-                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
-                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
-                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
-                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
-                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
-                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+                        le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(DatabaseMappings.FIELD_LOCATION_NAME));
+                        le.setWorld(rs.getString(DatabaseMappings.FIELD_WORLD));
+                        le.setX(rs.getFloat(DatabaseMappings.FIELD_POS_X));
+                        le.setY(rs.getFloat(DatabaseMappings.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(DatabaseMappings.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(DatabaseMappings.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(DatabaseMappings.FIELD_YAW));
                         
-                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK) - 1));
 
                         bh.setLocation(le);
-                        bh.setMaterial(rs.getString(BlockHistoryEntry.FIELD_MATERIAL));
+                        bh.setMaterial(rs.getString(DatabaseMappings.FIELD_MATERIAL));
                         return bh;
                     }
                 }
@@ -1428,28 +1429,28 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BlockHistoryEntry bh = new BlockHistoryEntry();
-                        bh.setId(rs.getInt(BlockHistoryEntry.FIELD_ID));
-                        bh.setCreated(rs.getString(BlockHistoryEntry.FIELD_CREATED));
-                        bh.setCreatedby(rs.getInt(BlockHistoryEntry.FIELD_CREATEDBY));
-                        bh.setDeleted(rs.getString(BlockHistoryEntry.FIELD_DELETED));
-                        bh.setDeletedby(rs.getInt(BlockHistoryEntry.FIELD_DELETEDBY));
+                        bh.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        bh.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        bh.setCreatedby(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        bh.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        bh.setDeletedby(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
 
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
-                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
-                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
-                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
-                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
-                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
-                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
-                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+                        le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(DatabaseMappings.FIELD_LOCATION_NAME));
+                        le.setWorld(rs.getString(DatabaseMappings.FIELD_WORLD));
+                        le.setX(rs.getFloat(DatabaseMappings.FIELD_POS_X));
+                        le.setY(rs.getFloat(DatabaseMappings.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(DatabaseMappings.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(DatabaseMappings.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(DatabaseMappings.FIELD_YAW));
                         
-                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK) - 1));
 
 
                         bh.setLocation(le);
-                        bh.setMaterial(rs.getString(BlockHistoryEntry.FIELD_MATERIAL));
+                        bh.setMaterial(rs.getString(DatabaseMappings.FIELD_MATERIAL));
                         bhe.add(bh);
                     }
                 }
@@ -1502,28 +1503,28 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BlockHistoryEntry bh = new BlockHistoryEntry();
-                        bh.setId(rs.getInt(BlockHistoryEntry.FIELD_ID));
-                        bh.setCreated(rs.getString(BlockHistoryEntry.FIELD_CREATED));
-                        bh.setCreatedby(rs.getInt(BlockHistoryEntry.FIELD_CREATEDBY));
-                        bh.setDeleted(rs.getString(BlockHistoryEntry.FIELD_DELETED));
-                        bh.setDeletedby(rs.getInt(BlockHistoryEntry.FIELD_DELETEDBY));
+                        bh.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        bh.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        bh.setCreatedby(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        bh.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        bh.setDeletedby(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
 
                         LocationEntry le = new LocationEntry();
-                        le.setId(rs.getInt(LocationEntry.FIELD_ID));
-                        le.setPlayerId(rs.getInt(LocationEntry.FIELD_PLAYER_FK));
-                        le.setLocationName(rs.getString(LocationEntry.FIELD_LOCATION_NAME));
-                        le.setWorld(rs.getString(LocationEntry.FIELD_WORLD));
-                        le.setX(rs.getFloat(LocationEntry.FIELD_POS_X));
-                        le.setY(rs.getFloat(LocationEntry.FIELD_POS_Y));
-                        le.setZ(rs.getFloat(LocationEntry.FIELD_POS_Z));
-                        le.setPitch(rs.getFloat(LocationEntry.FIELD_PITCH));
-                        le.setYaw(rs.getFloat(LocationEntry.FIELD_YAW));
+                        le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        le.setLocationName(rs.getString(DatabaseMappings.FIELD_LOCATION_NAME));
+                        le.setWorld(rs.getString(DatabaseMappings.FIELD_WORLD));
+                        le.setX(rs.getFloat(DatabaseMappings.FIELD_POS_X));
+                        le.setY(rs.getFloat(DatabaseMappings.FIELD_POS_Y));
+                        le.setZ(rs.getFloat(DatabaseMappings.FIELD_POS_Z));
+                        le.setPitch(rs.getFloat(DatabaseMappings.FIELD_PITCH));
+                        le.setYaw(rs.getFloat(DatabaseMappings.FIELD_YAW));
                         
-                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(LocationEntry.FIELD_LOCATION_TYPE_FK) - 1));
+                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK) - 1));
 
 
                         bh.setLocation(le);
-                        bh.setMaterial(rs.getString(BlockHistoryEntry.FIELD_MATERIAL));
+                        bh.setMaterial(rs.getString(DatabaseMappings.FIELD_MATERIAL));
                         bhe.add(bh);
                     }
                 }
@@ -1555,9 +1556,9 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         GroupEntry g = new GroupEntry();
-                        g.setId(rs.getInt(GroupEntry.FIELD_ID));
-                        g.setName(rs.getString(GroupEntry.FIELD_NAME));
-                        g.setPrefix(rs.getString(GroupEntry.FIELD_PREFIX));
+                        g.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        g.setName(rs.getString(DatabaseMappings.FIELD_NAME));
+                        g.setPrefix(rs.getString(DatabaseMappings.FIELD_PREFIX));
                         gel.add(g);
                     }
                 }
@@ -1577,13 +1578,13 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         BagTypeEntry bte = new BagTypeEntry();
 
-                        bte.setId(rs.getInt(BagTypeEntry.FIELD_ID));
-                        bte.setDisplayName(rs.getString(BagTypeEntry.FIELD_DISPLAY_NAME));
-                        bte.setName(rs.getString(BagTypeEntry.FIELD_NAME));
-                        bte.setCost(rs.getInt(BagTypeEntry.FIELD_COST));
+                        bte.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        bte.setDisplayName(rs.getString(DatabaseMappings.FIELD_DISPLAY_NAME));
+                        bte.setName(rs.getString(DatabaseMappings.FIELD_NAME));
+                        bte.setCost(rs.getInt(DatabaseMappings.FIELD_COST));
 
                         for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
-                            bte.setSlotName(i, rs.getString(String.format(BagTypeEntry.FIELD_SLOT_VAR_NAME, (i + 1))));
+                            bte.setSlotName(i, rs.getString(String.format(DatabaseMappings.FIELD_SLOT_VAR_NAME, (i + 1))));
                         }
                         return bte;
                     }
@@ -1604,19 +1605,19 @@ public class DatabaseHelper {
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
                         BagEntry be = new BagEntry();
-                        be.setId(rs.getInt(BagEntry.FIELD_ID));
-                        be.setCreated(rs.getString(BagEntry.FIELD_CREATED));
-                        be.setCreatedBy(rs.getInt(BagEntry.FIELD_CREATEDBY));
-                        be.setUpdated(rs.getString(BagEntry.FIELD_UPDATED));
-                        be.setUpdatedBy(rs.getInt(BagEntry.FIELD_UPDATEDBY));
-                        be.setDeleted(rs.getString(BagEntry.FIELD_DELETED));
-                        be.setDeletedBy(rs.getInt(BagEntry.FIELD_DELETEDBY));
-                        be.setPlayerId(rs.getInt(BagEntry.FIELD_PLAYER_FK));
-                        be.setBagTypeId(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK));
-                        be.setBagType(getBagType(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK)));
+                        be.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        be.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        be.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        be.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        be.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        be.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        be.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        be.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        be.setBagTypeId(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK));
+                        be.setBagType(getBagType(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK)));
 
                         for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
-                            be.setSlotValue(i, rs.getInt(String.format(BagEntry.FIELD_SLOT_VAR_VALUE, (i + 1))));
+                            be.setSlotValue(i, rs.getInt(String.format(DatabaseMappings.FIELD_SLOT_VAR_VALUE, (i + 1))));
                         }
 
                         return be;
@@ -1659,7 +1660,7 @@ public class DatabaseHelper {
                         bte.setCost(rs.getInt("cost"));
 
                         for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
-                            bte.setSlotName(i, rs.getString(String.format(BagTypeEntry.FIELD_SLOT_VAR_NAME, (i + 1))));
+                            bte.setSlotName(i, rs.getString(String.format(DatabaseMappings.FIELD_SLOT_VAR_NAME, (i + 1))));
                         }
 
                         btel.add(bte);
@@ -1682,19 +1683,19 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         BagEntry be = new BagEntry();
 
-                        be.setId(rs.getInt(BagEntry.FIELD_ID));
-                        be.setCreated(rs.getString(BagEntry.FIELD_CREATED));
-                        be.setCreatedBy(rs.getInt(BagEntry.FIELD_CREATEDBY));
-                        be.setUpdated(rs.getString(BagEntry.FIELD_UPDATED));
-                        be.setUpdatedBy(rs.getInt(BagEntry.FIELD_UPDATEDBY));
-                        be.setDeleted(rs.getString(BagEntry.FIELD_DELETED));
-                        be.setDeletedBy(rs.getInt(BagEntry.FIELD_DELETEDBY));
-                        be.setPlayerId(rs.getInt(BagEntry.FIELD_PLAYER_FK));
-                        be.setBagTypeId(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK));
-                        be.setBagType(getBagType(rs.getInt(BagEntry.FIELD_BAG_TYPE_FK)));
+                        be.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        be.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        be.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        be.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        be.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        be.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        be.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        be.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        be.setBagTypeId(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK));
+                        be.setBagType(getBagType(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK)));
 
                         for (int i = 0; i <= BagHelper.BAG_SIZE-1; i++) {
-                            be.setSlotValue(i, rs.getInt(String.format(BagEntry.FIELD_SLOT_VAR_VALUE, (i + 1))));
+                            be.setSlotValue(i, rs.getInt(String.format(DatabaseMappings.FIELD_SLOT_VAR_VALUE, (i + 1))));
                         }
 
                         bel.add(be);
@@ -1736,20 +1737,20 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         NPCEntry be = new NPCEntry();
 
-                        be.setId(rs.getInt(NPCEntry.FIELD_ID));
-                        be.setCreated(rs.getString(NPCEntry.FIELD_CREATED));
-                        be.setCreatedBy(rs.getInt(NPCEntry.FIELD_CREATEDBY));
-                        be.setUpdated(rs.getString(NPCEntry.FIELD_UPDATED));
-                        be.setUpdatedBy(rs.getInt(NPCEntry.FIELD_UPDATEDBY));
-                        be.setDeleted(rs.getString(NPCEntry.FIELD_DELETED));
-                        be.setDeletedBy(rs.getInt(NPCEntry.FIELD_DELETEDBY));
+                        be.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        be.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        be.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        be.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        be.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        be.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        be.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
 
-                        be.setName(rs.getString(NPCEntry.FIELD_NAME));
-                        be.setProfession(Villager.Profession.valueOf(rs.getString(NPCEntry.FIELD_PROFESSION)));
-                        be.setType(NPC.Type.valueOf(rs.getString(NPCEntry.FIELD_TYPE)));
+                        be.setName(rs.getString(DatabaseMappings.FIELD_NAME));
+                        be.setProfession(Villager.Profession.valueOf(rs.getString(DatabaseMappings.FIELD_PROFESSION)));
+                        be.setType(NPC.Type.valueOf(rs.getString(DatabaseMappings.FIELD_TYPE)));
 
                         for (int i = 0; i <= 27; i++) {
-                            be.setSlotName(i, rs.getString(String.format(NPCEntry.FIELD_SLOT_VAR_NAME, (i + 1))));
+                            be.setSlotName(i, rs.getString(String.format(DatabaseMappings.FIELD_SLOT_VAR_NAME, (i + 1))));
                         }
 
                         bel.add(be);
@@ -1772,14 +1773,14 @@ public class DatabaseHelper {
                     while (rs.next()) {
                         ProtectionLockEntry be = new ProtectionLockEntry();
 
-                        be.setId(rs.getInt(ProtectionLockEntry.FIELD_ID));
-                        be.setCreated(rs.getString(ProtectionLockEntry.FIELD_CREATED));
-                        be.setCreatedBy(rs.getInt(ProtectionLockEntry.FIELD_CREATEDBY));
-                        be.setUpdated(rs.getString(ProtectionLockEntry.FIELD_UPDATED));
-                        be.setUpdatedBy(rs.getInt(ProtectionLockEntry.FIELD_UPDATEDBY));
-                        be.setDeleted(rs.getString(ProtectionLockEntry.FIELD_DELETED));
-                        be.setDeletedBy(rs.getInt(ProtectionLockEntry.FIELD_DELETEDBY));
-                        be.setValue(Material.getMaterial(rs.getString(ProtectionLockEntry.FIELD_VALUE)));
+                        be.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        be.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        be.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        be.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        be.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        be.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        be.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        be.setValue(Material.getMaterial(rs.getString(DatabaseMappings.FIELD_VALUE)));
 
                         bel.add(be);
                     }

@@ -10,14 +10,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class BankTierEntry {
-
-    public static final String FIELD_ID = "id";
-    public static final String FIELD_NAME = "name";
-    public static final String FIELD_LIMIT = "limit";
-    public static final String FIELD_INTEREST = "interest";
-    public static final String FIELD_COST = "cost";
-
-
     private int id;
     private String name;
     private long limit;

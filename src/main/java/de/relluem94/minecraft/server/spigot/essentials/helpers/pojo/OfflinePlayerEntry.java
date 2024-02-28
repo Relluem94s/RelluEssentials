@@ -13,7 +13,6 @@ import java.util.UUID;
 @Setter
 @Getter
 public class OfflinePlayerEntry {
-
     private UUID id;
     private String name;
     private Properties properties;
