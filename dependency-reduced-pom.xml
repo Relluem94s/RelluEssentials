@@ -17,6 +17,11 @@
       <resource>
         <filtering>true</filtering>
         <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>lang_en_US.properties</exclude>
+          <exclude>lang_de_DE.properties</exclude>
+          <exclude>lang.properties</exclude>
+        </excludes>
       </resource>
     </resources>
     <plugins>
@@ -67,6 +72,7 @@
         <version>3.3.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
+          <filters />
         </configuration>
       </plugin>
     </plugins>
@@ -96,78 +102,6 @@
       <artifactId>spigot-api</artifactId>
       <version>1.20.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.github.seeseemelk</groupId>
-      <artifactId>MockBukkit-v1.20</artifactId>
-      <version>3.78.0</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>slf4j-simple</artifactId>
-          <groupId>org.slf4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>paper-api</artifactId>
-          <groupId>io.papermc.paper</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>junit-jupiter</artifactId>
-          <groupId>org.junit.jupiter</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>adventure-platform-bungeecord</artifactId>
-          <groupId>net.kyori</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>byte-buddy</artifactId>
-          <groupId>net.bytebuddy</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>maven-resolver-provider</artifactId>
-          <groupId>org.apache.maven</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>maven-resolver-connector-basic</artifactId>
-          <groupId>org.apache.maven.resolver</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>maven-resolver-transport-http</artifactId>
-          <groupId>org.apache.maven.resolver</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>ch.vorburger.mariaDB4j</groupId>
-      <artifactId>mariaDB4j</artifactId>
-      <version>3.0.1</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>logback-classic</artifactId>
-          <groupId>ch.qos.logback</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>spring-boot-starter-logging</artifactId>
-          <groupId>org.springframework.boot</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mariaDB4j-core</artifactId>
-          <groupId>ch.vorburger.mariaDB4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mariaDB4j-db-linux64</artifactId>
-          <groupId>ch.vorburger.mariaDB4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mariaDB4j-db-win32</artifactId>
-          <groupId>ch.vorburger.mariaDB4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mariaDB4j-db-mac64</artifactId>
-          <groupId>ch.vorburger.mariaDB4j</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -228,6 +162,7 @@
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <plugin.apiVersion>1.20</plugin.apiVersion>
+    <lombok.version>1.18.30</lombok.version>
     <plugin.author>Relluem94</plugin.author>
     <project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
     <plugin.website>https://www.relluem94.de</plugin.website>

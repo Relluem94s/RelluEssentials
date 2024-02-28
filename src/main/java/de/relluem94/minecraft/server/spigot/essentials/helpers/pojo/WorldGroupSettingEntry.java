@@ -2,9 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONObject;
-
-import de.relluem94.rellulib.stores.DoubleStore;
 
 /**
  *

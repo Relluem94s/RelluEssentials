@@ -43,7 +43,7 @@ public class Sign implements CommandExecutor {
                     }
 
                     //
-                    // Remeber to check for Permission (Protection if lower then mod)
+                    // Remember to check for Permission (Protection if lower than mod)
                     //
                     return true;
                 }

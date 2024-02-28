@@ -9,7 +9,7 @@ Use this Method to check if Block is protectable
 
 ## `public static boolean isOpenable(Block b)`
 
-Use this Method to check if a Block is a instance of Openable
+Use this Method to check if a Block is an instance of Openable
 
  * **Parameters:** `b` — Block
  * **Returns:** boolean

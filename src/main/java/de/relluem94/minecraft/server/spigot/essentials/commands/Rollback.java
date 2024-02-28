@@ -30,9 +30,9 @@ public class Rollback implements CommandExecutor {
     /rollback -> Info
     /rollback player <Player> --> Rolls back Player last to first block.                                                    // DONE
     /rollback player <Player> <Time> --> Rolls back Player last to first block in the last 2Y8M60d10h30m etc                // DONE
-  * /rollback location (or pos) (needs selected Area) next update or so..
-    /rollback undo player <Player> --> Undos rollback Player first to last  block.
-    /rollback undo player <Player> <Time> --> Undos rollback Player first to last block in the last 2Y8M60D10h30m etc
+  * /rollback location (or pos) (needs selected Area) next update or so.
+    /rollback undo player <Player> --> Undo rollback Player first to last  block.
+    /rollback undo player <Player> <Time> --> Undo rollback Player first to last block in the last 2Y8M60D10h30m etc.
   * /rollback undo location (needs selected Area)
     /rollback preview player <Player> --> Shows 
     /rollback preview player <Player> <Time> 
