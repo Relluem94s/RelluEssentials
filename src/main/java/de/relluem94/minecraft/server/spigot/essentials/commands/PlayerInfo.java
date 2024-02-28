@@ -94,8 +94,8 @@ public class PlayerInfo implements CommandExecutor {
             sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MARRIED_SINCE, pet.getPartner().getCreated()));
         }
 
-        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_LAST_ONLINE, new Date(target.getLastPlayed()).toString()));
-        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_FIRST_ONLINE, new Date(target.getFirstPlayed()).toString()));
+        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_LAST_ONLINE, new Date(target.getLastPlayed())));
+        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_FIRST_ONLINE, new Date(target.getFirstPlayed())));
 
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MINED, Material.STONE.name(), target.getStatistic(Statistic.MINE_BLOCK, Material.STONE)));
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MINED, Material.DIRT.name(), target.getStatistic(Statistic.MINE_BLOCK, Material.DIRT)));

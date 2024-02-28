@@ -28,8 +28,8 @@ public class CustomEnchants {
     public static final EnchantmentHelper autosmelt = new EnchantmentHelper(
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT, EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_DISPLAYNAME), 
         EnchantmentTarget.TOOL, 
-        new EnchantLevel(1, 1), 
-        Arrays.asList(Enchantment.SILK_TOUCH), 
+        new EnchantLevel(1, 1),
+            List.of(Enchantment.SILK_TOUCH),
         EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute()
@@ -38,8 +38,8 @@ public class CustomEnchants {
     public static final EnchantmentHelper telekinesis = new EnchantmentHelper(
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS_DISPLAYNAME), 
         EnchantmentTarget.BREAKABLE, 
-        new EnchantLevel(1, 1), 
-        Arrays.asList(Enchantment.SILK_TOUCH), 
+        new EnchantLevel(1, 1),
+            List.of(Enchantment.SILK_TOUCH),
         EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute()
@@ -48,8 +48,8 @@ public class CustomEnchants {
     public static final EnchantmentHelper replenishment = new EnchantmentHelper(
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT, EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT_DISPLAYNAME), 
         EnchantmentTarget.TOOL, 
-        new EnchantLevel(1, 1), 
-        Arrays.asList(Enchantment.SILK_TOUCH), 
+        new EnchantLevel(1, 1),
+            List.of(Enchantment.SILK_TOUCH),
         EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute()
@@ -58,8 +58,8 @@ public class CustomEnchants {
     public static final EnchantmentHelper delicate = new EnchantmentHelper(
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE, EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE_DISPLAYNAME), 
         EnchantmentTarget.TOOL, 
-        new EnchantLevel(1, 1), 
-        Arrays.asList(Enchantment.SILK_TOUCH), 
+        new EnchantLevel(1, 1),
+            List.of(Enchantment.SILK_TOUCH),
         EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute()
@@ -68,8 +68,8 @@ public class CustomEnchants {
     public static final EnchantmentHelper thunderstrike = new EnchantmentHelper(
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_DISPLAYNAME), 
         EnchantmentTarget.WEAPON, 
-        new EnchantLevel(1,1), 
-        Arrays.asList(Enchantment.FIRE_ASPECT), 
+        new EnchantLevel(1,1),
+            List.of(Enchantment.FIRE_ASPECT),
         EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_LORE, 
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute(

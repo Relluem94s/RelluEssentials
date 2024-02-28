@@ -91,9 +91,7 @@ public class BetterMobs implements Listener {
 
     @EventHandler
     public void onHit(EntityDamageByEntityEvent e) {
-        if (e.getEntity() instanceof Monster && e.getDamager() instanceof Player) {
-            Monster m = (Monster) e.getEntity();
-            Player p = (Player) e.getDamager();
+        if (e.getEntity() instanceof Monster m && e.getDamager() instanceof Player p) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if(pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)){
                 p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(), m.getLastDamage(), m.getHealth()));

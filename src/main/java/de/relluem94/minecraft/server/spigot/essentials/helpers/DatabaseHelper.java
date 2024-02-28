@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings;
-import de.relluem94.minecraft.server.spigot.essentials.managers.NPCManager;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -284,7 +283,7 @@ public class DatabaseHelper {
         applyPatch(getPluginInformation().getDbVersion());
     }
 
-    private boolean insertScripts = false; // To add Scripts in Development without its own patch version
+    private final boolean insertScripts = false; // To add Scripts in Development without its own patch version
 
     private void applyPatch(int version) {
         switch (version) {
@@ -1475,7 +1474,7 @@ public class DatabaseHelper {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource(deleted ? "sqls/getBlockHistoryByPlayerAndTimeIsDeleted.sql"
                             : "sqls/getBlockHistoryByPlayerAndTime.sql"))) {
-                String[] times = time.split("(\s+/?<!\\d){1,6}");
+                String[] times = time.split("( +/?<!\\d){1,6}");
 
                 for (String t : times) {
                     if (t.endsWith("Y") && TypeUtils.isInt(t.replaceAll(BLOCK_HISTORY_BY_PLAYER_TIME_REGEX, ""))) {

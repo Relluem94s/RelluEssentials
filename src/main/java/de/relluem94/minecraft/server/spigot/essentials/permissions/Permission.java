@@ -41,10 +41,6 @@ public class Permission {
             return isAuthorized((Player) sender, group);
         } else if (isCMDBlock(sender)) {
             return true;
-        } else if (isConsole(sender)) {
-            return true;
-        }
-
-        return false;
+        } else return isConsole(sender);
     }
 }

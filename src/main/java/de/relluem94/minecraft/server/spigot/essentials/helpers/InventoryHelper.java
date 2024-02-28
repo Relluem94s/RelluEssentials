@@ -65,8 +65,7 @@ public class InventoryHelper {
      * @param sender Updates Inventory for CommandSender / Player
      */
     public static void updateInventory(CommandSender sender) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (sender instanceof Player p) {
             p.updateInventory();
         }
     }
@@ -76,8 +75,7 @@ public class InventoryHelper {
      * @param sender Closes Inventory for CommandSender / Player
      */
     public static void closeInventory(CommandSender sender) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (sender instanceof Player p) {
             p.closeInventory();
         }
     }

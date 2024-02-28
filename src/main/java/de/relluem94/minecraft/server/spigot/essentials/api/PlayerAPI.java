@@ -20,8 +20,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartne
 
 public class PlayerAPI {
 
-    private Map<UUID, PlayerEntry> playerEntryMap = new HashMap<>();
-    private Multimap<Integer, BagEntry> playerBagEntryMap = ArrayListMultimap.create();
+    private final Map<UUID, PlayerEntry> playerEntryMap = new HashMap<>();
+    private final Multimap<Integer, BagEntry> playerBagEntryMap = ArrayListMultimap.create();
 
 
     public PlayerAPI(List<BagEntry> bagEntries){

@@ -1423,10 +1423,10 @@ public enum ItemPrice {
   ORANGE_CARPET(0, 0),
   BLUE_CARPET(0, 0);
 
-  private int buyPrice;
-  private int sellPrice;
+  private final int buyPrice;
+  private final int sellPrice;
 
-  private ItemPrice(int buyPrice, int sellPrice) {
+  ItemPrice(int buyPrice, int sellPrice) {
     this.buyPrice = buyPrice;
     this.sellPrice = sellPrice;
   }

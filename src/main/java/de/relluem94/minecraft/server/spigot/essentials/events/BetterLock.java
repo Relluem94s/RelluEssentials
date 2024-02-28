@@ -238,8 +238,7 @@ public class BetterLock implements Listener {
 
             boolean hasRights = true;
 
-            if(b.getBlockData() instanceof Chest){
-                Chest cd = (Chest) b.getBlockData();
+            if(b.getBlockData() instanceof Chest cd){
 
                 if(!cd.getType().equals(Type.SINGLE)){
                     Block b2;
@@ -264,8 +263,7 @@ public class BetterLock implements Listener {
                             break;
                     }
 
-                    if(b2.getBlockData() instanceof Chest){
-                        Chest cd2 = (Chest) b2.getBlockData();
+                    if(b2.getBlockData() instanceof Chest cd2){
                         if(cd2.getFacing().equals(cd.getFacing())){
                             if(!ProtectionHelper.hasPermission(b2, p)){
                                 hasRights = false;
@@ -274,8 +272,7 @@ public class BetterLock implements Listener {
                             }
                         }
                     }
-                    else if(b3.getBlockData() instanceof Chest){
-                        Chest cd3 = (Chest) b3.getBlockData();
+                    else if(b3.getBlockData() instanceof Chest cd3){
                         if(cd3.getFacing().equals(cd.getFacing())){
                             if(!ProtectionHelper.hasPermission(b3, p)){
                                 hasRights = false;
@@ -713,8 +710,7 @@ public class BetterLock implements Listener {
                             Door door = (Door) b.getBlockData();
                             Block b2 = ProtectionHelper.getOtherPart(door, b);
                             if(b2 != null){
-                                if(b2.getBlockData() instanceof Door){
-                                    Door door2 = (Door) b2.getBlockData();
+                                if(b2.getBlockData() instanceof Door door2){
                                     if(door2.getHinge() != door.getHinge()){
                                         if (door2.isOpen()) {
                                             door2.setOpen(false);

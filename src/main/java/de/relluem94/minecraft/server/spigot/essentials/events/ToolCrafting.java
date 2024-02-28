@@ -35,7 +35,7 @@ public class ToolCrafting implements Listener {
                 if (e.getResult().getType().equals(m)) {
 
                     List<String> lore = im.getLore();
-                    lore.addAll(Arrays.asList(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName()));
+                    lore.addAll(List.of(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName()));
                     lore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
 
                     im.setLore(lore);
@@ -49,7 +49,7 @@ public class ToolCrafting implements Listener {
         ItemMeta im = is.getItemMeta();
         for (Material m : mats) {
             if (is.getType().equals(m)) {
-                im.setLore(Arrays.asList(rarity.getPrefix() + rarity.getDisplayName()));
+                im.setLore(List.of(rarity.getPrefix() + rarity.getDisplayName()));
                 is.setItemMeta(im);
             }
         }

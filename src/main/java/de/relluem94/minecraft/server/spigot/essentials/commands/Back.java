@@ -21,7 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Back implements CommandExecutor {
 
-    private static Map<Player, Location> backPlayerLocation = new HashMap<>();
+    private static final Map<Player, Location> backPlayerLocation = new HashMap<>();
 
     public static void addBackPoint(Player p){
         removeBackPoint(p);
@@ -29,9 +29,7 @@ public class Back implements CommandExecutor {
     }
 
     public static void removeBackPoint(Player p){
-        if(backPlayerLocation.containsKey(p)){
-            backPlayerLocation.remove(p);
-        }
+        backPlayerLocation.remove(p);
     }
 
     @Override

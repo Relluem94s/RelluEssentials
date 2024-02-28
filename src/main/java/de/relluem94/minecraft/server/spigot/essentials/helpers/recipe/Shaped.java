@@ -5,9 +5,9 @@ import java.util.Map;
 import org.bukkit.Material;
 
 public class Shaped {
-    private String[] rows;
+    private final String[] rows;
 
-    private Map<Character, Material> ingredients;
+    private final Map<Character, Material> ingredients;
 
     public Shaped(String[] rows, Map<Character, Material> ingredients){
         this.ingredients = ingredients;

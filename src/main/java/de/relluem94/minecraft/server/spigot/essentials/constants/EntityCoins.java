@@ -132,9 +132,9 @@ public enum EntityCoins {
   BLOCK_DISPLAY(0);
 
 
-  private int coins;
+  private final int coins;
 
-  private EntityCoins(int coins) {
+  EntityCoins(int coins) {
     this.coins = coins;
   }
 

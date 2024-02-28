@@ -22,8 +22,7 @@ public class BetterLights implements Listener {
     public void onChangeSignCreateActionSign(PlayerInteractEvent e) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer().getUniqueId());
         Block b = e.getClickedBlock();
-        if(pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE) && b != null && b.getType().equals(Material.REDSTONE_LAMP) && b.getBlockData() instanceof Lightable){
-            Lightable lightable = (Lightable) b.getBlockData();
+        if(pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE) && b != null && b.getType().equals(Material.REDSTONE_LAMP) && b.getBlockData() instanceof Lightable lightable){
             lightable.setLit(!lightable.isLit());
             b.setBlockData(lightable);
             e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_LIGHTS_TOOGLE);

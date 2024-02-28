@@ -72,12 +72,8 @@ public class Message implements CommandExecutor {
             if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
                 String message = implode(start, args);
 
-                if (reply.containsKey(p)) {
-                    reply.remove(p);
-                }
-                if (reply.containsKey(target)) {
-                    reply.remove(target);
-                }
+                reply.remove(p);
+                reply.remove(target);
 
                 reply.put(p, target);
                 reply.put(target, p);

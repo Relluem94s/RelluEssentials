@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry
 
 public class BagAPI {
     
-    private List<BagTypeEntry> bagTypeEntryList = new ArrayList<>();
+    private final List<BagTypeEntry> bagTypeEntryList = new ArrayList<>();
 
     /**
      * 

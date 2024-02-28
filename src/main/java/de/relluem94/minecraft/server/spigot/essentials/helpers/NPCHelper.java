@@ -24,9 +24,9 @@ public class NPCHelper {
     private final boolean isCustomNameVisible;
     private boolean isInvisible;
     private boolean isCollidable = true;
-    private boolean canPickupItems = false;
+    private final boolean canPickupItems = false;
     private double health = 0;
-    private Profession profession;
+    private final Profession profession;
 
     public static final int INV_SIZE = 54;
 

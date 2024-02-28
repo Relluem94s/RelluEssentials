@@ -23,7 +23,7 @@ public class More implements CommandExecutor {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         p.getInventory().getItemInMainHand().setAmount(64);
-                        p.sendMessage(String.format(PLUGIN_COMMAND_MORE, p.getInventory().getItemInMainHand().getType().toString()));
+                        p.sendMessage(String.format(PLUGIN_COMMAND_MORE, p.getInventory().getItemInMainHand().getType()));
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -37,8 +37,8 @@ public class More implements CommandExecutor {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                             target.getInventory().getItemInMainHand().setAmount(64);
-                            p.sendMessage(String.format(PLUGIN_COMMAND_MORE, target.getInventory().getItemInMainHand().getType().toString()));
-                            target.sendMessage(String.format(PLUGIN_COMMAND_MORE_PLAYER, target.getInventory().getItemInMainHand().getType().toString()));
+                            p.sendMessage(String.format(PLUGIN_COMMAND_MORE, target.getInventory().getItemInMainHand().getType()));
+                            target.sendMessage(String.format(PLUGIN_COMMAND_MORE_PLAYER, target.getInventory().getItemInMainHand().getType()));
                             return true;
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

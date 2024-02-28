@@ -29,15 +29,14 @@ public class Repair implements CommandExecutor {
                         ItemStack item = p.getInventory().getItemInMainHand();
                         ItemMeta im = item.getItemMeta();
 
-                        if (im instanceof Damageable) {
-                            Damageable dmg = (Damageable) im;
+                        if (im instanceof Damageable dmg) {
                             if (dmg.hasDamage()) {
                                 dmg.setDamage(0);
                             }
                             item.setItemMeta(im);
                         }
 
-                        p.sendMessage(String.format(PLUGIN_COMMAND_REPAIR, p.getInventory().getItemInMainHand().getType().toString()));
+                        p.sendMessage(String.format(PLUGIN_COMMAND_REPAIR, p.getInventory().getItemInMainHand().getType()));
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -54,16 +53,15 @@ public class Repair implements CommandExecutor {
                             ItemStack item = target.getInventory().getItemInMainHand();
                             ItemMeta im = item.getItemMeta();
 
-                            if (im instanceof Damageable) {
-                                Damageable dmg = (Damageable) im;
+                            if (im instanceof Damageable dmg) {
                                 if (dmg.hasDamage()) {
                                     dmg.setDamage(0);
                                 }
                                 item.setItemMeta(im);
                             }
 
-                            p.sendMessage(String.format(PLUGIN_COMMAND_REPAIR, target.getInventory().getItemInMainHand().getType().toString()));
-                            target.sendMessage(String.format(PLUGIN_COMMAND_REPAIR_PLAYER, target.getInventory().getItemInMainHand().getType().toString()));
+                            p.sendMessage(String.format(PLUGIN_COMMAND_REPAIR, target.getInventory().getItemInMainHand().getType()));
+                            target.sendMessage(String.format(PLUGIN_COMMAND_REPAIR_PLAYER, target.getInventory().getItemInMainHand().getType()));
                             return true;
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);

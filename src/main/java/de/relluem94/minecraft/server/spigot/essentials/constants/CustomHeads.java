@@ -69,11 +69,11 @@ public enum CustomHeads {
 
     
 
-    private String name;
-    private String uuid;
-    private String base64;
+    private final String name;
+    private final String uuid;
+    private final String base64;
 
-    private CustomHeads(String name, String uuid, String base64){
+    CustomHeads(String name, String uuid, String base64){
         this.name = name;
         this.uuid = uuid;
         this.base64 = base64;

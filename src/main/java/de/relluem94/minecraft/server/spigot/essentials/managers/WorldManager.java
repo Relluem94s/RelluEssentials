@@ -21,7 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEn
 
 public class WorldManager implements IEnable, IDisable {
 
-    private Random r = new Random();
+    private final Random r = new Random();
 
     @Override
     public void enable() {

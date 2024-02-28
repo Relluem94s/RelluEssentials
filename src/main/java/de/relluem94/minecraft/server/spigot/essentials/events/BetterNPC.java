@@ -263,8 +263,7 @@ public class BetterNPC implements Listener {
    
     @EventHandler
     public void onInventoryClickItem(InventoryClickEvent e) {
-        if(e.getWhoClicked() instanceof Player && e.getCurrentItem() != null){
-            Player p = (Player) e.getWhoClicked();
+        if(e.getWhoClicked() instanceof Player p && e.getCurrentItem() != null){
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if (e.getView().getTitle().equals(RelluEssentials.getBanker().getTitle())) {
                 BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getId());
@@ -369,12 +368,10 @@ public class BetterNPC implements Listener {
             return;
         }
 
-        if(!(e.getDamager() instanceof Player)){
+        if(!(e.getDamager() instanceof Player p)){
             e.setCancelled(true);
             return;
         }
-
-        Player p = (Player) e.getDamager();
 
         if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
             e.setCancelled(true);

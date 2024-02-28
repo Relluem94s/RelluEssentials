@@ -27,7 +27,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
 public class NoDeathMessage implements Listener {
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {

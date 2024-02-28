@@ -2,8 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.enchantment;
 
 public class EnchantName {
 
-    private String name;
-    private String displayName;
+    private final String name;
+    private final String displayName;
 
     public EnchantName(String name, String displayName){
         this.name = name;

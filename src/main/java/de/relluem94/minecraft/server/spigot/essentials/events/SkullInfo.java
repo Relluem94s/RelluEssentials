@@ -21,8 +21,7 @@ public class SkullInfo implements Listener {
         Player p = e.getPlayer();
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && (Permission.isAuthorized(p, Groups.getGroup("vip").getId()) && (e.getAction() == Action.RIGHT_CLICK_BLOCK))) {
             BlockState block = e.getClickedBlock().getState();
-            if (block instanceof Skull) {
-                Skull sk = (Skull) block;
+            if (block instanceof Skull sk) {
                 p.sendTitle("§a" + sk.getOwnerProfile().getName(), PLUGIN_EVENT_SKULL_INFO_SPACER, 5, 80, 5);
             }
         }

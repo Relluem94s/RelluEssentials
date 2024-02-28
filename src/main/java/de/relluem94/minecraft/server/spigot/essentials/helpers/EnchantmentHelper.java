@@ -207,9 +207,9 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
             f.setAccessible(true);
             f.set(null, true);
             Enchantment.registerEnchantment(ench);
-            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_MANAGER_REGISTER_ENCHANTMENT, ench.getKey().getNamespace(), ench.getKey().toString()));
+            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_MANAGER_REGISTER_ENCHANTMENT, ench.getKey().getNamespace(), ench.getKey()));
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + ench.getKey().toString());
+            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + ench.getKey());
         }
     }
 
@@ -245,11 +245,7 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
             return false;
         }
 
-        if(!hasEnchantment(is, e)){
-            return false;
-        }
-
-        return true;
+        return hasEnchantment(is, e);
     }
 
     private static boolean hasEnchantment(ItemStack is, Enchantment e){

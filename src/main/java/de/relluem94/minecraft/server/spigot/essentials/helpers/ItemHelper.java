@@ -289,7 +289,7 @@ public class ItemHelper implements IItemHelper {
             locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
             
             if(ir.level != -1){
-                locLore.add(ir.getPrefix() + "" + ir.getDisplayName());
+                locLore.add(ir.getPrefix() + ir.getDisplayName());
             }
 
             im.setLore(locLore);
@@ -318,7 +318,7 @@ public class ItemHelper implements IItemHelper {
         private final String prefix;
         private final int level;
 
-        private Rarity(String displayName, String prefix, int level) {
+        Rarity(String displayName, String prefix, int level) {
             this.displayName = displayName;
             this.prefix = prefix;
             this.level = level;
@@ -365,7 +365,7 @@ public class ItemHelper implements IItemHelper {
         NPC_GUI,
         ENCHANTMENT,
         MONEY,
-        NONE;
+        NONE
     }
 
     public static ItemStack setDisplayName(ItemStack is, String displayname){
@@ -386,8 +386,7 @@ public class ItemHelper implements IItemHelper {
     }
 
     public static ItemStack addBookEnchantment(ItemStack item, Enchantment enchantment, int level) {
-        if(item.getItemMeta() instanceof EnchantmentStorageMeta){
-            EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
+        if(item.getItemMeta() instanceof EnchantmentStorageMeta meta){
             meta.addStoredEnchant(enchantment, level, true);
             meta.addEnchant(enchantment, level, true);
             item.setItemMeta(meta);

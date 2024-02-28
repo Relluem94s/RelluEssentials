@@ -13,8 +13,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLo
 
 public class ProtectionAPI {
 
-    private List<Material> protectionLocksList = new ArrayList<>();
-    private HashMap<Location, ProtectionEntry> protectionEntryMap = new HashMap<>();
+    private final List<Material> protectionLocksList = new ArrayList<>();
+    private final HashMap<Location, ProtectionEntry> protectionEntryMap = new HashMap<>();
 
 
     public ProtectionAPI(List<ProtectionLockEntry> protectionLocksEntryList, Map<Location, ProtectionEntry> protectionEntryMap){

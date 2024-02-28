@@ -30,11 +30,7 @@ public class Vanish implements CommandExecutor {
                     Player p = (Player) sender;
                     if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                         sendMessage(p, PLUGIN_COMMAND_VANISH);
-                        boolean canSee = true;
-
-                        if (isVanished.contains(p)) {
-                            canSee = false;
-                        }
+                        boolean canSee = !isVanished.contains(p);
 
                         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                             if (canSee) {

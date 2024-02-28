@@ -35,7 +35,7 @@ public class Exit implements CommandExecutor {
                         Bukkit.getOnlinePlayers().forEach(op ->  op.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN));
         
                     }
-                }.runTaskLater(RelluEssentials.getInstance(),  10l);
+                }.runTaskLater(RelluEssentials.getInstance(), 10L);
 
                 Bukkit.getServer().getScheduler().runTaskLater(RelluEssentials.getInstance(), Bukkit.getServer()::shutdown, 20L);
                 return true;

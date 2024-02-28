@@ -90,7 +90,7 @@ public class SignHelper {
         private final String displayName;
         private final boolean customInput;
 
-        private ActionType(int id, String displayName, boolean test) {
+        ActionType(int id, String displayName, boolean test) {
             this.id = id;
             this.customInput = test;
             this.displayName = displayName;

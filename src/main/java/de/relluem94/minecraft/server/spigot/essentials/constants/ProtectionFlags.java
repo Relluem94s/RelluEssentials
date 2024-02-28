@@ -7,10 +7,10 @@ public enum ProtectionFlags {
     AUTOCLOSE("autoClose", false);
 
     
-    private String name;
-    private boolean isDefault;
+    private final String name;
+    private final boolean isDefault;
 
-    private ProtectionFlags(String name, boolean isDefault){
+    ProtectionFlags(String name, boolean isDefault){
         this.name = name;
         this.isDefault = isDefault;
     }

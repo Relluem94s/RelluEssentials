@@ -259,7 +259,7 @@ public class Strings {
     public static final String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COLOR_COMMAND + "Server is shutting down...";
 
     public static final String PLUGIN_COMMAND_TP_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " eine Teleport Anfrage geschickt";
-    public static final String PLUGIN_COMMAND_TP_REQUEST_TARGET = PLUGIN_FORMS_COMMAND_PREFIX + "Teleport Anfrage von " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "";
+    public static final String PLUGIN_COMMAND_TP_REQUEST_TARGET = PLUGIN_FORMS_COMMAND_PREFIX + "Teleport Anfrage von " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND;
     public static final String PLUGIN_COMMAND_TP_REQUEST_EXPIRED = PLUGIN_FORMS_COMMAND_PREFIX + "Teleport Anfrage ist abgelaufen!";
     public static final String PLUGIN_COMMAND_TP = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest zu " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "teleportiert!";
     public static final String PLUGIN_COMMAND_TP_TO = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "zu  dir teleportiert!";

@@ -12,6 +12,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -89,7 +90,7 @@ public class Purse implements CommandExecutor {
         if ((purse >= coins)) {
             ItemStack coin = CustomItems.coins.getCustomItem();
             ItemMeta im = coin.getItemMeta();
-            im.setLore(Arrays.asList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));
+            im.setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));
             im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, coins);
 
             coin.setItemMeta(im);

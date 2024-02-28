@@ -11,8 +11,8 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.recipe.Shaped;
 
 public class RecipeHelper {
-    private NamespacedKey nameSpacedKey;
-    private ItemStack result;
+    private final NamespacedKey nameSpacedKey;
+    private final ItemStack result;
     private Material[] ingredients;
 
     Shaped shape;
