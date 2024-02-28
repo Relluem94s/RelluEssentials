@@ -34,11 +34,11 @@ import de.relluem94.rellulib.utils.TypeUtils;
 
 public class Teleport implements CommandExecutor {
 
-    HashMap<Player, Player> telportAcceptList = new HashMap<>();
-    HashMap<Player, Player> telportToAcceptList = new HashMap<>();
+    private final HashMap<Player, Player> teleportAcceptList = new HashMap<>();
+    private final HashMap<Player, Player> teleportToAcceptList = new HashMap<>();
 
     private void addTeleportEntry(Player p, Player t){
-        telportAcceptList.put(t, p);
+        teleportAcceptList.put(t, p);
         t.sendMessage(String.format(PLUGIN_COMMAND_TP_REQUEST_TARGET, p.getCustomName()));
         Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
             if(hasTeleportEntry(t)){
@@ -51,7 +51,7 @@ public class Teleport implements CommandExecutor {
 
    
     private void addTeleportToEntry(Player p, Player t){
-        telportToAcceptList.put(t, p);
+        teleportToAcceptList.put(t, p);
         t.sendMessage(String.format(PLUGIN_COMMAND_TP_REQUEST_TARGET, p.getCustomName()));
         Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
             if(hasToTeleportEntry(t)){
@@ -63,19 +63,19 @@ public class Teleport implements CommandExecutor {
     }
 
     private void removeTeleportEntry(Player t) {
-        telportAcceptList.remove(t);
+        teleportAcceptList.remove(t);
     }
 
     private void removeToTeleportEntry(Player t) {
-        telportToAcceptList.remove(t);
+        teleportToAcceptList.remove(t);
     }
 
     private boolean hasTeleportEntry(Player t){
-        return telportAcceptList.containsKey(t);
+        return teleportAcceptList.containsKey(t);
     }
 
     private boolean hasToTeleportEntry(Player t){
-        return telportToAcceptList.containsKey(t);
+        return teleportToAcceptList.containsKey(t);
     }
 
     public void teleport(Player p, Player t){
@@ -118,13 +118,13 @@ public class Teleport implements CommandExecutor {
         if (args.length == 1) {
             if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT)){
                 if(hasTeleportEntry(p)){
-                    teleport(p, telportAcceptList.get(p));
+                    teleport(p, teleportAcceptList.get(p));
                     removeTeleportEntry(p);
                     return true;
                 }
 
                 if(hasToTeleportEntry(p)){
-                    teleportTo(p, telportToAcceptList.get(p));
+                    teleportTo(p, teleportToAcceptList.get(p));
                     removeToTeleportEntry(p);
                     return true;
                 }

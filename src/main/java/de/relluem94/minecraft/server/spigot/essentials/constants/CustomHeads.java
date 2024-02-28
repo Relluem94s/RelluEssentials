@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import lombok.Getter;
+
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -70,8 +72,10 @@ public enum CustomHeads {
 
     
 
+    @Getter
     private final String name;
     private final String uuid;
+    @Getter
     private final String base64;
 
     CustomHeads(String name, String uuid, String base64){
@@ -80,15 +84,8 @@ public enum CustomHeads {
         this.base64 = base64;
     }
 
-    public String getName(){
-        return name;
-    }
-
     public UUID getUUID() {
         return UUID.fromString(uuid);
     }
 
-    public String getBase64(){
-        return base64;
-    }
 }

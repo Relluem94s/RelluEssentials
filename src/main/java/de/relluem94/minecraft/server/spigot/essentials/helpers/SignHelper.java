@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SIGN_CLICK;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SIGN_NAME;
 
+import lombok.Getter;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.HangingSign;
 import org.bukkit.block.data.type.Sign;
@@ -15,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCus
  *
  * @author rellu
  */
+@Getter
 public class SignHelper {
 
     private final String line1;
@@ -25,7 +27,7 @@ public class SignHelper {
     public SignHelper(ActionType signActionType, String customInput) {
         this.signActionType = signActionType;
         this.line1 = signActionType.getDisplayName();
-        if (signActionType.hasCustomInput()) {
+        if (signActionType.isCustomInput()) {
             this.line2 = customInput;
         } else {
             this.line2 = "";
@@ -36,25 +38,13 @@ public class SignHelper {
         this.signActionType = signActionType;
         this.line1 = signActionType.getDisplayName();
         this.line2 = "";
-        if (signActionType.hasCustomInput()) {
+        if (signActionType.isCustomInput()) {
             throw new SignMissingCustomInputException("");
         }
     }
 
-    public ActionType getSignActionType() {
-        return signActionType;
-    }
-
     public String getLine0() {
         return PLUGIN_SIGN_NAME;
-    }
-
-    public String getLine1() {
-        return line1;
-    }
-
-    public String getLine2() {
-        return line2;
     }
 
     public String getLine3() {
@@ -78,6 +68,7 @@ public class SignHelper {
         );
     }
 
+    @Getter
     public enum ActionType {
         COMMAND(1, "Command", true),
         TELEPORT(2, "Teleport", true),
@@ -96,17 +87,6 @@ public class SignHelper {
             this.displayName = displayName;
         }
 
-        public int getId() {
-            return id;
-        }
-
-        public boolean hasCustomInput() {
-            return customInput;
-        }
-
-        public String getDisplayName() {
-            return displayName;
-        }
 
         public String getShorthand() {
             return "[" + id + "]";

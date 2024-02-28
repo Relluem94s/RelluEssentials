@@ -59,6 +59,8 @@ public class PlayerAPI {
      * @param playerFK int
      * @return Collection of BagEntries
      */
+
+    @SuppressWarnings("unused")
     public Collection<BagEntry> getPlayerBagList(int playerFK){
         return playerBagEntryMap.get(playerFK);
     }

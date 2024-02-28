@@ -93,7 +93,7 @@ public class Rollback implements CommandExecutor {
                                     p.sendMessage("Added: " + list.size());
                                 }
                             } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO) && args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER)) {
-
+                                return true;
                             }
 
                             return true;

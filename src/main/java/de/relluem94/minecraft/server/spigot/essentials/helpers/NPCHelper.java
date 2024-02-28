@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 
+import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -23,10 +24,11 @@ public class NPCHelper {
     private final Location location;
     private final EntityType entityType;
     private final Collection<PotionEffect> potionEffects = new HashSet<>();
+    @Getter
     private final String customName;
     private final boolean isCustomNameVisible;
     private boolean isInvisible;
-    private boolean isCollidable = true;
+    private boolean isCollideAble = true;
     @Setter
     private double health = 0;
     private final Profession profession;
@@ -57,20 +59,22 @@ public class NPCHelper {
         this.isCustomNameVisible = isCustomNameVisible;
     }
 
+    @SuppressWarnings("unused")
     public void setInvisible(boolean isInvisible) {
         this.isInvisible = isInvisible;
     }
 
-    public void setCollidable(boolean b) {
-        this.isCollidable = b;
+    @SuppressWarnings("unused")
+    public void setCollideAble(boolean b) {
+        this.isCollideAble = b;
     }
 
     public void spawn() {
-        LivingEntity livingEntity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
+        LivingEntity livingEntity = (LivingEntity) Objects.requireNonNull(location.getWorld()).spawnEntity(location, entityType);
         livingEntity.setCustomName(customName);
         livingEntity.setCustomNameVisible(isCustomNameVisible);
         livingEntity.setAI(false);
-        livingEntity.setCollidable(isCollidable);
+        livingEntity.setCollidable(isCollideAble);
         livingEntity.setPersistent(true);
 
         if (health == 0 || health > livingEntity.getHealth()) {
@@ -85,10 +89,5 @@ public class NPCHelper {
 
         Villager villager = (Villager) livingEntity;
         villager.setProfession(profession);
-    }
-
-
-    public String getCustomName() {
-        return customName;
     }
 }

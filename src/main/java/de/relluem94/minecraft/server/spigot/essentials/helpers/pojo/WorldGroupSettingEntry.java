@@ -23,10 +23,4 @@ public class WorldGroupSettingEntry {
     private int deletedBy;
     private String name;
     private WorldGroupEntry worldGroupEntry;
-    public void setSetting(int setting){
-        int settingFK = setting;
-        JSONObject value = null;
-        DoubleStore ds = new DoubleStore(settingFK, value);
-        ds.toString(); // TODO remove this nonsense and add pojo for setting
-    }
 }

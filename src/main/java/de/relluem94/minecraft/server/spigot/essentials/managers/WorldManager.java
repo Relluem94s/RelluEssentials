@@ -104,6 +104,10 @@ public class WorldManager implements IEnable, IDisable {
     private void setLobbySpawnLocation(String name){
         World world = Bukkit.getWorld(name);
         int random = r.nextInt(9+1 -1) +1;
+        if(world == null){
+            return;
+        }
+
         switch(random){
             case 1:
             world.setSpawnLocation(140, 143, 188);
@@ -118,13 +122,18 @@ public class WorldManager implements IEnable, IDisable {
             world.setSpawnLocation(497, 68, -2800);
             break;
             default:
-            world.setSpawnLocation(140, 143, 188);
+            world.setSpawnLocation(141, 143, 188);
             break;
         }
     }
 
     private void setStandardGameRules(String name){
         World lobbyWorld = Bukkit.getWorld(name);
+
+        if(lobbyWorld == null){
+            return;
+        }
+
         lobbyWorld.setGameRule(GameRule.DO_FIRE_TICK, false);
         lobbyWorld.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         lobbyWorld.setGameRule(GameRule.MOB_GRIEFING, false);

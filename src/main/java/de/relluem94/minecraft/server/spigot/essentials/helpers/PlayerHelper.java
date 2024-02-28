@@ -57,7 +57,7 @@ public class PlayerHelper {
      *
      * @param p Player
      * @param join Boolean
-     * @return Boolean
+     *
      */
     public static void setAFK(Player p, boolean join) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
@@ -159,6 +159,7 @@ public class PlayerHelper {
         return name;
     }
 
+    @SuppressWarnings("unused")
     public static GroupEntry getGroup(Player p) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
 
@@ -220,6 +221,7 @@ public class PlayerHelper {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public static PlayerEntry getPlayer(String name){
         for(PlayerEntry pe : RelluEssentials.getInstance().getPlayerAPI().getPlayerEntryMap().values()){
             if(pe.getName().equals(name)){

@@ -123,6 +123,7 @@ public class BetterNPC implements Listener {
             InventoryHelper.closeInventory(p);
         }
         else if(CustomItems.npc_gui_disabled.equalsExact(is)){
+            return;
             // DISABLED DOES NOTHING. COULD BE AN EASTER EGG!
         }
         else if(is.getType().equals(Material.PLAYER_HEAD) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && ((SkullMeta) is.getItemMeta()).getOwnerProfile().getName().equals(CustomHeads.BAG.getName()) ){
@@ -206,7 +207,7 @@ public class BetterNPC implements Listener {
                 Damageable damageable = ((Damageable) is.getItemMeta());
                 if(is.getItemMeta().getEnchants().isEmpty() && sellPricePerItem != 0 && !damageable.hasDamage() && (!is.getItemMeta().hasDisplayName() || is.getItemMeta() instanceof SkullMeta)){
 
-                    double coins = 0;
+                    double coins;
                     
                     if(isRigthClicked){
                         amountOfItem = 0;

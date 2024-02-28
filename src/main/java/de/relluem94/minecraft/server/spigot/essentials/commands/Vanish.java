@@ -21,7 +21,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 public class Vanish implements CommandExecutor {
 
-    List<Player> isVanished = new ArrayList<>();
+    private final List<Player> isVanished = new ArrayList<>();
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {

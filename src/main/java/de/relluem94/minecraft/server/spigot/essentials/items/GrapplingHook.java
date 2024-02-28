@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.items;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;

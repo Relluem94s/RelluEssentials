@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.io.File;
-import java.io.IOException;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
@@ -18,7 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**

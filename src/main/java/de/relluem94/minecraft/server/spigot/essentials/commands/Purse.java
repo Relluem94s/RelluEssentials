@@ -88,7 +88,7 @@ public class Purse implements CommandExecutor {
         double purse = pe.getPurse();
         int coins = Math.abs(Integer.parseInt(args[0]));
 
-        if ((purse >= coins)) {
+        if (purse >= coins) {
             ItemStack coin = CustomItems.coins.getCustomItem();
             ItemMeta im = coin.getItemMeta();
             Objects.requireNonNull(im).setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));
@@ -102,10 +102,9 @@ public class Purse implements CommandExecutor {
 
             p.getInventory().addItem(coin);
             p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TO_ITEM, StringHelper.formatInt(coins)));
-            return true;
         } else {
             p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY);
-            return true;
         }
+        return true;
     }
 }

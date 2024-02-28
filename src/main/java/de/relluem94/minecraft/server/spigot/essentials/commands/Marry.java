@@ -41,7 +41,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Marry implements CommandExecutor {
 
-    HashMap<Player, Player> marryAcceptList = new HashMap<>();
+    private final HashMap<Player, Player> marryAcceptList = new HashMap<>();
 
     private void addMarryEntry(Player player, Player target){
         if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player).getPartner() != null || RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target).getPartner() != null){

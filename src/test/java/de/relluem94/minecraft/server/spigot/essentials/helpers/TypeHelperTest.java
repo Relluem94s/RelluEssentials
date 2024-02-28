@@ -9,25 +9,6 @@ import org.junit.Test;
 import org.bukkit.Material;
 
 public class TypeHelperTest {
-    @Test
-    public void testAreBlocksMaterial() {
-
-    }
-
-    @Test
-    public void testIsBlockOnOfMaterials() {
-
-    }
-
-    @Test
-    public void testIsCMDBlock() {
-
-    }
-
-    @Test
-    public void testIsConsole() {
-
-    }
 
     @Test
     public void testIsDouble1() {

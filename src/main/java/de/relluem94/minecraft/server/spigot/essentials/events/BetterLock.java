@@ -132,7 +132,7 @@ public class BetterLock implements Listener {
                 return false; 
             }
             else{
-                return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOWHOPPER);
+                return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_HOPPER);
             }
         }
         else{
@@ -333,7 +333,7 @@ public class BetterLock implements Listener {
 
                 JSONObject flags = new JSONObject();
                 if(b.getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
-                    String[] flag = {ProtectionFlags.ALLOWREDSTONE.getName()};
+                    String[] flag = {ProtectionFlags.ALLOW_REDSTONE.getName()};
                     flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
                 }
                 bpe.setFlags(flags);
@@ -523,7 +523,7 @@ public class BetterLock implements Listener {
                 else{
                     JSONObject flags = new JSONObject();
                     if(b.getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
-                        String[] flag = {ProtectionFlags.ALLOWREDSTONE.getName(),ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName()};
+                        String[] flag = {ProtectionFlags.ALLOW_REDSTONE.getName(),ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName()};
                         flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
                     }
                     else{
@@ -685,7 +685,7 @@ public class BetterLock implements Listener {
                     )
                 ) {  
                     if (ProtectionHelper.hasRights(protection, pe.getId())) {
-                        if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOWPUBLIC)){
+                        if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)){
                             e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
                         }
                         else{
@@ -718,7 +718,7 @@ public class BetterLock implements Listener {
                                         else{
                                             door2.setOpen(true);
     
-                                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
+                                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
                                                 Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
                                                 door.setOpen(false);
                                                 door2.setOpen(false);
@@ -734,7 +734,7 @@ public class BetterLock implements Listener {
                                 }
                             }
                             else{
-                                if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
+                                if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
                                     Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
                                         door.setOpen(false);
 
@@ -746,7 +746,7 @@ public class BetterLock implements Listener {
                         }
                         else if(openable instanceof TrapDoor){
                             TrapDoor door = (TrapDoor) b.getBlockData();
-                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
+                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
                                 Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
                                     door.setOpen(false);
 
@@ -757,7 +757,7 @@ public class BetterLock implements Listener {
                         }
                         else if(openable instanceof Gate){
                             Gate door = (Gate) b.getBlockData();
-                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTOCLOSE)){
+                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
                                 Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
                                     door.setOpen(false);
 
@@ -766,9 +766,7 @@ public class BetterLock implements Listener {
                                 }, 50);
                             }
                         }
-                        else{
-                            // Other Openable Objects (Future Implementations)
-                        }
+                        // ELSE Other Openable Objects (Future Implementations)
                     }
                 }
             }
@@ -777,7 +775,7 @@ public class BetterLock implements Listener {
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer());
                 if (protection != null && pe != null && pe.getPlayerState().equals(PlayerState.DEFAULT)) { 
                     if (ProtectionHelper.hasRights(protection, pe.getId())) {
-                        if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOWPUBLIC)){
+                        if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)){
                             e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
                         }
                         else{
@@ -821,7 +819,7 @@ public class BetterLock implements Listener {
 
         if (protection != null){
             JSONObject flags = protection.getFlags();
-            boolean isAllowed = (!flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(ProtectionFlags.ALLOWREDSTONE.getName()));
+            boolean isAllowed = (!flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(ProtectionFlags.ALLOW_REDSTONE.getName()));
             if(!isAllowed){
                 e.setNewCurrent(e.getOldCurrent());
             }
