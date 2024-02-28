@@ -13,11 +13,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,10 +58,8 @@ public class DatabaseHelper {
 
     public static final int DB_TEST_PORT = 65065;
 
-    private final String host;
     private final String user;
     private final String password;
-    private final int port;
 
     private static final String CONNECTOR = "jdbc:mysql";
     private final String connectorString;
@@ -75,18 +69,16 @@ public class DatabaseHelper {
         if(RelluEssentials.getInstance().isUnitTest()){
             this.user = "root";
             this.password = "";
-            this.port = DB_TEST_PORT;
+            port = DB_TEST_PORT;
         }
         else{
             this.user = user;
             this.password = password;
-            this.port = port;
-        }       
+        }
 
-        this.host = host;
-        connectorString = CONNECTOR + "://" + this.host + ":" + this.port + "/" + PLUGIN_DATABASE_NAME
+        connectorString = CONNECTOR + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME
                 + "?useSSL=false&allowPublicKeyRetrieval=true";
-        connectorStringInit = CONNECTOR + "://" + this.host + ":" + this.port
+        connectorStringInit = CONNECTOR + "://" + host + ":" + port
                 + "?useSSL=false&allowPublicKeyRetrieval=true";
 
         
@@ -94,14 +86,14 @@ public class DatabaseHelper {
 
     public String readResource(final String fileName) throws FileNotFoundException {
 
-        String out = "";
+        String out;
         try (InputStream is = getClass().getResourceAsStream("/" + fileName);
-                InputStreamReader isr = new InputStreamReader(is);
-                BufferedReader br = new BufferedReader(isr)) {
+             InputStreamReader isr = new InputStreamReader(Objects.requireNonNull(is));
+             BufferedReader br = new BufferedReader(isr)) {
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = br.readLine()) != null) {
-                sb.append(line + Strings.PLUGIN_EOL);
+                sb.append(line).append(Strings.PLUGIN_EOL);
             }
 
             out = sb.toString();
@@ -283,8 +275,6 @@ public class DatabaseHelper {
         applyPatch(getPluginInformation().getDbVersion());
     }
 
-    private final boolean insertScripts = false; // To add Scripts in Development without its own patch version
-
     private void applyPatch(int version) {
         switch (version) {
             case -1:
@@ -331,12 +321,15 @@ public class DatabaseHelper {
                 patch7();
                 break;
             default:
-
+                // To add Scripts in Development without its own patch version
+                /*
+                boolean insertScripts = false;
                 if (insertScripts) {
                     String v = "patches/v7/";
                     executeScript(v + "script.sql");
                 }
                 break;
+                */
         }
     }
 
@@ -1335,7 +1328,7 @@ public class DatabaseHelper {
                 ps.setFloat(4, (float) l.getZ());
                 ps.setFloat(5, l.getYaw());
                 ps.setFloat(6, l.getPitch());
-                ps.setString(7, l.getWorld().getName());
+                ps.setString(7, Objects.requireNonNull(l.getWorld()).getName());
                 ps.setString(8, le.getLocationName());
                 ps.setInt(9, le.getLocationType().getId());
                 ps.setInt(10, le.getPlayerId());

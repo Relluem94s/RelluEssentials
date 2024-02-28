@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;

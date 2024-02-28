@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import lombok.Getter;
+
 public enum EntityCoins {
   /**
    * Reg Ex to Replace all () to compare and add new Entries
@@ -132,13 +134,10 @@ public enum EntityCoins {
   BLOCK_DISPLAY(0);
 
 
+  @Getter
   private final int coins;
 
   EntityCoins(int coins) {
     this.coins = coins;
-  }
-
-  public int getCoins(){
-    return coins;
   }
 }
