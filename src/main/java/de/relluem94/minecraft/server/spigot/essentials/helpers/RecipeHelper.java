@@ -47,20 +47,20 @@ public class RecipeHelper {
      */
     public Recipe getRecipe(){
         if(shape != null){
-            Recipe recipe = new ShapedRecipe(nameSpacedKey, result);
+            ShapedRecipe recipe = new ShapedRecipe(nameSpacedKey, result);
 
-            recipe = ((ShapedRecipe) recipe).shape(shape.rows());
+            recipe = recipe.shape(shape.rows());
             for(Character cr : shape.ingredients().keySet()){
                 Material mat = shape.ingredients().get(cr);
-                ((ShapedRecipe) recipe).setIngredient(cr, mat);
+                recipe.setIngredient(cr, mat);
             }
             
             return recipe;
         }
-        
-        Recipe recipe = new ShapelessRecipe(nameSpacedKey, result);
+
+        ShapelessRecipe recipe = new ShapelessRecipe(nameSpacedKey, result);
         for(Material m : ingredients){
-            ((ShapelessRecipe) recipe).addIngredient(m);
+            recipe.addIngredient(m);
         }
 
         return recipe;

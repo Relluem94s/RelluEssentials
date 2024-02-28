@@ -43,6 +43,7 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
     private EnchantName enchantName;
     @Getter
     private Multimap<Attribute, AttributeModifier> attributes;
+    @SuppressWarnings("unused")
     private double multiply;
     private int actualLevel;
 
@@ -64,7 +65,8 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
         CustomEnchants.customEnchantments.add(this);
     }
 
-    public double getMultiplyer(){
+    @SuppressWarnings("unused")
+    public double getMultiplier(){
         return multiply;
     }
 
@@ -103,12 +105,12 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
     }
 
     @Override
-    public boolean conflictsWith(Enchantment other) {
+    public boolean conflictsWith(@NonNull Enchantment other) {
         return conflicts.contains(other);
     }
 
     @Override
-    public boolean canEnchantItem(ItemStack item) {
+    public boolean canEnchantItem(@NonNull ItemStack item) {
 
         boolean canEnchantItem = target.includes(item);
         for(Enchantment e : item.getEnchantments().keySet()){
@@ -134,6 +136,7 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
         );
     }
 
+    @SuppressWarnings("unused")
     public void addTo(ItemStack i, int level){
         actualLevel = level;
         addTo(i);
