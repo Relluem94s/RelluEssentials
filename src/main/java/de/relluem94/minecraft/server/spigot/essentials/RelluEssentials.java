@@ -74,10 +74,10 @@ public class RelluEssentials extends JavaPlugin {
     private static RelluEssentials instance;
 
     @Getter
-    private DatabaseHelper dBH;
+    private DatabaseHelper databaseHelper;
     @Setter
     @Getter
-    private PluginInformationEntry pie;
+    private PluginInformationEntry pluginInformation;
 
     private static Banker banker;
 
@@ -150,7 +150,7 @@ public class RelluEssentials extends JavaPlugin {
         );
 
         dm.enable();
-        dBH = dm.getDatabaseHelper();
+        databaseHelper = dm.getDatabaseHelper();
         
 
 

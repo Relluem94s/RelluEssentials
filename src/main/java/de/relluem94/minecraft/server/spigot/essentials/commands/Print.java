@@ -18,6 +18,7 @@ import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -91,7 +92,7 @@ public class Print implements CommandExecutor {
         message = replaceSymbols(replaceColor(message));
 
         if(targetedPlayerBySelector != null){
-            message = message.replace("@p", targetedPlayerBySelector.getCustomName());
+            message = message.replace("@p", Objects.requireNonNull(targetedPlayerBySelector.getCustomName()));
         }
 
         Bukkit.broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE+ PLUGIN_COLOR_MESSAGE + message);

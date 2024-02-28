@@ -9,7 +9,12 @@ import org.bukkit.World;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 
 @Getter
-public record WarpAPI(List<LocationEntry> warps) {
+public class WarpAPI {
+    private final List<LocationEntry> warps;
+
+    public WarpAPI(List<LocationEntry>  warps){
+        this.warps = warps;
+    }
 
     public LocationEntry getWarp(String name){
         for(LocationEntry le : warps){
