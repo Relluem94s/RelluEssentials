@@ -29,7 +29,7 @@ import org.bukkit.util.Vector;
 
 public class CloudSailor implements Listener {
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     @EventHandler
     public void mobDeath(EntityDeathEvent event) {
@@ -65,8 +65,7 @@ public class CloudSailor implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onFallDamage(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Player) {
-            Player p = (Player) e.getEntity();
+        if (e.getEntity() instanceof Player p) {
             if (isInWorld(p, Arrays.asList(RelluEssentials.getInstance().worlds))) {
                 if (e.getCause().equals(DamageCause.FALL)) {
                     if (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem())) {

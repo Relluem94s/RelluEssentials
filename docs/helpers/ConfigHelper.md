@@ -50,7 +50,7 @@ Reloads the Config
 
  * **Parameters:**
    * `path` — where the Location gets saved
-   * `l` — the Location it self
+   * `l` — the Location itself
 
 ## `public Location getLocation(String path)`
 

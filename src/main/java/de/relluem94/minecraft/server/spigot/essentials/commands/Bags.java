@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,6 +14,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
+import java.util.Objects;
+
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -20,7 +23,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 public class Bags implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_BAGS)) {
             return false;
         }
@@ -42,7 +45,7 @@ public class Bags implements CommandExecutor {
             return true;   
         }
 
-        BagTypeEntry bte = null;
+        BagTypeEntry bte;
         if(TypeUtils.isInt(args[0])){
             bte = BagHelper.getBagTypeById(Integer.parseInt(args[0]));
         }
@@ -52,8 +55,8 @@ public class Bags implements CommandExecutor {
 
         if(bte != null){
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            if(BagHelper.hasBag(pe.getID(), bte.getId())){
-                p.openInventory(BagHelper.getBag(bte.getId(), pe));
+            if(BagHelper.hasBag(pe.getId(), bte.getId())){
+                p.openInventory(Objects.requireNonNull(BagHelper.getBag(bte.getId(), pe)));
                 return true;
             }
             else{

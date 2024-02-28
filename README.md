@@ -7,29 +7,29 @@ Find out how to get the plugin and how to use it.
 
 ## Usage of Plugin
 1. [Download](https://github.com/Relluem94s/RelluEssentials/packages) or [Build](https://github.com/Relluem94s/RelluEssentials#build) the plugin jar 
-1. Copy the jar into the `plugin` Directory
-1. Start and Stop the Server
-1. Set Host, User and Password of your MySQL Server in the config.yml
-1. Start your Server again
-1. Enjoy
+2. Copy the jar into the `plugin` Directory
+3. Start and Stop the Server
+4. Set Host, User and Password of your MySQL Server in the config.yml
+5. Start your Server again
+6. Enjoy
 
 ## Build
 1. ```shell
    git clone https://github.com/Relluem94/RelluEssentials.git
    ```
 
-1. ```shell
+2. ```shell
    git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
    ```
 
-1. ```shell
+3. ```shell
    mvn clean install
    ```
 
 
 ## Deploy Package
-1. Make sure that your github token is in your maven settings.xml (~/.m2/settings.xml)
-1. ```shell
+1. Make sure that your GitHub token is in your maven settings.xml (~/.m2/settings.xml)
+2. ```shell
     mvn --batch-mode deploy
    ```
 
@@ -44,7 +44,7 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [Rell
 What does the plugin include?
 
 ## Commands
-* Admin gives Clearing Chat, Fake AFK, Teleport to highest Block and Custom NPCs  (`/admin`) 
+* Admin gives Clearing Chat, Fake AFK, Teleport to the highest Block and Custom NPCs  (`/admin`) 
 * Away from Keyboard (`/afk`)
 * Teleports to the latest Checkpoint (on spawn, teleport, world, warp and home) (`/back`)
 * Opens Bag Pack Menu (`/bags`)

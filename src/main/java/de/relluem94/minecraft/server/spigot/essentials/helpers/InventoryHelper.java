@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,7 +18,6 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
  * @author rellu
  */
 public class InventoryHelper {
-
     private InventoryHelper() {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
@@ -65,8 +63,7 @@ public class InventoryHelper {
      * @param sender Updates Inventory for CommandSender / Player
      */
     public static void updateInventory(CommandSender sender) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (sender instanceof Player p) {
             p.updateInventory();
         }
     }
@@ -76,8 +73,7 @@ public class InventoryHelper {
      * @param sender Closes Inventory for CommandSender / Player
      */
     public static void closeInventory(CommandSender sender) {
-        if (sender instanceof Player) {
-            Player p = (Player) sender;
+        if (sender instanceof Player p) {
             p.closeInventory();
         }
     }
@@ -147,8 +143,8 @@ public class InventoryHelper {
                   
                 }
             }
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            Bukkit.getConsoleSender().sendMessage(e.getMessage());
         }
     }
 
@@ -161,7 +157,7 @@ public class InventoryHelper {
             JSONObject slot = new JSONObject();
             slot.put(SLOT_NAME_ID ,Integer.valueOf(i));
             slot.put(SLOT_NAME_ITEMSTACK, ItemHelper.itemTo64(stack));
-            inv.put(Integer.valueOf(i) + "", slot);
+            inv.put(i + "", slot);
         }
         return inv;
     }
