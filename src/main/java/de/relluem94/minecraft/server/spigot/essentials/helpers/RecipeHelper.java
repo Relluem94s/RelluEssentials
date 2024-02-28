@@ -49,9 +49,9 @@ public class RecipeHelper {
         if(shape != null){
             Recipe recipe = new ShapedRecipe(nameSpacedKey, result);
 
-            recipe = ((ShapedRecipe) recipe).shape(shape.getRows());
-            for(Character cr : shape.getIngredients().keySet()){
-                Material mat = shape.getIngredients().get(cr);
+            recipe = ((ShapedRecipe) recipe).shape(shape.rows());
+            for(Character cr : shape.ingredients().keySet()){
+                Material mat = shape.ingredients().get(cr);
                 ((ShapedRecipe) recipe).setIngredient(cr, mat);
             }
             

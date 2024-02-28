@@ -1,5 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import lombok.Getter;
+
+@Getter
 public enum ItemPrice {
   /**
    * Reg Ex to Replace all () to compare and add new Entries
@@ -1430,13 +1433,4 @@ public enum ItemPrice {
     this.buyPrice = buyPrice;
     this.sellPrice = sellPrice;
   }
-
-  public int getBuyPrice() {
-    return buyPrice;
-  }
-
-  public int getSellPrice() {
-    return sellPrice;
-  }
-
 }

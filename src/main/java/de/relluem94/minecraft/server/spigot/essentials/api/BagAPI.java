@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
+import lombok.Getter;
 
+@Getter
 public class BagAPI {
     
     private final List<BagTypeEntry> bagTypeEntryList = new ArrayList<>();
@@ -15,14 +17,5 @@ public class BagAPI {
      */
     public BagAPI(List<BagTypeEntry> bagTypes) {
         bagTypeEntryList.addAll(bagTypes);
-    }
-
-    /**
-     * 
-     * Gives back a List of all BagTypes
-     * @return List of BagTypeEntry
-     */
-    public List<BagTypeEntry> getBagTypeEntryList(){
-        return bagTypeEntryList;
     }
 }

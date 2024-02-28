@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.attribute.Attribute;
