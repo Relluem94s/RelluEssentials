@@ -117,7 +117,8 @@ public class Strings {
     public static final String PLUGIN_COMMAND_MORE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast mehr von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erzeugt!";
     public static final String PLUGIN_COMMAND_MORE_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast mehr von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erhalten!";
 
-    public static final String PLUGIN_COMMAND_REPAIR = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " repariert!";
+    public static final String PLUGIN_COMMAND_REPAIR = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " repariert!";
+    public static final String PLUGIN_COMMAND_CANNOT_REPAIR = PLUGIN_FORMS_COMMAND_PREFIX + "Du kannst " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " nicht reparieren!";
     public static final String PLUGIN_COMMAND_REPAIR_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " repariert bekommen!";
 
     public static final String PLUGIN_COMMAND_GAMERULES = PLUGIN_FORMS_COMMAND_PREFIX + "Die Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "hat folgende Einstellungen:";
