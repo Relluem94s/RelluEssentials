@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -88,8 +89,7 @@ public class Marry implements CommandExecutor {
         firstPlayer.setPartner(playerPartnerEntry);
         secondPlayer.setPartner(playerPartnerEntry);
 
-        Collection<ProtectionEntry> protectionEntryList = new ArrayList<> ();
-        protectionEntryList.addAll(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
+        Collection<ProtectionEntry> protectionEntryList = new ArrayList<>(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
 
         for(ProtectionEntry pre : protectionEntryList){ 
             if(pre.getCreatedBy() == firstPlayer.getId()){
@@ -130,8 +130,7 @@ public class Marry implements CommandExecutor {
         
             RelluEssentials.getInstance().getDatabaseHelper().deletePlayerPartner(ppe);
 
-            Collection<ProtectionEntry> protectionEntryList = new ArrayList<> ();
-            protectionEntryList.addAll(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
+            Collection<ProtectionEntry> protectionEntryList = new ArrayList<>(RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().values());
 
             for(ProtectionEntry pre : protectionEntryList){
                 if(pre.getCreatedBy() == pe.getId()){
@@ -148,7 +147,7 @@ public class Marry implements CommandExecutor {
 
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_MARRY)) {
             return false;
         }

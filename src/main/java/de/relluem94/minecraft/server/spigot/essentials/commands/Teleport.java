@@ -19,6 +19,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import java.util.HashMap;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -92,7 +93,7 @@ public class Teleport implements CommandExecutor {
 
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TELEPORT)) {
             return false;
         }

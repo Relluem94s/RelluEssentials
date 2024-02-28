@@ -24,7 +24,6 @@ public class NPCHelper {
     private final boolean isCustomNameVisible;
     private boolean isInvisible;
     private boolean isCollidable = true;
-    private final boolean canPickupItems = false;
     private double health = 0;
     private final Profession profession;
 
@@ -85,6 +84,7 @@ public class NPCHelper {
         livingEntity.setHealth(health);
         livingEntity.addPotionEffects(potionEffects);
         livingEntity.setInvisible(isInvisible);
+        boolean canPickupItems = false;
         livingEntity.setCanPickupItems(canPickupItems);
 
         Villager villager = (Villager) livingEntity;

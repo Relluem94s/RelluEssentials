@@ -28,7 +28,7 @@ public class Groups {
                 return ge;
             }
         }
-        return null;
+        return new GroupEntry(1, "User", "§8");
     }
 
     /**

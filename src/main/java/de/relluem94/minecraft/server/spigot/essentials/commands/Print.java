@@ -19,6 +19,7 @@ import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
@@ -36,7 +37,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 public class Print implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         Player targetedPlayerBySelector = null;
 
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PRINT)) {

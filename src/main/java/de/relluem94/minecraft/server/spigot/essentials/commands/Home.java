@@ -22,6 +22,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,7 +37,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 public class Home implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME)) {
             switch (args.length) {
                 case 0:
@@ -65,14 +66,14 @@ public class Home implements CommandExecutor {
 
                             if (!pe.getHomes().isEmpty()) {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
-                                pe.getHomes().stream().forEachOrdered(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
+                                pe.getHomes().forEach(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
                             } else {
                                 p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
                             }
 
                             if(!pe.getDeaths().isEmpty()){
                                 p.sendMessage(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS);
-                                pe.getDeaths().stream().forEachOrdered(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
+                                pe.getDeaths().forEach(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
                             }
                             return true;
                         }

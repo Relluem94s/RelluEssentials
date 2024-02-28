@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,7 +50,7 @@ public class Rollback implements CommandExecutor {
     
      */
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK)) {
             switch (args.length) {
                 case 2:

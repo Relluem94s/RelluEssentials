@@ -69,14 +69,6 @@ public class RelluEssentialsTest {
         addPlayerToDB(player3, "user");
 
         server.getScheduler().performTicks(100L);
-
-        
-
-        //server.execute("setgroup", server.getConsoleSender(), new String[]{player1.getName(), "mod"});
-        //server.execute("setgroup", server.getConsoleSender(), new String[]{player2.getName(), "vip"});
-        //server.execute("setgroup", server.getConsoleSender(), new String[]{player3.getName(), "user"});
-
-        //player3.disconnect();
     }
 
     /**

@@ -20,6 +20,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 
 import java.util.Date;
 
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -38,7 +39,7 @@ public class PlayerInfo implements CommandExecutor {
 
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PLAYERINFO)) {
             return false;
         }

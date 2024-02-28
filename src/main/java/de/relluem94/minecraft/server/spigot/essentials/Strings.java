@@ -12,7 +12,7 @@ public class Strings {
     /*                             PLUGIN   STUFF                                    */
     /*********************************************************************************/
 
-    public static final String PLUGIN_EOL = System.getProperty("line.separator");
+    public static final String PLUGIN_EOL = System.lineSeparator();
 
     public static final String PLUGIN_COLOR_COMMAND = "§f";
     public static final String PLUGIN_COLOR_COMMAND_NAME = "§b";

@@ -322,13 +322,6 @@ public class DatabaseHelper {
                 break;
             default:
                 // To add Scripts in Development without its own patch version
-                /*
-                boolean insertScripts = false;
-                if (insertScripts) {
-                    String v = "patches/v7/";
-                    executeScript(v + "script.sql");
-                }
-                */
                 break;
         }
     }

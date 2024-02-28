@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -19,7 +20,6 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
  * @author rellu
  */
 public class InventoryHelper {
-
     private InventoryHelper() {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
@@ -145,8 +145,8 @@ public class InventoryHelper {
                   
                 }
             }
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            Bukkit.getConsoleSender().sendMessage(e.getMessage());
         }
     }
 

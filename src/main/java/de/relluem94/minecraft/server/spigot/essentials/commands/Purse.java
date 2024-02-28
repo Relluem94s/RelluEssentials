@@ -13,7 +13,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Objects;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,7 +37,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 public class Purse implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
             return false;
         }
@@ -90,7 +92,7 @@ public class Purse implements CommandExecutor {
         if ((purse >= coins)) {
             ItemStack coin = CustomItems.coins.getCustomItem();
             ItemMeta im = coin.getItemMeta();
-            im.setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));
+            Objects.requireNonNull(im).setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));
             im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, coins);
 
             coin.setItemMeta(im);
