@@ -98,12 +98,6 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot</artifactId>
-      <version>1.20.1-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.github.seeseemelk</groupId>
       <artifactId>MockBukkit-v1.20</artifactId>
       <version>3.78.0</version>
@@ -126,12 +120,20 @@
           <groupId>net.kyori</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>annotations</artifactId>
-          <groupId>org.jetbrains</groupId>
-        </exclusion>
-        <exclusion>
           <artifactId>byte-buddy</artifactId>
           <groupId>net.bytebuddy</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>maven-resolver-provider</artifactId>
+          <groupId>org.apache.maven</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>maven-resolver-connector-basic</artifactId>
+          <groupId>org.apache.maven.resolver</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>maven-resolver-transport-http</artifactId>
+          <groupId>org.apache.maven.resolver</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -168,10 +170,52 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.30</version>
-      <scope>provided</scope>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.10.1</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit-platform-engine</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-jupiter-api</artifactId>
+          <groupId>org.junit.jupiter</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-runner</artifactId>
+      <version>1.10.1</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-platform-launcher</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-platform-suite-api</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>junit-platform-suite-commons</artifactId>
+          <groupId>org.junit.platform</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
   <distributionManagement>
@@ -183,7 +227,7 @@
   </distributionManagement>
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
-    <plugin.apiVersion>1.19</plugin.apiVersion>
+    <plugin.apiVersion>1.20</plugin.apiVersion>
     <plugin.author>Relluem94</plugin.author>
     <project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
     <plugin.website>https://www.relluem94.de</plugin.website>

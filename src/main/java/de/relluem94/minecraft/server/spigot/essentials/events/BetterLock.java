@@ -88,7 +88,6 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 import javax.annotation.Nullable;
 
-
 /**
  *
  * @author rellu
