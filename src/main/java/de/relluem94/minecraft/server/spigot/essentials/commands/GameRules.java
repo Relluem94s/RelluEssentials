@@ -14,6 +14,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
@@ -25,10 +26,12 @@ import org.bukkit.entity.Player;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
-public class Gamerules implements CommandExecutor {
+import java.util.Objects;
+
+public class GameRules implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_GAMERULES)) {
             return false;
         }
@@ -73,10 +76,10 @@ public class Gamerules implements CommandExecutor {
     }
 
     private void showGameRule(CommandSender sender, World world) {
-        String[] gamerules = world.getGameRules();
+        String[] gameRules = world.getGameRules();
         sendMessage(sender, String.format(PLUGIN_COMMAND_GAMERULES, world.getName()));
-        for (String gamerule : gamerules) {
-            Object value = world.getGameRuleValue(GameRule.getByName(gamerule));
+        for (String gameRule : gameRules) {
+            Object value = world.getGameRuleValue(Objects.requireNonNull(GameRule.getByName(gameRule)));
             String color;
             if (value instanceof Boolean) {
                 color = ((boolean)value ? PLUGIN_COLOR_POSITIVE : PLUGIN_COLOR_NEGATIVE);
@@ -84,7 +87,7 @@ public class Gamerules implements CommandExecutor {
                 color = "§7";
             }
 
-            sendMessage(sender, "        §d" + gamerule + "§f = " + color + value);
+            sendMessage(sender, "        §d" + gameRule + "§f = " + color + value);
         }
     }
 }

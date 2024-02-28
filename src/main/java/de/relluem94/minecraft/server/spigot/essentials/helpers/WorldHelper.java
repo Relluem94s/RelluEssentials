@@ -239,10 +239,10 @@ public class WorldHelper {
                     }
                     else{
                         wgie = new WorldGroupInventoryEntry();
-                        wgie.setCreatedby(pe.getID());
-                        wgie.setPlayerId(pe.getID());
+                        wgie.setCreatedBy(pe.getId());
+                        wgie.setPlayerId(pe.getId());
                         wgie.setInventory(InventoryHelper.saveInventoryToJSON(p));
-                        wgie.setWorldGroup(wge);
+                        wgie.setWorldGroupEntry(wge);
                         wgie.setFoodLevel(p.getFoodLevel());
                         wgie.setHealth(p.getHealth());
                         wgie.setTotalExperience(ExperienceHelper.getTotalExperience(p));
@@ -301,9 +301,9 @@ public class WorldHelper {
         WorldGroupInventoryEntry wgie = RelluEssentials.getInstance().getDatabaseHelper().getWorldGroupInventory(pe, wge);
         if(wgie == null){
             wgie = new WorldGroupInventoryEntry();
-            wgie.setCreatedby(pe.getID());
-            wgie.setPlayerId(pe.getID());
-            wgie.setWorldGroup(wge);
+            wgie.setCreatedBy(pe.getId());
+            wgie.setPlayerId(pe.getId());
+            wgie.setWorldGroupEntry(wge);
 
             wgie.setInventory(InventoryHelper.saveInventoryToJSON(p));
             wgie.setFoodLevel(p.getFoodLevel());
@@ -326,7 +326,7 @@ public class WorldHelper {
 
         wgie.setFoodLevel(p.getFoodLevel());
         wgie.setHealth(p.getHealth());
-        wgie.setUpdatedBy(pe.getID());
+        wgie.setUpdatedBy(pe.getId());
 
         wgie.setTotalExperience(ExperienceHelper.getTotalExperience(p));
        

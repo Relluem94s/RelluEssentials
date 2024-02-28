@@ -8,11 +8,11 @@ public class Strings {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
-    /*********************************************************************************/
-    /*                             PLUGIN   STUFF                                    */
-    /*********************************************************************************/
+    /* ******************************************************************************* */
+    /*                               PLUGIN   STUFF                                    */
+    /* ******************************************************************************* */
 
-    public static final String PLUGIN_EOL = System.getProperty("line.separator");
+    public static final String PLUGIN_EOL = System.lineSeparator();
 
     public static final String PLUGIN_COLOR_COMMAND = "§f";
     public static final String PLUGIN_COLOR_COMMAND_NAME = "§b";
@@ -35,7 +35,6 @@ public class Strings {
     public static final String PLUGIN_NAME_ESSENTIALS = "Essentials";
     public static final String PLUGIN_NAME_INITIAL_RELLU = "R";
     public static final String PLUGIN_NAME_INITIAL_ESSENTIALS = "E";
-    public static final String PLUGIN_NAME = PLUGIN_NAME_RELLU + PLUGIN_NAME_ESSENTIALS;
     public static final String PLUGIN_NAME_SHORT = PLUGIN_COLOR_LOGO_RELLU + PLUGIN_NAME_INITIAL_RELLU + PLUGIN_COLOR_LOGO_ESSENTIALS + PLUGIN_NAME_INITIAL_ESSENTIALS + PLUGIN_COLOR_MESSAGE;
     public static final String PLUGIN_NAME_PREFIX = "§o§l" + PLUGIN_COLOR_LOGO_RELLU + PLUGIN_NAME_RELLU + PLUGIN_COLOR_LOGO_ESSENTIALS + PLUGIN_NAME_ESSENTIALS + PLUGIN_COLOR_RESET + PLUGIN_COLOR_MESSAGE;
     public static final String PLUGIN_NAME_CONSOLE = PLUGIN_COLOR_MESSAGE + "[" + PLUGIN_NAME_PREFIX + PLUGIN_COLOR_MESSAGE + "] ";
@@ -51,21 +50,19 @@ public class Strings {
     public static final String PLUGIN_FORMS_SPACER_CHANNEL = " >> " + PLUGIN_COLOR_COMMAND;
     public static final String PLUGIN_FORMS_SPACER_MESSAGE = PLUGIN_COLOR_MESSAGE_SPACER + " >> " + PLUGIN_COLOR_MESSAGE;
     public static final String PLUGIN_FORMS_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
-    public static final String PLUGIN_FORMS_SHORT_BORDER = "<><><><><><><><><><><><><><><><><><>";
-    public static final String PLUGIN_FORMS_WHITESPACE = "               ";
     public static final String PLUGIN_FORMS_WHITESPACE_SHORT = "    ";
     public static final String PLUGIN_FORMS_COMMAND_PREFIX = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_COMMAND;
 
-    public static final String PLUGIN_SYMBOL_HEAVY_CHECK_MARK = PLUGIN_COLOR_POSITIVE + "\u2714 ";
-    public static final String PLUGIN_SYMBOL_BLACK_LARGE_CIRCLE = PLUGIN_COLOR_NEUTRAL + "\u2B24 ";
-    public static final String PLUGIN_SYMBOL_HEAVY_MULTIPLICATION_X = PLUGIN_COLOR_NEGATIVE + "\u2716 ";
-    public static final String PLUGIN_SYMBOL_RIGHT_POINTING_ANGLE_BRACKET = PLUGIN_COLOR_POSITIVE + "\u232A";
-    public static final String PLUGIN_SYMBOL_LEFT_POINTING_ANGLE_BRACKET = PLUGIN_COLOR_NEGATIVE + "\u2329";
-    public static final String PLUGIN_SYMBOL_CROSS_MARK = PLUGIN_COLOR_NEGATIVE + "\u274C";
-    public static final String PLUGIN_SYMBOL_BLACK_FOUR_POINTED_STAR = PLUGIN_COLOR_POSITIVE + "\u2726"; 
-    public static final String PLUGIN_SYMBOL_HEART = PLUGIN_COLOR_NEGATIVE + "\u2665"; 
-    // \u274C Cross Mark (U+274C)
-    // \u2726 Black Four Pointed Star (U+2726)
+    public static final String PLUGIN_SYMBOL_HEAVY_CHECK_MARK = PLUGIN_COLOR_POSITIVE + "✔ ";
+    public static final String PLUGIN_SYMBOL_BLACK_LARGE_CIRCLE = PLUGIN_COLOR_NEUTRAL + "⬤ ";
+    public static final String PLUGIN_SYMBOL_HEAVY_MULTIPLICATION_X = PLUGIN_COLOR_NEGATIVE + "✖ ";
+    public static final String PLUGIN_SYMBOL_RIGHT_POINTING_ANGLE_BRACKET = PLUGIN_COLOR_POSITIVE + "〉";
+    public static final String PLUGIN_SYMBOL_LEFT_POINTING_ANGLE_BRACKET = PLUGIN_COLOR_NEGATIVE + "〈";
+    public static final String PLUGIN_SYMBOL_CROSS_MARK = PLUGIN_COLOR_NEGATIVE + "❌";
+    public static final String PLUGIN_SYMBOL_BLACK_FOUR_POINTED_STAR = PLUGIN_COLOR_POSITIVE + "✦";
+    public static final String PLUGIN_SYMBOL_HEART = PLUGIN_COLOR_NEGATIVE + "♥";
+    // ❌ Cross Mark (U+274C)
+    // ✦ Black Four Pointed Star (U+2726)
 
     public static final String PLUGIN_SIGN_NAME = PLUGIN_COLOR_MESSAGE + "[" + PLUGIN_NAME_SHORT + "]";
     public static final String PLUGIN_SIGN_CLICK = PLUGIN_COLOR_MESSAGE + "[Click here]";
@@ -93,9 +90,9 @@ public class Strings {
 
     
 
-    /*********************************************************************************/
-    /*                            COMMAND   STUFF                                    */
-    /*********************************************************************************/
+    /* ******************************************************************************* */
+    /*                              COMMAND   STUFF                                    */
+    /* ******************************************************************************* */
     public static final String PLUGIN_COMMAND_FLYMODE = PLUGIN_FORMS_COMMAND_PREFIX + "Der Flugmodus von %s" + PLUGIN_COLOR_COMMAND + " wurde " + PLUGIN_COLOR_COMMAND_ARG + "%s!";
     public static final String PLUGIN_COMMAND_FLYMODE_ACTIVATED = "aktiviert";
     public static final String PLUGIN_COMMAND_FLYMODE_DEACTIVATED = "deaktiviert";
@@ -109,12 +106,10 @@ public class Strings {
     public static final String PLUGIN_COMMAND_COOKIES = PLUGIN_FORMS_COMMAND_PREFIX + "Ein Keks für dich, %s";
     public static final String PLUGIN_COMMAND_COOKIES_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast %s " + PLUGIN_COLOR_COMMAND + "ein Keks geschenkt!";
     public static final String PLUGIN_COMMAND_COOKIES_LORE_1 = PLUGIN_COLOR_COMMAND + "Mit viel Liebe gebacken von %s";
-    public static final String PLUGIN_COMMAND_COOKIES_LORE_2 = PLUGIN_COLOR_COMMAND + "Backe doch auch einen Keks!";
     public static final String PLUGIN_COMMAND_COOKIES_LORE_3 = PLUGIN_COLOR_COMMAND + "Wie selbstverliebt!";
     public static final String PLUGIN_COMMAND_COOKIES_DISPLAYNAME = PLUGIN_COLOR_COMMAND + "Schokoladenkeks";
 
     public static final String PLUGIN_COMMAND_HEAD = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast ein Kopf von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erzeugt!";
-    public static final String PLUGIN_COMMAND_HEAD_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Es konnte kei Kopf erzeugt werden, Spieler nicht gefunden";
     public static final String PLUGIN_COMMAND_VANISH_DISABLE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast vanish für " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "deaktiviert!";
     public static final String PLUGIN_COMMAND_VANISH_ENABLE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast vanish für " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "aktiviert!";
     public static final String PLUGIN_COMMAND_VANISH = PLUGIN_FORMS_COMMAND_PREFIX + "Dein vanish wurde umgeschaltet!";
@@ -122,7 +117,8 @@ public class Strings {
     public static final String PLUGIN_COMMAND_MORE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast mehr von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erzeugt!";
     public static final String PLUGIN_COMMAND_MORE_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast mehr von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erhalten!";
 
-    public static final String PLUGIN_COMMAND_REPAIR = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " repariert!";
+    public static final String PLUGIN_COMMAND_REPAIR = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " repariert!";
+    public static final String PLUGIN_COMMAND_CANNOT_REPAIR = PLUGIN_FORMS_COMMAND_PREFIX + "Du kannst " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " nicht reparieren!";
     public static final String PLUGIN_COMMAND_REPAIR_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " repariert bekommen!";
 
     public static final String PLUGIN_COMMAND_GAMERULES = PLUGIN_FORMS_COMMAND_PREFIX + "Die Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "hat folgende Einstellungen:";
@@ -258,8 +254,9 @@ public class Strings {
     public static final String PLUGIN_COMMAND_EXIT_KICK_MESSAGE = PLUGIN_COLOR_COMMAND + "exited.";
     public static final String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COLOR_COMMAND + "Server is shutting down...";
 
+
     public static final String PLUGIN_COMMAND_TP_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " eine Teleport Anfrage geschickt";
-    public static final String PLUGIN_COMMAND_TP_REQUEST_TARGET = PLUGIN_FORMS_COMMAND_PREFIX + "Teleport Anfrage von " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "";
+    public static final String PLUGIN_COMMAND_TP_REQUEST_TARGET = PLUGIN_FORMS_COMMAND_PREFIX + "Teleport Anfrage von " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND;
     public static final String PLUGIN_COMMAND_TP_REQUEST_EXPIRED = PLUGIN_FORMS_COMMAND_PREFIX + "Teleport Anfrage ist abgelaufen!";
     public static final String PLUGIN_COMMAND_TP = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest zu " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "teleportiert!";
     public static final String PLUGIN_COMMAND_TP_TO = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "zu  dir teleportiert!";

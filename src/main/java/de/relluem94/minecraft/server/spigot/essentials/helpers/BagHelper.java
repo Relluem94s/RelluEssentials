@@ -52,7 +52,7 @@ public class BagHelper {
     public static final int BAG_SIZE = 28;
 
     public static Inventory getBag(int type, PlayerEntry pe) {
-        BagEntry be = getBag(pe.getID(), type);
+        BagEntry be = getBag(pe.getId(), type);
 
         if(be == null){
             return null;
@@ -121,7 +121,7 @@ public class BagHelper {
         while(bteli.hasNext()){
             slot = InventoryHelper.getNextSlot(slot);
             BagTypeEntry bte = bteli.next();
-            if(hasBag(pe.getID(), bte.getId())){
+            if(hasBag(pe.getId(), bte.getId())){
                 inv.setItem(slot, BagHelper.getItem(bte, false).getCustomItem());
                 slot++;
             }
@@ -213,7 +213,7 @@ public class BagHelper {
     }
 
     public static boolean hasBag(int type, PlayerEntry pe){
-        return RelluEssentials.getInstance().getDatabaseHelper().getBag(type, pe.getID()) != null;
+        return RelluEssentials.getInstance().getDatabaseHelper().getBag(type, pe.getId()) != null;
     }
 
     public static boolean hasBag(int playerFK, int bagType){
@@ -283,12 +283,12 @@ public class BagHelper {
             ItemStack checkWithoutAmount = i.getItemStack().clone();
             checkWithoutAmount.setAmount(1);
             if(RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)){
-                Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
+                Collection<BagEntry> bel = BagHelper.getBags(pe.getId());
                 for(BagEntry be: bel){
                     int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
                     if(slot != -1){
                         be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
-                        be.setToBeUpdated(true);
+                        be.setHasToBeUpdated(true);
                         ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName()));
                         p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
                         lio.add(i);
@@ -307,12 +307,12 @@ public class BagHelper {
             ItemStack checkWithoutAmount = i.clone();
             checkWithoutAmount.setAmount(1);
             if(RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)){
-                Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
+                Collection<BagEntry> bel = BagHelper.getBags(pe.getId());
                 for(BagEntry be: bel){
                     int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
                     if(slot != -1){
                         be.setSlotValue(slot, be.getSlotValue(slot) + i.getAmount());
-                        be.setToBeUpdated(true);
+                        be.setHasToBeUpdated(true);
                         ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(), i.getType().name().replace("_", " ").toLowerCase()));
                         p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
                         lio.add(i);
@@ -330,12 +330,12 @@ public class BagHelper {
             return false;
         }
 
-        Collection<BagEntry> bel = BagHelper.getBags(pe.getID());
+        Collection<BagEntry> bel = BagHelper.getBags(pe.getId());
         for(BagEntry be: bel){
             int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
             if(slot != -1){
                 be.setSlotValue(slot, be.getSlotValue(slot) + item.getItemStack().getAmount());
-                be.setToBeUpdated(true);
+                be.setHasToBeUpdated(true);
                 ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(), item.getName()));
                 p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
                 item.getItemStack().setAmount(0);
@@ -350,9 +350,9 @@ public class BagHelper {
         int updatedBags = 0;
 
         for(BagEntry be : RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().values()){
-            if(be.hasToBeUpdated()){
+            if(be.isHasToBeUpdated()){
                 RelluEssentials.getInstance().getDatabaseHelper().updateBagEntry(be);
-                be.setToBeUpdated(false);
+                be.setHasToBeUpdated(false);
                 updatedBags++;
             }
         }

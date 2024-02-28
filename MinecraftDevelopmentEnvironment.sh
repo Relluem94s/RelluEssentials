@@ -1,1 +1,0 @@
-RelluBash-Script-Collection/dev/MinecraftDevelopmentEnvironment.sh
