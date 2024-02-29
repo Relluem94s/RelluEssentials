@@ -4,7 +4,7 @@
     <groupId>de.relluem94</groupId>
     <artifactId>relluessentials</artifactId>
     <name>RelluEssentials</name>
-    <version>4.1.6</version>
+    <version>4.1.7</version>
     <url>https://github.com/Relluem94s/RelluEssentials</url>
     <properties>
         <lombok.version>1.18.30</lombok.version>
@@ -105,11 +105,6 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <excludes>
-                    <exclude>lang_en_US.properties</exclude>
-                    <exclude>lang_de_DE.properties</exclude>
-                    <exclude>lang.properties</exclude>
-                </excludes>
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>

@@ -17,11 +17,6 @@
       <resource>
         <filtering>true</filtering>
         <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>lang_en_US.properties</exclude>
-          <exclude>lang_de_DE.properties</exclude>
-          <exclude>lang.properties</exclude>
-        </excludes>
       </resource>
     </resources>
     <plugins>
