@@ -101,7 +101,7 @@ public class BetterBags implements Listener {
     }
 
     private boolean isChorusPlant(Block block){
-        return block.getType().equals(Material.CHORUS_PLANT);
+        return block.getType().equals(Material.CHORUS_PLANT) && block.getRelative(BlockFace.DOWN).getType().equals(Material.END_STONE);
     }
 
     private Set<Block> getChorusBlocks(Block b, int count, BlockFace prevBlockFace){
