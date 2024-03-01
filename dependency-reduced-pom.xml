@@ -4,7 +4,7 @@
   <groupId>de.relluem94</groupId>
   <artifactId>relluessentials</artifactId>
   <name>RelluEssentials</name>
-  <version>4.1.6</version>
+  <version>4.1.8</version>
   <url>https://github.com/Relluem94s/RelluEssentials</url>
   <scm>
     <connection>scm:git:git@github.com:Relluem94s/RelluEssentials.git</connection>
@@ -51,10 +51,9 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <excludes>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.MF</exclude>
-                    <exclude>META-INF/*.DSA</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/**</exclude>
+                    <exclude>LICENSE</exclude>
+                    <exclude>module-info.class</exclude>
                   </excludes>
                 </filter>
               </filters>
