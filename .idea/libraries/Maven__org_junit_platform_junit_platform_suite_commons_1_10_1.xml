@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: org.junit.platform:junit-platform-suite-commons:1.10.1" type="java-imported" external-system-id="Maven">
+    <properties groupId="org.junit.platform" artifactId="junit-platform-suite-commons" version="1.10.1" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-suite-commons/1.10.1/junit-platform-suite-commons-1.10.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-suite-commons/1.10.1/junit-platform-suite-commons-1.10.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-suite-commons/1.10.1/junit-platform-suite-commons-1.10.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

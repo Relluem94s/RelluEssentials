@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f995d241-c77a-4ca6-a80f-a33c036f2727" name="Changes" comment="RE-166 Fixed Chorus Plant, added check if is on End Stone + fixed bug that shows only one fruit is picked up">
+      <change beforePath="$PROJECT_DIR$/RelluBash-Script-Collection" beforeDir="false" afterPath="$PROJECT_DIR$/RelluBash-Script-Collection" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Relluem94&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="c6d663ae-5f20-42d6-96ee-0a1ebbe3fd22" />
+        <option name="url" value="https://github.com/Relluem94s/RelluBash-Script-Collection" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2d121EOSOg8fsQrfdGbGWsvUl3D" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.relluessentials [clean,install].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Shell Script.Deploy.executor": "Run",
+    "Shell Script.Start Server.executor": "Run",
+    "git-widget-placeholder": "Feature__RE-103",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/rellu/repos/RelluSGA",
+    "settings.editor.selected.configurable": "terminal"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-17.0.10-corretto-17.0.10-f644763e9732-f00315f9" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f995d241-c77a-4ca6-a80f-a33c036f2727" name="Changes" comment="" />
+      <created>1709161047493</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1709161047493</updated>
+    </task>
+    <task id="LOCAL-00001" summary="cleanup">
+      <option name="closed" value="true" />
+      <created>1709161658637</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1709161658637</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Merge remote-tracking branch 'origin/v4.2' into v4.2&#10;&#10;# Conflicts:&#10;#&#9;.idea/compiler.xml&#10;#&#9;relluessentials.iml">
+      <option name="closed" value="true" />
+      <created>1709162399100</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1709162399100</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added intellij runconfigs">
+      <option name="closed" value="true" />
+      <created>1709163070032</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1709163070032</updated>
+    </task>
+    <task id="LOCAL-00004" summary="added intellij runconfigs">
+      <option name="closed" value="true" />
+      <created>1709239198079</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1709239198079</updated>
+    </task>
+    <task id="LOCAL-00005" summary="RE-168 Bumped Version and Fixed Overlapping Resource">
+      <option name="closed" value="true" />
+      <created>1709328843838</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1709328843838</updated>
+    </task>
+    <task id="LOCAL-00006" summary="RE-166 Fixed Chorus Plant, added check if is on End Stone">
+      <option name="closed" value="true" />
+      <created>1709329093988</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1709329093988</updated>
+    </task>
+    <task id="LOCAL-00007" summary="RE-166 Fixed Chorus Plant, added check if is on End Stone + fixed bug that shows only one fruit is picked up">
+      <option name="closed" value="true" />
+      <created>1709329956973</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1709329956974</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="Feature_RE-103" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="cleanup" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/v4.2' into v4.2&#10;&#10;# Conflicts:&#10;#&#9;.idea/compiler.xml&#10;#&#9;relluessentials.iml" />
+    <MESSAGE value="added intellij runconfigs" />
+    <MESSAGE value="RE-168 Bumped Version and Fixed Overlapping Resource" />
+    <MESSAGE value="RE-166 Fixed Chorus Plant, added check if is on End Stone" />
+    <MESSAGE value="RE-166 Fixed Chorus Plant, added check if is on End Stone + fixed bug that shows only one fruit is picked up" />
+    <option name="LAST_COMMIT_MESSAGE" value="RE-166 Fixed Chorus Plant, added check if is on End Stone + fixed bug that shows only one fruit is picked up" />
+  </component>
+</project>
