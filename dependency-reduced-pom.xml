@@ -89,6 +89,13 @@
       <id>papermc</id>
       <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>github</id>
+      <name>RelluLib</name>
+      <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>

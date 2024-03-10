@@ -46,6 +46,13 @@
             <id>papermc</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>github</id>
+            <name>RelluLib</name>
+            <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
+            <snapshots><enabled>true</enabled></snapshots>
+            <releases><enabled>true</enabled></releases>
+        </repository>
     </repositories>
     <dependencies>
         <dependency>
@@ -55,9 +62,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.Relluem94s</groupId>
-            <artifactId>RelluLib</artifactId>
-            <version>0.12</version>
+            <groupId>de.relluem94</groupId>
+            <artifactId>rellulib</artifactId>
+            <version>0.16</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -77,11 +84,6 @@
             <version>4.0.43</version>
         </dependency>
         <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>24.1.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>32.1.3-jre</version>
@@ -98,7 +100,6 @@
             <version>1.10.1</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
     <build>
         <resources>
