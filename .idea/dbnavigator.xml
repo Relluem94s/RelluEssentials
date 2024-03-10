@@ -6,7 +6,7 @@
   </component>
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
@@ -17,7 +17,14 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="005e315d-ba06-4fb2-b969-2ea966f165b7">
-      <console name="RelluEssentials" type="STANDARD" schema="" session="Main" />
+      <console name="RelluEssentials" type="STANDARD" schema="" session="Main"><![CDATA[INSERT INTO `rellu_essentials`.`protection_locks` (`created`, `createdby`, `value`) VALUES
+(now(), 1, 'CHERRY_SIGN'),
+(now(), 1, 'CHERRY_WALL_SIGN'),
+(now(), 1, 'CHERRY_WALL_HANGING_SIGN'),
+(now(), 1, 'CHERRY_HANGING_SIGN'),
+(now(), 1, 'CHERRY_TRAPDOOR'),
+(now(), 1, 'CHERRY_DOOR'),
+(now(), 1, 'CHERRY_FENCE_GATE');]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -532,5 +539,9 @@
         </visibility-settings>
       </environment>
     </general-settings>
+  </component>
+  <component name="DBNavigator.Project.StatementExecutionManager">
+    <execution-variables />
+    <execution-variable-types />
   </component>
 </project>
