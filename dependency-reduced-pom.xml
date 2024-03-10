@@ -4,7 +4,7 @@
   <groupId>de.relluem94</groupId>
   <artifactId>relluessentials</artifactId>
   <name>RelluEssentials</name>
-  <version>4.1.6</version>
+  <version>4.1.8</version>
   <url>https://github.com/Relluem94s/RelluEssentials</url>
   <scm>
     <connection>scm:git:git@github.com:Relluem94s/RelluEssentials.git</connection>
@@ -51,10 +51,9 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <excludes>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.MF</exclude>
-                    <exclude>META-INF/*.DSA</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/**</exclude>
+                    <exclude>LICENSE</exclude>
+                    <exclude>module-info.class</exclude>
                   </excludes>
                 </filter>
               </filters>
@@ -72,11 +71,27 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>github</id>
+      <repositories>
+        <repository>
+          <releases />
+          <snapshots />
+          <id>central</id>
+          <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+          <releases />
+          <snapshots />
+          <id>github</id>
+          <name>RelluLib</name>
+          <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
   <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
     <repository>
       <id>central</id>
       <name>central</name>
@@ -89,6 +104,13 @@
     <repository>
       <id>papermc</id>
       <url>https://repo.papermc.io/repository/maven-public/</url>
+    </repository>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>github</id>
+      <name>RelluLib</name>
+      <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
     </repository>
   </repositories>
   <dependencies>

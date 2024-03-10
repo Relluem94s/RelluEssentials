@@ -271,6 +271,15 @@ public class DatabaseHelper {
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
+    private void patch8() {
+        String v = "patches/v8/";
+
+        executeScript(v + "insertProtectionLocks.sql");
+
+        executeScript(v + INSERT_NEW_DB_VERSION);
+        executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
     public void init() {
         applyPatch(getPluginInformation().getDbVersion());
     }
@@ -286,6 +295,7 @@ public class DatabaseHelper {
                 patch5();
                 patch6();
                 patch7();
+                patch8();
                 break;
             case 1:
                 patch2();
@@ -294,6 +304,7 @@ public class DatabaseHelper {
                 patch5();
                 patch6();
                 patch7();
+                patch8();
                 break;
             case 2:
                 patch3();
@@ -301,24 +312,32 @@ public class DatabaseHelper {
                 patch5();
                 patch6();
                 patch7();
+                patch8();
                 break;
             case 3:
                 patch4();
                 patch5();
                 patch6();
                 patch7();
+                patch8();
                 break;
             case 4:
                 patch5();
                 patch6();
                 patch7();
+                patch8();
                 break;
             case 5:
                 patch6();
                 patch7();
+                patch8();
                 break;
             case 6:
                 patch7();
+                patch8();
+                break;
+            case 7:
+                patch8();
                 break;
             default:
                 // To add Scripts in Development without its own patch version

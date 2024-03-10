@@ -65,12 +65,14 @@ public class BetterBags implements Listener {
         if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
             int dropCount = 0;
 
-            if(isChorusPlant(b)){
+            if(isChorusPlant(b) && b.getRelative(BlockFace.DOWN).getType().equals(Material.END_STONE)){
 
                 List<Block> blocks = new ArrayList<>(getChorusBlocks(b, 0, null));
 
                 if(blocks.size() <= 50){
+                    e.setCancelled(true);
                     blocks.forEach(block -> block.setType(Material.AIR));
+                    b.setType(Material.AIR);
 
                     Item item = e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(Material.CHORUS_FRUIT, blocks.size()+1));
                     EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item, blocks.size()+1);

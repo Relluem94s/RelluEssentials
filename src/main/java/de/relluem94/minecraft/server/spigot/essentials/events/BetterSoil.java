@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -20,14 +21,20 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /* Better Call Soil */
 public class BetterSoil implements Listener {
 
     @EventHandler
     public void onChange(PlayerInteractEvent e) {
+        Block b = e.getClickedBlock();
+
+        if(b == null){
+            return;
+        }
+
         if (e.getAction() == Action.PHYSICAL) {
-            Block b = e.getClickedBlock();
             if (b.getType().equals(Material.FARMLAND) && (!e.getPlayer().isSneaking())) {
                     e.setUseInteractedBlock(Event.Result.DENY);
                     e.setCancelled(true);
@@ -36,11 +43,9 @@ public class BetterSoil implements Listener {
         else{
             if(CustomItems.magic_water_bucket.almostEquals(e.getPlayer().getInventory().getItemInMainHand())){
                 e.setCancelled(true);
-                if(e.getClickedBlock() != null){
-                    Block b = e.getClickedBlock().getRelative(e.getBlockFace());
-                    if(b.getType().equals(Material.AIR)){
-                        b.setType(Material.WATER, false);
-                    }
+                b = e.getClickedBlock().getRelative(e.getBlockFace());
+                if(b.getType().equals(Material.AIR)){
+                    b.setType(Material.WATER);
                 }
             }
         }
