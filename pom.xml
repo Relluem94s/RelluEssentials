@@ -30,10 +30,6 @@
     </scm>
     <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>central</id>
             <name>central</name>
             <url>https://repo.maven.apache.org/maven2/</url>
@@ -54,6 +50,26 @@
             <releases><enabled>true</enabled></releases>
         </repository>
     </repositories>
+    <profiles>
+        <profile>
+            <id>github</id>
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <releases><enabled>true</enabled></releases>
+                    <snapshots><enabled>true</enabled></snapshots>
+                </repository>
+                <repository>
+                    <id>github</id>
+                    <name>RelluLib</name>
+                    <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
+                    <snapshots><enabled>true</enabled></snapshots>
+                    <releases><enabled>true</enabled></releases>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
