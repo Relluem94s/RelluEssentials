@@ -24,7 +24,8 @@ public class CustomEnchantment implements Listener {
                 e.getInventory().getItem(1).equals(CustomEnchants.telekinesis.getBook().getCustomItem()) ||
                 e.getInventory().getItem(1).equals(CustomEnchants.delicate.getBook().getCustomItem()) ||
                 e.getInventory().getItem(1).equals(CustomEnchants.replenishment.getBook().getCustomItem()) || 
-                e.getInventory().getItem(1).equals(CustomEnchants.thunderstrike.getBook().getCustomItem())
+                e.getInventory().getItem(1).equals(CustomEnchants.thunderstrike.getBook().getCustomItem()) || 
+                e.getInventory().getItem(1).equals(CustomEnchants.lifesteal.getBook().getCustomItem())
             ){
                 e.setResult(null);
             }
@@ -63,6 +64,12 @@ public class CustomEnchantment implements Listener {
                     CustomEnchants.thunderstrike.addTo(is);
                     e.setResult(is);
                 }
+                else if(e.getInventory().getItem(0).hasItemMeta() && e.getInventory().getItem(0).getItemMeta().hasEnchant((CustomEnchants.lifesteal))){
+                    ItemStack is = e.getResult().clone();
+                    CustomEnchants.lifesteal.removeFrom(is);
+                    CustomEnchants.lifesteal.addTo(is);
+                    e.setResult(is);
+                }
             }
             
             
@@ -89,6 +96,11 @@ public class CustomEnchantment implements Listener {
             else if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null && e.getInventory().getItem(1).equals(CustomEnchants.thunderstrike.getBook().getCustomItem())){
                 ItemStack is = e.getInventory().getItem(0).clone();
                 CustomEnchants.thunderstrike.addTo(is);
+                e.setResult(is);
+            }
+            else if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null && e.getInventory().getItem(1).equals(CustomEnchants.lifesteal.getBook().getCustomItem())){
+                ItemStack is = e.getInventory().getItem(0).clone();
+                CustomEnchants.lifesteal.addTo(is);
                 e.setResult(is);
             }
         }

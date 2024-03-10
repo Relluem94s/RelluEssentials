@@ -1,10 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_ENCHANTMENTS_REGISTERED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_REGISTER_ENCHANTMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
-
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 public class EnchantmentManager implements IEnable {
 
@@ -17,6 +20,7 @@ public class EnchantmentManager implements IEnable {
         EnchantmentHelper.registerEnchants(CustomEnchants.telekinesis);         enchantmentCount++;
         EnchantmentHelper.registerEnchants(CustomEnchants.delicate);            enchantmentCount++;
         EnchantmentHelper.registerEnchants(CustomEnchants.thunderstrike);       enchantmentCount++;
+        EnchantmentHelper.registerEnchants(CustomEnchants.lifesteal);           enchantmentCount++;
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_ENCHANTMENTS_REGISTERED, enchantmentCount));
     }

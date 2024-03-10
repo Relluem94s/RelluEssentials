@@ -45,4 +45,9 @@ public class EnchantmentConstants {
     public static final String PLUGIN_ENCHANTMENT_THUNDERSTRIKE_UUID = "01277108-fca1-452c-8cf7-de3968f8a636";
     public static final String PLUGIN_ENCHANTMENT_THUNDERSTRIKE_DISPLAYNAME = PLUGIN_ENCHANTMENT_COLOR_WEAPON + "Thunderstrike";
     public static final String PLUGIN_ENCHANTMENT_THUNDERSTRIKE_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Hits Target with a Thunderstrike";
+
+    public static final String PLUGIN_ENCHANTMENT_LIFESTEAL = "lifesteal";
+    public static final String PLUGIN_ENCHANTMENT_LIFESTEAL_UUID = "66e88b4c-3612-4248-9338-8a7b51f15332";
+    public static final String PLUGIN_ENCHANTMENT_LIFESTEAL_DISPLAYNAME = PLUGIN_ENCHANTMENT_COLOR_WEAPON + "Lifesteal";
+    public static final String PLUGIN_ENCHANTMENT_LIFESTEAL_LORE = PLUGIN_ENCHANTMENT_LORE_COLOR + "Every hit on a Target with Lifesteal heals you a bit";
 }
