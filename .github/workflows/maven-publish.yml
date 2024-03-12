@@ -34,7 +34,7 @@ jobs:
           }]
 
     - name: Build with Maven
-      run: mvn -B package --file pom.xml -Pgithub
+      run: mvn -B package --file pom.xml -Pgithub2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
