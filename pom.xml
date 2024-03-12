@@ -80,7 +80,7 @@
         <dependency>
             <groupId>de.relluem94</groupId>
             <artifactId>rellulib</artifactId>
-            <version>0.16</version>
+            <version>0.15</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
