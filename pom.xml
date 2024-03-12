@@ -45,21 +45,13 @@
         <repository>
             <id>github</id>
             <name>Relluem94s</name>
-            <url>https://maven.pkg.github.com/Relluem94s/*</url>
-            <snapshots><enabled>true</enabled></snapshots>
-            <releases><enabled>true</enabled></releases>
+            <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
         </repository>
     </repositories>
     <profiles>
         <profile>
             <id>github</id>
             <repositories>
-                <repository>
-                    <id>central</id>
-                    <url>https://repo1.maven.org/maven2</url>
-                    <releases><enabled>true</enabled></releases>
-                    <snapshots><enabled>true</enabled></snapshots>
-                </repository>
                 <repository>
                     <id>github</id>
                     <name>RelluLib</name>
@@ -80,7 +72,7 @@
         <dependency>
             <groupId>de.relluem94</groupId>
             <artifactId>rellulib</artifactId>
-            <version>0.15</version>
+            <version>0.16</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
