@@ -78,12 +78,6 @@
         <repository>
           <releases />
           <snapshots />
-          <id>central</id>
-          <url>https://repo1.maven.org/maven2</url>
-        </repository>
-        <repository>
-          <releases />
-          <snapshots />
           <id>github</id>
           <name>RelluLib</name>
           <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
@@ -106,11 +100,9 @@
       <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
     <repository>
-      <releases />
-      <snapshots />
       <id>github</id>
       <name>Relluem94s</name>
-      <url>https://maven.pkg.github.com/Relluem94s/*</url>
+      <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
     </repository>
   </repositories>
   <dependencies>
