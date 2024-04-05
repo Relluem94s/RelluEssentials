@@ -17,11 +17,6 @@
       <resource>
         <filtering>true</filtering>
         <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>lang_en_US.properties</exclude>
-          <exclude>lang_de_DE.properties</exclude>
-          <exclude>lang.properties</exclude>
-        </excludes>
       </resource>
     </resources>
     <plugins>
@@ -56,10 +51,9 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <excludes>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.MF</exclude>
-                    <exclude>META-INF/*.DSA</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/**</exclude>
+                    <exclude>LICENSE</exclude>
+                    <exclude>module-info.class</exclude>
                   </excludes>
                 </filter>
               </filters>
@@ -77,11 +71,27 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>github</id>
+      <repositories>
+        <repository>
+          <releases />
+          <snapshots />
+          <id>central</id>
+          <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+          <releases />
+          <snapshots />
+          <id>github</id>
+          <name>RelluLib</name>
+          <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
   <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
     <repository>
       <id>central</id>
       <name>central</name>
@@ -94,6 +104,13 @@
     <repository>
       <id>papermc</id>
       <url>https://repo.papermc.io/repository/maven-public/</url>
+    </repository>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>github</id>
+      <name>Relluem94s</name>
+      <url>https://maven.pkg.github.com/Relluem94s/*</url>
     </repository>
   </repositories>
   <dependencies>
@@ -155,7 +172,7 @@
   <distributionManagement>
     <repository>
       <id>github</id>
-      <name>GitHub Relluem94 Apache Maven Packages</name>
+      <name>GitHub Relluem94s Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/Relluem94s/RelluEssentials</url>
     </repository>
   </distributionManagement>

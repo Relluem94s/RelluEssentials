@@ -1,6 +1,6 @@
 ![Rellu Essentials](https://img.relluem94.de/logos/app/relluessentials.png)
 
-### a Spigot Plugin compatible with Spigot 1.19.4
+### a Spigot Plugin compatible with Spigot 1.20.1
 
 # First Steps
 Find out how to get the plugin and how to use it.
@@ -206,3 +206,6 @@ How it is working? What's under the hood?
 
 ## Database Model
 ![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.svg)
+
+
+[![Java CI with Maven](https://github.com/Relluem94s/RelluEssentials/actions/workflows/maven.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/maven.yml) [![Dependency review](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml) [![Dependency review](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml)
