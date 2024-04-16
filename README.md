@@ -36,7 +36,7 @@ Find out how to get the plugin and how to use it.
 
 ## Development
 ```shell
-./MinecraftDevelopmentEnvironment.sh
+./RelluBash-Script-Collection/dev/MinecraftDevelopmentEnvironment.sh
 ```
 it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [RelluBash-Script-Collection](https://github.com/Relluem94s/RelluBash-Script-Collection)
 
