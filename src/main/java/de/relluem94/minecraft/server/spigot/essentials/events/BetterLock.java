@@ -43,10 +43,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Nameable;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.DoubleChest;
+import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Chest;
@@ -121,7 +118,7 @@ public class BetterLock implements Listener {
             holder = inventory.getHolder();
 
             if(inventory.getType().equals(InventoryType.HOPPER)){
-                return false;
+                return sellItem(inventory, is, isSource, ((Hopper)holder).getLocation());
             }
 
             try {
@@ -141,50 +138,48 @@ public class BetterLock implements Listener {
                 return false; 
             }
             else{
-                BlockState state = location.getBlock().getState();
-                if((state instanceof Nameable)) {
-                    String name = ((Nameable)state).getCustomName();
-
-                    if(name.contains("Auto-Seller")){
-                        int sellPriceItem = ItemPrice.valueOf(is.getType().name()).getSellPrice() * is.getAmount();
-
-
-                        if(!isSource){
-                            Bukkit.broadcastMessage(name + " " + sellPriceItem);
-
-                            ItemStack coin = CustomItems.coins.getCustomItem();
-                            ItemMeta im = coin.getItemMeta();
-                            im.setLore(Arrays.asList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
-                            im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, sellPriceItem);
-
-                            coin.setItemMeta(im);
-
-                            inventory.addItem(coin);
-
-                            new BukkitRunnable() {
-                            @Override
-                                public void run() {
-                                    inventory.remove(is);
-                                }
-                            }.runTaskLater(RelluEssentials.getInstance(),  1l);
-
-                            return false;
-                        }
-                        else{
-                            return false;
-                        }
-                    }
-                }
-
-
-
-
-                return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOWHOPPER);
+                return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_HOPPER);
             }
         }
         else{
             return false;
         }
+    }
+
+    private static boolean sellItem(Inventory inventory, ItemStack is, boolean isSource, Location location) {
+        BlockState state = location.getBlock().getState();
+        if((state instanceof Nameable)) {
+            String name = ((Nameable)state).getCustomName();
+
+            if(name != null && name.contains("Auto-Seller")){
+                int sellPriceItem = ItemPrice.valueOf(is.getType().name()).getSellPrice() * is.getAmount();
+
+                if(!isSource && !inventory.isEmpty() && inventory.firstEmpty() != -1){
+                    if(CustomItems.coins.almostEquals(is) || sellPriceItem == 0){
+                        return false;
+                    }
+                    Bukkit.broadcastMessage(name + " Sold: " + is.getType().name() + " for " + sellPriceItem);
+
+                    ItemStack coin = CustomItems.coins.getCustomItem();
+                    ItemMeta im = coin.getItemMeta();
+                    im.setLore(Arrays.asList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
+                    im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, sellPriceItem);
+
+                    coin.setItemMeta(im);
+
+                    inventory.addItem(coin);
+
+                    new BukkitRunnable() {
+                    @Override
+                        public void run() {
+                            inventory.remove(is);
+                        }
+                    }.runTaskLater(RelluEssentials.getInstance(),  1L);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean removeProtectionFromBlock(Player p , Block b){
