@@ -1,10 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_SPACER_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_PREFIX;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
 
+import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -12,8 +11,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.json.JSONObject;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
@@ -21,6 +22,8 @@ import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.items.GrapplingHook;
+import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
@@ -41,7 +44,7 @@ public class PlayerHelper {
      * @param p Player to set Flying
      */
     public static void setFlying(Player p) {
-        if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
+        if (Permission.isAuthorized(p, Objects.requireNonNull(Groups.getGroup("vip")).getId())) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
             if (pe.isFlying()) {
                 p.setAllowFlight(true);
@@ -54,11 +57,11 @@ public class PlayerHelper {
      *
      * @param p Player
      * @param join Boolean
-     * @return Boolean
+     *
      */
-    public static boolean setAFK(Player p, boolean join) {
+    public static void setAFK(Player p, boolean join) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-        boolean isAFK = pe.isAFK();
+        boolean isAFK = pe.isAfk();
 
         if(pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)){
             isAFK = true;
@@ -74,16 +77,15 @@ public class PlayerHelper {
 
         if(pe.getPlayerState().equals(PlayerState.DEFAULT)){
             if(!join){
-                pe.setUpdatedBy(pe.getID());
-                pe.setAFK(isAFK);
-                pe.setUpdatedBy(pe.getID());
-                pe.setToBeUpdated(true);
+                pe.setUpdatedBy(pe.getId());
+                pe.setAfk(isAFK);
+                pe.setUpdatedBy(pe.getId());
+                pe.setHasToBeUpdated(true);
             }
             p.setInvulnerable(isAFK);
         }
         
         p.setPlayerListName((isAFK ? "§c[AFK] " : "") + p.getCustomName());
-        return true;
     }
 
 
@@ -92,7 +94,7 @@ public class PlayerHelper {
         OfflinePlayerEntry ope = new OfflinePlayerEntry();
 
         if(json.has("name")){
-            ope.setID(UUIDHelper.dashed((String)json.get("id")));
+            ope.setId(UUIDHelper.dashed((String)json.get("id")));
             ope.setName(json.get("name").toString());
             return ope;
         }
@@ -105,7 +107,7 @@ public class PlayerHelper {
         JSONObject json = NetworkUtils.getJSON("https://sessionserver.mojang.com/session/minecraft/profile/" + UUIDHelper.unDashed(uuid) + "?unsigned=false");
         OfflinePlayerEntry ope = new OfflinePlayerEntry();
         if(json.has("name")){
-            ope.setID(uuid);
+            ope.setId(uuid);
             ope.setName(json.get("name").toString());
 
             Properties properties = new Properties();
@@ -127,32 +129,37 @@ public class PlayerHelper {
         p.setScoreboard(ScoreBoardManager.board);
     }
 
-    public static void updateGroup(Player p, GroupEntry g) {
+    public static void updateGroup(OfflinePlayer p, GroupEntry g) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
+
+        if(p.isOnline()){
+            Player player = Bukkit.getPlayer(p.getUniqueId());
+            if (player != null) {
+                player.setCustomName(g.getPrefix() + getCustomName(player));
+                player.setPlayerListName(g.getPrefix() + getCustomName(player));
+            }
+        }
+
         pe.setGroup(g);
-        pe.setUpdatedBy(pe.getID());
-        pe.setToBeUpdated(true);
-        setGroup(p, g);
+        pe.setUpdatedBy(pe.getId());
+        pe.setHasToBeUpdated(true);
     }
+
 
     public static String getCustomName(Player p) {
         String name;
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-        if (pe.getCustomName() != null && pe.getCustomName().equals("null")) {
+        if (pe.getCustomName() != null && !pe.getCustomName().equals("null")) {
             name = pe.getCustomName();
         } 
         else {
-            if (pe.getName() != null && pe.getName().equals("null")) {
-                name = pe.getName();
-            } 
-            else {
-                name = p.getName();
-            }
+            name = p.getName();
         }
 
         return name;
     }
 
+    @SuppressWarnings("unused")
     public static GroupEntry getGroup(Player p) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
 
@@ -176,15 +183,28 @@ public class PlayerHelper {
         }
     }
 
-    public static int savePlayer(Player p){
+    public static void savePlayersInv(){
+        int updatedPlayers = 0;
+
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            updatedPlayers += WorldHelper.saveWorldGroupInventory(p, false) ? 1 : 0;
+        }
+
+        if(updatedPlayers != 0){
+            ChatHelper.sendMessageInChannel(String.format(Strings.PLUGIN_PLAYERS_INVENTORY_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedPlayers), Strings.PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+        }
+    }
+
+
+    public static void savePlayer(Player p){
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-        return savePlayer(pe);
+        savePlayer(pe);
     }
 
     public static int savePlayer(PlayerEntry pe){
-        if(pe.hasToBeUpdated()){
+        if(pe.isHasToBeUpdated()){
             RelluEssentials.getInstance().getDatabaseHelper().updatePlayer(pe);
-            pe.setToBeUpdated(false);
+            pe.setHasToBeUpdated(false);
             return 1;
         }
 
@@ -201,6 +221,7 @@ public class PlayerHelper {
         return null;
     }
 
+    @SuppressWarnings("unused")
     public static PlayerEntry getPlayer(String name){
         for(PlayerEntry pe : RelluEssentials.getInstance().getPlayerAPI().getPlayerEntryMap().values()){
             if(pe.getName().equals(name)){
@@ -215,12 +236,44 @@ public class PlayerHelper {
         Player nearestPlayer = null;
         double lastDistance = Double.MAX_VALUE;
         for(Player p : loc.getWorld().getPlayers()){
-             double distanceSquared = loc.distanceSquared(p.getLocation());
-             if(distanceSquared < lastDistance){
-                  lastDistance = distanceSquared;
-                  nearestPlayer = p;
-             }
+            double distanceSquared = loc.distanceSquared(p.getLocation());
+            if(distanceSquared < lastDistance){
+                lastDistance = distanceSquared;
+                nearestPlayer = p;
+            }
         }
         return nearestPlayer;
-   }
+    }
+
+    public static void setLobbyItems(Player p){
+        GrapplingHook gh = new GrapplingHook();
+        WorldSelector ws = new WorldSelector();
+
+        for(ItemStack i : p.getInventory().getContents()){
+            if(i == null){
+                continue;
+            }
+
+            if(i.isSimilar(gh.getCustomItem())){
+                p.getInventory().remove(i);
+            }
+
+            if(i.isSimilar(CustomItems.cloudSailor.getCustomItem())){
+                p.getInventory().remove(i);
+            }
+
+            if(i.getType().equals(ws.getCustomItem().getType()) && i.hasItemMeta() && i.getItemMeta().getDisplayName().equals(ws.getDisplayName())){
+                p.getInventory().remove(i);
+            }
+        }
+    
+        p.getInventory().setArmorContents(new ItemStack[]{null, null, null, null});
+        p.getInventory().setItemInOffHand(null);
+    
+        
+
+        p.getInventory().setItem(0, gh.getCustomItem());
+        p.getInventory().setItem(1, CustomItems.cloudSailor.getCustomItem());
+        p.getInventory().setItem(4, ws.getCustomItem());
+    }
 }

@@ -17,6 +17,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,11 +41,18 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.MobHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.items.RelluBoots;
+import de.relluem94.minecraft.server.spigot.essentials.items.RelluChestplate;
+import de.relluem94.minecraft.server.spigot.essentials.items.RelluHelmet;
+import de.relluem94.minecraft.server.spigot.essentials.items.RelluLeggings;
+import de.relluem94.minecraft.server.spigot.essentials.items.RelluPickaxe;
+import de.relluem94.minecraft.server.spigot.essentials.items.RelluShield;
+import de.relluem94.minecraft.server.spigot.essentials.items.RelluSword;
 
 public class TestCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND)) {
             return false;
         }
@@ -74,7 +82,7 @@ public class TestCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB)) {
             cm(p.getLocation());
         } else if (args[0].equalsIgnoreCase("pick")) {
-            p.getInventory().addItem(CustomItems.relluPickAxe.getCustomItem());
+            p.getInventory().addItem(new RelluPickaxe().getCustomItem());
         } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR)) {
             p.getInventory().addItem(CustomItems.cloudSailor.getCustomItem());
             p.getInventory().addItem(CustomItems.cloudBoots.getCustomItem());
@@ -91,13 +99,13 @@ public class TestCommand implements CommandExecutor {
             worlds(p);
         } else if (args[0].equalsIgnoreCase("bc")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getID());
+            RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getId());
         } else if (args[0].equalsIgnoreCase("bo")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             p.openInventory(BagHelper.getBag(1, pe));
         } else if (args[0].equalsIgnoreCase("bc2")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getID());
+            RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getId());
         } else if (args[0].equalsIgnoreCase("bo2")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             p.openInventory(BagHelper.getBag(2, pe));
@@ -129,12 +137,12 @@ public class TestCommand implements CommandExecutor {
     }
 
     private void rellu(Player p){
-        p.getInventory().addItem(CustomItems.relluHelmet.getCustomItem());
-        p.getInventory().addItem(CustomItems.relluChestPlate.getCustomItem());
-        p.getInventory().addItem(CustomItems.relluLeggings.getCustomItem());
-        p.getInventory().addItem(CustomItems.relluBoots.getCustomItem());
-        p.getInventory().addItem(CustomItems.relluShield.getCustomItem());
-        p.getInventory().addItem(CustomItems.relluSword.getCustomItem());
+        p.getInventory().addItem(new RelluHelmet().getCustomItem());
+        p.getInventory().addItem(new RelluChestplate().getCustomItem());
+        p.getInventory().addItem(new RelluLeggings().getCustomItem());
+        p.getInventory().addItem(new RelluBoots().getCustomItem());
+        p.getInventory().addItem(new RelluShield().getCustomItem());
+        p.getInventory().addItem(new RelluSword().getCustomItem());
     }
 
     private void worlds(Player p){

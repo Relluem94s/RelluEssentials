@@ -3,12 +3,14 @@ package de.relluem94.minecraft.server.spigot.essentials.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
 import org.bukkit.World;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 
+@Getter
 public class WarpAPI {
-    private List<LocationEntry> warps;
+    private final List<LocationEntry> warps;
 
     public WarpAPI(List<LocationEntry>  warps){
         this.warps = warps;
@@ -40,10 +42,6 @@ public class WarpAPI {
         warps.add(le);
     }
 
-    public List<LocationEntry> getWarps(){
-        return warps;
-    }
-
     public List<LocationEntry> getWarps(World world){
         List<LocationEntry> filteredWarps = new ArrayList<>();
 
@@ -55,5 +53,4 @@ public class WarpAPI {
 
         return filteredWarps;
     }
-
 }

@@ -1,14 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -21,6 +21,8 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
+
 /**
  *
  * @author rellu
@@ -28,14 +30,21 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 public class ItemHelper implements IItemHelper {
 
     private final ItemStack is;
+
+    @Getter
     private final Material material;
+
+    @Getter
     private final int amount;
+
+    @Getter
     private final String displayName;
     private final Type it;
     private final Rarity ir;
 
+    @Getter
     private List<String> lore;
-
+    
     /**
      *
      * @param material Bukkit Material
@@ -52,7 +61,12 @@ public class ItemHelper implements IItemHelper {
         this.ir = itemRarity;
 
         is = new ItemStack(this.material, this.amount);
+
         ItemMeta im = is.getItemMeta();
+        if(im == null){
+            return;
+        }
+
         im.setDisplayName(this.displayName);
         is.setItemMeta(im);
     }
@@ -75,7 +89,12 @@ public class ItemHelper implements IItemHelper {
         this.ir = itemRarity;
 
         is = new ItemStack(this.material, this.amount);
+
         ItemMeta im = is.getItemMeta();
+        if(im == null){
+            return;
+        }
+
         im.setDisplayName(this.displayName);
         im.setLore(this.lore);
         is.setItemMeta(im);
@@ -96,7 +115,12 @@ public class ItemHelper implements IItemHelper {
         this.ir = itemRarity;
 
         this.is = is;
+
         ItemMeta im = is.getItemMeta();
+        if(im == null){
+            return;
+        }
+
         im.setDisplayName(this.displayName);
         is.setItemMeta(im);
     }
@@ -118,7 +142,12 @@ public class ItemHelper implements IItemHelper {
         this.ir = itemRarity;
 
         this.is = is;
+
         ItemMeta im = is.getItemMeta();
+        if(im == null){
+            return;
+        }
+
         im.setDisplayName(this.displayName);
         im.setLore(this.lore);
         is.setItemMeta(im);
@@ -130,56 +159,24 @@ public class ItemHelper implements IItemHelper {
      */
     public ItemStack getCustomItem() {
         init();
-        addItemRarity();
-        postInit();
-        
-        return is;
+        addItemRarity();        
+        return postInit(is);
     }
 
     /**
      *
      * @return ItemStack of ItemHelper
      */
+    @SuppressWarnings("unused")
     protected ItemStack getItemStack() {
         return is;
     }
 
     /**
      *
-     * @return int Amount of ItemHelper
-     */
-    public int getAmount() {
-        return amount;
-    }
-
-    /**
-     *
-     * @return String DisplayName of ItemHelper
-     */
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    /**
-     *
-     * @return List of String Lore of ItemHelper
-     */
-    public List<String> getLore() {
-        return lore;
-    }
-
-    /**
-     *
-     * @return Material of ItemHelper
-     */
-    public Material getMaterial() {
-        return material;
-    }
-
-    /**
-     *
      * @return ItemType of ItemHelper
      */
+    @SuppressWarnings("unused")
     public Type getItemType() {
         return it;
     }
@@ -194,15 +191,15 @@ public class ItemHelper implements IItemHelper {
 
     /**
      *
-     * @param itemmeta ItemMeta sets ItemMeta of ItemStack
+     * @param itemMeta ItemMeta sets ItemMeta of ItemStack
      */
-    public void setItemMeta(ItemMeta itemmeta) {
-        is.setItemMeta(itemmeta);
+    public void setItemMeta(ItemMeta itemMeta) {
+        is.setItemMeta(itemMeta);
     }
 
     /**
      *
-     * @param compare
+     * @param compare ItemStack
      * @return boolean
      */
     public boolean equalsExact(ItemStack compare) {
@@ -219,12 +216,38 @@ public class ItemHelper implements IItemHelper {
             return false;
         }
 
+        if(item.getItemMeta() == null){
+            return false;
+        }
+
         return item.hasItemMeta() && item.getItemMeta().equals(compare.getItemMeta());
     }
 
     /**
      *
-     * @param compare
+     * @param compare ItemStack
+     * @return boolean
+     */
+    public boolean equalsName(ItemStack compare) {
+        ItemStack item = this.getCustomItem();
+        if (item == null || compare == null) {
+            return false;
+        }
+
+        if (item.getType() != compare.getType()) {
+            return false;
+        }
+
+        if (item.hasItemMeta() != compare.hasItemMeta()) {
+            return false;
+        }
+
+        return Objects.requireNonNull(item.getItemMeta()).getDisplayName().equals(Objects.requireNonNull(compare.getItemMeta()).getDisplayName()) ;
+    }
+
+    /**
+     *
+     * @param compare ItemStack
      * @return boolean
      */
     public boolean almostEquals(ItemStack compare) {
@@ -246,13 +269,14 @@ public class ItemHelper implements IItemHelper {
     }
 
     @Override
-    public void postInit() {
+    public ItemStack postInit(ItemStack is) {
         // has to be overwritten
+        return is;
     }
 
     private void addItemRarity() {
         ItemMeta im;
-        if (is.hasItemMeta()) {
+        if (is.hasItemMeta() && is.getItemMeta() != null) {
             im = is.getItemMeta();
             List<String> locLore;
             if (im.getLore() != null) {
@@ -268,7 +292,7 @@ public class ItemHelper implements IItemHelper {
             locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
             
             if(ir.level != -1){
-                locLore.add(ir.getPrefix() + "" + ir.getDisplayName());
+                locLore.add(ir.getPrefix() + ir.getDisplayName());
             }
 
             im.setLore(locLore);
@@ -285,6 +309,7 @@ public class ItemHelper implements IItemHelper {
         return locLore;
     }
 
+    @Getter
     public enum Rarity {
         NONE("", "", -1),
         COMMON("Common", "§f§l", 0),
@@ -293,42 +318,17 @@ public class ItemHelper implements IItemHelper {
         EPIC("Epic", "§5§l", 3),
         LEGENDARY("Legendary", "§6§l", 4);
 
+
         private final String displayName;
         private final String prefix;
         private final int level;
 
-        private Rarity(String displayName, String prefix, int level) {
+        Rarity(String displayName, String prefix, int level) {
             this.displayName = displayName;
             this.prefix = prefix;
             this.level = level;
         }
 
-        /**
-         * Returns Displayname of Rarity
-         *
-         * @return String displayName
-         */
-        public String getDisplayName() {
-            return displayName;
-        }
-
-        /**
-         * Returns Prefix of Rarity (Color and Bold)
-         *
-         * @return String prefix
-         */
-        public String getPrefix() {
-            return prefix;
-        }
-
-        /**
-         * Returns Level of Rarity
-         *
-         * @return int level
-         */
-        public int getLevel() {
-            return level;
-        }
     }
 
     public enum Type {
@@ -344,13 +344,14 @@ public class ItemHelper implements IItemHelper {
         NPC_GUI,
         ENCHANTMENT,
         MONEY,
-        NONE;
+        NONE
     }
 
-    public static ItemStack setDisplayName(ItemStack is, String displayname){
+    @SuppressWarnings("unused")
+    public static ItemStack setDisplayName(ItemStack is, String displayName){
         ItemMeta im = is.getItemMeta();
 
-        im.setDisplayName(displayname);
+        Objects.requireNonNull(im).setDisplayName(displayName);
 
         is.setItemMeta(im);
         return is;
@@ -360,13 +361,13 @@ public class ItemHelper implements IItemHelper {
         return new ItemStack(is.getType(), 1);
     }
 
+    @SuppressWarnings("unused")
     public static ItemStack getCleanItemStackWithAmount(ItemStack is){
         return new ItemStack(is.getType(), is.getAmount());
     }
 
     public static ItemStack addBookEnchantment(ItemStack item, Enchantment enchantment, int level) {
-        if(item.getItemMeta() instanceof EnchantmentStorageMeta){
-            EnchantmentStorageMeta meta = (EnchantmentStorageMeta) item.getItemMeta();
+        if(item.getItemMeta() instanceof EnchantmentStorageMeta meta){
             meta.addStoredEnchant(enchantment, level, true);
             meta.addEnchant(enchantment, level, true);
             item.setItemMeta(meta);
@@ -379,7 +380,7 @@ public class ItemHelper implements IItemHelper {
         String name = "";
         if(is.hasItemMeta()){
             ItemMeta meta = is.getItemMeta();
-            if (meta.hasDisplayName()){
+            if (Objects.requireNonNull(meta).hasDisplayName()){
                 name = meta.getDisplayName();
             } 
             else {
@@ -397,13 +398,13 @@ public class ItemHelper implements IItemHelper {
 
     public static ItemStack getSmeltedItemStack(ItemStack is){
         ItemStack result = null;
-        Iterator<Recipe> iter = Bukkit.recipeIterator();
-        while (iter.hasNext()) {
-            Recipe recipe = iter.next();
+        Iterator<Recipe> iterator = Bukkit.recipeIterator();
+        while (iterator.hasNext()) {
+            Recipe recipe = iterator.next();
             if (!(recipe instanceof FurnaceRecipe)) {
                 continue;
             }
-            if (recipe.getResult() != null && ((FurnaceRecipe) recipe).getInput().getType() != is.getType()) {
+            if (((FurnaceRecipe) recipe).getInput().getType() != is.getType()) {
                 continue;
             }
 
@@ -440,11 +441,8 @@ public class ItemHelper implements IItemHelper {
     public static ItemStack itemFrom64(String data) throws IOException {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
-            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            try {
+            try (BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
                 return (ItemStack) dataInput.readObject();
-            } finally {
-                dataInput.close();
             }
         }
         catch (ClassNotFoundException e) {

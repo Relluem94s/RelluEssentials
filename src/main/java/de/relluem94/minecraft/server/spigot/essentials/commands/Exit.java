@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,7 +21,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 public class Exit implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_EXIT)) {
             return false;
         }
@@ -35,7 +36,7 @@ public class Exit implements CommandExecutor {
                         Bukkit.getOnlinePlayers().forEach(op ->  op.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN));
         
                     }
-                }.runTaskLater(RelluEssentials.getInstance(),  10l);
+                }.runTaskLater(RelluEssentials.getInstance(), 10L);
 
                 Bukkit.getServer().getScheduler().runTaskLater(RelluEssentials.getInstance(), Bukkit.getServer()::shutdown, 20L);
                 return true;

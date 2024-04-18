@@ -1,12 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SUDO;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import lombok.NonNull;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -18,12 +22,19 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.rellulib.utils.StringUtils;
 
 public class Sudo implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SUDO)) {
+            
+            if(RelluEssentials.getInstance().getCommand(args[0]) != null){
+                dispatchCommand(args);
+                return true;
+            }
+
             if (args.length == 1) {
                 if (isPlayer(sender)) {
                     Player p = (Player) sender;
@@ -34,11 +45,11 @@ public class Sudo implements CommandExecutor {
                     else if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                         OfflinePlayerEntry target = PlayerHelper.getOfflinePlayerByName((args[0]));
                         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                        if (target != null && RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID()) != null) {
-                            PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getID());
+                        if (target != null && RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId()) != null) {
+                            PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId());
                             SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
-                            WorldHelper.saveWorldGroupInventory(p);
-                            pe.setID(tpe.getID());
+                            WorldHelper.saveWorldGroupInventory(p, true);
+                            pe.setId(tpe.getId());
                             pe.setCustomName(tpe.getCustomName());
                             pe.setGroup(tpe.getGroup());
                             pe.setHomes(tpe.getHomes());
@@ -51,6 +62,7 @@ public class Sudo implements CommandExecutor {
                             p.sendMessage(String.format(Strings.PLUGIN_COMMAND_SUDO_ACTIVATED, tpe.getGroup().getPrefix() + target.getName()));
                         }
                         else{
+                            
                             p.sendMessage(String.format(Strings.PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
                         }
                         return true;
@@ -61,15 +73,24 @@ public class Sudo implements CommandExecutor {
                     }
                 }
             }
+            else{
+                sender.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                return true;
+            }
         }
         return false;
+    }
+
+    private void dispatchCommand(String[] args){
+        ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+        Bukkit.getServer().dispatchCommand(console, StringUtils.toString(args));
     }
 
     public static void exitSudo(Player p){
         PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-        WorldHelper.saveWorldGroupInventory(p);
-        pe.setID(tpe.getID());
+        WorldHelper.saveWorldGroupInventory(p, true);
+        pe.setId(tpe.getId());
         pe.setCustomName(tpe.getCustomName());
         pe.setGroup(tpe.getGroup());
         pe.setHomes(tpe.getHomes());

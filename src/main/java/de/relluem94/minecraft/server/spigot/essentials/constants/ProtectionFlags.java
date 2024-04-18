@@ -1,25 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import lombok.Getter;
+
+@Getter
 public enum ProtectionFlags {
-    ALLOWHOPPER("allowHopper", false),
-    ALLOWREDSTONE("allowRedstone", false),
-    ALLOWPUBLIC("allowPublic", false),
-    AUTOCLOSE("autoClose", false);
+    ALLOW_HOPPER("allowHopper", false),
+    ALLOW_REDSTONE("allowRedstone", false),
+    ALLOW_PUBLIC("allowPublic", false),
+    AUTO_CLOSE("autoClose", false);
 
     
-    private String name;
-    private boolean isDefault;
+    private final String name;
+    private final boolean isDefault;
 
-    private ProtectionFlags(String name, boolean isDefault){
+    ProtectionFlags(String name, boolean isDefault){
         this.name = name;
         this.isDefault = isDefault;
-    }
-   
-    public String getName(){
-        return this.name;
-    }
-   
-    public boolean isDefault(){
-        return this.isDefault;
     }
 }

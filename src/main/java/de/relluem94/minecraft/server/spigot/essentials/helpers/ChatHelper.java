@@ -53,7 +53,7 @@ public class ChatHelper {
      *
      * @param type Prefix to add before message
      * @param message Message to send
-     * @param repeat how often should the message be send
+     * @param repeat how often should the message be sended
      */
     public static void consoleSendMessage(String type, String message, int repeat) {
         ConsoleCommandSender console = Bukkit.getConsoleSender();
@@ -64,10 +64,10 @@ public class ChatHelper {
 
     /**
      * 
-     * @param message
-     * @param p
-     * @param channel
-     * @param group
+     * @param message String
+     * @param p Player
+     * @param channel String
+     * @param group GroupEntry
      */
     public static void sendMessageInChannel(String message, Player p, String channel, GroupEntry group) {
         message = message.replaceFirst(channel, "");
@@ -80,10 +80,10 @@ public class ChatHelper {
 
     /**
      * 
-     * @param message
-     * @param sender
-     * @param channel
-     * @param group
+     * @param message String
+     * @param sender String
+     * @param channel String
+     * @param group GroupEntry
      */
     public static void sendMessageInChannel(String message, String sender, String channel, GroupEntry group) {
         message = message.replaceFirst(channel, "");

@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 
+import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -30,13 +33,17 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity
  */
 public class EnchantmentHelper extends Enchantment implements IEnchantment {
 
+    @Getter
     private String lore;
+    @Getter
     private Rarity rarity;
     private List<Enchantment> conflicts;
     private EnchantmentTarget target;
     private EnchantLevel level;
     private EnchantName enchantName;
+    @Getter
     private Multimap<Attribute, AttributeModifier> attributes;
+    @SuppressWarnings("unused")
     private double multiply;
     private int actualLevel;
 
@@ -45,52 +52,44 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
     }
 
     public EnchantmentHelper(EnchantName enchantName, EnchantmentTarget target, EnchantLevel level, List<Enchantment> conflicts, String lore, Rarity rarity, Multimap<Attribute, AttributeModifier> attributes) {
-        super(new NamespacedKey(RelluEssentials.getInstance(), enchantName.getName()));
+        super(new NamespacedKey(RelluEssentials.getInstance(), enchantName.name()));
         this.enchantName = enchantName;
         this.rarity = rarity;
         this.target = target;
         this.level = level;
         this.lore = lore;   
-        this.conflicts = new ArrayList<>();   
         this.conflicts = conflicts;
         this.attributes = attributes;
-        this.actualLevel = level.getStartLevel();
+        this.actualLevel = level.startLevel();
 
         CustomEnchants.customEnchantments.add(this);
     }
 
-    public double getMultiplyer(){
+    @SuppressWarnings("unused")
+    public double getMultiplier(){
         return multiply;
     }
 
-    @Override
+    @Override @NonNull
     public String getName() {
-        return enchantName.getName();
+        return enchantName.name();
     }
 
     public String getDisplayName() {
-        return enchantName.getDisplayName();
-    }
-
-    public String getLore(){
-        return lore;
-    }
-
-    public Rarity getRarity(){
-        return rarity;
+        return enchantName.displayName();
     }
 
     @Override
     public int getMaxLevel() {
-        return level.getMaxLevel();
+        return level.maxLevel();
     }
 
     @Override
     public int getStartLevel() {
-        return level.getStartLevel();
+        return level.startLevel();
     }
 
-    @Override
+    @Override @NonNull
     public EnchantmentTarget getItemTarget() {
         return target;
     }
@@ -106,12 +105,12 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
     }
 
     @Override
-    public boolean conflictsWith(Enchantment other) {
+    public boolean conflictsWith(@NonNull Enchantment other) {
         return conflicts.contains(other);
     }
 
     @Override
-    public boolean canEnchantItem(ItemStack item) {
+    public boolean canEnchantItem(@NonNull ItemStack item) {
 
         boolean canEnchantItem = target.includes(item);
         for(Enchantment e : item.getEnchantments().keySet()){
@@ -123,24 +122,21 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
         return canEnchantItem;
     }
 
-    public Multimap<Attribute, AttributeModifier> getAttributes(){
-        return attributes;
-    }
-
     public ItemHelper getBook(){
         return new ItemHelper(
             ItemHelper.addBookEnchantment(
                 new ItemStack(Material.ENCHANTED_BOOK), Enchantment.getByKey(
                     super.getKey()
                 ),
-                level.getStartLevel()
+                level.startLevel()
             ),
-            enchantName.getDisplayName(),
+            enchantName.displayName(),
             ItemHelper.Type.ENCHANTMENT,
             getRarity()
         );
     }
 
+    @SuppressWarnings("unused")
     public void addTo(ItemStack i, int level){
         actualLevel = level;
         addTo(i);
@@ -155,13 +151,13 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
 
             for(Attribute a : attributes.asMap().keySet()){
                 for(AttributeModifier am : attributes.asMap().get(a)){
-                    im.addAttributeModifier(a, am);
+                    Objects.requireNonNull(im).addAttributeModifier(a, am);
                 }
             }
 
 
             List<String> itemStackLore;
-            if (im.getLore() != null) {
+            if (Objects.requireNonNull(im).getLore() != null) {
                 itemStackLore = im.getLore();
                 Collections.reverse(itemStackLore);
                 itemStackLore.add(getLore());
@@ -187,29 +183,34 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
 
             for(Attribute a : attributes.asMap().keySet()){
                 for(AttributeModifier am : attributes.asMap().get(a)){
-                    im.removeAttributeModifier(a, am);
+                    if (im != null) {
+                        im.removeAttributeModifier(a, am);
+                    }
                 }
             }
 
-            List<String> itemStackLore = im.getLore();
-            itemStackLore.remove(getDisplayName());
-            itemStackLore.remove(getLore());
-            itemStackLore.remove(getRarity().getPrefix() + getRarity().getDisplayName());
+            List<String> itemStackLore = Objects.requireNonNull(im).getLore();
+            if (itemStackLore != null) {
+                itemStackLore.remove(getDisplayName());
+                itemStackLore.remove(getLore());
+                itemStackLore.remove(getRarity().getPrefix() + getRarity().getDisplayName());
+            }
+
             im.setLore(itemStackLore);
             i.setItemMeta(im);
         }
     }
 
-    public static void registerEnchants(Enchantment ench) {
+    public static void registerEnchants(Enchantment enchantment) {
         try {
             Field f;
             f = Enchantment.class.getDeclaredField("acceptingNew");
             f.setAccessible(true);
             f.set(null, true);
-            Enchantment.registerEnchantment(ench);
-            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_MANAGER_REGISTER_ENCHANTMENT, ench.getKey().getNamespace(), ench.getKey().toString()));
+            Enchantment.registerEnchantment(enchantment);
+            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_MANAGER_REGISTER_ENCHANTMENT, enchantment.getKey().getNamespace(), enchantment.getKey()));
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + ench.getKey().toString());
+            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + enchantment.getKey());
         }
     }
 
@@ -231,7 +232,7 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
         hash = 31 * hash + (lore == null ? 0 : lore.hashCode());
         hash = 31 * hash + (conflicts == null ? 0 : conflicts.hashCode());
         hash = 31 * hash + (attributes == null ? 0 : attributes.hashCode());
-        hash = 31 * hash + (super.getKey() == null ? 0 : super.getKey().hashCode());
+        hash = 31 * hash + (super.getKey().hashCode());
         
         return hash;
     }
@@ -241,19 +242,15 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
             return false;
         }
 
-        if(!is.getItemMeta().hasEnchants()){
+        if(!Objects.requireNonNull(is.getItemMeta()).hasEnchants()){
             return false;
         }
 
-        if(!hasEnchantment(is, e)){
-            return false;
-        }
-
-        return true;
+        return hasEnchantment(is, e);
     }
 
     private static boolean hasEnchantment(ItemStack is, Enchantment e){
-        for(Entry<Enchantment, Integer> en : is.getItemMeta().getEnchants().entrySet()){
+        for(Entry<Enchantment, Integer> en : Objects.requireNonNull(is.getItemMeta()).getEnchants().entrySet()){
             if(en.getKey().getKey().equals(e.getKey())){
                 return true;
             }

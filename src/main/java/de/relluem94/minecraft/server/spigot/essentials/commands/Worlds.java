@@ -15,7 +15,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_WRONG_SUBCOMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_CREATE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_LIST;
@@ -29,6 +29,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldType;
@@ -38,8 +39,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -48,7 +56,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 public class Worlds implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD)) {
             return false;
         }
@@ -80,6 +88,7 @@ public class Worlds implements CommandExecutor {
 
         if(args.length == 0){
             p.sendMessage(PLUGIN_COMMAND_WORLD_INFO);
+            openWorldMenu(p);
             return true;
         }
 
@@ -127,7 +136,7 @@ public class Worlds implements CommandExecutor {
         }
 
         if (!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_CREATE)) {
-            p.sendMessage(PLUGIN_COMMAND_WORLD_WRONG_SUBCOMMAND);
+            p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
             return true;
         }
 
@@ -139,7 +148,7 @@ public class Worlds implements CommandExecutor {
         if(WorldType.getByName(args[2].toUpperCase()) != null && World.Environment.valueOf(args[3].toUpperCase()) != null && Boolean.valueOf(args[4]) != null){
             WorldType type = WorldType.getByName(args[2].toUpperCase());
             World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
-            Boolean structures = Boolean.valueOf(args[4]);
+            boolean structures = Boolean.parseBoolean(args[4]);
             WorldHelper.createWorld(args[1], type, worldEnvironment, structures);
             p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_WORLD);
         }
@@ -170,5 +179,25 @@ public class Worlds implements CommandExecutor {
         Back.addBackPoint(p);
         p.teleport(w.getSpawnLocation());
         p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
+    }
+
+    public static void openWorldMenu(Player p){
+        org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
+            InventoryHelper.createInventory(18,
+            Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ "§dWorlds"),
+            CustomItems.npc_gui_disabled.getCustomItem()
+        );
+
+        for (int i = 0; i < Bukkit.getWorlds().size(); i++) {
+            ItemStack is = PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE);
+            ItemMeta im = is.getItemMeta();
+
+            im.setDisplayName(Bukkit.getWorlds().get(i).getName());
+
+            is.setItemMeta(im);
+            inv.setItem(i, is);
+        }
+
+        InventoryHelper.openInventory(p, inv);
     }
 }

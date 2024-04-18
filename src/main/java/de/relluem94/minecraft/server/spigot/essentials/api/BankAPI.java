@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntr
 
 public class BankAPI {
     
-    private List<BankTierEntry> bankTiersList = new ArrayList<>();
+    private final List<BankTierEntry> bankTiersList = new ArrayList<>();
 
     /**
      * 

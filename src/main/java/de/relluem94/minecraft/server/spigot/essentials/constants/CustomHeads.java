@@ -1,7 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import lombok.Getter;
+
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public enum CustomHeads {
     
     BOOKS1("GoodBook1", "2565e12a-e70b-4f64-9398-7d0f108eb53a","ewogICJ0aW1lc3RhbXAiIDogMTY3NTk2OTE2MDIyOCwKICAicHJvZmlsZUlkIiA6ICIyNTY1ZTEyYWU3MGI0ZjY0OTM5ODdkMGYxMDhlYjUzYSIsCiAgInByb2ZpbGVOYW1lIiA6ICJHb29kQm9vazEiLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWNkMDgxMTY4Y2E4NjYwNGZjZjM3ODAwMzQ4Y2MxNzJjZTc0MDczOWRiM2NjMDgwZjA3ZjFhN2ZiZGZmZjQ4OSIKICAgIH0KICB9Cn0"),
@@ -64,30 +67,25 @@ public enum CustomHeads {
     BOOKS5("Books5", UUID.randomUUID().toString(), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTJmZWJhMWYzMDVmOTU4NDc2ZGYxOWNjZDg5Mzc3OGM2ZTM0YWExN2U4ZmZlZGU0MTMzYjNhNWYzNDRmZDhlIn19fQ=="),
     HAUNTED_HOUSE("Haunted House", UUID.randomUUID().toString(), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmQwNjM2ZmE3YjdhODEyYTFjNzYyMWUyMzk5ZWQwMzhkODViM2VhYjAzY2E4M2MxOTliNzcxYWY3MGUyYjhjMyJ9fX0="),
     WOODEN_HOUSE("Wood Plank House", UUID.randomUUID().toString(), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjNkMDJjZGMwNzViYjFjYzVmNmZlM2M3NzExYWU0OTc3ZTM4YjkxMGQ1MGVkNjAyM2RmNzM5MTNlNWU3ZmNmZiJ9fX0="),
-    GLOBE("Globe", "c5096c08-4c27-471c-a826ec446b42329b", "ewogICJ0aW1lc3RhbXAiIDogMTY3OTIzMzc1OTQzMiwKICAicHJvZmlsZUlkIiA6ICJjNTA5NmMwODRjMjc0NzFjYTgyNmVjNDQ2YjQyMzI5YiIsCiAgInByb2ZpbGVOYW1lIiA6ICJEaXBpY3J5bGFtaW5lIiwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzQ0YzU2NDk2MDc3NGQ0YTc3NWZjM2YxYTc2OTZlNzRmOGNhZjFhMjA0ZDQ5NWQzZmIxYWJiMDRmYTkxZDJiZiIKICAgIH0KICB9Cn0="),
+    GLOBE("Globe", "bd287f02-7b3b-ffd9-c56c-99cb0fafab3b", "ewogICJ0aW1lc3RhbXAiIDogMTY3OTIzMzc1OTQzMiwKICAicHJvZmlsZUlkIiA6ICJjNTA5NmMwODRjMjc0NzFjYTgyNmVjNDQ2YjQyMzI5YiIsCiAgInByb2ZpbGVOYW1lIiA6ICJEaXBpY3J5bGFtaW5lIiwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzQ0YzU2NDk2MDc3NGQ0YTc3NWZjM2YxYTc2OTZlNzRmOGNhZjFhMjA0ZDQ5NWQzZmIxYWJiMDRmYTkxZDJiZiIKICAgIH0KICB9Cn0="),
     LOVE("Villager in Love", UUID.randomUUID().toString(), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmMzOTAxMTQ4Y2VmODYyNzI5OTkxNGY4MjA2NDk4ODI5ODFiM2JlMmI2YjQzNTg1YTk2YzdiMGFkMTA5MGI5YSJ9fX0=");
 
     
 
-    private String name;
-    private String uuid;
-    private String base64;
+    @Getter
+    private final String name;
+    private final String uuid;
+    @Getter
+    private final String base64;
 
-    private CustomHeads(String name, String uuid, String base64){
+    CustomHeads(String name, String uuid, String base64){
         this.name = name;
         this.uuid = uuid;
         this.base64 = base64;
-    }
-
-    public String getName(){
-        return name;
     }
 
     public UUID getUUID() {
         return UUID.fromString(uuid);
     }
 
-    public String getBase64(){
-        return base64;
-    }
 }

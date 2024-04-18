@@ -10,6 +10,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,7 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 public class Back implements CommandExecutor {
 
-    private static Map<Player, Location> backPlayerLocation = new HashMap<>();
+    private static final Map<Player, Location> backPlayerLocation = new HashMap<>();
 
     public static void addBackPoint(Player p){
         removeBackPoint(p);
@@ -29,13 +30,11 @@ public class Back implements CommandExecutor {
     }
 
     public static void removeBackPoint(Player p){
-        if(backPlayerLocation.containsKey(p)){
-            backPlayerLocation.remove(p);
-        }
+        backPlayerLocation.remove(p);
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_BACK)) {
             return false;
         }

@@ -17,6 +17,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,7 +33,7 @@ public class GameMode implements CommandExecutor {
     private static final String LANG_KEY = "PLUGIN_COMMAND_GAMEMODE";
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
         if (!Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
             sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;

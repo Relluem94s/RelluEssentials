@@ -28,7 +28,7 @@ public class UUIDHelper {
 
       /**
        * converts dashed UUID (long) to unDashed UUID (short)
-       * @param id
+       * @param id UUID
        * @return String
        */
       public static String unDashed(UUID id) {

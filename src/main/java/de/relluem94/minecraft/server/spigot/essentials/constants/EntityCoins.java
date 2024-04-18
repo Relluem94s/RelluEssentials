@@ -1,5 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import lombok.Getter;
+
+@Getter
 public enum EntityCoins {
   /**
    * Reg Ex to Replace all () to compare and add new Entries
@@ -31,17 +34,17 @@ public enum EntityCoins {
   SPECTRAL_ARROW(0),
   SHULKER_BULLET(0),
   DRAGON_FIREBALL(0),
-  ZOMBIE_VILLAGER(0),
-  SKELETON_HORSE(0),
-  ZOMBIE_HORSE(0),
+  ZOMBIE_VILLAGER(20),
+  SKELETON_HORSE(150),
+  ZOMBIE_HORSE(150),
   ARMOR_STAND(0),
   DONKEY(0),
   MULE(0),
   EVOKER_FANGS(0),
-  EVOKER(100),
-  VEX(100),
-  VINDICATOR(100),
-  ILLUSIONER(100),
+  EVOKER(150),
+  VEX(150),
+  VINDICATOR(150),
+  ILLUSIONER(150),
   MINECART_COMMAND(0),
   BOAT(0),
   MINECART(0),
@@ -95,12 +98,12 @@ public enum EntityCoins {
   SALMON(0),
   PUFFERFISH(0),
   TROPICAL_FISH(0),
-  DROWNED(0),
+  DROWNED(20),
   DOLPHIN(0),
   CAT(0),
   PANDA(0),
-  PILLAGER(0),
-  RAVAGER(0),
+  PILLAGER(200),
+  RAVAGER(1000),
   TRADER_LLAMA(0),
   WANDERING_TRADER(0),
   FOX(0),
@@ -115,7 +118,7 @@ public enum EntityCoins {
   GLOW_SQUID(0),
   GOAT(0),
   MARKER(0),
-  ALLAY(0),
+  ALLAY(20),
   CHEST_BOAT(0),
   FROG(0),
   TADPOLE(0),
@@ -131,14 +134,9 @@ public enum EntityCoins {
   INTERACTION(0),
   BLOCK_DISPLAY(0);
 
+  private final int coins;
 
-  private int coins;
-
-  private EntityCoins(int coins) {
+  EntityCoins(int coins) {
     this.coins = coins;
-  }
-
-  public int getCoins(){
-    return coins;
   }
 }

@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.Strings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -25,11 +26,11 @@ public class BetterPlayerJoin implements Listener {
         PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
         if (pe == null) {
             pe = new PlayerEntry();
-            pe.setCreatedby(1);
+            pe.setCreatedBy(1);
             pe.setName(p.getName());
             pe.setCustomName(p.getDisplayName());
             pe.setGroup(Groups.getGroup("user"));
-            pe.setUUID(p.getUniqueId().toString());
+            pe.setUuid(p.getUniqueId().toString());
             RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
 
             pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
@@ -56,8 +57,8 @@ public class BetterPlayerJoin implements Listener {
         addPlayer(p);
 
         PluginInformationEntry pie = RelluEssentials.getInstance().getPluginInformation();
-        p.setPlayerListHeader(pie.getTabheader());
-        p.setPlayerListFooter(pie.getTabfooter());
+        p.setPlayerListHeader(pie.getTabHeader());
+        p.setPlayerListFooter(pie.getTabFooter());
 
         PlayerHelper.setFlying(p);
         PlayerHelper.setAFK(p, true);
@@ -66,6 +67,10 @@ public class BetterPlayerJoin implements Listener {
         WorldHelper.loadWorldGroupInventory(p);
 
         BankerHelper.doInterest(e.getPlayer());
+
+         if(WorldHelper.isInWorld(p,Strings.PLUGIN_WORLD_LOBBY)){
+            PlayerHelper.setLobbyItems(p);
+        }
     }
 
     @EventHandler

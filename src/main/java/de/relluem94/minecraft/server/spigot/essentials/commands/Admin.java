@@ -10,15 +10,16 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING_OTHER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_TOP;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN_PING;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.HashMap;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -41,7 +42,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 public class Admin implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_ADMIN)) {
             return false;
         }
@@ -121,7 +122,7 @@ public class Admin implements CommandExecutor {
                     }
                 }
 
-                if (removeMap.size() == 0) {
+                if (removeMap.isEmpty()) {
                     p.sendMessage(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE);
                     
                 }
@@ -155,7 +156,7 @@ public class Admin implements CommandExecutor {
                 return true;
             }
             else {
-                p.sendMessage(PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND);
+                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }
         }
@@ -174,7 +175,7 @@ public class Admin implements CommandExecutor {
             }
         }
         else {
-            p.sendMessage(PLUGIN_COMMAND_ADMIN_WRONG_SUBCOMMAND);
+            p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
             return true;
         }
         return false;
