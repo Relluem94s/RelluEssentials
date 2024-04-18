@@ -15,5 +15,5 @@ public enum PlayerState implements IPlayerState {
     FAKE_AFK_ON,
     FAKE_AFK_ACTIVE,
     DAMAGE_INFO,
-    DEFAULT;
+    DEFAULT
 }

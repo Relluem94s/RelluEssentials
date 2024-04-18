@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +19,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHead
 public class Head implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_HEAD)) {
             return false; 
         }
@@ -43,11 +44,6 @@ public class Head implements CommandExecutor {
         String owner = args[0];
         ItemStack is = createSkull(owner);
 
-        if(is == null){
-            sendMessage(p, PLUGIN_COMMAND_HEAD_NOT_FOUND);
-            return true;
-        }
-        
         p.getInventory().addItem(is);
         p.updateInventory();
         sendMessage(p, String.format(PLUGIN_COMMAND_HEAD, owner));

@@ -7,6 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_NICK;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,7 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 public class Nick implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_NICK)) {
             return false;
         }
@@ -45,8 +46,8 @@ public class Nick implements CommandExecutor {
 
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
         pe.setCustomName(args[1]);
-        pe.setUpdatedBy(isPlayer(sender) ? RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(((Player)sender).getUniqueId()).getID() : 1);
-        pe.setToBeUpdated(true);
+        pe.setUpdatedBy(isPlayer(sender) ? RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(((Player)sender).getUniqueId()).getId() : 1);
+        pe.setHasToBeUpdated(true);
         target.setCustomName(pe.getGroup().getPrefix() + args[1]);
         target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);
         sender.sendMessage(String.format(PLUGIN_COMMAND_NICK, pe.getGroup().getPrefix() + target.getName()));

@@ -22,9 +22,11 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 
+import java.util.Collections;
+
 public class DatabaseManager implements IEnable{
 
-    private DatabaseHelper dBH;
+    private final DatabaseHelper dBH;
     private PluginInformationEntry pie;
 
     public DatabaseManager(String host, String user, String password, int port){
@@ -66,9 +68,7 @@ public class DatabaseManager implements IEnable{
 
         for(int i = 0; i < RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().size(); i++){
             ItemStack[] isa = BagHelper.getItemStacks(RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().get(i));
-            for(ItemStack is : isa){
-                RelluEssentials.getInstance().bagBlocks2collect.add(is);
-            }
+            Collections.addAll(RelluEssentials.getInstance().bagBlocks2collect, isa);
         }
     }
 
@@ -82,7 +82,7 @@ public class DatabaseManager implements IEnable{
                 RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));
                 RelluEssentials.getInstance().getPlayerAPI().reloadPlayerHomes();
             }
-        }.runTaskLater(RelluEssentials.getInstance(),  1l);
+        }.runTaskLater(RelluEssentials.getInstance(), 1L);
 
 
        

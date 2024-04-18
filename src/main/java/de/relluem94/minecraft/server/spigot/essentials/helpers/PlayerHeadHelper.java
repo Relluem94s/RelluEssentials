@@ -32,7 +32,7 @@ public class PlayerHeadHelper {
         ItemStack is = PLAYER_HEAD.clone();
         SkullMeta sm = (SkullMeta) is.getItemMeta();
         if(player != null){
-            PlayerProfile pp = Bukkit.createPlayerProfile(player.getID(), player.getName());
+            PlayerProfile pp = Bukkit.createPlayerProfile(player.getId(), player.getName());
  
             sm.setOwnerProfile(pp);
             sm.setDisplayName(player.getName());

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -16,10 +17,13 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
 
+import javax.annotation.Nonnull;
+
 public class PlayerAPI {
 
-    private Map<UUID, PlayerEntry> playerEntryMap = new HashMap<>();
-    private Multimap<Integer, BagEntry> playerBagEntryMap = ArrayListMultimap.create();
+    @Getter
+    private final Map<UUID, PlayerEntry> playerEntryMap = new HashMap<>();
+    private final Multimap<Integer, BagEntry> playerBagEntryMap = ArrayListMultimap.create();
 
 
     public PlayerAPI(List<BagEntry> bagEntries){
@@ -39,7 +43,7 @@ public class PlayerAPI {
 
     public PlayerEntry getPlayerEntry(int id){
         for(PlayerEntry pe : playerEntryMap.values()){
-            if(pe.getID() == id){
+            if(pe.getId() == id){
                 return pe;
             }
         }
@@ -50,25 +54,23 @@ public class PlayerAPI {
         return playerEntryMap.get(player.getUniqueId());
     }
 
-    public Map<UUID, PlayerEntry> getPlayerEntryMap(){
-        return playerEntryMap;
-    }
-
     /**
      * 
-     * @param playerFK
+     * @param playerFK int
      * @return Collection of BagEntries
      */
+
+    @SuppressWarnings("unused")
     public Collection<BagEntry> getPlayerBagList(int playerFK){
         return playerBagEntryMap.get(playerFK);
     }
 
     /**
      * Adds Player Bag to internal List
-     * @param playerFK
-     * @param bagEntry
+     * @param playerFK int
+     * @param bagEntry BagEntry
      */
-    public void putPlayerBagEntry(int playerFK, BagEntry bagEntry){
+    public void putPlayerBagEntry(int playerFK, @Nonnull BagEntry bagEntry){
         playerBagEntryMap.put(playerFK, bagEntry);
     }
 
@@ -82,7 +84,7 @@ public class PlayerAPI {
 
     public PlayerPartnerEntry getPartner(PlayerEntry pe){
         if(pe.getPartner() == null){
-            return RelluEssentials.getInstance().getDatabaseHelper().getPlayerPartner(pe.getID());
+            return RelluEssentials.getInstance().getDatabaseHelper().getPlayerPartner(pe.getId());
         }
         
         return pe.getPartner();
@@ -93,6 +95,6 @@ public class PlayerAPI {
 
         playerEntryMap.clear();
 
-        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUUID()), p));
+        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUuid()), p));
     }
 }

@@ -22,7 +22,7 @@ public class Permission {
      *
      * @param p Player
      * @param group long
-     * @return
+     * @return boolean
      */
     public static boolean isAuthorized(Player p, long group) {
         long id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p).getGroup().getId();
@@ -41,10 +41,6 @@ public class Permission {
             return isAuthorized((Player) sender, group);
         } else if (isCMDBlock(sender)) {
             return true;
-        } else if (isConsole(sender)) {
-            return true;
-        }
-
-        return false;
+        } else return isConsole(sender);
     }
 }

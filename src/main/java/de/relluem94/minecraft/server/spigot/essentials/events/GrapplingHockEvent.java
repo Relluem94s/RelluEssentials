@@ -40,7 +40,7 @@ public class GrapplingHockEvent implements Listener {
                     public void run() {
                         COOL_DOWN.remove(e.getPlayer());
                     }
-                }.runTaskLater(RelluEssentials.getInstance(),  50l);
+                }.runTaskLater(RelluEssentials.getInstance(), 50L);
             }
             else{
                 e.getPlayer().sendMessage(Strings.PLUGIN_GRAPPLINGHOOK_COOLDOWN);

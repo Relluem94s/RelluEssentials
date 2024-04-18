@@ -16,10 +16,10 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.NPC.Type;
 
 public class NPCAPI {
     
-    private List<ItemStack> npcItemstack = new ArrayList<>();
-    private List<String> npcName = new ArrayList<>();
-    private List<String> npcTraderTitle = new ArrayList<>();
-    private List<NPC> npcs = new ArrayList<>();
+    private final List<ItemStack> npcItemstack = new ArrayList<>();
+    private final List<String> npcName = new ArrayList<>();
+    private final List<String> npcTraderTitle = new ArrayList<>();
+    private final List<NPC> npcs = new ArrayList<>();
 
     public void init(List<NPCEntry> npcEntryList){
         for(NPCEntry ne : npcEntryList){
