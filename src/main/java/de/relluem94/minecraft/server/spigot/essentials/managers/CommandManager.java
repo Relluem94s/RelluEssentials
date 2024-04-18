@@ -76,7 +76,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Enderchest;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Exit;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
 import de.relluem94.minecraft.server.spigot.essentials.commands.GameMode;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Gamerules;
+import de.relluem94.minecraft.server.spigot.essentials.commands.GameRules;
 import de.relluem94.minecraft.server.spigot.essentials.commands.God;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Head;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
@@ -145,7 +145,7 @@ public class CommandManager implements IEnable {
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_HEAL)).setExecutor(new Heal());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GOD)).setExecutor(new God());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_ADMIN)).setExecutor(new Admin());
-        Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GAMERULES)).setExecutor(new Gamerules());
+        Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GAMERULES)).setExecutor(new GameRules());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_HEAD)).setExecutor(new Head());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_VANISH)).setExecutor(new Vanish());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_AFK)).setExecutor(new AFK());

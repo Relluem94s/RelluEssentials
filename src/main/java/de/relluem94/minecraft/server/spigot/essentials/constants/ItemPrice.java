@@ -1,5 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import lombok.Getter;
+
+@Getter
 public enum ItemPrice {
   /**
    * Reg Ex to Replace all () to compare and add new Entries
@@ -119,6 +122,14 @@ public enum ItemPrice {
   DARK_OAK_LOG(16, 16),
   MANGROVE_LOG(16, 16),
   MANGROVE_ROOTS(0, 0),
+  CHERRY_LOG(16, 16),
+  CHERRY_SAPLING(1, 1),
+  CHERRY_SLAB(0, 0),
+  CHERRY_FENCE_GATE(0, 0),
+  CHERRY_WALL_SIGN(0, 0),
+  CHERRY_PLANKS(4, 4),
+  CHERRY_WOOD(16, 16),
+  STRIPPED_CHERRY_WOOD(16,16),
   MUDDY_MANGROVE_ROOTS(0, 0),
   CRIMSON_STEM(16, 16),
   WARPED_STEM(16, 16),
@@ -484,8 +495,8 @@ public enum ItemPrice {
   REPEATING_COMMAND_BLOCK(0, 0),
   CHAIN_COMMAND_BLOCK(0, 0),
   MAGMA_BLOCK(0, 0),
-  NETHER_WART_BLOCK(0, 0),
-  WARPED_WART_BLOCK(0, 0),
+  NETHER_WART_BLOCK(18, 18),
+  WARPED_WART_BLOCK(18, 18),
   RED_NETHER_BRICKS(0, 0),
   BONE_BLOCK(0, 0),
   STRUCTURE_VOID(0, 0),
@@ -754,7 +765,7 @@ public enum ItemPrice {
   RAW_COPPER(40, 40),
   COPPER_INGOT(50, 50),
   RAW_GOLD(60, 60),
-  GOLD_INGOT(70, 70),
+  GOLD_INGOT(72, 72),
   NETHERITE_INGOT(960, 960),
   NETHERITE_SCRAP(240, 240),
   WOODEN_SWORD(0, 0),
@@ -933,7 +944,7 @@ public enum ItemPrice {
   ENDER_PEARL(30, 30),
   BLAZE_ROD(26, 26),
   GHAST_TEAR(60, 60),
-  GOLD_NUGGET(0, 0),
+  GOLD_NUGGET(8, 8),
   NETHER_WART(2, 2),
   POTION(0, 0),
   GLASS_BOTTLE(3, 3),
@@ -1332,18 +1343,12 @@ public enum ItemPrice {
   BIG_DRIPLEAF_STEM(0, 0),
   POTTED_AZALEA_BUSH(0, 0),
   POTTED_FLOWERING_AZALEA_BUSH(0, 0),
-  CHERRY_PLANKS(0, 0),
-
   LIME_CARPET(0, 0),
   BLACK_CARPET(0, 0),
   MOURNER_POTTERY_SHERD(0, 0),
   CYAN_CARPET(0, 0),
-  CHERRY_SLAB(0, 0),
-  CHERRY_FENCE_GATE(0, 0),
-  CHERRY_WALL_SIGN(0, 0),
   LIGHT_BLUE_CARPET(0, 0),
   SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE(0, 0),
-  CHERRY_WOOD(0, 0),
   PINK_CARPET(0, 0),
   RAISER_ARMOR_TRIM_SMITHING_TEMPLATE(0, 0),
   HEARTBREAK_POTTERY_SHERD(0, 0),
@@ -1351,7 +1356,6 @@ public enum ItemPrice {
   ANGLER_POTTERY_SHERD(0, 0),
   NETHERITE_UPGRADE_SMITHING_TEMPLATE(0, 0),
   ARMS_UP_POTTERY_SHERD(0, 0),
-  STRIPPED_CHERRY_WOOD(0, 0),
   SNIFFER_EGG(0, 0),
   MINER_POTTERY_SHERD(0, 0),
   COAST_ARMOR_TRIM_SMITHING_TEMPLATE(0, 0),
@@ -1383,7 +1387,6 @@ public enum ItemPrice {
   BURN_POTTERY_SHERD(0, 0),
   CHERRY_HANGING_SIGN(0, 0),
   RIB_ARMOR_TRIM_SMITHING_TEMPLATE(0, 0),
-  CHERRY_SAPLING(0, 0),
   SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE(0, 0),
   HEART_POTTERY_SHERD(0, 0),
   PLENTY_POTTERY_SHERD(0, 0),
@@ -1420,24 +1423,14 @@ public enum ItemPrice {
   CHERRY_DOOR(0, 0),
   LIGHT_GRAY_CARPET(0, 0),
   GRAY_CARPET(0, 0),
-  CHERRY_LOG(0, 0),
   ORANGE_CARPET(0, 0),
   BLUE_CARPET(0, 0);
 
-  private int buyPrice;
-  private int sellPrice;
+  private final int buyPrice;
+  private final int sellPrice;
 
-  private ItemPrice(int buyPrice, int sellPrice) {
+  ItemPrice(int buyPrice, int sellPrice) {
     this.buyPrice = buyPrice;
     this.sellPrice = sellPrice;
   }
-
-  public int getBuyPrice() {
-    return buyPrice;
-  }
-
-  public int getSellPrice() {
-    return sellPrice;
-  }
-
 }

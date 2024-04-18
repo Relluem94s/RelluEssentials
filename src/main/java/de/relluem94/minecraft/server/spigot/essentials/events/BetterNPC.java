@@ -50,7 +50,7 @@ public class BetterNPC implements Listener {
     @EventHandler
     public void onNPCPlacement(PlayerInteractEvent e) {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
-            if((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && e.getItem() != null && new WorldSelector().almostEquals(e.getItem())){
+            if((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && (e.getItem() != null && new WorldSelector().equalsName(e.getItem()))){
                 Worlds.openWorldMenu(e.getPlayer());
                 e.setCancelled(true);
             }
@@ -82,7 +82,7 @@ public class BetterNPC implements Listener {
                     if(RelluEssentials.getInstance().getNpcAPI().getNPCNameList().get(i).equals(customName)){
                         if(customName.equals(RelluEssentials.getBanker().getName())){
                             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                            BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getID());
+                            BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getId());
                             if(bae != null){
                                 InventoryHelper.openInventory(p, RelluEssentials.getBanker().getMainGUI());
                             }
@@ -90,13 +90,13 @@ public class BetterNPC implements Listener {
                                 BankTierEntry bte = RelluEssentials.getInstance().getDatabaseHelper().getBankTier(1);
                                 if(pe.getPurse() > bte.getCost()){
                                     pe.setPurse(pe.getPurse() - bte.getCost());
-                                    pe.setUpdatedBy(pe.getID());
-                                    pe.setToBeUpdated(true);
+                                    pe.setUpdatedBy(pe.getId());
+                                    pe.setHasToBeUpdated(true);
             
                                     bae = new BankAccountEntry();
                                     bae.setValue(0);
                                     bae.setTier(bte);
-                                    bae.setPlayerId(pe.getID());
+                                    bae.setPlayerId(pe.getId());
                 
                                     RelluEssentials.getInstance().getDatabaseHelper().insertBankAccount(bae);
                                     p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT);
@@ -123,6 +123,7 @@ public class BetterNPC implements Listener {
             InventoryHelper.closeInventory(p);
         }
         else if(CustomItems.npc_gui_disabled.equalsExact(is)){
+            return;
             // DISABLED DOES NOTHING. COULD BE AN EASTER EGG!
         }
         else if(is.getType().equals(Material.PLAYER_HEAD) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && ((SkullMeta) is.getItemMeta()).getOwnerProfile().getName().equals(CustomHeads.BAG.getName()) ){
@@ -141,10 +142,10 @@ public class BetterNPC implements Listener {
                 if(!BagHelper.hasBag(bt.getId(), pe)){
                     if(purse >= price){
                         pe.setPurse(purse - price);
-                        pe.setUpdatedBy(pe.getID());
-                        pe.setToBeUpdated(true);
-                        RelluEssentials.getInstance().getDatabaseHelper().insertBag(bt.getId(), pe.getID());
-                        RelluEssentials.getInstance().getPlayerAPI().putPlayerBagEntry(pe.getID(), RelluEssentials.getInstance().getDatabaseHelper().getBag(bt.getId(), pe.getID()));
+                        pe.setUpdatedBy(pe.getId());
+                        pe.setHasToBeUpdated(true);
+                        RelluEssentials.getInstance().getDatabaseHelper().insertBag(bt.getId(), pe.getId());
+                        RelluEssentials.getInstance().getPlayerAPI().putPlayerBagEntry(pe.getId(), RelluEssentials.getInstance().getDatabaseHelper().getBag(bt.getId(), pe.getId()));
                         
                         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
                     }
@@ -183,8 +184,8 @@ public class BetterNPC implements Listener {
                             p.updateInventory();
     
                             pe.setPurse(pe.getPurse() - coins);
-                            pe.setUpdatedBy(pe.getID());
-                            pe.setToBeUpdated(true);
+                            pe.setUpdatedBy(pe.getId());
+                            pe.setHasToBeUpdated(true);
     
                             p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                             p.playSound(p, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
@@ -206,7 +207,7 @@ public class BetterNPC implements Listener {
                 Damageable damageable = ((Damageable) is.getItemMeta());
                 if(is.getItemMeta().getEnchants().isEmpty() && sellPricePerItem != 0 && !damageable.hasDamage() && (!is.getItemMeta().hasDisplayName() || is.getItemMeta() instanceof SkullMeta)){
 
-                    double coins = 0;
+                    double coins;
                     
                     if(isRigthClicked){
                         amountOfItem = 0;
@@ -229,8 +230,8 @@ public class BetterNPC implements Listener {
                     p.updateInventory();
 
                     pe.setPurse(pe.getPurse() + coins);
-                    pe.setUpdatedBy(pe.getID());
-                    pe.setToBeUpdated(true);
+                    pe.setUpdatedBy(pe.getId());
+                    pe.setHasToBeUpdated(true);
 
                     p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SELL, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                     p.playSound(p, Sound.ENTITY_WANDERING_TRADER_NO, SoundCategory.MASTER, 1f, 1f);
@@ -263,11 +264,10 @@ public class BetterNPC implements Listener {
    
     @EventHandler
     public void onInventoryClickItem(InventoryClickEvent e) {
-        if(e.getWhoClicked() instanceof Player && e.getCurrentItem() != null){
-            Player p = (Player) e.getWhoClicked();
+        if(e.getWhoClicked() instanceof Player p && e.getCurrentItem() != null){
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if (e.getView().getTitle().equals(RelluEssentials.getBanker().getTitle())) {
-                BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getID());
+                BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getId());
                 if(e.getCurrentItem().equals(BankerHelper.npc_gui_deposit.getCustomItem())){
                     InventoryHelper.closeInventory(p);
                     InventoryHelper.openInventory(p, RelluEssentials.getBanker().getDepositGUI());
@@ -369,12 +369,10 @@ public class BetterNPC implements Listener {
             return;
         }
 
-        if(!(e.getDamager() instanceof Player)){
+        if(!(e.getDamager() instanceof Player p)){
             e.setCancelled(true);
             return;
         }
-
-        Player p = (Player) e.getDamager();
 
         if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
             e.setCancelled(true);

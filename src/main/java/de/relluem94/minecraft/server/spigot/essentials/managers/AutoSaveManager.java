@@ -1,6 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_AUTOSAVE_REGISTERED;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_REGISTER_AUTOSAVE;
+import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import org.bukkit.scheduler.BukkitRunnable;
@@ -27,6 +30,13 @@ public class AutoSaveManager implements IEnable, IDisable {
             @Override
             public void run() {               
                 PlayerHelper.savePlayers();
+            }
+        }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 *  60 * AUTO_SAVE_MINUTES);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {               
+                PlayerHelper.savePlayersInv();
             }
         }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 *  60 * AUTO_SAVE_MINUTES);
 

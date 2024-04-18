@@ -14,7 +14,7 @@ public class GroupManager implements IEnable{
     @Override
     public void enable() {
         List<PlayerEntry> pel = RelluEssentials.getInstance().getDatabaseHelper().getPlayers();
-        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUUID()), p));
+        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUuid()), p));
 
         Bukkit.getOnlinePlayers().forEach(p -> {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);

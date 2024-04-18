@@ -1,35 +1,50 @@
 ![Rellu Essentials](https://img.relluem94.de/logos/app/relluessentials.png)
 
-### a Spigot Plugin compatible with Spigot 1.19.4
+### a Spigot Plugin compatible with Spigot 1.20.1
 
-## Development / Build
+# First Steps
+Find out how to get the plugin and how to use it.
+
+## Usage of Plugin
+1. [Download](https://github.com/Relluem94s/RelluEssentials/packages) or [Build](https://github.com/Relluem94s/RelluEssentials#build) the plugin jar 
+2. Copy the jar into the `plugin` Directory
+3. Start and Stop the Server
+4. Set Host, User and Password of your MySQL Server in the config.yml
+5. Start your Server again
+6. Enjoy
+
+## Build
 1. ```shell
    git clone https://github.com/Relluem94/RelluEssentials.git
    ```
 
-1. ```shell
+2. ```shell
    git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
    ```
 
-1. ```shell
+3. ```shell
    mvn clean install
    ```
 
-For Development you can use 
+
+## Deploy Package
+1. Make sure that your GitHub token is in your maven settings.xml (~/.m2/settings.xml)
+2. ```shell
+    mvn --batch-mode deploy
+   ```
+
+
+## Development
 ```shell
 ./MinecraftDevelopmentEnvironment.sh
 ```
-it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
+it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [RelluBash-Script-Collection](https://github.com/Relluem94s/RelluBash-Script-Collection)
 
-## First Steps
-1. Copy the jar into the `plugin` Directory
-1. Start and Stop the Server
-1. Set User and Password of your MySQL Server in the config.yml
-1. Start your Server again
-1. Enjoy
+# Functionality 
+What does the plugin include?
 
 ## Commands
-* Admin gives Clearing Chat, Fake AFK, Teleport to highest Block and Custom NPCs  (`/admin`) 
+* Admin gives Clearing Chat, Fake AFK, Teleport to the highest Block and Custom NPCs  (`/admin`) 
 * Away from Keyboard (`/afk`)
 * Teleports to the latest Checkpoint (on spawn, teleport, world, warp and home) (`/back`)
 * Opens Bag Pack Menu (`/bags`)
@@ -98,6 +113,7 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
     * Beekeeper
     * Enchanter (WIP)
 
+
 ## Bags
 * Custom Bags via Database
     * Mining Bag
@@ -106,8 +122,10 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
     * Shepherd Bag
     * Lumberjack Bag
 
+
 ## Functional Block Protections
 * Add additional Blocks via Database or via API
+
 
 ## Enchantments
 * Replenishment (Auto Replant Seeds)
@@ -115,6 +133,7 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 * Telekinesis (Teleports item into Inventory)
 * Delicate (Prevents breaking immature Crops and Stems)
 * Thunderstrike (Strikes Entity with a Lightning Bolt)
+
 
 ## Skills
 * Skills will be reworked. Some as Enchant some as Skill. (WIP)
@@ -145,6 +164,9 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 * No Death Message
   * Save Death Location as Home
   * Show Location in Chat (private)
+
+# Documentation
+How it is working? What's under the hood?
 
 ## Helpers
 - AttributeHelper
@@ -181,5 +203,9 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin)
 - ProtectionAPI
 - WarpAPI
 
+
 ## Database Model
-![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.png)
+![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.svg)
+
+
+[![Java CI with Maven](https://github.com/Relluem94s/RelluEssentials/actions/workflows/maven.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/maven.yml) [![Dependency review](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml) [![Dependency review](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml)

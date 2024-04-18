@@ -20,6 +20,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 
 import java.util.Date;
 
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
@@ -38,7 +39,7 @@ public class PlayerInfo implements CommandExecutor {
 
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PLAYERINFO)) {
             return false;
         }
@@ -90,12 +91,12 @@ public class PlayerInfo implements CommandExecutor {
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_GROUP, pet.getGroup().getPrefix() + pet.getGroup().getName()));
 
         if(pet.getPartner() != null){
-            sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MARRIED_TO,  RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getFirstPlayerID()).getName(), RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getSecondPlayerID())));
+            sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MARRIED_TO,  RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getFirstPartnerId()).getName(), RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(pet.getPartner().getSecondPartnerId())));
             sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MARRIED_SINCE, pet.getPartner().getCreated()));
         }
 
-        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_LAST_ONLINE, new Date(target.getLastPlayed()).toString()));
-        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_FIRST_ONLINE, new Date(target.getFirstPlayed()).toString()));
+        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_LAST_ONLINE, new Date(target.getLastPlayed())));
+        sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_FIRST_ONLINE, new Date(target.getFirstPlayed())));
 
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MINED, Material.STONE.name(), target.getStatistic(Statistic.MINE_BLOCK, Material.STONE)));
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_MINED, Material.DIRT.name(), target.getStatistic(Statistic.MINE_BLOCK, Material.DIRT)));

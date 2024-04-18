@@ -4,7 +4,7 @@
   <groupId>de.relluem94</groupId>
   <artifactId>relluessentials</artifactId>
   <name>RelluEssentials</name>
-  <version>4.0</version>
+  <version>4.2</version>
   <url>https://github.com/Relluem94s/RelluEssentials</url>
   <scm>
     <connection>scm:git:git@github.com:Relluem94s/RelluEssentials.git</connection>
@@ -22,11 +22,18 @@
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.10.1</version>
+        <version>3.12.1</version>
         <configuration>
           <source>17</source>
           <target>17</target>
           <encoding>UTF-8</encoding>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
       </plugin>
       <plugin>
@@ -44,10 +51,9 @@
                 <filter>
                   <artifact>*:*</artifact>
                   <excludes>
-                    <exclude>META-INF/*.SF</exclude>
-                    <exclude>META-INF/*.MF</exclude>
-                    <exclude>META-INF/*.DSA</exclude>
-                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>META-INF/**</exclude>
+                    <exclude>LICENSE</exclude>
+                    <exclude>module-info.class</exclude>
                   </excludes>
                 </filter>
               </filters>
@@ -60,15 +66,32 @@
         <version>3.3.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
+          <filters />
         </configuration>
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>github</id>
+      <repositories>
+        <repository>
+          <releases />
+          <snapshots />
+          <id>central</id>
+          <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+          <releases />
+          <snapshots />
+          <id>github</id>
+          <name>RelluLib</name>
+          <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
   <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
     <repository>
       <id>central</id>
       <name>central</name>
@@ -82,6 +105,13 @@
       <id>papermc</id>
       <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
+    <repository>
+      <releases />
+      <snapshots />
+      <id>github</id>
+      <name>Relluem94s</name>
+      <url>https://maven.pkg.github.com/Relluem94s/*</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -91,72 +121,50 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot</artifactId>
-      <version>1.20.1-R0.1-SNAPSHOT</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.github.seeseemelk</groupId>
-      <artifactId>MockBukkit-v1.18</artifactId>
-      <version>2.85.2</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>5.10.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <artifactId>slf4j-simple</artifactId>
-          <groupId>org.slf4j</groupId>
+          <artifactId>junit-platform-engine</artifactId>
+          <groupId>org.junit.platform</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>paper-api</artifactId>
-          <groupId>io.papermc.paper</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>junit-jupiter</artifactId>
+          <artifactId>junit-jupiter-api</artifactId>
           <groupId>org.junit.jupiter</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>hamcrest-library</artifactId>
-          <groupId>org.hamcrest</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>annotations</artifactId>
-          <groupId>org.jetbrains</groupId>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
         </exclusion>
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.github.vorburger</groupId>
-      <artifactId>MariaDB4j</artifactId>
-      <version>main-SNAPSHOT</version>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-runner</artifactId>
+      <version>1.10.1</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <artifactId>logback-classic</artifactId>
-          <groupId>ch.qos.logback</groupId>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>spring-boot-starter-logging</artifactId>
-          <groupId>org.springframework.boot</groupId>
+          <artifactId>junit-platform-launcher</artifactId>
+          <groupId>org.junit.platform</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>mariaDB4j</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
+          <artifactId>junit-platform-suite-api</artifactId>
+          <groupId>org.junit.platform</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>mariaDB4j-app</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
+          <artifactId>junit-platform-suite-commons</artifactId>
+          <groupId>org.junit.platform</groupId>
         </exclusion>
         <exclusion>
-          <artifactId>mariaDB4j-core</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mariaDB4j-maven-plugin</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>mariaDB4j-springboot</artifactId>
-          <groupId>com.github.vorburger.MariaDB4j</groupId>
+          <artifactId>apiguardian-api</artifactId>
+          <groupId>org.apiguardian</groupId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -164,13 +172,15 @@
   <distributionManagement>
     <repository>
       <id>github</id>
-      <name>GitHub Relluem94 Apache Maven Packages</name>
+      <name>GitHub Relluem94s Apache Maven Packages</name>
       <url>https://maven.pkg.github.com/Relluem94s/RelluEssentials</url>
     </repository>
   </distributionManagement>
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
-    <plugin.apiVersion>1.19</plugin.apiVersion>
+    <plugin.apiVersion>1.20</plugin.apiVersion>
+    <lombok.version>1.18.30</lombok.version>
+    <spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
     <plugin.author>Relluem94</plugin.author>
     <project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
     <plugin.website>https://www.relluem94.de</plugin.website>

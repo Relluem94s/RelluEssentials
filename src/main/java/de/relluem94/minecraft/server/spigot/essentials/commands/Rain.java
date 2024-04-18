@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.WeatherType;
 import org.bukkit.command.Command;
@@ -17,7 +18,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 public class Rain implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_RAIN)) {
             if (args.length == 0) {
                 if (isPlayer(sender)) {

@@ -1,12 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DBNavigator.Project.DDLFileAttachmentManager">
+    <mappings />
+    <preferences />
+  </component>
+  <component name="DBNavigator.Project.DataEditorManager">
+    <record-view-column-sorting-type value="BY_INDEX" />
+    <value-preview-text-wrapping value="false" />
+    <value-preview-pinned value="false" />
+  </component>
+  <component name="DBNavigator.Project.DatabaseBrowserManager">
+    <autoscroll-to-editor value="false" />
+    <autoscroll-from-editor value="true" />
+    <show-object-properties value="true" />
+    <loaded-nodes />
+  </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="005e315d-ba06-4fb2-b969-2ea966f165b7">
+      <console name="RelluEssentials" type="STANDARD" schema="" session="Main"><![CDATA[INSERT INTO `rellu_essentials`.`protection_locks` (`created`, `createdby`, `value`) VALUES
+(now(), 1, 'CHERRY_SIGN'),
+(now(), 1, 'CHERRY_WALL_SIGN'),
+(now(), 1, 'CHERRY_WALL_HANGING_SIGN'),
+(now(), 1, 'CHERRY_HANGING_SIGN'),
+(now(), 1, 'CHERRY_TRAPDOOR'),
+(now(), 1, 'CHERRY_DOOR'),
+(now(), 1, 'CHERRY_FENCE_GATE');]]></console>
       <console name="RelluEssentials" type="STANDARD" schema="" session="Main" />
     </connection>
   </component>
+  <component name="DBNavigator.Project.DatabaseEditorStateManager">
+    <last-used-providers />
+  </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
+  </component>
+  <component name="DBNavigator.Project.DatabaseSessionManager">
+    <connection id="005e315d-ba06-4fb2-b969-2ea966f165b7" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.block_history" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.player_partner" active-filter-id="" />
+    <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.player" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.npc" active-filter-id="EMPTY_FILTER" />
+  </component>
+  <component name="DBNavigator.Project.ExecutionManager">
+    <retain-sticky-names value="false" />
+  </component>
+  <component name="DBNavigator.Project.ObjectQuickFilterManager">
+    <last-used-operator value="EQUAL" />
+    <filters />
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
@@ -498,5 +540,9 @@
         </visibility-settings>
       </environment>
     </general-settings>
+  </component>
+  <component name="DBNavigator.Project.StatementExecutionManager">
+    <execution-variables />
+    <execution-variable-types />
   </component>
 </project>

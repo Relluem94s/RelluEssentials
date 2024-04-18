@@ -1,5 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import lombok.NonNull;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +22,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 public class Repair implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_REPAIR)) {
             if (args.length == 0) {
                 if (isPlayer(sender)) {
@@ -29,15 +32,15 @@ public class Repair implements CommandExecutor {
                         ItemStack item = p.getInventory().getItemInMainHand();
                         ItemMeta im = item.getItemMeta();
 
-                        if (im instanceof Damageable) {
-                            Damageable dmg = (Damageable) im;
-                            if (dmg.hasDamage()) {
-                                dmg.setDamage(0);
-                            }
+                        if (im instanceof Damageable dmg && dmg.hasDamage()) {
+                            dmg.setDamage(0);
                             item.setItemMeta(im);
+                            p.sendMessage(String.format(PLUGIN_COMMAND_REPAIR, p.getInventory().getItemInMainHand().getType().name()));
+                        }
+                        else{
+                            p.sendMessage(String.format(PLUGIN_COMMAND_CANNOT_REPAIR, p.getInventory().getItemInMainHand().getType().name()));
                         }
 
-                        p.sendMessage(String.format(PLUGIN_COMMAND_REPAIR, p.getInventory().getItemInMainHand().getType().toString()));
                         return true;
                     } else {
                         p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
@@ -54,16 +57,16 @@ public class Repair implements CommandExecutor {
                             ItemStack item = target.getInventory().getItemInMainHand();
                             ItemMeta im = item.getItemMeta();
 
-                            if (im instanceof Damageable) {
-                                Damageable dmg = (Damageable) im;
-                                if (dmg.hasDamage()) {
-                                    dmg.setDamage(0);
-                                }
+                            if (im instanceof Damageable dmg && dmg.hasDamage()) {
+                                dmg.setDamage(0);
                                 item.setItemMeta(im);
+                                p.sendMessage(String.format(PLUGIN_COMMAND_REPAIR, target.getInventory().getItemInMainHand().getType().name()));
+                                target.sendMessage(String.format(PLUGIN_COMMAND_REPAIR_PLAYER, target.getInventory().getItemInMainHand().getType().name()));
+                            }
+                            else{
+                                p.sendMessage(String.format(PLUGIN_COMMAND_CANNOT_REPAIR, p.getInventory().getItemInMainHand().getType().name()));
                             }
 
-                            p.sendMessage(String.format(PLUGIN_COMMAND_REPAIR, target.getInventory().getItemInMainHand().getType().toString()));
-                            target.sendMessage(String.format(PLUGIN_COMMAND_REPAIR_PLAYER, target.getInventory().getItemInMainHand().getType().toString()));
                             return true;
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
