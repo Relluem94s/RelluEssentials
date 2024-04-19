@@ -32,11 +32,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.EventCon
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_RIGHTS;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -118,7 +114,8 @@ public class BetterLock implements Listener {
             holder = inventory.getHolder();
 
             if(inventory.getType().equals(InventoryType.HOPPER)){
-                return sellItem(inventory, is, isSource, ((Hopper)holder).getLocation());
+                sellItem(inventory, is, isSource, ((Hopper)holder).getLocation());
+                return false;
             }
 
             try {
@@ -146,7 +143,7 @@ public class BetterLock implements Listener {
         }
     }
 
-    private static boolean sellItem(Inventory inventory, ItemStack is, boolean isSource, Location location) {
+    private static void sellItem(Inventory inventory, ItemStack is, boolean isSource, Location location) {
         BlockState state = location.getBlock().getState();
         if((state instanceof Nameable)) {
             String name = ((Nameable)state).getCustomName();
@@ -156,13 +153,14 @@ public class BetterLock implements Listener {
 
                 if(!isSource && inventory.firstEmpty() != -1){
                     if(CustomItems.coins.almostEquals(is) || sellPriceItem == 0){
-                        return false;
+                        return;
                     }
+
                     Bukkit.broadcastMessage(name + " Sold: " + is.getType().name() + " for " + sellPriceItem);
 
                     ItemStack coin = CustomItems.coins.getCustomItem();
                     ItemMeta im = coin.getItemMeta();
-                    im.setLore(Arrays.asList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
+                    im.setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
                     im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, sellPriceItem);
 
                     coin.setItemMeta(im);
@@ -175,11 +173,11 @@ public class BetterLock implements Listener {
                             inventory.remove(is);
                         }
                     }.runTaskLater(RelluEssentials.getInstance(),  1L);
-                    return true;
+                    return;
                 }
             }
         }
-        return false;
+        return;
     }
 
     private boolean removeProtectionFromBlock(Player p , Block b){
