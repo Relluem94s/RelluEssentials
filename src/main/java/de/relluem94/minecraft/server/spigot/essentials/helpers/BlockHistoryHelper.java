@@ -8,9 +8,9 @@ import org.bukkit.Material;
  *
  * @author rellu
  */
-public class BlockHelper {
+public class BlockHistoryHelper {
 
-    private BlockHelper() {
+    private BlockHistoryHelper() {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
