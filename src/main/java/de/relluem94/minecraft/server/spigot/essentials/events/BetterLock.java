@@ -30,6 +30,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.EventCon
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_FLAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_RIGHTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -147,7 +148,7 @@ public class BetterLock implements Listener {
         if((state instanceof Nameable)) {
             String name = ((Nameable)state).getCustomName();
 
-            if(name != null && name.contains("Auto-Seller")){
+            if(name != null && name.contains(PLUGIN_ITEM_AUTOSELLHOPER)){
                 int sellPriceItem = ItemPrice.valueOf(is.getType().name()).getSellPrice() * is.getAmount();
 
                 int size = 0;
@@ -167,11 +168,9 @@ public class BetterLock implements Listener {
 
 
                 if(!isSource && (inventory.firstEmpty() != -1 && size < 4)){
-                    Bukkit.broadcastMessage(name + " Sold: " + is.getType().name() + " for " + sellPriceItem);
-
                     ItemStack coin = CustomItems.coins.getCustomItem();
                     ItemMeta im = coin.getItemMeta();
-                    im.setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
+                    Objects.requireNonNull(im).setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
                     im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, sellPriceItem);
 
                     coin.setItemMeta(im);

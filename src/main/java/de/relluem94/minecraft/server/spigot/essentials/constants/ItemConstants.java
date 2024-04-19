@@ -32,6 +32,7 @@ public class ItemConstants {
     public static final String PLUGIN_ITEM_RELLU_PICKAXE = "§eRellu's Pickaxe";
 
 
+    public static final String PLUGIN_ITEM_AUTOSELLHOPER = PLUGIN_COLOR_MONEY + "\uD835\uDE3C\uD835\uDE6A\uD835\uDE69\uD835\uDE64 \uD835\uDE4E\uD835\uDE5A\uD835\uDE61\uD835\uDE61 \uD835\uDE43\uD835\uDE64\uD835\uDE65\uD835\uDE65\uD835\uDE5A\uD835\uDE67";
     public static final String PLUGIN_ITEM_GRAPPLINGHOCK = "§cGrappling Hook";
     public static final String PLUGIN_ITEM_WORLDSELECTOR = "§eWorld Selector";
 
