@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc;
 
+import de.relluem94.minecraft.server.spigot.essentials.items.AutoSellHopper;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
@@ -25,6 +26,8 @@ public class Enchanter extends NPC {
         }
 
         inv.setItem(slot,CustomItems.magic_water_bucket.getCustomItem());
+        slot++;
+        inv.setItem(slot, new AutoSellHopper().getCustomItem());
 
         
         return inv;

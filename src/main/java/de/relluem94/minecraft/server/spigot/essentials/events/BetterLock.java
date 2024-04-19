@@ -30,23 +30,17 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.EventCon
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_FLAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_RIGHTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Nameable;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.DoubleChest;
+import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Chest;
@@ -121,7 +115,7 @@ public class BetterLock implements Listener {
             holder = inventory.getHolder();
 
             if(inventory.getType().equals(InventoryType.HOPPER)){
-                return false;
+                return sellItem(inventory, is, isSource, ((Hopper) Objects.requireNonNull(holder)).getLocation());
             }
 
             try {
@@ -141,50 +135,62 @@ public class BetterLock implements Listener {
                 return false; 
             }
             else{
-                BlockState state = location.getBlock().getState();
-                if((state instanceof Nameable)) {
-                    String name = ((Nameable)state).getCustomName();
-
-                    if(name.contains("Auto-Seller")){
-                        int sellPriceItem = ItemPrice.valueOf(is.getType().name()).getSellPrice() * is.getAmount();
-
-
-                        if(!isSource){
-                            Bukkit.broadcastMessage(name + " " + sellPriceItem);
-
-                            ItemStack coin = CustomItems.coins.getCustomItem();
-                            ItemMeta im = coin.getItemMeta();
-                            im.setLore(Arrays.asList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
-                            im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, sellPriceItem);
-
-                            coin.setItemMeta(im);
-
-                            inventory.addItem(coin);
-
-                            new BukkitRunnable() {
-                            @Override
-                                public void run() {
-                                    inventory.remove(is);
-                                }
-                            }.runTaskLater(RelluEssentials.getInstance(),  1l);
-
-                            return false;
-                        }
-                        else{
-                            return false;
-                        }
-                    }
-                }
-
-
-
-
-                return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOWHOPPER);
+                return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_HOPPER);
             }
         }
         else{
             return false;
         }
+    }
+
+    private static boolean sellItem(Inventory inventory, ItemStack is, boolean isSource, Location location) {
+        BlockState state = location.getBlock().getState();
+        if((state instanceof Nameable)) {
+            String name = ((Nameable)state).getCustomName();
+
+            if(name != null && name.contains(PLUGIN_ITEM_AUTOSELLHOPER)){
+                int sellPriceItem = ItemPrice.valueOf(is.getType().name()).getSellPrice() * is.getAmount();
+
+                int size = 0;
+                for(ItemStack itemStack : inventory.getStorageContents()){
+                    if(itemStack == null){
+                        continue;
+                    }
+
+                    if(!itemStack.getType().equals(Material.AIR)){
+                        size++;
+                    }
+                }
+
+                if(CustomItems.coins.almostEquals(is) || sellPriceItem == 0){
+                    return false;
+                }
+
+
+                if(!isSource && (inventory.firstEmpty() != -1 && size < 4)){
+                    ItemStack coin = CustomItems.coins.getCustomItem();
+                    ItemMeta im = coin.getItemMeta();
+                    Objects.requireNonNull(im).setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
+                    im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, sellPriceItem);
+
+                    coin.setItemMeta(im);
+
+                    inventory.addItem(coin);
+
+                    new BukkitRunnable() {
+                    @Override
+                        public void run() {
+                            inventory.remove(is);
+                        }
+                    }.runTaskLater(RelluEssentials.getInstance(),  1L);
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean removeProtectionFromBlock(Player p , Block b){
@@ -471,7 +477,7 @@ public class BetterLock implements Listener {
                 p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID, pre.getId()));
                 p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED, pre.getCreated()));
                 p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED, pre.getUpdated()));
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION, loc.getX(), loc.getY(), loc.getZ(), loc.getWorld().getName()));
+                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION, loc.getX(), loc.getY(), loc.getZ(), Objects.requireNonNull(loc.getWorld()).getName()));
                 p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID, pre.getLocationEntry().getPlayerId()));
 
                 
@@ -569,7 +575,7 @@ public class BetterLock implements Listener {
                 }
                 else{
                     JSONObject flags = new JSONObject();
-                    if(b.getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
+                    if(Objects.requireNonNull(b).getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
                         String[] flag = {ProtectionFlags.ALLOW_REDSTONE.getName(),ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName()};
                         flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
                     }
