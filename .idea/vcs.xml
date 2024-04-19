@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/RelluBash-Script-Collection" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../RelluSGA" vcs="Git" />
   </component>
 </project>
