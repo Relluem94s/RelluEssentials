@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SIGN_CLICK;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_SIGN_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_CLICK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_NAME;
 
 import lombok.Getter;
 import org.bukkit.block.Block;

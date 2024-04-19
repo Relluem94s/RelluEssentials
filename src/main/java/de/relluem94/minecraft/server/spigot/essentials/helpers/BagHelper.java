@@ -1,16 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAGS_SAVED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_AMOUNT;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_CLICK_TO_BUY;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_CLICK_TO_OPEN;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_COST_TO_BUY;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_GUI_TITLE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_BAG_RETRIEVE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_SPACER_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_INTERNAL_UTILITY_CLASS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CHAT_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_PREFIX;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAGS_SAVED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_AMOUNT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_CLICK_TO_BUY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_CLICK_TO_OPEN;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_COST_TO_BUY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_GUI_TITLE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_RETRIEVE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SPACER_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_INTERNAL_UTILITY_CLASS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 import java.util.ArrayList;

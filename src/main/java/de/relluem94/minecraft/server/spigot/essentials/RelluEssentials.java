@@ -1,15 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COLOR_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_FORMS_BORDER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_STARTTIME_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_START_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_MANAGER_STOP_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_WORLD_LOBBY;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_WORLD_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_WORLD_WORLD_NETHER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_WORLD_WORLD_THE_END;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_BORDER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_STARTTIME_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_START_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_STOP_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_WORLD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_WORLD_NETHER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_WORLD_THE_END;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import java.io.File;

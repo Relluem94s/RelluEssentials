@@ -21,7 +21,7 @@ import com.google.common.collect.Multimap;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantLevel;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantName;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.interfaces.IEnchantment;
@@ -208,9 +208,9 @@ public class EnchantmentHelper extends Enchantment implements IEnchantment {
             f.setAccessible(true);
             f.set(null, true);
             Enchantment.registerEnchantment(enchantment);
-            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, String.format(Strings.PLUGIN_MANAGER_REGISTER_ENCHANTMENT, enchantment.getKey().getNamespace(), enchantment.getKey()));
+            ChatHelper.consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, String.format(Constants.PLUGIN_MANAGER_REGISTER_ENCHANTMENT, enchantment.getKey().getNamespace(), enchantment.getKey()));
         } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-            ChatHelper.consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + enchantment.getKey());
+            ChatHelper.consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, ex.getMessage() + ": " + enchantment.getKey());
         }
     }
 

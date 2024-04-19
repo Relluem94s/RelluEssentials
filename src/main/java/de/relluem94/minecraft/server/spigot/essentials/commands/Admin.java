@@ -1,18 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CHAT_CLEARED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING_OTHER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_ADMIN_TOP;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CHAT_CLEARED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_PING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_PING_OTHER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_TOP;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ADMIN_PING;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -30,7 +30,7 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
@@ -60,7 +60,7 @@ public class Admin implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            p.sendMessage(Strings.PLUGIN_COMMAND_ADMIN_INFO);
+            p.sendMessage(Constants.PLUGIN_COMMAND_ADMIN_INFO);
             return true;
         } else if (args.length == 1) {
             if (args[0].equals("npc")) {
@@ -71,7 +71,7 @@ public class Admin implements CommandExecutor {
 
                 org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
                     InventoryHelper.createInventory(18,
-                    Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ "§dNPCs"),
+                    Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+ "§dNPCs"),
                     CustomItems.npc_gui_disabled.getCustomItem()
                 );
 
@@ -100,9 +100,9 @@ public class Admin implements CommandExecutor {
 
                 if (pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE)) {
                     pe.setPlayerState(PlayerState.DEFAULT);
-                    p.sendMessage(Strings.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE_DISABLED);
+                    p.sendMessage(Constants.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE_DISABLED);
                 } else {
-                    p.sendMessage(Strings.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE);
+                    p.sendMessage(Constants.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE);
                     pe.setPlayerState(PlayerState.LIGHT_TOOGLE);
                 }
                 return true;

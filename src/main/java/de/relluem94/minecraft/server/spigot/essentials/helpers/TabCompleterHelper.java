@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class TabCompleterHelper {
     private TabCompleterHelper() {
         throw new IllegalStateException(
-                de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+                Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static List<String> getOnlinePlayers(){

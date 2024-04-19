@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 public class GrapplingHockEvent implements Listener {
 
@@ -43,7 +43,7 @@ public class GrapplingHockEvent implements Listener {
                 }.runTaskLater(RelluEssentials.getInstance(), 50L);
             }
             else{
-                e.getPlayer().sendMessage(Strings.PLUGIN_GRAPPLINGHOOK_COOLDOWN);
+                e.getPlayer().sendMessage(Constants.PLUGIN_GRAPPLING_HOOK_COOLDOWN);
             }
             
         }

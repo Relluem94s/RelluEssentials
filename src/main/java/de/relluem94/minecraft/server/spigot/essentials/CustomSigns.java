@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCustomInputException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper.ActionType;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 public class CustomSigns {
 
     private CustomSigns() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static final SignHelper spawn;
