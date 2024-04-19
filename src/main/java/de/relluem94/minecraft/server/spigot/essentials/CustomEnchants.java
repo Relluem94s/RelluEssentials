@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.enchantments.Enchantment;
@@ -19,7 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity
 public class CustomEnchants {
 
     private CustomEnchants(){
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static final List<EnchantmentHelper> customEnchantments = new ArrayList<>();

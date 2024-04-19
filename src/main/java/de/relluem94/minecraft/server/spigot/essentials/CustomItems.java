@@ -14,6 +14,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import java.util.Arrays;
 import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -32,7 +33,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 public class CustomItems {
 
     private CustomItems() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static final ItemHelper magic_water_bucket = new ItemHelper(Material.WATER_BUCKET, 1, PLUGIN_ITEM_MAGIC_WATER_BUCKET, Type.GADGET, Rarity.EPIC, List.of(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE)){

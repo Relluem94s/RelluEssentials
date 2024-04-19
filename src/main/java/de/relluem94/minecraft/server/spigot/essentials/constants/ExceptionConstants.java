@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
-
 /**
  *
  * @author rellu
@@ -9,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
 public class ExceptionConstants {
 
     private ExceptionConstants() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     //==============================================================================//

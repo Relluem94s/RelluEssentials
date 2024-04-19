@@ -10,10 +10,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_EXIT;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
@@ -27,13 +27,13 @@ public class Exit implements CommandExecutor {
         }
 
         if (isConsole(sender)){
-            Bukkit.broadcastMessage(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN);
+            Bukkit.broadcastMessage(Constants.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN);
 
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         
-                        Bukkit.getOnlinePlayers().forEach(op ->  op.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN));
+                        Bukkit.getOnlinePlayers().forEach(op ->  op.kickPlayer(Constants.PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN));
         
                     }
                 }.runTaskLater(RelluEssentials.getInstance(), 10L);
@@ -53,7 +53,7 @@ public class Exit implements CommandExecutor {
             return true;
         } 
 
-        p.kickPlayer(Strings.PLUGIN_COMMAND_EXIT_KICK_MESSAGE);
+        p.kickPlayer(Constants.PLUGIN_COMMAND_EXIT_KICK_MESSAGE);
         return true;
     }
 }

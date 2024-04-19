@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 
@@ -12,7 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 public class Groups {
 
     private Groups() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     /**

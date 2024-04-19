@@ -1,10 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import static java.lang.Math.round;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WHERE_STRING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WHERE_STRING;
 import org.bukkit.Location;
 
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 /**
  *
@@ -13,7 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.Strings;
 public class StringHelper {
 
     private StringHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     /**

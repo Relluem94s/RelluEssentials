@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
@@ -66,7 +66,7 @@ public class BetterMobs implements Listener {
                 pe.setPurse(pe.getPurse() + coinsPerDeath);
                 pe.setUpdatedBy(pe.getId());
                 pe.setHasToBeUpdated(true);
-                ChatHelper.sendMessageInActionBar(p, String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, coinsPerDeath, StringHelper.formatDouble(pe.getPurse())));
+                ChatHelper.sendMessageInActionBar(p, String.format(Constants.PLUGIN_COMMAND_PURSE_GAIN, coinsPerDeath, StringHelper.formatDouble(pe.getPurse())));
 
 
                 if(BagHelper.hasBags(pe.getId())){

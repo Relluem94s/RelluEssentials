@@ -4,13 +4,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 
 import java.util.Map;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.RecipeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.recipe.Shaped;
 
 public class CustomRecipes {
 
     private CustomRecipes() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static final RecipeHelper cloudBoots = new RecipeHelper(

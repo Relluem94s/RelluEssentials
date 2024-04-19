@@ -25,7 +25,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
@@ -333,8 +333,8 @@ public class BetterNPC implements Listener {
                     e.setCancelled(true);
             }
             else if(
-                e.getView().getTitle().equals(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+"§dNPCs") || 
-                e.getView().getTitle().equals(Strings.PLUGIN_COMMAND_CUSTOMHEADS_TITLE)
+                e.getView().getTitle().equals(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+"§dNPCs") ||
+                e.getView().getTitle().equals(Constants.PLUGIN_COMMAND_CUSTOMHEADS_TITLE)
             ){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     p.getInventory().addItem(e.getCurrentItem().clone());
@@ -343,7 +343,7 @@ public class BetterNPC implements Listener {
                 e.setCancelled(true);
             }
             else if(
-                e.getView().getTitle().equals(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+"§dWorlds")
+                e.getView().getTitle().equals(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+"§dWorlds")
             ){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     String worldName = e.getCurrentItem().getItemMeta().getDisplayName();

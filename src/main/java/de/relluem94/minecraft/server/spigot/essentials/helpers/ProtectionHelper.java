@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.*;
@@ -22,7 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEn
 public class ProtectionHelper {
 
     private ProtectionHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
     
     /**

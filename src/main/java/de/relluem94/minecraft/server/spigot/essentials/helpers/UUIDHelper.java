@@ -2,12 +2,12 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.util.UUID;
 
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 public class UUIDHelper {
 
   private UUIDHelper() {
-    throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
 }
 
     /**

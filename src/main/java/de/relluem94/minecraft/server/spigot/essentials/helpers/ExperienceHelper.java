@@ -2,12 +2,12 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 public class ExperienceHelper {
 
     private ExperienceHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
     
     public static int getTotalExperience(int level) {

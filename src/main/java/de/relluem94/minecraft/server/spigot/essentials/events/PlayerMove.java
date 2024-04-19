@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 /**
  *
@@ -24,7 +24,7 @@ public class PlayerMove implements Listener {
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
         
-        if(p.getWorld().getName().equals(Strings.PLUGIN_WORLD_LOBBY)){
+        if(p.getWorld().getName().equals(Constants.PLUGIN_WORLD_LOBBY)){
             if(e.getTo().clone().add(0, -1, 0).getBlock().getType().equals(Material.MYCELIUM)){
                 if(p.isSneaking()){
                     p.getWorld().playEffect(p.getLocation(), Effect.BAT_TAKEOFF, 5);

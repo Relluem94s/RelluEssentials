@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 
@@ -19,7 +19,7 @@ public class BetterWorlds implements Listener {
         WorldHelper.loadWorldGroupInventory(p);
 
 
-        if(WorldHelper.isInWorld(p,Strings.PLUGIN_WORLD_LOBBY)){
+        if(WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)){
             PlayerHelper.setLobbyItems(p);
         }
     }
