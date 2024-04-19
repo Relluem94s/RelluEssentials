@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHistoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ public class BlockHistoryManager implements IEnable {
         scheduler.runTaskTimer(RelluEssentials.getInstance(), () -> {
             if (!RelluEssentials.getInstance().blockHistoryList.isEmpty()) {
                 BlockHistoryEntry bh = RelluEssentials.getInstance().blockHistoryList.get(0);
-                BlockHelper.setBlock(bh);
+                BlockHistoryHelper.setBlock(bh);
                 if (bh.getDeleted() == null) {
                     RelluEssentials.getInstance().getDatabaseHelper().insertBlockHistory(bh);
                 } else {
