@@ -114,8 +114,7 @@ public class BetterLock implements Listener {
             holder = inventory.getHolder();
 
             if(inventory.getType().equals(InventoryType.HOPPER)){
-                sellItem(inventory, is, isSource, ((Hopper)holder).getLocation());
-                return false;
+                return sellItem(inventory, is, isSource, ((Hopper)holder).getLocation());
             }
 
             try {
@@ -143,7 +142,7 @@ public class BetterLock implements Listener {
         }
     }
 
-    private static void sellItem(Inventory inventory, ItemStack is, boolean isSource, Location location) {
+    private static boolean sellItem(Inventory inventory, ItemStack is, boolean isSource, Location location) {
         BlockState state = location.getBlock().getState();
         if((state instanceof Nameable)) {
             String name = ((Nameable)state).getCustomName();
@@ -151,9 +150,20 @@ public class BetterLock implements Listener {
             if(name != null && name.contains("Auto-Seller")){
                 int sellPriceItem = ItemPrice.valueOf(is.getType().name()).getSellPrice() * is.getAmount();
 
-                if(!isSource && (inventory.firstEmpty() != -1 || inventory.getContents().length == 4)){
+                int size = 0;
+                for(ItemStack itemStack : inventory.getStorageContents()){
+                    if(itemStack == null){
+                        continue;
+                    }
+
+                    if(!itemStack.getType().equals(Material.AIR)){
+                        size++;
+                    }
+                }
+
+                if(!isSource && (inventory.firstEmpty() != -1 && size > 4)){
                     if(CustomItems.coins.almostEquals(is) || sellPriceItem == 0){
-                        return;
+                        return false;
                     }
 
                     Bukkit.broadcastMessage(name + " Sold: " + is.getType().name() + " for " + sellPriceItem);
@@ -173,11 +183,14 @@ public class BetterLock implements Listener {
                             inventory.remove(is);
                         }
                     }.runTaskLater(RelluEssentials.getInstance(),  1L);
-                    return;
+                    return false;
+                }
+                else{
+                    return true;
                 }
             }
         }
-        return;
+        return false;
     }
 
     private boolean removeProtectionFromBlock(Player p , Block b){
