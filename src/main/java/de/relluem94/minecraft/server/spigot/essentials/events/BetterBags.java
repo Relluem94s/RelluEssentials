@@ -332,7 +332,7 @@ public class BetterBags implements Listener {
                     p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);
 
                     pe.setUpdatedBy(pe.getId());
-                    pe.setHasToBeUpdated(false);
+                    pe.setHasToBeUpdated(true);
 
                     e.getItem().getItemStack().setAmount(0);
                     e.setCancelled(true);
