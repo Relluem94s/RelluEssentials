@@ -151,7 +151,7 @@ public class BetterLock implements Listener {
             if(name != null && name.contains("Auto-Seller")){
                 int sellPriceItem = ItemPrice.valueOf(is.getType().name()).getSellPrice() * is.getAmount();
 
-                if(!isSource && inventory.firstEmpty() != -1){
+                if(!isSource && (inventory.firstEmpty() != -1 || inventory.getContents().length == 4)){
                     if(CustomItems.coins.almostEquals(is) || sellPriceItem == 0){
                         return;
                     }
