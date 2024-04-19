@@ -38,6 +38,10 @@ public class InventoryHelper {
      */
     public static int inventorySize(int amount) {
 
+        if(amount <= 9){
+            return 9;
+        }
+
         int[] sizes = new int[6];
         sizes[0] = 9;
         sizes[1] = 18;
