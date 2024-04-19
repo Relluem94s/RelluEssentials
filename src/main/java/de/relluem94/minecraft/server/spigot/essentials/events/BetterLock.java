@@ -115,7 +115,7 @@ public class BetterLock implements Listener {
             holder = inventory.getHolder();
 
             if(inventory.getType().equals(InventoryType.HOPPER)){
-                return sellItem(inventory, is, isSource, ((Hopper)holder).getLocation());
+                return sellItem(inventory, is, isSource, ((Hopper) Objects.requireNonNull(holder)).getLocation());
             }
 
             try {
@@ -477,7 +477,7 @@ public class BetterLock implements Listener {
                 p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID, pre.getId()));
                 p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED, pre.getCreated()));
                 p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED, pre.getUpdated()));
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION, loc.getX(), loc.getY(), loc.getZ(), loc.getWorld().getName()));
+                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION, loc.getX(), loc.getY(), loc.getZ(), Objects.requireNonNull(loc.getWorld()).getName()));
                 p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID, pre.getLocationEntry().getPlayerId()));
 
                 
@@ -575,7 +575,7 @@ public class BetterLock implements Listener {
                 }
                 else{
                     JSONObject flags = new JSONObject();
-                    if(b.getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
+                    if(Objects.requireNonNull(b).getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
                         String[] flag = {ProtectionFlags.ALLOW_REDSTONE.getName(),ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName()};
                         flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
                     }
