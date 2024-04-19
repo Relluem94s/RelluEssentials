@@ -174,7 +174,7 @@
     <lombok.version>1.18.30</lombok.version>
     <spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
     <plugin.author>Relluem94</plugin.author>
-    <project.build.sourceEncoding>windows-1252</project.build.sourceEncoding>
+    <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
     <plugin.website>https://www.relluem94.de</plugin.website>
     <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
   </properties>
