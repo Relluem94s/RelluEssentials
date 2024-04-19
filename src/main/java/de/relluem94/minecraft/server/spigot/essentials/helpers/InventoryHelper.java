@@ -1,14 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.jetbrains.annotations.ApiStatus;
 import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.Strings;
@@ -22,7 +28,7 @@ public class InventoryHelper {
         throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
-    private static final String SLOT_NAME_ITEMSTACK = "itemStack";
+    private static final String SLOT_NAME_ITEM_STACK = "itemStack";
     private static final String SLOT_NAME_ID = "id";
 
     /**
@@ -62,6 +68,7 @@ public class InventoryHelper {
      *
      * @param sender Updates Inventory for CommandSender / Player
      */
+    @Deprecated @ApiStatus.Internal @SuppressWarnings("all")
     public static void updateInventory(CommandSender sender) {
         if (sender instanceof Player p) {
             p.updateInventory();
@@ -132,9 +139,9 @@ public class InventoryHelper {
             for (int i=p.getInventory().getSize(); i >= 0; i--) {
                 JSONObject slot = invJson.getJSONObject(i+"");
                                 
-                if (slot.has(SLOT_NAME_ITEMSTACK)) {
+                if (slot.has(SLOT_NAME_ITEM_STACK)) {
                     int slotID = slot.getInt(SLOT_NAME_ID);
-                    ItemStack stack = ItemHelper.itemFrom64(slot.getString(SLOT_NAME_ITEMSTACK));
+                    ItemStack stack = ItemHelper.itemFrom64(slot.getString(SLOT_NAME_ITEM_STACK));
                     
                     if(stack != null){
                         p.getInventory().setItem(slotID, stack);
@@ -156,7 +163,7 @@ public class InventoryHelper {
             ItemStack stack = inventory.getItem(i);
             JSONObject slot = new JSONObject();
             slot.put(SLOT_NAME_ID ,Integer.valueOf(i));
-            slot.put(SLOT_NAME_ITEMSTACK, ItemHelper.itemTo64(stack));
+            slot.put(SLOT_NAME_ITEM_STACK, ItemHelper.itemTo64(stack));
             inv.put(i + "", slot);
         }
         return inv;
