@@ -161,11 +161,12 @@ public class BetterLock implements Listener {
                     }
                 }
 
-                if(!isSource && (inventory.firstEmpty() != -1 && size > 4)){
-                    if(CustomItems.coins.almostEquals(is) || sellPriceItem == 0){
-                        return false;
-                    }
+                if(CustomItems.coins.almostEquals(is) || sellPriceItem == 0){
+                    return false;
+                }
 
+
+                if(!isSource && (inventory.firstEmpty() != -1 && size < 4)){
                     Bukkit.broadcastMessage(name + " Sold: " + is.getType().name() + " for " + sellPriceItem);
 
                     ItemStack coin = CustomItems.coins.getCustomItem();
