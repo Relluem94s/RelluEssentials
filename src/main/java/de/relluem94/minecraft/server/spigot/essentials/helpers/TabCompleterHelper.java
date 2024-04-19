@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.sga.extras.DataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
