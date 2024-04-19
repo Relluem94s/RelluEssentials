@@ -177,9 +177,6 @@ public class BetterLock implements Listener {
                     }.runTaskLater(RelluEssentials.getInstance(),  1L);
                     return true;
                 }
-                else{
-                    return true;
-                }
             }
         }
         return false;
