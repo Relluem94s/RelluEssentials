@@ -7,7 +7,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COM
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TO_ITEM;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_INVALID;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_TO_HIGH;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PURSE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -75,12 +74,6 @@ public class Purse implements CommandExecutor {
             }
         }
 
-        if (TypeHelper.isLong(args[0])) {
-            p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_TO_HIGH);
-            return true;
-        }
-
-        
         if (!TypeHelper.isInt(args[0])) {
             p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_INVALID);
             return true;
