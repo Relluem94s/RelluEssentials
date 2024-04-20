@@ -47,5 +47,6 @@ public class AutoSaveManager implements IEnable, IDisable {
     public void disable() {
         BagHelper.saveBags();
         PlayerHelper.savePlayers();
+        PlayerHelper.savePlayersInv();
     }
 }
