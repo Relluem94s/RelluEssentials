@@ -9,7 +9,7 @@ import org.bukkit.plugin.InvalidPluginException;
 public class ConfigManager implements IEnable, IDisable {
 
     @Override
-    public void enable() throws InvalidPluginException {
+    public void enable()  {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_LOADING_CONFIGS);
 
         if (RelluEssentials.getInstance().getDataFolder().exists()) {
@@ -17,7 +17,7 @@ public class ConfigManager implements IEnable, IDisable {
         }
 
         if(!RelluEssentials.getInstance().getDataFolder().mkdir()){
-            throw new InvalidPluginException(PLUGIN_FOLDER_MKDIR_ERROR);
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_FOLDER_MKDIR_ERROR);
         }
         
         RelluEssentials.getInstance().saveDefaultConfig();

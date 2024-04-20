@@ -115,7 +115,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.10.1</version>
+      <version>5.10.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -135,7 +135,7 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-runner</artifactId>
-      <version>1.10.1</version>
+      <version>1.10.2</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -171,7 +171,7 @@
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <plugin.apiVersion>1.20</plugin.apiVersion>
-    <lombok.version>1.18.30</lombok.version>
+    <lombok.version>1.18.32</lombok.version>
     <spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
     <plugin.author>Relluem94</plugin.author>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
