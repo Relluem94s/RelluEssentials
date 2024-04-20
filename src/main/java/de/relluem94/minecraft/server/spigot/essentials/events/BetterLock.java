@@ -847,9 +847,6 @@ public class BetterLock implements Listener {
                         e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
                     }
                 }
-                else{
-                    //Unprotected Block
-                }
             }
         }
     }

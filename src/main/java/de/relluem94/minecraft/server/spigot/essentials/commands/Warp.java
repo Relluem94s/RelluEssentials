@@ -23,6 +23,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
 
 public class Warp implements CommandExecutor {
 
@@ -64,10 +65,12 @@ public class Warp implements CommandExecutor {
             } 
 
             if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WARP_ADD)){
-                return addWarp(args[1], p);
+                addWarp(args[1], p);
+                return true;
             }
             else if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WARP_REMOVE)){
-                return removeWarp(args[1]);
+                removeWarp(args[1]);
+                return true;
             }
             else {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
@@ -77,7 +80,7 @@ public class Warp implements CommandExecutor {
         return false;
     }
 
-    private boolean addWarp(String name, Player p){
+    private void addWarp(String name, Player p){
         LocationEntry le = RelluEssentials.getInstance().getWarpAPI().getWarp(name);
         if(le == null){
             int typeId = 3;
@@ -93,21 +96,17 @@ public class Warp implements CommandExecutor {
 
             RelluEssentials.getInstance().getWarpAPI().addWarp(le);
         }
-
-        return true;
     }
 
-    private boolean removeWarp(String name){
+    private void removeWarp(String name){
         LocationEntry le = RelluEssentials.getInstance().getWarpAPI().getWarp(name);
         if(le != null){
             RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
             RelluEssentials.getInstance().getWarpAPI().removeWarp(le);
         }
-
-        return true;
     }
 
-    private void warp(String name, Player p){
+    private void warp(String name, @NotNull Player p){
         LocationEntry le = RelluEssentials.getInstance().getWarpAPI().getWarp(name, p.getWorld());
 
         if(le == null){

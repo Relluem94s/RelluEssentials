@@ -11,6 +11,8 @@ import org.bukkit.block.data.type.WallHangingSign;
 import org.bukkit.block.data.type.WallSign;
 
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCustomInputException;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -24,7 +26,7 @@ public class SignHelper {
     
     private final ActionType signActionType;
 
-    public SignHelper(ActionType signActionType, String customInput) {
+    public SignHelper(@NotNull ActionType signActionType, String customInput) {
         this.signActionType = signActionType;
         this.line1 = signActionType.getDisplayName();
         if (signActionType.isCustomInput()) {
@@ -34,7 +36,7 @@ public class SignHelper {
         }
     }
 
-    public SignHelper(ActionType signActionType) throws SignMissingCustomInputException {
+    public SignHelper(@NotNull ActionType signActionType) throws SignMissingCustomInputException {
         this.signActionType = signActionType;
         this.line1 = signActionType.getDisplayName();
         this.line2 = "";
@@ -51,15 +53,15 @@ public class SignHelper {
         return PLUGIN_SIGN_CLICK;
     }
 
-    public static boolean isSign(SignHelper sh, String line0, String line1, String line3) {
+    public static boolean isSign(@NotNull SignHelper sh, String line0, String line1, String line3) {
         return sh.getLine0().equals(line0) && sh.getLine1().equals(line1) && sh.getLine3().equals(line3);
     }
 
-    public static boolean isSign(SignHelper sh, String line1) {
+    public static boolean isSign(@NotNull SignHelper sh, String line1) {
         return sh.getSignActionType().getShorthand().equals(line1) || sh.getSignActionType().getName().equalsIgnoreCase(line1);
     }
 
-    public static boolean isBlockASign(Block b){
+    public static boolean isBlockASign(@NotNull Block b){
         return (
             b.getBlockData() instanceof WallSign ||
             b.getBlockData() instanceof Sign ||
@@ -88,11 +90,13 @@ public class SignHelper {
         }
 
 
-        public String getShorthand() {
+        @Contract(pure = true)
+        public @NotNull String getShorthand() {
             return "[" + id + "]";
         }
 
-        public String getName() {
+        @Contract(pure = true)
+        public @NotNull String getName() {
             return "[" + this.name() + "]";
         }
     }

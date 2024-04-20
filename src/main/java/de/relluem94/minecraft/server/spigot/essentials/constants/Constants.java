@@ -82,6 +82,8 @@ public interface Constants {
 
     String PLUGIN_INTERNAL_UTILITY_CLASS = "This is a Utility Class";
 
+    String PLUGIN_FOLDER_MKDIR_ERROR = "Couldn't create the Plugin Folder";
+
     
 
     /* ******************************************************************************* */
