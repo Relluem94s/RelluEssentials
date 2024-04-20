@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -24,5 +25,14 @@ public class TabCompleterHelper {
         }
 
         return playerList;
+    }
+
+    public static List<String> getProtectionFlags(){
+        List<String> protectionFlagList = new ArrayList<>();
+        for(ProtectionFlags protectionFlag : ProtectionFlags.values()){
+            protectionFlagList.add(protectionFlag.toString());
+        }
+
+        return protectionFlagList;
     }
 }
