@@ -315,4 +315,7 @@ public interface Constants {
     String PLUGIN_COMMAND_PLAYERINFO_LEFT_GAME = "Left Game: %s";
 
     String PLUGIN_COMMAND_TEAM_TITLE = PLUGIN_FORMS_COMMAND_PREFIX + "Team:";
+
+    String PLUGIN_ITEM_SELL_PRICE_MESSAGE = PLUGIN_COLOR_NEGATIVE + "Sell: " + PLUGIN_NAME_MONEY + " per Item: %s " + PLUGIN_NAME_MONEY + " per Stack: %s";
+    String PLUGIN_ITEM_BUY_PRICE_MESSAGE = PLUGIN_COLOR_POSITIVE + "Buy: " + PLUGIN_NAME_MONEY + " per Item: %s " + PLUGIN_NAME_MONEY + " per Stack: %s";
 }

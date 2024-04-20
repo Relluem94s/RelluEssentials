@@ -21,6 +21,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
@@ -43,6 +44,10 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.bukkit.persistence.PersistentDataType;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
 
 public class BetterNPC implements Listener {
@@ -163,9 +168,32 @@ public class BetterNPC implements Listener {
         else{
             String item = is.getType().name();
             String itemDisplayname = item.toLowerCase().replace('_', ' ');
+
+            ItemMeta itemMeta = is.getItemMeta();
+
+            if(itemMeta == null){
+                return;
+            }
+
+            int buyPricePerItem;
+            int sellPricePerItem;
+
+            if(itemMeta.getPersistentDataContainer().has(itemSellPrice, PersistentDataType.INTEGER)){
+                sellPricePerItem = itemMeta.getPersistentDataContainer().get(itemSellPrice, PersistentDataType.INTEGER);
+            }
+            else{
+                sellPricePerItem = ItemPrice.valueOf(item).getSellPrice();
+            }
+
+            if(itemMeta.getPersistentDataContainer().has(itemBuyPrice, PersistentDataType.INTEGER)){
+                buyPricePerItem = itemMeta.getPersistentDataContainer().get(itemBuyPrice, PersistentDataType.INTEGER);
+            }
+            else{
+                buyPricePerItem = ItemPrice.valueOf(item).getBuyPrice();
+            }
+
             int amountOfItem = is.getAmount();
-            int buyPricePerItem = ItemPrice.valueOf(item).getBuyPrice();
-            int sellPricePerItem = ItemPrice.valueOf(item).getSellPrice();
+
 
 
             if(inv.getType().equals(InventoryType.CHEST)){
@@ -179,8 +207,8 @@ public class BetterNPC implements Listener {
                 if(buyPricePerItem > 0){
                     if(pe.getPurse() - buyPricePerItem * amountOfItem >= 0){
                         if(p.getInventory().firstEmpty() != -1){
-                            p.getInventory().addItem(itemStack);
-                            p.updateInventory();
+                            p.getInventory().addItem(new ItemStack(itemStack.getType(), amountOfItem));
+                            //p.updateInventory();
     
                             pe.setPurse(pe.getPurse() - coins);
                             pe.setUpdatedBy(pe.getId());
