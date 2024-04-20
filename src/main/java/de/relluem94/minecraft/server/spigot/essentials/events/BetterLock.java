@@ -116,7 +116,7 @@ public class BetterLock implements Listener {
             holder = inventory.getHolder();
 
             if(inventory.getType().equals(InventoryType.HOPPER)){
-                return sellItem(inventory, is, isSource, ((Hopper) Objects.requireNonNull(holder)).getLocation());
+                return sellItem(inventory, is, isSource, ((BlockState) Objects.requireNonNull(holder)).getLocation());
             }
 
             try {
