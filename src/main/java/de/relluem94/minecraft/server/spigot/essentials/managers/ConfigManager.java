@@ -4,15 +4,20 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import org.bukkit.plugin.InvalidPluginException;
 
 public class ConfigManager implements IEnable, IDisable {
 
     @Override
-    public void enable() {
+    public void enable() throws InvalidPluginException {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_LOADING_CONFIGS);
 
-        if (!RelluEssentials.getInstance().getDataFolder().exists()) {
-            RelluEssentials.getInstance().getDataFolder().mkdir();
+        if (RelluEssentials.getInstance().getDataFolder().exists()) {
+            return;
+        }
+
+        if(!RelluEssentials.getInstance().getDataFolder().mkdir()){
+            throw new InvalidPluginException(PLUGIN_FOLDER_MKDIR_ERROR);
         }
         
         RelluEssentials.getInstance().saveDefaultConfig();

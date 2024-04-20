@@ -123,8 +123,7 @@ public class BetterNPC implements Listener {
             InventoryHelper.closeInventory(p);
         }
         else if(CustomItems.npc_gui_disabled.equalsExact(is)){
-            return;
-            // DISABLED DOES NOTHING. COULD BE AN EASTER EGG!
+            p.playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1f, 1f);
         }
         else if(is.getType().equals(Material.PLAYER_HEAD) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && ((SkullMeta) is.getItemMeta()).getOwnerProfile().getName().equals(CustomHeads.BAG.getName()) ){
             BagTypeEntry bt = null;

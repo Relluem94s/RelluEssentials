@@ -4,6 +4,8 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
@@ -21,22 +23,27 @@ public class Groups {
      * @param name String
      * @return GroupEntry
      */
-    public static GroupEntry getGroup(String name) {
+    public static @NotNull GroupEntry getGroup(String name) {
         for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
             if (ge.getName().equalsIgnoreCase(name)) {
                 return ge;
             }
         }
-        return getGroup("user");
+        if(!groupExists("user")){
+            return new GroupEntry(1, "user", "§8");
+        }
+        else{
+            return getGroup("user");
+        }
     }
 
     public static boolean groupExists(String name) {
         for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
             if (ge.getName().equalsIgnoreCase(name)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
     /**
      * Returns a GroupEntry if a Group is found by id<br>
@@ -45,7 +52,7 @@ public class Groups {
      * @param id int
      * @return GroupEntry
      */
-    public static GroupEntry getGroup(int id) {
+    public static @Nullable GroupEntry getGroup(int id) {
         for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
             if (ge.getId() == id) {
                 return ge;
@@ -61,8 +68,8 @@ public class Groups {
      * @return boolean
      */
     @SuppressWarnings("unused")
-    public static boolean addGroup(GroupEntry groupEntry) {
-        if (!groupExists(groupEntry.getName())) {
+    public static boolean addGroup(@NotNull GroupEntry groupEntry) {
+        if (groupExists(groupEntry.getName())) {
             RelluEssentials.getInstance().getDatabaseHelper().insertGroup(groupEntry);
             RelluEssentials.getInstance().groupEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
             return true;

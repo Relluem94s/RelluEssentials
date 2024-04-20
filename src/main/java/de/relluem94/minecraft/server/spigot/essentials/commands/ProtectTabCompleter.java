@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
