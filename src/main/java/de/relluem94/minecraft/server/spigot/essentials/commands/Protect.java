@@ -27,7 +27,7 @@ public class Protect implements CommandExecutor {
         StringBuilder sb = new StringBuilder();
         sb.append("Available Flags: ");
         for (ProtectionFlags flag : flags) {
-            sb.append(flag.getName()).append(" ");
+            sb.append(flag.name()).append(" ");
         }
         return sb.toString();
     }
@@ -78,7 +78,7 @@ public class Protect implements CommandExecutor {
                         if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_ADD);
                             pe.setPlayerState(PlayerState.PROTECTION_FLAG_ADD);
-                            pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).getName());
+                            pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
                         }
                     } catch (IllegalArgumentException ex) {
                         p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_NOT_FOUND);
@@ -89,7 +89,7 @@ public class Protect implements CommandExecutor {
                         if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_REMOVE);
                             pe.setPlayerState(PlayerState.PROTECTION_FLAG_REMOVE);
-                            pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).getName());
+                            pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
                         }
                     } catch (IllegalArgumentException ex) {
                         p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_NOT_FOUND);

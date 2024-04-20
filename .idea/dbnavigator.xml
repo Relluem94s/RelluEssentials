@@ -17,14 +17,20 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="005e315d-ba06-4fb2-b969-2ea966f165b7">
-      <console name="RelluEssentials" type="STANDARD" schema="" session="Main"><![CDATA[INSERT INTO `rellu_essentials`.`protection_locks` (`created`, `createdby`, `value`) VALUES
-(now(), 1, 'CHERRY_SIGN'),
-(now(), 1, 'CHERRY_WALL_SIGN'),
-(now(), 1, 'CHERRY_WALL_HANGING_SIGN'),
-(now(), 1, 'CHERRY_HANGING_SIGN'),
-(now(), 1, 'CHERRY_TRAPDOOR'),
-(now(), 1, 'CHERRY_DOOR'),
-(now(), 1, 'CHERRY_FENCE_GATE');]]></console>
+      <console name="RelluEssentials" type="STANDARD" schema="rellu_essentials" session="Main"><![CDATA[select
+    p.created,
+    p.createdby,
+    p.deleted,
+    p.deletedby,
+    p.flags,
+    p.id,
+    p.location_fk,
+    p.material_name,
+    p.rights,
+    p.updated,
+    p.updatedby
+from
+    protections p;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -39,15 +45,22 @@
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.block_history" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.player_partner" active-filter-id="" />
+    <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.protections" active-filter-id="" />
     <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.player" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" dataset="rellu_essentials.npc" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
   </component>
+  <component name="DBNavigator.Project.FileConnectionMappingManager">
+    <mapping file-url="file://$PROJECT_DIR$/src/main/resources/sqls/patches/v9/insertNewDBVersion.sql" connection-id="005e315d-ba06-4fb2-b969-2ea966f165b7" session-id="MAIN" current-schema="rellu_essentials" />
+  </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
     <filters />
+  </component>
+  <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
+    <recently-used-interfaces />
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
@@ -115,6 +128,7 @@
           <debugger-type value="ASK" />
         </debugger>
         <object-filters hide-empty-schemas="false" hide-pseudo-columns="false" hide-audit-columns="false">
+          <object-filters />
           <object-type-filter use-master-settings="true">
             <object-type name="SCHEMA" enabled="true" />
             <object-type name="USER" enabled="true" />
@@ -142,7 +156,6 @@
             <object-type name="CLUSTER" enabled="true" />
             <object-type name="DBLINK" enabled="true" />
           </object-type-filter>
-          <object-name-filters />
         </object-filters>
       </connection>
     </connections>

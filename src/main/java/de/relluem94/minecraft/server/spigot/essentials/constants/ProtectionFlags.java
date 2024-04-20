@@ -4,17 +4,15 @@ import lombok.Getter;
 
 @Getter
 public enum ProtectionFlags {
-    ALLOW_HOPPER("allowHopper", false),
-    ALLOW_REDSTONE("allowRedstone", false),
-    ALLOW_PUBLIC("allowPublic", false),
-    AUTO_CLOSE("autoClose", false);
+    ALLOW_HOPPER(false),
+    ALLOW_REDSTONE(false),
+    ALLOW_PUBLIC(false),
+    AUTO_CLOSE(false);
 
     
-    private final String name;
     private final boolean isDefault;
 
-    ProtectionFlags(String name, boolean isDefault){
-        this.name = name;
+    ProtectionFlags(boolean isDefault){
         this.isDefault = isDefault;
     }
 }

@@ -86,8 +86,8 @@ public class ProtectionHelper {
     public static boolean hasFlag(ProtectionEntry protection, ProtectionFlags flag) {
         JSONObject flags = protection.getFlags();
         return(
-            (!flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(PLUGIN_EVENT_PROTECT_FLAGS) instanceof JSONArray && flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(flag.getName())) ||
-            !flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(PLUGIN_EVENT_PROTECT_FLAGS) instanceof String && flags.get(PLUGIN_EVENT_PROTECT_FLAGS).equals(flag.getName())
+            (!flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(PLUGIN_EVENT_PROTECT_FLAGS) instanceof JSONArray && flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(flag.name())) ||
+            !flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(PLUGIN_EVENT_PROTECT_FLAGS) instanceof String && flags.get(PLUGIN_EVENT_PROTECT_FLAGS).equals(flag.name())
         );
     }
 

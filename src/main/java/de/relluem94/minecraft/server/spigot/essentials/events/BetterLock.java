@@ -407,7 +407,7 @@ public class BetterLock implements Listener {
 
                 JSONObject flags = new JSONObject();
                 if(b.getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
-                    String[] flag = {ProtectionFlags.ALLOW_REDSTONE.getName()};
+                    String[] flag = {ProtectionFlags.ALLOW_REDSTONE.name()};
                     flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
                 }
                 bpe.setFlags(flags);
@@ -538,7 +538,7 @@ public class BetterLock implements Listener {
                 if(pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)){
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
 
-                    String flag = ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName();
+                    String flag = ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name();
                     List<Object> list = flagJSON.toList();
                     if(list.contains(flag)){
                         update = true;
@@ -582,11 +582,11 @@ public class BetterLock implements Listener {
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
 
                     List<Object> list = flagJSON.toList();
-                    String flag = ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName();
+                    String flag = ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name();
 
                     if(!list.contains(flag)){
                         update = true;
-                        list.add(ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName());
+                        list.add(ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name());
                     }
 
                     JSONObject flags = new JSONObject();
@@ -597,11 +597,11 @@ public class BetterLock implements Listener {
                 else{
                     JSONObject flags = new JSONObject();
                     if(Objects.requireNonNull(b).getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
-                        String[] flag = {ProtectionFlags.ALLOW_REDSTONE.getName(),ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName()};
+                        String[] flag = {ProtectionFlags.ALLOW_REDSTONE.name(),ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name()};
                         flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
                     }
                     else{
-                        String[] flag = {ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).getName()};
+                        String[] flag = {ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name()};
                         flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
                     }
                     update = true;
@@ -890,7 +890,7 @@ public class BetterLock implements Listener {
 
         if (protection != null){
             JSONObject flags = protection.getFlags();
-            boolean isAllowed = (!flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(ProtectionFlags.ALLOW_REDSTONE.getName()));
+            boolean isAllowed = (!flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(ProtectionFlags.ALLOW_REDSTONE.name()));
             if(!isAllowed){
                 e.setNewCurrent(e.getOldCurrent());
             }
