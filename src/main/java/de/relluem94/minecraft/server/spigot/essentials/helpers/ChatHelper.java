@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import net.md_5.bungee.api.ChatMessageType;
@@ -22,7 +22,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class ChatHelper {
 
     private ChatHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     /**

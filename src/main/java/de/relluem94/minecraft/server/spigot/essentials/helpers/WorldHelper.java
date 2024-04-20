@@ -17,7 +17,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
@@ -32,7 +32,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupIn
 public class WorldHelper {
 
     private WorldHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     /**

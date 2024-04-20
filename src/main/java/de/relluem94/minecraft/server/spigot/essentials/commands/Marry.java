@@ -1,18 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_ACCEPT_NO_REQUEST;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_DIVORCED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_INFO;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_MARRIED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_RECEIVE_REQUEST;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_REQUEST_IS_MAARIED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_SELF_MARRIGE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_MARRY_SEND_REQUEST;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_ACCEPT_NO_REQUEST;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_DIVORCED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_MARRIED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_RECEIVE_REQUEST;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_REQUEST_IS_MARRIED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_SELF_MARRIAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_SEND_REQUEST;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MARRY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MARRY_ACCEPT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MARRY_DIVORCE;
@@ -45,7 +45,7 @@ public class Marry implements CommandExecutor {
 
     private void addMarryEntry(Player player, Player target){
         if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player).getPartner() != null || RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target).getPartner() != null){
-            player.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_IS_MAARIED);
+            player.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_IS_MARRIED);
             return;
         }
 
@@ -201,7 +201,7 @@ public class Marry implements CommandExecutor {
             }
 
             if(target.getName().equalsIgnoreCase(p.getName())){
-                p.sendMessage(PLUGIN_COMMAND_MARRY_SELF_MARRIGE);
+                p.sendMessage(PLUGIN_COMMAND_MARRY_SELF_MARRIAGE);
                 return true;
             }
 

@@ -1,21 +1,21 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_SPAWN;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_CREATE_INFO;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_CREATE_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_INFO;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_LOAD_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_NOT_FOUND;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_UNLOAD_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_SPAWN;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_CREATE_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_CREATE_WORLD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_LOAD_WORLD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_UNLOAD_WORLD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_CREATE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_LIST;
@@ -43,7 +43,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
@@ -52,6 +52,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
 
 public class Worlds implements CommandExecutor {
 
@@ -120,9 +121,11 @@ public class Worlds implements CommandExecutor {
                     p.sendMessage(PLUGIN_COMMAND_WORLD_LOAD_WORLD);
                     return true;
                 case PLUGIN_COMMAND_NAME_WORLD_UNLOAD:
-                    return unloadWorld(p, args[1], true);
+                    unloadWorld(p, args[1], true);
+                    return true;
                 case PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE:
-                    return unloadWorld(p, args[1], false);
+                    unloadWorld(p, args[1], false);
+                    return true;
                 case PLUGIN_COMMAND_NAME_WORLD_CREATE:
                 default:
                     p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_INFO);
@@ -144,7 +147,7 @@ public class Worlds implements CommandExecutor {
         return true;
     }
 
-    private void createWorld(Player p, String[] args){
+    private void createWorld(Player p, String @NotNull [] args){
         if(WorldType.getByName(args[2].toUpperCase()) != null && World.Environment.valueOf(args[3].toUpperCase()) != null && Boolean.valueOf(args[4]) != null){
             WorldType type = WorldType.getByName(args[2].toUpperCase());
             World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
@@ -157,7 +160,7 @@ public class Worlds implements CommandExecutor {
         }
     }
 
-    private boolean unloadWorld(Player p, String name, boolean save){
+    private void unloadWorld(@NotNull Player p, String name, boolean save){
         try {
             WorldHelper.unloadWorld(name, save);
             p.sendMessage(save ? PLUGIN_COMMAND_WORLD_UNLOAD_WORLD : PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE);
@@ -166,7 +169,6 @@ public class Worlds implements CommandExecutor {
         catch (WorldNotLoadedException ex) {
                 Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED, ex);
         }
-        return true;
     }
 
     private void teleportWorld(Player p, String name){
@@ -184,7 +186,7 @@ public class Worlds implements CommandExecutor {
     public static void openWorldMenu(Player p){
         org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
             InventoryHelper.createInventory(18,
-            Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+ "§dWorlds"),
+            Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+ "§dWorlds"),
             CustomItems.npc_gui_disabled.getCustomItem()
         );
 

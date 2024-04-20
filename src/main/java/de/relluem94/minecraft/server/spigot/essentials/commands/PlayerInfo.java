@@ -1,21 +1,21 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_DEATHPOINTS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_DEATHS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_FIRST_ONLINE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_GROUP;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_HOMES;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_JUMPED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_LAST_ONLINE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_LEFT_GAME;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_MARRIED_SINCE;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_MARRIED_TO;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PLAYERINFO_MINED;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_DEATHPOINTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_DEATHS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_FIRST_ONLINE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_GROUP;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_HOMES;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_JUMPED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_LAST_ONLINE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_LEFT_GAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_MARRIED_SINCE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_MARRIED_TO;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PLAYERINFO_MINED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PLAYERINFO;
 
 import java.util.Date;

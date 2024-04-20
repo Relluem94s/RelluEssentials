@@ -37,7 +37,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
@@ -48,7 +48,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 public class BankerHelper {
 
     private BankerHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     @SuppressWarnings("unused")

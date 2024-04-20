@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_DEATH_TP;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 import java.util.Random;
 
@@ -58,7 +59,7 @@ public class NoDeathMessage implements Listener {
         }
        
         for(ItemStack is : p.getInventory().getContents()){
-            if(CustomItems.coins.almostEquals(is) && is.getItemMeta().getPersistentDataContainer().has(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER)){
+            if(CustomItems.coins.almostEquals(is) && is.getItemMeta().getPersistentDataContainer().has(itemCoins, PersistentDataType.INTEGER)){
                 p.getInventory().remove(is);
             }
         }

@@ -12,7 +12,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 /**
  *
@@ -23,14 +23,13 @@ public class PlayerMove implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
-        
-        if(p.getWorld().getName().equals(Strings.PLUGIN_WORLD_LOBBY)){
-            if(e.getTo().clone().add(0, -1, 0).getBlock().getType().equals(Material.MYCELIUM)){
-                if(p.isSneaking()){
+
+        if (p.getWorld().getName().equals(Constants.PLUGIN_WORLD_LOBBY)) {
+            if (e.getTo().clone().add(0, -1, 0).getBlock().getType().equals(Material.MYCELIUM)) {
+                if (p.isSneaking()) {
                     p.getWorld().playEffect(p.getLocation(), Effect.BAT_TAKEOFF, 5);
-				    p.getWorld().playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1F, 0F);
-                }
-                else{
+                    p.getWorld().playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1F, 0F);
+                } else {
                     Vector dir = p.getLocation().getDirection().multiply(0.50);
                     Vector vec = new Vector(dir.getX(), 2.0D, dir.getZ());
                     p.setVelocity(vec);
@@ -42,8 +41,8 @@ public class PlayerMove implements Listener {
             }
         }
 
-        if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()) != null){
+        if (RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()) != null) {
             e.setCancelled(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).isAfk());
         }
-    }   
+    }
 }

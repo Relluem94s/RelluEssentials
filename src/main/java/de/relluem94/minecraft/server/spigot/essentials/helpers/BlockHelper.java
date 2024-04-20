@@ -1,32 +1,44 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+
+import java.util.HashMap;
+
 
 /**
  *
- * @author rellu
+ * @author Relluem94
  */
 public class BlockHelper {
 
-    private BlockHelper() {
-        throw new IllegalStateException(Strings.PLUGIN_INTERNAL_UTILITY_CLASS);
+    @Setter
+    private Material type;
+    private final HashMap<Location, Long> locations = new HashMap<>();
+    public BlockHelper(Material type) {
+        this.type = type;
     }
 
-    /**
-     * Sets a Block on the Location of the BlockHistoryEntry (bh) with the
-     * specified Material from the database
-     *
-     * @param bh BlockHistoryEntry
-     */
-    public static void setBlock(BlockHistoryEntry bh) {
-        Material m = Material.getMaterial(bh.getMaterial());
-        if (m == null) {
-            m = Material.AIR;
-        }
-        if (bh.getLocation() != null && bh.getLocation().getLocation() != null) {
-            bh.getLocation().getLocation().getBlock().setType(m);
-        }
+    public void addLocation(Location location, Long delay) {
+        locations.put(location, delay);
+    }
+
+    public void putAll(BlockHelper setBlockHelper){
+        locations.putAll(setBlockHelper.locations);
+    }
+
+    public void setBlocks(long addDelay) {
+        locations.forEach((location, delay) -> Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(RelluEssentials.getInstance(), () -> location.getBlock().setType(type), Math.abs(delay + addDelay)));
+    }
+
+    public void setBlocks() {
+        setBlocks(0);
+    }
+
+    public static boolean checkBlockAt(Location location, Material mat) {
+        return location.getBlock().getType() == mat;
     }
 }

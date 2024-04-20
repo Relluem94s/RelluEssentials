@@ -1,14 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TOTAL;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TOTAL_OTHER;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TO_ITEM;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_INVALID;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_TO_HIGH;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TOTAL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TOTAL_OTHER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TO_ITEM;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_INVALID;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PURSE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.Collections;
@@ -59,25 +59,22 @@ public class Purse implements CommandExecutor {
             return true;
         }
 
-        if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            Player target = Bukkit.getPlayer(args[0]);
-            if (target != null) {
-                PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
-                p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(),
-                StringHelper.formatDouble(pe.getPurse())));
+        Player target = Bukkit.getPlayer(args[0]);
+        if (target != null) {
+            if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
+                if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
+                    PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
+                    p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                 return true;
             }
-        } else {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-            return true;
         }
 
-        if (TypeHelper.isLong(args[0])) {
-            p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_TO_HIGH);
-            return true;
-        }
-
-        
         if (!TypeHelper.isInt(args[0])) {
             p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_INVALID);
             return true;
@@ -92,7 +89,7 @@ public class Purse implements CommandExecutor {
             ItemStack coin = CustomItems.coins.getCustomItem();
             ItemMeta im = coin.getItemMeta();
             Objects.requireNonNull(im).setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));
-            im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, coins);
+            im.getPersistentDataContainer().set(itemCoins, PersistentDataType.INTEGER, coins);
 
             coin.setItemMeta(im);
 

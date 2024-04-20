@@ -27,8 +27,7 @@ import org.bukkit.persistence.PersistentDataType;
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
@@ -38,6 +37,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
+
 public class BetterBags implements Listener {
     
     @EventHandler
@@ -208,7 +210,7 @@ public class BetterBags implements Listener {
     @EventHandler
     public void onInventoryClickItem(InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player p && e.getCurrentItem() != null){
-            if (e.getView().getTitle().startsWith(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE) && e.getView().getTitle().endsWith(" Bag")) {
+            if (e.getView().getTitle().startsWith(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE) && e.getView().getTitle().endsWith(" Bag")) {
 
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                 BagTypeEntry bte = BagHelper.getBagTypeByName(e.getView().getTitle());
@@ -324,15 +326,15 @@ public class BetterBags implements Listener {
             if(CustomItems.coins.almostEquals(is)){
                 ItemMeta im = is.getItemMeta();
 
-                if(im != null && im.getPersistentDataContainer().has(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER)){
-                    int coins = im.getPersistentDataContainer().get(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER) * is.getAmount();
-                    ChatHelper.sendMessageInActionBar(p, String.format(Strings.PLUGIN_COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
+                if(im != null && im.getPersistentDataContainer().has(itemCoins, PersistentDataType.INTEGER)){
+                    int coins = im.getPersistentDataContainer().get(itemCoins, PersistentDataType.INTEGER) * is.getAmount();
+                    ChatHelper.sendMessageInActionBar(p, String.format(Constants.PLUGIN_COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
                     pe.setPurse(pe.getPurse() + coins);
 
                     p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);
 
                     pe.setUpdatedBy(pe.getId());
-                    pe.setHasToBeUpdated(false);
+                    pe.setHasToBeUpdated(true);
 
                     e.getItem().getItemStack().setAmount(0);
                     e.setCancelled(true);

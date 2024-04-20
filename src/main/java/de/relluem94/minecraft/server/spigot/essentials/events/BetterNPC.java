@@ -21,11 +21,12 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
@@ -43,6 +44,10 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.bukkit.persistence.PersistentDataType;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
 
 public class BetterNPC implements Listener {
@@ -123,8 +128,7 @@ public class BetterNPC implements Listener {
             InventoryHelper.closeInventory(p);
         }
         else if(CustomItems.npc_gui_disabled.equalsExact(is)){
-            return;
-            // DISABLED DOES NOTHING. COULD BE AN EASTER EGG!
+            p.playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1f, 1f);
         }
         else if(is.getType().equals(Material.PLAYER_HEAD) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && ((SkullMeta) is.getItemMeta()).getOwnerProfile().getName().equals(CustomHeads.BAG.getName()) ){
             BagTypeEntry bt = null;
@@ -164,9 +168,32 @@ public class BetterNPC implements Listener {
         else{
             String item = is.getType().name();
             String itemDisplayname = item.toLowerCase().replace('_', ' ');
+
+            ItemMeta itemMeta = is.getItemMeta();
+
+            if(itemMeta == null){
+                return;
+            }
+
+            int buyPricePerItem;
+            int sellPricePerItem;
+
+            if(itemMeta.getPersistentDataContainer().has(itemSellPrice, PersistentDataType.INTEGER)){
+                sellPricePerItem = itemMeta.getPersistentDataContainer().get(itemSellPrice, PersistentDataType.INTEGER);
+            }
+            else{
+                sellPricePerItem = ItemPrice.valueOf(item).getSellPrice();
+            }
+
+            if(itemMeta.getPersistentDataContainer().has(itemBuyPrice, PersistentDataType.INTEGER)){
+                buyPricePerItem = itemMeta.getPersistentDataContainer().get(itemBuyPrice, PersistentDataType.INTEGER);
+            }
+            else{
+                buyPricePerItem = ItemPrice.valueOf(item).getBuyPrice();
+            }
+
             int amountOfItem = is.getAmount();
-            int buyPricePerItem = ItemPrice.valueOf(item).getBuyPrice();
-            int sellPricePerItem = ItemPrice.valueOf(item).getSellPrice();
+
 
 
             if(inv.getType().equals(InventoryType.CHEST)){
@@ -180,8 +207,8 @@ public class BetterNPC implements Listener {
                 if(buyPricePerItem > 0){
                     if(pe.getPurse() - buyPricePerItem * amountOfItem >= 0){
                         if(p.getInventory().firstEmpty() != -1){
-                            p.getInventory().addItem(itemStack);
-                            p.updateInventory();
+                            p.getInventory().addItem(new ItemStack(itemStack.getType(), amountOfItem));
+                            //p.updateInventory();
     
                             pe.setPurse(pe.getPurse() - coins);
                             pe.setUpdatedBy(pe.getId());
@@ -333,8 +360,8 @@ public class BetterNPC implements Listener {
                     e.setCancelled(true);
             }
             else if(
-                e.getView().getTitle().equals(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+"§dNPCs") || 
-                e.getView().getTitle().equals(Strings.PLUGIN_COMMAND_CUSTOMHEADS_TITLE)
+                e.getView().getTitle().equals(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+"§dNPCs") ||
+                e.getView().getTitle().equals(Constants.PLUGIN_COMMAND_CUSTOMHEADS_TITLE)
             ){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     p.getInventory().addItem(e.getCurrentItem().clone());
@@ -343,7 +370,7 @@ public class BetterNPC implements Listener {
                 e.setCancelled(true);
             }
             else if(
-                e.getView().getTitle().equals(Strings.PLUGIN_NAME_PREFIX + Strings.PLUGIN_FORMS_SPACER_MESSAGE+"§dWorlds")
+                e.getView().getTitle().equals(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+"§dWorlds")
             ){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     String worldName = e.getCurrentItem().getItemMeta().getDisplayName();

@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SUDO;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -14,7 +14,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
@@ -23,11 +23,12 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.utils.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 public class Sudo implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SUDO)) {
             
             if(RelluEssentials.getInstance().getCommand(args[0]) != null){
@@ -59,11 +60,11 @@ public class Sudo implements CommandExecutor {
                                 p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
                             }
                             WorldHelper.loadWorldGroupInventory(p);
-                            p.sendMessage(String.format(Strings.PLUGIN_COMMAND_SUDO_ACTIVATED, tpe.getGroup().getPrefix() + target.getName()));
+                            p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_ACTIVATED, tpe.getGroup().getPrefix() + target.getName()));
                         }
                         else{
                             
-                            p.sendMessage(String.format(Strings.PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
+                            p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
                         }
                         return true;
                     }
@@ -101,6 +102,6 @@ public class Sudo implements CommandExecutor {
         }
         WorldHelper.loadWorldGroupInventory(p);
         SudoManager.sudoers.remove(p.getUniqueId());
-        p.sendMessage(Strings.PLUGIN_COMMAND_SUDO_DEACTIVATED);
+        p.sendMessage(Constants.PLUGIN_COMMAND_SUDO_DEACTIVATED);
     }
 }

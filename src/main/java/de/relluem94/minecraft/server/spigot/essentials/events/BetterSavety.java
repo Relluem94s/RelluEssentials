@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.Strings.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

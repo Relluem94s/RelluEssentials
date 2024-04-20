@@ -25,7 +25,7 @@ import org.bukkit.entity.Villager;
 import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.Strings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
@@ -93,7 +93,7 @@ public class DatabaseHelper {
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = br.readLine()) != null) {
-                sb.append(line).append(Strings.PLUGIN_EOL);
+                sb.append(line).append(Constants.PLUGIN_EOL);
             }
 
             out = sb.toString();
@@ -116,7 +116,7 @@ public class DatabaseHelper {
 
     private void patch1() {
         String v = "patches/v1/";
-        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, "applying " + v);
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScriptNoSchema(v + "createSchema.sql");
         executeScript(v + "createGroup.sql");
         executeScript(v + "createPlayer.sql");
@@ -159,7 +159,7 @@ public class DatabaseHelper {
 
     private void patch2() {
         String v = "patches/v2/";
-        consoleSendMessage(Strings.PLUGIN_NAME_CONSOLE, "applying " + v);
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "dropBlockHistory.sql");
         executeScript(v + "createBlockHistory.sql");
         executeScript(v + INSERT_NEW_DB_VERSION);
