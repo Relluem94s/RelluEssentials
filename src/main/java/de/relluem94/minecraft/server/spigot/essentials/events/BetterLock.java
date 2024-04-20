@@ -111,6 +111,7 @@ public class BetterLock implements Listener {
 
     private boolean handleMoveItemEvent(Inventory inventory, ItemStack is, boolean isSource) {
         Location location;
+        Location locationOtherSide = null;
         InventoryHolder holder;
         if(inventory != null){
             holder = inventory.getHolder();
@@ -122,18 +123,37 @@ public class BetterLock implements Listener {
             try {
                 if (holder instanceof BlockState) {
                     location = ((BlockState)holder).getLocation();
-                } else if (holder instanceof DoubleChest) {
-                    location = ((DoubleChest)holder).getLocation();
+                } else if (holder instanceof DoubleChest doubleChest) {
+                    location = Objects.requireNonNull(doubleChest.getRightSide()).getInventory().getLocation().getBlock().getLocation();
+                    locationOtherSide = Objects.requireNonNull(doubleChest.getLeftSide()).getInventory().getLocation().getBlock().getLocation();
                 } else {
                     return false;
                 } 
             } catch (Exception e) {
                 return false;
-            } 
+            }
 
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(location);
+
             if (protection == null){
-                return false; 
+                if(locationOtherSide == null){
+                    return false;
+                }
+                else{
+                    protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(locationOtherSide);
+                }
+
+                if (protection == null){
+                    return false;
+                }
+                else{
+                    if(isSource){
+                        return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_HOPPER);
+                    }
+                    else{
+                        return true;
+                    }
+                }
             }
             else{
                 return !ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_HOPPER);
