@@ -77,7 +77,6 @@ public interface ItemConstants {
 
     String PLUGIN_ITEM_COINS = Constants.PLUGIN_NAME_MONEY;
     String PLUGIN_ITEM_COINS_LORE =  Constants.PLUGIN_COLOR_MONEY + "%s " + Constants.PLUGIN_NAME_MONEY;
-    NamespacedKey PLUGIN_ITEM_COINS_NAMESPACE = new NamespacedKey(RelluEssentials.getInstance(), "coins");
     
     String PLUGIN_ITEM_NPC_LORE1 = "§7Click to Spawn";
 

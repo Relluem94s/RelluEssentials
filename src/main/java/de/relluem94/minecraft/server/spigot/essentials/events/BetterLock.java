@@ -31,6 +31,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.EventCon
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_FLAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_RIGHTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -171,7 +172,7 @@ public class BetterLock implements Listener {
                     ItemStack coin = CustomItems.coins.getCustomItem();
                     ItemMeta im = coin.getItemMeta();
                     Objects.requireNonNull(im).setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
-                    im.getPersistentDataContainer().set(ItemConstants.PLUGIN_ITEM_COINS_NAMESPACE, PersistentDataType.INTEGER, sellPriceItem);
+                    im.getPersistentDataContainer().set(itemCoins, PersistentDataType.INTEGER, sellPriceItem);
 
                     coin.setItemMeta(im);
 
