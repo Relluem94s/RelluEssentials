@@ -15,12 +15,21 @@ import org.bukkit.util.Vector;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
+
 public class GrapplingHockEvent implements Listener {
 
     protected static final List<Player> COOL_DOWN = new ArrayList<>();
 
     @EventHandler
     public void grapple(PlayerFishEvent e){
+        if(!isInWorld(e.getPlayer(), PLUGIN_WORLD_LOBBY)){
+            return;
+        }
+
+        // TODO Check auf item
+
         if(e.getState().equals(State.IN_GROUND) || e.getState().equals(State.REEL_IN)){
             if(!COOL_DOWN.contains(e.getPlayer())){
                 Location hookLocation = e.getHook().getLocation();
