@@ -42,7 +42,7 @@ public class DatabaseManager implements IEnable{
         RelluEssentials.getInstance().locationTypeEntryList.addAll(dBH.getLocationTypes());
 
         for(DropEntry de : dBH.getDrops()){
-            RelluEssentials.getInstance().dropMap.put(de.getMaterial(), new DoubleStore(de.getMin(), de.getMax()));
+            RelluEssentials.getInstance().dropMap.put(de.getMaterial(), new DoubleStore<>(de.getMin(), de.getMax()));
         }
 
         for(CropEntry ce : dBH.getCrops()){

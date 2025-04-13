@@ -146,8 +146,8 @@ public class BetterBags implements Listener {
         for(Item i : e.getItems()){
             if(RelluEssentials.getInstance().dropMap.containsKey(i.getItemStack().getType())){
                 if(i.getItemStack().getAmount() == 1){ 
-                    DoubleStore ds = RelluEssentials.getInstance().dropMap.get(i.getItemStack().getType());
-                    i.getItemStack().setAmount(random.nextInt((int)ds.getSecondValue()) + (int)ds.getValue());
+                    DoubleStore<Integer, Integer> ds = RelluEssentials.getInstance().dropMap.get(i.getItemStack().getType());
+                    i.getItemStack().setAmount(random.nextInt(ds.getSecondValue()) + ds.getValue());
                 }
             }            
         }

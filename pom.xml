@@ -4,7 +4,7 @@
     <groupId>de.relluem94</groupId>
     <artifactId>relluessentials</artifactId>
     <name>RelluEssentials</name>
-    <version>4.2.3</version>
+    <version>4.2.4</version>
     <url>https://github.com/Relluem94s/RelluEssentials</url>
     <properties>
         <lombok.version>1.18.32</lombok.version>
@@ -72,13 +72,13 @@
         <dependency>
             <groupId>de.relluem94</groupId>
             <artifactId>rellulib</artifactId>
-            <version>0.16</version>
+            <version>0.19</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.3.0</version>
+            <version>9.2.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
-            <version>4.0.43</version>
+            <version>6.0.58</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>

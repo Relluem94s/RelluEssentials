@@ -105,7 +105,7 @@ public class RelluEssentials extends JavaPlugin {
 
     public final Map<Integer, Vector2Location> selections = new HashMap<>();
     public final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
-    public final Map<Material, DoubleStore> dropMap = new EnumMap<>(Material.class);
+    public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
     public final Map<Material, Material> crops = new EnumMap<>(Material.class);
     public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
 
