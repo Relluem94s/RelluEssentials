@@ -1,4 +1,4 @@
-![Rellu Essentials](https://img.relluem94.de/logos/app/relluessentials.png)
+![Rellu Essentials](https://static.relluem94.de/logos/app/relluessentials.png)
 
 ### a Spigot Plugin compatible with Spigot 1.20.1
 
