@@ -74,7 +74,7 @@ public class CustomEnchants {
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute(
             EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_UUID, 
-            Attribute.GENERIC_ATTACK_DAMAGE, 
+            Attribute.ATTACK_DAMAGE,
             Operation.ADD_NUMBER, 
             EquipmentSlot.HAND, 
             EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE, 
