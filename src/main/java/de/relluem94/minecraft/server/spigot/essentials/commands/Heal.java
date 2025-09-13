@@ -64,7 +64,7 @@ public class Heal implements CommandExecutor {
     }
 
     private void heal(Player p) {
-        p.setHealth(Objects.requireNonNull(p.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getDefaultValue());
+        p.setHealth(Objects.requireNonNull(p.getAttribute(Attribute.MAX_HEALTH)).getDefaultValue());
         p.setFoodLevel(20);
         p.sendMessage(PLUGIN_COMMAND_HEAL);
     }

@@ -26,10 +26,10 @@ public class RelluShield extends ItemHelper{
 
         bmeta.setBlockState(banner);
 
-        bmeta.addEnchant(Enchantment.DAMAGE_ALL, 94, true);
+        bmeta.addEnchant(Enchantment.SHARPNESS, 94, true);
         bmeta.addEnchant(Enchantment.THORNS, 94, true);
-        bmeta.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
-        bmeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 94, true);
+        bmeta.addEnchant(Enchantment.LOOTING, 94, true);
+        bmeta.addEnchant(Enchantment.PROTECTION, 94, true);
         bmeta.setUnbreakable(true);
         setItemMeta(bmeta);
     }
