@@ -118,13 +118,11 @@ public class EnchantmentHelper extends CustomEnchantment {
             itemStackLore.add(getLore());
             itemStackLore.add(getDisplayName());
             Collections.reverse(itemStackLore);
-            System.out.println("imLore ja");
         } else {
             itemStackLore = new ArrayList<>();
             itemStackLore.add(getDisplayName());
             itemStackLore.add(getLore());
             itemStackLore.add(getRarity().getPrefix() + getRarity().getDisplayName());
-            System.out.println("imLore nein");
         }
 
         im.setLore(itemStackLore);
@@ -193,8 +191,7 @@ public class EnchantmentHelper extends CustomEnchantment {
     }
 
     public static boolean hasEnchant(ItemStack is, CustomEnchantment e) {
-
-        if (!is.hasItemMeta()) {
+        if(is == null){
             return false;
         }
 
@@ -205,7 +202,6 @@ public class EnchantmentHelper extends CustomEnchantment {
         }
 
         PersistentDataContainer persistentDataContainer = im.getPersistentDataContainer();
-        System.out.println("hasEnchant() => " + persistentDataContainer.has(e.getKey()) + " {" + e.getKey().toString() + "}");
         return persistentDataContainer.has(e.getKey());
     }
 }

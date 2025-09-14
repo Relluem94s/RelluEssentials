@@ -40,7 +40,7 @@ public class CustomEnchantment implements Listener {
         }
 
         if(renameText.equals(ItemHelper.getItemName(itemStackSlotZero))){
-            System.out.println("test22");
+            System.out.println("test11");
             return;
         }
         else{
