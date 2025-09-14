@@ -31,6 +31,11 @@ public class PlayerHeadHelper {
         OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(name);
         ItemStack is = PLAYER_HEAD.clone();
         SkullMeta sm = (SkullMeta) is.getItemMeta();
+
+        if(sm == null){
+            return is;
+        }
+
         if(player != null){
             PlayerProfile pp = Bukkit.createPlayerProfile(player.getId(), player.getName());
  
@@ -48,6 +53,11 @@ public class PlayerHeadHelper {
         } 
 
         SkullMeta sm = (SkullMeta) ph.getItemMeta();
+
+        if(sm == null){
+            return ph;
+        }
+
         GameProfile profile = new GameProfile(UUID.randomUUID(), ch.getName());
         profile.getProperties().put("textures", new Property("textures", ch.getBase64()));
 
