@@ -205,6 +205,9 @@ public class BetterBags implements Listener {
                 }
             }
         }
+        else{
+            System.out.println("NOPE");
+        }
     }
 
     @EventHandler

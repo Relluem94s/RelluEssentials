@@ -21,6 +21,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
@@ -359,16 +361,19 @@ public class ItemHelper implements IItemHelper {
         return is;
     }
 
-    public static ItemStack getCleanItemStack(ItemStack is){
+    @Contract("_ -> new")
+    public static @NotNull ItemStack getCleanItemStack(@NotNull ItemStack is){
         return new ItemStack(is.getType(), 1);
     }
 
+    @Contract("_ -> new")
     @SuppressWarnings("unused")
-    public static ItemStack getCleanItemStackWithAmount(ItemStack is){
+    public static @NotNull ItemStack getCleanItemStackWithAmount(@NotNull ItemStack is){
         return new ItemStack(is.getType(), is.getAmount());
     }
 
-    public static ItemStack addBookEnchantment(ItemStack item, EnchantmentHelper enchantment) {
+    @Contract("_, _ -> param1")
+    public static @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item, EnchantmentHelper enchantment) {
         if(item.getItemMeta() instanceof EnchantmentStorageMeta meta){
             meta.getPersistentDataContainer().set(enchantment.getKey(), PersistentDataType.INTEGER, enchantment.getStartLevel());
             item.setItemMeta(meta);
@@ -377,7 +382,7 @@ public class ItemHelper implements IItemHelper {
         return item;
     }
 
-    public static String getItemName(ItemStack is){
+    public static String getItemName(@NotNull ItemStack is){
         String name = "";
         if(is.hasItemMeta()){
             ItemMeta meta = is.getItemMeta();

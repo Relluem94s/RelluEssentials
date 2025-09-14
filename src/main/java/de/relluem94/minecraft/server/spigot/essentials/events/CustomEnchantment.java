@@ -23,97 +23,96 @@ public class CustomEnchantment implements Listener {
     @EventHandler
     public void enchantApply(PrepareAnvilEvent e){
         ItemStack itemStackSlotZero = e.getInventory().getItem(0);
-        ItemStack itemStackSlotOne = e.getInventory().getItem(0);
+        ItemStack itemStackSlotOne = e.getInventory().getItem(1);
+        @SuppressWarnings("all")
+        String renameText = e.getView().getRenameText();
 
         if(itemStackSlotZero == null){
             return;
         }
 
-
         if(itemStackSlotOne == null){
             return;
         }
 
-
-
-        if(!e.getView().getRenameText().equals(ItemHelper.getItemName(itemStackSlotZero))){
-            if(
-                itemStackSlotOne.equals(CustomEnchants.autosmelt.getBook().getCustomItem()) ||
-                itemStackSlotOne.equals(CustomEnchants.telekinesis.getBook().getCustomItem()) ||
-                itemStackSlotOne.equals(CustomEnchants.delicate.getBook().getCustomItem()) ||
-                itemStackSlotOne.equals(CustomEnchants.replenishment.getBook().getCustomItem()) ||
-                itemStackSlotOne.equals(CustomEnchants.thunderstrike.getBook().getCustomItem())
-            ){
-                System.out.println("TEST_11");
-                e.setResult(null);
-            }
-            else {
-                System.out.println("TEST_00");
-            }
-            
+        if(renameText == null){
+            return;
         }
 
+        if(renameText.equals(ItemHelper.getItemName(itemStackSlotZero))){
+            System.out.println("test22");
+            return;
+        }
+        else{
+            System.out.println("test22");
+        }
+
+        if(
+            itemStackSlotZero.equals(CustomEnchants.autosmelt.getBook().getCustomItem()) ||
+            itemStackSlotZero.equals(CustomEnchants.telekinesis.getBook().getCustomItem()) ||
+            itemStackSlotZero.equals(CustomEnchants.delicate.getBook().getCustomItem()) ||
+            itemStackSlotZero.equals(CustomEnchants.replenishment.getBook().getCustomItem()) ||
+            itemStackSlotZero.equals(CustomEnchants.thunderstrike.getBook().getCustomItem())
+        ){
+            e.setResult(null);
+        }
+        
         try{
-            if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null && e.getResult() != null){
+            if(e.getResult() != null){
                 if(itemStackSlotZero.hasItemMeta() && hasEnchant(itemStackSlotZero, CustomEnchants.autosmelt)){
                     ItemStack is = e.getResult().clone();
                     CustomEnchants.autosmelt.removeFrom(is);
                     CustomEnchants.autosmelt.addTo(is);
                     e.setResult(is);
-                    System.out.println("TEST_22");
                 }
                 if(itemStackSlotZero.hasItemMeta() && hasEnchant(itemStackSlotZero, CustomEnchants.telekinesis)){
                     ItemStack is = e.getResult().clone();
                     CustomEnchants.telekinesis.removeFrom(is);
                     CustomEnchants.telekinesis.addTo(is);
                     e.setResult(is);
-                    System.out.println("TEST_22");
                 }
                 if(itemStackSlotZero.hasItemMeta() && hasEnchant(itemStackSlotZero, CustomEnchants.replenishment)){
                     ItemStack is = e.getResult().clone();
                     CustomEnchants.replenishment.removeFrom(is);
                     CustomEnchants.replenishment.addTo(is);
                     e.setResult(is);
-                    System.out.println("TEST_22");
                 }
                 if(itemStackSlotZero.hasItemMeta() && hasEnchant(itemStackSlotZero, CustomEnchants.delicate)){
                     ItemStack is = e.getResult().clone();
                     CustomEnchants.delicate.removeFrom(is);
                     CustomEnchants.delicate.addTo(is);
                     e.setResult(is);
-                    System.out.println("TEST_22");
                 }
                 if(itemStackSlotZero.hasItemMeta() && hasEnchant(itemStackSlotZero, CustomEnchants.thunderstrike)){
                     ItemStack is = e.getResult().clone();
                     CustomEnchants.thunderstrike.removeFrom(is);
                     CustomEnchants.thunderstrike.addTo(is);
                     e.setResult(is);
-                    System.out.println("TEST_22");
                 }
             }
-            
-            
-            if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null && e.getInventory().getItem(1).equals(CustomEnchants.autosmelt.getBook().getCustomItem())){
+
+            System.out.println("TEST_22");
+            if(itemStackSlotOne.equals(CustomEnchants.autosmelt.getBook().getCustomItem()) &! hasEnchant(itemStackSlotZero, CustomEnchants.autosmelt)){
                 ItemStack is = itemStackSlotZero.clone();
                 CustomEnchants.autosmelt.addTo(is);
                 e.setResult(is);
             }
-            else if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null && e.getInventory().getItem(1).equals(CustomEnchants.telekinesis.getBook().getCustomItem())){
+            else if(itemStackSlotOne.equals(CustomEnchants.telekinesis.getBook().getCustomItem()) &! hasEnchant(itemStackSlotZero, CustomEnchants.telekinesis)){
                 ItemStack is = itemStackSlotZero.clone();
                 CustomEnchants.telekinesis.addTo(is);
                 e.setResult(is);
             }
-            else if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null && itemStackSlotOne.equals(CustomEnchants.replenishment.getBook().getCustomItem())){
+            else if(itemStackSlotOne.equals(CustomEnchants.replenishment.getBook().getCustomItem()) &! hasEnchant(itemStackSlotZero, CustomEnchants.replenishment)){
                 ItemStack is = itemStackSlotZero.clone();
                 CustomEnchants.replenishment.addTo(is);
                 e.setResult(is);
             }
-            else if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null && itemStackSlotOne.equals(CustomEnchants.delicate.getBook().getCustomItem())){
+            else if(itemStackSlotOne.equals(CustomEnchants.delicate.getBook().getCustomItem()) &! hasEnchant(itemStackSlotZero, CustomEnchants.delicate)){
                 ItemStack is = itemStackSlotZero.clone();
                 CustomEnchants.delicate.addTo(is);
                 e.setResult(is);
             }
-            else if(e.getInventory().getItem(0) != null && e.getInventory().getItem(1) != null && itemStackSlotOne.equals(CustomEnchants.thunderstrike.getBook().getCustomItem())){
+            else if(itemStackSlotOne.equals(CustomEnchants.thunderstrike.getBook().getCustomItem()) &! hasEnchant(itemStackSlotZero, CustomEnchants.thunderstrike)){
                 ItemStack is = itemStackSlotZero.clone();
                 CustomEnchants.thunderstrike.addTo(is);
                 e.setResult(is);

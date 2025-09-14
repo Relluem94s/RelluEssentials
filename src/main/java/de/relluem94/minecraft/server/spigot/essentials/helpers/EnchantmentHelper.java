@@ -1,4 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,70 +92,82 @@ public class EnchantmentHelper extends CustomEnchantment {
     }
 
     public void addTo(ItemStack i) {
-        if (i.hasItemMeta()) {
-            ItemMeta im = i.getItemMeta();
+        ItemMeta im = i.getItemMeta();
 
-            for (Attribute a : attributes.asMap().keySet()) {
-                if(a == null){
+        if (im == null) {
+            return;
+        }
+
+        for (Attribute a : attributes.asMap().keySet()) {
+            if (a == null) {
+                continue;
+            }
+            for (AttributeModifier am : attributes.asMap().get(a)) {
+                if (am == null) {
                     continue;
                 }
-                for (AttributeModifier am : attributes.asMap().get(a)) {
-                    if(am == null){
-                        continue;
-                    }
-                    Objects.requireNonNull(im).addAttributeModifier(a, am);
-                }
+                Objects.requireNonNull(im).addAttributeModifier(a, am);
             }
-
-
-            List<String> itemStackLore;
-            if (Objects.requireNonNull(im).getLore() != null) {
-                itemStackLore = im.getLore();
-                Collections.reverse(itemStackLore);
-                itemStackLore.add(getLore());
-                itemStackLore.add(getDisplayName());
-                Collections.reverse(itemStackLore);
-            } else {
-                itemStackLore = new ArrayList<>();
-                itemStackLore.add(getDisplayName());
-                itemStackLore.add(getLore());
-                itemStackLore.add(getRarity().getPrefix() + getRarity().getDisplayName());
-            }
-
-            im.setLore(itemStackLore);
-            i.setItemMeta(im);
-
-            PersistentDataContainer persistentDataContainer = im.getPersistentDataContainer();
-            persistentDataContainer.set(super.getKey(), PersistentDataType.INTEGER, actualLevel);
         }
+
+
+        List<String> itemStackLore;
+        if (Objects.requireNonNull(im).getLore() != null) {
+            itemStackLore = im.getLore();
+            Collections.reverse(itemStackLore);
+            itemStackLore.add(getLore());
+            itemStackLore.add(getDisplayName());
+            Collections.reverse(itemStackLore);
+            System.out.println("imLore ja");
+        } else {
+            itemStackLore = new ArrayList<>();
+            itemStackLore.add(getDisplayName());
+            itemStackLore.add(getLore());
+            itemStackLore.add(getRarity().getPrefix() + getRarity().getDisplayName());
+            System.out.println("imLore nein");
+        }
+
+        im.setLore(itemStackLore);
+        PersistentDataContainer persistentDataContainer = im.getPersistentDataContainer();
+        persistentDataContainer.set(super.getKey(), PersistentDataType.INTEGER, actualLevel);
+
+        i.setItemMeta(im);
     }
 
 
     public void removeFrom(ItemStack i) {
-        if (i.hasItemMeta()) {
-            ItemMeta im = i.getItemMeta();
+        ItemMeta im = i.getItemMeta();
 
-            for (Attribute a : attributes.asMap().keySet()) {
-                for (AttributeModifier am : attributes.asMap().get(a)) {
-                    if (im != null) {
-                        im.removeAttributeModifier(a, am);
-                    }
-                }
-            }
-
-            List<String> itemStackLore = Objects.requireNonNull(im).getLore();
-            if (itemStackLore != null) {
-                itemStackLore.remove(getDisplayName());
-                itemStackLore.remove(getLore());
-                itemStackLore.remove(getRarity().getPrefix() + getRarity().getDisplayName());
-            }
-
-            im.setLore(itemStackLore);
-            i.setItemMeta(im);
-
-            PersistentDataContainer persistentDataContainer = im.getPersistentDataContainer();
-            persistentDataContainer.remove(super.getKey());
+        if (im == null) {
+            return;
         }
+
+
+        for (Attribute a : attributes.asMap().keySet()) {
+            if (a == null) {
+                continue;
+            }
+            for (AttributeModifier am : attributes.asMap().get(a)) {
+                if (am == null) {
+                    continue;
+                }
+                im.removeAttributeModifier(a, am);
+            }
+        }
+
+        List<String> itemStackLore = im.getLore();
+        if (itemStackLore != null) {
+            itemStackLore.remove(getDisplayName());
+            itemStackLore.remove(getLore());
+            itemStackLore.remove(getRarity().getPrefix() + getRarity().getDisplayName());
+        }
+
+        im.setLore(itemStackLore);
+        PersistentDataContainer persistentDataContainer = im.getPersistentDataContainer();
+        persistentDataContainer.remove(super.getKey());
+
+        i.setItemMeta(im);
+
     }
 
     @Override
@@ -180,17 +193,19 @@ public class EnchantmentHelper extends CustomEnchantment {
     }
 
     public static boolean hasEnchant(ItemStack is, CustomEnchantment e) {
+
         if (!is.hasItemMeta()) {
             return false;
         }
 
         ItemMeta im = is.getItemMeta();
 
-        if(im == null){
+        if (im == null) {
             return false;
         }
 
         PersistentDataContainer persistentDataContainer = im.getPersistentDataContainer();
+        System.out.println("hasEnchant() => " + persistentDataContainer.has(e.getKey()) + " {" + e.getKey().toString() + "}");
         return persistentDataContainer.has(e.getKey());
     }
 }
