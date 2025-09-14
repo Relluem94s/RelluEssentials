@@ -44,7 +44,11 @@ public class CustomEnchantment implements Listener {
                 itemStackSlotOne.equals(CustomEnchants.replenishment.getBook().getCustomItem()) ||
                 itemStackSlotOne.equals(CustomEnchants.thunderstrike.getBook().getCustomItem())
             ){
+                System.out.println("TEST_11");
                 e.setResult(null);
+            }
+            else {
+                System.out.println("TEST_00");
             }
             
         }
@@ -56,30 +60,35 @@ public class CustomEnchantment implements Listener {
                     CustomEnchants.autosmelt.removeFrom(is);
                     CustomEnchants.autosmelt.addTo(is);
                     e.setResult(is);
+                    System.out.println("TEST_22");
                 }
                 if(itemStackSlotZero.hasItemMeta() && hasEnchant(itemStackSlotZero, CustomEnchants.telekinesis)){
                     ItemStack is = e.getResult().clone();
                     CustomEnchants.telekinesis.removeFrom(is);
                     CustomEnchants.telekinesis.addTo(is);
                     e.setResult(is);
+                    System.out.println("TEST_22");
                 }
                 if(itemStackSlotZero.hasItemMeta() && hasEnchant(itemStackSlotZero, CustomEnchants.replenishment)){
                     ItemStack is = e.getResult().clone();
                     CustomEnchants.replenishment.removeFrom(is);
                     CustomEnchants.replenishment.addTo(is);
                     e.setResult(is);
+                    System.out.println("TEST_22");
                 }
                 if(itemStackSlotZero.hasItemMeta() && hasEnchant(itemStackSlotZero, CustomEnchants.delicate)){
                     ItemStack is = e.getResult().clone();
                     CustomEnchants.delicate.removeFrom(is);
                     CustomEnchants.delicate.addTo(is);
                     e.setResult(is);
+                    System.out.println("TEST_22");
                 }
                 if(itemStackSlotZero.hasItemMeta() && hasEnchant(itemStackSlotZero, CustomEnchants.thunderstrike)){
                     ItemStack is = e.getResult().clone();
                     CustomEnchants.thunderstrike.removeFrom(is);
                     CustomEnchants.thunderstrike.addTo(is);
                     e.setResult(is);
+                    System.out.println("TEST_22");
                 }
             }
             
