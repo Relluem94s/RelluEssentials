@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import de.relluem94.minecraft.server.spigot.essentials.enchantment.CustomEnchantment;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
@@ -366,10 +368,9 @@ public class ItemHelper implements IItemHelper {
         return new ItemStack(is.getType(), is.getAmount());
     }
 
-    public static ItemStack addBookEnchantment(ItemStack item, Enchantment enchantment, int level) {
+    public static ItemStack addBookEnchantment(ItemStack item, EnchantmentHelper enchantment) {
         if(item.getItemMeta() instanceof EnchantmentStorageMeta meta){
-            meta.addStoredEnchant(enchantment, level, true);
-            meta.addEnchant(enchantment, level, true);
+            meta.getPersistentDataContainer().set(enchantment.getKey(), PersistentDataType.INTEGER, enchantment.getStartLevel());
             item.setItemMeta(meta);
         }
         
@@ -384,11 +385,7 @@ public class ItemHelper implements IItemHelper {
                 name = meta.getDisplayName();
             } 
             else {
-                if (meta.hasLocalizedName()){
-                    name = meta.getLocalizedName();
-                } else {
-                    name = is.getType().name().toLowerCase().replace("_", " ");
-                }
+                name = "ERROR_404_NAME_NOT_FOUND_EXCEPTION";
             }
         }
 
