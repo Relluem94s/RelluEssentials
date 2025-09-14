@@ -388,7 +388,7 @@ public class ItemHelper implements IItemHelper {
             ItemMeta meta = is.getItemMeta();
             if (Objects.requireNonNull(meta).hasDisplayName()){
                 name = meta.getDisplayName();
-            } 
+            }
             else {
                 name = "ERROR_404_NAME_NOT_FOUND_EXCEPTION";
             }
