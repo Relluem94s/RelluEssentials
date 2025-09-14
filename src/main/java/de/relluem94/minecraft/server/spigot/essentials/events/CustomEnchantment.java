@@ -40,11 +40,14 @@ public class CustomEnchantment implements Listener {
         }
 
         if(renameText.equals(ItemHelper.getItemName(itemStackSlotZero))){
-            System.out.println("test11");
-            return;
+            //return;
+            System.out.println("sameName");
         }
         else{
-            System.out.println("test22");
+            if(itemStackSlotOne.getAmount() != 0){
+                e.setResult(null);
+                return;
+            }
         }
 
         if(
@@ -91,7 +94,6 @@ public class CustomEnchantment implements Listener {
                 }
             }
 
-            System.out.println("TEST_22");
             if(itemStackSlotOne.equals(CustomEnchants.autosmelt.getBook().getCustomItem()) &! hasEnchant(itemStackSlotZero, CustomEnchants.autosmelt)){
                 ItemStack is = itemStackSlotZero.clone();
                 CustomEnchants.autosmelt.addTo(is);
