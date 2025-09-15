@@ -4,7 +4,7 @@
     <groupId>de.relluem94</groupId>
     <artifactId>relluessentials</artifactId>
     <name>RelluEssentials</name>
-    <version>4.2.4</version>
+    <version>4.3</version>
     <url>https://github.com/Relluem94s/RelluEssentials</url>
     <properties>
         <lombok.version>1.18.32</lombok.version>
