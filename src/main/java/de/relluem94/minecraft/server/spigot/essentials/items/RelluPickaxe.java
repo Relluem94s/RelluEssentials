@@ -18,8 +18,8 @@ public class RelluPickaxe extends ItemHelper{
     @Override
     public void init() {
         ItemMeta im = getItemMeta();
-        im.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 94, true);
-        im.addEnchant(Enchantment.DIG_SPEED, 94, true);
+        im.addEnchant(Enchantment.LOOTING, 94, true);
+        im.addEnchant(Enchantment.EFFICIENCY, 94, true);
         im.setUnbreakable(true);
         setItemMeta(im);
     }

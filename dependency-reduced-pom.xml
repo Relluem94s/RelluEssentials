@@ -129,7 +129,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.20.1-R0.1-SNAPSHOT</version>
+      <version>1.21.8-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -190,9 +190,9 @@
   </distributionManagement>
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
-    <plugin.apiVersion>1.20</plugin.apiVersion>
+    <plugin.apiVersion>1.21</plugin.apiVersion>
     <lombok.version>1.18.32</lombok.version>
-    <spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
+    <spigot.version>1.21.8-R0.1-SNAPSHOT</spigot.version>
     <plugin.author>Relluem94</plugin.author>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
     <plugin.website>https://www.relluem94.de</plugin.website>

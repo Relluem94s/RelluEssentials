@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import de.relluem94.minecraft.server.spigot.essentials.enchantment.CustomEnchantment;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,8 +18,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
@@ -357,38 +361,36 @@ public class ItemHelper implements IItemHelper {
         return is;
     }
 
-    public static ItemStack getCleanItemStack(ItemStack is){
+    @Contract("_ -> new")
+    public static @NotNull ItemStack getCleanItemStack(@NotNull ItemStack is){
         return new ItemStack(is.getType(), 1);
     }
 
+    @Contract("_ -> new")
     @SuppressWarnings("unused")
-    public static ItemStack getCleanItemStackWithAmount(ItemStack is){
+    public static @NotNull ItemStack getCleanItemStackWithAmount(@NotNull ItemStack is){
         return new ItemStack(is.getType(), is.getAmount());
     }
 
-    public static ItemStack addBookEnchantment(ItemStack item, Enchantment enchantment, int level) {
+    @Contract("_, _ -> param1")
+    public static @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item, EnchantmentHelper enchantment) {
         if(item.getItemMeta() instanceof EnchantmentStorageMeta meta){
-            meta.addStoredEnchant(enchantment, level, true);
-            meta.addEnchant(enchantment, level, true);
+            meta.getPersistentDataContainer().set(enchantment.getKey(), PersistentDataType.INTEGER, enchantment.getStartLevel());
             item.setItemMeta(meta);
         }
         
         return item;
     }
 
-    public static String getItemName(ItemStack is){
+    public static String getItemName(@NotNull ItemStack is){
         String name = "";
         if(is.hasItemMeta()){
             ItemMeta meta = is.getItemMeta();
             if (Objects.requireNonNull(meta).hasDisplayName()){
                 name = meta.getDisplayName();
-            } 
+            }
             else {
-                if (meta.hasLocalizedName()){
-                    name = meta.getLocalizedName();
-                } else {
-                    name = is.getType().name().toLowerCase().replace("_", " ");
-                }
+                name = "ERROR_404_NAME_NOT_FOUND_EXCEPTION";
             }
         }
 

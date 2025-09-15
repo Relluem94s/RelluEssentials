@@ -282,18 +282,22 @@ public class BagHelper {
             Item i = lii.next();
             ItemStack checkWithoutAmount = i.getItemStack().clone();
             checkWithoutAmount.setAmount(1);
-            if(RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)){
-                Collection<BagEntry> bel = BagHelper.getBags(pe.getId());
-                for(BagEntry be: bel){
-                    int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
-                    if(slot != -1){
-                        be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
-                        be.setHasToBeUpdated(true);
-                        ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName()));
-                        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
-                        lio.add(i);
-                    }
+            if(!RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)){
+                continue;
+            }
+
+            Collection<BagEntry> bel = BagHelper.getBags(pe.getId());
+            for(BagEntry be: bel){
+                int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
+                if(slot == -1){
+                    continue;
                 }
+
+                be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
+                be.setHasToBeUpdated(true);
+                ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName()));
+                p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
+                lio.add(i);
             }
         }
         return lio;

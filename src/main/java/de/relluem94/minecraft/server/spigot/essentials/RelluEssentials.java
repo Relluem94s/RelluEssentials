@@ -56,7 +56,6 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.CleanUpManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ConfigManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.EnchantmentManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EventManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.GroupManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.NPCManager;
@@ -154,7 +153,6 @@ public class RelluEssentials extends JavaPlugin {
         
 
 
-        new EnchantmentManager().enable();
         new EventManager().enable();
         new SkillManager().enable();
         new RecipeManager().enable();

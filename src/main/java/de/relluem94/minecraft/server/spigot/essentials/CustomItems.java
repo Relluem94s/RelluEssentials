@@ -40,7 +40,7 @@ public class CustomItems {
         @Override
         public void init() {
             ItemMeta im = getItemMeta();
-            im.addEnchant(Enchantment.ARROW_INFINITE, 1, false);
+            im.addEnchant(Enchantment.INFINITY, 1, false);
         }
     };
 
@@ -53,7 +53,7 @@ public class CustomItems {
             LeatherArmorMeta cloudBootsMeta = (LeatherArmorMeta) getItemMeta();
             cloudBootsMeta.setColor(Color.SILVER);
             cloudBootsMeta.setUnbreakable(true);
-            cloudBootsMeta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3, true);
+            cloudBootsMeta.addEnchant(Enchantment.PROTECTION, 3, true);
             
             setItemMeta(cloudBootsMeta);
         }

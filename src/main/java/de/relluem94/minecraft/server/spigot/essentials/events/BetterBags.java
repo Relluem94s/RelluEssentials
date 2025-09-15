@@ -152,6 +152,15 @@ public class BetterBags implements Listener {
             }            
         }
 
+        if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.autosmelt)){
+            for(int i = 0; i < e.getItems().size(); i++){
+                ItemStack is = e.getItems().get(i).getItemStack().clone();
+                if(e.getItems().get(i) != null && ItemHelper.getSmeltedItemStack(is) != null){
+                    e.getItems().get(i).getItemStack().setType(ItemHelper.getSmeltedItemStack(is).getType());
+                }
+            }
+        }
+
         if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.replenishment)){
             for(int i = 0; i < e.getItems().size(); i++){
                 if(e.getItems().get(i) != null && RelluEssentials.getInstance().crops.containsKey(e.getItems().get(i).getItemStack().getType())){
@@ -180,10 +189,10 @@ public class BetterBags implements Listener {
                 }
             }
         }
-        
+
         if(BagHelper.hasBags(pe.getId())){
             List<Item> lis = BagHelper.collectItems(e.getItems(), e.getPlayer(), pe);
-            e.getItems().removeAll(lis);  
+            e.getItems().removeAll(lis);
         }
 
         if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
@@ -195,15 +204,6 @@ public class BetterBags implements Listener {
                 }
             }
             e.getItems().removeAll(lis);
-        }
-
-        if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.autosmelt)){
-            for(int i = 0; i < e.getItems().size(); i++){
-                ItemStack is = e.getItems().get(i).getItemStack().clone();
-                if(e.getItems().get(i) != null && ItemHelper.getSmeltedItemStack(is) != null){
-                    e.getItems().get(i).getItemStack().setType(ItemHelper.getSmeltedItemStack(is).getType());
-                }
-            }
         }
     }
 

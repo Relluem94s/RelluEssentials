@@ -8,8 +8,8 @@
     <url>https://github.com/Relluem94s/RelluEssentials</url>
     <properties>
         <lombok.version>1.18.32</lombok.version>
-        <spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
-        <plugin.apiVersion>1.20</plugin.apiVersion>
+        <spigot.version>1.21.8-R0.1-SNAPSHOT</spigot.version>
+        <plugin.apiVersion>1.21</plugin.apiVersion>
         <plugin.author>Relluem94</plugin.author>
         <plugin.website>https://www.relluem94.de</plugin.website>
         <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
@@ -90,6 +90,16 @@
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
             <version>6.0.58</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -107,6 +117,16 @@
             <artifactId>junit-platform-runner</artifactId>
             <version>1.10.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.15.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.18.0</version>
         </dependency>
     </dependencies>
     <build>

@@ -19,8 +19,8 @@ public class RelluLeggings extends ItemHelper{
         LeatherArmorMeta lam = (LeatherArmorMeta) getItemMeta();
             lam.setColor(Color.fromRGB(152, 216, 1));
             lam.addEnchant(Enchantment.THORNS, 94, true);
-            lam.addEnchant(Enchantment.LOOT_BONUS_MOBS, 94, true);
-            lam.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 94, true);
+            lam.addEnchant(Enchantment.LOOTING, 94, true);
+            lam.addEnchant(Enchantment.PROTECTION, 94, true);
             lam.setUnbreakable(true);
             setItemMeta(lam);
     }   

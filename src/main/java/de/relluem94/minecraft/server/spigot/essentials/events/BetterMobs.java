@@ -25,6 +25,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
+
 public class BetterMobs implements Listener {
 
     @EventHandler
@@ -75,7 +77,7 @@ public class BetterMobs implements Listener {
                 }
 
 
-                if(p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.telekinesis)){
+                if(p.getInventory().getItemInMainHand().hasItemMeta() &&  hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
                     List<ItemStack> lis = new ArrayList<>();
                     for(ItemStack is: e.getDrops()){
                         if(p.getInventory().firstEmpty() != -1){
@@ -96,7 +98,10 @@ public class BetterMobs implements Listener {
             if(pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)){
                 p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(), m.getLastDamage(), m.getHealth()));
             }
-            if(p.getInventory().getItemInMainHand().hasItemMeta() &&  p.getInventory().getItemInMainHand().getItemMeta().hasEnchant(CustomEnchants.thunderstrike)){
+            if(p.getInventory().getItemInMainHand().hasItemMeta() &&  hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.thunderstrike)){
+                if(m.getLocation().getWorld() == null){
+                    return;
+                }
                 m.getLocation().getWorld().strikeLightningEffect(m.getLocation());
             }
         }
