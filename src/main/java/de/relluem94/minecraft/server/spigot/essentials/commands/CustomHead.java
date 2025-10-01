@@ -3,10 +3,11 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_CUSTOMHEADS_TITLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_CUSTOMHEADS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper.getCustomSkull;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.commands.CustomHeadsCommand;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -18,12 +19,13 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
 
 public class CustomHead implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_CUSTOMHEADS)) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
+        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(CustomHeadsCommand.class))) {
             return false;
         }
 

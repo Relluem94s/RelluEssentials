@@ -94,6 +94,5 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_MARRY = "marry";
     String PLUGIN_COMMAND_NAME_MARRY_ACCEPT = "accept";
     String PLUGIN_COMMAND_NAME_MARRY_DIVORCE = "divorce";
-    String PLUGIN_COMMAND_NAME_CUSTOMHEADS = "customheads";
     String PLUGIN_COMMAND_NAME_TEAM = "team";
 }
