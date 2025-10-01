@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.commands.EnderchestCommand;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -9,16 +11,18 @@ import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_ENDERCHEST;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Enderchest implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_ENDERCHEST)) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
+        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(EnderchestCommand.class))) {
             return false;
         }
 
@@ -38,9 +42,15 @@ public class Enderchest implements CommandExecutor {
             p.openInventory(p.getEnderChest());
             p.sendMessage(PLUGIN_COMMAND_ENDERCHEST);
             return true;
-        } 
-        
-        Player target = Bukkit.getPlayer(args[0]).getPlayer();
+        }
+
+        if (Bukkit.getPlayer(args[0]) == null) {
+            p.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player target = Objects.requireNonNull(Bukkit.getPlayer(args[0])).getPlayer();
+
         if (target == null) {
             p.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
             return true;
