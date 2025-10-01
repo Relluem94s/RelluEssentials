@@ -5,13 +5,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SPACER_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_BROADCAST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BROADCAST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BROADCAST_TITLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 import static de.relluem94.rellulib.utils.StringUtils.implode;
 import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BroadcastCommand;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -26,7 +26,7 @@ public class Broadcast implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_BROADCAST)) {
+        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(BroadcastCommand.class))) {
             return false;
         }
 
@@ -40,10 +40,10 @@ public class Broadcast implements CommandExecutor {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_BROADCAST_TITLE)) {
+        if (args[0].equalsIgnoreCase(BroadcastCommand.Commands.title.getName())) {
             broadcast(args, 1, false);
             return true;
-        } 
+        }
 
         broadcast(args, 0, true);
         return true;

@@ -32,8 +32,6 @@ public class AdminCommand implements CommandConstruct {
             this.name = name;
             this.subCommands = subCommands;
         }
-
-
     }
 }
 

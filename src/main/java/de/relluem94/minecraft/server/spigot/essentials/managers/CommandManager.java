@@ -4,7 +4,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_COMMANDS_REGISTERED;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_REGISTER_COMMANDS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BROADCAST;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_COOKIE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_CRAFT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_CUSTOMHEADS;
@@ -58,10 +57,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 import java.util.Objects;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AdminCommand;
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AfkCommand;
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BackCommand;
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BagsCommand;
+import de.relluem94.minecraft.server.spigot.essentials.constants.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import org.bukkit.command.PluginCommandYamlParser;
 
@@ -107,7 +103,7 @@ public class CommandManager implements IEnable {
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_TITLE)).setExecutor(new Title());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_WHERE)).setExecutor(new Where());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_PRINT)).setExecutor(new Print());
-        Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_BROADCAST)).setExecutor(new Broadcast());
+        Objects.requireNonNull(RelluEssentials.getInstance().getCommand(Objects.requireNonNull(AnnotationHelper.getCommandName(BroadcastCommand.class)))).setExecutor(new Broadcast());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_RENAME)).setExecutor(new Rename());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_SPEED)).setExecutor(new Speed());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_POKE)).setExecutor(new Poke());
