@@ -10,10 +10,9 @@ public interface CommandNameConstants {
     //                            COMMAND   STUFF                                   //
     //==============================================================================//
     
-    String PLUGIN_COMMAND_NAME_AFK = "afk";
     String PLUGIN_COMMAND_NAME_BROADCAST = "broadcast";
     String PLUGIN_COMMAND_NAME_BROADCAST_TITLE = "title";
-    String PLUGIN_COMMAND_NAME_COOCKIE = "cookie";
+    String PLUGIN_COMMAND_NAME_COOKIE = "cookie";
     String PLUGIN_COMMAND_NAME_CRAFT = "craft";
     String PLUGIN_COMMAND_NAME_DAY = "day";
     String PLUGIN_COMMAND_NAME_ENDERCHEST = "enderchest";
@@ -60,7 +59,6 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_ROLLBACK_UNDO = "undo";
     String PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER = "player";
     String PLUGIN_COMMAND_NAME_SPAWN = "spawn";
-    String PLUGIN_COMMAND_NAME_BACK = "back";
     String PLUGIN_COMMAND_NAME_PLAYERINFO = "playerinfo";
     String PLUGIN_COMMAND_NAME_BAGS = "bags";
     String PLUGIN_COMMAND_NAME_WORLD = "world";

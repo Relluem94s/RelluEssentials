@@ -8,7 +8,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_COOCKIE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_COOKIE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -35,7 +35,7 @@ public class Cookies implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_COOCKIE)) {
+        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_COOKIE)) {
             return false;
         }
 
@@ -79,7 +79,7 @@ public class Cookies implements CommandExecutor {
     }
 
     private boolean getCookies(Command command, ItemStack is, Player p) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_COOCKIE)) {
+        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_COOKIE)) {
             p.getWorld().dropItem(p.getLocation(), is);
             sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES, p.getCustomName()));
             return true;
