@@ -31,13 +31,13 @@ public class Sign implements CommandExecutor {
                     else if (args.length == 1) {
                         if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_SIGN_EDIT)){
                             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                            pe.setPlayerState(PlayerState.SIGNEDIT);
+                            pe.setPlayerState(PlayerState.SIGN_EDIT);
                             p.sendMessage(PLUGIN_COMMAND_SIGN_EDIT);
                         }
                         else 
                         if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_SIGN_COPY)){
                             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                            pe.setPlayerState(PlayerState.SIGNCOPY);
+                            pe.setPlayerState(PlayerState.SIGN_COPY);
                             p.sendMessage(PLUGIN_COMMAND_SIGN_COPY);
                         }
                     }

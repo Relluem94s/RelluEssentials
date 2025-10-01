@@ -24,19 +24,19 @@ public class SignEdit implements Listener {
                 Block b =  e.getClickedBlock();
                 if (SignHelper.isBlockASign(b)) {
                     Sign sign = (Sign) e.getClickedBlock().getState();
-                    if(pe.getPlayerState().equals(PlayerState.SIGNEDIT)){
+                    if(pe.getPlayerState().equals(PlayerState.SIGN_EDIT)){
                         e.getPlayer().openSign(sign);
                         pe.setPlayerState(PlayerState.DEFAULT);
 
                         e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_EDIT);
                     }
-                    else if(pe.getPlayerState().equals(PlayerState.SIGNCOPY)){
+                    else if(pe.getPlayerState().equals(PlayerState.SIGN_COPY)){
                         pe.setPlayerStateParameter(sign);
-                        pe.setPlayerState(PlayerState.SIGNPASTE);
+                        pe.setPlayerState(PlayerState.SIGN_PASTE);
                         e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_COPY);
                         e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_COPY_TO_PASTE_MESSAGE);
                     }
-                    else if(pe.getPlayerState().equals(PlayerState.SIGNPASTE)){
+                    else if(pe.getPlayerState().equals(PlayerState.SIGN_PASTE)){
                         if(pe.getPlayerStateParameter() instanceof Sign){
                             updateSign(sign, (Sign) pe.getPlayerStateParameter());
                             e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_PASTE);
