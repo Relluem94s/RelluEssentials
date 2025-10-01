@@ -8,13 +8,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_COOKIE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.Arrays;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.commands.CookieCommand;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,12 +31,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
 
 public class Cookies implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_COOKIE)) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
+        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(CookieCommand.class))) {
             return false;
         }
 
@@ -79,7 +81,7 @@ public class Cookies implements CommandExecutor {
     }
 
     private boolean getCookies(Command command, ItemStack is, Player p) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_COOKIE)) {
+        if (command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(CookieCommand.class))) {
             p.getWorld().dropItem(p.getLocation(), is);
             sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES, p.getCustomName()));
             return true;
@@ -90,6 +92,11 @@ public class Cookies implements CommandExecutor {
     private ItemStack getCookie(Player p) {
         ItemStack is = new ItemStack(Material.COOKIE, 1);
         ItemMeta im = is.getItemMeta();
+
+        if(im == null){
+            return is;
+        }
+
         im.setDisplayName(PLUGIN_COMMAND_COOKIES_DISPLAYNAME);
         im.setLore(Arrays.asList(String.format(PLUGIN_COMMAND_COOKIES_LORE_1, p.getCustomName()), PLUGIN_COMMAND_COOKIES_LORE_3));
         is.setItemMeta(im);

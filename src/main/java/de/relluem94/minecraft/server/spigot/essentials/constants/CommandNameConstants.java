@@ -10,7 +10,6 @@ public interface CommandNameConstants {
     //                            COMMAND   STUFF                                   //
     //==============================================================================//
     
-    String PLUGIN_COMMAND_NAME_COOKIE = "cookie";
     String PLUGIN_COMMAND_NAME_CRAFT = "craft";
     String PLUGIN_COMMAND_NAME_DAY = "day";
     String PLUGIN_COMMAND_NAME_ENDERCHEST = "enderchest";

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AdminCommand;
 import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AfkCommand;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
