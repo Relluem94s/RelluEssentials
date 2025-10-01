@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.IPlayerState;
+
 public enum PlayerState implements IPlayerState {
     PROTECTION_INFO,
     PROTECTION_ADD,
@@ -8,7 +10,7 @@ public enum PlayerState implements IPlayerState {
     PROTECTION_FLAG_REMOVE,
     PROTECTION_RIGHT_ADD,
     PROTECTION_RIGHT_REMOVE,
-    LIGHT_TOOGLE,
+    LIGHT_TOGGLE,
     SIGNCOPY,
     SIGNPASTE,
     SIGNEDIT,

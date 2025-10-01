@@ -98,12 +98,12 @@ public class Admin implements CommandExecutor {
             else if (args[0].equalsIgnoreCase("light")) {
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
-                if (pe.getPlayerState().equals(PlayerState.LIGHT_TOOGLE)) {
+                if (pe.getPlayerState().equals(PlayerState.LIGHT_TOGGLE)) {
                     pe.setPlayerState(PlayerState.DEFAULT);
                     p.sendMessage(Constants.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE_DISABLED);
                 } else {
                     p.sendMessage(Constants.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE);
-                    pe.setPlayerState(PlayerState.LIGHT_TOOGLE);
+                    pe.setPlayerState(PlayerState.LIGHT_TOGGLE);
                 }
                 return true;
             }
