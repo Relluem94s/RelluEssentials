@@ -4,11 +4,11 @@
     <groupId>de.relluem94</groupId>
     <artifactId>relluessentials</artifactId>
     <name>RelluEssentials</name>
-    <version>4.3.1</version>
+    <version>4.3.2</version>
     <url>https://github.com/Relluem94s/RelluEssentials</url>
     <properties>
         <lombok.version>1.18.32</lombok.version>
-        <spigot.version>1.21.8-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.21.9-R0.1-SNAPSHOT</spigot.version>
         <plugin.apiVersion>1.21</plugin.apiVersion>
         <plugin.author>Relluem94</plugin.author>
         <plugin.website>https://www.relluem94.de</plugin.website>
