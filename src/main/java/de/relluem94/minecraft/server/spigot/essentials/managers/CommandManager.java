@@ -4,7 +4,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_COMMANDS_REGISTERED;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_REGISTER_COMMANDS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BROADCAST;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_COOKIE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_CRAFT;
@@ -62,6 +61,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AdminCommand;
 import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AfkCommand;
 import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BackCommand;
+import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BagsCommand;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import org.bukkit.command.PluginCommandYamlParser;
 
@@ -116,7 +116,7 @@ public class CommandManager implements IEnable {
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_TEST_COMMAND)).setExecutor(new TestCommand());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_PROTECT)).setExecutor(new Protect());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_SIGN)).setExecutor(new Sign());
-        Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_BAGS)).setExecutor(new Bags());
+        Objects.requireNonNull(RelluEssentials.getInstance().getCommand((Objects.requireNonNull(AnnotationHelper.getCommandName(BagsCommand.class))))).setExecutor(new Bags());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_SUDO)).setExecutor(new Sudo());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_EXIT)).setExecutor(new Exit());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_TELEPORT)).setExecutor(new Teleport());

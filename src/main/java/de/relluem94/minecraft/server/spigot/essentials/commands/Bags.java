@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BagsCommand;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,18 +15,18 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_BAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 public class Bags implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_BAGS)) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
+        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(BagsCommand.class))) {
             return false;
         }
         
@@ -57,16 +59,15 @@ public class Bags implements CommandExecutor {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if(BagHelper.hasBag(pe.getId(), bte.getId())){
                 p.openInventory(Objects.requireNonNull(BagHelper.getBag(bte.getId(), pe)));
-                return true;
             }
             else{
                 p.sendMessage(String.format(PLUGIN_COMMAND_BAGS_NOT_FOUND, args[0]));
-                return true;
             }
+
         }
         else{
             p.sendMessage(String.format(PLUGIN_COMMAND_BAGS_NOT_FOUND, args[0]));
-            return true;
         }
+        return true;
     }
 }

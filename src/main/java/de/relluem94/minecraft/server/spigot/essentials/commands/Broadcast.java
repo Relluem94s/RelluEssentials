@@ -30,7 +30,7 @@ public class Broadcast implements CommandExecutor {
             return false;
         }
 
-        if (args.length <= 1) {
+        if (args.length < 1) {
             sendMessage(sender, PLUGIN_COMMAND_BROADCAST_INFO);
             return true;
         }

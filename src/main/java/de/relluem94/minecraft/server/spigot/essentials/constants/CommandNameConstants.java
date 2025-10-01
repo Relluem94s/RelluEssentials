@@ -60,7 +60,6 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER = "player";
     String PLUGIN_COMMAND_NAME_SPAWN = "spawn";
     String PLUGIN_COMMAND_NAME_PLAYERINFO = "playerinfo";
-    String PLUGIN_COMMAND_NAME_BAGS = "bags";
     String PLUGIN_COMMAND_NAME_WORLD = "world";
     String PLUGIN_COMMAND_NAME_WORLD_CREATE = "create";
     String PLUGIN_COMMAND_NAME_WORLD_LOAD = "load";
