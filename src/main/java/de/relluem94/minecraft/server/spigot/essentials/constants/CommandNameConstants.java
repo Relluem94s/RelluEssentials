@@ -34,7 +34,6 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_GAMEMODE_3 = "3";
     String PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME = "Spectator";
     String PLUGIN_COMMAND_NAME_GOD = "god";
-    String PLUGIN_COMMAND_NAME_ADMIN = "admin";
     String PLUGIN_COMMAND_NAME_SUDO = "sudo";
     String PLUGIN_COMMAND_NAME_EXIT = "exit";
     String PLUGIN_COMMAND_NAME_GAMERULES = "gamerules";
@@ -54,7 +53,6 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_POKE = "poke";
     String PLUGIN_COMMAND_NAME_PRINT = "print";
     String PLUGIN_COMMAND_NAME_RAIN = "rain";
-    String PLUGIN_COMMAND_NAME_ADMIN_PING = "ping";
     String PLUGIN_COMMAND_NAME_RENAME = "rename";
     String PLUGIN_COMMAND_NAME_REPAIR = "repair";
     String PLUGIN_COMMAND_NAME_ROLLBACK = "rollback";
