@@ -43,7 +43,7 @@ public class GameMode implements CommandExecutor {
             Player target = Bukkit.getPlayer(args[0]);
 
             if (target == null) {
-                sender.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
+                sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
                 return true;
             }
             return gameMode(command, target);
