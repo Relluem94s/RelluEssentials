@@ -80,7 +80,7 @@ public class Cookies implements CommandExecutor {
         return getCookies(command, getCookie(p), target);
     }
 
-    private boolean getCookies(Command command, ItemStack is, Player p) {
+    private boolean getCookies(@NotNull Command command, ItemStack is, Player p) {
         if (command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(CookieCommand.class))) {
             p.getWorld().dropItem(p.getLocation(), is);
             sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES, p.getCustomName()));
@@ -89,7 +89,7 @@ public class Cookies implements CommandExecutor {
         return false;
     }
 
-    private ItemStack getCookie(Player p) {
+    private @NotNull ItemStack getCookie(Player p) {
         ItemStack is = new ItemStack(Material.COOKIE, 1);
         ItemMeta im = is.getItemMeta();
 

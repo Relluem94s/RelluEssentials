@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
+import org.jetbrains.annotations.NotNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
@@ -20,7 +21,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 public class AFK implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(AfkCommand.class))) {
             return false;
         }
