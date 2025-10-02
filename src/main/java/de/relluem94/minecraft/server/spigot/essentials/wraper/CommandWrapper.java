@@ -17,7 +17,7 @@ public class CommandWrapper {
     }
 
     public boolean hasSubCommands(){
-        return construct.getCommands() == null;
+        return construct.getCommands().length == 0;
     }
 
     public CommandsEnum[] getSubCommands(){

@@ -46,12 +46,12 @@ public class Admin implements CommandConstruct {
 
     @Override
     public CommandsEnum[] getCommands() {
-        return Admin.Commands.values();
+        return Commands.values();
     }
-
 
     @Getter
     public enum Commands implements CommandsEnum {
+
         AFK("afk"),
         CLEAN_PROTECTIONS("cleanProtections"),
         CHAT("chat"),
@@ -59,7 +59,6 @@ public class Admin implements CommandConstruct {
         NPC("npc"),
         PING("ping"),
         TOP("top");
-
 
         private final String name;
         private final String[] subCommands;

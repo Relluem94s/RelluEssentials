@@ -29,14 +29,14 @@ public class Broadcast implements CommandConstruct {
 
     @Override
     public CommandsEnum[] getCommands() {
-        return Commands.values();
+        return Admin.Commands.values();
     }
 
     @Getter
     public enum Commands implements CommandsEnum {
+
         title("title"),
         CHAT("chat");
-
 
         private final String name;
         private final String[] subCommands;

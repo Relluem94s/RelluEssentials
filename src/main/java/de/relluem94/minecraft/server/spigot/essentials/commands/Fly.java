@@ -1,9 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,7 +18,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_FLY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-public class Fly implements CommandExecutor {
+public class Fly implements CommandConstruct {
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return new CommandsEnum[0];
+    }
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
@@ -52,11 +58,12 @@ public class Fly implements CommandExecutor {
         if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
             p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, target.getCustomName(), !target.getAllowFlight() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
             flyMode(target);
-            return true;
-        } else {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-            return true;
         }
+        else {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+
+        }
+        return true;
     }
 
     private void flyMode(Player p) {

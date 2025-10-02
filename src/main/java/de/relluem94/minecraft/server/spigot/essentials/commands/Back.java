@@ -27,7 +27,7 @@ public class Back implements CommandConstruct {
 
     @Override
     public CommandsEnum[] getCommands() {
-        return null;
+        return new CommandsEnum[0];
     }
 
     private static final Map<Player, Location> backPlayerLocation = new HashMap<>();

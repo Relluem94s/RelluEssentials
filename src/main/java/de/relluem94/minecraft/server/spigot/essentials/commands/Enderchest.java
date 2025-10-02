@@ -23,7 +23,7 @@ public class Enderchest implements CommandConstruct {
 
     @Override
     public CommandsEnum[] getCommands() {
-        return null;
+        return new CommandsEnum[0];
     }
 
     @Override
