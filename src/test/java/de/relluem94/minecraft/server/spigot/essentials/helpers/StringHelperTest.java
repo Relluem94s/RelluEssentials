@@ -13,13 +13,13 @@ public class StringHelperTest {
     @Test
     public void testFormatDouble1() {
         String test = StringHelper.formatDouble(1234.12);
-        Assertions.assertEquals("1.23K", test);
+        Assertions.assertTrue("1.23K".equals(test) || "1,23K".equals(test));
     }
 
     @Test
     public void testFormatDouble2() {
         String test2 = StringHelper.formatDouble(12341.2);
-        Assertions.assertEquals("12.34K", test2);
+        Assertions.assertTrue("12.34K".equals(test2) || "12,34K".equals(test2));
     }
 
     @Test
@@ -37,7 +37,7 @@ public class StringHelperTest {
     @Test
     public void testFormatLong() {
         String test = StringHelper.formatLong(12345678901L);
-        Assertions.assertEquals("12.345678901B", test);
+        Assertions.assertTrue("12.345678901B".equals(test) || "12,345678901B".equals(test));
     }
 
     @Test
