@@ -23,8 +23,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AdminCommand;
+import de.relluem94.minecraft.server.spigot.essentials.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.wraper.CommandWrapper;
 import lombok.Getter;
 import lombok.Setter;
@@ -121,7 +120,15 @@ public class RelluEssentials extends JavaPlugin {
     public final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
 
     public static final List<CommandWrapper> commandWrapperList = List.of(
-            new CommandWrapper(new AdminCommand(), new Admin())
+            new CommandWrapper(new Admin()),
+            new CommandWrapper(new AFK()),
+            new CommandWrapper(new Back()),
+            new CommandWrapper(new Bags()),
+            new CommandWrapper(new Broadcast()),
+            new CommandWrapper(new Cookies()),
+            new CommandWrapper(new CustomHead()),
+            new CommandWrapper(new Day()),
+            new CommandWrapper(new Enderchest())
     );
     
     public static synchronized RelluEssentials getInstance() {

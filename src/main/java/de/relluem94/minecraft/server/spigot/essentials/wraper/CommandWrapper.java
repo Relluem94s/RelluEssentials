@@ -4,21 +4,16 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import lombok.Getter;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.jetbrains.annotations.NotNull;
 
 public class CommandWrapper {
-    private CommandConstruct construct;
-    @Getter @NotNull
-    private final CommandExecutor executor;
+    private final CommandConstruct construct;
 
     private boolean initialised = false;
 
-    public CommandWrapper(@NotNull CommandConstruct construct, @NotNull CommandExecutor executor){
+    public CommandWrapper(@NotNull CommandConstruct construct){
         this.construct = construct;
-        this.executor = executor;
     }
 
     public boolean hasSubCommands(){
@@ -44,7 +39,7 @@ public class CommandWrapper {
             return;
         }
 
-        pluginCommand.setExecutor(getExecutor());
+        pluginCommand.setExecutor(construct);
         initialised = true;
     }
 }

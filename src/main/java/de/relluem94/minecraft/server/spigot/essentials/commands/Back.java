@@ -9,10 +9,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import java.util.HashMap;
 import java.util.Map;
 
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -20,7 +22,13 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 
-public class Back implements CommandExecutor {
+@CommandName("back")
+public class Back implements CommandConstruct {
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return null;
+    }
 
     private static final Map<Player, Location> backPlayerLocation = new HashMap<>();
 

@@ -6,11 +6,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper.getCustomSkull;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.CustomHeadsCommand;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,14 +21,16 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 
-public class CustomHead implements CommandExecutor {
+@CommandName("customheads")
+public class CustomHead implements CommandConstruct {
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return null;
+    }
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(CustomHeadsCommand.class))) {
-            return false;
-        }
-
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
@@ -42,7 +44,7 @@ public class CustomHead implements CommandExecutor {
         }
             
         org.bukkit.inventory.Inventory inv = InventoryHelper.createInventory(54, PLUGIN_COMMAND_CUSTOMHEADS_TITLE);
-        inv = InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
+        InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
 
         inv.setItem(10, getCustomSkull(CustomHeads.BOOK1));
         inv.setItem(11, getCustomSkull(CustomHeads.BOOKS1));

@@ -17,12 +17,15 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import java.util.HashMap;
 
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -36,10 +39,36 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AdminCommand;
 import org.jetbrains.annotations.NotNull;
 
-public class Admin implements CommandExecutor {
+@CommandName("admin")
+public class Admin implements CommandConstruct {
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return Admin.Commands.values();
+    }
+
+
+    @Getter
+    public enum Commands implements CommandsEnum {
+        AFK("afk"),
+        CLEAN_PROTECTIONS("cleanProtections"),
+        CHAT("chat"),
+        LIGHT("light"),
+        NPC("npc"),
+        PING("ping"),
+        TOP("top");
+
+
+        private final String name;
+        private final String[] subCommands;
+
+        Commands(String name, String... subCommands) {
+            this.name = name;
+            this.subCommands = subCommands;
+        }
+    }
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
@@ -59,7 +88,7 @@ public class Admin implements CommandExecutor {
             p.sendMessage(Constants.PLUGIN_COMMAND_ADMIN_INFO);
             return true;
         } else if (args.length == 1) {
-            if (AdminCommand.Commands.NPC.getName().equalsIgnoreCase(args[0])) {
+            if (Commands.NPC.getName().equalsIgnoreCase(args[0])) {
                 if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                     p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                     return true;
@@ -78,11 +107,11 @@ public class Admin implements CommandExecutor {
                 InventoryHelper.openInventory(sender, inv);
                 return true;
             } 
-            else if (AdminCommand.Commands.PING.getName().equalsIgnoreCase(args[0])) {
+            else if (Commands.PING.getName().equalsIgnoreCase(args[0])) {
                 p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_PING, p.getPing()));
                 return true;
             }
-            else if (AdminCommand.Commands.CHAT.getName().equalsIgnoreCase(args[0])) {
+            else if (Commands.CHAT.getName().equalsIgnoreCase(args[0])) {
                 for (Player bp : Bukkit.getOnlinePlayers()) {
                     for (int i = 0; i < 100; i++) {
                         bp.sendMessage("");
@@ -91,7 +120,7 @@ public class Admin implements CommandExecutor {
                 p.sendMessage(PLUGIN_COMMAND_ADMIN_CHAT_CLEARED);
                 return true;
             }
-            else if (AdminCommand.Commands.LIGHT.getName().equalsIgnoreCase(args[0])) {
+            else if (Commands.LIGHT.getName().equalsIgnoreCase(args[0])) {
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
                 if (pe.getPlayerState().equals(PlayerState.LIGHT_TOGGLE)) {
@@ -103,7 +132,7 @@ public class Admin implements CommandExecutor {
                 }
                 return true;
             }
-            else if (AdminCommand.Commands.CLEAN_PROTECTIONS.getName().equalsIgnoreCase(args[0])) {
+            else if (Commands.CLEAN_PROTECTIONS.getName().equalsIgnoreCase(args[0])) {
                 HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
 
                 p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
@@ -132,7 +161,7 @@ public class Admin implements CommandExecutor {
                 }
                 return true;
             }
-            else if (AdminCommand.Commands.AFK.getName().equalsIgnoreCase(args[0])) {
+            else if (Commands.AFK.getName().equalsIgnoreCase(args[0])) {
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
                 if (pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)) {
@@ -145,7 +174,7 @@ public class Admin implements CommandExecutor {
                 }
                 return true;
             }
-            else if (AdminCommand.Commands.TOP.getName().equalsIgnoreCase(args[0])) {
+            else if (Commands.TOP.getName().equalsIgnoreCase(args[0])) {
                 Location l = p.getWorld().getHighestBlockAt(p.getLocation()).getLocation().add(0, 1, 0);
                 p.sendMessage(PLUGIN_COMMAND_ADMIN_TOP);
                 p.teleport(l);
@@ -157,7 +186,7 @@ public class Admin implements CommandExecutor {
             }
         }
         else if (args.length == 2) {
-            if (AdminCommand.Commands.PING.getName().equalsIgnoreCase(args[0])) {
+            if (Commands.PING.getName().equalsIgnoreCase(args[0])) {
                 Player target = Bukkit.getPlayer(args[1]);
                 if (target == null) {
                     p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND, args[1]));

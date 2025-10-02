@@ -10,11 +10,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelp
 import static de.relluem94.rellulib.utils.StringUtils.implode;
 import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BroadcastCommand;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,7 +24,28 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 
-public class Broadcast implements CommandExecutor {
+@CommandName("broadcast")
+public class Broadcast implements CommandConstruct {
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return Commands.values();
+    }
+
+    @Getter
+    public enum Commands implements CommandsEnum {
+        title("title"),
+        CHAT("chat");
+
+
+        private final String name;
+        private final String[] subCommands;
+
+        Commands(String name, String... subCommands) {
+            this.name = name;
+            this.subCommands = subCommands;
+        }
+    }
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
@@ -36,7 +59,7 @@ public class Broadcast implements CommandExecutor {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase(BroadcastCommand.Commands.title.getName())) {
+        if (args[0].equalsIgnoreCase(Commands.title.getName())) {
             broadcast(args, 1, false);
             return true;
         }
