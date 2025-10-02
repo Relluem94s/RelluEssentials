@@ -11,7 +11,6 @@ import static de.relluem94.rellulib.utils.StringUtils.implode;
 import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BroadcastCommand;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -27,10 +26,6 @@ public class Broadcast implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(BroadcastCommand.class))) {
-            return false;
-        }
-
         if (args.length < 1) {
             sendMessage(sender, PLUGIN_COMMAND_BROADCAST_INFO);
             return true;

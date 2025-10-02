@@ -37,17 +37,12 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEn
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AdminCommand;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import org.jetbrains.annotations.NotNull;
 
 public class Admin implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(AdminCommand.class))) {
-            return false;
-        }
-
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;

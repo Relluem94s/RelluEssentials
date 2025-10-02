@@ -9,8 +9,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import java.util.HashMap;
 import java.util.Map;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BackCommand;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -37,10 +35,6 @@ public class Back implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(BackCommand.class))) {
-            return false;
-        }
-
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;

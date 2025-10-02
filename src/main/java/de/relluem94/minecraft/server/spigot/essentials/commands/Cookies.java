@@ -14,8 +14,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import java.util.Arrays;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.CookieCommand;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -37,10 +35,6 @@ public class Cookies implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(CookieCommand.class))) {
-            return false;
-        }
-
         if (isCMDBlock(sender) && args.length == 1 && args[0].equals("@p")) {
             BlockCommandSender bcs = (BlockCommandSender) sender;
             CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
@@ -50,7 +44,8 @@ public class Cookies implements CommandExecutor {
                 return true;
             }
 
-            return getCookies(command, getCookie(p), p);
+            getCookies(getCookie(p), p);
+            return true;
         }
 
         if(!isPlayer(sender)){
@@ -67,7 +62,8 @@ public class Cookies implements CommandExecutor {
         }
 
         if (args.length == 0) {
-            return getCookies(command, getCookie(p), p);
+            getCookies(getCookie(p), p);
+            return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
@@ -77,16 +73,13 @@ public class Cookies implements CommandExecutor {
         }
 
         sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES_PLAYER, target.getCustomName()));
-        return getCookies(command, getCookie(p), target);
+        getCookies(getCookie(p), target);
+        return true;
     }
 
-    private boolean getCookies(@NotNull Command command, ItemStack is, Player p) {
-        if (command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(CookieCommand.class))) {
-            p.getWorld().dropItem(p.getLocation(), is);
-            sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES, p.getCustomName()));
-            return true;
-        }
-        return false;
+    private void getCookies(ItemStack is, @NotNull Player p) {
+        p.getWorld().dropItem(p.getLocation(), is);
+        sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES, p.getCustomName()));
     }
 
     private @NotNull ItemStack getCookie(Player p) {

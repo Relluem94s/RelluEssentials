@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.commands.BagsCommand;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,10 +24,7 @@ public class Bags implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(AnnotationHelper.getCommandName(BagsCommand.class))) {
-            return false;
-        }
-        
+
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;

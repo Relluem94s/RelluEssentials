@@ -12,6 +12,7 @@ import java.util.Objects;
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.constants.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
+import de.relluem94.minecraft.server.spigot.essentials.wraper.CommandWrapper;
 import org.bukkit.command.PluginCommandYamlParser;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -19,8 +20,12 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 public class CommandManager implements IEnable {
 
     @Override
-    public void enable() {
+    public void enable() throws InstantiationException, IllegalAccessException {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_REGISTER_COMMANDS);
+
+        CommandWrapper adminWrapper = new CommandWrapper(new AdminCommand(), new Admin());
+        adminWrapper.init();
+
 
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_0)).setExecutor(new GameMode());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_1)).setExecutor(new GameMode());
@@ -46,7 +51,6 @@ public class CommandManager implements IEnable {
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_SUICIDE)).setExecutor(new Suicide());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_HEAL)).setExecutor(new Heal());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GOD)).setExecutor(new God());
-        Objects.requireNonNull(RelluEssentials.getInstance().getCommand(Objects.requireNonNull(AnnotationHelper.getCommandName(AdminCommand.class)))).setExecutor(new Admin());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GAMERULES)).setExecutor(new GameRules());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_HEAD)).setExecutor(new Head());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_VANISH)).setExecutor(new Vanish());
