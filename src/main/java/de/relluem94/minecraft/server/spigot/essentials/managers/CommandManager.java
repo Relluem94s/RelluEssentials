@@ -10,7 +10,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 import java.util.Objects;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
-import de.relluem94.minecraft.server.spigot.essentials.wraper.CommandWrapper;
+import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import org.bukkit.command.PluginCommandYamlParser;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -64,7 +64,6 @@ public class CommandManager implements IEnable {
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_PROTECT)).setExecutor(new Protect());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_SIGN)).setExecutor(new Sign());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_SUDO)).setExecutor(new Sudo());
-        Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_EXIT)).setExecutor(new Exit());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_TELEPORT)).setExecutor(new Teleport());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_WARP)).setExecutor(new Warp());
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_MARRY)).setExecutor(new Marry());

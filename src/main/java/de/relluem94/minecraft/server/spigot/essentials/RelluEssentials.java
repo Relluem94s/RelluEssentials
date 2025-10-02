@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
-import de.relluem94.minecraft.server.spigot.essentials.wraper.CommandWrapper;
+import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;

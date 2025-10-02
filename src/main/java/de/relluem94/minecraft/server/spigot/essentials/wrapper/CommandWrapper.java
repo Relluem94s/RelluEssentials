@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.wraper;
+package de.relluem94.minecraft.server.spigot.essentials.wrapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
@@ -17,7 +17,7 @@ public class CommandWrapper {
     }
 
     public boolean hasSubCommands(){
-        return construct.getCommands().length == 0;
+        return construct.getCommands().length != 0;
     }
 
     public CommandsEnum[] getSubCommands(){

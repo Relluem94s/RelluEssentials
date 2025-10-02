@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.CustomEnchantment;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
-import org.bukkit.inventory.EquipmentSlot;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantLevel;
@@ -17,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AttributeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
+import org.bukkit.inventory.EquipmentSlotGroup;
 
 public class CustomEnchants {
 
@@ -62,6 +60,7 @@ public class CustomEnchants {
         AttributeHelper.addAttribute()
     );
 
+    @SuppressWarnings("UnstableApiUsage")
     public static final EnchantmentHelper thunderstrike = new EnchantmentHelper(
         new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_DISPLAYNAME), 
         EnchantmentTarget.WEAPON, 
@@ -69,10 +68,9 @@ public class CustomEnchants {
         EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_LORE,
         Rarity.LEGENDARY,
         AttributeHelper.addAttribute(
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_UUID, 
             Attribute.ATTACK_DAMAGE,
-            Operation.ADD_NUMBER, 
-            EquipmentSlot.HAND, 
+            Operation.ADD_NUMBER,
+            EquipmentSlotGroup.HAND,
             EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE, 
             50
         )
