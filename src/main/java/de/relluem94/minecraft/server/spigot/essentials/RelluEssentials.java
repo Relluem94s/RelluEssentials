@@ -23,6 +23,9 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
+import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
+import de.relluem94.minecraft.server.spigot.essentials.constants.commands.AdminCommand;
+import de.relluem94.minecraft.server.spigot.essentials.wraper.CommandWrapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
@@ -117,6 +120,9 @@ public class RelluEssentials extends JavaPlugin {
     public static final boolean MONEY_LOST_ON_DEATH = true;
     public final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
 
+    public static final List<CommandWrapper> commandWrapperList = List.of(
+            new CommandWrapper(new AdminCommand(), new Admin())
+    );
     
     public static synchronized RelluEssentials getInstance() {
         

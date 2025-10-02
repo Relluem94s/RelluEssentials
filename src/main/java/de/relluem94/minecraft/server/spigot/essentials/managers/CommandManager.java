@@ -20,11 +20,10 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 public class CommandManager implements IEnable {
 
     @Override
-    public void enable() throws InstantiationException, IllegalAccessException {
+    public void enable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_REGISTER_COMMANDS);
 
-        CommandWrapper adminWrapper = new CommandWrapper(new AdminCommand(), new Admin());
-        adminWrapper.init();
+        RelluEssentials.commandWrapperList.forEach(CommandWrapper::init);
 
 
         Objects.requireNonNull(RelluEssentials.getInstance().getCommand(PLUGIN_COMMAND_NAME_GAMEMODE_0)).setExecutor(new GameMode());
