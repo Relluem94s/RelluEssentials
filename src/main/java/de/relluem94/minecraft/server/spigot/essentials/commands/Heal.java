@@ -39,7 +39,7 @@ public class Heal implements CommandConstruct {
     }
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
 
         if (isCMDBlock(sender) || isConsole(sender)) {
             if (args.length < 1) {
