@@ -1,9 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -11,19 +13,21 @@ import org.bukkit.inventory.Inventory;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.event.inventory.InventoryType;
+import org.jetbrains.annotations.NotNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_CRAFT;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-public class PortableCraftingBench implements CommandExecutor {
+@CommandName("craft")
+public class CraftingBench implements CommandConstruct {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_CRAFT)) {
-            return false;
-        }
+    public CommandsEnum[] getCommands() {
+        return new CommandsEnum[0];
+    }
+
+    @Override
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
 
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
