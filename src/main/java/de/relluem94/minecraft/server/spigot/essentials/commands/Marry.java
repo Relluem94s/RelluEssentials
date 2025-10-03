@@ -13,21 +13,18 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MARRY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MARRY_ACCEPT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_MARRY_DIVORCE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
-
+import lombok.Getter;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -38,9 +35,33 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartne
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import org.jetbrains.annotations.NotNull;
 
-public class Marry implements CommandExecutor {
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+
+@CommandName("marry")
+public class Marry implements CommandConstruct {
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return Admin.Commands.values();
+    }
+
+    @Getter
+    public enum Commands implements CommandsEnum {
+
+        ACCEPT("accept"),
+        DIVORCE("divorce");
+
+        private final String name;
+        private final String[] subCommands;
+
+        Commands(String name, String... subCommands) {
+            this.name = name;
+            this.subCommands = subCommands;
+        }
+    }
 
     private final HashMap<Player, Player> marryAcceptList = new HashMap<>();
 
@@ -149,9 +170,6 @@ public class Marry implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_MARRY)) {
-            return false;
-        }
 
         Player p = null;
         if (isPlayer(sender)) {
@@ -173,7 +191,7 @@ public class Marry implements CommandExecutor {
         }
         
         if (args.length == 1) {
-            if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_MARRY_ACCEPT)){
+            if(args[0].equalsIgnoreCase(Commands.ACCEPT.getName())){
                 if(hasMarryEntry(p)){
                     marry(p, marryAcceptList.get(p));
                     removeMarryEntry(p);
@@ -184,7 +202,7 @@ public class Marry implements CommandExecutor {
                 return true;
             }
 
-            if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_MARRY_DIVORCE)){
+            if(args[0].equalsIgnoreCase(Commands.DIVORCE.getName())){
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
                 if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p).getPartner() != null){
                     divorce(pe);

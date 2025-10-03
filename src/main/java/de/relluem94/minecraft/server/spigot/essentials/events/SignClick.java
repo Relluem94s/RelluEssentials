@@ -1,9 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SPAWN;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper.isSign;
 
+import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -93,7 +94,7 @@ public class SignClick implements Listener {
                         Location location = new Location(e.getPlayer().getWorld(), Integer.parseInt(locationString[0]), Integer.parseInt(locationString[1]), Integer.parseInt(locationString[2]));
                         e.getPlayer().teleport(location);
                     } else if (isSign(CustomSigns.home, sign.getSide(Side.FRONT).getLine(0), sign.getSide(Side.FRONT).getLine(1), sign.getSide(Side.FRONT).getLine(3))) {
-                        e.getPlayer().performCommand(PLUGIN_COMMAND_NAME_HOME + " " + sign.getSide(Side.FRONT).getLine(2));
+                        e.getPlayer().performCommand(AnnotationHelper.getCommandName(Home.class) + " " + sign.getSide(Side.FRONT).getLine(2));
                     }
                 }
             }

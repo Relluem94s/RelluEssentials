@@ -73,8 +73,5 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_SIGN = "sign";
     String PLUGIN_COMMAND_NAME_SIGN_EDIT = "edit";
     String PLUGIN_COMMAND_NAME_SIGN_COPY = "copy";
-    String PLUGIN_COMMAND_NAME_MARRY = "marry";
-    String PLUGIN_COMMAND_NAME_MARRY_ACCEPT = "accept";
-    String PLUGIN_COMMAND_NAME_MARRY_DIVORCE = "divorce";
     String PLUGIN_COMMAND_NAME_TEAM = "team";
 }

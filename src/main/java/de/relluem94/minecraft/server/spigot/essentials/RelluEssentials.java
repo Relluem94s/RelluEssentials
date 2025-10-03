@@ -141,7 +141,8 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Head()),
             new CommandWrapper(new Heal()),
             new CommandWrapper(new Home()),
-            new CommandWrapper(new Inventory())
+            new CommandWrapper(new Inventory()),
+            new CommandWrapper(new Marry())
     );
     
     public static synchronized RelluEssentials getInstance() {
