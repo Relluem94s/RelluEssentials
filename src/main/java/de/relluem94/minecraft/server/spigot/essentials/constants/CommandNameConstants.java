@@ -11,7 +11,6 @@ public interface CommandNameConstants {
     //==============================================================================//
     
     String PLUGIN_COMMAND_NAME_CRAFT = "craft";
-    String PLUGIN_COMMAND_NAME_FLY = "fly";
     String PLUGIN_COMMAND_NAME_PURSE = "purse";
     String PLUGIN_COMMAND_NAME_WARP = "warp";
     String PLUGIN_COMMAND_NAME_WARP_ADD = "add";

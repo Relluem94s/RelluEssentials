@@ -129,7 +129,8 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new CustomHead()),
             new CommandWrapper(new Day()),
             new CommandWrapper(new Enderchest()),
-            new CommandWrapper(new Exit())
+            new CommandWrapper(new Exit()),
+            new CommandWrapper(new Fly())
     );
     
     public static synchronized RelluEssentials getInstance() {
