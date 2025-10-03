@@ -20,6 +20,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_LIST;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_SET;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportBed;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportHome;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import lombok.NonNull;
@@ -44,18 +46,11 @@ public class Home implements CommandExecutor {
                     if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-                            if (p.getBedSpawnLocation() != null) {
-                                Back.addBackPoint(p);
-                                p.teleport(p.getBedSpawnLocation());
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME, p.getWorld().getName()));
-                            } else {
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO_BED, p.getWorld().getName()));
-                            }
-                            return true;
+                            teleportBed(p);
                         } else {
                             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                            return true;
                         }
+                        return true;
                     }
                     break;
                 case 1:
@@ -87,15 +82,11 @@ public class Home implements CommandExecutor {
                             le.setPlayerId(pe.getId());
 
                             if (homeExists(pe, le) || deathExists(pe, le)) {
-                                le = getLocationEntry(pe, le);
-                                Back.addBackPoint(p);
-                                p.teleport(le.getLocation());
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_TP, args[0]));
-                                return true;
+                                teleportHome(p, getLocationEntry(pe, le));
                             } else {
                                 p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[0]));
-                                return true;
                             }
+                            return true;
                         }
                     }
                     break;

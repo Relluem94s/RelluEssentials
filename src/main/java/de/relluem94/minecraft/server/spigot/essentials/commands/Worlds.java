@@ -23,6 +23,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_UNLOAD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -170,21 +171,6 @@ public class Worlds implements CommandExecutor {
         catch (WorldNotLoadedException ex) {
                 Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED, ex);
         }
-    }
-
-    private void teleportWorld(Player p, String name){
-        World w = Bukkit.getWorld(name);
-        if (w == null) {
-            p.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, name));
-            return;
-        }
-
-        Location spawn = w.getSpawnLocation();
-
-        Back.addBackPoint(p);
-        Location location = new Location(Bukkit.getWorld(name), spawn.getX(),spawn.getY(),spawn.getZ(), spawn.getYaw(), spawn.getPitch());
-        p.teleport(location);
-        p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
     }
 
     public static void openWorldMenu(Player p){

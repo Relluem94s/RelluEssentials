@@ -33,7 +33,6 @@ public class PlayerHeadHelper {
 
         PlayerProfile pp = Bukkit.createPlayerProfile(player.getId(), player.getName());
         sm.setOwnerProfile(pp);
-        sm.setOwner(name);
         sm.setDisplayName(player.getName());
         is.setItemMeta(sm);
         return is;

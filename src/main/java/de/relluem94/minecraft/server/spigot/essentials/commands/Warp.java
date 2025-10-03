@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WARP;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WARP_ERROR_NO_WARP_FOUND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WARP_ERROR_WORLD_UNLOADED;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WARP_LIST;
@@ -11,6 +10,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WARP;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WARP_ADD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WARP_REMOVE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWarp;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import lombok.NonNull;
@@ -124,8 +124,6 @@ public class Warp implements CommandExecutor {
             return;
         }
 
-        Back.addBackPoint(p);
-        p.teleport(le.getLocation());
-        p.sendMessage(PLUGIN_COMMAND_WARP);
+        teleportWarp(p, le.getLocation());
     }
 }

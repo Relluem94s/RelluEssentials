@@ -21,7 +21,10 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMapping
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.Villager;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -1733,7 +1736,7 @@ public class DatabaseHelper {
         return bel;
     }
 
-    public void updateBagEntry(BagEntry be) {
+    public void updateBagEntry(@NotNull BagEntry be) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateBag.sql"))) {
 
@@ -1771,7 +1774,8 @@ public class DatabaseHelper {
                         be.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
 
                         be.setName(rs.getString(DatabaseMappings.FIELD_NAME));
-                        be.setProfession(Villager.Profession.valueOf(rs.getString(DatabaseMappings.FIELD_PROFESSION)));
+                        Villager.Profession profession = Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(rs.getString(DatabaseMappings.FIELD_PROFESSION).toLowerCase()));
+                        be.setProfession(profession);
                         be.setType(NPC.Type.valueOf(rs.getString(DatabaseMappings.FIELD_TYPE)));
 
                         for (int i = 0; i <= 27; i++) {

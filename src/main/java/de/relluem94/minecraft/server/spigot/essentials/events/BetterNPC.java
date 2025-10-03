@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -45,9 +44,11 @@ import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 
 
 public class BetterNPC implements Listener {
@@ -61,6 +62,10 @@ public class BetterNPC implements Listener {
             }
             else if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) && (e.getItem() != null && RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().contains(e.getItem()))){
                 e.setCancelled(true);
+
+                if(e.getClickedBlock() == null){
+                    return;
+                }
 
                 Location location = e.getClickedBlock().getLocation().add(0, 1, 0);
                 location.setYaw(e.getPlayer().getLocation().getYaw());
@@ -130,7 +135,7 @@ public class BetterNPC implements Listener {
         else if(CustomItems.npc_gui_disabled.equalsExact(is)){
             p.playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1f, 1f);
         }
-        else if(is.getType().equals(Material.PLAYER_HEAD) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && ((SkullMeta) is.getItemMeta()).getOwnerProfile().getName().equals(CustomHeads.BAG.getName()) ){
+        else if(Material.PLAYER_HEAD.equals(is.getType()) && is.getItemMeta() instanceof SkullMeta && ((SkullMeta) is.getItemMeta()).getOwnerProfile() != null && CustomHeads.BAG.getName().equals(((SkullMeta) is.getItemMeta()).getOwnerProfile().getName())){
             BagTypeEntry bt = null;
 
             for(BagTypeEntry bte : RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList()){
@@ -373,8 +378,12 @@ public class BetterNPC implements Listener {
                 e.getView().getTitle().equals(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+"§dWorlds")
             ){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
+                    if(e.getCurrentItem().getItemMeta() == null){
+                        return;
+                    }
+
                     String worldName = e.getCurrentItem().getItemMeta().getDisplayName();
-                    p.teleport(Bukkit.getWorld(worldName).getSpawnLocation());
+                    teleportWorld(p, worldName);
                     e.setCancelled(true);
                 }
                 e.setCancelled(true);
@@ -383,7 +392,7 @@ public class BetterNPC implements Listener {
     }
 
     @EventHandler
-    public void onNPCDamage(EntityDamageByEntityEvent e){
+    public void onNPCDamage(@NotNull EntityDamageByEntityEvent e){
         if(!(e.getEntity() instanceof Villager)){
             return;
         }

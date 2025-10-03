@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_QUIT_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,6 +31,6 @@ public class BetterPlayerQuit implements Listener {
         PlayerHelper.savePlayer(p);
         
         Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
-        p.teleport(Objects.requireNonNull(Bukkit.getWorld(Constants.PLUGIN_WORLD_LOBBY)).getSpawnLocation());
+        teleportWorld(p, Constants.PLUGIN_WORLD_LOBBY, true);
     }
 }
