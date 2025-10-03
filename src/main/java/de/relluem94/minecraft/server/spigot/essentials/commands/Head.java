@@ -26,7 +26,7 @@ public class Head implements CommandConstruct {
     }
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
 
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
@@ -49,7 +49,7 @@ public class Head implements CommandConstruct {
         ItemStack is = createSkull(owner);
 
         p.getInventory().addItem(is);
-        //p.updateInventory();
+
         sendMessage(p, String.format(PLUGIN_COMMAND_HEAD, owner));
         return true;
     }
