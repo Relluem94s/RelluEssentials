@@ -33,12 +33,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
-    - name: Pull latest changes from badges branch
-      run: |
-        git fetch origin badges
-        git checkout -B badges origin/badges
-        git merge --strategy=ours origin/badges || true
-        
     - name: Generate JaCoCo Badge
       id: jacoco
       uses: cicirello/jacoco-badge-generator@v2.6.1
@@ -55,6 +49,12 @@ jobs:
     - name: Add badges
       run: git add .github/badges
 
+    - name: Pull latest changes from badges branch
+      run: |
+        git fetch origin badges
+        git checkout -B badges origin/badges
+        git merge --strategy=ours origin/badges || true
+        
     - name: Commit files
       run: |
         git config --global user.name 'github-actions'
