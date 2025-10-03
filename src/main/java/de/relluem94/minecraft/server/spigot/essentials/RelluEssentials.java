@@ -126,6 +126,7 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Bags()),
             new CommandWrapper(new Broadcast()),
             new CommandWrapper(new Cookies()),
+            new CommandWrapper(new CraftingBench()),
             new CommandWrapper(new CustomHead()),
             new CommandWrapper(new Day()),
             new CommandWrapper(new Enderchest()),
