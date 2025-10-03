@@ -6,16 +6,17 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HEAL;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,13 +25,16 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
 import java.util.Objects;
 
-public class Heal implements CommandExecutor {
+@CommandName("heal")
+public class Heal implements CommandConstruct {
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return new CommandsEnum[0];
+    }
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_HEAL)) {
-            return false;
-        }
 
         if (isCMDBlock(sender) || isConsole(sender)) {
             if (args.length < 1) {
