@@ -49,11 +49,9 @@ jobs:
     - name: Add badges
       run: git add .github/badges
 
-    - name: Pull latest changes from badges branch
+    - name: Kill badges branch
       run: |
-        git fetch origin badges
-        git checkout -B badges origin/badges
-        git merge --strategy=ours origin/badges || true
+        git branch -d origin/badges
         
     - name: Commit files
       run: |
