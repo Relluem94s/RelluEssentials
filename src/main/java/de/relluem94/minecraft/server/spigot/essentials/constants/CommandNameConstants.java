@@ -22,7 +22,6 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME = "Adventure";
     String PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME = "Spectator";
     String PLUGIN_COMMAND_NAME_SUDO = "sudo";
-    String PLUGIN_COMMAND_NAME_INVENTORY = "inv";
     String PLUGIN_COMMAND_NAME_MSG = "msg";
     String PLUGIN_COMMAND_NAME_REPLY = "r";
     String PLUGIN_COMMAND_NAME_MORE = "more";
