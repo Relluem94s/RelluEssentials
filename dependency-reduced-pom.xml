@@ -38,7 +38,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -65,7 +65,9 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
         <configuration>
-          <useModulePath>false</useModulePath>
+          <argLine>--illegal-access=permit</argLine>
+          <testFailureIgnore>false</testFailureIgnore>
+          <argLine>${surefireArgLine} -Xshare:off</argLine>
         </configuration>
       </plugin>
       <plugin>
@@ -98,7 +100,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
         <configuration>
           <encoding>UTF-8</encoding>
           <filters />

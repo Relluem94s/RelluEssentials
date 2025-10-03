@@ -208,4 +208,10 @@ How it is working? What's under the hood?
 ![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.svg)
 
 
-[![Java CI with Maven](https://github.com/Relluem94s/RelluEssentials/actions/workflows/maven.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/maven.yml) [![Dependency review](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml) [![Dependency review](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml)
+## Build & Code Coverage
+
+[![Java CI with Maven](https://github.com/Relluem94s/RelluEssentials/actions/workflows/maven.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/maven.yml)
+[![Dependency review](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml) 
+[![Dependency review](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/Relluem94s/RelluEssentials/actions/workflows/dependency-review.yml)
+![Coverage](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/refs/heads/badges/.github/badges/jacoco.svg)
+![Branches](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/refs/heads/badges/.github/badges/branches.svg)
