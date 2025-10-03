@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 
 import lombok.NonNull;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.block.CommandBlock;
@@ -178,8 +179,11 @@ public class Worlds implements CommandExecutor {
             return;
         }
 
+        Location spawn = w.getSpawnLocation();
+
         Back.addBackPoint(p);
-        p.teleport(w.getSpawnLocation());
+        Location location = new Location(Bukkit.getWorld(name), spawn.getX(),spawn.getY(),spawn.getZ(), spawn.getYaw(), spawn.getPitch());
+        p.teleport(location);
         p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
     }
 
@@ -193,6 +197,10 @@ public class Worlds implements CommandExecutor {
         for (int i = 0; i < Bukkit.getWorlds().size(); i++) {
             ItemStack is = PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE);
             ItemMeta im = is.getItemMeta();
+
+            if(im == null){
+                return;
+            }
 
             im.setDisplayName(Bukkit.getWorlds().get(i).getName());
 
