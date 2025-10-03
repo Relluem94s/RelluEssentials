@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -14,15 +15,16 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import org.jetbrains.annotations.NotNull;
 
 public class SignEdit implements Listener {
 
     @EventHandler
-    public void onChangeSignEditSign(PlayerInteractEvent e) {
+    public void onChangeSignEditSign(@NotNull PlayerInteractEvent e) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer().getUniqueId());
         if (!pe.getPlayerState().equals(PlayerState.DEFAULT) && e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && !e.getPlayer().isSneaking() && (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK)) {
                 Block b =  e.getClickedBlock();
-                if (SignHelper.isBlockASign(b)) {
+                if (b != null && SignHelper.isBlockASign(b)) {
                     Sign sign = (Sign) e.getClickedBlock().getState();
                     if(pe.getPlayerState().equals(PlayerState.SIGN_EDIT)){
                         e.getPlayer().openSign(sign);
@@ -43,12 +45,15 @@ public class SignEdit implements Listener {
                         }
                         pe.setPlayerState(PlayerState.DEFAULT);
                     }
+                    e.setCancelled(true);
+                    e.setUseInteractedBlock(Event.Result.DENY);
+                    e.setUseItemInHand(Event.Result.DENY);
                 }
             
         }
     }
 
-    private void updateSign(Sign sign, Sign copiedSign){
+    private void updateSign(@NotNull Sign sign, @NotNull Sign copiedSign){
         sign.getSide(Side.FRONT).setLine(0, copiedSign.getSide(Side.FRONT).getLine(0));
         sign.getSide(Side.FRONT).setLine(1, copiedSign.getSide(Side.FRONT).getLine(1));
         sign.getSide(Side.FRONT).setLine(2, copiedSign.getSide(Side.FRONT).getLine(2));

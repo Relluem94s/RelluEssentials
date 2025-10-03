@@ -7,13 +7,14 @@ import org.bukkit.event.block.SignChangeEvent;
 import de.relluem94.minecraft.server.spigot.essentials.CustomSigns;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper.isSign;
 
 public class SignActions implements Listener {
 
     @EventHandler
-    public void onChangeSignCreateActionSign(SignChangeEvent e) {
+    public void onChangeSignCreateActionSign(@NotNull SignChangeEvent e) {
         if (Permission.isAuthorized(e.getPlayer(), Groups.getGroup("mod").getId())) {
             if (e.getLine(1) != null) {
                 if (isSign(CustomSigns.spawn, e.getLine(1))) {
