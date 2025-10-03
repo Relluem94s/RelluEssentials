@@ -139,7 +139,8 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new GameRules()),
             new CommandWrapper(new God()),
             new CommandWrapper(new Head()),
-            new CommandWrapper(new Heal())
+            new CommandWrapper(new Heal()),
+            new CommandWrapper(new Home())
     );
     
     public static synchronized RelluEssentials getInstance() {

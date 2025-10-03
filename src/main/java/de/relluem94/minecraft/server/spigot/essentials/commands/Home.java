@@ -1,32 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_DEATH_DELETE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_DELETE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_EXISTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_LIST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_LIST_NAME;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_NONE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_NOT_FOUND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_NO_BED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_RESERVED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_SET;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_HOME_TP;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_DELETE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_LIST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_HOME_SET;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportBed;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportHome;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -35,130 +20,156 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntr
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class Home implements CommandExecutor {
+@CommandName("home")
+public class Home implements CommandConstruct {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME)) {
-            switch (args.length) {
-                case 0:
-                    if (isPlayer(sender)) {
-                        Player p = (Player) sender;
-                        if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-                            teleportBed(p);
-                        } else {
-                            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+    public CommandsEnum[] getCommands() {
+        return Commands.values();
+    }
+
+    @Getter
+    public enum Commands implements CommandsEnum {
+
+        SET("set"),
+        DELETE("delete"),
+        LIST("list");
+
+        private final String name;
+        private final String[] subCommands;
+
+        Commands(String name, String... subCommands) {
+            this.name = name;
+            this.subCommands = subCommands;
+        }
+    }
+
+    @Override
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String @NotNull [] args) {
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+
+        if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
+
+
+        switch (args.length) {
+            case 0:
+                teleportBed(p);
+                return true;
+            case 1:
+
+
+                if (args[0].equalsIgnoreCase(Commands.LIST.getName())) {
+                    if (!pe.getHomes().isEmpty()) {
+                        p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
+                        pe.getHomes().forEach(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
+                    } else {
+                        p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
+                    }
+
+                    if(!pe.getDeaths().isEmpty()){
+                        p.sendMessage(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS);
+                        pe.getDeaths().forEach(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
+                    }
+                } else {
+                    LocationEntry le = new LocationEntry();
+                    le.setLocationName(args[0]);
+                    le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
+                    le.setPlayerId(pe.getId());
+
+                    if (homeExists(pe, le) || deathExists(pe, le)) {
+                        teleportHome(p, getLocationEntry(pe, le));
+                    } else {
+                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[0]));
+                    }
+                }
+                return true;
+            case 2:
+                LocationEntry le = new LocationEntry();
+                le.setLocation(p.getLocation());
+                le.setLocationName(args[1]);
+                le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
+                le.setPlayerId(pe.getId());
+
+                if (args[0].equalsIgnoreCase(Commands.SET.getName())) {
+                    if (homeExists(pe, le)) {
+                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
+                    } else if (!args[1].startsWith("death_")) {
+                        RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
+                        pe.getHomes().add(le);
+                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
+                    } else {
+                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_RESERVED, args[1]));
+                    }
+                    return true;
+                } else if (args[0].equalsIgnoreCase(Commands.DELETE.getName())) {
+                    if (homeExists(pe, le)) {
+                        le = getLocationEntry(pe, le);
+
+                        pe.getHomes().remove(le);
+                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DELETE, args[1]));
+
+                        if(le == null){
+                            return true;
                         }
+
+                        RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
                         return true;
                     }
-                    break;
-                case 1:
-                    if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_LIST)) {
-                        if (isPlayer(sender)) {
-                            Player p = (Player) sender;
-                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
+                    else if(deathExists(pe, le)){
+                        le = getLocationEntry(pe, le);
+                        pe.getDeaths().remove(le);
+                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, args[1]));
 
-                            if (!pe.getHomes().isEmpty()) {
-                                p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
-                                pe.getHomes().forEach(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
-                            } else {
-                                p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
-                            }
-
-                            if(!pe.getDeaths().isEmpty()){
-                                p.sendMessage(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS);
-                                pe.getDeaths().forEach(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
-                            }
+                        if(le == null){
                             return true;
                         }
-                    } else {
-                        if (isPlayer(sender)) {
-                            Player p = (Player) sender;
-                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-                            LocationEntry le = new LocationEntry();
-                            le.setLocationName(args[0]);
-                            le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
-                            le.setPlayerId(pe.getId());
 
-                            if (homeExists(pe, le) || deathExists(pe, le)) {
-                                teleportHome(p, getLocationEntry(pe, le));
-                            } else {
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[0]));
-                            }
-                            return true;
-                        }
+                        RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
+                        return true;
                     }
-                    break;
-                case 2:
-                    if (isPlayer(sender)) {
-                        Player p = (Player) sender;
-                        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-
-                        LocationEntry le = new LocationEntry();
-                        le.setLocation(p.getLocation());
-                        le.setLocationName(args[1]);
-                        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
-                        le.setPlayerId(pe.getId());
-
-                        if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_SET)) {
-                            if (homeExists(pe, le)) {
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
-                            } else if (!args[1].startsWith("death_")) {
-                                RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
-                                pe.getHomes().add(le);
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
-                            } else {
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_RESERVED, args[1]));
-                            }
-                            return true;
-                        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_HOME_DELETE)) {
-                            if (homeExists(pe, le)) {
-                                le = getLocationEntry(pe, le);
-                                RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
-                                pe.getHomes().remove(le);
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DELETE, args[1]));
-                                return true;
-                            }
-                            else if(deathExists(pe, le)){
-                                le = getLocationEntry(pe, le);
-                                RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
-                                pe.getDeaths().remove(le);
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, args[1]));
-                                return true;
-                            }
-                            else if(le.getLocationName().startsWith("death_") && le.getLocationName().contains("*")){
-                                for(LocationEntry dle : pe.getDeaths()){
-                                    p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, dle.getLocationName()));
-                                    RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(dle);
-                                }
-
-                                pe.getDeaths().clear();
-                                return true;
-                            }
-                            else {
-                                p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[1]));
-                                return true;
-                            }
+                    else if(le.getLocationName().startsWith("death_") && le.getLocationName().contains("*")){
+                        for(LocationEntry dle : pe.getDeaths()){
+                            p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, dle.getLocationName()));
+                            RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(dle);
                         }
+
+                        pe.getDeaths().clear();
+                        return true;
                     }
-                    break;
-                default:
-                    break;
-            }
+                    else {
+                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[1]));
+                        return true;
+                    }
+                }
+                break;
+            default:
+                break;
         }
         return false;
     }
 
-    private boolean homeExists(PlayerEntry pe, LocationEntry le) {
+    private boolean homeExists(@NotNull PlayerEntry pe, LocationEntry le) {
         return pe.getHomes().stream().anyMatch(fle -> (fle.getLocationName().equals(le.getLocationName())));
     }
 
-    private boolean deathExists(PlayerEntry pe, LocationEntry le) {
+    private boolean deathExists(@NotNull PlayerEntry pe, LocationEntry le) {
         return pe.getDeaths().stream().anyMatch(fle -> (fle.getLocationName().equals(le.getLocationName())));
     }
 
-    private LocationEntry getLocationEntry(PlayerEntry pe, LocationEntry le) {
+    private @Nullable LocationEntry getLocationEntry(@NotNull PlayerEntry pe, LocationEntry le) {
         for (LocationEntry fle : pe.getHomes()) {
             if (fle.getLocationName().equals(le.getLocationName())) {
                 return fle;
