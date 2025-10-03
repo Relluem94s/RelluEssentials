@@ -42,7 +42,7 @@ public class Inventory implements CommandExecutor {
         if (args.length == 0) {
             p.openInventory(p.getInventory());
                 p.sendMessage(PLUGIN_COMMAND_INVENTORY);
-                return true; // TODO BUGS Clicked Items will be placed anywhere and overwrite other items..  
+                return true;
         }
         
         Player target = Bukkit.getPlayer(args[0]).getPlayer();
