@@ -1,0 +1,62 @@
+package de.relluem94.minecraft.server.spigot.essentials.commands;
+
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import lombok.NonNull;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
+@CommandName("2")
+public class GameModeAdventure implements CommandConstruct {
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return new CommandsEnum[0];
+    }
+
+    private static final String LANG_KEY = "PLUGIN_COMMAND_GAMEMODE";
+
+    @Override
+    public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
+        if (!Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
+            sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
+        }
+
+        if (args.length == 1) {
+            Player target = Bukkit.getPlayer(args[0]);
+
+            if (target == null) {
+                sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+                return true;
+            }
+            return gameMode(target);
+        }
+
+        if (!isPlayer(sender)) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+
+        return gameMode(p);
+    }
+
+    private boolean gameMode(Player p) {
+        p.setGameMode(GameMode.ADVENTURE);
+        p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME + PLUGIN_COLOR_COMMAND));
+        return true;
+    }
+}

@@ -18,13 +18,9 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_TELEPORT = "teleport";
     String PLUGIN_COMMAND_NAME_TELEPORT_TO = "to";
     String PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT = "accept";
-    String PLUGIN_COMMAND_NAME_GAMEMODE_0 = "0";
     String PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME = "Survival";
-    String PLUGIN_COMMAND_NAME_GAMEMODE_1 = "1";
     String PLUGIN_COMMAND_NAME_GAMEMODE_1_NAME = "Creative";
-    String PLUGIN_COMMAND_NAME_GAMEMODE_2 = "2";
     String PLUGIN_COMMAND_NAME_GAMEMODE_2_NAME = "Adventure";
-    String PLUGIN_COMMAND_NAME_GAMEMODE_3 = "3";
     String PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME = "Spectator";
     String PLUGIN_COMMAND_NAME_GOD = "god";
     String PLUGIN_COMMAND_NAME_SUDO = "sudo";
