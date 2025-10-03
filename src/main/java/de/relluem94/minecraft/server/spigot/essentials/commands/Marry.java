@@ -38,6 +38,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartne
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
 
 public class Marry implements CommandExecutor {
 
@@ -114,10 +115,10 @@ public class Marry implements CommandExecutor {
         Player firstPlayer = Bukkit.getPlayer(UUID.fromString(pe.getUuid()));
         OfflinePlayer secondOfflinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUuid()));
 
-        if(firstPlayer != null && secondOfflinePlayer != null){
-            if(secondOfflinePlayer.isOnline()){
-                Player secondPlayer = Bukkit.getPlayer(secondOfflinePlayer.getName());
-                firstPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, secondPlayer.getCustomName()));
+        if(firstPlayer != null && secondOfflinePlayer.getName() != null){
+            Player secondPlayer = Bukkit.getPlayer(secondOfflinePlayer.getName());
+            if(secondOfflinePlayer.isOnline() && secondPlayer != null){
+                firstPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, secondPlayer.getDisplayName()));
                 secondPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, firstPlayer.getCustomName()));
             }
             else{
@@ -147,7 +148,7 @@ public class Marry implements CommandExecutor {
 
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_MARRY)) {
             return false;
         }
