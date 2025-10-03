@@ -15,10 +15,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
+
+import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import lombok.Getter;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +38,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import org.jetbrains.annotations.Nullable;
 
 @CommandName("marry")
 public class Marry implements CommandConstruct {
@@ -231,5 +231,27 @@ public class Marry implements CommandConstruct {
 
         p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
         return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        List<String> tabList = new ArrayList<>();
+
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("user").getId())) {
+            return tabList;
+        }
+
+        if (!isPlayer(commandSender)) {
+            return tabList;
+        }
+
+        if(strings.length > 1){
+            return tabList;
+        }
+
+        tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+        tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+
+        return tabList;
     }
 }

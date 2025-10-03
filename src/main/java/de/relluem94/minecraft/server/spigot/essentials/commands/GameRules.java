@@ -13,6 +13,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -27,7 +28,10 @@ import org.bukkit.entity.Player;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @CommandName("gamerules")
@@ -47,14 +51,8 @@ public class GameRules implements CommandConstruct {
                 return true;   
             }
 
-
-            World world = Bukkit.getWorld(args[0]);
-            if (world == null) {
-                sender.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, args[0]));
-                return true;
-            }
-
-            showGameRule(sender, world);
+            showGameRulesForWorld(sender, args[0]);
+            
             return true;
         }
 
@@ -71,12 +69,17 @@ public class GameRules implements CommandConstruct {
             return true;   
         }
 
-        if (args.length > 0) {
+        if(args.length == 0){
+            showGameRule(sender, p.getWorld());
+            return true;
+        }
+
+        if (args.length > 1) {
             p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
             return true;   
         }
 
-        showGameRule(sender, p.getWorld());
+        showGameRulesForWorld(sender, args[0]);
         return true;
     }
 
@@ -94,5 +97,28 @@ public class GameRules implements CommandConstruct {
 
             sendMessage(sender, "        §d" + gameRule + "§f = " + color + value);
         }
+    }
+
+    private void showGameRulesForWorld(CommandSender sender, String name){
+        World world = Bukkit.getWorld(name);
+        if (world == null) {
+            sender.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, name));
+            return;
+        }
+
+        showGameRule(sender, world);
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) {
+            return new ArrayList<>();
+        }
+
+        if(strings.length > 1){
+            return new ArrayList<>();
+        }
+
+        return TabCompleterHelper.getWorlds();
     }
 }

@@ -25,7 +25,7 @@ public class TeleportHelper {
 
         Location spawn = w.getSpawnLocation();
 
-        addBackPointAndTeleport(p, name, silent, spawn);
+        addBackPointAndTeleport(PLUGIN_COMMAND_SPAWN, p, Bukkit.getWorld(name), silent, spawn);
     }
 
     public static void teleportBed(Player p){
@@ -44,26 +44,24 @@ public class TeleportHelper {
             return;
         }
 
-        addBackPointAndTeleport(p, w, silent, spawn);
+        addBackPointAndTeleport(PLUGIN_COMMAND_HOME, p, w, silent, spawn);
     }
 
-    public static void teleportHome(Player p, LocationEntry locationEntry){
-        teleportHome(p,locationEntry, false);
-    }
 
-    public static void teleportHome(@NotNull Player p, LocationEntry locationEntry, boolean silent){
+    public static void teleportHome(@NotNull Player p, LocationEntry locationEntry){
         if (p.getRespawnLocation() == null) {
             p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO_BED, p.getWorld().getName()));
         }
 
         Location home = locationEntry.getLocation();
 
-        World w = getWorld(p, silent, home, "world_of_home_from_" + p.getName().toLowerCase());
+        World w = getWorld(p, false, home, "world_of_home_from_" + p.getName().toLowerCase());
         if (w == null){
             return;
         }
 
-        addBackPointAndTeleport(p, w, silent, home);
+        addBackPointAndTeleport("", p, w, true, home);
+        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_TP, locationEntry.getLocationName()));
     }
 
     public static void teleportBack(Player p, @NotNull Location location){
@@ -72,7 +70,7 @@ public class TeleportHelper {
             return;
         }
 
-        addBackPointAndTeleport(p, w, true, location, false);
+        addBackPointAndTeleport("", p, w, true, location, false);
         p.sendMessage(PLUGIN_COMMAND_BACK);
     }
 
@@ -82,7 +80,7 @@ public class TeleportHelper {
             return;
         }
 
-        addBackPointAndTeleport(p, w, true, location, true);
+        addBackPointAndTeleport("", p, w, true, location, true);
         p.sendMessage(PLUGIN_COMMAND_WARP);
     }
 
@@ -112,15 +110,11 @@ public class TeleportHelper {
         return w;
     }
 
-    private static void addBackPointAndTeleport(Player p, String name, boolean silent, Location location) {
-        addBackPointAndTeleport(p, Bukkit.getWorld(name), silent, location);
+    private static void addBackPointAndTeleport(String message, Player p, World world, boolean silent, @NotNull Location location) {
+        addBackPointAndTeleport(message, p, world, silent, location, true);
     }
 
-    private static void addBackPointAndTeleport(Player p, World world, boolean silent, @NotNull Location location) {
-        addBackPointAndTeleport(p, world, silent, location, true);
-    }
-
-    private static void addBackPointAndTeleport(Player p, World world, boolean silent, @NotNull Location location, boolean saveBackPoint){
+    private static void addBackPointAndTeleport(String message, Player p, World world, boolean silent, @NotNull Location location, boolean saveBackPoint){
         if(saveBackPoint){
             Back.addBackPoint(p);
         }
@@ -128,7 +122,7 @@ public class TeleportHelper {
         Location locationWorld = new Location(world, location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         p.teleport(locationWorld);
         if(!silent){
-            p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
+            p.sendMessage(String.format(message, p.getWorld().getName()));
         }
     }
 }

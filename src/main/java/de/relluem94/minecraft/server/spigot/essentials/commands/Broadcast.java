@@ -7,9 +7,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_BROADCAST;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import static de.relluem94.rellulib.utils.StringUtils.implode;
 import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -23,9 +25,30 @@ import org.bukkit.entity.Player;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @CommandName("broadcast")
 public class Broadcast implements CommandConstruct {
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        List<String> tabList = new ArrayList<>();
+
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) {
+            return tabList;
+        }
+
+        if(strings.length > 1){
+            return tabList;
+        }
+
+        tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+
+        return tabList;
+    }
 
     @Override
     public CommandsEnum[] getCommands() {
@@ -35,7 +58,7 @@ public class Broadcast implements CommandConstruct {
     @Getter
     public enum Commands implements CommandsEnum {
 
-        title("title"),
+        TITLE("title"),
         CHAT("chat");
 
         private final String name;
@@ -48,7 +71,7 @@ public class Broadcast implements CommandConstruct {
     }
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String @NotNull [] args) {
         if (args.length < 1) {
             sendMessage(sender, PLUGIN_COMMAND_BROADCAST_INFO);
             return true;
@@ -59,8 +82,12 @@ public class Broadcast implements CommandConstruct {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase(Commands.title.getName())) {
+        if (args[0].equalsIgnoreCase(Commands.TITLE.getName())) {
             broadcast(args, 1, false);
+            return true;
+        }
+        else if(args[0].equalsIgnoreCase(Commands.CHAT.getName())) {
+            broadcast(args, 1, true);
             return true;
         }
 

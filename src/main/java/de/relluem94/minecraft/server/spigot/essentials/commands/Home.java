@@ -6,6 +6,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHe
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportHome;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -23,6 +24,9 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @CommandName("home")
 public class Home implements CommandConstruct {
 
@@ -36,7 +40,8 @@ public class Home implements CommandConstruct {
 
         SET("set"),
         DELETE("delete"),
-        LIST("list");
+        LIST("list"),
+        TP("tp");
 
         private final String name;
         private final String[] subCommands;
@@ -63,14 +68,11 @@ public class Home implements CommandConstruct {
 
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
 
-
         switch (args.length) {
             case 0:
                 teleportBed(p);
                 return true;
             case 1:
-
-
                 if (args[0].equalsIgnoreCase(Commands.LIST.getName())) {
                     if (!pe.getHomes().isEmpty()) {
                         p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
@@ -84,16 +86,7 @@ public class Home implements CommandConstruct {
                         pe.getDeaths().forEach(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
                     }
                 } else {
-                    LocationEntry le = new LocationEntry();
-                    le.setLocationName(args[0]);
-                    le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
-                    le.setPlayerId(pe.getId());
-
-                    if (homeExists(pe, le) || deathExists(pe, le)) {
-                        teleportHome(p, getLocationEntry(pe, le));
-                    } else {
-                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[0]));
-                    }
+                    p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 }
                 return true;
             case 2:
@@ -154,6 +147,18 @@ public class Home implements CommandConstruct {
                         return true;
                     }
                 }
+                else if(args[0].equalsIgnoreCase(Commands.TP.getName())){
+                    le.setLocationName(args[1]);
+                    le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
+                    le.setPlayerId(pe.getId());
+
+                    if (homeExists(pe, le) || deathExists(pe, le)) {
+                        teleportHome(p, getLocationEntry(pe, le));
+                    } else {
+                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[1]));
+                    }
+                    return true;
+                }
                 break;
             default:
                 break;
@@ -182,5 +187,33 @@ public class Home implements CommandConstruct {
             }
         }
         return null;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        List<String> tabList = new ArrayList<>();
+
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("user").getId())) {
+            return tabList;
+        }
+
+        if (!isPlayer(commandSender)) {
+            return tabList;
+        }
+
+        if(strings.length == 1){
+            tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+            return tabList;
+        }
+
+        if(strings.length == 2){
+            if(Commands.SET.getName().equalsIgnoreCase(strings[0])){
+                return tabList;
+            }
+            tabList.addAll(TabCompleterHelper.getHomes((Player) commandSender));
+            return tabList;
+        }
+
+        return tabList;
     }
 }

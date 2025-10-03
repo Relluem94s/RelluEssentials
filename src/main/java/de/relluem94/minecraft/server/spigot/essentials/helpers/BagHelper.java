@@ -39,8 +39,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-
-
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class BagHelper {
@@ -51,7 +52,7 @@ public class BagHelper {
 
     public static final int BAG_SIZE = 28;
 
-    public static Inventory getBag(int type, PlayerEntry pe) {
+    public static @Nullable Inventory getBag(int type, @NotNull PlayerEntry pe) {
         BagEntry be = getBag(pe.getId(), type);
 
         if(be == null){
@@ -59,7 +60,7 @@ public class BagHelper {
         }
 
         Inventory inv = InventoryHelper.createInventory(54, PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ be.getBagType().getDisplayName());
-        inv = InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
+        InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
 
         inv.setItem(10, getItemStack(be, 0));
         inv.setItem(11, getItemStack(be, 1));
@@ -129,7 +130,8 @@ public class BagHelper {
         return inv;
     }
 
-    public static ItemHelper getItem(BagTypeEntry bte, boolean npc){
+    @Contract("_, _ -> new")
+    public static @NotNull ItemHelper getItem(BagTypeEntry bte, boolean npc){
         String[] lore;
         if(npc){
             lore = new String[]{PLUGIN_BAG_CLICK_TO_BUY, String.format(PLUGIN_BAG_COST_TO_BUY,  bte.getCost())};
@@ -140,7 +142,7 @@ public class BagHelper {
         return new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG), bte.getDisplayName(), Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore));
     }
 
-    public static ItemStack[] getItemStacks(BagTypeEntry bte){
+    public static ItemStack @NotNull [] getItemStacks(BagTypeEntry bte){
         ItemStack[] isa = new ItemStack[BAG_SIZE];
         for(int i = 0; i < BAG_SIZE; i++){
             isa[i] = getItemStack(bte, i);
@@ -149,41 +151,46 @@ public class BagHelper {
     }
 
 
-    private static ItemStack getItemStack(BagTypeEntry bte, int slot){
+    private static ItemStack getItemStack(@NotNull BagTypeEntry bte, int slot){
         String name = bte.getSlotName(slot);
-        Material mat = Material.AIR;
 
         if(name == null){
             return CustomItems.npc_gui_disabled.getCustomItem();
         }
 
-        if(Material.matchMaterial(name) != null){
-            mat = Material.matchMaterial(name);
+        Material mat = Material.matchMaterial(name);
+
+        if(mat == null){
+            mat = Material.AIR;
         }
 
         return new ItemStack(mat, 1);
     }
 
-    private static ItemStack getItemStack(BagEntry be, int slot){
+    private static ItemStack getItemStack(@NotNull BagEntry be, int slot){
         String name = be.getBagType().getSlotName(slot);
         int value =  be.getSlotValue(slot);
-
-        Material mat = Material.AIR;
 
         if(name == null){
             return CustomItems.npc_gui_disabled.getCustomItem();
         }
 
-        if(Material.matchMaterial(name) != null){
-            mat = Material.matchMaterial(name);
+        Material mat = Material.matchMaterial(name);
+
+        if(mat == null){
+            mat = Material.AIR;
         }
 
-        if(mat.equals(Material.AIR)){
+        if(Material.AIR.equals(mat)){
             return CustomItems.npc_gui_disabled.getCustomItem();
         }
 
         ItemStack is = new ItemStack(mat, 1);
         ItemMeta im = is.getItemMeta();
+
+        if(im == null){
+            return is;
+        }
 
         List<String> lore = new ArrayList<>();
         lore.add(String.format(PLUGIN_BAG_AMOUNT, value));
@@ -196,7 +203,7 @@ public class BagHelper {
     }
 
 
-    public static int getSlotByItemStack(BagEntry be, ItemStack is){
+    public static int getSlotByItemStack(@NotNull BagEntry be, ItemStack is){
         List<ItemStack> isa = Arrays.asList(getItemStacks(be.getBagType()));
         ItemStack checkWithoutAmount = ItemHelper.getCleanItemStack(is);
         int slot = -1;
@@ -212,7 +219,7 @@ public class BagHelper {
         return slot;
     }
 
-    public static boolean hasBag(int type, PlayerEntry pe){
+    public static boolean hasBag(int type, @NotNull PlayerEntry pe){
         return RelluEssentials.getInstance().getDatabaseHelper().getBag(type, pe.getId()) != null;
     }
 
@@ -234,7 +241,7 @@ public class BagHelper {
     }
 
 
-    public static BagEntry getBag(int playerFK, int bagType){
+    public static @Nullable BagEntry getBag(int playerFK, int bagType){
         if(RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().containsKey(playerFK)){
             Collection<BagEntry> cbe = RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().get(playerFK);
             for(BagEntry be : cbe){
@@ -246,9 +253,9 @@ public class BagHelper {
         return null;
     }
 
-    public static BagTypeEntry getBagTypeByName(String name){
+    public static @Nullable BagTypeEntry getBagTypeByName(String name){
         for(BagTypeEntry bte : RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList()){
-            if(name.contains(bte.getDisplayName()) || bte.getDisplayName().contains(name)){
+            if(name.contains(bte.getDisplayName()) || name.contains(bte.getName().toLowerCase()) || bte.getDisplayName().contains(name) || bte.getName().toLowerCase().contains(name)){
                 return bte;
             }
         }
@@ -265,7 +272,7 @@ public class BagHelper {
         return cbe;
     }
 
-    public static BagTypeEntry getBagTypeById(int id) {
+    public static @Nullable BagTypeEntry getBagTypeById(int id) {
         for(BagTypeEntry bte : RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList()){
             if(bte.getId() == id){
                 return bte;
@@ -275,7 +282,7 @@ public class BagHelper {
     }
 
 
-    public static List<Item> collectItems(List<Item> li, Player p, PlayerEntry pe){
+    public static @NotNull List<Item> collectItems(@NotNull List<Item> li, Player p, PlayerEntry pe){
         ListIterator<Item> lii = li.listIterator();
         List<Item> lio = new ArrayList<>();
         while(lii.hasNext()){
@@ -303,7 +310,7 @@ public class BagHelper {
         return lio;
     }
 
-    public static List<ItemStack> collectItemStacks(List<ItemStack> li, Player p, PlayerEntry pe){
+    public static @NotNull List<ItemStack> collectItemStacks(@NotNull List<ItemStack> li, Player p, PlayerEntry pe){
         ListIterator<ItemStack> lii = li.listIterator();
         List<ItemStack> lio = new ArrayList<>();
         while(lii.hasNext()){
@@ -327,7 +334,7 @@ public class BagHelper {
         return lio;
     }
 
-    public static boolean collectItem(Item item, Player p, PlayerEntry pe) {
+    public static boolean collectItem(@NotNull Item item, Player p, PlayerEntry pe) {
         ItemStack checkWithoutAmount = item.getItemStack().clone();
         checkWithoutAmount.setAmount(1);
         if(!RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)){
@@ -354,6 +361,10 @@ public class BagHelper {
         int updatedBags = 0;
 
         for(BagEntry be : RelluEssentials.getInstance().getPlayerAPI().getPlayerBagMap().values()){
+            if(be == null){
+                continue;
+            }
+
             if(be.isHasToBeUpdated()){
                 RelluEssentials.getInstance().getDatabaseHelper().updateBagEntry(be);
                 be.setHasToBeUpdated(false);
