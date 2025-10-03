@@ -14,6 +14,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+@CommandName("gamerules")
 public class GameRules implements CommandConstruct {
 
     @Override
