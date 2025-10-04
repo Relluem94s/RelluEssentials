@@ -47,6 +47,11 @@
             <name>Relluem94s</name>
             <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
         </repository>
+        <repository>
+            <id>checkEntityCoins</id>
+            <name>Relluem94s</name>
+            <url>https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo</url>
+        </repository>
     </repositories>
     <profiles>
         <profile>
@@ -74,12 +79,6 @@
             <artifactId>rellulib</artifactId>
             <version>0.20</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.relluem94.maven.plugin</groupId>
-            <artifactId>entity-check-plugin</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <scope>develop</scope>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
@@ -262,7 +261,7 @@
             <plugin>
                 <groupId>de.relluem94.maven.plugin</groupId>
                 <artifactId>entity-check-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.1.0-SNAPSHOT</version>
             </plugin>
         </plugins>
     </build>

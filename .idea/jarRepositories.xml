@@ -17,6 +17,11 @@
       <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="RelluMavenPluginCheckEntityCoinsMojo" />
+      <option name="name" value="Relluem94s" />
+      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="github" />
       <option name="name" value="RelluLib" />
       <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluLib" />
@@ -30,6 +35,11 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="checkEntityCoins" />
+      <option name="name" value="checkEntityCoins" />
+      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
