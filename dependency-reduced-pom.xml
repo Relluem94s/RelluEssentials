@@ -241,12 +241,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>de.relluem94</groupId>
-      <artifactId>relluessentials-processor</artifactId>
-      <version>1.0.0</version>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
   <distributionManagement>
     <repository>

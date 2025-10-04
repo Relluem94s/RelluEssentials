@@ -157,7 +157,7 @@
             <groupId>de.relluem94</groupId>
             <artifactId>relluessentials-processor</artifactId>
             <version>1.0.0</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
