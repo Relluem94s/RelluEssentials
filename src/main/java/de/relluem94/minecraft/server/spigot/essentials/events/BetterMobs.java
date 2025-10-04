@@ -24,6 +24,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import org.jetbrains.annotations.NotNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
@@ -59,9 +60,11 @@ public class BetterMobs implements Listener {
     }
 
     @EventHandler
-    public void onDeath(EntityDeathEvent e) {
+    public void onDeath(@NotNull EntityDeathEvent e) {
         if(e.getEntity().getKiller() != null){
-            int coinsPerDeath = EntityCoins.valueOf(e.getEntity().getType().name()).getCoins();
+            EntityCoins entityCoins = EntityCoins.from(e.getEntity().getType());
+            int coinsPerDeath = entityCoins.getCoins();
+
             if(coinsPerDeath > 0){
                 Player p = e.getEntity().getKiller();
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);

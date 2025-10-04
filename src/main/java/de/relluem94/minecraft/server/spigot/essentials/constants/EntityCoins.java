@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
 import lombok.Getter;
+import org.bukkit.entity.EntityType;
 
 @SuppressWarnings("SpellCheckingInspection")
 @Getter
@@ -140,4 +141,13 @@ public enum EntityCoins {
   EntityCoins(int coins) {
     this.coins = coins;
   }
+
+    public static EntityCoins from(EntityType type) {
+        try {
+            return EntityCoins.valueOf(type.name());
+        }
+        catch (IllegalArgumentException ex) {
+            return EntityCoins.UNKNOWN;
+        }
+    }
 }
