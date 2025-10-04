@@ -28,6 +28,7 @@ import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -114,6 +115,7 @@ public class RelluEssentials extends JavaPlugin {
     public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     public final List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
     public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
+    public static final Map<Player, Player> reply = new HashMap<>();
 
     public final String[] oreRespawn = new String[]{PLUGIN_WORLD_WORLD_NETHER}; //TODO has to be done in Config (new Table?) #IsComming
     public static final boolean MONEY_LOST_ON_DEATH = true;
@@ -142,7 +144,9 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Heal()),
             new CommandWrapper(new Home()),
             new CommandWrapper(new Inventory()),
-            new CommandWrapper(new Marry())
+            new CommandWrapper(new Marry()),
+            new CommandWrapper(new Message()),
+            new CommandWrapper(new Reply())
     );
     
     public static synchronized RelluEssentials getInstance() {

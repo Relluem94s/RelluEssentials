@@ -1,6 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.reply;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -8,6 +11,8 @@ import org.bukkit.entity.Player;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+import static de.relluem94.rellulib.utils.StringUtils.implode;
+import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -101,5 +106,26 @@ public class ChatHelper {
      */
     public static void sendMessageInActionBar(Player p, String message){
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+    }
+
+    public static void msg(CommandSender sender, Player target, String[] args, int start) {
+        if (sender instanceof ConsoleCommandSender) {
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return;
+        }
+
+        String message = implode(start, args);
+
+        Player p = (Player) sender;
+        if (Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
+            message = replaceSymbols(replaceColor(message));
+        }
+
+        if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
+            target.sendMessage(p.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_IN + message);
+            p.sendMessage(target.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_OUT + message);
+        } else {
+            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+        }
     }
 }
