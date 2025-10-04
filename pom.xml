@@ -76,6 +76,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>de.relluem94.maven.plugin</groupId>
+            <artifactId>entity-check-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <scope>develop</scope>
+        </dependency>
+        <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>9.2.0</version>
@@ -252,6 +258,11 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>de.relluem94.maven.plugin</groupId>
+                <artifactId>entity-check-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </plugin>
         </plugins>
     </build>
