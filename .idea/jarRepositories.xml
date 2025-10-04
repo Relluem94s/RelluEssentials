@@ -2,6 +2,11 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="checkItemPrice" />
+      <option name="name" value="Relluem94s" />
+      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="github" />
       <option name="name" value="github" />
       <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluEssentials" />
