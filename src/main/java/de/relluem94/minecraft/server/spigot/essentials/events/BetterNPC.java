@@ -54,7 +54,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHe
 public class BetterNPC implements Listener {
 
     @EventHandler
-    public void onNPCPlacement(PlayerInteractEvent e) {
+    public void onNPCPlacement(@NotNull PlayerInteractEvent e) {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
             if((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && (e.getItem() != null && new WorldSelector().equalsName(e.getItem()))){
                 Worlds.openWorldMenu(e.getPlayer());
@@ -187,14 +187,14 @@ public class BetterNPC implements Listener {
                 sellPricePerItem = itemMeta.getPersistentDataContainer().get(itemSellPrice, PersistentDataType.INTEGER);
             }
             else{
-                sellPricePerItem = ItemPrice.valueOf(item).getSellPrice();
+                sellPricePerItem = ItemPrice.from(is.getType()).getSellPrice();
             }
 
             if(itemMeta.getPersistentDataContainer().has(itemBuyPrice, PersistentDataType.INTEGER)){
                 buyPricePerItem = itemMeta.getPersistentDataContainer().get(itemBuyPrice, PersistentDataType.INTEGER);
             }
             else{
-                buyPricePerItem = ItemPrice.valueOf(item).getBuyPrice();
+                buyPricePerItem = ItemPrice.from(is.getType()).getBuyPrice();
             }
 
             int amountOfItem = is.getAmount();
@@ -215,8 +215,7 @@ public class BetterNPC implements Listener {
                     if(pe.getPurse() - buyPricePerItem * amountOfItem >= 0){
                         if(p.getInventory().firstEmpty() != -1){
                             p.getInventory().addItem(new ItemStack(itemStack.getType(), amountOfItem));
-                            //p.updateInventory();
-    
+
                             pe.setPurse(pe.getPurse() - coins);
                             pe.setUpdatedBy(pe.getId());
                             pe.setHasToBeUpdated(true);

@@ -169,7 +169,8 @@ public class BetterLock implements Listener {
             String name = ((Nameable)state).getCustomName();
 
             if(name != null && name.contains(PLUGIN_ITEM_AUTOSELLHOPER)){
-                int sellPriceItem = ItemPrice.valueOf(is.getType().name()).getSellPrice() * is.getAmount();
+                ItemPrice itemPrice = ItemPrice.from(is.getType());
+                int sellPriceItem = itemPrice.getSellPrice() * is.getAmount();
 
                 int size = 0;
                 for(ItemStack itemStack : inventory.getStorageContents()){

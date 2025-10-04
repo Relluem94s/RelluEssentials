@@ -41,8 +41,8 @@ public class NPCAPI {
                         if(!ne.getSlotName(i).equals("AIR")){
                             ItemStack itemStack = new ItemStack(Material.valueOf(ne.getSlotName(i)), 1);
 
-                            int buyPricePerItem = ItemPrice.valueOf(itemStack.getType().name()).getBuyPrice();
-                            int sellPricePerItem = ItemPrice.valueOf(itemStack.getType().name()).getSellPrice();
+                            int buyPricePerItem = ItemPrice.from(itemStack.getType()).getBuyPrice();
+                            int sellPricePerItem = ItemPrice.from(itemStack.getType()).getSellPrice();
 
                             ItemMeta itemMeta =  itemStack.getItemMeta();
                             Objects.requireNonNull(itemMeta).getPersistentDataContainer().set(itemSellPrice, PersistentDataType.INTEGER, sellPricePerItem);
