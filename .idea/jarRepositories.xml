@@ -2,9 +2,9 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
-      <option name="id" value="checkItemPrice" />
-      <option name="name" value="Relluem94s" />
-      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo" />
+      <option name="id" value="annotationProcessor" />
+      <option name="name" value="annotationProcessor" />
+      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluEssentials-Annotation-Processor" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="github" />
@@ -17,9 +17,9 @@
       <option name="url" value="https://jitpack.io" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="spigotmc-repo" />
-      <option name="name" value="spigotmc-repo" />
-      <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
+      <option name="id" value="github" />
+      <option name="name" value="RelluLib" />
+      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluLib" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="RelluMavenPluginCheckEntityCoinsMojo" />
@@ -27,29 +27,14 @@
       <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="github" />
-      <option name="name" value="RelluLib" />
-      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluLib" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Maven Central repository" />
       <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="jboss.community" />
-      <option name="name" value="JBoss Community repository" />
-      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="checkEntityCoins" />
       <option name="name" value="checkEntityCoins" />
       <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="central" />
-      <option name="name" value="central" />
-      <option name="url" value="https://repo.maven.apache.org/maven2/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -60,6 +45,31 @@
       <option name="id" value="papermc" />
       <option name="name" value="papermc" />
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="checkEntityCoins" />
+      <option name="name" value="Relluem94s" />
+      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="checkItemPrice" />
+      <option name="name" value="Relluem94s" />
+      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="spigotmc-repo" />
+      <option name="name" value="spigotmc-repo" />
+      <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="central" />
+      <option name="url" value="https://repo.maven.apache.org/maven2/" />
     </remote-repository>
   </component>
 </project>

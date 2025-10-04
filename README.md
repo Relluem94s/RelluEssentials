@@ -13,33 +13,6 @@ Find out how to get the plugin and how to use it.
 5. Start your Server again
 6. Enjoy
 
-## Build
-1. ```shell
-   git clone https://github.com/Relluem94/RelluEssentials.git
-   ```
-
-2. ```shell
-   git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
-   ```
-
-3. ```shell
-   mvn clean install
-   ```
-
-
-## Deploy Package
-1. Make sure that your GitHub token is in your maven settings.xml (~/.m2/settings.xml)
-2. ```shell
-    mvn --batch-mode deploy
-   ```
-
-
-## Development
-```shell
-./RelluBash-Script-Collection/dev/MinecraftDevelopmentEnvironment.sh
-```
-it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [RelluBash-Script-Collection](https://github.com/Relluem94s/RelluBash-Script-Collection)
-
 # Functionality 
 What does the plugin include?
 
@@ -164,6 +137,27 @@ What does the plugin include?
 * No Death Message
   * Save Death Location as Home
   * Show Location in Chat (private)
+
+## Build
+1. ```shell
+   git clone https://github.com/Relluem94/RelluEssentials.git
+   ```
+
+2. ```shell
+   git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+   ```
+
+3. ```shell
+   mvn clean install -Pship
+   ```
+
+
+## Development
+```shell
+./RelluBash-Script-Collection/dev/MinecraftDevelopmentEnvironment.sh
+```
+it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [RelluBash-Script-Collection](https://github.com/Relluem94s/RelluBash-Script-Collection)
+
 
 # Documentation
 How it is working? What's under the hood?

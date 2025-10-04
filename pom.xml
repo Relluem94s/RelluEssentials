@@ -57,6 +57,10 @@
             <name>Relluem94s</name>
             <url>https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo</url>
         </repository>
+        <repository>
+            <id>annotationProcessor</id>
+            <url>https://maven.pkg.github.com/Relluem94s/RelluEssentials-Annotation-Processor</url>
+        </repository>
     </repositories>
     <profiles>
         <profile>
@@ -70,6 +74,13 @@
                     <releases><enabled>true</enabled></releases>
                 </repository>
             </repositories>
+        </profile>
+        <profile>
+            <id>ship</id>
+            <properties>
+                <maven.compiler.skipAnnotationProcessing>true</maven.compiler.skipAnnotationProcessing>
+                <skipTests>true</skipTests>
+            </properties>
         </profile>
     </profiles>
     <dependencies>
@@ -142,6 +153,12 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.18.0</version>
         </dependency>
+        <dependency>
+            <groupId>de.relluem94</groupId>
+            <artifactId>relluessentials-processor</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -164,6 +181,11 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>de.relluem94</groupId>
+                            <artifactId>relluessentials-processor</artifactId>
+                            <version>1.0.0</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
