@@ -35,13 +35,13 @@ public class WorldManager implements IEnable, IDisable {
                 continue;
             }
             for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
-                if(!WorldHelper.worldExists(we.getName())){
+                if(we != null && !WorldHelper.worldExists(we.getName())){
                     createWorld(we);
                     continue;        
                 }
 
                 for(World w: Bukkit.getWorlds()){
-                    if(!w.getName().equals(we.getName())){
+                    if(we != null && !w.getName().equals(we.getName())){
                         WorldHelper.loadWorld(we.getName());
                         setStandardGameRules(we.getName());
                     }
@@ -62,6 +62,10 @@ public class WorldManager implements IEnable, IDisable {
 
             for(WorldEntry we: RelluEssentials.getInstance().worldsMap.get(wge)){
                 try{
+                    if(we == null){
+                        return;
+                    }
+                    
                     WorldHelper.unloadWorld(we.getName(), true);
                 }
                 catch(WorldNotLoadedException e){

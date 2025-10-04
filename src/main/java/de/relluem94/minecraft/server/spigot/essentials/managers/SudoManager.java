@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import org.bukkit.entity.Player;
 
 public class SudoManager implements IDisable {
 
@@ -16,7 +17,11 @@ public class SudoManager implements IDisable {
     @Override
     public void disable() {
         for(UUID uuid: sudoers.keySet()){
-            Sudo.exitSudo(Bukkit.getPlayer(uuid));
+            Player player = Bukkit.getPlayer(uuid);
+            if(player == null){
+                continue;
+            }
+            Sudo.exitSudo(player);
         }
     }
 }

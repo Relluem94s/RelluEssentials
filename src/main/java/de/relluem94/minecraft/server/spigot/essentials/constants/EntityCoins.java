@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.constants;
 
 import lombok.Getter;
 
+@SuppressWarnings("SpellCheckingInspection")
 @Getter
 public enum EntityCoins {
   /**

@@ -53,7 +53,7 @@ public class ChatHelper {
      *
      * @param type Prefix to add before message
      * @param message Message to send
-     * @param repeat how often should the message be sended
+     * @param repeat how often should the message be sent
      */
     public static void consoleSendMessage(String type, String message, int repeat) {
         ConsoleCommandSender console = Bukkit.getConsoleSender();

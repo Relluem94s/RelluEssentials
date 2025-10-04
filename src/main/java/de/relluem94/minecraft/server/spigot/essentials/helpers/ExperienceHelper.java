@@ -35,7 +35,6 @@ public class ExperienceHelper {
         float c = -amount;
 
         if (amount > getTotalExperience(0) && amount <= getTotalExperience(15)) {
-            a = 1;
             b = 6;
         } else if (amount > getTotalExperience(15) && amount <= getTotalExperience(30)) {
             a = 2.5f;

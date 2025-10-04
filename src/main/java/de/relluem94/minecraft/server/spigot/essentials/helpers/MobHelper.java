@@ -6,10 +6,12 @@ import java.util.Objects;
 
 import lombok.Setter;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -23,22 +25,19 @@ public class MobHelper {
     private final Collection<PotionEffect> potionEffects = new HashSet<>();
     private final String customName;
     private final boolean isCustomNameVisible;
+    @Setter
     private boolean isInvisible;
     @Setter
     private boolean canPickupItems = true;
     @Setter
     private double health = 0;
 
-    public MobHelper(Location location, EntityType entityType, String customName, boolean isCustomNameVisible) {
+    public MobHelper(Location location, @NotNull EntityType entityType, String customName, boolean isCustomNameVisible) {
         this.location = location;
         this.entityType = entityType;
         this.customName = Objects.requireNonNullElseGet(customName, entityType::name);
 
         this.isCustomNameVisible = isCustomNameVisible;
-    }
-
-    public void setInvisible(boolean isInvisible) {
-        this.isInvisible = isInvisible;
     }
 
     public void addPotionEffect(PotionEffect potionEffect) {
@@ -65,7 +64,13 @@ public class MobHelper {
     }
 
     public void spawn() {
-        livingEntity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
+        World world = location.getWorld();
+
+        if(world == null){
+            return;
+        }
+
+        livingEntity = (LivingEntity) world.spawnEntity(location, entityType);
         livingEntity.setCustomName(customName);
         livingEntity.setCustomNameVisible(isCustomNameVisible);
 

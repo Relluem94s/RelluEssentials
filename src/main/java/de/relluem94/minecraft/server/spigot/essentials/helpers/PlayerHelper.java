@@ -7,11 +7,15 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 
+import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
@@ -103,7 +107,8 @@ public class PlayerHelper {
         }
     }
 
-    public static OfflinePlayerEntry getOfflinePlayerByUUID(UUID uuid){
+    @SuppressWarnings("unused")
+    public static @Nullable OfflinePlayerEntry getOfflinePlayerByUUID(UUID uuid){
         JSONObject json = NetworkUtils.getJSON("https://sessionserver.mojang.com/session/minecraft/profile/" + UUIDHelper.unDashed(uuid) + "?unsigned=false");
         OfflinePlayerEntry ope = new OfflinePlayerEntry();
         if(json.has("name")){
@@ -201,7 +206,7 @@ public class PlayerHelper {
         savePlayer(pe);
     }
 
-    public static int savePlayer(PlayerEntry pe){
+    public static int savePlayer(@NotNull PlayerEntry pe){
         if(pe.isHasToBeUpdated()){
             RelluEssentials.getInstance().getDatabaseHelper().updatePlayer(pe);
             pe.setHasToBeUpdated(false);
@@ -211,9 +216,9 @@ public class PlayerHelper {
         return 0;
     }
 
-    public static OfflinePlayer getOfflinePlayer(String name){
+    public static @Nullable OfflinePlayer getOfflinePlayer(@NonNull String name){
         for(OfflinePlayer op : Bukkit.getOfflinePlayers()){
-            if(op.getName().equals(name)){
+            if(name.equals(op.getName())){
                 return op;
             }
         }
@@ -222,7 +227,7 @@ public class PlayerHelper {
     }
 
     @SuppressWarnings("unused")
-    public static PlayerEntry getPlayer(String name){
+    public static @Nullable PlayerEntry getPlayer(String name){
         for(PlayerEntry pe : RelluEssentials.getInstance().getPlayerAPI().getPlayerEntryMap().values()){
             if(pe.getName().equals(name)){
                 return pe;
@@ -232,10 +237,16 @@ public class PlayerHelper {
         return null;
     }
 
-    public static Player getTargetedPlayer(Location loc){
+    public static @Nullable Player getTargetedPlayer(@NotNull Location loc){
         Player nearestPlayer = null;
         double lastDistance = Double.MAX_VALUE;
-        for(Player p : loc.getWorld().getPlayers()){
+        World world = loc.getWorld();
+
+        if(world == null){
+            return null;
+        }
+
+        for(Player p : world.getPlayers()){
             double distanceSquared = loc.distanceSquared(p.getLocation());
             if(distanceSquared < lastDistance){
                 lastDistance = distanceSquared;
@@ -262,7 +273,7 @@ public class PlayerHelper {
                 p.getInventory().remove(i);
             }
 
-            if(i.getType().equals(ws.getCustomItem().getType()) && i.hasItemMeta() && i.getItemMeta().getDisplayName().equals(ws.getDisplayName())){
+            if(i.getType().equals(ws.getCustomItem().getType()) && i.hasItemMeta() && i.getItemMeta() != null && i.getItemMeta().getDisplayName().equals(ws.getDisplayName())){
                 p.getInventory().remove(i);
             }
         }

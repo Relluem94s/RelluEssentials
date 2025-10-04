@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 
-public class BetterSavety implements Listener {
+public class BetterSafety implements Listener {
 
     private final String[] strings2block = {"/pl", "/bukkit", "/ver"};
 

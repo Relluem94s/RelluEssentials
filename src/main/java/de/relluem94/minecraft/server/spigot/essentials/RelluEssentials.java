@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_BORDER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_STARTTIME_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_START_TIME_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_START_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_STOP_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
@@ -221,7 +221,7 @@ public class RelluEssentials extends JavaPlugin {
 
     private void stopLoading() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_STARTTIME_MESSAGE, Calendar.getInstance().getTimeInMillis() - start));
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_START_TIME_MESSAGE, Calendar.getInstance().getTimeInMillis() - start));
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
         consoleSendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
     }

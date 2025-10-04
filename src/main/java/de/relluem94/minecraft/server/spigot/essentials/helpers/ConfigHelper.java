@@ -18,11 +18,24 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
+ * Helper class for configuration migration.
+ *
+ * <p><b>Legacy Notice:</b> This class is deprecated since version 4.3.3 and will
+ * no longer receive further development. It is only kept for legacy purposes,
+ * mainly to assist in migrating old plugin versions from config files to the database.</p>
+ *
+ * <p>In normal operation with newer versions, this class is irrelevant and
+ * should not be used.</p>
  *
  * @author rellu
  */
+
+@SuppressWarnings("SpellCheckingInspection")
+@ApiStatus.Internal
 @Getter
 public class ConfigHelper {
 
@@ -44,6 +57,7 @@ public class ConfigHelper {
      *
      * @return Returns List of all Players from config file
      */
+
     public List<PlayerEntry> getPlayers() {
         List<PlayerEntry> list = new ArrayList<>();
         ConfigurationSection cs = config.getConfigurationSection("player");
@@ -77,7 +91,8 @@ public class ConfigHelper {
      * @param p Player
      * @return List of Homes as LocationEntry
      */
-    public List<LocationEntry> getHomes(PlayerEntry p) {
+
+    public List<LocationEntry> getHomes(@NotNull PlayerEntry p) {
         List<LocationEntry> list = new ArrayList<>();
         ConfigurationSection homes = config.getConfigurationSection("player." + p.getUuid() + ".home");
         for (String home : Objects.requireNonNull(homes).getKeys(false)) {

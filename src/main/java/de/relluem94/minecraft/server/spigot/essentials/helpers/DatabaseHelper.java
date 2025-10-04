@@ -375,7 +375,7 @@ public class DatabaseHelper {
     // //
     // *****************************************************************************************************************************************//
 
-    private void script(Connection connection, String script) {
+    private void script(@NotNull Connection connection, String script) {
         try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script))) {
             ps.execute();
         } catch (SQLException | FileNotFoundException ey) {
@@ -445,7 +445,7 @@ public class DatabaseHelper {
         return lde;
     }
 
-    public void insertPlayerPartner(PlayerPartnerEntry ppe) {
+    public void insertPlayerPartner(@NotNull PlayerPartnerEntry ppe) {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayerPartner.sql"))) {
@@ -461,7 +461,7 @@ public class DatabaseHelper {
         }
     }
 
-    public void deletePlayerPartner(PlayerPartnerEntry ppe) {
+    public void deletePlayerPartner(@NotNull PlayerPartnerEntry ppe) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/deletePlayerPartner.sql"))) {
                 ps.setInt(1, ppe.getDeletedBy());
@@ -473,7 +473,8 @@ public class DatabaseHelper {
         }
     }
 
-    public void updatePlayerPartner(PlayerPartnerEntry ppe) {
+    @SuppressWarnings("unused")
+    public void updatePlayerPartner(@NotNull PlayerPartnerEntry ppe) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayerPartner.sql"))) {
                 ps.setInt(1, ppe.getUpdatedBy());
@@ -493,7 +494,7 @@ public class DatabaseHelper {
                 ps.setInt(2, playerFK);
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         PlayerPartnerEntry ppe = new PlayerPartnerEntry();
                         ppe.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         ppe.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
@@ -517,33 +518,33 @@ public class DatabaseHelper {
     }
 
     public List<WorldGroupEntry> getWorldGroups() {
-        List<WorldGroupEntry> lbte = new ArrayList<>();
+        List<WorldGroupEntry> worldGroupEntryList = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroups.sql"))) {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
-                        WorldGroupEntry wge = new WorldGroupEntry();
-                        wge.setId(rs.getInt(DatabaseMappings.FIELD_ID));
-                        wge.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
-                        wge.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
-                        wge.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
-                        wge.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
-                        wge.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
-                        wge.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
-                        wge.setName(rs.getString(DatabaseMappings.FIELD_NAME));
+                        WorldGroupEntry worldGroupEntry = new WorldGroupEntry();
+                        worldGroupEntry.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        worldGroupEntry.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        worldGroupEntry.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        worldGroupEntry.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        worldGroupEntry.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        worldGroupEntry.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        worldGroupEntry.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        worldGroupEntry.setName(rs.getString(DatabaseMappings.FIELD_NAME));
 
-                        lbte.add(wge);
+                        worldGroupEntryList.add(worldGroupEntry);
                     }
                 }
             }
         } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
-        return lbte;
+        return worldGroupEntryList;
     }
 
-    public List<WorldEntry> getWorldByGroup(WorldGroupEntry wge) {
+    public List<WorldEntry> getWorldByGroup(@NotNull WorldGroupEntry wge) {
         List<WorldEntry> lwe = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldByGroup.sql"))) {
@@ -571,17 +572,17 @@ public class DatabaseHelper {
         return lwe;
     }
 
-    public void insertWorldGroupInventory(WorldGroupInventoryEntry wgie) {
+    public void insertWorldGroupInventory(@NotNull WorldGroupInventoryEntry worldGroupInventoryEntry) {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertWorldInventoryByGroupAndPlayer.sql"))) {
-                ps.setInt(1, wgie.getPlayerId());
-                ps.setInt(2, wgie.getPlayerId());
-                ps.setInt(3, wgie.getWorldGroupEntry().getId());
-                ps.setString(4, wgie.getInventory().toString());
-                ps.setDouble(5, wgie.getHealth());
-                ps.setInt(6, wgie.getFoodLevel());
-                ps.setInt(7, wgie.getTotalExperience());
+                ps.setInt(1, worldGroupInventoryEntry.getPlayerId());
+                ps.setInt(2, worldGroupInventoryEntry.getPlayerId());
+                ps.setInt(3, worldGroupInventoryEntry.getWorldGroupEntry().getId());
+                ps.setString(4, worldGroupInventoryEntry.getInventory().toString());
+                ps.setDouble(5, worldGroupInventoryEntry.getHealth());
+                ps.setInt(6, worldGroupInventoryEntry.getFoodLevel());
+                ps.setInt(7, worldGroupInventoryEntry.getTotalExperience());
 
                 ps.execute();
             }
@@ -590,17 +591,17 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateWorldGroupInventory(WorldGroupInventoryEntry wgie) {
+    public void updateWorldGroupInventory(@NotNull WorldGroupInventoryEntry worldGroupInventoryEntry) {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateWorldInventoryByGroupAndPlayer.sql"))) {
-                ps.setInt(1, wgie.getUpdatedBy());
-                ps.setString(2, wgie.getInventory().toString());
-                ps.setDouble(3, wgie.getHealth());
-                ps.setInt(4, wgie.getFoodLevel());
-                ps.setInt(5, wgie.getTotalExperience());
-                ps.setInt(6, wgie.getPlayerId());
-                ps.setInt(7, wgie.getWorldGroupEntry().getId());
+                ps.setInt(1, worldGroupInventoryEntry.getUpdatedBy());
+                ps.setString(2, worldGroupInventoryEntry.getInventory().toString());
+                ps.setDouble(3, worldGroupInventoryEntry.getHealth());
+                ps.setInt(4, worldGroupInventoryEntry.getFoodLevel());
+                ps.setInt(5, worldGroupInventoryEntry.getTotalExperience());
+                ps.setInt(6, worldGroupInventoryEntry.getPlayerId());
+                ps.setInt(7, worldGroupInventoryEntry.getWorldGroupEntry().getId());
 
                 ps.execute();
             }
@@ -609,30 +610,30 @@ public class DatabaseHelper {
         }
     }
 
-    public WorldGroupInventoryEntry getWorldGroupInventory(PlayerEntry pe, WorldGroupEntry wge) {
+    public WorldGroupInventoryEntry getWorldGroupInventory(@NotNull PlayerEntry pe, @NotNull WorldGroupEntry wge) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldInventoryByGroupAndPlayer.sql"))) {
                 ps.setInt(1, wge.getId());
                 ps.setInt(2, pe.getId());
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        WorldGroupInventoryEntry wgie = new WorldGroupInventoryEntry();
-                        wgie.setId(rs.getInt(DatabaseMappings.FIELD_ID));
-                        wgie.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
-                        wgie.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
-                        wgie.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
-                        wgie.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
-                        wgie.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
-                        wgie.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
-                        wgie.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
-                        wgie.setHealth(rs.getInt(DatabaseMappings.FIELD_HEALTH));
-                        wgie.setTotalExperience(rs.getInt(DatabaseMappings.FIELD_TOTAL_EXPERIENCE));
-                        wgie.setFoodLevel(rs.getInt(DatabaseMappings.FIELD_FOOD));
-                        wgie.setWorldGroupEntry(wge);
-                        wgie.setInventory(new JSONObject(rs.getString(DatabaseMappings.FIELD_INVENTORY)));
+                    if (rs.next()) {
+                        WorldGroupInventoryEntry worldGroupInventoryEntry = new WorldGroupInventoryEntry();
+                        worldGroupInventoryEntry.setId(rs.getInt(DatabaseMappings.FIELD_ID));
+                        worldGroupInventoryEntry.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
+                        worldGroupInventoryEntry.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        worldGroupInventoryEntry.setUpdated(rs.getString(DatabaseMappings.FIELD_UPDATED));
+                        worldGroupInventoryEntry.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
+                        worldGroupInventoryEntry.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
+                        worldGroupInventoryEntry.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        worldGroupInventoryEntry.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
+                        worldGroupInventoryEntry.setHealth(rs.getInt(DatabaseMappings.FIELD_HEALTH));
+                        worldGroupInventoryEntry.setTotalExperience(rs.getInt(DatabaseMappings.FIELD_TOTAL_EXPERIENCE));
+                        worldGroupInventoryEntry.setFoodLevel(rs.getInt(DatabaseMappings.FIELD_FOOD));
+                        worldGroupInventoryEntry.setWorldGroupEntry(wge);
+                        worldGroupInventoryEntry.setInventory(new JSONObject(rs.getString(DatabaseMappings.FIELD_INVENTORY)));
 
-                        return wgie;
+                        return worldGroupInventoryEntry;
                     }
                 }
             }
@@ -642,7 +643,8 @@ public class DatabaseHelper {
         return null;
     }
 
-    public void insertWorld(WorldEntry we) {
+    @SuppressWarnings("unused")
+    public void insertWorld(@NotNull WorldEntry we) {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertWorld.sql"))) {
@@ -659,7 +661,8 @@ public class DatabaseHelper {
         }
     }
 
-    public void insertWorldGroup(WorldGroupEntry wge) {
+    @SuppressWarnings("unused")
+    public void insertWorldGroup(@NotNull WorldGroupEntry wge) {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertWorldGroup.sql"))) {
@@ -673,13 +676,14 @@ public class DatabaseHelper {
         }
     }
 
+    @SuppressWarnings("unused")
     public WorldGroupEntry getWorldGroup(String name) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroupByName.sql"))) {
                 ps.setString(1, name);
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         WorldGroupEntry wge = new WorldGroupEntry();
                         wge.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         wge.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
@@ -700,13 +704,13 @@ public class DatabaseHelper {
         return null;
     }
 
-    public LocationEntry getLocation(PlayerEntry pe, int type) {
+    public LocationEntry getLocation(@NotNull PlayerEntry pe, int type) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationsByPlayer.sql"))) {
                 ps.setInt(1, pe.getId());
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         LocationEntry le = new LocationEntry();
                         le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
@@ -732,7 +736,7 @@ public class DatabaseHelper {
         return null;
     }
 
-    public List<LocationEntry> getLocations(PlayerEntry pe, int type) {
+    public List<LocationEntry> getLocations(@NotNull PlayerEntry pe, int type) {
         List<LocationEntry> lle = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationsByPlayer.sql"))) {
@@ -768,7 +772,7 @@ public class DatabaseHelper {
         return lle;
     }
 
-    public LocationEntry getLocation(Location l, int type) {
+    public LocationEntry getLocation(@NotNull Location l, int type) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationByLocation.sql"))) {
                 ps.setFloat(1, (float) l.getX());
@@ -777,7 +781,7 @@ public class DatabaseHelper {
                 ps.setInt(4, type);
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         LocationEntry le = new LocationEntry();
                         le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
@@ -810,7 +814,7 @@ public class DatabaseHelper {
 
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         LocationEntry le = new LocationEntry();
                         le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         le.setPlayerId(rs.getInt(DatabaseMappings.FIELD_PLAYER_FK));
@@ -845,7 +849,7 @@ public class DatabaseHelper {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPluginInformation.sql"))) {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         pie.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         pie.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
                         pie.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
@@ -872,7 +876,7 @@ public class DatabaseHelper {
                 ps.setString(1, uuid);
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         PlayerEntry p = new PlayerEntry();
                         p.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         p.setUuid(rs.getString(DatabaseMappings.FIELD_UUID));
@@ -909,7 +913,7 @@ public class DatabaseHelper {
                 ps.setInt(1, playerFK);
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         BankAccountEntry bae = new BankAccountEntry();
                         bae.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         bae.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
@@ -938,7 +942,7 @@ public class DatabaseHelper {
                 ps.setInt(1, id);
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         BankTierEntry bte = new BankTierEntry();
                         bte.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         bte.setName(rs.getString(DatabaseMappings.FIELD_NAME));
@@ -956,7 +960,7 @@ public class DatabaseHelper {
     }
 
     public List<BankTierEntry> getBankTiers() {
-        List<BankTierEntry> lbte = new ArrayList<>();
+        List<BankTierEntry> bankTierEntryList = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBankTiers.sql"))) {
                 ps.execute();
@@ -968,17 +972,17 @@ public class DatabaseHelper {
                         bte.setLimit(rs.getLong(DatabaseMappings.FIELD_LIMIT));
                         bte.setInterest(rs.getDouble(DatabaseMappings.FIELD_INTEREST));
                         bte.setCost(rs.getLong(DatabaseMappings.FIELD_COST));
-                        lbte.add(bte);
+                        bankTierEntryList.add(bte);
                     }
                 }
             }
         } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
-        return lbte;
+        return bankTierEntryList;
     }
 
-    public void insertBankAccount(BankAccountEntry bae) {
+    public void insertBankAccount(@NotNull BankAccountEntry bae) {
         try (
                 Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertBankAccount.sql"))) {
@@ -1057,7 +1061,7 @@ public class DatabaseHelper {
         return bte;
     }
 
-    public ProtectionEntry getProtectionByLocation(Location l) {
+    public ProtectionEntry getProtectionByLocation(@NotNull Location l) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getProtectionByLocation.sql"))) {
                 ps.setFloat(1, (float) l.getX());
@@ -1065,7 +1069,7 @@ public class DatabaseHelper {
                 ps.setFloat(3, (float) l.getZ());
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         ProtectionEntry pe = new ProtectionEntry();
                         pe.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         pe.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
@@ -1089,7 +1093,7 @@ public class DatabaseHelper {
         return null;
     }
 
-    public void insertProtection(ProtectionEntry pe) {
+    public void insertProtection(@NotNull ProtectionEntry pe) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertProtection.sql"))) {
 
@@ -1106,7 +1110,7 @@ public class DatabaseHelper {
         }
     }
 
-    public void deleteProtection(ProtectionEntry pe) {
+    public void deleteProtection(@NotNull ProtectionEntry pe) {
         deleteLocation(pe.getLocationEntry());
 
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
@@ -1120,7 +1124,7 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateProtectionFlag(ProtectionEntry pe) {
+    public void updateProtectionFlag(@NotNull ProtectionEntry pe) {
         deleteLocation(pe.getLocationEntry());
 
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
@@ -1135,7 +1139,7 @@ public class DatabaseHelper {
         }
     }
 
-    public void updateProtectionRight(ProtectionEntry pe) {
+    public void updateProtectionRight(@NotNull ProtectionEntry pe) {
         deleteLocation(pe.getLocationEntry());
 
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
@@ -1225,7 +1229,7 @@ public class DatabaseHelper {
         return pel;
     }
 
-    public void insertPlayer(PlayerEntry pe) {
+    public void insertPlayer(@NotNull PlayerEntry pe) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql"))) {
                 ps.setInt(1, pe.getCreatedBy());
@@ -1241,7 +1245,7 @@ public class DatabaseHelper {
         }
     }
 
-    public void insertGroup(GroupEntry ge) {
+    public void insertGroup(@NotNull GroupEntry ge) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertGroup.sql"))) {
                 ps.setInt(1, ge.getId());
@@ -1255,7 +1259,7 @@ public class DatabaseHelper {
         }
     }
 
-    public void updatePlayer(PlayerEntry pe) {
+    public void updatePlayer(@NotNull PlayerEntry pe) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayer.sql"))) {
                 ps.setInt(1, pe.getId());
@@ -1293,6 +1297,7 @@ public class DatabaseHelper {
         return ll;
     }
 
+    @SuppressWarnings("unused")
     public List<LocationEntry> getLocations() {
         List<LocationEntry> ll = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
@@ -1352,7 +1357,7 @@ public class DatabaseHelper {
         return ll;
     }
 
-    public void insertLocation(LocationEntry le) {
+    public void insertLocation(@NotNull LocationEntry le) {
 
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertLocation.sql"))) {
@@ -1376,7 +1381,7 @@ public class DatabaseHelper {
         }
     }
 
-    public void deleteLocation(LocationEntry le) {
+    public void deleteLocation(@NotNull LocationEntry le) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteLocation.sql"))) {
                 ps.setInt(1, le.getPlayerId());
@@ -1388,7 +1393,8 @@ public class DatabaseHelper {
         }
     }
 
-    public BlockHistoryEntry getBlockHistoryByLocation(Location l) {
+    @SuppressWarnings("unused")
+    public BlockHistoryEntry getBlockHistoryByLocation(@NotNull Location l) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBlockHistoryByLocation.sql"))) {
                 ps.setFloat(1, l.getBlockX());
@@ -1398,13 +1404,13 @@ public class DatabaseHelper {
                 ps.execute();
 
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         BlockHistoryEntry bh = new BlockHistoryEntry();
                         bh.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         bh.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
-                        bh.setCreatedby(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        bh.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
                         bh.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
-                        bh.setDeletedby(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        bh.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
 
                         LocationEntry le = new LocationEntry();
                         le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
@@ -1432,10 +1438,10 @@ public class DatabaseHelper {
         return null;
     }
 
-    public void insertBlockHistory(BlockHistoryEntry bh) {
+    public void insertBlockHistory(@NotNull BlockHistoryEntry bh) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertBlockHistory.sql"))) {
-                ps.setInt(1, bh.getCreatedby());
+                ps.setInt(1, bh.getCreatedBy());
                 ps.setInt(2, bh.getLocation().getId());
                 ps.setString(3, bh.getMaterial());
 
@@ -1446,7 +1452,7 @@ public class DatabaseHelper {
         }
     }
 
-    public List<BlockHistoryEntry> getBlockHistoryByPlayer(PlayerEntry p) {
+    public List<BlockHistoryEntry> getBlockHistoryByPlayer(@NotNull PlayerEntry p) {
         List<BlockHistoryEntry> bhe = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBlockHistoryByPlayer.sql"))) {
@@ -1459,9 +1465,9 @@ public class DatabaseHelper {
                         BlockHistoryEntry bh = new BlockHistoryEntry();
                         bh.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         bh.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
-                        bh.setCreatedby(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        bh.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
                         bh.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
-                        bh.setDeletedby(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        bh.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
 
                         LocationEntry le = new LocationEntry();
                         le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
@@ -1492,7 +1498,7 @@ public class DatabaseHelper {
 
     private static final String BLOCK_HISTORY_BY_PLAYER_TIME_REGEX = "[^\\d.]";
 
-    public List<BlockHistoryEntry> getBlockHistoryByPlayerAndTime(PlayerEntry p, String time, boolean deleted) {
+    public List<BlockHistoryEntry> getBlockHistoryByPlayerAndTime(PlayerEntry p, @NotNull String time, boolean deleted) {
         List<BlockHistoryEntry> bhe = new ArrayList<>();
         int year = 0;
         int month = 0;
@@ -1533,9 +1539,9 @@ public class DatabaseHelper {
                         BlockHistoryEntry bh = new BlockHistoryEntry();
                         bh.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         bh.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
-                        bh.setCreatedby(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
+                        bh.setCreatedBy(rs.getInt(DatabaseMappings.FIELD_CREATEDBY));
                         bh.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
-                        bh.setDeletedby(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
+                        bh.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
 
                         LocationEntry le = new LocationEntry();
                         le.setId(rs.getInt(DatabaseMappings.FIELD_ID));
@@ -1563,10 +1569,10 @@ public class DatabaseHelper {
         return bhe;
     }
 
-    public void deleteBlockHistory(BlockHistoryEntry bh) {
+    public void deleteBlockHistory(@NotNull BlockHistoryEntry bh) {
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteBlockHistory.sql"))) {
-                ps.setInt(1, bh.getDeletedby());
+                ps.setInt(1, bh.getDeletedBy());
                 ps.setInt(2, bh.getLocation().getId());
 
                 ps.execute();
@@ -1603,7 +1609,7 @@ public class DatabaseHelper {
                 ps.setInt(1, type);
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         BagTypeEntry bte = new BagTypeEntry();
 
                         bte.setId(rs.getInt(DatabaseMappings.FIELD_ID));
@@ -1631,7 +1637,7 @@ public class DatabaseHelper {
                 ps.setInt(2, playerFK);
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         BagEntry be = new BagEntry();
                         be.setId(rs.getInt(DatabaseMappings.FIELD_ID));
                         be.setCreated(rs.getString(DatabaseMappings.FIELD_CREATED));
@@ -1673,13 +1679,13 @@ public class DatabaseHelper {
     }
 
     public List<BagTypeEntry> getBagTypes() {
-        List<BagTypeEntry> btel = new ArrayList<>();
+        List<BagTypeEntry> bagTypeEntryList = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBagTypes.sql"))) {
                 ps.execute();
 
                 try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
+                    if (rs.next()) {
                         BagTypeEntry bte = new BagTypeEntry();
 
                         bte.setId(rs.getInt("id"));
@@ -1691,14 +1697,14 @@ public class DatabaseHelper {
                             bte.setSlotName(i, rs.getString(String.format(DatabaseMappings.FIELD_SLOT_VAR_NAME, (i + 1))));
                         }
 
-                        btel.add(bte);
+                        bagTypeEntryList.add(bte);
                     }
                 }
             }
         } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
-        return btel;
+        return bagTypeEntryList;
     }
 
     public List<BagEntry> getBags() {

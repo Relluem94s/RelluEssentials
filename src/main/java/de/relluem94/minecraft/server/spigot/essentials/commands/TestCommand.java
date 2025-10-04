@@ -14,6 +14,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +22,7 @@ import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -102,13 +104,13 @@ public class TestCommand implements CommandExecutor {
             RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getId());
         } else if (args[0].equalsIgnoreCase("bo")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            p.openInventory(BagHelper.getBag(1, pe));
+            p.openInventory(Objects.requireNonNull(BagHelper.getBag(1, pe)));
         } else if (args[0].equalsIgnoreCase("bc2")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getId());
         } else if (args[0].equalsIgnoreCase("bo2")) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            p.openInventory(BagHelper.getBag(2, pe));
+            p.openInventory(Objects.requireNonNull(BagHelper.getBag(2, pe)));
         } else if (args[0].equalsIgnoreCase("di")) {
             di(p);
         } else if (args[0].equalsIgnoreCase("pl")) {
@@ -152,7 +154,12 @@ public class TestCommand implements CommandExecutor {
             Logger.getLogger(TestCommand.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        p.teleport(Bukkit.getWorld("world2").getSpawnLocation());
+        World world2 = Bukkit.getWorld("world2");
+        if(world2 == null){
+            return;
+        }
+
+        p.teleport(world2.getSpawnLocation());
     }
 
     private void di(Player p){

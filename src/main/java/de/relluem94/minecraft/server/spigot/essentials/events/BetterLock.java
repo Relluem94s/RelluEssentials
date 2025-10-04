@@ -73,6 +73,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -91,15 +92,13 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEn
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 
-import javax.annotation.Nullable;
-
 /**
  *
  * @author rellu
  */
 public class BetterLock implements Listener {
     @EventHandler
-    public void onWaterMove(BlockFromToEvent e) {
+    public void onWaterMove(@NotNull BlockFromToEvent e) {
         List<Material> unBreakable = RelluEssentials.getInstance().getProtectionAPI().getMaterialProtectionList();
         Block block = e.getToBlock();
         if (unBreakable.contains(block.getType())){
@@ -124,8 +123,8 @@ public class BetterLock implements Listener {
                 if (holder instanceof BlockState) {
                     location = ((BlockState)holder).getLocation();
                 } else if (holder instanceof DoubleChest doubleChest) {
-                    location = Objects.requireNonNull(doubleChest.getRightSide()).getInventory().getLocation().getBlock().getLocation();
-                    locationOtherSide = Objects.requireNonNull(doubleChest.getLeftSide()).getInventory().getLocation().getBlock().getLocation();
+                    location = Objects.requireNonNull(Objects.requireNonNull(doubleChest.getRightSide()).getInventory().getLocation()).getBlock().getLocation();
+                    locationOtherSide = Objects.requireNonNull(Objects.requireNonNull(doubleChest.getLeftSide()).getInventory().getLocation()).getBlock().getLocation();
                 } else {
                     return false;
                 } 
@@ -164,7 +163,7 @@ public class BetterLock implements Listener {
         }
     }
 
-    private static boolean sellItem(Inventory inventory, ItemStack is, boolean isSource, Location location) {
+    private static boolean sellItem(Inventory inventory, ItemStack is, boolean isSource, @NotNull Location location) {
         BlockState state = location.getBlock().getState();
         if((state instanceof Nameable)) {
             String name = ((Nameable)state).getCustomName();
@@ -426,7 +425,7 @@ public class BetterLock implements Listener {
     }
 
 
-    private boolean isAttachedToBlock(Block b, BlockFace face){
+    private boolean isAttachedToBlock(@NotNull Block b, BlockFace face){
         Block attachedBlock = b.getRelative(face);
         BlockData bd = attachedBlock.getBlockData();
 
@@ -457,19 +456,19 @@ public class BetterLock implements Listener {
 
 
     @EventHandler
-    public void placeBlocks(BlockPlaceEvent e) {
+    public void placeBlocks(@NotNull BlockPlaceEvent e) {
         e.setCancelled(!protectBlock(e.getPlayer(), e.getBlock()));
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent e) {
+    public void onBlockBreak(@NotNull BlockBreakEvent e) {
         if(removeProtectionFromBlock(e.getPlayer(), e.getBlock())){
             e.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onPlayerProtectionChange(PlayerInteractEvent e) {
+    public void onPlayerProtectionChange(@NotNull PlayerInteractEvent e) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer());
 
         if(pe.getPlayerState().equals(PlayerState.PROTECTION_ADD)){
@@ -674,7 +673,7 @@ public class BetterLock implements Listener {
         }
     }
 
-    public static void addRight(Player p, ProtectionEntry pre, int id, boolean silent) {
+    public static void addRight(Player p, @NotNull ProtectionEntry pre, int id, boolean silent) {
         Location l = pre.getLocationEntry().getLocation();
         if(pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)){
             JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
@@ -704,7 +703,7 @@ public class BetterLock implements Listener {
         }
     }
 
-    public static void removeRight(Player p, ProtectionEntry pre, int id, boolean silent) {
+    public static void removeRight(Player p, @NotNull ProtectionEntry pre, int id, boolean silent) {
         Location l = pre.getLocationEntry().getLocation();
         if(pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)){
             JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
@@ -734,12 +733,12 @@ public class BetterLock implements Listener {
         }
     }
 
-    public static void removeRight(@Nullable OfflinePlayer p, ProtectionEntry pre, int id) {
+    public static void removeRight(ProtectionEntry pre, int id) {
         removeRight(null, pre, id, true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInteract(PlayerInteractEvent e) {
+    public void onInteract(@NotNull PlayerInteractEvent e) {
         Block b = e.getClickedBlock();
        
         if(b != null){
@@ -874,14 +873,14 @@ public class BetterLock implements Listener {
 
 
     @EventHandler(ignoreCancelled = true)
-    public void onMoveItem(InventoryMoveItemEvent e) {
+    public void onMoveItem(@NotNull InventoryMoveItemEvent e) {
         if (handleMoveItemEvent(e.getSource(), e.getItem(), true) || handleMoveItemEvent(e.getDestination(), e.getItem(), false)){
             e.setCancelled(true); 
         }
     }
 
     @EventHandler
-    public void onBlockRedstoneChange(BlockRedstoneEvent e) {
+    public void onBlockRedstoneChange(@NotNull BlockRedstoneEvent e) {
         Block b = e.getBlock();
         ProtectionEntry protection;
 
@@ -899,7 +898,7 @@ public class BetterLock implements Listener {
 
 
     @EventHandler
-    public void entityBreakDoor(EntityBreakDoorEvent e) {
+    public void entityBreakDoor(@NotNull EntityBreakDoorEvent e) {
         Block b = e.getBlock();
         Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
         ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
@@ -909,7 +908,7 @@ public class BetterLock implements Listener {
     }
 
     @EventHandler
-    public void onBlockPistonExtend(BlockPistonExtendEvent e) {
+    public void onBlockPistonExtend(@NotNull BlockPistonExtendEvent e) {
         for (Block b : e.getBlocks()) {
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
             if (protection != null || isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)) {
@@ -920,7 +919,7 @@ public class BetterLock implements Listener {
     }
 
     @EventHandler
-    public void onBlockPistonRetract(BlockPistonRetractEvent e) {    
+    public void onBlockPistonRetract(@NotNull BlockPistonRetractEvent e) {
         for (Block b : e.getBlocks()) {
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getLocation());
             if (protection != null || isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)) {
@@ -931,7 +930,7 @@ public class BetterLock implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onEntityExplode(EntityExplodeEvent event) {
+    public void onEntityExplode(@NotNull EntityExplodeEvent event) {
         for (Block block : event.blockList()) {
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
             if (protection != null) {
@@ -942,7 +941,7 @@ public class BetterLock implements Listener {
         } 
     }
 
-    private boolean isProtected(Block b, BlockFace bf){
+    private boolean isProtected(@NotNull Block b, BlockFace bf){
         return RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(b.getRelative(bf).getLocation()) != null;
     }
 

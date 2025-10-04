@@ -25,7 +25,7 @@ public class PlayerMove implements Listener {
         Player p = e.getPlayer();
 
         if (p.getWorld().getName().equals(Constants.PLUGIN_WORLD_LOBBY)) {
-            if (e.getTo().clone().add(0, -1, 0).getBlock().getType().equals(Material.MYCELIUM)) {
+            if (e.getTo() != null && e.getTo().clone().add(0, -1, 0).getBlock().getType().equals(Material.MYCELIUM)) {
                 if (p.isSneaking()) {
                     p.getWorld().playEffect(p.getLocation(), Effect.BAT_TAKEOFF, 5);
                     p.getWorld().playSound(p.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1F, 0F);

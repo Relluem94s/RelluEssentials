@@ -63,7 +63,7 @@ public interface Constants {
     
     String PLUGIN_MANAGER_START_MESSAGE = "starts configuring ...";
     String PLUGIN_MANAGER_STOP_MESSAGE = "shutdown();";
-    String PLUGIN_MANAGER_STARTTIME_MESSAGE = "wurde in %s ms gestartet!";
+    String PLUGIN_MANAGER_START_TIME_MESSAGE = "wurde in %s ms gestartet!";
     String PLUGIN_MANAGER_REGISTER_SKILLS = "Registriere Skills!";
     String PLUGIN_MANAGER_SKILLS_REGISTERED = "Skills erfolgreich registriert!";
     String PLUGIN_MANAGER_LOADING_CONFIGS = "Configs werden geladen!";

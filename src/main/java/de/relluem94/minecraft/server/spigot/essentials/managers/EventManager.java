@@ -19,7 +19,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.BetterMobs;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterNPC;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerJoin;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterPlayerQuit;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterSavety;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterSafety;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterSoil;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterWorlds;
 import de.relluem94.minecraft.server.spigot.essentials.events.BlockPlace;
@@ -54,7 +54,7 @@ public class EventManager implements IEnable{
         pm.registerEvents(new BetterMobs(), RelluEssentials.getInstance());                 eventCount++;
         pm.registerEvents(new BetterSoil(), RelluEssentials.getInstance());                 eventCount++;
         pm.registerEvents(new BetterNPC(), RelluEssentials.getInstance());                  eventCount++;
-        pm.registerEvents(new BetterSavety(), RelluEssentials.getInstance());               eventCount++;
+        pm.registerEvents(new BetterSafety(), RelluEssentials.getInstance());               eventCount++;
         pm.registerEvents(new BetterLock(), RelluEssentials.getInstance());                 eventCount++;
         pm.registerEvents(new SkullInfo(), RelluEssentials.getInstance());                  eventCount++;
         pm.registerEvents(new NoDeathMessage(), RelluEssentials.getInstance());             eventCount++;

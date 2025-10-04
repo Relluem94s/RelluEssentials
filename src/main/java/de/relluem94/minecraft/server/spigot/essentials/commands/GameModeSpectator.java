@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAME_MODE_3_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -63,7 +63,7 @@ public class GameModeSpectator implements CommandConstruct {
 
     private void gameMode(@NotNull Player p) {
         p.setGameMode(GameMode.ADVENTURE);
-        p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAMEMODE_3_NAME + PLUGIN_COLOR_COMMAND));
+        p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAME_MODE_3_NAME + PLUGIN_COLOR_COMMAND));
     }
 
     @Override

@@ -62,7 +62,7 @@ public class GameModeCreative implements CommandConstruct {
 
     private void gameMode(@NotNull Player p) {
         p.setGameMode(org.bukkit.GameMode.CREATIVE);
-        p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAMEMODE_1_NAME + PLUGIN_COLOR_COMMAND));
+        p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAME_MODE_1_NAME + PLUGIN_COLOR_COMMAND));
     }
 
     @Override

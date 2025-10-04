@@ -5,6 +5,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import org.bukkit.Location;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -30,16 +32,20 @@ public class StringHelper {
      * @param l Location
      * @return String with Location
      */
-    public static String locationToString(Location l) {
-        return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), l.getWorld().getName());
+    public static @NotNull String locationToString(@NotNull Location l) {
+        World world = l.getWorld();
+        if(world == null){
+            return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), "null");
+        }
+        return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), world.getName());
     }
 
-    public static String firstCharToUpper(String s){
+    public static @NotNull String firstCharToUpper(@NotNull String s){
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
 
-    public static String formatLong(long l) {
+    public static @NotNull String formatLong(long l) {
         if(l >= 1000000000){
             return String.format("%sB", l / 1000000000.0);
         }
@@ -54,7 +60,7 @@ public class StringHelper {
         }
     }
 
-    public static String formatInt(int i) {
+    public static @NotNull String formatInt(int i) {
         if(i >= 1000000000){
             return String.format("%sB", i / 1000000000);
         }
@@ -69,7 +75,7 @@ public class StringHelper {
         }
     }
 
-    public static String formatDouble(double d) {
+    public static @NotNull String formatDouble(double d) {
         if(d >= 1000000000){
             return String.format("%.2fB", d / 1000000000.0);
         }

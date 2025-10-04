@@ -24,7 +24,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Namespac
 
 public class NPCAPI {
     
-    private final List<ItemStack> npcItemstack = new ArrayList<>();
+    private final List<ItemStack> npcItemStack = new ArrayList<>();
     private final List<String> npcName = new ArrayList<>();
     private final List<String> npcTraderTitle = new ArrayList<>();
     private final List<NPC> npcs = new ArrayList<>();
@@ -76,7 +76,7 @@ public class NPCAPI {
      */
     public void addNPC(NPC npc){
         npcs.add(npc);
-        npcItemstack.add(npc.getItemHelper().getCustomItem());
+        npcItemStack.add(npc.getItemHelper().getCustomItem());
         npcName.add(npc.getName());
 
         if(npc.getType().equals(Type.TRADER)){
@@ -89,7 +89,7 @@ public class NPCAPI {
      * @return List of ItemStack
      */
     public List<ItemStack> getNPCItemStackList(){
-        return npcItemstack;
+        return npcItemStack;
     }
 
     /**

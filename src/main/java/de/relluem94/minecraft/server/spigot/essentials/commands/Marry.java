@@ -160,7 +160,7 @@ public class Marry implements CommandConstruct {
                 }
     
                 if(pre.getCreatedBy() == secondPlayerEntry.getId()){
-                    BetterLock.removeRight(secondOfflinePlayer, pre, pe.getId());
+                    BetterLock.removeRight(pre, pe.getId());
                 }
                 
             }

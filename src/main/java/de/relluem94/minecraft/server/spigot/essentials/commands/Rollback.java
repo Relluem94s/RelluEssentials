@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import lombok.NonNull;
@@ -46,7 +47,7 @@ public class Rollback implements CommandExecutor {
     
     Maybe also as an Inventory Menu.
     Undo reverts last action. (looks for timeframe but ignores the deleted)
-    Preview sends blockchange to player and reverts after 60 seconds (if possible else no preview)    
+    Preview sends block change to player and reverts after 60 seconds (if possible else no preview)
     
      */
     @Override
@@ -57,13 +58,13 @@ public class Rollback implements CommandExecutor {
                     if (isPlayer(sender)) {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                            UUID targetUUID = Bukkit.getPlayer(args[1]).getUniqueId();
+                            UUID targetUUID = Objects.requireNonNull(Bukkit.getPlayer(args[1])).getUniqueId();
                             PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(targetUUID.toString());
                             if (pe != null && args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER)) {
                                 int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getId();
                                 List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayer(pe);
                                 for (BlockHistoryEntry bh : list) {
-                                    bh.setDeletedby(id);
+                                    bh.setDeletedBy(id);
                                     RelluEssentials.getInstance().blockHistoryList.add(bh);
                                 }
                                 p.sendMessage("Added: " + list.size());
@@ -80,14 +81,14 @@ public class Rollback implements CommandExecutor {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER)) {
-                                UUID targetUUID = Bukkit.getPlayer(args[1]).getUniqueId();
+                                UUID targetUUID = Objects.requireNonNull(Bukkit.getPlayer(args[1])).getUniqueId();
                                 PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
                                     int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getId();
                                     List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayerAndTime(pe, args[2], false);
                                     for (BlockHistoryEntry bh : list) {
-                                        bh.setDeletedby(id);
+                                        bh.setDeletedBy(id);
                                         RelluEssentials.getInstance().blockHistoryList.add(bh);
                                     }
                                     p.sendMessage("Added: " + list.size());
@@ -108,14 +109,14 @@ public class Rollback implements CommandExecutor {
                         Player p = (Player) sender;
                         if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                             if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO) && args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_ROLLBACK_UNDO_PLAYER)) {
-                                UUID targetUUID = Bukkit.getPlayer(args[2]).getUniqueId();
+                                UUID targetUUID = Objects.requireNonNull(Bukkit.getPlayer(args[2])).getUniqueId();
                                 PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(targetUUID.toString());
 
                                 if (pe != null) {
                                     int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId()).getId();
                                     List<BlockHistoryEntry> list = RelluEssentials.getInstance().getDatabaseHelper().getBlockHistoryByPlayerAndTime(pe, args[3], true);
                                     for (BlockHistoryEntry bh : list) {
-                                        bh.setDeletedby(id);
+                                        bh.setDeletedBy(id);
                                         RelluEssentials.getInstance().blockHistoryList.add(bh);
                                     }
                                     p.sendMessage("Added: " + list.size());

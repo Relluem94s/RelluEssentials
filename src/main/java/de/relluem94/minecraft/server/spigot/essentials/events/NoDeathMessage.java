@@ -9,6 +9,7 @@ import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import org.jetbrains.annotations.NotNull;
 
 public class NoDeathMessage implements Listener {
 
@@ -35,7 +37,7 @@ public class NoDeathMessage implements Listener {
         e.setDroppedExp(0);
         e.setDeathMessage(null);
 
-        Player p = e.getEntity().getPlayer();
+        Player p = e.getEntity();
         Location ploc = p.getLocation();
         Location location = new Location(ploc.getWorld(), ploc.getBlockX(), ploc.getBlockY(), ploc.getBlockZ(), ploc.getYaw(), ploc.getPitch());
 
@@ -47,7 +49,10 @@ public class NoDeathMessage implements Listener {
         le.setLocationType(locationType);
         le.setPlayerId(pe.getId());
 
-        p.sendMessage(String.format(PLUGIN_EVENT_DEATH, le.getLocationName(), (int) le.getLocation().getX(), (int) le.getLocation().getY(), (int) le.getLocation().getZ(), le.getLocation().getWorld().getName()));
+        World world = le.getLocation().getWorld();
+        String locationName = le.getLocationName();
+        Location leLocation = le.getLocation();
+
         Bukkit.getConsoleSender().getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + p.getName() + " [\"\",{\"text\":\"" + PLUGIN_EVENT_DEATH_TP + "\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/home " + le.getLocationName() + "\"}}]");
         
         RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
@@ -58,14 +63,20 @@ public class NoDeathMessage implements Listener {
         }
        
         for(ItemStack is : p.getInventory().getContents()){
-            if(CustomItems.coins.almostEquals(is) && is.getItemMeta().getPersistentDataContainer().has(itemCoins, PersistentDataType.INTEGER)){
+            if(is.getItemMeta() != null && CustomItems.coins.almostEquals(is) && is.getItemMeta().getPersistentDataContainer().has(itemCoins, PersistentDataType.INTEGER)){
                 p.getInventory().remove(is);
             }
         }
+
+        if(world == null){
+            return;
+        }
+
+        p.sendMessage(String.format(PLUGIN_EVENT_DEATH, locationName, (int) leLocation.getX(), (int) leLocation.getY(), (int) leLocation.getZ(), world.getName()));
     }
 
     @EventHandler
-    public void onRespawn(PlayerRespawnEvent e) {
+    public void onRespawn(@NotNull PlayerRespawnEvent e) {
         Player p = e.getPlayer();
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         if(pe != null){
@@ -75,7 +86,7 @@ public class NoDeathMessage implements Listener {
     }
 
     @EventHandler
-    public void onWorldChange(PlayerChangedWorldEvent e) {
+    public void onWorldChange(@NotNull PlayerChangedWorldEvent e) {
         Player p = e.getPlayer();
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         if(pe != null){
@@ -85,7 +96,7 @@ public class NoDeathMessage implements Listener {
     }
 
     @EventHandler
-    public void onWorldChange(PlayerTeleportEvent e) {
+    public void onWorldChange(@NotNull PlayerTeleportEvent e) {
         Player p = e.getPlayer();
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         if(pe != null){

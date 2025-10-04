@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_GAME_MODE_0_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -65,7 +65,7 @@ public class GameModeSurvival implements CommandConstruct {
     private void gameMode(@NotNull Player p) {
         p.setGameMode(GameMode.SURVIVAL);
         PlayerHelper.setFlying(p);
-        p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAMEMODE_0_NAME + PLUGIN_COLOR_COMMAND));
+        p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAME_MODE_0_NAME + PLUGIN_COLOR_COMMAND));
     }
 
     @Override

@@ -1,3 +1,4 @@
+#file: noinspection PluginYml
 name: ${name}
 version: ${version}
 api-version: ${plugin.apiVersion}
@@ -25,7 +26,7 @@ commands:
         description: Toggle your fly mode
         usage: /fly
     craft:
-        description: Open Craftingbench protable
+        description: Open Crafting bench portable
         usage: /craft
     cookie:
         description: Share a Cookie (with your best friend)
@@ -64,16 +65,16 @@ commands:
         description: Kill yourself
         usage: /suicide
     more:
-        description: Give yourself more of the item in your Mainhand
+        description: Give yourself more of the item in your main hand
         usage: /more
     repair:
-        description: Repair your Tool in the Mainhand
+        description: Repair your Tool in the main hand
         usage: /repair
     home:
-        description: Teleport to your Bedspawn
+        description: Teleport to your Bed spawn or homes
         usage: /home
     god:
-        description: toogle god mode
+        description: toggle god mode
         usage: /god
     admin:
         description: shows options for admins
@@ -104,7 +105,7 @@ commands:
         description: shows player location
         usage: /where
     print:
-        description: sends message from player or commandblock
+        description: sends message from player or command block
         usage: /print
     broadcast:
         description: sends message to all players via chat or title
@@ -128,7 +129,7 @@ commands:
         description: not a command
         usage: /ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj
     gamerules:
-        description: shows gamerules from world the sender is in
+        description: shows game rules from world the sender is in
         usage: /gamerules
     protect:
         description: protects Blocks, Modify Protections add Flags etc 
@@ -146,7 +147,7 @@ commands:
         description: Linux like exit 
         usage: /exit
     teleport:
-        description: Telport Player
+        description: Teleport Player
         usage: /teleport
     back:
         description: Teleports to last location

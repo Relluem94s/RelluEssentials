@@ -79,7 +79,7 @@ public class BetterPlayerJoin implements Listener {
         int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
 
         if(onlinePlayers >= maxPlayers){
-                e.disallow(null, EventConstants.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN);
+                e.disallow(PlayerLoginEvent.Result.KICK_FULL, EventConstants.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN);
         }
     }
 

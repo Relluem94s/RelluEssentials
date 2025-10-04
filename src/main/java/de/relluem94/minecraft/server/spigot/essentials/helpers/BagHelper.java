@@ -102,12 +102,12 @@ public class BagHelper {
 
     public static Inventory getBags(boolean npc, String title){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title), CustomItems.npc_gui_disabled.getCustomItem());
-        ListIterator<BagTypeEntry> bteli = RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().listIterator();
+        ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().listIterator();
 
         int slot = 0;
-        while(bteli.hasNext()){
+        while(bagTypeEntryListIterator.hasNext()){
             slot = InventoryHelper.getNextSlot(slot);
-            BagTypeEntry bte = bteli.next();
+            BagTypeEntry bte = bagTypeEntryListIterator.next();
             inv.setItem(slot, BagHelper.getItem(bte, npc).getCustomItem());
             slot++;
         }
@@ -116,12 +116,12 @@ public class BagHelper {
 
     public static Inventory getBags(PlayerEntry pe){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI), CustomItems.npc_gui_disabled.getCustomItem());
-        ListIterator<BagTypeEntry> bteli = RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().listIterator();
+        ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().listIterator();
 
         int slot = 0;
-        while(bteli.hasNext()){
+        while(bagTypeEntryListIterator.hasNext()){
             slot = InventoryHelper.getNextSlot(slot);
-            BagTypeEntry bte = bteli.next();
+            BagTypeEntry bte = bagTypeEntryListIterator.next();
             if(hasBag(pe.getId(), bte.getId())){
                 inv.setItem(slot, BagHelper.getItem(bte, false).getCustomItem());
                 slot++;

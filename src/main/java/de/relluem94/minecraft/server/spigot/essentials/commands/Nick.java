@@ -37,7 +37,7 @@ public class Nick implements CommandExecutor {
             return true;
         }
         
-        Player target = Bukkit.getPlayer(args[0]).getPlayer();
+        Player target = Bukkit.getPlayer(args[0]);
 
         if (target == null) {
             sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));

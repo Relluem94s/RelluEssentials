@@ -83,7 +83,7 @@ public class CloudSailor implements Listener {
     public void onSail(PlayerMoveEvent e) {
         Player p = e.getPlayer();
         if (isInWorld(p, Arrays.asList(RelluEssentials.getInstance().worlds))) {
-            if (!e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation())) {
+            if (e.getTo() != null && !e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation())) {
                 if (p.getInventory().getItemInOffHand().equals(CustomItems.cloudSailor.getCustomItem()) || (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem()))) {
                     if (!p.isFlying() && !p.isSneaking()) {
 

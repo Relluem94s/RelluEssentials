@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *
@@ -26,7 +27,7 @@ public class ToolCrafting implements Listener {
     private final Material[] leather = new Material[]{Material.SHIELD, Material.SHEARS, Material.FLINT_AND_STEEL, Material.COMPASS, Material.CLOCK, Material.FISHING_ROD, Material.WOODEN_HOE, Material.WOODEN_AXE, Material.WOODEN_PICKAXE, Material.WOODEN_SHOVEL, Material.WOODEN_SWORD, Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.LEATHER_HORSE_ARMOR};
 
     @EventHandler
-    public void addRarityToTools(PrepareSmithingEvent e) {
+    public void addRarityToTools(@NotNull PrepareSmithingEvent e) {
         if (e.getResult() != null) {
             ItemMeta im = e.getResult().getItemMeta();
 
@@ -45,7 +46,7 @@ public class ToolCrafting implements Listener {
         }
     }
 
-    private void addRarity(Material[] mats, ItemStack is, Rarity rarity){
+    private void addRarity(Material @NotNull [] mats, @NotNull ItemStack is, Rarity rarity){
         ItemMeta im = is.getItemMeta();
         for (Material m : mats) {
             if (is.getType().equals(m) && im != null) {
@@ -56,7 +57,7 @@ public class ToolCrafting implements Listener {
     }
 
     @EventHandler
-    public void addRarityToTools(PrepareItemCraftEvent e) {
+    public void addRarityToTools(@NotNull PrepareItemCraftEvent e) {
         if (e.getRecipe() != null) {
             addRarity(netherite, e.getRecipe().getResult(), Rarity.EPIC);
             addRarity(diamond, e.getRecipe().getResult(), Rarity.RARE);

@@ -17,21 +17,21 @@ public class RelluShield extends ItemHelper{
 
     @Override
     public void init() {
-        BlockStateMeta bmeta = (BlockStateMeta) getItemMeta();
+        BlockStateMeta blockStateMeta = (BlockStateMeta) getItemMeta();
 
-        Banner banner = (Banner) bmeta.getBlockState();
+        Banner banner = (Banner) blockStateMeta.getBlockState();
         banner.setBaseColor(DyeColor.PURPLE);
 
         banner.update();
 
-        bmeta.setBlockState(banner);
+        blockStateMeta.setBlockState(banner);
 
-        bmeta.addEnchant(Enchantment.SHARPNESS, 94, true);
-        bmeta.addEnchant(Enchantment.THORNS, 94, true);
-        bmeta.addEnchant(Enchantment.LOOTING, 94, true);
-        bmeta.addEnchant(Enchantment.PROTECTION, 94, true);
-        bmeta.setUnbreakable(true);
-        setItemMeta(bmeta);
+        blockStateMeta.addEnchant(Enchantment.SHARPNESS, 94, true);
+        blockStateMeta.addEnchant(Enchantment.THORNS, 94, true);
+        blockStateMeta.addEnchant(Enchantment.LOOTING, 94, true);
+        blockStateMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+        blockStateMeta.setUnbreakable(true);
+        setItemMeta(blockStateMeta);
     }
     
 }

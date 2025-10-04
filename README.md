@@ -53,8 +53,8 @@ What does the plugin include?
 * Change time to Day (`/day`)
 * Open the Enderchest (`/enderchest`)
 * Linux Like (`/exit`)
-* Flymode (`/fly`)
-* Gamemode (`/0` `/1 `/`2` `/3`)
+* Fly mode (`/fly`)
+* Game mode (`/0` `/1 `/`2` `/3`)
 * List all Gamerules for the current World (`/gamerules`)
 * Play as god (`/god`)
 * Gives a Player Head (`/head`)
@@ -67,8 +67,8 @@ What does the plugin include?
 * Change time to Night (`/night`)
 * Set Permission Group (`/setGroup`)
 * Poke a Player if he does not respond (`/poke`)
-* Portable Craftingbench (`/craft`)
-* Print Message in Chat in Player / Commandblock Name (`/print`)
+* Portable Crafting Bench (`/craft`)
+* Print Message in Chat in Player / Command Block Name (`/print`)
 * Protect your Chests, Doors and other Blocks with (`/protect`)
 * Shows you your Money in your Purse (`/purse`)
 * Change Weather to Rain (`/rain`)
@@ -77,7 +77,7 @@ What does the plugin include?
 * Repair your favorite Tools (`/repair`)
 * Does a rollback of a player (`/rollback`) (WIP)
 * Edit or Copy your Signs (`/sign`)
-* Teleport to Worldspawn (`/spawn`)
+* Teleport to World Spawn (`/spawn`)
 * Change your Speed with (`/speed`)
 * Change Weather to Storm (`/storm`)
 * Linux Like (`/sudo`)
@@ -104,7 +104,7 @@ What does the plugin include?
     * Florist
     * Lumberjack
     * Miner
-    * Musican
+    * Musician
     * Shepherd
     * Smith
 * NPCs in Game via Code
@@ -129,10 +129,10 @@ What does the plugin include?
 
 ## Enchantments
 * Replenishment (Auto Replant Seeds)
-* Autosmelt  (Smelts all Blocks)
+* AutoSmelt  (Smelts all Blocks)
 * Telekinesis (Teleports item into Inventory)
 * Delicate (Prevents breaking immature Crops and Stems)
-* Thunderstrike (Strikes Entity with a Lightning Bolt)
+* ThunderStrike (Strikes Entity with a Lightning Bolt)
 
 
 ## Skills
@@ -147,11 +147,11 @@ What does the plugin include?
     * Color Codes for VIP and higher
     * Chat Channels Vip, Mod, Admin | #v, #m, #a
 * Better Player Join Message (Shows Custom Join Message)
-  * Sets Custom Tab Header and Footer (defined in config.yml)
-  * Sets Flymode to enabled 
-    * if VIP or higer 
+  * Sets Custom Tab Header and Footer (Database)
+  * Sets Fly mode to enabled 
+    * if VIP or higher 
     * if in air
-    * if flymode enabled in players.yml
+    * if fly mode enabled in playerEntry (Database)
 * Better Player Quit Message (Shows Custom Leave Message)
 * Better Block Drop (Glass etc.)
 * Better Mobs (Disable Phantom)
@@ -159,7 +159,7 @@ What does the plugin include?
 * Better Safety (Auto disable some commands like /pl)
 * Player Move is disabled while afk
 * Player Head Info
-* Cloudsailor (Gliding Feather and Boots)
+* CloudSailor (Gliding Feather and Boots)
 * Tool Crafting with Rarity, Higher Tier is unbreakable
 * No Death Message
   * Save Death Location as Home

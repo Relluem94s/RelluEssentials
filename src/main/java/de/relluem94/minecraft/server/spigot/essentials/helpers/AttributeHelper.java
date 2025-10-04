@@ -29,16 +29,16 @@ public class AttributeHelper {
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    public static @NotNull Multimap<Attribute, AttributeModifier> addAttribute(@Nonnull Attribute attribute, Operation operation, EquipmentSlotGroup slot, String name, double multiplyer){
+    public static @NotNull Multimap<Attribute, AttributeModifier> addAttribute(@Nonnull Attribute attribute, Operation operation, EquipmentSlotGroup slot, String name, double multiplier){
         Multimap<Attribute, AttributeModifier> attributes = ArrayListMultimap.create();
-        attributes.put(attribute, new AttributeModifier(new NamespacedKey(RelluEssentials.getInstance(), name), multiplyer, operation, slot));
+        attributes.put(attribute, new AttributeModifier(new NamespacedKey(RelluEssentials.getInstance(), name), multiplier, operation, slot));
         return attributes;
     }
 
     @Contract("_, _, _, _, _, _ -> param1")
     @SuppressWarnings({"UnstableApiUsage", "unused"})
-    public static @NotNull Multimap<Attribute, AttributeModifier> addAttribute(@NotNull Multimap<Attribute, AttributeModifier> attributes, @Nonnull Attribute attribute, Operation operation, EquipmentSlotGroup slot, String name, double multiplyer){
-        attributes.put(attribute, new AttributeModifier(new NamespacedKey(RelluEssentials.getInstance(), name), multiplyer, operation, slot));
+    public static @NotNull Multimap<Attribute, AttributeModifier> addAttribute(@NotNull Multimap<Attribute, AttributeModifier> attributes, @Nonnull Attribute attribute, Operation operation, EquipmentSlotGroup slot, String name, double multiplier){
+        attributes.put(attribute, new AttributeModifier(new NamespacedKey(RelluEssentials.getInstance(), name), multiplier, operation, slot));
         return attributes;
     }
 }

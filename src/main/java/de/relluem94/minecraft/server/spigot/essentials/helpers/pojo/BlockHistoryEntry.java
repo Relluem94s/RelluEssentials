@@ -14,9 +14,9 @@ public class BlockHistoryEntry {
     private LocationEntry location;
     private String material;
     private String created;
-    private int createdby;
+    private int createdBy;
     private String updated;
     private int updatedBy;
     private String deleted;
-    private int deletedby;
+    private int deletedBy;
 }

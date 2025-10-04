@@ -128,7 +128,7 @@ public class BetterNPC implements Listener {
     }
 
 
-    private void trade(ItemStack is, Inventory inv, Player p, PlayerEntry pe, int slot, boolean isRigthClicked){
+    private void trade(ItemStack is, Inventory inv, Player p, PlayerEntry pe, int slot, boolean isRightClicked){
         if(CustomItems.npc_gui_close.equalsExact(is)){
             InventoryHelper.closeInventory(p);
         }
@@ -205,7 +205,7 @@ public class BetterNPC implements Listener {
 
             if(inv.getType().equals(InventoryType.CHEST)){
                 ItemStack itemStack = is.clone();
-                if(isRigthClicked){
+                if(isRightClicked){
                     amountOfItem = 64;
                     itemStack.setAmount(64);
                 }
@@ -243,7 +243,7 @@ public class BetterNPC implements Listener {
 
                     double coins;
                     
-                    if(isRigthClicked){
+                    if(isRightClicked){
                         amountOfItem = 0;
                         ItemStack[] iss = p.getInventory().getContents();
                         for(ItemStack lis : iss){
@@ -353,8 +353,8 @@ public class BetterNPC implements Listener {
                 else if(BankerHelper.npc_gui_balance_transactions.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                     p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION);
-                    List<BankTransactionEntry> btel = RelluEssentials.getInstance().getDatabaseHelper().getTransactionsToBankFromPlayer(bae.getId());
-                    for(BankTransactionEntry bte: btel){
+                    List<BankTransactionEntry> bankTransactionEntryList = RelluEssentials.getInstance().getDatabaseHelper().getTransactionsToBankFromPlayer(bae.getId());
+                    for(BankTransactionEntry bte: bankTransactionEntryList){
                         p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST, bte.getValue() > 1 ? EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE : EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE, StringHelper.formatDouble(bte.getValue()), bte.getCreated()));
                     }
                 }
