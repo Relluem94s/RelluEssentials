@@ -52,6 +52,11 @@
             <name>Relluem94s</name>
             <url>https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo</url>
         </repository>
+        <repository>
+            <id>checkItemPrice</id>
+            <name>Relluem94s</name>
+            <url>https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo</url>
+        </repository>
     </repositories>
     <profiles>
         <profile>
@@ -262,6 +267,11 @@
                 <groupId>de.relluem94.maven.plugin</groupId>
                 <artifactId>entity-check-plugin</artifactId>
                 <version>1.1.0-SNAPSHOT</version>
+            </plugin>
+            <plugin>
+                <groupId>de.relluem94.maven.plugin</groupId>
+                <artifactId>item-check-plugin</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </plugin>
         </plugins>
     </build>
