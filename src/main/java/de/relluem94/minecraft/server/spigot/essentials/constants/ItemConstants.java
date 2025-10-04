@@ -3,10 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.constants;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 
-import org.bukkit.NamespacedKey;
-
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-
 /**
  *
  * @author rellu

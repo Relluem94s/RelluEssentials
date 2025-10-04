@@ -8,8 +8,6 @@ import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 
-import java.util.List;
-
 public class CustomEnchantment {
     @Getter
     private final NamespacedKey key;

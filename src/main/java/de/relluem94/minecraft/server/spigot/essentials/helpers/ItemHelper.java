@@ -8,11 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.CustomEnchantment;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;

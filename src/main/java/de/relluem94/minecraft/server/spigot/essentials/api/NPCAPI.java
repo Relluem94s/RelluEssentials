@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 

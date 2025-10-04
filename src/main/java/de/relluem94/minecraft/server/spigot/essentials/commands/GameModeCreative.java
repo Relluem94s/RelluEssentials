@@ -46,7 +46,9 @@ public class GameModeCreative implements CommandConstruct {
                 sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
                 return true;
             }
-            return gameMode(target);
+
+            gameMode(target);
+            return true;
         }
 
         if (!isPlayer(sender)) {
@@ -54,15 +56,13 @@ public class GameModeCreative implements CommandConstruct {
             return true;
         }
 
-        Player p = (Player) sender;
-
-        return gameMode(p);
+        gameMode((Player) sender);
+        return true;
     }
 
-    private boolean gameMode(@NotNull Player p) {
+    private void gameMode(@NotNull Player p) {
         p.setGameMode(org.bukkit.GameMode.CREATIVE);
         p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAMEMODE_1_NAME + PLUGIN_COLOR_COMMAND));
-        return true;
     }
 
     @Override

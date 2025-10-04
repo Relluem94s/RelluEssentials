@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import java.util.*;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -37,13 +38,14 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
+import org.jetbrains.annotations.NotNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 public class BetterBags implements Listener {
     
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent e){
+    public void onBlockBreak(@NotNull BlockBreakEvent e){
         Player p = e.getPlayer();
         Block b = e.getBlock();
         Material m = b.getType();
@@ -104,11 +106,11 @@ public class BetterBags implements Listener {
         }
     }
 
-    private boolean isChorusPlant(Block block){
+    private boolean isChorusPlant(@NotNull Block block){
         return block.getType().equals(Material.CHORUS_PLANT);
     }
 
-    private Set<Block> getChorusBlocks(Block b, int count, BlockFace prevBlockFace){
+    private @NotNull Set<Block> getChorusBlocks(Block b, int count, BlockFace prevBlockFace){
         Set<Block> blocks = new LinkedHashSet<>();
 
         count ++;
@@ -132,14 +134,14 @@ public class BetterBags implements Listener {
         return blocks;
     }
 
-    private boolean isSugarCaneOrIsBamboo(Block b){
+    private boolean isSugarCaneOrIsBamboo(@NotNull Block b){
         return b.getType().equals(Material.SUGAR_CANE) || b.getType().equals(Material.BAMBOO);
     }
 
     private final Random random = new Random();
 
     @EventHandler
-    public void onBlockDrop(BlockDropItemEvent e) {
+    public void onBlockDrop(@NotNull BlockDropItemEvent e) {
         Player p = e.getPlayer();
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
@@ -208,7 +210,7 @@ public class BetterBags implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClickItem(InventoryClickEvent e) {
+    public void onInventoryClickItem(@NotNull InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player p && e.getCurrentItem() != null){
             if (e.getView().getTitle().startsWith(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE) && e.getView().getTitle().endsWith(" Bag")) {
 
@@ -249,7 +251,6 @@ public class BetterBags implements Listener {
                             be.setHasToBeUpdated(true);
                             Objects.requireNonNull(p.getInventory().getItem(e.getSlot())).setAmount(0);
                         }
-                        p.updateInventory();
                     }
                     else{
                         ItemStack cleanIS = ItemHelper.getCleanItemStack(is);
@@ -266,7 +267,6 @@ public class BetterBags implements Listener {
                                         be.setSlotValue(slot, value);
                                         be.setHasToBeUpdated(true);
                                         p.getInventory().addItem(cleanIS);
-                                        p.updateInventory();
                                         if(p.getInventory().firstEmpty() == -1){
                                             break;
                                         }
@@ -276,7 +276,6 @@ public class BetterBags implements Listener {
                                         be.setSlotValue(slot, 0);
                                         be.setHasToBeUpdated(true);
                                         p.getInventory().addItem(cleanIS);
-                                        p.updateInventory();
                                         break;
                                     }
                                 }
@@ -293,7 +292,6 @@ public class BetterBags implements Listener {
                                     }
                                     be.setHasToBeUpdated(true);
                                     p.getInventory().addItem(cleanIS);
-                                    p.updateInventory();
                                 }
                             }
                         }
@@ -317,7 +315,7 @@ public class BetterBags implements Listener {
 
 
     @EventHandler
-    public void onItemCollect(EntityPickupItemEvent e) {
+    public void onItemCollect(@NotNull EntityPickupItemEvent e) {
         if(e.getEntity() instanceof Player p){
 
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
@@ -327,7 +325,13 @@ public class BetterBags implements Listener {
                 ItemMeta im = is.getItemMeta();
 
                 if(im != null && im.getPersistentDataContainer().has(itemCoins, PersistentDataType.INTEGER)){
-                    int coins = im.getPersistentDataContainer().get(itemCoins, PersistentDataType.INTEGER) * is.getAmount();
+                    Integer itemCoins = im.getPersistentDataContainer().get(NamespacedKeyConstants.itemCoins, PersistentDataType.INTEGER);
+
+                    if(itemCoins == null){
+                        itemCoins = 0;
+                    }
+
+                    int coins = itemCoins * is.getAmount();
                     ChatHelper.sendMessageInActionBar(p, String.format(Constants.PLUGIN_COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
                     pe.setPurse(pe.getPurse() + coins);
 
@@ -343,13 +347,11 @@ public class BetterBags implements Listener {
 
             if(BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(), p, pe)){
                 p.getInventory().remove(is);
-                p.updateInventory();
                 e.setCancelled(true);
                 e.getItem().remove();
             }
             else{
                 p.getInventory().addItem(is);
-                p.updateInventory();
                 e.setCancelled(true);
                 e.getItem().remove();
                 p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5f, 1f);

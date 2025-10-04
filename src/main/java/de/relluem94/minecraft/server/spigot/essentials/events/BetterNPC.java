@@ -180,8 +180,8 @@ public class BetterNPC implements Listener {
                 return;
             }
 
-            int buyPricePerItem;
-            int sellPricePerItem;
+            Integer buyPricePerItem;
+            Integer sellPricePerItem;
 
             if(itemMeta.getPersistentDataContainer().has(itemSellPrice, PersistentDataType.INTEGER)){
                 sellPricePerItem = itemMeta.getPersistentDataContainer().get(itemSellPrice, PersistentDataType.INTEGER);
@@ -199,7 +199,9 @@ public class BetterNPC implements Listener {
 
             int amountOfItem = is.getAmount();
 
-
+            if(buyPricePerItem == null || sellPricePerItem == null){
+                return;
+            }
 
             if(inv.getType().equals(InventoryType.CHEST)){
                 ItemStack itemStack = is.clone();
@@ -256,10 +258,15 @@ public class BetterNPC implements Listener {
                     }
                     else{
                         coins = sellPricePerItem * (double) amountOfItem;
-                        p.getInventory().getItem(slot).setAmount(0);
+
+                        ItemStack itemStack = p.getInventory().getItem(slot);
+                        if(itemStack == null){
+                            return;
+                        }
+
+                        itemStack.setAmount(0);
                     }
-                    
-                    p.updateInventory();
+
 
                     pe.setPurse(pe.getPurse() + coins);
                     pe.setUpdatedBy(pe.getId());
@@ -370,7 +377,6 @@ public class BetterNPC implements Listener {
             ){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     p.getInventory().addItem(e.getCurrentItem().clone());
-                    p.updateInventory();
                 }
                 e.setCancelled(true);
             }

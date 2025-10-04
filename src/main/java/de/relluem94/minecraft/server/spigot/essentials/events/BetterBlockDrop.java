@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -34,10 +35,15 @@ public class BetterBlockDrop implements Listener {
 
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
+        World world = e.getBlock().getLocation().getWorld();
+        if(world == null){
+            return;
+        }
 
         Material m = e.getBlock().getBlockData().getMaterial();
         for (Material ore : ores) {
-            if (m == ore && Arrays.asList(RelluEssentials.getInstance().oreRespawn).contains(e.getBlock().getLocation().getWorld().getName())) {
+
+            if (m == ore && Arrays.asList(RelluEssentials.getInstance().oreRespawn).contains(world.getName())) {
                 runLater(() -> e.getBlock().setType(m), 10000L);
                 break;
             }

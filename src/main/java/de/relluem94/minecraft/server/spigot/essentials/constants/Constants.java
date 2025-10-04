@@ -76,9 +76,6 @@ public interface Constants {
     String PLUGIN_MANAGER_COMMANDS_REGISTERED = "%s Befehle erfolgreich registriert!";
     String PLUGIN_MANAGER_REGISTER_AUTOSAVE = "Registriere Auto Save!";
     String PLUGIN_MANAGER_AUTOSAVE_REGISTERED = "Auto Save erfolgreich registriert!";
-    String PLUGIN_MANAGER_REGISTER_ENCHANTMENTS = "Registriere Enchantments!";
-    String PLUGIN_MANAGER_ENCHANTMENTS_REGISTERED = "%s Enchantments erfolgreich registriert!";
-    String PLUGIN_MANAGER_REGISTER_ENCHANTMENT = "Registered enchantment %s with id %s!";
 
     String PLUGIN_INTERNAL_UTILITY_CLASS = "This is a Utility Class";
 

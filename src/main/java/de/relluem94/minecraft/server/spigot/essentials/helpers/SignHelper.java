@@ -45,10 +45,12 @@ public class SignHelper {
         }
     }
 
+    @SuppressWarnings("SameReturnValue")
     public String getLine0() {
         return PLUGIN_SIGN_NAME;
     }
 
+    @SuppressWarnings("SameReturnValue")
     public String getLine3() {
         return PLUGIN_SIGN_CLICK;
     }
