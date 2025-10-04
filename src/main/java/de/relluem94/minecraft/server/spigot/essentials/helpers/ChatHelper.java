@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.reply;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;

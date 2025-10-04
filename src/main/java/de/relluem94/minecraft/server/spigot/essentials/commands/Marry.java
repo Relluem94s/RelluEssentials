@@ -93,7 +93,7 @@ public class Marry implements CommandConstruct {
     }
 
 
-    public void marry(Player player, Player target){
+    public void marry(@NotNull Player player, @NotNull Player target){
         target.sendMessage(String.format(PLUGIN_COMMAND_MARRY_MARRIED, player.getCustomName()));
         player.sendMessage(String.format(PLUGIN_COMMAND_MARRY_MARRIED, target.getCustomName()));
 
@@ -128,7 +128,7 @@ public class Marry implements CommandConstruct {
 
 
 
-    private void divorce(PlayerEntry pe) {
+    private void divorce(@NotNull PlayerEntry pe) {
         PlayerPartnerEntry ppe = pe.getPartner();
 
         PlayerEntry secondPlayerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry((ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId() : ppe.getFirstPartnerId()));
