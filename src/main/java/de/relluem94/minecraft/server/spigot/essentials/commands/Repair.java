@@ -54,8 +54,6 @@ public class Repair implements CommandConstruct {
             else{
                 p.sendMessage(String.format(PLUGIN_COMMAND_CANNOT_REPAIR, p.getInventory().getItemInMainHand().getType().name()));
             }
-
-            return true;
         } else {
             Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
@@ -75,10 +73,8 @@ public class Repair implements CommandConstruct {
             else{
                 p.sendMessage(String.format(PLUGIN_COMMAND_CANNOT_REPAIR, p.getInventory().getItemInMainHand().getType().name()));
             }
-
-            return true;
-
         }
+        return true;
     }
 
     @Override

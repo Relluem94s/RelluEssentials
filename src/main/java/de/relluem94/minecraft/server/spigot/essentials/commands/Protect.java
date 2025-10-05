@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -57,7 +58,7 @@ public class Protect implements CommandConstruct {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
 
         if (args.length == 0) {
-            p.sendMessage(PLUGIN_COMMAND_PROTECT_COMMAND_INFO);
+            p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_COMMAND_INFO, AnnotationHelper.getCommandName(this.getClass()), Commands.ADD.getName(), Commands.REMOVE.getName(), Commands.FLAG.getName(), Commands.RIGHT.getName(), Commands.INFO.getName()));
         } else if (args.length == 1) {
             if (args[0].equalsIgnoreCase(Commands.ADD.getName())) {
                 p.sendMessage(PLUGIN_COMMAND_PROTECT_ADD);
@@ -66,9 +67,9 @@ public class Protect implements CommandConstruct {
                 p.sendMessage(PLUGIN_COMMAND_PROTECT_REMOVE);
                 pe.setPlayerState(PlayerState.PROTECTION_REMOVE);
             } else if (args[0].equalsIgnoreCase(Commands.FLAG.getName())) {
-                p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG);
+                p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_FLAG, AnnotationHelper.getCommandName(this.getClass()), Commands.FLAG.getName(), Commands.FLAG.getSubCommands()[1], Commands.FLAG.getSubCommands()[0]));
             } else if (args[0].equalsIgnoreCase(Commands.RIGHT.getName())) {
-                p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT);
+                p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_RIGHT, AnnotationHelper.getCommandName(this.getClass()), Commands.RIGHT.getName(), Commands.RIGHT.getSubCommands()[1], Commands.RIGHT.getSubCommands()[0]));
             } else if (args[0].equalsIgnoreCase(Commands.INFO.getName())) {
                 pe.setPlayerState(PlayerState.PROTECTION_INFO);
                 p.sendMessage(PLUGIN_COMMAND_PROTECT_INFO);
@@ -77,7 +78,7 @@ public class Protect implements CommandConstruct {
             }
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase(Commands.FLAG.getName())) {
-                if (args[1].equalsIgnoreCase(Commands.ADD.getSubCommands()[0])) {
+                if (args[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[0])) {
                     try {
                         if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_ADD);
@@ -88,7 +89,7 @@ public class Protect implements CommandConstruct {
                         p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_NOT_FOUND);
                         p.sendMessage(getFlags());
                     }
-                } else if (args[1].equalsIgnoreCase(Commands.REMOVE.getName())) {
+                } else if (args[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[1])) {
                     try {
                         if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_REMOVE);

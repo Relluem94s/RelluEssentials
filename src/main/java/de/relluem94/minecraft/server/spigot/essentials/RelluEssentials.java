@@ -158,7 +158,9 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Rain()),
             new CommandWrapper(new Rename()),
             new CommandWrapper(new Repair()),
-            new CommandWrapper(new Reply())
+            new CommandWrapper(new Reply()),
+            //ROLLBACK
+            new CommandWrapper(new Sign())
     );
     
     public static synchronized RelluEssentials getInstance() {
