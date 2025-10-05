@@ -1685,7 +1685,7 @@ public class DatabaseHelper {
                 ps.execute();
 
                 try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
+                    while (rs.next()) {
                         BagTypeEntry bte = new BagTypeEntry();
 
                         bte.setId(rs.getInt("id"));
