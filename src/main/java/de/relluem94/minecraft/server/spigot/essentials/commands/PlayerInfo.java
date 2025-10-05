@@ -57,7 +57,7 @@ public class PlayerInfo implements CommandConstruct {
             return true;
         }
 
-        if (!Permission.isAuthorized(sender, Groups.getGroup("user").getId())) {
+        if (!Permission.isAuthorized(sender, Groups.getGroup("vip").getId())) {
             sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         }
@@ -121,7 +121,7 @@ public class PlayerInfo implements CommandConstruct {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         List<String> tabList = new ArrayList<>();
 
-        if (!Permission.isAuthorized(commandSender, Groups.getGroup("user").getId())) {
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("vip").getId())) {
             return tabList;
         }
 
