@@ -160,7 +160,11 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Repair()),
             new CommandWrapper(new Reply()),
             //ROLLBACK
-            new CommandWrapper(new Sign())
+            new CommandWrapper(new Sign()),
+
+
+            // THIS IS A DEV COMMAND
+            new CommandWrapper(new TestCommand())
     );
     
     public static synchronized RelluEssentials getInstance() {

@@ -4,27 +4,27 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_RELLU;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -38,10 +38,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.MobHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.items.RelluBoots;
 import de.relluem94.minecraft.server.spigot.essentials.items.RelluChestplate;
@@ -50,15 +46,15 @@ import de.relluem94.minecraft.server.spigot.essentials.items.RelluLeggings;
 import de.relluem94.minecraft.server.spigot.essentials.items.RelluPickaxe;
 import de.relluem94.minecraft.server.spigot.essentials.items.RelluShield;
 import de.relluem94.minecraft.server.spigot.essentials.items.RelluSword;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class TestCommand implements CommandExecutor {
+@CommandName("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")
+public class TestCommand implements CommandConstruct {
+
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND)) {
-            return false;
-        }
-
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
@@ -81,41 +77,29 @@ public class TestCommand implements CommandExecutor {
             return true;   
         }
 
-        if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_CUSTOMMOB)) {
+        if (args[0].equalsIgnoreCase(Commands.CUSTOM_MOB.getName())) {
             cm(p.getLocation());
-        } else if (args[0].equalsIgnoreCase("pick")) {
+        } else if (args[0].equalsIgnoreCase(Commands.PICKAXE.getName())) {
             p.getInventory().addItem(new RelluPickaxe().getCustomItem());
-        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_CLOUDSAILOR)) {
+        } else if (args[0].equalsIgnoreCase(Commands.CLOUD_SAILOR.getName())) {
             p.getInventory().addItem(CustomItems.cloudSailor.getCustomItem());
             p.getInventory().addItem(CustomItems.cloudBoots.getCustomItem());
-        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_RELLU)) {
+        } else if (args[0].equalsIgnoreCase(Commands.RELLU.getName())) {
             rellu(p);
-        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_SMELT)) {
+        } else if (args[0].equalsIgnoreCase(Commands.SMELT.getName())) {
             CustomEnchants.autosmelt.addTo(p.getInventory().getItemInMainHand());
-        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_TELE)) {
+        } else if (args[0].equalsIgnoreCase(Commands.TELE.getName())) {
             CustomEnchants.telekinesis.addTo(p.getInventory().getItemInMainHand());
-        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_NOENCHANT)) {
+        } else if (args[0].equalsIgnoreCase(Commands.NO_ENCHANT.getName())) {
             CustomEnchants.autosmelt.removeFrom(p.getInventory().getItemInMainHand());
             CustomEnchants.telekinesis.removeFrom(p.getInventory().getItemInMainHand());
-        } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TEST_COMMAND_WORLDS)) {
+        } else if (args[0].equalsIgnoreCase(Commands.WORLDS.getName())) {
             worlds(p);
-        } else if (args[0].equalsIgnoreCase("bc")) {
-            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            RelluEssentials.getInstance().getDatabaseHelper().insertBag(1, pe.getId());
-        } else if (args[0].equalsIgnoreCase("bo")) {
-            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            p.openInventory(Objects.requireNonNull(BagHelper.getBag(1, pe)));
-        } else if (args[0].equalsIgnoreCase("bc2")) {
-            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            RelluEssentials.getInstance().getDatabaseHelper().insertBag(2, pe.getId());
-        } else if (args[0].equalsIgnoreCase("bo2")) {
-            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            p.openInventory(Objects.requireNonNull(BagHelper.getBag(2, pe)));
-        } else if (args[0].equalsIgnoreCase("di")) {
+        } else if (args[0].equalsIgnoreCase(Commands.DAMAGE_INFO.getName())) {
             di(p);
-        } else if (args[0].equalsIgnoreCase("pl")) {
+        } else if (args[0].equalsIgnoreCase(Commands.PLAYER_STATS.getName())) {
             pl(p);
-        } else if (args[0].equalsIgnoreCase("sk")) {
+        } else if (args[0].equalsIgnoreCase(Commands.SKULL.getName())) {
             p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG_OF_COINS));
             p.getInventory().addItem(PlayerHeadHelper.getCustomSkull(CustomHeads.MONEY_BAG));
         }
@@ -138,7 +122,7 @@ public class TestCommand implements CommandExecutor {
         );
     }
 
-    private void rellu(Player p){
+    private void rellu(@NotNull Player p){
         p.getInventory().addItem(new RelluHelmet().getCustomItem());
         p.getInventory().addItem(new RelluChestplate().getCustomItem());
         p.getInventory().addItem(new RelluLeggings().getCustomItem());
@@ -171,9 +155,58 @@ public class TestCommand implements CommandExecutor {
         }
     }
 
-    private void pl(Player p){
+    private void pl(@NotNull Player p){
         p.sendMessage("Health: " + p.getHealth());
         p.sendMessage("Food: " + p.getFoodLevel());
         p.sendMessage("Exp: " + p.getExp());
+    }
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return Commands.values();
+    }
+
+    @Getter
+    public enum Commands implements CommandsEnum {
+
+        CUSTOM_MOB("cm"),
+        CLOUD_SAILOR("cs"),
+        PICKAXE("pick"),
+        RELLU("rellu"),
+        SMELT("smelt"),
+        TELE("tele"),
+        NO_ENCHANT("noenchant"),
+        WORLDS("worlds"),
+        PLAYER_STATS("pl"),
+        DAMAGE_INFO("di"),
+        SKULL("sk");
+
+        private final String name;
+        private final String[] subCommands;
+
+        Commands(String name, String... subCommands) {
+            this.name = name;
+            this.subCommands = subCommands;
+        }
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        List<String> tabList = new ArrayList<>();
+
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) {
+            return tabList;
+        }
+
+        if (!isPlayer(commandSender)) {
+            return tabList;
+        }
+
+        if(strings.length == 1){
+            tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+            return tabList;
+        }
+
+        return tabList;
     }
 }
