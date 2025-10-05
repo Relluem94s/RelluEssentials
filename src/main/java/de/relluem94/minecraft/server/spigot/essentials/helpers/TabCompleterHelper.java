@@ -4,6 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -11,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,5 +90,15 @@ public class TabCompleterHelper {
         }
 
         return homes;
+    }
+
+    public static @NotNull List<String> getGroups() {
+        List<String> groups = new ArrayList<>();
+
+        for(GroupEntry ge : RelluEssentials.getInstance().groupEntryList){
+            groups.add(ge.getName());
+        }
+
+        return groups;
     }
 }

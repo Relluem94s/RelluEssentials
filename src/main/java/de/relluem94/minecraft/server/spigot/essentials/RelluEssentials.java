@@ -149,6 +149,7 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new More()),
             new CommandWrapper(new Nick()),
             new CommandWrapper(new Night()),
+            new CommandWrapper(new PermissionsGroup()),
             new CommandWrapper(new Reply())
     );
     
