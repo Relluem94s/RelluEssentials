@@ -50,7 +50,7 @@ public class Rain implements CommandConstruct {
 
         World world = Bukkit.getWorld(args[0]);
 
-        if(world == null){ // player target hier.
+        if(world == null){
             p.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, args[0]));
             return true;
         }

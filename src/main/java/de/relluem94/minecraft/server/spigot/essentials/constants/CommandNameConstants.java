@@ -47,16 +47,6 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_TITLE = "title";
     String PLUGIN_COMMAND_NAME_VANISH = "vanish";
     String PLUGIN_COMMAND_NAME_WHERE = "where";
-    String PLUGIN_COMMAND_NAME_PROTECT = "protect";
-    String PLUGIN_COMMAND_NAME_PROTECT_ADD = "add";
-    String PLUGIN_COMMAND_NAME_PROTECT_REMOVE = "remove";
-    String PLUGIN_COMMAND_NAME_PROTECT_INFO = "info";
-    String PLUGIN_COMMAND_NAME_PROTECT_FLAG = "flag";
-    String PLUGIN_COMMAND_NAME_PROTECT_RIGHT = "right";
-    String PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD = "add";
-    String PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE = "remove";
-    String PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD = "add";
-    String PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE = "remove";
     String PLUGIN_COMMAND_NAME_SIGN = "sign";
     String PLUGIN_COMMAND_NAME_SIGN_EDIT = "edit";
     String PLUGIN_COMMAND_NAME_SIGN_COPY = "copy";

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -8,6 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -42,10 +42,6 @@ public class Protect implements CommandConstruct {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT)) {
-            return false;
-        }
-
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
@@ -63,25 +59,25 @@ public class Protect implements CommandConstruct {
         if (args.length == 0) {
             p.sendMessage(PLUGIN_COMMAND_PROTECT_COMMAND_INFO);
         } else if (args.length == 1) {
-            if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_ADD)) {
+            if (args[0].equalsIgnoreCase(Commands.ADD.getName())) {
                 p.sendMessage(PLUGIN_COMMAND_PROTECT_ADD);
                 pe.setPlayerState(PlayerState.PROTECTION_ADD);
-            } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_REMOVE)) {
+            } else if (args[0].equalsIgnoreCase(Commands.REMOVE.getName())) {
                 p.sendMessage(PLUGIN_COMMAND_PROTECT_REMOVE);
                 pe.setPlayerState(PlayerState.PROTECTION_REMOVE);
-            } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG)) {
+            } else if (args[0].equalsIgnoreCase(Commands.FLAG.getName())) {
                 p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG);
-            } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)) {
+            } else if (args[0].equalsIgnoreCase(Commands.RIGHT.getName())) {
                 p.sendMessage(PLUGIN_COMMAND_PROTECT_RIGHT);
-            } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_INFO)) {
+            } else if (args[0].equalsIgnoreCase(Commands.INFO.getName())) {
                 pe.setPlayerState(PlayerState.PROTECTION_INFO);
                 p.sendMessage(PLUGIN_COMMAND_PROTECT_INFO);
             } else {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
             }
         } else if (args.length == 3) {
-            if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG)) {
-                if (args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD)) {
+            if (args[0].equalsIgnoreCase(Commands.FLAG.getName())) {
+                if (args[1].equalsIgnoreCase(Commands.ADD.getSubCommands()[0])) {
                     try {
                         if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_ADD);
@@ -92,7 +88,7 @@ public class Protect implements CommandConstruct {
                         p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_NOT_FOUND);
                         p.sendMessage(getFlags());
                     }
-                } else if (args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE)) {
+                } else if (args[1].equalsIgnoreCase(Commands.REMOVE.getName())) {
                     try {
                         if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
                             p.sendMessage(PLUGIN_COMMAND_PROTECT_FLAG_REMOVE);
@@ -106,8 +102,8 @@ public class Protect implements CommandConstruct {
                 } else {
                     p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 }
-            } else if (args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)) {
-                if (args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD)) {
+            } else if (args[0].equalsIgnoreCase(Commands.RIGHT.getName())) {
+                if (args[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[0])) {
                     OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
 
                     if (player != null) {
@@ -117,7 +113,7 @@ public class Protect implements CommandConstruct {
                     } else {
                         p.sendMessage(String.format(PLUGIN_COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND, args[2]));
                     }
-                } else if (args[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE)) {
+                } else if (args[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[1])) {
                     OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
 
                     if (player != null) {
@@ -154,27 +150,21 @@ public class Protect implements CommandConstruct {
 
         switch (strings.length){
             case 1:
-                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_ADD);
-                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_REMOVE);
-                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_FLAG);
-                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_RIGHT);
-                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_INFO);
+                tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
                 break;
             case 2:
-                if (strings[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG)) {
-                    tabList.add(PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD);
-                    tabList.add(PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE);
+                if (strings[0].equalsIgnoreCase(Commands.FLAG.getName())) {
+                    tabList.addAll(List.of(Commands.FLAG.subCommands));
                 }
-                else if (strings[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)) {
-                    tabList.add(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD);
-                    tabList.add(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE);
+                else if (strings[0].equalsIgnoreCase(Commands.RIGHT.getName())) {
+                    tabList.addAll(List.of(Commands.RIGHT.subCommands));
                 }
                 break;
             case 3:
-                if (strings[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG) && (strings[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD) || strings[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE))) {
+                if (strings[0].equalsIgnoreCase(Commands.FLAG.getName()) && (strings[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[0]) || strings[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[1]))) {
                     tabList.addAll(TabCompleterHelper.getProtectionFlags());
                 }
-                else if (strings[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT) && (strings[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD) || strings[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE))) {
+                else if (strings[0].equalsIgnoreCase(Commands.RIGHT.getName()) && (strings[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[0]) || strings[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[1]))) {
                     tabList.addAll(TabCompleterHelper.getOnlinePlayers());
                 }
                 break;
@@ -185,8 +175,26 @@ public class Protect implements CommandConstruct {
         return tabList;
     }
 
+    @Getter
+    public enum Commands implements CommandsEnum {
+
+        ADD("add"),
+        REMOVE("remove"),
+        INFO("info"),
+        FLAG("flag", "add", "remove"),
+        RIGHT("right", "add", "remove");
+
+        private final String name;
+        private final String[] subCommands;
+
+        Commands(String name, String... subCommands) {
+            this.name = name;
+            this.subCommands = subCommands;
+        }
+    }
+
     @Override
     public CommandsEnum[] getCommands() {
-        return new CommandsEnum[0];
+        return Commands.values();
     }
 }
