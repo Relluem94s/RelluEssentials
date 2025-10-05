@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
