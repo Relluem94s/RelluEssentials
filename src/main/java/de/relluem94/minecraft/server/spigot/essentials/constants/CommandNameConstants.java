@@ -10,7 +10,6 @@ public interface CommandNameConstants {
     //                            COMMAND   STUFF                                   //
     //==============================================================================//
     
-    String PLUGIN_COMMAND_NAME_PURSE = "purse";
     String PLUGIN_COMMAND_NAME_WARP = "warp";
     String PLUGIN_COMMAND_NAME_WARP_ADD = "add";
     String PLUGIN_COMMAND_NAME_WARP_REMOVE = "remove";
@@ -22,10 +21,6 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_GAME_MODE_2_NAME = "Adventure";
     String PLUGIN_COMMAND_NAME_GAME_MODE_3_NAME = "Spectator";
     String PLUGIN_COMMAND_NAME_SUDO = "sudo";
-    String PLUGIN_COMMAND_NAME_PRINT = "print";
-    String PLUGIN_COMMAND_NAME_RAIN = "rain";
-    String PLUGIN_COMMAND_NAME_RENAME = "rename";
-    String PLUGIN_COMMAND_NAME_REPAIR = "repair";
     String PLUGIN_COMMAND_NAME_ROLLBACK = "rollback";
     String PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER = "player";
     String PLUGIN_COMMAND_NAME_ROLLBACK_UNDO = "undo";

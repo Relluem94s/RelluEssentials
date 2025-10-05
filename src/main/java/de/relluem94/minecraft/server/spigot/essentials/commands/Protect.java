@@ -4,9 +4,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandN
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,10 +21,15 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlaye
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
 
-public class Protect implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
 
-    private String getFlags() {
+@CommandName("protect")
+public class Protect implements CommandConstruct {
+
+    private @NotNull String getFlags() {
         ProtectionFlags[] flags = ProtectionFlags.values();
 
         StringBuilder sb = new StringBuilder();
@@ -130,5 +138,55 @@ public class Protect implements CommandExecutor {
         }
         return true;
 
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        List<String> tabList = new ArrayList<>();
+
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("user").getId())) {
+            return tabList;
+        }
+
+        if (!isPlayer(commandSender)) {
+            return tabList;
+        }
+
+        switch (strings.length){
+            case 1:
+                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_ADD);
+                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_REMOVE);
+                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_FLAG);
+                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_RIGHT);
+                tabList.add(PLUGIN_COMMAND_NAME_PROTECT_INFO);
+                break;
+            case 2:
+                if (strings[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG)) {
+                    tabList.add(PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD);
+                    tabList.add(PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE);
+                }
+                else if (strings[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT)) {
+                    tabList.add(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD);
+                    tabList.add(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE);
+                }
+                break;
+            case 3:
+                if (strings[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG) && (strings[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG_ADD) || strings[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_FLAG_REMOVE))) {
+                    tabList.addAll(TabCompleterHelper.getProtectionFlags());
+                }
+                else if (strings[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT) && (strings[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_ADD) || strings[1].equalsIgnoreCase(PLUGIN_COMMAND_NAME_PROTECT_RIGHT_REMOVE))) {
+                    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+                }
+                break;
+            default:
+                break;
+        }
+
+        return tabList;
+    }
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return new CommandsEnum[0];
     }
 }

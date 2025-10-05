@@ -7,17 +7,19 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TO_ITEM;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_INVALID;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PURSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,15 +34,14 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class Purse implements CommandExecutor {
+@CommandName("purse")
+public class Purse implements CommandConstruct {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
-            return false;
-        }
-
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
@@ -62,13 +63,9 @@ public class Purse implements CommandExecutor {
         Player target = Bukkit.getPlayer(args[0]);
         if (target != null) {
             if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PURSE)) {
-                    PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
-                    p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
-                    return true;
-                } else {
-                    return false;
-                }
+                PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
+                p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
+                return true;
             } else {
                 p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
                 return true;
@@ -103,5 +100,15 @@ public class Purse implements CommandExecutor {
             p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY);
         }
         return true;
+    }
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return new CommandsEnum[0];
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        return List.of();
     }
 }
