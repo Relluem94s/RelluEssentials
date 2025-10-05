@@ -162,7 +162,7 @@ public class RelluEssentials extends JavaPlugin {
             //ROLLBACK
             new CommandWrapper(new Sign()),
             new CommandWrapper(new Spawn()),
-
+            new CommandWrapper(new Speed()),
 
             // THIS IS A DEV COMMAND
             new CommandWrapper(new TestCommand())
