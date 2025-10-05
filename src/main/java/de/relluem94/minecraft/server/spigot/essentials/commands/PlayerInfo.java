@@ -16,16 +16,21 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_PLAYER_INFO;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -33,17 +38,15 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
-public class PlayerInfo implements CommandExecutor {
-
+@CommandName("playerinfo")
+public class PlayerInfo implements CommandConstruct {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_PLAYER_INFO)) {
-            return false;
-        }
-
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String @NotNull [] args) {
         if (args.length < 1) {
             sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
             return true;
@@ -107,5 +110,31 @@ public class PlayerInfo implements CommandExecutor {
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_DEATHS, target.getStatistic(Statistic.DEATHS)));
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_JUMPED, target.getStatistic(Statistic.JUMP)));
         sender.sendMessage(String.format(PLUGIN_COMMAND_PLAYERINFO_LEFT_GAME, target.getStatistic(Statistic.LEAVE_GAME)));
+    }
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return new CommandsEnum[0];
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        List<String> tabList = new ArrayList<>();
+
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("user").getId())) {
+            return tabList;
+        }
+
+        if (!isPlayer(commandSender)) {
+            return tabList;
+        }
+
+        if(strings.length > 1){
+            return tabList;
+        }
+
+        tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+
+        return tabList;
     }
 }
