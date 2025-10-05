@@ -1,10 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import de.relluem94.minecraft.server.spigot.essentials.CustomSigns;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
@@ -56,7 +56,11 @@ public class SignClick implements Listener {
         };
 
         if (SignHelper.isSign(CustomSigns.spawn, frontLines[0], frontLines[1], frontLines[3])) {
-            player.performCommand(CommandNameConstants.PLUGIN_COMMAND_NAME_SPAWN);
+            String spawnCommand = AnnotationHelper.getCommandName(Spawn.class);
+            if(spawnCommand == null){
+                return;
+            }
+            player.performCommand(spawnCommand);
             return;
         }
 
