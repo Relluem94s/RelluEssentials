@@ -44,7 +44,7 @@ public class Rain implements CommandConstruct {
             p.getWorld().setStorm(true);
             p.getWorld().setThundering(false);
             p.getWorld().setWeatherDuration(1000000);
-            p.sendMessage(String.format(PLUGIN_COMMAND_DAY, p.getWorld().getName()));
+            p.sendMessage(String.format(PLUGIN_COMMAND_RAIN, p.getWorld().getName()));
             return true;
         }
 
