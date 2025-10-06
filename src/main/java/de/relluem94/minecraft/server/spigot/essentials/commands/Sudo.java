@@ -1,8 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_SUDO;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import lombok.NonNull;
@@ -29,57 +27,62 @@ public class Sudo implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_SUDO)) {
-            
-            if(RelluEssentials.getInstance().getCommand(args[0]) != null){
-                dispatchCommand(args);
-                return true;
-            }
-
-            if (args.length == 1) {
-                if (isPlayer(sender)) {
-                    Player p = (Player) sender;
-                    if(SudoManager.sudoers.containsKey(p.getUniqueId())){
-                        exitSudo(p);
-                        return true;
-                    }
-                    else if (Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                        OfflinePlayerEntry target = PlayerHelper.getOfflinePlayerByName((args[0]));
-                        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                        if (target != null && RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId()) != null) {
-                            PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId());
-                            SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
-                            WorldHelper.saveWorldGroupInventory(p, true);
-                            pe.setId(tpe.getId());
-                            pe.setCustomName(tpe.getCustomName());
-                            pe.setGroup(tpe.getGroup());
-                            pe.setHomes(tpe.getHomes());
-                            pe.setPurse(tpe.getPurse());
-                            p.setCustomName(tpe.getGroup().getPrefix() + target.getName());
-                            if(tpe.getCustomName() != null){
-                                p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
-                            }
-                            WorldHelper.loadWorldGroupInventory(p);
-                            p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_ACTIVATED, tpe.getGroup().getPrefix() + target.getName()));
-                        }
-                        else{
-                            
-                            p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
-                        }
-                        return true;
-                    }
-                    else {
-                        p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-                        return true;
-                    }
-                }
-            }
-            else{
-                sender.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
-                return true;
-            }
+        if (!Permission.isAuthorized(sender, Groups.getGroup("admin").getId())) {
+            sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            return true;
         }
-        return false;
+
+        if (!isPlayer(sender)){
+            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            return true;
+        }
+
+        Player p = (Player) sender;
+
+        if(RelluEssentials.getInstance().getCommand(args[0]) != null){
+            dispatchCommand(args);
+            return true;
+        }
+
+        if (args.length != 1) {
+            sender.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+            return true;
+        }
+
+        if(SudoManager.sudoers.containsKey(p.getUniqueId())){
+            exitSudo(p);
+            return true;
+        }
+
+        OfflinePlayerEntry target = PlayerHelper.getOfflinePlayerByName((args[0]));
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
+
+        if (target == null) {
+            p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
+            return true;
+        }
+
+        if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId()) == null){
+            p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
+            return true;
+        }
+
+        PlayerEntry tpe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId());
+        SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
+        WorldHelper.saveWorldGroupInventory(p, true);
+        pe.setId(tpe.getId());
+        pe.setCustomName(tpe.getCustomName());
+        pe.setGroup(tpe.getGroup());
+        pe.setHomes(tpe.getHomes());
+        pe.setPurse(tpe.getPurse());
+        p.setCustomName(tpe.getGroup().getPrefix() + target.getName());
+        if (tpe.getCustomName() != null) {
+            p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
+        }
+        WorldHelper.loadWorldGroupInventory(p);
+        p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_ACTIVATED, tpe.getGroup().getPrefix() + target.getName()));
+
+        return true;
     }
 
     private void dispatchCommand(String[] args){
@@ -87,7 +90,7 @@ public class Sudo implements CommandExecutor {
         Bukkit.getServer().dispatchCommand(console, StringUtils.toString(args));
     }
 
-    public static void exitSudo(Player p){
+    public static void exitSudo(@NotNull Player p){
         PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
         WorldHelper.saveWorldGroupInventory(p, true);
