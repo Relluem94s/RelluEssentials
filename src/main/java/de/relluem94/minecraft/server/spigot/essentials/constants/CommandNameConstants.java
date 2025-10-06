@@ -30,5 +30,4 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_TITLE = "title";
     String PLUGIN_COMMAND_NAME_VANISH = "vanish";
     String PLUGIN_COMMAND_NAME_WHERE = "where";
-    String PLUGIN_COMMAND_NAME_TEAM = "team";
 }
