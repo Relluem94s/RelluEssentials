@@ -12,18 +12,21 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TP_REQUEST_TARGET;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TP_SEND_REQUEST;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TP_TO;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_TELEPORT_TO;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -32,8 +35,10 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.utils.TypeUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class Teleport implements CommandExecutor {
+@CommandName("teleport")
+public class Teleport implements CommandConstruct {
 
     private final HashMap<Player, Player> teleportAcceptList = new HashMap<>();
     private final HashMap<Player, Player> teleportToAcceptList = new HashMap<>();
@@ -95,10 +100,6 @@ public class Teleport implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_TELEPORT)) {
-            return false;
-        }
-        
         if (!isPlayer(sender)) {
             sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
@@ -117,7 +118,7 @@ public class Teleport implements CommandExecutor {
         }
         
         if (args.length == 1) {
-            if(args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT)){
+            if(args[0].equalsIgnoreCase(Commands.ACCEPT.getName())){
                 if(hasTeleportEntry(p)){
                     teleport(p, teleportAcceptList.get(p));
                     removeTeleportEntry(p);
@@ -159,7 +160,7 @@ public class Teleport implements CommandExecutor {
                 return true;
             }
 
-            if(!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_TELEPORT_TO)){
+            if(!args[0].equalsIgnoreCase(Commands.TO.getName())){
                 p.sendMessage(PLUGIN_COMMAND_TP_INFO);
                 return true;
             }
@@ -210,5 +211,44 @@ public class Teleport implements CommandExecutor {
         p.teleport(l);
         p.sendMessage(String.format(PLUGIN_COMMAND_TP, l.getX() + ", " + l.getY() + ", " + l.getZ()));
 
+    }
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return Sign.Commands.values();
+    }
+
+    @Getter
+    public enum Commands implements CommandsEnum {
+
+        ACCEPT("accept"),
+        TO("to");
+
+        private final String name;
+        private final String[] subCommands;
+
+        Commands(String name, String... subCommands) {
+            this.name = name;
+            this.subCommands = subCommands;
+        }
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        List<String> tabList = new ArrayList<>();
+
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("user").getId())) {
+            return tabList;
+        }
+
+        if (!isPlayer(commandSender)) {
+            return tabList;
+        }
+
+        if(strings.length == 1){
+            tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
+        }
+
+        return tabList;
     }
 }
