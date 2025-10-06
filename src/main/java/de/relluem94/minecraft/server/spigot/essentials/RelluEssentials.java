@@ -164,6 +164,7 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Spawn()),
             new CommandWrapper(new Speed()),
             new CommandWrapper(new Storm()),
+            new CommandWrapper(new Sudo()),
 
             // THIS IS A DEV COMMAND
             new CommandWrapper(new TestCommand())

@@ -16,7 +16,6 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_TELEPORT = "teleport";
     String PLUGIN_COMMAND_NAME_TELEPORT_TO = "to";
     String PLUGIN_COMMAND_NAME_TELEPORT_ACCEPT = "accept";
-    String PLUGIN_COMMAND_NAME_SUDO = "sudo";
     String PLUGIN_COMMAND_NAME_ROLLBACK = "rollback";
     String PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER = "player";
     String PLUGIN_COMMAND_NAME_ROLLBACK_UNDO = "undo";

@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -100,5 +101,15 @@ public class TabCompleterHelper {
         }
 
         return groups;
+    }
+
+    public static @NotNull List<String> getPluginCommands(){
+        List<String> commands = new ArrayList<>();
+
+        for(CommandWrapper commandWrapper : RelluEssentials.commandWrapperList){
+            commands.add(commandWrapper.getCommandName());
+        }
+
+        return commands;
     }
 }
