@@ -159,7 +159,7 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Rename()),
             new CommandWrapper(new Repair()),
             new CommandWrapper(new Reply()),
-            //ROLLBACK
+            new CommandWrapper(new Rollback()),
             new CommandWrapper(new Sign()),
             new CommandWrapper(new Spawn()),
             new CommandWrapper(new Speed()),
