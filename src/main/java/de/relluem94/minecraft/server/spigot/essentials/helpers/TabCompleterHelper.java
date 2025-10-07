@@ -11,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -120,5 +121,25 @@ public class TabCompleterHelper {
         }
 
         return warps;
+    }
+
+    public static @NotNull List<String> getWorldTypes(){
+        List<String> worldTypes = new ArrayList<>();
+
+        for(WorldType worldType : WorldType.values()){
+            worldTypes.add(worldType.getName());
+        }
+
+        return worldTypes;
+    }
+
+    public static @NotNull List<String> getWorldEnvironmentTypes(){
+        List<String> worldTypes = new ArrayList<>();
+
+        for(World.Environment worldEnvironmentType : World.Environment.values()){
+            worldTypes.add(worldEnvironmentType.name());
+        }
+
+        return worldTypes;
     }
 }

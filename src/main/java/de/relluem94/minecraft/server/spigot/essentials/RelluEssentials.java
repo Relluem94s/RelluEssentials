@@ -173,6 +173,7 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Vanish()),
             new CommandWrapper(new Warp()),
             new CommandWrapper(new Where()),
+            new CommandWrapper(new Worlds()),
 
             // THIS IS A DEV COMMAND
             new CommandWrapper(new TestCommand())

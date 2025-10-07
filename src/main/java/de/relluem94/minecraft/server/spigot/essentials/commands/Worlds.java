@@ -14,20 +14,22 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_CREATE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_LIST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_LOAD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_UNLOAD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.CommandNameConstants.PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -35,7 +37,6 @@ import org.bukkit.WorldType;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -45,23 +46,17 @@ import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class Worlds implements CommandExecutor {
+@CommandName("world")
+public class Worlds implements CommandConstruct {
 
     @Override
-    public boolean onCommand(@NonNull CommandSender sender, Command command, @NonNull String label, String[] args) {
-        if (!command.getName().equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD)) {
-            return false;
-        }
-
-        if (isCMDBlock(sender) && args.length == 2 && !args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_LIST) && args[1].equals("@p")) {
+    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
+        if (isCMDBlock(sender) && args.length == 2 && !args[0].equalsIgnoreCase(Commands.LIST.getName()) && args[1].equals("@p")) {
             BlockCommandSender bcs = (BlockCommandSender) sender;
             CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
             Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
@@ -93,7 +88,7 @@ public class Worlds implements CommandExecutor {
         }
 
         if(args.length == 1){
-            if (!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_LIST)) {
+            if (!args[0].equalsIgnoreCase(Commands.LIST.getName())) {
                 teleportWorld(p, args[0]);
                 return true;
             }
@@ -114,21 +109,26 @@ public class Worlds implements CommandExecutor {
         }
 
         if(args.length == 2){
-            switch (args[0]) {
-                case PLUGIN_COMMAND_NAME_WORLD_LOAD:
-                    WorldHelper.loadWorld(args[1]);
-                    p.sendMessage(PLUGIN_COMMAND_WORLD_LOAD_WORLD);
-                    return true;
-                case PLUGIN_COMMAND_NAME_WORLD_UNLOAD:
-                    unloadWorld(p, args[1], true);
-                    return true;
-                case PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE:
-                    unloadWorld(p, args[1], false);
-                    return true;
-                case PLUGIN_COMMAND_NAME_WORLD_CREATE:
-                default:
-                    p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_INFO);
-                    return true;
+            if(Commands.LOAD.getName().equalsIgnoreCase(args[0])){
+                WorldHelper.loadWorld(args[1]);
+                p.sendMessage(PLUGIN_COMMAND_WORLD_LOAD_WORLD);
+                return true;
+            }
+            else if(Commands.UNLOAD.getName().equalsIgnoreCase(args[0])){
+                unloadWorld(p, args[1], true);
+                return true;
+            }
+            else if(Commands.UNLOAD_NO_SAVE.getName().equalsIgnoreCase(args[0])){
+                unloadWorld(p, args[1], false);
+                return true;
+            }
+            else if(Commands.CREATE.getName().equalsIgnoreCase(args[0])){
+                p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_INFO);
+                return true;
+            }
+            else{
+                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                return true;
             }
         }
 
@@ -137,7 +137,7 @@ public class Worlds implements CommandExecutor {
             return true;
         }
 
-        if (!args[0].equalsIgnoreCase(PLUGIN_COMMAND_NAME_WORLD_CREATE)) {
+        if (!args[0].equalsIgnoreCase(Commands.CREATE.getName())) {
             p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
             return true;
         }
@@ -146,8 +146,15 @@ public class Worlds implements CommandExecutor {
         return true;
     }
 
+    private boolean isValidWorldEnvironment(String input){
+        return Arrays.stream(World.Environment.values())
+                .filter(env -> env.name().equalsIgnoreCase(input))
+                .findFirst()
+                .orElse(null) != null;
+    }
+
     private void createWorld(Player p, String @NotNull [] args){
-        if(WorldType.getByName(args[2].toUpperCase()) != null && World.Environment.valueOf(args[3].toUpperCase()) != null && Boolean.valueOf(args[4]) != null){
+        if((WorldType.getByName(args[2].toUpperCase()) != null) && isValidWorldEnvironment(args[3]) && (Boolean.parseBoolean(args[4]))){
             WorldType type = WorldType.getByName(args[2].toUpperCase());
             World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
             boolean structures = Boolean.parseBoolean(args[4]);
@@ -192,5 +199,72 @@ public class Worlds implements CommandExecutor {
         }
 
         InventoryHelper.openInventory(p, inv);
+    }
+
+    @Override
+    public CommandsEnum[] getCommands() {
+        return Commands.values();
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) {
+            return new ArrayList<>();
+        }
+
+        if(strings.length > 5){
+            return new ArrayList<>();
+        }
+
+        if(Commands.UNLOAD.getName().equalsIgnoreCase(strings[0])){
+            TabCompleterHelper.getWorlds();
+        }
+
+        if(strings.length == 2){
+            if(Commands.CREATE.getName().equalsIgnoreCase(strings[0])){
+                return List.of("<enter name>");
+            }
+        }
+
+        if(strings.length == 3){
+            if(Commands.CREATE.getName().equalsIgnoreCase(strings[0])){
+                return TabCompleterHelper.getWorldTypes();
+            }
+        }
+
+        if(strings.length == 4){
+            if(Commands.CREATE.getName().equalsIgnoreCase(strings[0])){
+                return TabCompleterHelper.getWorldEnvironmentTypes();
+            }
+        }
+
+        if(strings.length == 5){
+            if(Commands.CREATE.getName().equalsIgnoreCase(strings[0])){
+                return List.of("true", "false");
+            }
+        }
+
+
+
+
+
+        return TabCompleterHelper.getCommands(Commands.values());
+    }
+
+    @Getter
+    public enum Commands implements CommandsEnum{
+        CREATE("create"),
+        LOAD("load"),
+        LIST("list"),
+        UNLOAD("unload"),
+        UNLOAD_NO_SAVE("unloadNoSave");
+
+        private final String name;
+        private final String[] subCommands;
+
+        Commands(String name, String... subCommands) {
+            this.name = name;
+            this.subCommands = subCommands;
+        }
     }
 }
