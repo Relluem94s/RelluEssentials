@@ -32,7 +32,7 @@ public class NoDeathMessage implements Listener {
     private final Random random = new Random();
 
     @EventHandler
-    public void onDeath(PlayerDeathEvent e) {
+    public void onDeath(@NotNull PlayerDeathEvent e) {
         e.setKeepLevel(true);
         e.setDroppedExp(0);
         e.setDeathMessage(null);

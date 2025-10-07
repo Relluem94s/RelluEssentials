@@ -20,5 +20,4 @@ public interface CommandNameConstants {
     String PLUGIN_COMMAND_NAME_WORLD_LIST = "list";
     String PLUGIN_COMMAND_NAME_WORLD_UNLOAD = "unload";
     String PLUGIN_COMMAND_NAME_WORLD_UNLOAD_NO_SAVE = "unloadNoSave";
-    String PLUGIN_COMMAND_NAME_WHERE = "where";
 }
