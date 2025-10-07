@@ -9,10 +9,6 @@ public interface CommandNameConstants {
     //==============================================================================//
     //                            COMMAND   STUFF                                   //
     //==============================================================================//
-    
-    String PLUGIN_COMMAND_NAME_WARP = "warp";
-    String PLUGIN_COMMAND_NAME_WARP_ADD = "add";
-    String PLUGIN_COMMAND_NAME_WARP_REMOVE = "remove";
 
     String PLUGIN_COMMAND_NAME_ROLLBACK = "rollback";
     String PLUGIN_COMMAND_NAME_ROLLBACK_PLAYER = "player";

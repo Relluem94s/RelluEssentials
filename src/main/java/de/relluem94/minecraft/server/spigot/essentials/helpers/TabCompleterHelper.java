@@ -13,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -111,5 +110,15 @@ public class TabCompleterHelper {
         }
 
         return commands;
+    }
+
+    public static @NotNull List<String> getWarps(World world){
+        List<String> warps = new ArrayList<>();
+
+        for(LocationEntry le : RelluEssentials.getInstance().getWarpAPI().getWarps(world)){
+            warps.add(le.getLocationName());
+        }
+
+        return warps;
     }
 }

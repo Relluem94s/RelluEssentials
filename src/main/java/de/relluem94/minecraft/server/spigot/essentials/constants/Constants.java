@@ -294,6 +294,8 @@ public interface Constants {
     String PLUGIN_COMMAND_WARP_LIST = PLUGIN_COLOR_COMMAND + "Warp Name: " + PLUGIN_COLOR_COMMAND_ARG + "%s ";
     String PLUGIN_COMMAND_WARP_ERROR_WORLD_UNLOADED = PLUGIN_FORMS_COMMAND_PREFIX + "Error, Welt ist nicht geladen!";
     String PLUGIN_COMMAND_WARP_ERROR_NO_WARP_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Kein Warp mit diesem Namen gefunden!";
+    String PLUGIN_COMMAND_WARP_ADD = PLUGIN_FORMS_COMMAND_PREFIX + "Warp mit dem Namen %s wurde hinzugefügt!";
+    String PLUGIN_COMMAND_WARP_REMOVE = PLUGIN_FORMS_COMMAND_PREFIX + "Warp mit dem Namen %s wurde entfernt!";
 
 
     String PLUGIN_COMMAND_SETGROUP = PLUGIN_COLOR_COMMAND + "Group " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " for Player " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " was set!";
