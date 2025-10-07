@@ -63,7 +63,7 @@ public class NoDeathMessage implements Listener {
         }
        
         for(ItemStack is : p.getInventory().getContents()){
-            if(is.getItemMeta() != null && CustomItems.coins.almostEquals(is) && is.getItemMeta().getPersistentDataContainer().has(itemCoins, PersistentDataType.INTEGER)){
+            if(is != null && is.getItemMeta() != null && CustomItems.coins.almostEquals(is) && is.getItemMeta().getPersistentDataContainer().has(itemCoins, PersistentDataType.INTEGER)){
                 p.getInventory().remove(is);
             }
         }
