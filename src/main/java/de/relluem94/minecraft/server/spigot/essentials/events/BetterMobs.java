@@ -31,7 +31,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.Enchantmen
 public class BetterMobs implements Listener {
 
     @EventHandler
-    public void onSpawn(CreatureSpawnEvent e) {
+    public void onSpawn(@NotNull CreatureSpawnEvent e) {
         EntityType et = e.getEntity().getType();
         if (et == EntityType.PHANTOM) {
             e.setCancelled(true);
@@ -95,7 +95,7 @@ public class BetterMobs implements Listener {
     }
 
     @EventHandler
-    public void onHit(EntityDamageByEntityEvent e) {
+    public void onHit(@NotNull EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Monster m && e.getDamager() instanceof Player p) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if(pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)){
