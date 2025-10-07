@@ -165,6 +165,7 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Speed()),
             new CommandWrapper(new Storm()),
             new CommandWrapper(new Sudo()),
+            new CommandWrapper(new Suicide()),
             new CommandWrapper(new Sun()),
             new CommandWrapper(new Team()),
             new CommandWrapper(new Teleport()),
