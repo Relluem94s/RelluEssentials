@@ -332,4 +332,6 @@ public interface Constants {
 
     String PLUGIN_ITEM_SELL_PRICE_MESSAGE = PLUGIN_COLOR_NEGATIVE + "Sell: " + PLUGIN_NAME_MONEY + " per Item: %s " + PLUGIN_NAME_MONEY + " per Stack: %s";
     String PLUGIN_ITEM_BUY_PRICE_MESSAGE = PLUGIN_COLOR_POSITIVE + "Buy: " + PLUGIN_NAME_MONEY + " per Item: %s " + PLUGIN_NAME_MONEY + " per Stack: %s";
+
+    String PLUGIN_POSITION_HIGHLIGHTING_DIFFERENT_WORLDS = PLUGIN_FORMS_COMMAND_PREFIX + "Positions are in different worlds, cannot highlight.";
 }

@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
+import de.relluem94.minecraft.server.spigot.essentials.managers.*;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,21 +54,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInform
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.types.Vector2Location;
-import de.relluem94.minecraft.server.spigot.essentials.managers.AutoSaveManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.BankManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.BlockHistoryManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.CleanUpManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.ConfigManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.EventManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.GroupManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.NPCManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.RecipeManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
 import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
 import de.relluem94.rellulib.stores.DoubleStore;
 
@@ -231,6 +217,7 @@ public class RelluEssentials extends JavaPlugin {
         stopLoading();
         new WorldManager().enable();
         new GroupManager().enable();
+        new PositionHighlightManager().enable();
         dm.afterWorldLoaded();
     }
 
