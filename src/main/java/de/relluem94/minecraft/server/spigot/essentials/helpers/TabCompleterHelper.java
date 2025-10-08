@@ -10,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
@@ -141,5 +142,21 @@ public class TabCompleterHelper {
         }
 
         return worldTypes;
+    }
+
+    public static @NotNull List<String> getMaterials(){
+        List<String> materials = new ArrayList<>();
+
+        for(Material material : Material.values()){
+            if(material.name().startsWith("LEGACY")){
+                continue;
+            }
+
+            if (material.isBlock() && material.isSolid()) {
+                materials.add(material.name());
+            }
+        }
+
+        return materials;
     }
 }

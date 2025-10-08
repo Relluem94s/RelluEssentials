@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import lombok.Getter;
@@ -46,13 +47,6 @@ import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.types.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
 import de.relluem94.rellulib.stores.DoubleStore;
@@ -109,7 +103,7 @@ public class RelluEssentials extends JavaPlugin {
     public final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
 
 
-    public final Map<Player, List<List<BlockHistoryEntry>>> undo = new HashMap<>();
+    public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
     public final Map<Player, DoubleStore<Location,Location>> postion = new HashMap<>();
 
 
@@ -138,6 +132,7 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Inventory()),
             new CommandWrapper(new Marry()),
             new CommandWrapper(new Message()),
+            new CommandWrapper(new Modify()),
             new CommandWrapper(new More()),
             new CommandWrapper(new Nick()),
             new CommandWrapper(new Night()),

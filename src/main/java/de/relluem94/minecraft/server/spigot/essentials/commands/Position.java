@@ -73,8 +73,8 @@ public class Position implements CommandConstruct {
             Location first = RelluEssentials.getInstance().postion.get(p).getValue();
             Location second = RelluEssentials.getInstance().postion.get(p).getSecondValue();
 
-            String firstLocationString = first == null ? "N/A" : StringHelper.locationToString(first);
-            String secondLocationString = second == null ? "N/A" : StringHelper.locationToString(second);
+            String firstLocationString = first == null ? PLUGIN_COMMAND_POSITION_LOCATION_NOT_AVAILIBLE : StringHelper.locationToString(first);
+            String secondLocationString = second == null ? PLUGIN_COMMAND_POSITION_LOCATION_NOT_AVAILIBLE : StringHelper.locationToString(second);
 
             p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_INFO_2, firstLocationString));
             p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_INFO_3, secondLocationString));

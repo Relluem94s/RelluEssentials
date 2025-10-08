@@ -171,3 +171,6 @@ commands:
         description: Sets Positions for Edit
         usage: /position
         alias: pos
+    modify:
+      description: Uses Positions to Modify Blocks
+      usage: /modify
