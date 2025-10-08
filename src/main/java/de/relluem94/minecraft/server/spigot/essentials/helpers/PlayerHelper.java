@@ -8,12 +8,10 @@ import java.util.Properties;
 import java.util.UUID;
 
 import lombok.NonNull;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.RayTraceResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -286,5 +284,13 @@ public class PlayerHelper {
         p.getInventory().setItem(0, gh.getCustomItem());
         p.getInventory().setItem(1, CustomItems.cloudSailor.getCustomItem());
         p.getInventory().setItem(4, ws.getCustomItem());
+    }
+
+    public static @NotNull Location getLookingLocation(@NotNull Player player, double range) {
+        RayTraceResult result = player.rayTraceBlocks(range, FluidCollisionMode.ALWAYS);
+        if (result != null && result.getHitBlock() != null) {
+            return result.getHitBlock().getLocation();
+        }
+        return player.getLocation();
     }
 }

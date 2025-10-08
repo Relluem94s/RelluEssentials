@@ -27,6 +27,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -121,6 +122,11 @@ public class RelluEssentials extends JavaPlugin {
     public static final boolean MONEY_LOST_ON_DEATH = true;
     public final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
 
+
+    public final Map<Player, List<List<BlockHistoryEntry>>> undo = new HashMap<>();
+    public final Map<Player, DoubleStore<Location,Location>> postion = new HashMap<>();
+
+
     public static final List<CommandWrapper> commandWrapperList = List.of(
             new CommandWrapper(new Admin()),
             new CommandWrapper(new AFK()),
@@ -152,6 +158,7 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new PermissionsGroup()),
             new CommandWrapper(new PlayerInfo()),
             new CommandWrapper(new Poke()),
+            new CommandWrapper(new Position()),
             new CommandWrapper(new Print()),
             new CommandWrapper(new Protect()),
             new CommandWrapper(new Purse()),

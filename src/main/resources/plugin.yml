@@ -167,3 +167,7 @@ commands:
     team:
         description: Shows Team Members
         usage: /team
+    position:
+        description: Sets Positions for Edit
+        usage: /position
+        alias: pos

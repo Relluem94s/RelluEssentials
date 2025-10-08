@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
@@ -26,7 +27,7 @@ public class BlockHelper {
         locations.put(location, delay);
     }
 
-    public void putAll(BlockHelper setBlockHelper){
+    public void putAll(@NotNull BlockHelper setBlockHelper){
         locations.putAll(setBlockHelper.locations);
     }
 
@@ -38,7 +39,7 @@ public class BlockHelper {
         setBlocks(0);
     }
 
-    public static boolean checkBlockAt(Location location, Material mat) {
+    public static boolean checkBlockAt(@NotNull Location location, Material mat) {
         return location.getBlock().getType() == mat;
     }
 }
