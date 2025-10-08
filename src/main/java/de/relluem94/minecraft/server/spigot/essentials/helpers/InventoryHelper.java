@@ -179,11 +179,14 @@ public class InventoryHelper {
         }
         return inv;
     }
-    public static Inventory getCustomItemInventory(CustomInventory ci) {
+
+    @ApiStatus.Experimental
+    public static @NotNull Inventory getCustomItemInventory(@NotNull CustomInventory ci) {
         return getCustomItemInventory(ci.getTitleGUI(), ci.getSize(), ci.getType());
     }
 
-    public static Inventory getCustomItemInventory(String guiTitle, int guiSize, ItemHelper.Type itemType) {
+    @ApiStatus.Experimental
+    public static @NotNull Inventory getCustomItemInventory(String guiTitle, int guiSize, ItemHelper.Type itemType) {
         Inventory inv = Bukkit.createInventory(null, guiSize, guiTitle);
         for (Field f : CustomItems.class.getFields()) {
             if (!ItemHelper.class.isAssignableFrom(f.getType())) {
