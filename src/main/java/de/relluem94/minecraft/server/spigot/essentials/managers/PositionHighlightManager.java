@@ -24,7 +24,7 @@ public class PositionHighlightManager implements IEnable {
             @Override
             public void run() {
                 List<Player> toRemove = new ArrayList<>();
-                for (Map.Entry<Player, DoubleStore<Location, Location>> entry : RelluEssentials.getInstance().postion.entrySet()) {
+                for (Map.Entry<Player, DoubleStore<Location, Location>> entry : RelluEssentials.getInstance().position.entrySet()) {
                     Player p = entry.getKey();
                     if (!p.isOnline()) {
                         toRemove.add(p);
@@ -59,7 +59,7 @@ public class PositionHighlightManager implements IEnable {
                     }
                 }
                 for (Player p : toRemove) {
-                    RelluEssentials.getInstance().postion.remove(p);
+                    RelluEssentials.getInstance().position.remove(p);
                 }
             }
         }.runTaskTimer(RelluEssentials.getInstance(), 0L, 20L);

@@ -67,15 +67,15 @@ public class Position implements CommandConstruct {
         Player p = (Player) commandSender;
 
         if(strings.length == 0){
-            if(!RelluEssentials.getInstance().postion.containsKey(p)){
+            if(!RelluEssentials.getInstance().position.containsKey(p)){
                 p.sendMessage(PLUGIN_COMMAND_POSITION_INFO_NO_POSITIONS);
                 return true;
             }
 
             p.sendMessage(PLUGIN_COMMAND_POSITION_INFO_1);
 
-            Location first = RelluEssentials.getInstance().postion.get(p).getValue();
-            Location second = RelluEssentials.getInstance().postion.get(p).getSecondValue();
+            Location first = RelluEssentials.getInstance().position.get(p).getValue();
+            Location second = RelluEssentials.getInstance().position.get(p).getSecondValue();
 
             String firstLocationString = first == null ? PLUGIN_COMMAND_POSITION_LOCATION_NOT_AVAILIBLE : StringHelper.locationToString(first);
             String secondLocationString = second == null ? PLUGIN_COMMAND_POSITION_LOCATION_NOT_AVAILIBLE : StringHelper.locationToString(second);
@@ -87,11 +87,11 @@ public class Position implements CommandConstruct {
 
         String cmd = strings[0].toLowerCase();
 
-        if(!RelluEssentials.getInstance().postion.containsKey(p)){
-            RelluEssentials.getInstance().postion.put(p, new DoubleStore<>(null, null));
+        if(!RelluEssentials.getInstance().position.containsKey(p)){
+            RelluEssentials.getInstance().position.put(p, new DoubleStore<>(null, null));
         }
 
-        DoubleStore<Location, Location> positions = RelluEssentials.getInstance().postion.get(p);
+        DoubleStore<Location, Location> positions = RelluEssentials.getInstance().position.get(p);
         Location first = positions.getValue();
         Location second = positions.getSecondValue();
 
@@ -100,7 +100,7 @@ public class Position implements CommandConstruct {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }
-            RelluEssentials.getInstance().postion.put(p, new DoubleStore<>(null, null));
+            RelluEssentials.getInstance().position.put(p, new DoubleStore<>(null, null));
             p.sendMessage(PLUGIN_COMMAND_POSITION_CLEAR);
             return true;
         }

@@ -117,23 +117,23 @@ public class Modify implements CommandConstruct {
                 return true;
             }
 
-            if(!RelluEssentials.getInstance().postion.containsKey(p)){
+            if(!RelluEssentials.getInstance().position.containsKey(p)){
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_POSITIONS);
                 return true;
             }
 
-            if(RelluEssentials.getInstance().postion.get(p).getValue() == null){
+            if(RelluEssentials.getInstance().position.get(p).getValue() == null){
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);
                 return true;
             }
 
-            if(RelluEssentials.getInstance().postion.get(p).getSecondValue() == null){
+            if(RelluEssentials.getInstance().position.get(p).getSecondValue() == null){
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
                 return true;
             }
 
-            Location pos1 = RelluEssentials.getInstance().postion.get(p).getValue();
-            Location pos2 = RelluEssentials.getInstance().postion.get(p).getSecondValue();
+            Location pos1 = RelluEssentials.getInstance().position.get(p).getValue();
+            Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
 
             if(pos1 == null){
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);
@@ -217,13 +217,13 @@ public class Modify implements CommandConstruct {
                 return true;
             }
 
-            if(!RelluEssentials.getInstance().postion.containsKey(p)){
+            if(!RelluEssentials.getInstance().position.containsKey(p)){
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_POSITIONS);
                 return true;
             }
 
-            Location pos1 = RelluEssentials.getInstance().postion.get(p).getValue();
-            Location pos2 = RelluEssentials.getInstance().postion.get(p).getSecondValue();
+            Location pos1 = RelluEssentials.getInstance().position.get(p).getValue();
+            Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
 
             if(pos1 == null){
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);

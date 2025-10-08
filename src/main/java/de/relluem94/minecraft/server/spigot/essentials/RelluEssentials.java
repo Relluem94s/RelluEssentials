@@ -104,7 +104,7 @@ public class RelluEssentials extends JavaPlugin {
 
 
     public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
-    public final Map<Player, DoubleStore<Location,Location>> postion = new HashMap<>();
+    public final Map<Player, DoubleStore<Location,Location>> position = new HashMap<>();
 
 
     public static final List<CommandWrapper> commandWrapperList = List.of(
