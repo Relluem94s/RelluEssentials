@@ -37,6 +37,9 @@ public class Position implements CommandConstruct {
 
         SET("set", "first", "second"),
         REMOVE("remove", "first", "second"),
+        SHIFT("shift"),
+        EXPAND("expand"),
+        DECREASE("decrease"),
         CLEAR("clear");
 
         private final String name;
