@@ -15,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -144,7 +145,7 @@ public class TabCompleterHelper {
         return worldTypes;
     }
 
-    public static @NotNull List<String> getMaterials(){
+    public static @NotNull List<String> getMaterials(@Nullable String filter){
         List<String> materials = new ArrayList<>();
 
         for(Material material : Material.values()){
@@ -152,8 +153,12 @@ public class TabCompleterHelper {
                 continue;
             }
 
+            String materialName = material.name();
+
             if (material.isBlock() && material.isSolid()) {
-                materials.add(material.name());
+                if (filter == null || materialName.toLowerCase().contains(filter.toLowerCase())) {
+                    materials.add(materialName);
+                }
             }
         }
 

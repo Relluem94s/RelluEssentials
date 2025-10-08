@@ -312,7 +312,7 @@ public class Modify implements CommandConstruct {
         }
 
         if(strings.length == 2){
-            tabList.addAll(TabCompleterHelper.getMaterials());
+            tabList.addAll(TabCompleterHelper.getMaterials(strings[1].isEmpty() ? null : strings[1]));
             return tabList;
         }
 
@@ -321,7 +321,7 @@ public class Modify implements CommandConstruct {
                 return tabList;
             }
 
-            tabList.addAll(TabCompleterHelper.getMaterials());
+            tabList.addAll(TabCompleterHelper.getMaterials(strings[2].isEmpty() ? null : strings[2]));
             return tabList;
         }
 
