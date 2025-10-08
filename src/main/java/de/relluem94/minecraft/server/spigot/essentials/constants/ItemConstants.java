@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants;
 
+import org.bukkit.ChatColor;
+
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 
@@ -12,6 +14,11 @@ public interface ItemConstants {
     //==============================================================================//
     //                              ITEM   STUFF                                    //
     //==============================================================================//
+
+    String PLUGIN_ITEM_DUMMY = ChatColor.AQUA + "This is a Dummy Item";
+
+
+
     String PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS = "cloud_boots";
 
     String PLUGIN_ITEM_RELLU_HELMET = "§6Rellu's Helmet";
@@ -35,6 +42,10 @@ public interface ItemConstants {
     String PLUGIN_ITEM_CLOUDSAILOR = "§bCloud Sailor";
     String PLUGIN_ITEM_CLOUDSAILOR_LORE1 = "§bHeld in Off Hand grants gliding abillity.";
     String PLUGIN_ITEM_CLOUDSAILOR_LORE2 = "§bAlso reduces Fall Damage by 50%";
+
+    String PLUGIN_ITEM_POSITION_AXE = "§6Position Axe";
+    String PLUGIN_ITEM_POSITION_AXE_LORE1 = "Left click to set first Position";
+    String PLUGIN_ITEM_POSITION_AXE_LORE2 = "Right click for the second Positon";
 
     String PLUGIN_ITEM_NPC_BAGSALESMAN = "§dBag Salesman";
 

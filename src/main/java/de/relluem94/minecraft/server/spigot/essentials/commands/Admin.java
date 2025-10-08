@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.CustomInventory;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -89,7 +91,8 @@ public class Admin implements CommandConstruct {
         LIGHT("light"),
         NPC("npc"),
         PING("ping"),
-        TOP("top");
+        TOP("top"),
+        ADMIN_TOOLS("adminTools");
 
         private final String name;
         private final String[] subCommands;
@@ -136,7 +139,17 @@ public class Admin implements CommandConstruct {
 
                 InventoryHelper.openInventory(sender, inv);
                 return true;
-            } 
+            }
+            if (Commands.ADMIN_TOOLS.getName().equalsIgnoreCase(args[0])) {
+                if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
+                    p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                    return true;
+                }
+
+                org.bukkit.inventory.Inventory inv = InventoryHelper.getCustomItemInventory(new CustomInventory(ItemHelper.Type.ADMIN_TOOL, 9, Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+ "§dAdmin Tools"));
+                InventoryHelper.openInventory(sender, inv);
+                return true;
+            }
             else if (Commands.PING.getName().equalsIgnoreCase(args[0])) {
                 p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_PING, p.getPing()));
                 return true;

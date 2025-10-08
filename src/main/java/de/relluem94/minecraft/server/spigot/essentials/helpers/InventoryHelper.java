@@ -1,19 +1,29 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.CustomInventory;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_DUMMY;
 
 /**
  *
@@ -60,7 +70,7 @@ public class InventoryHelper {
      * @param name of the Inventory
      * @return Inventory
      */
-    public static Inventory createInventory(int size, String name) {
+    public static @NotNull Inventory createInventory(int size, String name) {
         return Bukkit.createInventory(null, size, name);
     }
 
@@ -102,7 +112,8 @@ public class InventoryHelper {
      * @param inv Inventory to fill
      * @param is ItemStack Item to fill with
      */
-    public static Inventory fillInventory(Inventory inv, ItemStack is) {
+    @Contract("_, _ -> param1")
+    public static Inventory fillInventory(@NotNull Inventory inv, ItemStack is) {
         for(int i = 0; i < inv.getSize(); i++){
             inv.setItem(i, is);
         }
@@ -131,7 +142,7 @@ public class InventoryHelper {
     }
 
 
-    public static void createInventory(String json, Player p){
+    public static void createInventory(String json, @NotNull Player p){
         p.getInventory().clear();
 
         try {
@@ -155,7 +166,7 @@ public class InventoryHelper {
         }
     }
 
-    public static JSONObject saveInventoryToJSON(Player p){
+    public static @NotNull JSONObject saveInventoryToJSON(@NotNull Player p){
         PlayerInventory inventory = p.getInventory();
         JSONObject inv = new JSONObject();
 
@@ -168,4 +179,30 @@ public class InventoryHelper {
         }
         return inv;
     }
+    public static Inventory getCustomItemInventory(CustomInventory ci) {
+        return getCustomItemInventory(ci.getTitleGUI(), ci.getSize(), ci.getType());
+    }
+
+    public static Inventory getCustomItemInventory(String guiTitle, int guiSize, ItemHelper.Type itemType) {
+        Inventory inv = Bukkit.createInventory(null, guiSize, guiTitle);
+        for (Field f : CustomItems.class.getFields()) {
+            if (!ItemHelper.class.isAssignableFrom(f.getType())) {
+                continue;
+            }
+
+            ItemHelper ih = new ItemHelper(Material.STONE, 1, PLUGIN_ITEM_DUMMY, ItemHelper.Type.NONE, ItemHelper.Rarity.COMMON);
+            try {
+                Object value = f.get(ih);
+                ih = (ItemHelper) value;
+                if (ih.getItemType().equals(itemType)) {
+                    inv.addItem(ih.getCustomItem());
+                }
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return inv;
+    }
+
 }
