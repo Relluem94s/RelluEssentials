@@ -173,6 +173,10 @@ public class Modify implements CommandConstruct {
                         Location loc = new Location(world, x, y, z);
                         Block block = loc.getBlock();
 
+                        if(material.equals(block.getType())){
+                            continue;
+                        }
+
                         ModifyHistoryEntry entry = new ModifyHistoryEntry();
                         entry.setLocation(loc);
                         entry.setMaterial(block.getType());

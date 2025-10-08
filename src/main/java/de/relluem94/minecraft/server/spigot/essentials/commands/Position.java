@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -84,9 +85,62 @@ public class Position implements CommandConstruct {
             return true;
         }
 
-        if(Commands.CLEAR.getName().equalsIgnoreCase(strings[0])){
+        String cmd = strings[0].toLowerCase();
+
+        if(!RelluEssentials.getInstance().postion.containsKey(p)){
+            RelluEssentials.getInstance().postion.put(p, new DoubleStore<>(null, null));
+        }
+
+        DoubleStore<Location, Location> positions = RelluEssentials.getInstance().postion.get(p);
+        Location first = positions.getValue();
+        Location second = positions.getSecondValue();
+
+        if(cmd.equals(Commands.CLEAR.getName())){
+            if(strings.length != 1){
+                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                return true;
+            }
             RelluEssentials.getInstance().postion.put(p, new DoubleStore<>(null, null));
             p.sendMessage(PLUGIN_COMMAND_POSITION_CLEAR);
+            return true;
+        }
+
+        if(cmd.equals(Commands.SET.getName())){
+            if(strings.length != 2){
+                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                return true;
+            }
+            String sub = strings[1].toLowerCase();
+            Location location = PlayerHelper.getLookingLocation(p, 100);
+            if(sub.equals(Commands.SET.getSubCommands()[0])){
+                positions.setValue(location);
+                p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_SET_FIRST, locationToString(location)));
+            }
+            else if(sub.equals(Commands.SET.getSubCommands()[1])){
+                positions.setSecondValue(location);
+                p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_SET_SECOND, locationToString(location)));
+            } else {
+                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+            }
+            return true;
+        }
+
+        if(cmd.equals(Commands.REMOVE.getName())){
+            if(strings.length != 2){
+                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                return true;
+            }
+            String sub = strings[1].toLowerCase();
+            if(sub.equals(Commands.REMOVE.getSubCommands()[0])){
+                positions.setValue(null);
+                p.sendMessage(PLUGIN_COMMAND_POSITION_REMOVE_FIRST);
+            }
+            else if(sub.equals(Commands.REMOVE.getSubCommands()[1])){
+                positions.setSecondValue(null);
+                p.sendMessage(PLUGIN_COMMAND_POSITION_REMOVE_SECOND);
+            } else {
+                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+            }
             return true;
         }
 
@@ -95,41 +149,66 @@ public class Position implements CommandConstruct {
             return true;
         }
 
-        if(strings[0].equalsIgnoreCase(Commands.SET.getName())){
-            if(!RelluEssentials.getInstance().postion.containsKey(p)){
-                RelluEssentials.getInstance().postion.put(p, new DoubleStore<>(null, null));
-            }
-
-            Location location = PlayerHelper.getLookingLocation(p, 100);
-
-            if(strings[1].equalsIgnoreCase(Commands.SET.getSubCommands()[0])){
-                RelluEssentials.getInstance().postion.get(p).setValue(location);
-                p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_SET_FIRST, locationToString(location)));
-            }
-            else{
-                RelluEssentials.getInstance().postion.get(p).setSecondValue(location);
-                p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_SET_SECOND, locationToString(location)));
-            }
+        int amount;
+        try {
+            amount = Integer.parseInt(strings[1]);
+        } catch (NumberFormatException e) {
+            p.sendMessage(PLUGIN_COMMAND_POSITION_INVALID_AMOUNT);
+            return true;
         }
 
+        Vector direction = p.getLocation().getDirection().normalize();
 
-
-        if(strings[0].equalsIgnoreCase(Commands.REMOVE.getName())){
-            if(!RelluEssentials.getInstance().postion.containsKey(p)){
-                RelluEssentials.getInstance().postion.put(p, new DoubleStore<>(null, null));
+        if(cmd.equals(Commands.SHIFT.getName())){
+            if(first == null && second == null){
+                p.sendMessage(PLUGIN_COMMAND_POSITION_INFO_NO_POSITIONS);
                 return true;
             }
 
-            if(strings[1].equalsIgnoreCase(Commands.REMOVE.getSubCommands()[0])){
-                RelluEssentials.getInstance().postion.get(p).setValue(null);
-                p.sendMessage(PLUGIN_COMMAND_POSITION_REMOVE_FIRST);
+            if(first != null){
+                first.add(direction.clone().multiply(amount));
+                positions.setValue(first);
             }
-            else{
-                RelluEssentials.getInstance().postion.get(p).setSecondValue(null);
-                p.sendMessage(PLUGIN_COMMAND_POSITION_REMOVE_SECOND);
+
+            if(second != null){
+                second.add(direction.clone().multiply(amount));
+                positions.setSecondValue(second);
             }
+
+            p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_SHIFT, amount));
+            return true;
         }
 
+        if(cmd.equals(Commands.EXPAND.getName()) || cmd.equals(Commands.DECREASE.getName())){
+            if(first == null || second == null){
+                p.sendMessage(PLUGIN_COMMAND_POSITION_NEED_BOTH_POSITIONS);
+                return true;
+            }
+
+            Location playerLoc = p.getLocation();
+
+            double distFirst = first.distance(playerLoc);
+            double distSecond = second.distance(playerLoc);
+
+            Location farther = distFirst > distSecond ? first : second;
+
+            int multiplier = cmd.equals(Commands.EXPAND.getName()) ? 1 : -1;
+
+            Vector offset = direction.clone().multiply(amount * multiplier);
+            farther.add(offset);
+
+            if(farther == first){
+                positions.setValue(farther);
+            } else {
+                positions.setSecondValue(farther);
+            }
+
+            String action = cmd.equals(Commands.EXPAND.getName()) ? PLUGIN_COMMAND_POSITION_EXPAND : PLUGIN_COMMAND_POSITION_DECREASE;
+            p.sendMessage(String.format(action, amount));
+            return true;
+        }
+
+        p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
         return true;
     }
 
