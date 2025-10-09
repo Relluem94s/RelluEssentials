@@ -166,12 +166,18 @@ public class Position implements CommandConstruct {
             }
 
             if(first != null){
-                first.add(direction.clone().multiply(amount));
+                Vector offset = direction.clone().multiply(amount);
+                first.setX(Math.round(first.getX() + offset.getX()));
+                first.setY(Math.round(first.getY() + offset.getY()));
+                first.setZ(Math.round(first.getZ() + offset.getZ()));
                 positions.setValue(first);
             }
 
             if(second != null){
-                second.add(direction.clone().multiply(amount));
+                Vector offset = direction.clone().multiply(amount);
+                second.setX(Math.round(second.getX() + offset.getX()));
+                second.setY(Math.round(second.getY() + offset.getY()));
+                second.setZ(Math.round(second.getZ() + offset.getZ()));
                 positions.setSecondValue(second);
             }
 
@@ -187,15 +193,18 @@ public class Position implements CommandConstruct {
 
             Location playerLoc = p.getLocation();
 
-            double distFirst = first.distance(playerLoc);
-            double distSecond = second.distance(playerLoc);
+            Vector playerVec = playerLoc.toVector();
+            double projFirst = direction.dot(first.toVector().subtract(playerVec));
+            double projSecond = direction.dot(second.toVector().subtract(playerVec));
 
-            Location farther = distFirst > distSecond ? first : second;
+            Location farther = projFirst > projSecond ? first : second;
 
             int multiplier = cmd.equals(Commands.EXPAND.getName()) ? 1 : -1;
 
             Vector offset = direction.clone().multiply(amount * multiplier);
-            farther.add(offset);
+            farther.setX(Math.round(farther.getX() + offset.getX()));
+            farther.setY(Math.round(farther.getY() + offset.getY()));
+            farther.setZ(Math.round(farther.getZ() + offset.getZ()));
 
             if(farther == first){
                 positions.setValue(farther);

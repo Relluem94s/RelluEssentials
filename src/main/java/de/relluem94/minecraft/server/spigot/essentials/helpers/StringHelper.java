@@ -40,6 +40,24 @@ public class StringHelper {
         return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), world.getName());
     }
 
+    /**
+     *
+     * @param l Location
+     * @param round boolean should round the number
+     * @return String with Location
+     */
+    public static @NotNull String locationToString(@NotNull Location l, boolean round) {
+        if(round){
+            return locationToString(l);
+        }
+
+        World world = l.getWorld();
+        if(world == null){
+            return String.format(PLUGIN_COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), "null");
+        }
+        return String.format(PLUGIN_COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), world.getName());
+    }
+
     public static @NotNull String firstCharToUpper(@NotNull String s){
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
