@@ -9,10 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntr
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.WorldType;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -163,5 +160,15 @@ public class TabCompleterHelper {
         }
 
         return materials;
+    }
+
+    public static @NotNull List<String> getWeatherTypes(){
+        List<String> weatherTypes = new ArrayList<>();
+
+        for(WeatherType weatherType : WeatherType.values()){
+            weatherTypes.add(weatherType.name());
+        }
+
+        return weatherTypes;
     }
 }

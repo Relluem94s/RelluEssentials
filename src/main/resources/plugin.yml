@@ -174,3 +174,6 @@ commands:
     modify:
       description: Uses Positions to Modify Blocks
       usage: /modify
+    playerweather:
+      description: Changes the Weather just for you
+      usage: /playerweather
