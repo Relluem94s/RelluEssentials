@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.ICustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.CustomInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,7 +31,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
  * @author rellu
  */
 public class InventoryHelper {
-    private InventoryHelper() {
+    protected InventoryHelper() {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
@@ -180,15 +181,19 @@ public class InventoryHelper {
         return inv;
     }
 
-    @ApiStatus.Experimental
+    @ApiStatus.Internal
     public static @NotNull Inventory getCustomItemInventory(@NotNull CustomInventory ci) {
-        return getCustomItemInventory(ci.getTitleGUI(), ci.getSize(), ci.getType());
+        return getCustomItemInventory(CustomItems.class, ci.getTitleGUI(), ci.getSize(), ci.getType());
     }
 
-    @ApiStatus.Experimental
-    public static @NotNull Inventory getCustomItemInventory(String guiTitle, int guiSize, ItemHelper.Type itemType) {
+    @SuppressWarnings("unused")
+    public static @NotNull Inventory getCustomItemInventory(Class<? extends ICustomItems> customItems, @NotNull CustomInventory ci) {
+        return getCustomItemInventory(customItems, ci.getTitleGUI(), ci.getSize(), ci.getType());
+    }
+
+    public static @NotNull Inventory getCustomItemInventory(@NotNull Class<? extends ICustomItems> customItems, String guiTitle, int guiSize, ItemHelper.Type itemType) {
         Inventory inv = Bukkit.createInventory(null, guiSize, guiTitle);
-        for (Field f : CustomItems.class.getFields()) {
+        for (Field f : customItems.getFields()) {
             if (!ItemHelper.class.isAssignableFrom(f.getType())) {
                 continue;
             }
@@ -206,6 +211,11 @@ public class InventoryHelper {
         }
 
         return inv;
+    }
+
+    @SuppressWarnings("unused")
+    public static boolean isCustomItemInMainHand(@NotNull Player player, @NotNull ItemHelper customItem) {
+        return player.getInventory().getItemInMainHand().equals(customItem.getCustomItem());
     }
 
 }
