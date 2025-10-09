@@ -65,6 +65,7 @@ public class Modify implements CommandConstruct {
         Player p = (Player) commandSender;
 
         if(strings.length == 0){
+            p.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
             return true;
         }
 

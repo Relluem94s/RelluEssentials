@@ -6,7 +6,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import org.bukkit.command.PluginCommandYamlParser;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -17,7 +16,7 @@ public class CommandManager implements IEnable {
     public void enable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_REGISTER_COMMANDS);
 
-        RelluEssentials.commandWrapperList.forEach(CommandWrapper::init);
+        RelluEssentials.commandWrapperList.forEach(wrapper -> wrapper.init(RelluEssentials.getInstance()));
 
         int commands = PluginCommandYamlParser.parse(RelluEssentials.getInstance()).size();
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_COMMANDS_REGISTERED, commands));
