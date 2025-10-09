@@ -26,6 +26,7 @@ public class CustomInventory {
         this.titleGUI = titleGUI;
     }
 
+    @SuppressWarnings("unused")
     @ApiStatus.AvailableSince("v4.3.3")
     public CustomInventory(Class<? extends ICustomItems> customItems, ItemHelper.Type type, int size, String titleGUI) {
         this.type = type;

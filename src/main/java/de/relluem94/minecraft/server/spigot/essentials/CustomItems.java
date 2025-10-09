@@ -51,6 +51,7 @@ public class CustomItems implements ICustomItems {
         }
     };
 
+    @SuppressWarnings("unused")
     public static final ItemHelper positionAxe = new ItemHelper(Material.COPPER_AXE, 1, PLUGIN_ITEM_POSITION_AXE, Type.ADMIN_TOOL, Rarity.LEGENDARY, List.of(PLUGIN_ITEM_POSITION_AXE_LORE1, PLUGIN_ITEM_POSITION_AXE_LORE2));
 
     public static final ItemHelper npc_gui_disabled = new ItemHelper(Material.BLACK_STAINED_GLASS_PANE, 1, "   ", Type.NPC_GUI, Rarity.NONE);
