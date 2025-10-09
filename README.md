@@ -11,14 +11,16 @@ Find out how to get the plugin and how to use it.
 3. Start and Stop the Server
 4. Set Host, User and Password of your MySQL Server in the config.yml
 5. Start your Server again
-6. Enjoy
+6. Use (`/setGroup`) in your Server Console to grant permission to your player
+7. Enjoy
 
 # Functionality 
 What does the plugin include?
 
 ## Commands
-* Admin gives Clearing Chat, Fake AFK, Teleport to the highest Block and Custom NPCs  (`/admin`) 
+* Admin gives AdminTools, Clearing Chat, Fake AFK, Teleport to the highest Block and Custom NPCs and others (`/admin`) 
 * Away from Keyboard (`/afk`)
+* Change your own Weather (vip) (`/playerweather`)
 * Teleports to the latest Checkpoint (on spawn, teleport, world, warp and home) (`/back`)
 * Opens Bag Pack Menu (`/bags`)
 * Broadcasts Message to online Players (`/broadcast`)
@@ -64,6 +66,8 @@ What does the plugin include?
 * Warps you to a defined Point (`/warp`)
 * Show where a Player is (`/where`)
 * Show Worlds or Teleport to the spawn (`/world`)
+* Set Positions for Modify Command (`/postion`)
+* Modify selected Blocks (`/modify`)
 
 
 ## NPCs
@@ -80,6 +84,7 @@ What does the plugin include?
     * Musician
     * Shepherd
     * Smith
+    * Builder
 * NPCs in Game via Code
     * Bag Salesman
     * Banker
@@ -94,6 +99,7 @@ What does the plugin include?
     * Monster Bag
     * Shepherd Bag
     * Lumberjack Bag
+    * Nether Bag
 
 
 ## Functional Block Protections
@@ -134,6 +140,7 @@ What does the plugin include?
 * Player Head Info
 * CloudSailor (Gliding Feather and Boots)
 * Tool Crafting with Rarity, Higher Tier is unbreakable
+* Position Highlighter shows your Selections
 * No Death Message
   * Save Death Location as Home
   * Show Location in Chat (private)
