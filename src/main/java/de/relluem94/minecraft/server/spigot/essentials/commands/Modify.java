@@ -271,6 +271,10 @@ public class Modify implements CommandConstruct {
                             continue;
                         }
 
+                        if (block.getType() != fromMaterial) {
+                            continue;
+                        }
+
                         checkAndRemoveProtection(block);
 
                         ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
