@@ -94,7 +94,7 @@ public class Modify implements CommandConstruct {
             int counter = 0;
             for (ModifyHistoryEntry entry : lastHistory) {
                 long finalDelay = currentDelay;
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(RelluEssentials.getInstance(), () -> entry.getLocation().getBlock().setType(entry.getMaterial()), Math.abs(finalDelay));
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(RelluEssentials.getInstance(), () -> undo(entry), Math.abs(finalDelay));
                 counter++;
                 if (counter >= BLOCKS_PER_TICK) {
                     currentDelay += 1;
@@ -180,9 +180,7 @@ public class Modify implements CommandConstruct {
                             continue;
                         }
 
-                        ModifyHistoryEntry entry = new ModifyHistoryEntry();
-                        entry.setLocation(loc);
-                        entry.setMaterial(block.getType());
+                        ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
                         history.add(entry);
 
                         bh.addLocation(loc, currentDelay);
@@ -266,9 +264,7 @@ public class Modify implements CommandConstruct {
                         Block block = loc.getBlock();
 
                         if (block.getType() == fromMaterial) {
-                            ModifyHistoryEntry entry = new ModifyHistoryEntry();
-                            entry.setLocation(loc);
-                            entry.setMaterial(block.getType());
+                            ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
                             history.add(entry);
 
                             bh.addLocation(loc, currentDelay);
@@ -294,6 +290,11 @@ public class Modify implements CommandConstruct {
 
         p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
         return true;
+    }
+
+    private void undo(@NotNull ModifyHistoryEntry entry) {
+        entry.getLocation().getBlock().setType(entry.getMaterial());
+        entry.getLocation().getBlock().setBlockData(entry.getData());
     }
 
     @Override

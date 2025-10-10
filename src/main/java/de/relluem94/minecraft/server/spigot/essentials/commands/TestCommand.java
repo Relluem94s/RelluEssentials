@@ -241,7 +241,7 @@ public class TestCommand implements CommandConstruct {
         int rows = (DEV_PLATTFORM_MATERIAL_LIST.size() + cols - 1) / cols;
         int perTick = 64;
         int placedThisTick = 0;
-        long delay = 0L;
+        long schedule = 0L;
         double yaw = p.getLocation().getYaw();
         int fx = 0, fz = 0;
         yaw = ((yaw % 360) + 360) % 360;
@@ -268,10 +268,10 @@ public class TestCommand implements CommandConstruct {
                 for (int yy = cy; yy <= cy + 14; yy++){
                     for (int xx = startX; xx <= endX; xx++){
                         for (int zz = startZ; zz <= endZ; zz++){
-                            if (placedThisTick >= perTick){ delay++; placedThisTick = 0; }
+                            if (placedThisTick >= perTick){ schedule++; placedThisTick = 0; }
                             Location airLocation = new Location(world, xx, yy, zz);
-                            air.addLocation(airLocation, delay);
-                            undoList.add(new ModifyHistoryEntry(airLocation, airLocation.getBlock().getType()));
+                            air.addLocation(airLocation, schedule);
+                            undoList.add(new ModifyHistoryEntry(airLocation, airLocation.getBlock().getType(), airLocation.getBlock().getBlockData()));
                             placedThisTick++;
                         }
                     }
@@ -281,24 +281,23 @@ public class TestCommand implements CommandConstruct {
                     for (int dz = -2; dz <= 2; dz++){
                         int bx = cx + dx;
                         int bz = cz + dz;
-                        if (placedThisTick >= perTick){ delay++; placedThisTick = 0; }
+                        if (placedThisTick >= perTick){ schedule++; placedThisTick = 0; }
 
                         if (Math.abs(dx) == 2 || Math.abs(dz) == 2){
                             Location frameLocation = new Location(world, bx, cy, bz);
-                            frame.addLocation(frameLocation, delay);
-                            undoList.add(new ModifyHistoryEntry(frameLocation, frameLocation.getBlock().getType()));
+                            frame.addLocation(frameLocation, schedule);
+                            undoList.add(new ModifyHistoryEntry(frameLocation, frameLocation.getBlock().getType(), frameLocation.getBlock().getBlockData()));
                             placedThisTick++;
                         } else {
                             if (dx == 0 && dz == 0){
                                 Material oreMat = DEV_PLATTFORM_MATERIAL_LIST.get(oreIndex);
                                 String blockName = "minecraft:" + oreMat.name().toLowerCase();
-                                long schedule = delay;
                                 placedThisTick++;
                                 new BukkitRunnable(){
                                     @Override
                                     public void run(){
                                         Block b = world.getBlockAt(bx, cy, bz);
-                                        undoList.add(new ModifyHistoryEntry(b.getLocation(), b.getType()));
+                                        undoList.add(new ModifyHistoryEntry(b.getLocation(), b.getType(),  b.getBlockData()));
                                         b.setType(Material.REPEATING_COMMAND_BLOCK, true);
                                         if (b.getState() instanceof CommandBlock cb){
                                             cb.setCommand("/setblock ~ ~1 ~ " + blockName);
@@ -309,11 +308,11 @@ public class TestCommand implements CommandConstruct {
 
                                 Location redstone_block = world.getBlockAt(bx, cy, bz).getLocation().clone().subtract(0,1,0);
                                 redstone.addLocation(redstone_block, schedule);
-                                undoList.add(new ModifyHistoryEntry(redstone_block, redstone_block.getBlock().getType()));
+                                undoList.add(new ModifyHistoryEntry(redstone_block, redstone_block.getBlock().getType(), redstone_block.getBlock().getBlockData()));
                             } else {
                                 Location innerLocation = new Location(world, bx, cy, bz);
-                                inner.addLocation(innerLocation, delay);
-                                undoList.add(new ModifyHistoryEntry(innerLocation, innerLocation.getBlock().getType()));
+                                inner.addLocation(innerLocation, schedule);
+                                undoList.add(new ModifyHistoryEntry(innerLocation, innerLocation.getBlock().getType(), innerLocation.getBlock().getBlockData()));
                                 placedThisTick++;
                             }
                         }
