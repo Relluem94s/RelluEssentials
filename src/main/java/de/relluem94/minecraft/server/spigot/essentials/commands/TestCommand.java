@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BlockHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -26,7 +25,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -34,14 +32,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.CommandBlock;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 
@@ -243,7 +235,7 @@ public class TestCommand implements CommandConstruct {
         int placedThisTick = 0;
         long schedule = 0L;
         double yaw = p.getLocation().getYaw();
-        int fx = 0, fz = 0;
+        int fx, fz;
         yaw = ((yaw % 360) + 360) % 360;
         if (yaw >= 315 || yaw < 45) { fx = 0; fz = 1; }
         else if (yaw >= 45 && yaw < 135) { fx = -1; fz = 0; }
@@ -259,13 +251,12 @@ public class TestCommand implements CommandConstruct {
                 int rightOffset = c * 5;
                 int cx = originX + fx * forwardOffset + rx * rightOffset;
                 int cz = originZ + fz * forwardOffset + rz * rightOffset;
-                int cy = originY;
                 int startX = cx - 2;
                 int startZ = cz - 2;
                 int endX = cx + 2;
                 int endZ = cz + 2;
 
-                for (int yy = cy; yy <= cy + 14; yy++){
+                for (int yy = originY; yy <= originY + 14; yy++){
                     for (int xx = startX; xx <= endX; xx++){
                         for (int zz = startZ; zz <= endZ; zz++){
                             if (placedThisTick >= perTick){ schedule++; placedThisTick = 0; }
@@ -284,7 +275,7 @@ public class TestCommand implements CommandConstruct {
                         if (placedThisTick >= perTick){ schedule++; placedThisTick = 0; }
 
                         if (Math.abs(dx) == 2 || Math.abs(dz) == 2){
-                            Location frameLocation = new Location(world, bx, cy, bz);
+                            Location frameLocation = new Location(world, bx, originY, bz);
                             frame.addLocation(frameLocation, schedule);
                             undoList.add(new ModifyHistoryEntry(frameLocation, frameLocation.getBlock().getType(), frameLocation.getBlock().getBlockData()));
                             placedThisTick++;
@@ -296,7 +287,7 @@ public class TestCommand implements CommandConstruct {
                                 new BukkitRunnable(){
                                     @Override
                                     public void run(){
-                                        Block b = world.getBlockAt(bx, cy, bz);
+                                        Block b = world.getBlockAt(bx, originY, bz);
                                         undoList.add(new ModifyHistoryEntry(b.getLocation(), b.getType(),  b.getBlockData()));
                                         b.setType(Material.REPEATING_COMMAND_BLOCK, true);
                                         if (b.getState() instanceof CommandBlock cb){
@@ -306,11 +297,11 @@ public class TestCommand implements CommandConstruct {
                                     }
                                 }.runTaskLater(RelluEssentials.getInstance(), schedule);
 
-                                Location redstone_block = world.getBlockAt(bx, cy, bz).getLocation().clone().subtract(0,1,0);
+                                Location redstone_block = world.getBlockAt(bx, originY, bz).getLocation().clone().subtract(0,1,0);
                                 redstone.addLocation(redstone_block, schedule);
                                 undoList.add(new ModifyHistoryEntry(redstone_block, redstone_block.getBlock().getType(), redstone_block.getBlock().getBlockData()));
                             } else {
-                                Location innerLocation = new Location(world, bx, cy, bz);
+                                Location innerLocation = new Location(world, bx, originY, bz);
                                 inner.addLocation(innerLocation, schedule);
                                 undoList.add(new ModifyHistoryEntry(innerLocation, innerLocation.getBlock().getType(), innerLocation.getBlock().getBlockData()));
                                 placedThisTick++;
