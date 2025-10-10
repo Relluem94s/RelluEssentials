@@ -175,7 +175,7 @@ public class TestCommand implements CommandConstruct {
     private static final List<Material> DEV_PLATTFORM_MATERIAL_LIST = Arrays.asList(
             Material.IRON_ORE,
             Material.DEEPSLATE_IRON_ORE,
-            Material.RAW_IRON,
+            Material.RAW_IRON_BLOCK,
             Material.COPPER_ORE,
             Material.DEEPSLATE_COPPER_ORE,
             Material.RAW_COPPER_BLOCK,
@@ -323,9 +323,9 @@ public class TestCommand implements CommandConstruct {
         }
 
         air.setBlocks();
-        frame.setBlocks(3);
-        inner.setBlocks(6);
-        redstone.setBlocks(9);
+        frame.setBlocks(9);
+        inner.setBlocks(19);
+        redstone.setBlocks(29);
 
 
 
