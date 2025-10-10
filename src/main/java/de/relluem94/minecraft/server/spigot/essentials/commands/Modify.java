@@ -3,8 +3,10 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -15,6 +17,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -180,6 +183,14 @@ public class Modify implements CommandConstruct {
                             continue;
                         }
 
+                        if(ProtectionHelper.isLockAble(block)){
+                            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
+
+                            if(protection != null){
+                                RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(block.getLocation());
+                            }
+                        }
+
                         ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
                         history.add(entry);
 
@@ -263,16 +274,26 @@ public class Modify implements CommandConstruct {
                         Location loc = new Location(world, x, y, z);
                         Block block = loc.getBlock();
 
-                        if (block.getType() == fromMaterial) {
-                            ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
-                            history.add(entry);
+                        if (block.getType() == toMaterial) {
+                            continue;
+                        }
 
-                            bh.addLocation(loc, currentDelay);
-                            counter++;
-                            if (counter >= BLOCKS_PER_TICK) {
-                                currentDelay += 1;
-                                counter = 0;
+                        ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
+                        history.add(entry);
+
+                        if(ProtectionHelper.isLockAble(block)){
+                            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
+
+                            if(protection != null){
+                                RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(block.getLocation());
                             }
+                        }
+
+                        bh.addLocation(loc, currentDelay);
+                        counter++;
+                        if (counter >= BLOCKS_PER_TICK) {
+                            currentDelay += 1;
+                            counter = 0;
                         }
                     }
                 }
