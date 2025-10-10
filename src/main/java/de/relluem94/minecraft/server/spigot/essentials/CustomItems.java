@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.ICustomItems;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -22,7 +21,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
  *
  * @author rellu
  */
-public class CustomItems implements ICustomItems {
+public class CustomItems {
 
     private CustomItems() {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
