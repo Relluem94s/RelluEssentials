@@ -29,6 +29,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 @CommandName("modify")
 public class Modify implements CommandConstruct {
+
+    public static final int BLOCKS_PER_TICK = 64;
+
     @Override
     public CommandsEnum[] getCommands() {
         return Commands.values();
@@ -86,14 +89,14 @@ public class Modify implements CommandConstruct {
                 return true;
             }
 
-            int blocksPerTick = 10;
+
             long currentDelay = 0;
             int counter = 0;
             for (ModifyHistoryEntry entry : lastHistory) {
                 long finalDelay = currentDelay;
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(RelluEssentials.getInstance(), () -> entry.getLocation().getBlock().setType(entry.getMaterial()), Math.abs(finalDelay));
                 counter++;
-                if (counter >= blocksPerTick) {
+                if (counter >= BLOCKS_PER_TICK) {
                     currentDelay += 1;
                     counter = 0;
                 }
@@ -101,7 +104,7 @@ public class Modify implements CommandConstruct {
 
             RelluEssentials.getInstance().undo.get(p).remove(playerUndo);
 
-            p.sendMessage(PLUGIN_COOMAND_MODIFY_UNDO_STARTED);
+            p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_UNDO_STARTED, lastHistory.size()));
             return true;
         }
 
@@ -164,7 +167,6 @@ public class Modify implements CommandConstruct {
 
             List<ModifyHistoryEntry> history = new ArrayList<>();
 
-            int blocksPerTick = 64;
             long currentDelay = 0;
             int counter = 0;
 
@@ -185,7 +187,7 @@ public class Modify implements CommandConstruct {
 
                         bh.addLocation(loc, currentDelay);
                         counter++;
-                        if (counter >= blocksPerTick) {
+                        if (counter >= BLOCKS_PER_TICK) {
                             currentDelay += 1;
                             counter = 0;
                         }
@@ -199,7 +201,7 @@ public class Modify implements CommandConstruct {
             playerUndoList.add(history);
             RelluEssentials.getInstance().undo.put(p, playerUndoList);
 
-            p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_SET_STARTED, material.name()));
+            p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_SET_STARTED, history.size(), material.name()));
 
             return true;
         }
@@ -254,7 +256,6 @@ public class Modify implements CommandConstruct {
 
             List<ModifyHistoryEntry> history = new ArrayList<>();
 
-            int blocksPerTick = 64;
             long currentDelay = 0;
             int counter = 0;
 
@@ -272,7 +273,7 @@ public class Modify implements CommandConstruct {
 
                             bh.addLocation(loc, currentDelay);
                             counter++;
-                            if (counter >= blocksPerTick) {
+                            if (counter >= BLOCKS_PER_TICK) {
                                 currentDelay += 1;
                                 counter = 0;
                             }
@@ -287,7 +288,7 @@ public class Modify implements CommandConstruct {
             playerUndoList.add(history);
             RelluEssentials.getInstance().undo.put(p, playerUndoList);
 
-            p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_REPLACE_STARTED, fromMaterial.name(), toMaterial.name()));
+            p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_REPLACE_STARTED, history.size(), fromMaterial.name(), toMaterial.name()));
             return true;
         }
 
