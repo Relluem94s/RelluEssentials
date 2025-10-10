@@ -56,4 +56,11 @@ public class CustomItems implements ICustomItems {
 
     public static final ItemHelper npc_gui_disabled = new ItemHelper(Material.BLACK_STAINED_GLASS_PANE, 1, "   ", Type.NPC_GUI, Rarity.NONE);
     public static final ItemHelper npc_gui_close = new ItemHelper(Material.BARRIER, 1, "Close", Type.NPC_GUI, Rarity.NONE);
+
+
+
+    public static final List<ItemHelper> CUSTOM_ITEMS = List.of(
+            magic_water_bucket, coins, cloudSailor, cloudBoots, positionAxe
+    );
+
 }

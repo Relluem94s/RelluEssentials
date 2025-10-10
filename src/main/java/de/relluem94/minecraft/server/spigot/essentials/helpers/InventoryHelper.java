@@ -1,17 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.ICustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.CustomInventory;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -24,6 +17,7 @@ import org.json.JSONObject;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
+import static de.relluem94.minecraft.server.spigot.essentials.CustomItems.CUSTOM_ITEMS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_DUMMY;
 
 /**
@@ -183,31 +177,21 @@ public class InventoryHelper {
 
     @ApiStatus.Internal
     public static @NotNull Inventory getCustomItemInventory(@NotNull CustomInventory ci) {
-        return getCustomItemInventory(CustomItems.class, ci.getTitleGUI(), ci.getSize(), ci.getType());
+        return getCustomItemInventory(CUSTOM_ITEMS, ci.getTitleGUI(), ci.getSize(), ci.getType());
     }
 
     @SuppressWarnings("unused")
-    public static @NotNull Inventory getCustomItemInventory(Class<? extends ICustomItems> customItems, @NotNull CustomInventory ci) {
+    public static @NotNull Inventory getCustomItemInventory(List<ItemHelper> customItems, @NotNull CustomInventory ci) {
         return getCustomItemInventory(customItems, ci.getTitleGUI(), ci.getSize(), ci.getType());
     }
 
-    public static @NotNull Inventory getCustomItemInventory(@NotNull Class<? extends ICustomItems> customItems, String guiTitle, int guiSize, ItemHelper.Type itemType) {
+    public static @NotNull Inventory getCustomItemInventory(@NotNull List<ItemHelper> customItems, String guiTitle, int guiSize, ItemHelper.Type itemType) {
         Inventory inv = Bukkit.createInventory(null, guiSize, guiTitle);
-        for (Field f : customItems.getFields()) {
-            if (!ItemHelper.class.isAssignableFrom(f.getType())) {
+        for (ItemHelper itemHelper : customItems) {
+            if(!itemType.equals(itemHelper.getItemType())){
                 continue;
             }
-
-            ItemHelper ih = new ItemHelper(Material.STONE, 1, PLUGIN_ITEM_DUMMY, ItemHelper.Type.NONE, ItemHelper.Rarity.COMMON);
-            try {
-                Object value = f.get(ih);
-                ih = (ItemHelper) value;
-                if (ih.getItemType().equals(itemType)) {
-                    inv.addItem(ih.getCustomItem());
-                }
-            } catch (IllegalAccessException ex) {
-                Logger.getLogger(de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            inv.addItem(itemHelper.getCustomItem());
         }
 
         return inv;
