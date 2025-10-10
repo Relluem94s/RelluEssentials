@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -8,7 +9,6 @@ import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -52,11 +52,12 @@ public class Head implements CommandConstruct {
         }
 
         String owner = args[0];
-        ItemStack is = createSkull(owner);
 
-        p.getInventory().addItem(is);
+        createSkull(owner, RelluEssentials.getInstance(), item -> {
+            p.getInventory().addItem(item);
+            sendMessage(p, String.format(PLUGIN_COMMAND_HEAD, owner));
+        });
 
-        sendMessage(p, String.format(PLUGIN_COMMAND_HEAD, owner));
         return true;
     }
 
