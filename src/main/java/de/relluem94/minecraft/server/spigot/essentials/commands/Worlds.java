@@ -216,11 +216,20 @@ public class Worlds implements CommandConstruct {
             return new ArrayList<>();
         }
 
-        if(Commands.UNLOAD.getName().equalsIgnoreCase(strings[0])){
-            TabCompleterHelper.getWorlds();
+        if(strings.length == 1){
+            List<String> tabList = new ArrayList<>();
+            tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
+            tabList.addAll(TabCompleterHelper.getWorlds());
+            return tabList;
+
         }
 
+
         if(strings.length == 2){
+            if(Commands.UNLOAD.getName().equalsIgnoreCase(strings[0])){
+                return TabCompleterHelper.getWorlds();
+            }
+
             if(Commands.CREATE.getName().equalsIgnoreCase(strings[0])){
                 return List.of("<enter name>");
             }
@@ -248,7 +257,7 @@ public class Worlds implements CommandConstruct {
 
 
 
-        return TabCompleterHelper.getCommands(Commands.values());
+        return new ArrayList<>();
     }
 
     @Getter
