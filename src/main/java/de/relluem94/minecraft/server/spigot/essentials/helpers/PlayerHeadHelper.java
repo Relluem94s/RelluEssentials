@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlaye
 import java.util.Base64;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public class PlayerHeadHelper {
@@ -23,7 +24,7 @@ public class PlayerHeadHelper {
     }
 
     private static final ItemStack PLAYER_HEAD = new ItemStack(Material.PLAYER_HEAD, 1);
-    
+
     public static void createSkull(String name, org.bukkit.plugin.Plugin plugin, java.util.function.Consumer<org.bukkit.inventory.ItemStack> callback) {
         OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(name);
         final org.bukkit.inventory.ItemStack is = PLAYER_HEAD.clone();
@@ -33,23 +34,21 @@ public class PlayerHeadHelper {
         }
 
         org.bukkit.profile.PlayerProfile profile = org.bukkit.Bukkit.createPlayerProfile(player.getId(), player.getName());
-        profile.update().whenComplete((updated, ex) -> {
-            org.bukkit.Bukkit.getScheduler().runTask(plugin, () -> {
-                org.bukkit.inventory.meta.SkullMeta sm = (org.bukkit.inventory.meta.SkullMeta) is.getItemMeta();
-                if (sm == null) {
-                    callback.accept(is);
-                    return;
-                }
-                if (ex == null && updated != null && updated.isComplete()) {
-                    sm.setOwnerProfile(updated);
-                } else {
-                    sm.setOwningPlayer(org.bukkit.Bukkit.getOfflinePlayer(player.getId()));
-                }
-                sm.setDisplayName(player.getName());
-                is.setItemMeta(sm);
+        profile.update().whenComplete((updated, ex) -> Bukkit.getScheduler().runTask(plugin, () -> {
+            SkullMeta sm = (SkullMeta) is.getItemMeta();
+            if (sm == null) {
                 callback.accept(is);
-            });
-        });
+                return;
+            }
+            if (ex == null && updated != null && updated.isComplete()) {
+                sm.setOwnerProfile(updated);
+            } else {
+                sm.setOwningPlayer(Bukkit.getOfflinePlayer(player.getId()));
+            }
+            sm.setDisplayName(player.getName());
+            is.setItemMeta(sm);
+            callback.accept(is);
+        }));
     }
 
     public static @NotNull ItemStack getCustomSkull(@NotNull CustomHeads ch) {
@@ -88,7 +87,7 @@ public class PlayerHeadHelper {
         return ph;
     }
 
-    private static String extractSkinUrlFromBase64(String jsonString) {
+    private static @Nullable String extractSkinUrlFromBase64(String jsonString) {
         try {
             JSONObject json = new JSONObject(jsonString);
             return json.getJSONObject("textures")
