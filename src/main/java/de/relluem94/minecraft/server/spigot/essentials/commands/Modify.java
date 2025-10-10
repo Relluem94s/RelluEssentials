@@ -182,13 +182,7 @@ public class Modify implements CommandConstruct {
                             continue;
                         }
 
-                        if(ProtectionHelper.isLockAble(block)){
-                            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
-
-                            if(protection != null){
-                                RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(block.getLocation());
-                            }
-                        }
+                        checkAndRemoveProtection(block);
 
                         ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
                         history.add(entry);
@@ -277,16 +271,10 @@ public class Modify implements CommandConstruct {
                             continue;
                         }
 
+                        checkAndRemoveProtection(block);
+
                         ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
                         history.add(entry);
-
-                        if(ProtectionHelper.isLockAble(block)){
-                            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
-
-                            if(protection != null){
-                                RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(block.getLocation());
-                            }
-                        }
 
                         bh.addLocation(loc, currentDelay);
                         counter++;
@@ -310,6 +298,17 @@ public class Modify implements CommandConstruct {
 
         p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
         return true;
+    }
+
+    private static void checkAndRemoveProtection(Block block) {
+        if(ProtectionHelper.isLockAble(block)){
+            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
+
+            if(protection != null){
+                RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(protection);
+                RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(block.getLocation());
+            }
+        }
     }
 
     private void undo(@NotNull ModifyHistoryEntry entry) {
