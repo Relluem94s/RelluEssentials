@@ -54,7 +54,8 @@ public class Modify implements CommandConstruct {
         CUT("cut"),
         PASTE("paste"),
         UNDO("undo"),
-        WALL("wall");
+        WALL("wall"),
+        CYLINDER("cylinder");
 
         private final String name;
         private final String[] subCommands;
@@ -252,6 +253,60 @@ public class Modify implements CommandConstruct {
                 addUndoHistory(p, history);
 
                 p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_WALL_STARTED, history.size(), material.name()));
+                return true;
+            }
+            else if (Commands.CYLINDER.getName().equalsIgnoreCase(strings[0])) {
+                Material material = Material.getMaterial(strings[1].toUpperCase());
+                if (material == null) {
+                    p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
+                    return true;
+                }
+
+                Selection selection = getSelection(p);
+                if (selection == null) return true;
+
+                BlockHelper bh = new BlockHelper(material);
+                List<ModifyHistoryEntry> history = new ArrayList<>();
+
+                final long[] currentDelay = {0};
+                final int[] counter = {0};
+
+                double centerX = (selection.getMinX() + selection.getMaxX() + 1) / 2.0;
+                double centerZ = (selection.getMinZ() + selection.getMaxZ() + 1) / 2.0;
+
+                double radiusX = (selection.getMaxX() - selection.getMinX() + 1) / 2.0;
+                double radiusZ = (selection.getMaxZ() - selection.getMinZ() + 1) / 2.0;
+                double thickness = 1.0 / Math.min(radiusX, radiusZ);
+
+                forEachBlock(selection, block -> {
+                    int x = block.getX();
+                    int z = block.getZ();
+
+                    double dx = (x + 0.5 - centerX) / radiusX;
+                    double dz = (z + 0.5 - centerZ) / radiusZ;
+                    double dist = dx * dx + dz * dz;
+
+                    if (dist < 1.0 - thickness || dist > 1.0 + thickness) {
+                        return;
+                    }
+
+                    checkAndRemoveProtection(block);
+
+                    ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
+                    history.add(entry);
+
+                    bh.addLocation(block.getLocation(), currentDelay[0]);
+                    counter[0]++;
+                    if (counter[0] >= BLOCKS_PER_TICK) {
+                        currentDelay[0]++;
+                        counter[0] = 0;
+                    }
+                });
+
+                bh.setBlocks(0);
+                addUndoHistory(p, history);
+
+                p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_CYLINDER_STARTED, history.size(), material.name()));
                 return true;
             }
             else if(Commands.MOVE.getName().equalsIgnoreCase(strings[0])){
