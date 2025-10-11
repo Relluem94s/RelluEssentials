@@ -245,6 +245,10 @@ public interface Constants {
     String PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD = PLUGIN_FORMS_COMMAND_PREFIX + "Clipboard is empty.";
     String PLUGIN_COOMAND_MODIFY_WALL_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Created wall with %d blocks of %s.";
     String PLUGIN_COOMAND_MODIFY_CYLINDER_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Created cylinder with %d blocks of %s.";
+    String PLUGIN_COOMAND_MODIFY_FILL_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Filled %d blocks of %s in a radius of %d.";
+    String PLUGIN_COOMAND_MODIFY_FILLR_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Filled %d blocks of %s downwards in a radius of %d.";
+    String PLUGIN_COOMAND_MODIFY_FILL_RADIUS_TO_HIGH = PLUGIN_FORMS_COMMAND_PREFIX + "Can't fill Radius is to High! Max Radius is %d.";
+
 
 
 

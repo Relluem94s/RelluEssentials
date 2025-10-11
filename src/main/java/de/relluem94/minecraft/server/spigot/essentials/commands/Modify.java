@@ -25,8 +25,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
@@ -38,6 +37,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 public class Modify implements CommandConstruct {
 
     public static final int BLOCKS_PER_TICK = 64;
+    public static final int MAX_RADIUS = 128;
+    public static final int MAX_ITERATIONS = 1048576;
 
     @Override
     public CommandsEnum[] getCommands() {
@@ -55,7 +56,9 @@ public class Modify implements CommandConstruct {
         PASTE("paste"),
         UNDO("undo"),
         WALL("wall"),
-        CYLINDER("cylinder");
+        CYLINDER("cylinder"),
+        FILL("fill"),
+        FILLR("fillr");
 
         private final String name;
         private final String[] subCommands;
@@ -67,25 +70,25 @@ public class Modify implements CommandConstruct {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())){
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String string, @NotNull String[] strings) {
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) {
             commandSender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
             return true;
         }
 
-        if(!isPlayer(commandSender)){
+        if (!isPlayer(commandSender)) {
             commandSender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
             return true;
         }
 
         Player p = (Player) commandSender;
 
-        if(strings.length == 0){
+        if (strings.length == 0) {
             p.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
             return true;
         }
 
-        if(strings.length == 1){
+        if (strings.length == 1) {
             if (Commands.COPY.getName().equalsIgnoreCase(strings[0]) || Commands.CUT.getName().equalsIgnoreCase(strings[0])) {
 
                 Selection selection = getSelection(p);
@@ -175,7 +178,7 @@ public class Modify implements CommandConstruct {
             }
 
 
-            if(!Commands.UNDO.getName().equalsIgnoreCase(strings[0])){
+            if (!Commands.UNDO.getName().equalsIgnoreCase(strings[0])) {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }
@@ -210,7 +213,7 @@ public class Modify implements CommandConstruct {
             return true;
         }
 
-        if(strings.length == 2){
+        if (strings.length == 2) {
             if (Commands.WALL.getName().equalsIgnoreCase(strings[0])) {
                 Material material = Material.getMaterial(strings[1].toUpperCase());
                 if (material == null) {
@@ -254,8 +257,7 @@ public class Modify implements CommandConstruct {
 
                 p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_WALL_STARTED, history.size(), material.name()));
                 return true;
-            }
-            else if (Commands.CYLINDER.getName().equalsIgnoreCase(strings[0])) {
+            } else if (Commands.CYLINDER.getName().equalsIgnoreCase(strings[0])) {
                 Material material = Material.getMaterial(strings[1].toUpperCase());
                 if (material == null) {
                     p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
@@ -308,16 +310,15 @@ public class Modify implements CommandConstruct {
 
                 p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_CYLINDER_STARTED, history.size(), material.name()));
                 return true;
-            }
-            else if(Commands.MOVE.getName().equalsIgnoreCase(strings[0])){
-                if(!isInt(strings[1])){
+            } else if (Commands.MOVE.getName().equalsIgnoreCase(strings[0])) {
+                if (!isInt(strings[1])) {
                     p.sendMessage(PLUGIN_COMMAND_INVALID);
                 }
 
                 int offset = Integer.parseInt(strings[1]);
 
                 Selection selection = getSelection(p);
-                if(selection == null) return true;
+                if (selection == null) return true;
 
                 List<ModifyHistoryEntry> history = new ArrayList<>();
 
@@ -362,21 +363,20 @@ public class Modify implements CommandConstruct {
 
                 p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_MOVE_STARTED, history.size(), offset));
                 return true;
-            }
-            else if(!Commands.SET.getName().equalsIgnoreCase(strings[0])){
+            } else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }
 
             Material material = Material.getMaterial(strings[1].toUpperCase());
 
-            if(material == null){
+            if (material == null) {
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
                 return true;
             }
 
             Selection selection = getSelection(p);
-            if(selection == null) return true;
+            if (selection == null) return true;
 
             BlockHelper bh = new BlockHelper(material);
             List<ModifyHistoryEntry> history = new ArrayList<>();
@@ -386,7 +386,7 @@ public class Modify implements CommandConstruct {
 
 
             forEachBlock(selection, block -> {
-                if(material.equals(block.getType())){
+                if (material.equals(block.getType())) {
                     return;
                 }
 
@@ -404,7 +404,6 @@ public class Modify implements CommandConstruct {
             });
 
 
-
             bh.setBlocks(0);
 
             addUndoHistory(p, history);
@@ -414,8 +413,95 @@ public class Modify implements CommandConstruct {
             return true;
         }
 
-        if(strings.length == 3){
-            if(!Commands.REPLACE.getName().equalsIgnoreCase(strings[0])){
+        if (strings.length == 3) {
+            if (Commands.FILL.getName().equalsIgnoreCase(strings[0]) || Commands.FILLR.getName().equalsIgnoreCase(strings[0])) {
+                Material material = Material.getMaterial(strings[1].toUpperCase());
+                if (material == null) {
+                    p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
+                    return true;
+                }
+
+                if (!isInt(strings[2])) {
+                    p.sendMessage(PLUGIN_COMMAND_INVALID);
+                    return true;
+                }
+
+                int radius = Integer.parseInt(strings[2]);
+                if (radius <= 0) {
+                    p.sendMessage(PLUGIN_COMMAND_INVALID);
+                    return true;
+                }
+
+                if(radius > MAX_RADIUS){
+                    p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_FILL_RADIUS_TO_HIGH, MAX_RADIUS));
+                }
+
+                BlockHelper bh = new BlockHelper(material);
+                List<ModifyHistoryEntry> history = new ArrayList<>();
+                final long[] currentDelay = {0};
+                final int[] counter = {0};
+
+                Location playerPos = p.getLocation().clone().add(0,0,0);
+
+                Queue<Block> queue = new ArrayDeque<>();
+                Set<Location> visited = new HashSet<>();
+
+                Block startBlock = playerPos.getBlock();
+                queue.add(startBlock);
+                visited.add(startBlock.getLocation());
+
+                int iterations = 0;
+                while(!queue.isEmpty()){
+                    iterations++;
+                    if(iterations >= MAX_ITERATIONS) break;
+
+                    Block block = queue.poll();
+                    if (block.getLocation().distance(playerPos) > radius) continue;
+                    if (!block.isEmpty()) continue;
+
+                    checkAndRemoveProtection(block);
+                    ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
+                    history.add(entry);
+                    bh.addLocation(block.getLocation(), currentDelay[0]);
+                    counter[0]++;
+                    if (counter[0] >= BLOCKS_PER_TICK) {
+                        currentDelay[0]++;
+                        counter[0] = 0;
+                    }
+
+                    int[][] directions;
+                    if (Commands.FILL.getName().equalsIgnoreCase(strings[0])) {
+                        directions = new int[][]{{1,0,0},{-1,0,0},{0,0,1},{0,0,-1}};
+                    } else {
+                        directions = new int[][]{{1,0,0},{-1,0,0},{0,0,1},{0,0,-1},{0,-1,0}};
+                    }
+
+                    for (int[] dir : directions){
+                        int nx = block.getX() + dir[0];
+                        int ny = block.getY() + dir[1];
+                        int nz = block.getZ() + dir[2];
+
+                        Location location = new Location(block.getWorld(), nx, ny, nz);
+
+                        if (visited.contains(location)) continue;
+                        Block neighbor = location.getBlock();
+                        if (!neighbor.isEmpty()) continue;
+                        queue.add(neighbor);
+                        visited.add(location);
+                    }
+                }
+
+                bh.setBlocks(0);
+                addUndoHistory(p, history);
+
+                p.sendMessage(String.format(
+                        Commands.FILL.getName().equalsIgnoreCase(strings[0]) ? PLUGIN_COOMAND_MODIFY_FILL_STARTED : PLUGIN_COOMAND_MODIFY_FILLR_STARTED,
+                        history.size(), material.name(), radius
+                ));
+                return true;
+            }
+
+            if (!Commands.REPLACE.getName().equalsIgnoreCase(strings[0])) {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }
@@ -423,13 +509,13 @@ public class Modify implements CommandConstruct {
             Material fromMaterial = Material.getMaterial(strings[1].toUpperCase());
             Material toMaterial = Material.getMaterial(strings[2].toUpperCase());
 
-            if(fromMaterial == null || toMaterial == null){
+            if (fromMaterial == null || toMaterial == null) {
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
                 return true;
             }
 
             Selection selection = getSelection(p);
-            if(selection == null) return true;
+            if (selection == null) return true;
 
             BlockHelper bh = new BlockHelper(toMaterial);
             List<ModifyHistoryEntry> history = new ArrayList<>();
@@ -471,7 +557,7 @@ public class Modify implements CommandConstruct {
     }
 
     private @Nullable Selection getSelection(Player p) {
-        if(!RelluEssentials.getInstance().position.containsKey(p)){
+        if (!RelluEssentials.getInstance().position.containsKey(p)) {
             p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_POSITIONS);
             return null;
         }
@@ -479,12 +565,12 @@ public class Modify implements CommandConstruct {
         Location pos1 = RelluEssentials.getInstance().position.get(p).getValue();
         Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
 
-        if(pos1 == null){
+        if (pos1 == null) {
             p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);
             return null;
         }
 
-        if(pos2 == null){
+        if (pos2 == null) {
             p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
             return null;
         }
@@ -504,10 +590,10 @@ public class Modify implements CommandConstruct {
     }
 
     private static void checkAndRemoveProtection(Block block) {
-        if(ProtectionHelper.isLockAble(block)){
+        if (ProtectionHelper.isLockAble(block)) {
             ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
 
-            if(protection != null){
+            if (protection != null) {
                 RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(protection);
                 RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(block.getLocation());
             }
@@ -534,31 +620,31 @@ public class Modify implements CommandConstruct {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         List<String> tabList = new ArrayList<>();
 
-        if(!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())){
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) {
             return tabList;
         }
 
-        if(strings.length == 1){
+        if (strings.length == 1) {
             tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
             return tabList;
         }
 
-        if(strings[0].equalsIgnoreCase(Commands.UNDO.getName())){
+        if (strings[0].equalsIgnoreCase(Commands.UNDO.getName())) {
             return tabList;
         }
 
-        if(strings[0].equalsIgnoreCase(Commands.MOVE.getName())){
+        if (strings[0].equalsIgnoreCase(Commands.MOVE.getName())) {
             return tabList;
         }
 
 
-        if(strings.length == 2){
+        if (strings.length == 2) {
             tabList.addAll(TabCompleterHelper.getMaterials(strings[1].isEmpty() ? null : strings[1]));
             return tabList;
         }
 
-        if(strings.length == 3){
-            if(!strings[0].equalsIgnoreCase(Commands.REPLACE.getName())){
+        if (strings.length == 3) {
+            if (!strings[0].equalsIgnoreCase(Commands.REPLACE.getName())) {
                 return tabList;
             }
 
