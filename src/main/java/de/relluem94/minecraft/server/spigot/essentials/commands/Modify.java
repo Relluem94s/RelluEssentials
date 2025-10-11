@@ -16,7 +16,6 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -137,41 +136,8 @@ public class Modify implements CommandConstruct {
                 return true;
             }
 
-            if(!RelluEssentials.getInstance().position.containsKey(p)){
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_POSITIONS);
-                return true;
-            }
-
-            if(RelluEssentials.getInstance().position.get(p).getValue() == null){
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);
-                return true;
-            }
-
-            Location pos1 = RelluEssentials.getInstance().position.get(p).getValue();
-
-            if(pos1 == null){
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);
-                return true;
-            }
-
-            if(RelluEssentials.getInstance().position.get(p).getSecondValue() == null){
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
-                return true;
-            }
-
-            Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
-
-            if(pos2 == null){
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
-                return true;
-            }
-
-            if (pos1.getWorld() != pos2.getWorld()) {
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_DIFFERENT_WORLDS);
-                return true;
-            }
-
-            World world = pos1.getWorld();
+            Selection selection = getSelection(p);
+            if(selection == null) return true;
 
             BlockHelper bh = new BlockHelper(material);
             List<ModifyHistoryEntry> history = new ArrayList<>();
@@ -179,9 +145,8 @@ public class Modify implements CommandConstruct {
             final long[] currentDelay = {0};
             final int[] counter = {0};
 
-            Selection selection = new Selection(pos1, pos2);
 
-            forEachBlock(selection, world, block -> {
+            forEachBlock(selection, block -> {
                 if(material.equals(block.getType())){
                     return;
                 }
@@ -203,9 +168,7 @@ public class Modify implements CommandConstruct {
 
             bh.setBlocks(0);
 
-            List<List<ModifyHistoryEntry>> playerUndoList = RelluEssentials.getInstance().undo.getOrDefault(p, new ArrayList<>());
-            playerUndoList.add(history);
-            RelluEssentials.getInstance().undo.put(p, playerUndoList);
+            addUndoHistory(p, history);
 
             p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_SET_STARTED, history.size(), material.name()));
 
@@ -226,43 +189,16 @@ public class Modify implements CommandConstruct {
                 return true;
             }
 
-            if(!RelluEssentials.getInstance().position.containsKey(p)){
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_POSITIONS);
-                return true;
-            }
-
-            Location pos1 = RelluEssentials.getInstance().position.get(p).getValue();
-            Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
-
-            if(pos1 == null){
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);
-                return true;
-            }
-
-            if(pos2 == null){
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
-                return true;
-            }
-
-            if (pos1.getWorld() != pos2.getWorld()) {
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_DIFFERENT_WORLDS);
-                return true;
-            }
-
-            World world = pos1.getWorld();
-
-
+            Selection selection = getSelection(p);
+            if(selection == null) return true;
 
             BlockHelper bh = new BlockHelper(toMaterial);
-
             List<ModifyHistoryEntry> history = new ArrayList<>();
 
             final long[] currentDelay = {0};
             final int[] counter = {0};
 
-            Selection selection = new Selection(pos1, pos2);
-
-            forEachBlock(selection, world, block -> {
+            forEachBlock(selection, block -> {
                 if (block.getType() == toMaterial) {
                     return;
                 }
@@ -285,10 +221,7 @@ public class Modify implements CommandConstruct {
             });
 
             bh.setBlocks(0);
-
-            List<List<ModifyHistoryEntry>> playerUndoList = RelluEssentials.getInstance().undo.getOrDefault(p, new ArrayList<>());
-            playerUndoList.add(history);
-            RelluEssentials.getInstance().undo.put(p, playerUndoList);
+            addUndoHistory(p, history);
 
             p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_REPLACE_STARTED, history.size(), fromMaterial.name(), toMaterial.name()));
             return true;
@@ -296,6 +229,39 @@ public class Modify implements CommandConstruct {
 
         p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
         return true;
+    }
+
+    private @Nullable Selection getSelection(Player p) {
+        if(!RelluEssentials.getInstance().position.containsKey(p)){
+            p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_POSITIONS);
+            return null;
+        }
+
+        Location pos1 = RelluEssentials.getInstance().position.get(p).getValue();
+        Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
+
+        if(pos1 == null){
+            p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);
+            return null;
+        }
+
+        if(pos2 == null){
+            p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
+            return null;
+        }
+
+        if (pos1.getWorld() != pos2.getWorld()) {
+            p.sendMessage(PLUGIN_COOMAND_MODIFY_DIFFERENT_WORLDS);
+            return null;
+        }
+
+        return new Selection(pos1, pos2);
+    }
+
+    private static void addUndoHistory(Player p, List<ModifyHistoryEntry> history) {
+        List<List<ModifyHistoryEntry>> playerUndoList = RelluEssentials.getInstance().undo.getOrDefault(p, new ArrayList<>());
+        playerUndoList.add(history);
+        RelluEssentials.getInstance().undo.put(p, playerUndoList);
     }
 
     private static void checkAndRemoveProtection(Block block) {
@@ -309,11 +275,11 @@ public class Modify implements CommandConstruct {
         }
     }
 
-    public void forEachBlock(@NotNull Selection selection, World world, Consumer<Block> action) {
+    public void forEachBlock(@NotNull Selection selection, Consumer<Block> action) {
         for (int y = selection.getMinY(); y <= selection.getMaxY(); y++) {
             for (int x = selection.getMinX(); x <= selection.getMaxX(); x++) {
                 for (int z = selection.getMinZ(); z <= selection.getMaxZ(); z++) {
-                    Block block = new Location(world, x, y, z).getBlock();
+                    Block block = new Location(selection.getWorld(), x, y, z).getBlock();
                     action.accept(block);
                 }
             }
