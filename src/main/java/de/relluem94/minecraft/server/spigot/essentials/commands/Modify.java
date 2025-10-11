@@ -374,6 +374,10 @@ public class Modify implements CommandConstruct {
                 p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_MOVE_STARTED, history.size(), offset));
                 return true;
             }
+
+
+
+
             else if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
                 List<ModifyClipboardEntry> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
                 if (clipboardList == null || clipboardList.isEmpty()) {
@@ -398,20 +402,51 @@ public class Modify implements CommandConstruct {
                     Location loc = entry.getLocation().clone();
                     double relX = loc.getX() - centerX;
                     double relY = loc.getY() - centerY;
+                    double relZ = loc.getZ() - centerZ;
 
-                    double newRelX = loc.getZ() - centerZ;
-                    double newRelZ = -relX;
+                    double newX = centerX + relZ;
+                    double newY = centerY + relY;
+                    double newZ = centerZ - relX;
 
-                    Location newLoc = new Location(loc.getWorld(), centerX + newRelX, centerY + relY, centerZ + newRelZ);
+                    Location newLoc = new Location(loc.getWorld(), newX, newY, newZ);
                     newLocs.add(newLoc);
                 }
 
-                Selection newSelection = getSelection(newLocs, originalSel);
+                int newMinX = Integer.MAX_VALUE;
+                int newMinY = Integer.MAX_VALUE;
+                int newMinZ = Integer.MAX_VALUE;
+                int newMaxX = Integer.MIN_VALUE;
+                int newMaxY = Integer.MIN_VALUE;
+                int newMaxZ = Integer.MIN_VALUE;
+
+                for (Location loc : newLocs) {
+                    int x = loc.getBlockX();
+                    int y = loc.getBlockY();
+                    int z = loc.getBlockZ();
+                    newMinX = Math.min(newMinX, x);
+                    newMinY = Math.min(newMinY, y);
+                    newMinZ = Math.min(newMinZ, z);
+                    newMaxX = Math.max(newMaxX, x);
+                    newMaxY = Math.max(newMaxY, y);
+                    newMaxZ = Math.max(newMaxZ, z);
+                }
+
+                int shiftX = originalSel.getMinX() - newMinX;
+                int shiftY = originalSel.getMinY() - newMinY;
+                int shiftZ = originalSel.getMinZ() - newMinZ;
+
+                List<Location> shiftedLocs = new ArrayList<>();
+                for (Location loc : newLocs) {
+                    Location shifted = loc.clone().add(shiftX, shiftY, shiftZ);
+                    shiftedLocs.add(shifted);
+                }
+
+                Selection newSelection = getSelection(shiftedLocs, originalSel);
 
                 List<ModifyClipboardEntry> rotated = new ArrayList<>();
                 for (int i = 0; i < clipboardList.size(); i++) {
                     ModifyClipboardEntry originalEntry = clipboardList.get(i);
-                    Location newLoc = newLocs.get(i);
+                    Location newLoc = shiftedLocs.get(i);
                     rotated.add(new ModifyClipboardEntry(newLoc, originalEntry.getMaterial(), originalEntry.getData(), firstEntry.getPlayerLocation(), newSelection));
                 }
 
@@ -419,6 +454,10 @@ public class Modify implements CommandConstruct {
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
                 return true;
             }
+
+
+
+
 
             else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
