@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -157,7 +158,7 @@ public class Position implements CommandConstruct {
             return true;
         }
 
-        Vector direction = p.getLocation().getDirection().normalize();
+        Vector direction = getPlayerDirection(p);
 
         if(cmd.equals(Commands.SHIFT.getName())){
             if(first == null && second == null){

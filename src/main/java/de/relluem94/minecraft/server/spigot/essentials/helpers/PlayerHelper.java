@@ -12,6 +12,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -292,5 +293,28 @@ public class PlayerHelper {
             return result.getHitBlock().getLocation();
         }
         return player.getLocation();
+    }
+
+    public static @NotNull Vector getPlayerDirection(@NotNull Player p){
+        Vector direction = p.getLocation().getDirection();
+        double verticalThreshold = 0.5;
+
+        if (Math.abs(direction.getY()) > verticalThreshold) {
+            return new Vector(0, Math.signum(direction.getY()), 0);
+        }
+
+        direction.setY(0);
+        direction.normalize();
+
+        double yaw = Math.toDegrees(Math.atan2(-direction.getX(), direction.getZ()));
+        if ((yaw >= -45 && yaw < 45)) {
+            return new Vector(0, 0, 1);
+        } else if ((yaw >= 45 && yaw < 135)) {
+            return new Vector(-1, 0, 0);
+        } else if ((yaw >= -135 && yaw < -45)) {
+            return new Vector(1, 0, 0);
+        } else {
+            return new Vector(0, 0, -1);
+        }
     }
 }
