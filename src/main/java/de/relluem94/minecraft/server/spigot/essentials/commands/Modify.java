@@ -53,7 +53,8 @@ public class Modify implements CommandConstruct {
         COPY("copy"),
         CUT("cut"),
         PASTE("paste"),
-        UNDO("undo");
+        UNDO("undo"),
+        WALL("wall");
 
         private final String name;
         private final String[] subCommands;
@@ -209,7 +210,51 @@ public class Modify implements CommandConstruct {
         }
 
         if(strings.length == 2){
-            if(Commands.MOVE.getName().equalsIgnoreCase(strings[0])){
+            if (Commands.WALL.getName().equalsIgnoreCase(strings[0])) {
+                Material material = Material.getMaterial(strings[1].toUpperCase());
+                if (material == null) {
+                    p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
+                    return true;
+                }
+
+                Selection selection = getSelection(p);
+                if (selection == null) return true;
+
+                BlockHelper bh = new BlockHelper(material);
+                List<ModifyHistoryEntry> history = new ArrayList<>();
+
+                final long[] currentDelay = {0};
+                final int[] counter = {0};
+
+                forEachBlock(selection, block -> {
+                    int x = block.getX();
+                    int z = block.getZ();
+
+                    if (x != selection.getMinX() && x != selection.getMaxX()
+                            && z != selection.getMinZ() && z != selection.getMaxZ()) {
+                        return;
+                    }
+
+                    checkAndRemoveProtection(block);
+
+                    ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
+                    history.add(entry);
+
+                    bh.addLocation(block.getLocation(), currentDelay[0]);
+                    counter[0]++;
+                    if (counter[0] >= BLOCKS_PER_TICK) {
+                        currentDelay[0]++;
+                        counter[0] = 0;
+                    }
+                });
+
+                bh.setBlocks(0);
+                addUndoHistory(p, history);
+
+                p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_WALL_STARTED, history.size(), material.name()));
+                return true;
+            }
+            else if(Commands.MOVE.getName().equalsIgnoreCase(strings[0])){
                 if(!isInt(strings[1])){
                     p.sendMessage(PLUGIN_COMMAND_INVALID);
                 }
@@ -263,9 +308,7 @@ public class Modify implements CommandConstruct {
                 p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_MOVE_STARTED, history.size(), offset));
                 return true;
             }
-
-
-            if(!Commands.SET.getName().equalsIgnoreCase(strings[0])){
+            else if(!Commands.SET.getName().equalsIgnoreCase(strings[0])){
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }

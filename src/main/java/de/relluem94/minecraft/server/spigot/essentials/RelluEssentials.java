@@ -27,7 +27,6 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
-import de.relluem94.rellulib.FixedSizeList;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
