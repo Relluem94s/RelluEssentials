@@ -140,15 +140,23 @@ public class Modify implements CommandConstruct {
                     ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
                     history.add(entry);
 
+                    Location location = block.getLocation().clone().add(direction);
+                    Block newBlock = location.getBlock();
+
+                    ModifyHistoryEntry entryNewBlock = new ModifyHistoryEntry(newBlock.getLocation(), newBlock.getType(), newBlock.getBlockData());
+                    history.add(entryNewBlock);
+
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            Location location = block.getLocation().clone().add(direction);
-                            Block newBlock = location.getBlock();
+
                             newBlock.setType(block.getType());
                             newBlock.setBlockData(block.getBlockData());
+
+                            block.setType(Material.AIR);
+
                         }
-                    }.runTaskLaterAsynchronously(RelluEssentials.getInstance(), currentDelay[0]);
+                    }.runTaskLater(RelluEssentials.getInstance(), currentDelay[0]);
 
                     counter[0]++;
                     if (counter[0] >= BLOCKS_PER_TICK) {
