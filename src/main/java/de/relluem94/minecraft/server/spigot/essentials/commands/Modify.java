@@ -5,6 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
@@ -25,8 +26,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isInt;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 @CommandName("modify")
@@ -44,6 +47,7 @@ public class Modify implements CommandConstruct {
 
         SET("set"),
         REPLACE("replace"),
+        MOVE("move"),
         UNDO("undo");
 
         private final String name;
@@ -111,6 +115,16 @@ public class Modify implements CommandConstruct {
         }
 
         if(strings.length == 2){
+            if(Commands.MOVE.getName().equalsIgnoreCase(strings[0])){
+                if(!isInt(strings[1])){
+                    p.sendMessage(PLUGIN_COMMAND_INVALID);
+                }
+
+
+                return true;
+            }
+
+
             if(!Commands.SET.getName().equalsIgnoreCase(strings[0])){
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
@@ -133,18 +147,19 @@ public class Modify implements CommandConstruct {
                 return true;
             }
 
-            if(RelluEssentials.getInstance().position.get(p).getSecondValue() == null){
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
-                return true;
-            }
-
             Location pos1 = RelluEssentials.getInstance().position.get(p).getValue();
-            Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
 
             if(pos1 == null){
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);
                 return true;
             }
+
+            if(RelluEssentials.getInstance().position.get(p).getSecondValue() == null){
+                p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
+                return true;
+            }
+
+            Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
 
             if(pos2 == null){
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
@@ -158,44 +173,33 @@ public class Modify implements CommandConstruct {
 
             World world = pos1.getWorld();
 
-            int minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
-            int maxX = Math.max(pos1.getBlockX(), pos2.getBlockX());
-            int minY = Math.min(pos1.getBlockY(), pos2.getBlockY());
-            int maxY = Math.max(pos1.getBlockY(), pos2.getBlockY());
-            int minZ = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
-            int maxZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
-
             BlockHelper bh = new BlockHelper(material);
-
             List<ModifyHistoryEntry> history = new ArrayList<>();
 
-            long currentDelay = 0;
-            int counter = 0;
+            final long[] currentDelay = {0};
+            final int[] counter = {0};
 
-            for (int y = minY; y <= maxY; y++) {
-                for (int x = minX; x <= maxX; x++) {
-                    for (int z = minZ; z <= maxZ; z++) {
-                        Location loc = new Location(world, x, y, z);
-                        Block block = loc.getBlock();
+            Selection selection = new Selection(pos1, pos2);
 
-                        if(material.equals(block.getType())){
-                            continue;
-                        }
-
-                        checkAndRemoveProtection(block);
-
-                        ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
-                        history.add(entry);
-
-                        bh.addLocation(loc, currentDelay);
-                        counter++;
-                        if (counter >= BLOCKS_PER_TICK) {
-                            currentDelay += 1;
-                            counter = 0;
-                        }
-                    }
+            forEachBlock(selection, world, block -> {
+                if(material.equals(block.getType())){
+                    return;
                 }
-            }
+
+                checkAndRemoveProtection(block);
+
+                ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
+                history.add(entry);
+
+                bh.addLocation(block.getLocation(), currentDelay[0]);
+                counter[0]++;
+                if (counter[0] >= BLOCKS_PER_TICK) {
+                    currentDelay[0] += 1;
+                    counter[0] = 0;
+                }
+            });
+
+
 
             bh.setBlocks(0);
 
@@ -247,48 +251,38 @@ public class Modify implements CommandConstruct {
 
             World world = pos1.getWorld();
 
-            int minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
-            int maxX = Math.max(pos1.getBlockX(), pos2.getBlockX());
-            int minY = Math.min(pos1.getBlockY(), pos2.getBlockY());
-            int maxY = Math.max(pos1.getBlockY(), pos2.getBlockY());
-            int minZ = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
-            int maxZ = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
+
 
             BlockHelper bh = new BlockHelper(toMaterial);
 
             List<ModifyHistoryEntry> history = new ArrayList<>();
 
-            long currentDelay = 0;
-            int counter = 0;
+            final long[] currentDelay = {0};
+            final int[] counter = {0};
 
-            for (int y = minY; y <= maxY; y++) {
-                for (int x = minX; x <= maxX; x++) {
-                    for (int z = minZ; z <= maxZ; z++) {
-                        Location loc = new Location(world, x, y, z);
-                        Block block = loc.getBlock();
+            Selection selection = new Selection(pos1, pos2);
 
-                        if (block.getType() == toMaterial) {
-                            continue;
-                        }
-
-                        if (block.getType() != fromMaterial) {
-                            continue;
-                        }
-
-                        checkAndRemoveProtection(block);
-
-                        ModifyHistoryEntry entry = new ModifyHistoryEntry(loc, block.getType(), block.getBlockData());
-                        history.add(entry);
-
-                        bh.addLocation(loc, currentDelay);
-                        counter++;
-                        if (counter >= BLOCKS_PER_TICK) {
-                            currentDelay += 1;
-                            counter = 0;
-                        }
-                    }
+            forEachBlock(selection, world, block -> {
+                if (block.getType() == toMaterial) {
+                    return;
                 }
-            }
+
+                if (block.getType() != fromMaterial) {
+                    return;
+                }
+
+                checkAndRemoveProtection(block);
+
+                ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
+                history.add(entry);
+
+                bh.addLocation(block.getLocation(), currentDelay[0]);
+                counter[0]++;
+                if (counter[0] >= BLOCKS_PER_TICK) {
+                    currentDelay[0] += 1;
+                    counter[0] = 0;
+                }
+            });
 
             bh.setBlocks(0);
 
@@ -315,6 +309,17 @@ public class Modify implements CommandConstruct {
         }
     }
 
+    public void forEachBlock(@NotNull Selection selection, World world, Consumer<Block> action) {
+        for (int y = selection.getMinY(); y <= selection.getMaxY(); y++) {
+            for (int x = selection.getMinX(); x <= selection.getMaxX(); x++) {
+                for (int z = selection.getMinZ(); z <= selection.getMaxZ(); z++) {
+                    Block block = new Location(world, x, y, z).getBlock();
+                    action.accept(block);
+                }
+            }
+        }
+    }
+
     private void undo(@NotNull ModifyHistoryEntry entry) {
         entry.getLocation().getBlock().setType(entry.getMaterial());
         entry.getLocation().getBlock().setBlockData(entry.getData());
@@ -336,6 +341,11 @@ public class Modify implements CommandConstruct {
         if(strings[0].equalsIgnoreCase(Commands.UNDO.getName())){
             return tabList;
         }
+
+        if(strings[0].equalsIgnoreCase(Commands.MOVE.getName())){
+            return tabList;
+        }
+
 
         if(strings.length == 2){
             tabList.addAll(TabCompleterHelper.getMaterials(strings[1].isEmpty() ? null : strings[1]));
