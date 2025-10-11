@@ -135,8 +135,6 @@ public class Modify implements CommandConstruct {
                 Vector direction = getPlayerDirection(p).multiply(offset);
 
                 forEachBlock(selection, block -> {
-                    checkAndRemoveProtection(block);
-
                     ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
                     history.add(entry);
 
@@ -145,6 +143,9 @@ public class Modify implements CommandConstruct {
 
                     ModifyHistoryEntry entryNewBlock = new ModifyHistoryEntry(newBlock.getLocation(), newBlock.getType(), newBlock.getBlockData());
                     history.add(entryNewBlock);
+
+                    checkAndRemoveProtection(block);
+                    checkAndRemoveProtection(newBlock);
 
                     new BukkitRunnable() {
                         @Override
