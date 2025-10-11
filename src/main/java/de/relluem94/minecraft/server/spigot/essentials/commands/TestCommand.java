@@ -17,6 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import lombok.Getter;
@@ -212,8 +213,7 @@ public class TestCommand implements CommandConstruct {
             Material.GRAY_STAINED_GLASS,
             Material.PUMPKIN,
             Material.MELON,
-
-            Material.FARMLAND
+            Material.PALE_OAK_LOG
     );
 
     private void devPlattform(@NotNull Player p){
@@ -229,8 +229,16 @@ public class TestCommand implements CommandConstruct {
         BlockHelper redstone = new BlockHelper(Material.REDSTONE_BLOCK);
         BlockHelper air = new BlockHelper(Material.AIR);
 
+        List<NPC> npcs = RelluEssentials.getInstance().getNpcAPI().getNPCs();
+
+        int npcIndex = 0;
         int cols = 5;
-        int rows = (DEV_PLATTFORM_MATERIAL_LIST.size() + cols - 1) / cols;
+        int npcCount = npcs.size();
+        int totalBlocks = DEV_PLATTFORM_MATERIAL_LIST.size();
+        int totalAmount = totalBlocks + npcCount;
+
+        int rows = (totalAmount + cols) / cols;
+
         int perTick = 64;
         int placedThisTick = 0;
         long schedule = 0L;
@@ -246,8 +254,8 @@ public class TestCommand implements CommandConstruct {
         for (int r = 0; r < rows; r++){
             for (int c = 0; c < cols; c++){
                 int oreIndex = r * cols + c;
-                if (oreIndex >= DEV_PLATTFORM_MATERIAL_LIST.size()) break;
-                int forwardOffset = r * 5; // statt 4 — volle Reihe, keine Lücke
+                if (oreIndex >= totalAmount) break;
+                int forwardOffset = r * 5;
                 int rightOffset = c * 5;
                 int cx = originX + fx * forwardOffset + rx * rightOffset;
                 int cz = originZ + fz * forwardOffset + rz * rightOffset;
@@ -281,6 +289,26 @@ public class TestCommand implements CommandConstruct {
                             placedThisTick++;
                         } else {
                             if (dx == 0 && dz == 0){
+
+
+                                if(DEV_PLATTFORM_MATERIAL_LIST.size() <= oreIndex){
+                                    Block b = world.getBlockAt(bx, originY, bz);
+                                    undoList.add(new ModifyHistoryEntry(b.getLocation(), b.getType(),  b.getBlockData()));
+                                    inner.addLocation(b.getLocation(), schedule);
+
+                                    NPCHelper nh = new NPCHelper(world.getBlockAt(bx, originY +1, bz).getLocation(), npcs.get(npcIndex));
+
+                                    new BukkitRunnable(){
+                                        @Override
+                                        public void run(){
+                                            nh.spawn();
+                                        }
+                                    }.runTaskLater(RelluEssentials.getInstance(), schedule+11);
+
+                                    npcIndex++;
+                                    continue;
+                                }
+
                                 Material oreMat = DEV_PLATTFORM_MATERIAL_LIST.get(oreIndex);
                                 String blockName = "minecraft:" + oreMat.name().toLowerCase();
                                 placedThisTick++;
@@ -313,9 +341,9 @@ public class TestCommand implements CommandConstruct {
         }
 
         air.setBlocks();
-        frame.setBlocks(9);
-        inner.setBlocks(19);
-        redstone.setBlocks(29);
+        frame.setBlocks(5);
+        inner.setBlocks(10);
+        redstone.setBlocks(15);
 
 
 
