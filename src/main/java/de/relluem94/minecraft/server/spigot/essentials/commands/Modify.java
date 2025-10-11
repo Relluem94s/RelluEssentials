@@ -20,6 +20,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +30,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isInt;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -119,7 +122,44 @@ public class Modify implements CommandConstruct {
                     p.sendMessage(PLUGIN_COMMAND_INVALID);
                 }
 
+                int offset = Integer.parseInt(strings[1]);
 
+                Selection selection = getSelection(p);
+                if(selection == null) return true;
+
+                List<ModifyHistoryEntry> history = new ArrayList<>();
+
+                final long[] currentDelay = {0};
+                final int[] counter = {0};
+
+                Vector direction = getPlayerDirection(p).multiply(offset);
+
+                forEachBlock(selection, block -> {
+                    checkAndRemoveProtection(block);
+
+                    ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
+                    history.add(entry);
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            Location location = block.getLocation().clone().add(direction);
+                            Block newBlock = location.getBlock();
+                            newBlock.setType(block.getType());
+                            newBlock.setBlockData(block.getBlockData());
+                        }
+                    }.runTaskLaterAsynchronously(RelluEssentials.getInstance(), currentDelay[0]);
+
+                    counter[0]++;
+                    if (counter[0] >= BLOCKS_PER_TICK) {
+                        currentDelay[0] += 1;
+                        counter[0] = 0;
+                    }
+                });
+
+                addUndoHistory(p, history);
+
+                p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_MOVE_STARTED, history.size(), offset));
                 return true;
             }
 

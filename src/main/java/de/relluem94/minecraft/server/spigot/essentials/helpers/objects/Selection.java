@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.objects;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
