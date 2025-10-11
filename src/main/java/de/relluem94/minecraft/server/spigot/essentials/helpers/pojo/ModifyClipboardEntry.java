@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -17,4 +18,5 @@ public class ModifyClipboardEntry {
     private Material material;
     private BlockData data;
     private Location playerLocation;
+    private Selection selection;
 }

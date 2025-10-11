@@ -106,7 +106,7 @@ public class Modify implements CommandConstruct {
 
                 forEachBlock(selection, block -> {
                     ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
-                    ModifyClipboardEntry clipboardEntry = new ModifyClipboardEntry(block.getLocation(), block.getType(), block.getBlockData(), p.getLocation());
+                    ModifyClipboardEntry clipboardEntry = new ModifyClipboardEntry(block.getLocation(), block.getType(), block.getBlockData(), p.getLocation(), selection);
                     clipboardList.add(clipboardEntry);
 
                     if (Commands.CUT.getName().equalsIgnoreCase(strings[0])) {
@@ -149,7 +149,7 @@ public class Modify implements CommandConstruct {
 
                 ModifyClipboardEntry pivotEntry = clipboardList.get(0);
                 Location originalPlayerLoc = pivotEntry.getPlayerLocation().clone();
-                
+
                 Location playerTargetLoc = p.getLocation().clone();
                 int offsetX = playerTargetLoc.getBlockX() - originalPlayerLoc.getBlockX();
                 int offsetY = playerTargetLoc.getBlockY() - originalPlayerLoc.getBlockY();
@@ -373,30 +373,53 @@ public class Modify implements CommandConstruct {
 
                 p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_MOVE_STARTED, history.size(), offset));
                 return true;
-            } else if (Commands.CLIPBOARD.getName().equalsIgnoreCase(strings[0])) {
-
-                if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
-                    List<ModifyClipboardEntry> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
-                    if (clipboardList == null || clipboardList.isEmpty()) {
-                        p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
-                        return true;
-                    }
-
-                    List<ModifyClipboardEntry> rotated = new ArrayList<>();
-                    for (ModifyClipboardEntry entry : clipboardList) {
-                        Location loc = entry.getLocation().clone();
-                        int x = loc.getBlockX();
-                        int z = loc.getBlockZ();
-                        int newX = -z;
-                        Location newLoc = new Location(loc.getWorld(), newX, loc.getBlockY(), x);
-                        rotated.add(new ModifyClipboardEntry(newLoc, entry.getMaterial(), entry.getData(), p.getLocation()));
-                    }
-
-                    RelluEssentials.getInstance().clipboard.put(p, rotated);
-                    p.sendMessage(PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
+            }
+            else if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
+                List<ModifyClipboardEntry> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
+                if (clipboardList == null || clipboardList.isEmpty()) {
+                    p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
                     return true;
                 }
+
+                ModifyClipboardEntry firstEntry = clipboardList.get(0);
+                Selection originalSel = firstEntry.getSelection();
+
+                if (originalSel == null) {
+                    p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
+                    return true;
+                }
+
+                double centerX = (originalSel.getMinX() + originalSel.getMaxX()) / 2.0;
+                double centerY = (originalSel.getMinY() + originalSel.getMaxY()) / 2.0;
+                double centerZ = (originalSel.getMinZ() + originalSel.getMaxZ()) / 2.0;
+
+                List<Location> newLocs = new ArrayList<>();
+                for (ModifyClipboardEntry entry : clipboardList) {
+                    Location loc = entry.getLocation().clone();
+                    double relX = loc.getX() - centerX;
+                    double relY = loc.getY() - centerY;
+
+                    double newRelX = loc.getZ() - centerZ;
+                    double newRelZ = -relX;
+
+                    Location newLoc = new Location(loc.getWorld(), centerX + newRelX, centerY + relY, centerZ + newRelZ);
+                    newLocs.add(newLoc);
+                }
+
+                Selection newSelection = getSelection(newLocs, originalSel);
+
+                List<ModifyClipboardEntry> rotated = new ArrayList<>();
+                for (int i = 0; i < clipboardList.size(); i++) {
+                    ModifyClipboardEntry originalEntry = clipboardList.get(i);
+                    Location newLoc = newLocs.get(i);
+                    rotated.add(new ModifyClipboardEntry(newLoc, originalEntry.getMaterial(), originalEntry.getData(), firstEntry.getPlayerLocation(), newSelection));
+                }
+
+                RelluEssentials.getInstance().clipboard.put(p, rotated);
+                p.sendMessage(PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
+                return true;
             }
+
             else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
@@ -588,6 +611,28 @@ public class Modify implements CommandConstruct {
 
         p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
         return true;
+    }
+
+    private static @NotNull Selection getSelection(List<Location> newLocs, Selection originalSel) {
+        double newMinX = Double.MAX_VALUE;
+        double newMinY = Double.MAX_VALUE;
+        double newMinZ = Double.MAX_VALUE;
+        double newMaxX = Double.MIN_VALUE;
+        double newMaxY = Double.MIN_VALUE;
+        double newMaxZ = Double.MIN_VALUE;
+
+        for (Location loc : newLocs) {
+            newMinX = Math.min(newMinX, loc.getX());
+            newMinY = Math.min(newMinY, loc.getY());
+            newMinZ = Math.min(newMinZ, loc.getZ());
+            newMaxX = Math.max(newMaxX, loc.getX());
+            newMaxY = Math.max(newMaxY, loc.getY());
+            newMaxZ = Math.max(newMaxZ, loc.getZ());
+        }
+
+        Location newPos1 = new Location(originalSel.getWorld(), newMinX, newMinY, newMinZ);
+        Location newPos2 = new Location(originalSel.getWorld(), newMaxX, newMaxY, newMaxZ);
+        return new Selection(newPos1, newPos2);
     }
 
     private @Nullable Selection getSelection(Player p) {
