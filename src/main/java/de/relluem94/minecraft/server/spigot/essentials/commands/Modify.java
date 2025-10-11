@@ -613,7 +613,7 @@ public class Modify implements CommandConstruct {
         return true;
     }
 
-    private static @NotNull Selection getSelection(List<Location> newLocs, Selection originalSel) {
+    private static @NotNull Selection getSelection(@NotNull List<Location> newLocs, Selection originalSel) {
         double newMinX = Double.MAX_VALUE;
         double newMinY = Double.MAX_VALUE;
         double newMinZ = Double.MAX_VALUE;
