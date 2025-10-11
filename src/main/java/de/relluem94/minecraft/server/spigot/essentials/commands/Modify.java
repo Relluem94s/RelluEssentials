@@ -50,6 +50,9 @@ public class Modify implements CommandConstruct {
         SET("set"),
         REPLACE("replace"),
         MOVE("move"),
+        COPY("copy"),
+        CUT("cut"),
+        PASTE("paste"),
         UNDO("undo");
 
         private final String name;
@@ -81,6 +84,95 @@ public class Modify implements CommandConstruct {
         }
 
         if(strings.length == 1){
+            if (Commands.COPY.getName().equalsIgnoreCase(strings[0]) || Commands.CUT.getName().equalsIgnoreCase(strings[0])) {
+
+                Selection selection = getSelection(p);
+                if (selection == null) return true;
+
+                List<ModifyHistoryEntry> clipboardList = new ArrayList<>();
+                List<ModifyHistoryEntry> history = new ArrayList<>();
+
+                final long[] currentDelay = {0};
+                final int[] counter = {0};
+
+                BlockHelper bh = new BlockHelper(Material.AIR);
+
+                forEachBlock(selection, block -> {
+                    ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
+                    clipboardList.add(entry);
+
+                    if (Commands.CUT.getName().equalsIgnoreCase(strings[0])) {
+                        history.add(entry);
+                        checkAndRemoveProtection(block);
+                        bh.addLocation(block.getLocation(), currentDelay[0]);
+
+                        counter[0]++;
+                        if (counter[0] >= BLOCKS_PER_TICK) {
+                            currentDelay[0]++;
+                            counter[0] = 0;
+                        }
+                    }
+                });
+
+                if (Commands.CUT.getName().equalsIgnoreCase(strings[0])) {
+                    bh.setBlocks(0);
+                    addUndoHistory(p, history);
+                }
+
+                RelluEssentials.getInstance().clipboard.put(p, clipboardList);
+
+                p.sendMessage(String.format(
+                        Commands.CUT.getName().equalsIgnoreCase(strings[0]) ? PLUGIN_COOMAND_MODIFY_CUT_STARTED : PLUGIN_COOMAND_MODIFY_COPY_STARTED,
+                        clipboardList.size()
+                ));
+                return true;
+            }
+
+            if (Commands.PASTE.getName().equalsIgnoreCase(strings[0])) {
+                List<ModifyHistoryEntry> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
+                if (clipboardList == null || clipboardList.isEmpty()) {
+                    p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
+                    return true;
+                }
+
+                List<ModifyHistoryEntry> history = new ArrayList<>();
+                final long[] currentDelay = {0};
+                final int[] counter = {0};
+
+                Vector direction = getPlayerDirection(p);
+
+                for (ModifyHistoryEntry entry : clipboardList) {
+                    Location newLoc = p.getLocation().clone().add(direction).add(entry.getLocation().clone().subtract(clipboardList.get(0).getLocation()));
+                    Block block = newLoc.getBlock();
+
+                    ModifyHistoryEntry entryNew = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
+                    history.add(entryNew);
+
+                    checkAndRemoveProtection(block);
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            block.setType(entry.getMaterial());
+                            block.setBlockData(entry.getData());
+                        }
+                    }.runTaskLater(RelluEssentials.getInstance(), currentDelay[0]);
+
+                    counter[0]++;
+                    if (counter[0] >= BLOCKS_PER_TICK) {
+                        currentDelay[0]++;
+                        counter[0] = 0;
+                    }
+                }
+
+
+                addUndoHistory(p, history);
+
+                p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_PASTE_STARTED, clipboardList.size()));
+                return true;
+            }
+
+
             if(!Commands.UNDO.getName().equalsIgnoreCase(strings[0])){
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;

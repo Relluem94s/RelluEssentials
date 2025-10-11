@@ -239,6 +239,10 @@ public interface Constants {
     String PLUGIN_COOMAND_MODIFY_SET_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Set of %d blocks with material %s was started!";
     String PLUGIN_COOMAND_MODIFY_MOVE_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Move of %d blocks with offset %d was started!";
     String PLUGIN_COOMAND_MODIFY_REPLACE_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Replace of %d blocks with material %s to %s was started!";
+    String PLUGIN_COOMAND_MODIFY_COPY_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Copied %d blocks to clipboard.";
+    String PLUGIN_COOMAND_MODIFY_CUT_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Cut %d blocks to clipboard.";
+    String PLUGIN_COOMAND_MODIFY_PASTE_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Pasted %d blocks from clipboard.";
+    String PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD = PLUGIN_FORMS_COMMAND_PREFIX + "Clipboard is empty.";
 
     String PLUGIN_COMMAND_PROTECT_COMMAND_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use " + PLUGIN_COLOR_COMMAND_NAME + "/%s " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_MESSAGE + ", " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_MESSAGE + " or " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_MESSAGE + ", " + PLUGIN_COLOR_COMMAND_ARG + "%s"+ PLUGIN_COLOR_MESSAGE + " or " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     String PLUGIN_COMMAND_PROTECT_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Click a Protected Block to view the Protection Info";

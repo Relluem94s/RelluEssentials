@@ -27,6 +27,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
+import de.relluem94.rellulib.FixedSizeList;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -104,6 +105,7 @@ public class RelluEssentials extends JavaPlugin {
 
 
     public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
+    public final Map<Player, List<ModifyHistoryEntry>> clipboard = new HashMap<>();
     public final Map<Player, DoubleStore<Location,Location>> position = new HashMap<>();
 
 
