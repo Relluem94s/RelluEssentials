@@ -248,6 +248,8 @@ public interface Constants {
     String PLUGIN_COOMAND_MODIFY_FILL_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Filled %d blocks of %s in a radius of %d.";
     String PLUGIN_COOMAND_MODIFY_FILLR_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Filled %d blocks of %s downwards in a radius of %d.";
     String PLUGIN_COOMAND_MODIFY_FILL_RADIUS_TO_HIGH = PLUGIN_FORMS_COMMAND_PREFIX + "Can't fill Radius is to High! Max Radius is %d.";
+    String PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS = PLUGIN_FORMS_COMMAND_PREFIX + "Clipboard rotated 90° successfully!";
+
 
 
 

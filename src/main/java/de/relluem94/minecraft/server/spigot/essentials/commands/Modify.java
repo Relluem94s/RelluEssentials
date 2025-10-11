@@ -6,6 +6,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
@@ -54,6 +55,7 @@ public class Modify implements CommandConstruct {
         COPY("copy"),
         CUT("cut"),
         PASTE("paste"),
+        CLIPBOARD("clipboard", "rotate"),
         UNDO("undo"),
         WALL("wall"),
         CYLINDER("cylinder"),
@@ -94,7 +96,7 @@ public class Modify implements CommandConstruct {
                 Selection selection = getSelection(p);
                 if (selection == null) return true;
 
-                List<ModifyHistoryEntry> clipboardList = new ArrayList<>();
+                List<ModifyClipboardEntry> clipboardList = new ArrayList<>();
                 List<ModifyHistoryEntry> history = new ArrayList<>();
 
                 final long[] currentDelay = {0};
@@ -104,7 +106,8 @@ public class Modify implements CommandConstruct {
 
                 forEachBlock(selection, block -> {
                     ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
-                    clipboardList.add(entry);
+                    ModifyClipboardEntry clipboardEntry = new ModifyClipboardEntry(block.getLocation(), block.getType(), block.getBlockData(), p.getLocation());
+                    clipboardList.add(clipboardEntry);
 
                     if (Commands.CUT.getName().equalsIgnoreCase(strings[0])) {
                         history.add(entry);
@@ -134,7 +137,7 @@ public class Modify implements CommandConstruct {
             }
 
             if (Commands.PASTE.getName().equalsIgnoreCase(strings[0])) {
-                List<ModifyHistoryEntry> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
+                List<ModifyClipboardEntry> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
                 if (clipboardList == null || clipboardList.isEmpty()) {
                     p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
                     return true;
@@ -144,10 +147,20 @@ public class Modify implements CommandConstruct {
                 final long[] currentDelay = {0};
                 final int[] counter = {0};
 
-                Vector direction = getPlayerDirection(p);
+                ModifyClipboardEntry pivotEntry = clipboardList.get(0);
+                Location originalPlayerLoc = pivotEntry.getPlayerLocation().clone();
+                
+                Location playerTargetLoc = p.getLocation().clone();
+                int offsetX = playerTargetLoc.getBlockX() - originalPlayerLoc.getBlockX();
+                int offsetY = playerTargetLoc.getBlockY() - originalPlayerLoc.getBlockY();
+                int offsetZ = playerTargetLoc.getBlockZ() - originalPlayerLoc.getBlockZ();
 
-                for (ModifyHistoryEntry entry : clipboardList) {
-                    Location newLoc = p.getLocation().clone().add(direction).add(entry.getLocation().clone().subtract(clipboardList.get(0).getLocation()));
+                for (ModifyClipboardEntry entry : clipboardList) {
+                    int tx = entry.getLocation().getBlockX() + offsetX;
+                    int ty = entry.getLocation().getBlockY() + offsetY;
+                    int tz = entry.getLocation().getBlockZ() + offsetZ;
+
+                    Location newLoc = new Location(playerTargetLoc.getWorld(), tx, ty, tz);
                     Block block = newLoc.getBlock();
 
                     ModifyHistoryEntry entryNew = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
@@ -170,13 +183,10 @@ public class Modify implements CommandConstruct {
                     }
                 }
 
-
                 addUndoHistory(p, history);
-
                 p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_PASTE_STARTED, clipboardList.size()));
                 return true;
             }
-
 
             if (!Commands.UNDO.getName().equalsIgnoreCase(strings[0])) {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
@@ -363,7 +373,31 @@ public class Modify implements CommandConstruct {
 
                 p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_MOVE_STARTED, history.size(), offset));
                 return true;
-            } else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
+            } else if (Commands.CLIPBOARD.getName().equalsIgnoreCase(strings[0])) {
+
+                if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
+                    List<ModifyClipboardEntry> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
+                    if (clipboardList == null || clipboardList.isEmpty()) {
+                        p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
+                        return true;
+                    }
+
+                    List<ModifyClipboardEntry> rotated = new ArrayList<>();
+                    for (ModifyClipboardEntry entry : clipboardList) {
+                        Location loc = entry.getLocation().clone();
+                        int x = loc.getBlockX();
+                        int z = loc.getBlockZ();
+                        int newX = -z;
+                        Location newLoc = new Location(loc.getWorld(), newX, loc.getBlockY(), x);
+                        rotated.add(new ModifyClipboardEntry(newLoc, entry.getMaterial(), entry.getData(), p.getLocation()));
+                    }
+
+                    RelluEssentials.getInstance().clipboard.put(p, rotated);
+                    p.sendMessage(PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
+                    return true;
+                }
+            }
+            else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }
@@ -441,7 +475,7 @@ public class Modify implements CommandConstruct {
                 final long[] currentDelay = {0};
                 final int[] counter = {0};
 
-                Location playerPos = p.getLocation().clone().add(0,0,0);
+                Location playerPos = p.getLocation().clone();
 
                 Queue<Block> queue = new ArrayDeque<>();
                 Set<Location> visited = new HashSet<>();
@@ -639,6 +673,11 @@ public class Modify implements CommandConstruct {
 
 
         if (strings.length == 2) {
+            if (strings[0].equalsIgnoreCase(Commands.CLIPBOARD.getName())) {
+                tabList.addAll(List.of(Commands.CLIPBOARD.getSubCommands()));
+                return tabList;
+            }
+
             tabList.addAll(TabCompleterHelper.getMaterials(strings[1].isEmpty() ? null : strings[1]));
             return tabList;
         }
