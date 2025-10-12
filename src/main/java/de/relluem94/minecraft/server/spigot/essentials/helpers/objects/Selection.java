@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.objects;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,9 @@ public class Selection {
     int minZ;
     int maxZ;
     World world;
+
+    @Setter
+    private Location originalPivot;
 
     public Selection(@NotNull Location pos1, @NotNull Location pos2){
         minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
