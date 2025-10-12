@@ -424,6 +424,7 @@ public class Modify implements CommandConstruct {
 
                 int offset = calculateShortestSide(originalSel);
                 p.sendMessage("offset: " + offset + " ");
+                System.out.println("offset: " + offset + " ");
                 Vector playerDirection = getLocationDirection(firstEntry.getPlayerLocation());
 
                 p.sendMessage("playerLocation: " + StringHelper.locationToString(firstEntry.getPlayerLocation()) + " yaw: " +firstEntry.getPlayerLocation().getYaw() + " pitch: " + firstEntry.getPlayerLocation().getPitch());
@@ -436,14 +437,20 @@ public class Modify implements CommandConstruct {
 
                     int width = originalSel.getMaxX() - originalSel.getMinX() + 1;
                     int length = originalSel.getMaxZ() - originalSel.getMinZ() + 1;
-                    boolean isShortToLong = (width <= length && offset == width) || (length <= width && offset == length);
+                    boolean isInitialShortToLong = (width <= length && offset == width) || (length <= width && offset == length);
 
-                    if (isShortToLong && xDir > zDir && playerDirection.getX() != 0) {
-                        shifted.add(playerDirection.getX() > 0 ? -offset : offset, 0, 0);
-                    } else if (isShortToLong && zDir > xDir && playerDirection.getZ() != 0) {
-                        shifted.add(0, 0, playerDirection.getZ() > 0 ? -offset : offset);
+                    if (isInitialShortToLong && zDir > xDir && playerDirection.getZ() < 0) {
+                        shifted.add(0, 0, offset);
+                    } else if (isInitialShortToLong && xDir > zDir && playerDirection.getX() > 0) {
+                        shifted.add(-offset, 0, 0);
+                    } else if (isInitialShortToLong && xDir > zDir && playerDirection.getX() < 0) {
+                        shifted.add(offset, 0, 0);
+                    } else if (isInitialShortToLong && zDir > xDir && playerDirection.getZ() > 0) {
+                        shifted.add(0, 0, -offset);
                     } else {
-                        p.sendMessage("No shift applied: xDir=" + xDir + ", zDir=" + zDir + ", playerDirection=" + playerDirection + ", isShortToLong=" + isShortToLong);
+                        String shiftApplied = "No shift applied: xDir=" + xDir + ", zDir=" + zDir + ", playerDirection=" + playerDirection + ", isInitialShortToLong=" + isInitialShortToLong + ", width=" + width + ", length=" + length;
+                        p.sendMessage(shiftApplied);
+                        System.out.println(shiftApplied);
                     }
 
                     p.sendMessage("shifted: " + StringHelper.locationToString(shifted) + " ");
