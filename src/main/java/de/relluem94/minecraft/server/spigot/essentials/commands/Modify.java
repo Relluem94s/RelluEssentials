@@ -4,6 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
@@ -30,6 +31,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getLocationDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isInt;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -393,24 +395,7 @@ public class Modify implements CommandConstruct {
                     return true;
                 }
 
-                double centerX = (originalSel.getMinX() + originalSel.getMaxX()) / 2.0;
-                double centerY = (originalSel.getMinY() + originalSel.getMaxY()) / 2.0;
-                double centerZ = (originalSel.getMinZ() + originalSel.getMaxZ()) / 2.0;
-
-                List<Location> newLocs = new ArrayList<>();
-                for (ModifyClipboardEntry entry : clipboardList) {
-                    Location loc = entry.getLocation().clone();
-                    double relX = loc.getX() - centerX;
-                    double relY = loc.getY() - centerY;
-                    double relZ = loc.getZ() - centerZ;
-
-                    double newX = centerX + relZ;
-                    double newY = centerY + relY;
-                    double newZ = centerZ - relX;
-
-                    Location newLoc = new Location(loc.getWorld(), newX, newY, newZ);
-                    newLocs.add(newLoc);
-                }
+                List<Location> newLocs = getLocations(originalSel, clipboardList);
 
                 int newMinX = Integer.MAX_VALUE;
                 int newMinY = Integer.MAX_VALUE;
@@ -436,8 +421,34 @@ public class Modify implements CommandConstruct {
                 int shiftZ = originalSel.getMinZ() - newMinZ;
 
                 List<Location> shiftedLocs = new ArrayList<>();
+
+                int offset = calculateShortestSide(originalSel);
+                p.sendMessage("offset: " + offset + " ");
+                Vector playerDirection = getLocationDirection(firstEntry.getPlayerLocation());
+
+                p.sendMessage("playerLocation: " + StringHelper.locationToString(firstEntry.getPlayerLocation()) + " yaw: " +firstEntry.getPlayerLocation().getYaw() + " pitch: " + firstEntry.getPlayerLocation().getPitch());
+
                 for (Location loc : newLocs) {
+                    p.sendMessage("loc: " + StringHelper.locationToString(loc) + " ");
                     Location shifted = loc.clone().add(shiftX, shiftY, shiftZ);
+                    double xDir = Math.abs(playerDirection.getX());
+                    double zDir = Math.abs(playerDirection.getZ());
+
+                    int width = originalSel.getMaxX() - originalSel.getMinX() + 1;
+                    int length = originalSel.getMaxZ() - originalSel.getMinZ() + 1;
+                    boolean isShortToLong = (width <= length && offset == width) || (length <= width && offset == length);
+
+                    if (isShortToLong && xDir > zDir && playerDirection.getX() != 0) {
+                        shifted.add(playerDirection.getX() > 0 ? -offset : offset, 0, 0);
+                    } else if (isShortToLong && zDir > xDir && playerDirection.getZ() != 0) {
+                        shifted.add(0, 0, playerDirection.getZ() > 0 ? -offset : offset);
+                    } else {
+                        p.sendMessage("No shift applied: xDir=" + xDir + ", zDir=" + zDir + ", playerDirection=" + playerDirection + ", isShortToLong=" + isShortToLong);
+                    }
+
+                    p.sendMessage("shifted: " + StringHelper.locationToString(shifted) + " ");
+                    p.sendMessage();
+
                     shiftedLocs.add(shifted);
                 }
 
@@ -650,6 +661,34 @@ public class Modify implements CommandConstruct {
 
         p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
         return true;
+    }
+
+    private int calculateShortestSide(@NotNull Selection selection) {
+        int width = selection.getMaxX() - selection.getMinX() + 1;
+        int length = selection.getMaxZ() - selection.getMinZ() + 1;
+        return Math.min(width, length);
+    }
+
+    private static @NotNull List<Location> getLocations(@NotNull Selection originalSel, @NotNull List<ModifyClipboardEntry> clipboardList) {
+        int pivotX = originalSel.getMinX();
+        int pivotY = originalSel.getMinY();
+        int pivotZ = originalSel.getMinZ();
+
+        List<Location> newLocs = new ArrayList<>();
+        for (ModifyClipboardEntry entry : clipboardList) {
+            Location loc = entry.getLocation();
+            int relX = loc.getBlockX() - pivotX;
+            int relY = loc.getBlockY() - pivotY;
+            int relZ = loc.getBlockZ() - pivotZ;
+
+            int newX = pivotX + relZ;
+            int newY = pivotY + relY;
+            int newZ = pivotZ - relX;
+
+            Location newLoc = new Location(loc.getWorld(), newX, newY, newZ);
+            newLocs.add(newLoc);
+        }
+        return newLocs;
     }
 
     private static @NotNull Selection getSelection(@NotNull List<Location> newLocs, Selection originalSel) {

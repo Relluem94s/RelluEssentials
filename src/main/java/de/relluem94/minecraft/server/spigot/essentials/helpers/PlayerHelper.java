@@ -296,7 +296,11 @@ public class PlayerHelper {
     }
 
     public static @NotNull Vector getPlayerDirection(@NotNull Player p){
-        Vector direction = p.getLocation().getDirection();
+        return getLocationDirection(p.getLocation());
+    }
+
+    public static @NotNull Vector getLocationDirection(@NotNull Location l){
+        Vector direction = l.getDirection();
         double verticalThreshold = 0.5;
 
         if (Math.abs(direction.getY()) > verticalThreshold) {
