@@ -389,17 +389,31 @@ public class Modify implements CommandConstruct {
                     return true;
                 }
 
+                ModifyClipboardEntry firstEntry = clipboardList.get(0);
+                Selection originalSelection = firstEntry.getSelection();
+                Location originalPlayerLoc = firstEntry.getPlayerLocation();
+                Location originalPivot = originalSelection.getOriginalPivot();
+                if (originalPivot == null) {
+                    originalPivot = getClosestCornerToLocation(originalSelection, originalPlayerLoc);
+                    originalSelection.setOriginalPivot(originalPivot);
+                }
+
                 List<ModifyClipboardEntry> rotated = rotateClipboard(clipboardList);
 
-                Vector offset = calculateInsertOffset(rotated, p.getLocation());
+                Vector pasteOffset = computePasteOffset(p.getLocation(), originalPlayerLoc);
 
-                List<ModifyClipboardEntry> finalClipboard = new ArrayList<>();
+                Location newPivotLocation = originalPivot.clone().add(pasteOffset);
+                Selection updatedSelection = cloneSelectionWithPivot(originalSelection, newPivotLocation);
+
+                List<ModifyClipboardEntry> finalClipboard = new ArrayList<>(rotated.size());
                 for (ModifyClipboardEntry entry : rotated) {
-                    Location newLoc = entry.getLocation().clone().add(offset);
-                    finalClipboard.add(new ModifyClipboardEntry(newLoc, entry.getMaterial(), entry.getData(), entry.getPlayerLocation(), entry.getSelection()));
+                    Location shifted = entry.getLocation().clone().add(pasteOffset);
+                    ModifyClipboardEntry updated = new ModifyClipboardEntry(shifted, entry.getMaterial(), entry.getData(), p.getLocation().clone(), updatedSelection);
+                    finalClipboard.add(updated);
                 }
 
                 RelluEssentials.getInstance().clipboard.put(p, finalClipboard);
+
                 p.sendMessage(PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
                 return true;
             }
@@ -601,55 +615,6 @@ public class Modify implements CommandConstruct {
         return true;
     }
 
-    private int calculateShortestSide(@NotNull Selection selection) {
-        int width = selection.getMaxX() - selection.getMinX() + 1;
-        int length = selection.getMaxZ() - selection.getMinZ() + 1;
-        return Math.min(width, length);
-    }
-
-    private static @NotNull List<Location> getLocations(@NotNull Selection originalSel, @NotNull List<ModifyClipboardEntry> clipboardList) {
-        int pivotX = originalSel.getMinX();
-        int pivotY = originalSel.getMinY();
-        int pivotZ = originalSel.getMinZ();
-
-        List<Location> newLocs = new ArrayList<>();
-        for (ModifyClipboardEntry entry : clipboardList) {
-            Location loc = entry.getLocation();
-            int relX = loc.getBlockX() - pivotX;
-            int relY = loc.getBlockY() - pivotY;
-            int relZ = loc.getBlockZ() - pivotZ;
-
-            int newX = pivotX + relZ;
-            int newY = pivotY + relY;
-            int newZ = pivotZ - relX;
-
-            Location newLoc = new Location(loc.getWorld(), newX, newY, newZ);
-            newLocs.add(newLoc);
-        }
-        return newLocs;
-    }
-
-    private static @NotNull Selection getSelection(@NotNull List<Location> newLocs, Selection originalSel) {
-        double newMinX = Double.MAX_VALUE;
-        double newMinY = Double.MAX_VALUE;
-        double newMinZ = Double.MAX_VALUE;
-        double newMaxX = Double.MIN_VALUE;
-        double newMaxY = Double.MIN_VALUE;
-        double newMaxZ = Double.MIN_VALUE;
-
-        for (Location loc : newLocs) {
-            newMinX = Math.min(newMinX, loc.getX());
-            newMinY = Math.min(newMinY, loc.getY());
-            newMinZ = Math.min(newMinZ, loc.getZ());
-            newMaxX = Math.max(newMaxX, loc.getX());
-            newMaxY = Math.max(newMaxY, loc.getY());
-            newMaxZ = Math.max(newMaxZ, loc.getZ());
-        }
-
-        Location newPos1 = new Location(originalSel.getWorld(), newMinX, newMinY, newMinZ);
-        Location newPos2 = new Location(originalSel.getWorld(), newMaxX, newMaxY, newMaxZ);
-        return new Selection(newPos1, newPos2);
-    }
 
     private @Nullable Selection getSelection(Player p) {
         if (!RelluEssentials.getInstance().position.containsKey(p)) {
@@ -678,12 +643,20 @@ public class Modify implements CommandConstruct {
         return new Selection(pos1, pos2);
     }
 
+    private static @NotNull Selection cloneSelectionWithPivot(@NotNull Selection original, @NotNull Location newPivot) {
+        Location pos1 = new Location(original.getWorld(), original.getMinX(), original.getMinY(), original.getMinZ());
+        Location pos2 = new Location(original.getWorld(), original.getMaxX(), original.getMaxY(), original.getMaxZ());
+        Selection copy = new Selection(pos1, pos2);
+        copy.setOriginalPivot(newPivot);
+        return copy;
+    }
+
     public static @NotNull List<ModifyClipboardEntry> rotateClipboard(@NotNull List<ModifyClipboardEntry> clipboard) {
         if (clipboard.isEmpty()) return clipboard;
 
         ModifyClipboardEntry first = clipboard.get(0);
         Selection sel = first.getSelection();
-        Location pivot = sel.getOriginalPivot();
+        Location pivot = sel.getOriginalPivot() != null ? sel.getOriginalPivot() : getClosestCornerToLocation(sel, first.getPlayerLocation());
 
         List<ModifyClipboardEntry> rotated = new ArrayList<>();
         for (ModifyClipboardEntry entry : clipboard) {
@@ -702,17 +675,9 @@ public class Modify implements CommandConstruct {
         return rotated;
     }
 
-    private static @NotNull Vector calculateInsertOffset(@NotNull List<ModifyClipboardEntry> clipboard, @NotNull Location targetPivot) {
-        ModifyClipboardEntry first = clipboard.get(0);
-        Location currentPivot = first.getSelection().getOriginalPivot();
-
-        int offsetX = targetPivot.getBlockX() - currentPivot.getBlockX();
-        int offsetY = targetPivot.getBlockY() - currentPivot.getBlockY();
-        int offsetZ = targetPivot.getBlockZ() - currentPivot.getBlockZ();
-
-        return new Vector(offsetX, offsetY, offsetZ);
+    private static @NotNull org.bukkit.util.Vector computePasteOffset(@NotNull Location currentPlayerLoc, @NotNull Location originalPlayerLoc) {
+        return currentPlayerLoc.toVector().subtract(originalPlayerLoc.toVector());
     }
-
 
     public static @NotNull Location getClosestCornerToLocation(@NotNull Selection selection, @NotNull Location reference) {
         Location[] corners = new Location[]{
@@ -735,15 +700,6 @@ public class Modify implements CommandConstruct {
 
         return closest;
     }
-
-
-
-
-
-
-
-
-
 
 
 
