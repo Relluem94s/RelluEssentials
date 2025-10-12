@@ -4,7 +4,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
@@ -31,7 +30,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getLocationDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isInt;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -98,7 +96,10 @@ public class Modify implements CommandConstruct {
                 Selection selection = getSelection(p);
                 if (selection == null) return true;
 
-                selection.setOriginalPivot(getClosestCornerToLocation(selection, p.getLocation()));
+                Location pivot = getCenterLocation(selection);
+                selection.setOriginalPivot(pivot);
+                Vector pivotPlayerOffset = p.getLocation().toVector().subtract(pivot.toVector());
+                selection.setPivotPlayerOffset(pivotPlayerOffset);
 
                 List<ModifyClipboardEntry> clipboardList = new ArrayList<>();
                 List<ModifyHistoryEntry> history = new ArrayList<>();
@@ -152,19 +153,16 @@ public class Modify implements CommandConstruct {
                 final int[] counter = {0};
 
                 ModifyClipboardEntry pivotEntry = clipboardList.get(0);
-                Location originalPlayerLoc = pivotEntry.getPlayerLocation().clone();
+                Selection sel = pivotEntry.getSelection();
+                Location oldPivot = sel.getOriginalPivot();
+                Vector rotatedOffset = sel.getPivotPlayerOffset();
 
                 Location playerTargetLoc = p.getLocation().clone();
-                int offsetX = playerTargetLoc.getBlockX() - originalPlayerLoc.getBlockX();
-                int offsetY = playerTargetLoc.getBlockY() - originalPlayerLoc.getBlockY();
-                int offsetZ = playerTargetLoc.getBlockZ() - originalPlayerLoc.getBlockZ();
+                Location newPivot = playerTargetLoc.clone().subtract(rotatedOffset);
+                Vector offset = newPivot.toVector().subtract(oldPivot.toVector());
 
                 for (ModifyClipboardEntry entry : clipboardList) {
-                    int tx = entry.getLocation().getBlockX() + offsetX;
-                    int ty = entry.getLocation().getBlockY() + offsetY;
-                    int tz = entry.getLocation().getBlockZ() + offsetZ;
-
-                    Location newLoc = new Location(playerTargetLoc.getWorld(), tx, ty, tz);
+                    Location newLoc = entry.getLocation().clone().add(offset);
                     Block block = newLoc.getBlock();
 
                     ModifyHistoryEntry entryNew = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
@@ -394,21 +392,43 @@ public class Modify implements CommandConstruct {
                 Location originalPlayerLoc = firstEntry.getPlayerLocation();
                 Location originalPivot = originalSelection.getOriginalPivot();
                 if (originalPivot == null) {
-                    originalPivot = getClosestCornerToLocation(originalSelection, originalPlayerLoc);
+                    originalPivot = getCenterLocation(originalSelection);
                     originalSelection.setOriginalPivot(originalPivot);
+                }
+                Vector originalOffset = originalSelection.getPivotPlayerOffset();
+                if (originalOffset == null) {
+                    originalOffset = firstEntry.getPlayerLocation().toVector().subtract(originalPivot.toVector());
+                    originalSelection.setPivotPlayerOffset(originalOffset);
                 }
 
                 List<ModifyClipboardEntry> rotated = rotateClipboard(clipboardList);
 
-                Vector pasteOffset = computePasteOffset(p.getLocation(), originalPlayerLoc);
+                int minX = Integer.MAX_VALUE;
+                int maxX = Integer.MIN_VALUE;
+                int minY = Integer.MAX_VALUE;
+                int maxY = Integer.MIN_VALUE;
+                int minZ = Integer.MAX_VALUE;
+                int maxZ = Integer.MIN_VALUE;
 
-                Location newPivotLocation = originalPivot.clone().add(pasteOffset);
-                Selection updatedSelection = cloneSelectionWithPivot(originalSelection, newPivotLocation);
+                for (ModifyClipboardEntry entry : rotated) {
+                    Location loc = entry.getLocation();
+                    minX = Math.min(minX, loc.getBlockX());
+                    maxX = Math.max(maxX, loc.getBlockX());
+                    minY = Math.min(minY, loc.getBlockY());
+                    maxY = Math.max(maxY, loc.getBlockY());
+                    minZ = Math.min(minZ, loc.getBlockZ());
+                    maxZ = Math.max(maxZ, loc.getBlockZ());
+                }
+
+                Location pos1 = new Location(originalSelection.getWorld(), minX, minY, minZ);
+                Location pos2 = new Location(originalSelection.getWorld(), maxX, maxY, maxZ);
+                Selection newSelection = new Selection(pos1, pos2);
+                newSelection.setOriginalPivot(originalPivot);
+                newSelection.setPivotPlayerOffset(originalOffset);
 
                 List<ModifyClipboardEntry> finalClipboard = new ArrayList<>(rotated.size());
                 for (ModifyClipboardEntry entry : rotated) {
-                    Location shifted = entry.getLocation().clone().add(pasteOffset);
-                    ModifyClipboardEntry updated = new ModifyClipboardEntry(shifted, entry.getMaterial(), entry.getData(), p.getLocation().clone(), updatedSelection);
+                    ModifyClipboardEntry updated = new ModifyClipboardEntry(entry.getLocation(), entry.getMaterial(), entry.getData(), originalPlayerLoc, newSelection);
                     finalClipboard.add(updated);
                 }
 
@@ -643,13 +663,13 @@ public class Modify implements CommandConstruct {
         return new Selection(pos1, pos2);
     }
 
-    private static @NotNull Selection cloneSelectionWithPivot(@NotNull Selection original, @NotNull Location newPivot) {
-        Location pos1 = new Location(original.getWorld(), original.getMinX(), original.getMinY(), original.getMinZ());
-        Location pos2 = new Location(original.getWorld(), original.getMaxX(), original.getMaxY(), original.getMaxZ());
-        Selection copy = new Selection(pos1, pos2);
-        copy.setOriginalPivot(newPivot);
-        return copy;
+    public static Location getCenterLocation(Selection selection) {
+        int centerX = selection.getMinX() + (selection.getMaxX() - selection.getMinX()) / 2;
+        int centerY = selection.getMinY() + (selection.getMaxY() - selection.getMinY()) / 2; // Falls Y-Rotation, aber aktuell nicht, aber für konsistenz
+        int centerZ = selection.getMinZ() + (selection.getMaxZ() - selection.getMinZ()) / 2;
+        return new Location(selection.getWorld(), centerX, centerY, centerZ);
     }
+
 
     public static @NotNull List<ModifyClipboardEntry> rotateClipboard(@NotNull List<ModifyClipboardEntry> clipboard) {
         if (clipboard.isEmpty()) return clipboard;
@@ -675,9 +695,6 @@ public class Modify implements CommandConstruct {
         return rotated;
     }
 
-    private static @NotNull org.bukkit.util.Vector computePasteOffset(@NotNull Location currentPlayerLoc, @NotNull Location originalPlayerLoc) {
-        return currentPlayerLoc.toVector().subtract(originalPlayerLoc.toVector());
-    }
 
     public static @NotNull Location getClosestCornerToLocation(@NotNull Selection selection, @NotNull Location reference) {
         Location[] corners = new Location[]{

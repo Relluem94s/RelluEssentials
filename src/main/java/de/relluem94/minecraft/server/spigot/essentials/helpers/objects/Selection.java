@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -19,6 +20,8 @@ public class Selection {
 
     @Setter
     private Location originalPivot;
+    @Setter
+    private Vector pivotPlayerOffset;
 
     public Selection(@NotNull Location pos1, @NotNull Location pos2){
         minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
