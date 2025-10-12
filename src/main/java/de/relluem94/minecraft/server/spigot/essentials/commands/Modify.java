@@ -421,41 +421,9 @@ public class Modify implements CommandConstruct {
                 int shiftZ = originalSel.getMinZ() - newMinZ;
 
                 List<Location> shiftedLocs = new ArrayList<>();
-
-                int offset = calculateShortestSide(originalSel);
-                p.sendMessage("offset: " + offset + " ");
-                System.out.println("offset: " + offset + " ");
-                Vector playerDirection = getLocationDirection(firstEntry.getPlayerLocation());
-
-                p.sendMessage("playerLocation: " + StringHelper.locationToString(firstEntry.getPlayerLocation()) + " yaw: " +firstEntry.getPlayerLocation().getYaw() + " pitch: " + firstEntry.getPlayerLocation().getPitch());
-
+                
                 for (Location loc : newLocs) {
-                    p.sendMessage("loc: " + StringHelper.locationToString(loc) + " ");
                     Location shifted = loc.clone().add(shiftX, shiftY, shiftZ);
-                    double xDir = Math.abs(playerDirection.getX());
-                    double zDir = Math.abs(playerDirection.getZ());
-
-                    int width = originalSel.getMaxX() - originalSel.getMinX() + 1;
-                    int length = originalSel.getMaxZ() - originalSel.getMinZ() + 1;
-                    boolean isInitialShortToLong = (width <= length && offset == width) || (length <= width && offset == length);
-
-                    if (isInitialShortToLong && zDir > xDir && playerDirection.getZ() < 0) {
-                        shifted.add(0, 0, offset);
-                    } else if (isInitialShortToLong && xDir > zDir && playerDirection.getX() > 0) {
-                        shifted.add(-offset, 0, 0);
-                    } else if (isInitialShortToLong && xDir > zDir && playerDirection.getX() < 0) {
-                        shifted.add(offset, 0, 0);
-                    } else if (isInitialShortToLong && zDir > xDir && playerDirection.getZ() > 0) {
-                        shifted.add(0, 0, -offset);
-                    } else {
-                        String shiftApplied = "No shift applied: xDir=" + xDir + ", zDir=" + zDir + ", playerDirection=" + playerDirection + ", isInitialShortToLong=" + isInitialShortToLong + ", width=" + width + ", length=" + length;
-                        p.sendMessage(shiftApplied);
-                        System.out.println(shiftApplied);
-                    }
-
-                    p.sendMessage("shifted: " + StringHelper.locationToString(shifted) + " ");
-                    p.sendMessage();
-
                     shiftedLocs.add(shifted);
                 }
 
