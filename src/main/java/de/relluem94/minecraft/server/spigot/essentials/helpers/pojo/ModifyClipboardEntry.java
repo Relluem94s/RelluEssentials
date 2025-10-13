@@ -17,6 +17,4 @@ public class ModifyClipboardEntry {
     private Location location;
     private Material material;
     private BlockData data;
-    private Location playerLocation;
-    private Selection selection;
 }
