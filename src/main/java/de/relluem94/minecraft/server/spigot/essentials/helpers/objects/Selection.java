@@ -23,7 +23,13 @@ public class Selection {
     @Setter
     private Vector pivotPlayerOffset;
 
+    private final Location pos1;
+    private final Location pos2;
+
     public Selection(@NotNull Location pos1, @NotNull Location pos2){
+        this.pos1 = pos1;
+        this.pos2 = pos2;
+
         minX = Math.min(pos1.getBlockX(), pos2.getBlockX());
         maxX = Math.max(pos1.getBlockX(), pos2.getBlockX());
         minY = Math.min(pos1.getBlockY(), pos2.getBlockY());

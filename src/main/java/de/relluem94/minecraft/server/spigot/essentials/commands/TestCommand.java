@@ -14,12 +14,14 @@ import java.util.logging.Logger;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.rellulib.stores.DoubleStore;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -86,6 +88,8 @@ public class TestCommand implements CommandConstruct {
 
         if (args[0].equalsIgnoreCase(Commands.CUSTOM_MOB.getName())) {
             cm(p.getLocation());
+        } else if(args[0].equalsIgnoreCase(Commands.ROTATE_TEST.getName())){
+            rotateTester(p);
         } else if (args[0].equalsIgnoreCase(Commands.DEV_PLATTFORM.getName())) {
             devPlattform(p);
         } else if (args[0].equalsIgnoreCase(Commands.PICKAXE.getName())) {
@@ -352,6 +356,73 @@ public class TestCommand implements CommandConstruct {
         RelluEssentials.getInstance().undo.put(p, playerUndoList);
     }
 
+    private void rotateTester(Player p){
+        Location startLocation = p.getLocation().clone();
+
+        RelluEssentials.getInstance().position.put(p, new DoubleStore<>(startLocation.clone().add(1,0,0), startLocation.clone().add(4,2,8)));
+
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                p.performCommand("modify set stone");
+            }
+        }.runTaskLater(RelluEssentials.getInstance(), 0L);
+
+
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                p.performCommand("modify copy");
+            }
+        }.runTaskLater(RelluEssentials.getInstance(), 10L);
+
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                p.performCommand("modify clipboard rotate");
+            }
+        }.runTaskLater(RelluEssentials.getInstance(), 11L);
+
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                p.teleport(p.getLocation().clone().add(10,0,20));
+            }
+        }.runTaskLater(RelluEssentials.getInstance(), 12L);
+
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                p.performCommand("modify paste");
+            }
+        }.runTaskLater(RelluEssentials.getInstance(), 13L);
+
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                p.sendMessage("Clean Up in 400 ticks.");
+            }
+        }.runTaskLater(RelluEssentials.getInstance(), 140L);
+
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                p.sendMessage("Clean Up in 200 ticks..");
+            }
+        }.runTaskLater(RelluEssentials.getInstance(), 340L);
+
+        new BukkitRunnable(){
+            @Override
+            public void run(){
+                p.sendMessage("Clean Up...");
+
+                p.teleport(startLocation);
+                p.performCommand("modify undo");
+                p.performCommand("modify undo");
+            }
+        }.runTaskLater(RelluEssentials.getInstance(), 540L);
+    }
+
 
     private void pl(@NotNull Player p){
         p.sendMessage("Health: " + p.getHealth());
@@ -378,6 +449,7 @@ public class TestCommand implements CommandConstruct {
         PLAYER_STATS("pl"),
         DAMAGE_INFO("di"),
         SKULL("sk"),
+        ROTATE_TEST("rt"),
         DEV_PLATTFORM("dp");
 
         private final String name;
