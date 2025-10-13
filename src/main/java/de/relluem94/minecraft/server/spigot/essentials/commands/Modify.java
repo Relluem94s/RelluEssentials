@@ -4,7 +4,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
@@ -15,7 +14,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.stores.DoubleStore;
-import de.relluem94.rellulib.stores.TrippleStore;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -662,13 +660,13 @@ public class Modify implements CommandConstruct {
         int xShift = 0;
 
         if(orientation.getValue() && orientation.getSecondValue()){
-            zShift += 123456;
+            zShift += 0;
         } else if(orientation.getValue()){
-            zShift += 123456;
-            xShift += 123456;
+            zShift += 0;
+            xShift += 0;
         } else if(orientation.getSecondValue()){
-            zShift += 123456;
-            xShift += 123456;
+            zShift += 0;
+            xShift += 0;
         }
 
         int finalXShift = xShift;
@@ -679,8 +677,6 @@ public class Modify implements CommandConstruct {
                     int newX = oldLocation.getBlockZ() + finalXShift;
                     int newZ = -oldLocation.getBlockX() + finalZShift;
                     int newY = oldLocation.getBlockY();
-
-
 
                     Location newLocation = new Location(oldLocation.getWorld(), newX, newY, newZ);
 
@@ -698,13 +694,18 @@ public class Modify implements CommandConstruct {
                 selection.getWorld(),
                 selection.getMinZ(),
                 selection.getMinY(),
-                -selection.getMaxX() + zShift
+                -selection.getMaxX() + zShift,
+                selection.getPos1().getYaw(),
+                selection.getPos1().getPitch()
         );
+
         Location newPos2 = new Location(
                 selection.getWorld(),
                 selection.getMaxZ() + 1,
                 selection.getMaxY(),
-                -selection.getMinX() + zShift
+                -selection.getMinX() + zShift,
+                selection.getPos2().getYaw(),
+                selection.getPos2().getPitch()
         );
 
         return new Selection(newPos1, newPos2);
