@@ -61,7 +61,7 @@ public class GameModeSpectator implements CommandConstruct {
     }
 
     private void gameMode(@NotNull Player p) {
-        p.setGameMode(GameMode.ADVENTURE);
+        p.setGameMode(GameMode.SPECTATOR);
         p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAME_MODE_3_NAME + PLUGIN_COLOR_COMMAND));
     }
 
