@@ -375,18 +375,18 @@ public class Modify implements CommandConstruct {
 
 
 
-            else if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
-                DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
-                if (clipboardList == null || clipboardList.getSecondValue() == null || clipboardList.getSecondValue().isEmpty()) {
-                    p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
-                    return true;
-                }
-
-                RelluEssentials.getInstance().clipboard.put(p, rotate(clipboardList.getSecondValue(), clipboardList.getValue()));
-
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
-                return true;
-            }
+//            else if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
+//                DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
+//                if (clipboardList == null || clipboardList.getSecondValue() == null || clipboardList.getSecondValue().isEmpty()) {
+//                    p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
+//                    return true;
+//                }
+//
+//                RelluEssentials.getInstance().clipboard.put(p, rotate(clipboardList.getSecondValue(), clipboardList.getValue()));
+//
+//                p.sendMessage(PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
+//                return true;
+//            }
 
 
 
@@ -767,10 +767,10 @@ public class Modify implements CommandConstruct {
 
 
         if (strings.length == 2) {
-            if (strings[0].equalsIgnoreCase(Commands.CLIPBOARD.getName())) {
-                tabList.addAll(List.of(Commands.CLIPBOARD.getSubCommands()));
-                return tabList;
-            }
+//            if (strings[0].equalsIgnoreCase(Commands.CLIPBOARD.getName())) {
+//                tabList.addAll(List.of(Commands.CLIPBOARD.getSubCommands()));
+//                return tabList;
+//            }
 
             tabList.addAll(TabCompleterHelper.getMaterials(strings[1].isEmpty() ? null : strings[1]));
             return tabList;
