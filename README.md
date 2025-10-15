@@ -1,6 +1,6 @@
 ![Rellu Essentials](https://static.relluem94.de/logos/app/relluessentials.png)
 
-### a Spigot Plugin compatible with Spigot 1.21.9
+### a Spigot Plugin compatible with Spigot 1.21.10
 
 # First Steps
 Find out how to get the plugin and how to use it.
