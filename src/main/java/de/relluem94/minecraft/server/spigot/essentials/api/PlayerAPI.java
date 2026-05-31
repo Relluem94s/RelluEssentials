@@ -16,8 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerAPI {
 
@@ -70,7 +69,7 @@ public class PlayerAPI {
      * @param playerFK int
      * @param bagEntry BagEntry
      */
-    public void putPlayerBagEntry(int playerFK, @Nonnull BagEntry bagEntry){
+    public void putPlayerBagEntry(int playerFK, @NotNull BagEntry bagEntry){
         playerBagEntryMap.put(playerFK, bagEntry);
     }
 

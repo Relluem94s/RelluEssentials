@@ -138,9 +138,9 @@ public class WorldManager implements IEnable, IDisable {
             return;
         }
 
-        lobbyWorld.setGameRule(GameRule.DO_FIRE_TICK, false);
-        lobbyWorld.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        lobbyWorld.setGameRule(GameRule.FIRE_DAMAGE, false);
+        lobbyWorld.setGameRule(GameRule.SPAWN_MOBS, false);
         lobbyWorld.setGameRule(GameRule.MOB_GRIEFING, false);
-        lobbyWorld.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+        lobbyWorld.setGameRule(GameRule.ADVANCE_WEATHER, false);
     }
 }
