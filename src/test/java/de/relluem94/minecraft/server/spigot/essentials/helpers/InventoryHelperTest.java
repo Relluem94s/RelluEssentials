@@ -1,8 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.utils.TestLogHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.inventory.ItemFactory;
 import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
 
 import java.lang.reflect.Field;
 import java.util.logging.Level;
@@ -12,8 +16,15 @@ public class InventoryHelperTest {
 
 
     @BeforeEach
-    protected void setUp() {
+    protected void setUp() throws NoSuchFieldException, IllegalAccessException {
+        Server server = Mockito.mock(Server.class);
+        ItemFactory itemFactory = Mockito.mock(ItemFactory.class);
 
+        Mockito.when(server.getItemFactory()).thenReturn(itemFactory);
+
+        Field serverField = Bukkit.class.getDeclaredField("server");
+        serverField.setAccessible(true);
+        serverField.set(null, server);
     }
 
     @AfterEach
@@ -43,7 +54,6 @@ public class InventoryHelperTest {
         }
     }
 
-    @Disabled
     @Test
     public void testIllegalAccessExceptionLogging() throws Exception {
         Logger logger = Logger.getLogger(de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper.class.getName());

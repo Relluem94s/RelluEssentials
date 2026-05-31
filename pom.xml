@@ -15,7 +15,6 @@
         <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <surefireArgLine/>
     </properties>
     <distributionManagement>
         <repository>
@@ -155,9 +154,15 @@
             <version>3.20.0</version>
         </dependency>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.23.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>de.relluem94</groupId>
             <artifactId>relluessentials-processor</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -222,11 +227,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.6</version>
                 <configuration>
-                    <argLine>
-                        --illegal-access=permit
-                    </argLine>
-                    <testFailureIgnore>false</testFailureIgnore>
+                    <!--suppress UnresolvedMavenProperty -->
                     <argLine>${surefireArgLine} -Xshare:off</argLine>
+                    <forkCount>1</forkCount>
+                    <reuseForks>true</reuseForks>
                 </configuration>
             </plugin>
             <plugin>
