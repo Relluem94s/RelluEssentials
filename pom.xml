@@ -186,7 +186,7 @@
                         <path>
                             <groupId>de.relluem94</groupId>
                             <artifactId>relluessentials-processor</artifactId>
-                            <version>1.0.0</version>
+                            <version>1.0.1</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -289,12 +289,12 @@
             <plugin>
                 <groupId>de.relluem94.maven.plugin</groupId>
                 <artifactId>entity-check-plugin</artifactId>
-                <version>1.2.0-SNAPSHOT</version>
+                <version>1.2.1-SNAPSHOT</version>
             </plugin>
             <plugin>
                 <groupId>de.relluem94.maven.plugin</groupId>
                 <artifactId>item-check-plugin</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
+                <version>1.0.1-SNAPSHOT</version>
             </plugin>
         </plugins>
     </build>
