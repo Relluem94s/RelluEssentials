@@ -45,6 +45,7 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
@@ -301,14 +302,26 @@ public class BetterNPC implements Listener {
 
    
     @EventHandler
-    public void onInventoryClickItem(InventoryClickEvent e) {
+    public void onInventoryClickItem(@NonNull InventoryClickEvent e) {
         if(e.getWhoClicked() instanceof Player p && e.getCurrentItem() != null){
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if (e.getView().getTitle().equals(RelluEssentials.getBanker().getTitle())) {
                 BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getId());
-                if(e.getCurrentItem().equals(BankerHelper.npc_gui_deposit.getCustomItem())){
+                if(BankerHelper.npc_gui_deposit.equalsName(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
                     InventoryHelper.openInventory(p, RelluEssentials.getBanker().getDepositGUI());
+                }
+                else if(BankerHelper.npc_gui_balance_total.equalsName(e.getCurrentItem())){
+                    InventoryHelper.closeInventory(p);
+                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue())));
+                }
+                else if(BankerHelper.npc_gui_balance.equalsName(e.getCurrentItem())){
+                    InventoryHelper.closeInventory(p);
+                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getBalanceGUI());
+                }
+                else if(e.getCurrentItem().getType().equals(BankerHelper.npc_gui_withdraw.getCustomItem().getType())){
+                    InventoryHelper.closeInventory(p);
+                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getWithdrawGUI());
                 }
                 else if(e.getCurrentItem().getType().equals(BankerHelper.UPGRADE_MATERIAL)){
                     BankerHelper.upgradeAccount(e.getCurrentItem(), p, pe, bae);
@@ -336,18 +349,6 @@ public class BetterNPC implements Listener {
                 }
                 else if(BankerHelper.npc_gui_withdraw_all.equalsExact(e.getCurrentItem())){
                     BankerHelper.withdraw(pe, p, bae, 100f);
-                }
-                else if(BankerHelper.npc_gui_withdraw.equalsExact(e.getCurrentItem())){
-                    InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getWithdrawGUI());
-                }
-                else if(BankerHelper.npc_gui_balance.equalsExact(e.getCurrentItem())){
-                    InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getBalanceGUI());
-                }
-                else if(BankerHelper.npc_gui_balance_total.equalsExact(e.getCurrentItem())){
-                    InventoryHelper.closeInventory(p);
-                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue())));
                 }
                 else if(BankerHelper.npc_gui_balance_transactions.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
