@@ -21,9 +21,10 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
+import java.util.Base64;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
+import org.jspecify.annotations.NonNull;
 
 /**
  *
@@ -429,25 +430,28 @@ public class ItemHelper implements IItemHelper {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
             dataOutput.writeObject(stack);
-
-            // Serialize that array
             dataOutput.close();
-            return Base64Coder.encodeLines(outputStream.toByteArray());
+            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
         }
         catch (Exception e) {
             throw new IllegalStateException("Unable to save item stack.", e);
         }
     }
    
-    public static ItemStack itemFrom64(String data) throws IOException {
+    public static ItemStack itemFrom64(@NonNull String data) throws IOException {
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
+            String cleaned = data.replaceAll("\\s+", "");
+
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(cleaned));
             try (BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
                 return (ItemStack) dataInput.readObject();
             }
         }
         catch (ClassNotFoundException e) {
             throw new IOException("Unable to decode class type.", e);
+        }
+        catch (IllegalArgumentException e) {
+            throw new IOException("Invalid Base64 data: " + e.getMessage(), e);
         }
     }
 

@@ -4,17 +4,17 @@
     <groupId>de.relluem94</groupId>
     <artifactId>relluessentials</artifactId>
     <name>RelluEssentials</name>
-    <version>4.3.7</version>
+    <version>4.3.8</version>
     <url>https://github.com/Relluem94s/RelluEssentials</url>
     <properties>
         <lombok.version>1.18.46</lombok.version>
-        <spigot.version>1.21.11-R0.1-SNAPSHOT</spigot.version>
-        <plugin.apiVersion>1.21</plugin.apiVersion>
+        <spigot.version>26.2-R0.1-SNAPSHOT</spigot.version>
+        <plugin.apiVersion>26.2</plugin.apiVersion>
         <plugin.author>Relluem94</plugin.author>
         <plugin.website>https://www.relluem94.de</plugin.website>
         <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
     </properties>
     <distributionManagement>
         <repository>
@@ -162,7 +162,7 @@
         <dependency>
             <groupId>de.relluem94</groupId>
             <artifactId>relluessentials-processor</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -179,8 +179,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.15.0</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <release>25</release>
                     <encoding>UTF-8</encoding>
                     <annotationProcessorPaths>
                         <path>
@@ -191,7 +190,7 @@
                         <path>
                             <groupId>de.relluem94</groupId>
                             <artifactId>relluessentials-processor</artifactId>
-                            <version>1.0.1</version>
+                            <version>1.0.2</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -293,12 +292,12 @@
             <plugin>
                 <groupId>de.relluem94.maven.plugin</groupId>
                 <artifactId>entity-check-plugin</artifactId>
-                <version>1.2.1-SNAPSHOT</version>
+                <version>1.2.2-SNAPSHOT</version>
             </plugin>
             <plugin>
                 <groupId>de.relluem94.maven.plugin</groupId>
                 <artifactId>item-check-plugin</artifactId>
-                <version>1.0.1-SNAPSHOT</version>
+                <version>1.0.2-SNAPSHOT</version>
             </plugin>
         </plugins>
     </build>

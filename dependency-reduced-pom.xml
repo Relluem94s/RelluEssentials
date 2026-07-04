@@ -4,7 +4,7 @@
   <groupId>de.relluem94</groupId>
   <artifactId>relluessentials</artifactId>
   <name>RelluEssentials</name>
-  <version>4.3.7</version>
+  <version>4.3.8</version>
   <url>https://github.com/Relluem94s/RelluEssentials</url>
   <scm>
     <connection>scm:git:git@github.com:Relluem94s/RelluEssentials.git</connection>
@@ -24,8 +24,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.15.0</version>
         <configuration>
-          <source>21</source>
-          <target>21</target>
+          <release>25</release>
           <encoding>UTF-8</encoding>
           <annotationProcessorPaths>
             <path>
@@ -36,7 +35,7 @@
             <path>
               <groupId>de.relluem94</groupId>
               <artifactId>relluessentials-processor</artifactId>
-              <version>1.0.1</version>
+              <version>1.0.2</version>
             </path>
           </annotationProcessorPaths>
         </configuration>
@@ -134,12 +133,12 @@
       <plugin>
         <groupId>de.relluem94.maven.plugin</groupId>
         <artifactId>entity-check-plugin</artifactId>
-        <version>1.2.1-SNAPSHOT</version>
+        <version>1.2.2-SNAPSHOT</version>
       </plugin>
       <plugin>
         <groupId>de.relluem94.maven.plugin</groupId>
         <artifactId>item-check-plugin</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
       </plugin>
     </plugins>
   </build>
@@ -202,7 +201,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.21.11-R0.1-SNAPSHOT</version>
+      <version>26.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -270,13 +269,13 @@
     </repository>
   </distributionManagement>
   <properties>
-    <maven.compiler.release>21</maven.compiler.release>
-    <plugin.apiVersion>1.21</plugin.apiVersion>
     <lombok.version>1.18.46</lombok.version>
-    <spigot.version>1.21.11-R0.1-SNAPSHOT</spigot.version>
+    <spigot.version>26.2-R0.1-SNAPSHOT</spigot.version>
+    <maven.compiler.release>25</maven.compiler.release>
     <plugin.author>Relluem94</plugin.author>
     <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
     <plugin.website>https://www.relluem94.de</plugin.website>
     <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
+    <plugin.apiVersion>26.2</plugin.apiVersion>
   </properties>
 </project>
