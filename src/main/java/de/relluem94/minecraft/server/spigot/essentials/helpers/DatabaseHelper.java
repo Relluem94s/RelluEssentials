@@ -293,6 +293,13 @@ public class DatabaseHelper {
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
+    private void patch10() {
+        String v = "patches/v10/";
+
+        executeScript(v + INSERT_NEW_DB_VERSION);
+        executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
     public void init() {
         applyPatch(getPluginInformation().getDbVersion());
     }
@@ -310,6 +317,7 @@ public class DatabaseHelper {
                 patch7();
                 patch8();
                 patch9();
+                patch10();
                 break;
             case 1:
                 patch2();
@@ -320,6 +328,7 @@ public class DatabaseHelper {
                 patch7();
                 patch8();
                 patch9();
+                patch10();
                 break;
             case 2:
                 patch3();
@@ -329,6 +338,7 @@ public class DatabaseHelper {
                 patch7();
                 patch8();
                 patch9();
+                patch10();
                 break;
             case 3:
                 patch4();
@@ -337,6 +347,7 @@ public class DatabaseHelper {
                 patch7();
                 patch8();
                 patch9();
+                patch10();
                 break;
             case 4:
                 patch5();
@@ -344,27 +355,35 @@ public class DatabaseHelper {
                 patch7();
                 patch8();
                 patch9();
+                patch10();
                 break;
             case 5:
                 patch6();
                 patch7();
                 patch8();
                 patch9();
+                patch10();
                 break;
             case 6:
                 patch7();
                 patch8();
                 patch9();
+                patch10();
                 break;
             case 7:
                 patch8();
                 patch9();
+                patch10();
                 break;
             case 8:
                 patch9();
+                patch10();
+                break;
+            case 9:
+                patch10();
                 break;
             default:
-                // To add Scripts in Development without its own patch version
+                // Add Scripts here for Development without its own patch version
                 break;
         }
     }
