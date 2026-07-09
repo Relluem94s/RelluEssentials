@@ -407,8 +407,9 @@ public class BetterLock implements Listener {
 
                 JSONObject flags = new JSONObject();
                 if(b.getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
-                    String[] flag = {ProtectionFlags.ALLOW_REDSTONE.name()};
-                    flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
+                    JSONArray flagArray = new JSONArray();
+                    flagArray.put(ProtectionFlags.ALLOW_REDSTONE.name());
+                    flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flagArray);
                 }
                 bpe.setFlags(flags);
 
@@ -430,22 +431,21 @@ public class BetterLock implements Listener {
         Block attachedBlock = b.getRelative(face);
         BlockData bd = attachedBlock.getBlockData();
 
-        if(bd instanceof WallHangingSign){
-            WallHangingSign sign = (WallHangingSign) attachedBlock.getBlockData();
-            return attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
-        }
-        else if(bd instanceof WallSign){
-            WallSign sign = (WallSign) attachedBlock.getBlockData();
-            return attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
-        }
-        else if(bd instanceof Sign){
-            return attachedBlock.getRelative(BlockFace.DOWN).equals(b);
-        }
-        else if(bd instanceof Door){
-            return attachedBlock.getRelative(BlockFace.DOWN).equals(b);
-        }
-        else{
-            return false;
+        switch (bd) {
+            case WallHangingSign _ -> {
+                WallHangingSign sign = (WallHangingSign) attachedBlock.getBlockData();
+                return attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
+            }
+            case WallSign _ -> {
+                WallSign sign = (WallSign) attachedBlock.getBlockData();
+                return attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
+            }
+            case Sign _, Door _ -> {
+                return attachedBlock.getRelative(BlockFace.DOWN).equals(b);
+            }
+            default -> {
+                return false;
+            }
         }
 
         
@@ -597,12 +597,15 @@ public class BetterLock implements Listener {
                 else{
                     JSONObject flags = new JSONObject();
                     if(Objects.requireNonNull(b).getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
-                        String[] flag = {ProtectionFlags.ALLOW_REDSTONE.name(),ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name()};
-                        flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
+                        JSONArray flagArray = new JSONArray();
+                        flagArray.put(ProtectionFlags.ALLOW_REDSTONE.name());
+                        flagArray.put(ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name());
+                        flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flagArray);
                     }
                     else{
-                        String[] flag = {ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name()};
-                        flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
+                        JSONArray flagArray = new JSONArray();
+                        flagArray.put(ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name());
+                        flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flagArray);
                     }
                     update = true;
                     pre.setFlags(flags);  
@@ -775,40 +778,51 @@ public class BetterLock implements Listener {
                         }
                     }
                     else{
-                        // TODO If Notify protection self on
+                        // If Notify protection self on
                         e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
 
                         Openable openable = (Openable) b.getBlockData();
 
-                        if(openable instanceof Door){
-                            Door door = (Door) b.getBlockData();
-                            Block b2 = ProtectionHelper.getOtherPart(door, b);
-                            if(b2 != null){
-                                if(b2.getBlockData() instanceof Door door2){
-                                    if(door2.getHinge() != door.getHinge()){
-                                        if (door2.isOpen()) {
-                                            door2.setOpen(false);
-                                        }
-                                        else{
-                                            door2.setOpen(true);
-    
-                                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
-                                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
-                                                door.setOpen(false);
+                        switch (openable) {
+                            case Door _ -> {
+                                Door door = (Door) b.getBlockData();
+                                Block b2 = ProtectionHelper.getOtherPart(door, b);
+                                if (b2 != null) {
+                                    if (b2.getBlockData() instanceof Door door2) {
+                                        if (door2.getHinge() != door.getHinge()) {
+                                            if (door2.isOpen()) {
                                                 door2.setOpen(false);
+                                            } else {
+                                                door2.setOpen(true);
 
-                                                b.setBlockData(door);
-                                                b2.setBlockData(door2);
-                                                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                           }, 50);
+                                                if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                                                    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                                        door.setOpen(false);
+                                                        door2.setOpen(false);
+
+                                                        b.setBlockData(door);
+                                                        b2.setBlockData(door2);
+                                                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
+                                                    }, 50);
+                                                }
                                             }
+                                            b2.setBlockData(door2);
                                         }
-                                        b2.setBlockData(door2);
+                                    }
+                                } else {
+                                    if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                                        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                            door.setOpen(false);
+
+                                            b.setBlockData(door);
+                                            e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
+                                        }, 50);
                                     }
                                 }
                             }
-                            else{
-                                if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
+                            case TrapDoor _ -> {
+                                TrapDoor door = (TrapDoor) b.getBlockData();
+                                if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
                                     Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
                                         door.setOpen(false);
 
@@ -816,28 +830,19 @@ public class BetterLock implements Listener {
                                         e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
                                     }, 50);
                                 }
-                            }                        
-                        }
-                        else if(openable instanceof TrapDoor){
-                            TrapDoor door = (TrapDoor) b.getBlockData();
-                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
-                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
-                                    door.setOpen(false);
-
-                                    b.setBlockData(door);
-                                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                }, 50);
                             }
-                        }
-                        else if(openable instanceof Gate){
-                            Gate door = (Gate) b.getBlockData();
-                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
-                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
-                                    door.setOpen(false);
+                            case Gate _ -> {
+                                Gate door = (Gate) b.getBlockData();
+                                if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                                    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                        door.setOpen(false);
 
-                                    b.setBlockData(door);
-                                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                }, 50);
+                                        b.setBlockData(door);
+                                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
+                                    }, 50);
+                                }
+                            }
+                            default -> {
                             }
                         }
                         // ELSE Other Openable Objects (Future Implementations)
