@@ -10,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @CommandName("spawn")
 public class Spawn implements CommandConstruct {
@@ -102,7 +104,13 @@ public class Spawn implements CommandConstruct {
 
     public void spawn(Player p){
         Back.addBackPoint(p);
-        p.teleport(p.getWorld().getSpawnLocation());
+
+        Location coords = p.getWorld().getSpawnLocation();
+        Location spawn = new Location(p.getWorld(), coords.getX(),coords.getY(),coords.getZ());
+
+        p.sendMessage(Objects.requireNonNull(p.getWorld().getSpawnLocation().getWorld()).getName());
+        p.teleport(spawn);
+
         p.sendMessage(String.format(PLUGIN_COMMAND_SPAWN, p.getWorld().getName()));
     }
 
