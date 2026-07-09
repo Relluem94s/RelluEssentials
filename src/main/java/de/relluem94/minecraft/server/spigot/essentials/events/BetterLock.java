@@ -299,8 +299,10 @@ public class BetterLock implements Listener {
                 return false;
             }
             else{
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
-                return true;
+                if (bpe != null && bpe.getLocationEntry() != null) {
+                    p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                    return true;
+                }
             }
         }
         return false;
