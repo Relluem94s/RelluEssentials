@@ -1,18 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CHAT_CLEARED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_PING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_PING_OTHER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_TOP;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.ArrayList;
@@ -175,33 +163,65 @@ public class Admin implements CommandConstruct {
                 }
                 return true;
             }
+
             else if (Commands.CLEAN_PROTECTIONS.getName().equalsIgnoreCase(args[0])) {
+                HashMap<Location, ProtectionEntry> protectionEntryList = new HashMap<>(
+                        RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList()
+                );
+
+                p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START, protectionEntryList.size()));
+
+                List<Location> locations = new ArrayList<>(protectionEntryList.keySet());
+                int[] index = {0};
                 HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
+                int total = locations.size();
 
-                p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
-                        RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size()));
-                for (Location l : RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().keySet()) {
-                    ProtectionEntry pe = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().get(l);
-                    if (!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))) {
-                        removeMap.put(l, pe);
-                        p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS, pe.getId(),
-                                pe.getMaterialName(), l.getBlock().getType().name()));
-                        RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(pe);
-                    }
-                }
+                Bukkit.getScheduler().runTaskTimer(
+                        RelluEssentials.getInstance(),
+                        task -> {
+                            int batchSize = 5;
+                            int processed = 0;
 
-                if (removeMap.isEmpty()) {
-                    p.sendMessage(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE);
-                    
-                }
-                else {
-                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP, removeMap.size()));
-                    for (Location l : removeMap.keySet()) {
-                        RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(l);
-                    }
-                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
-                            RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size()));
-                }
+                            while (index[0] < locations.size() && processed < batchSize) {
+                                Location l = locations.get(index[0]);
+                                ProtectionEntry pe = protectionEntryList.get(l);
+
+                                if (!l.getChunk().isLoaded()) {
+                                    l.getChunk().load();
+                                }
+
+                                if (!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))) {
+                                    removeMap.put(l, pe);
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS,
+                                            pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
+                                    RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(pe);
+                                }
+
+                                index[0]++;
+                                processed++;
+                            }
+
+                            int percent = (int) Math.round((index[0] / (double) total) * 100);
+                            p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE, index[0], total, percent));
+
+                            if (index[0] >= locations.size()) {
+                                task.cancel();
+
+                                if (removeMap.isEmpty()) {
+                                    p.sendMessage(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE);
+                                } else {
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP, removeMap.size()));
+                                    for (Location l : removeMap.keySet()) {
+                                        RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(l);
+                                    }
+                                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
+                                            RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size()));
+                                }
+                            }
+                        },
+                        0L,
+                        300L
+                );
                 return true;
             }
             else if (Commands.AFK.getName().equalsIgnoreCase(args[0])) {

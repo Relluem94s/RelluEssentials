@@ -1191,8 +1191,10 @@ public class DatabaseHelper {
                             pe.setUpdatedBy(rs.getInt(DatabaseMappings.FIELD_UPDATEDBY));
                             pe.setDeleted(rs.getString(DatabaseMappings.FIELD_DELETED));
                             pe.setDeletedBy(rs.getInt(DatabaseMappings.FIELD_DELETEDBY));
-                            pe.setFlags(new JSONObject(rs.getString(DatabaseMappings.FIELD_FLAGS)));
-                            pe.setRights(new JSONObject(rs.getString(DatabaseMappings.FIELD_RIGHTS)));
+                            String flagsJson = rs.getString(DatabaseMappings.FIELD_FLAGS);
+                            pe.setFlags(flagsJson != null ? new JSONObject(flagsJson) : new JSONObject());
+                            String rightsJson = rs.getString(DatabaseMappings.FIELD_RIGHTS);
+                            pe.setRights(rightsJson != null ? new JSONObject(rightsJson) : new JSONObject());
                             pe.setMaterialName(rs.getString(DatabaseMappings.FIELD_MATERIAL_NAME));
                             pe.setLocationEntry(loc);
                             pel.put(loc.getLocation(), pe);

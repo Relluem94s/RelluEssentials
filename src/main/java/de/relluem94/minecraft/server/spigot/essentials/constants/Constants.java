@@ -280,6 +280,7 @@ public interface Constants {
     String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP = PLUGIN_FORMS_COMMAND_PREFIX + "Cleaning Up " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Protections";
     String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END = PLUGIN_FORMS_COMMAND_PREFIX + "Reduced to " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Protections";
     String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE = PLUGIN_FORMS_COMMAND_PREFIX + "No Protections to Clean Up";
+    String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE = PLUGIN_FORMS_COMMAND_PREFIX + "Progress: §e%d/%d §7(§a%d%%§7)";
     String PLUGIN_COMMAND_WORLD_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use this command with the following Subcommands: list load unload unloadNoSave";
     String PLUGIN_COMMAND_WORLD_CREATE_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use this command with the following arguments: name(String) type(WordType String) environment (Environment as String) structures (boolean)";
     String PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED = "World not loaded. Can't unload this World.";
