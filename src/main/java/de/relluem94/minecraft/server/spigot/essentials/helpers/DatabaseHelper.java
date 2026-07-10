@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -117,6 +118,13 @@ public class DatabaseHelper {
         }
     }
 
+    private void finishPatching(){
+        List<PlayerEntry> pel = getPlayers();
+        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUuid()), p));
+
+        RelluEssentials.getInstance().setPluginInformation(getPluginInformation());
+    }
+
     private void patch1() {
         String v = "patches/v1/";
         consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
@@ -132,10 +140,6 @@ public class DatabaseHelper {
         executeScript(v + "insertLocationTypes.sql");
         executeScript(v + "insertPluginInformation.sql");
 
-        RelluEssentials.getInstance().setPluginInformation(getPluginInformation());
-
-        List<PlayerEntry> pel = getPlayers();
-        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUuid()), p));
 
         ConfigHelper ch = new ConfigHelper("players");
 
@@ -171,6 +175,7 @@ public class DatabaseHelper {
 
     private void patch3() {
         String v = "patches/v3/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "dropPlayerConstraint.sql");
         executeScript(v + "updateAdminGroup.sql"); // changed id of Admin
         executeScript(v + "updateModGroup.sql"); // changed id of Mod
@@ -185,6 +190,7 @@ public class DatabaseHelper {
 
     private void patch4() {
         String v = "patches/v4/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "addBankTier.sql");
         executeScript(v + "addBankAccount.sql");
         executeScript(v + "addBagType.sql");
@@ -198,7 +204,7 @@ public class DatabaseHelper {
         executeScript(v + "addSkillsPlayer.sql");
         executeScript(v + "addNPC.sql");
         executeScript(v + "addProtectionLocks.sql");
-
+        executeScript(v + "updatePlayer.sql");
         executeScript(v + "insertProtectionLocks.sql");
         executeScript(v + "insertNPC.sql");
         executeScript(v + "insertSkills.sql");
@@ -209,13 +215,13 @@ public class DatabaseHelper {
         executeScript(v + "alterBankAccount.sql");
         executeScript(v + "alterBankTier.sql");
         executeScript(v + "alterBankTransaction.sql");
-        executeScript(v + "updatePlayer.sql");
         executeScript(v + INSERT_NEW_DB_VERSION);
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     private void patch5() {
         String v = "patches/v5/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "addSetting.sql");
         executeScript(v + "addPluginSetting.sql");
         executeScript(v + "addSettingPlayer.sql");
@@ -226,7 +232,6 @@ public class DatabaseHelper {
         executeScript(v + "addCrops.sql");
         executeScript(v + "addDrops.sql");
         executeScript(v + "addPlayerPartner.sql");
-
         executeScript(v + "insertSkills.sql");
         executeScript(v + "insertSettings.sql");
         executeScript(v + "insertWorldGroup.sql");
@@ -235,17 +240,15 @@ public class DatabaseHelper {
         executeScript(v + "insertBagType.sql");
         executeScript(v + "insertCrops.sql");
         executeScript(v + "insertDrops.sql");
-
         executeScript(v + "addPlayerName.sql");
         executeScript(v + "changePlayerCustomName.sql");
-
         executeScript(v + INSERT_NEW_DB_VERSION);
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     private void patch6() {
         String v = "patches/v6/";
-      
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "updateNPCStick.sql");
         executeScript(v + "updateNPCRedSand.sql");
         executeScript(v + "updateNPCBambooBlock.sql");
@@ -257,45 +260,40 @@ public class DatabaseHelper {
         executeScript(v + "alterLumberjackNPC.sql");
         executeScript(v + "alterFarmingBag.sql"); 
         executeScript(v + "alterMiningBag.sql");
-
-
         executeScript(v + INSERT_NEW_DB_VERSION);
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     private void patch7() {
         String v = "patches/v7/";
-      
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "alterFarmingBag.sql"); 
         executeScript(v + "alterFarmingBagType.sql"); 
-        executeScript(v + "alterMiningBagType.sql"); 
-
+        executeScript(v + "alterMiningBagType.sql");
         executeScript(v + INSERT_NEW_DB_VERSION);
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     private void patch8() {
         String v = "patches/v8/";
-
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "insertProtectionLocks.sql");
-
         executeScript(v + INSERT_NEW_DB_VERSION);
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     private void patch9() {
         String v = "patches/v9/";
-
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + "updateProtections.sql");
         executeScript(v + "fixProtections.sql");
-
         executeScript(v + INSERT_NEW_DB_VERSION);
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
 
     private void patch10() {
         String v = "patches/v10/";
-
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         executeScript(v + INSERT_NEW_DB_VERSION);
         executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
@@ -318,6 +316,7 @@ public class DatabaseHelper {
                 patch8();
                 patch9();
                 patch10();
+                finishPatching();
                 break;
             case 1:
                 patch2();
@@ -329,6 +328,7 @@ public class DatabaseHelper {
                 patch8();
                 patch9();
                 patch10();
+                finishPatching();
                 break;
             case 2:
                 patch3();
@@ -339,6 +339,7 @@ public class DatabaseHelper {
                 patch8();
                 patch9();
                 patch10();
+                finishPatching();
                 break;
             case 3:
                 patch4();
@@ -348,6 +349,7 @@ public class DatabaseHelper {
                 patch8();
                 patch9();
                 patch10();
+                finishPatching();
                 break;
             case 4:
                 patch5();
@@ -356,6 +358,7 @@ public class DatabaseHelper {
                 patch8();
                 patch9();
                 patch10();
+                finishPatching();
                 break;
             case 5:
                 patch6();
@@ -363,24 +366,29 @@ public class DatabaseHelper {
                 patch8();
                 patch9();
                 patch10();
+                finishPatching();
                 break;
             case 6:
                 patch7();
                 patch8();
                 patch9();
                 patch10();
+                finishPatching();
                 break;
             case 7:
                 patch8();
                 patch9();
                 patch10();
+                finishPatching();
                 break;
             case 8:
                 patch9();
                 patch10();
+                finishPatching();
                 break;
             case 9:
                 patch10();
+                finishPatching();
                 break;
             default:
                 // Add Scripts here for Development without its own patch version
@@ -882,7 +890,7 @@ public class DatabaseHelper {
                 }
             }
         } catch (SQLException | FileNotFoundException ex) {
-            consoleSendMessage(ex.getClass().getName(), ex.getMessage());
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, "Init Database..");
             pie.setDbVersion(-1); // standard pie if no Database version was found
             return pie;
         }
