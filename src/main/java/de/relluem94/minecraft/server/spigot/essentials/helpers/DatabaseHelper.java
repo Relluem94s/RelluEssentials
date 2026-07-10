@@ -630,8 +630,6 @@ public class DatabaseHelper {
     }
 
     public void updateProtectionFlag(@NotNull ProtectionEntry pe) {
-        deleteLocation(pe.getLocationEntry());
-
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateProtectionFlags.sql"))) {
                 ps.setInt(1, pe.getLocationEntry().getPlayerId());
@@ -645,8 +643,6 @@ public class DatabaseHelper {
     }
 
     public void updateProtectionRight(@NotNull ProtectionEntry pe) {
-        deleteLocation(pe.getLocationEntry());
-
         try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
             try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateProtectionRights.sql"))) {
                 ps.setInt(1, pe.getLocationEntry().getPlayerId());
