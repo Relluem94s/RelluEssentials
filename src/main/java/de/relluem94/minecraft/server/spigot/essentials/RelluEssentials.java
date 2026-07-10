@@ -95,7 +95,6 @@ public class RelluEssentials extends JavaPlugin {
 
     public final List<GroupEntry> groupEntryList = new ArrayList<>();
     public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
-    public final List<BlockHistoryEntry> blockHistoryList = new ArrayList<>();
     public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
     public static final Map<Player, Player> reply = new HashMap<>();
 
@@ -150,7 +149,6 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Rename()),
             new CommandWrapper(new Repair()),
             new CommandWrapper(new Reply()),
-            new CommandWrapper(new Rollback()),
             new CommandWrapper(new Sign()),
             new CommandWrapper(new Spawn()),
             new CommandWrapper(new Speed()),
@@ -208,7 +206,6 @@ public class RelluEssentials extends JavaPlugin {
         new EventManager().enable();
         new SkillManager().enable();
         new RecipeManager().enable();
-        new BlockHistoryManager().enable();
         new AutoSaveManager().enable();
         new BankManager().enable();
         new NPCManager().enable();
