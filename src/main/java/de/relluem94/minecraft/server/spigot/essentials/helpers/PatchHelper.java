@@ -196,6 +196,7 @@ public class PatchHelper {
         consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
         databaseHelper.executeScript(v + "RE-266_fixDeletedLocationsFromProtections.sql");
         databaseHelper.executeScript(v + "alterMonsterBag.sql");
+        databaseHelper.executeScript(v + "insertProtectionLocks.sql");
         databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
         databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
