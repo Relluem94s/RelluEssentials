@@ -198,12 +198,13 @@ public class BetterLock implements Listener {
 
                     inventory.addItem(coin);
 
+                    final ItemStack toRemove = is.clone();
                     new BukkitRunnable() {
-                    @Override
+                        @Override
                         public void run() {
-                            inventory.remove(is);
+                            inventory.removeItem(toRemove);
                         }
-                    }.runTaskLater(RelluEssentials.getInstance(),  1L);
+                    }.runTaskLater(RelluEssentials.getInstance(), 1L);
                     return false;
                 }
                 else{
