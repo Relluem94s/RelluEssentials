@@ -75,6 +75,7 @@ public class Admin implements CommandConstruct {
 
         AFK("afk"),
         CLEAN_PROTECTIONS("cleanProtections"),
+        CLEAN_LOCATIONS("cleanLocations"),
         CHAT("chat"),
         LIGHT("light"),
         NPC("npc"),
@@ -222,6 +223,20 @@ public class Admin implements CommandConstruct {
                         0L,
                         300L
                 );
+
+                int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupProtections();
+                p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END, deleted));
+
+                return true;
+            }
+            else if (Commands.CLEAN_LOCATIONS.getName().equalsIgnoreCase(args[0])) {
+                if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
+                    p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                    return true;
+                }
+
+                int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupLocations();
+                p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END, deleted));
                 return true;
             }
             else if (Commands.AFK.getName().equalsIgnoreCase(args[0])) {

@@ -977,4 +977,26 @@ public class DatabaseHelper {
         }
         return bel;
     }
+
+    public int cleanupLocations() {
+        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/cleanupLocations.sql"))) {
+                return ps.executeUpdate();
+            }
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            return 0;
+        }
+    }
+
+    public int cleanupProtections() {
+        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/cleanupProtections.sql"))) {
+                return ps.executeUpdate();
+            }
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            return 0;
+        }
+    }
 }
