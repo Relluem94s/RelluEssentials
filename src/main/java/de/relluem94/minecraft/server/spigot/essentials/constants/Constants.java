@@ -229,26 +229,26 @@ public interface Constants {
 
     String PLUGIN_COMMAND_POSITION_LOCATION_NOT_AVAILIBLE = "N/A";
 
-    String PLUGIN_COOMAND_MODIFY_NO_UNDO_HISTORY = PLUGIN_FORMS_COMMAND_PREFIX + "There is no Undo History nothing was logged";
-    String PLUGIN_COOMAND_MODIFY_UNDO_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Undo of %d blocks was started!";
-    String PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL = PLUGIN_FORMS_COMMAND_PREFIX + "Bad Material Data!";
-    String PLUGIN_COOMAND_MODIFY_NO_POSITIONS = PLUGIN_FORMS_COMMAND_PREFIX + "No Positions set!";
-    String PLUGIN_COOMAND_MODIFY_POS_1_EMPTY = PLUGIN_FORMS_COMMAND_PREFIX + "Position #1 is Empty";
-    String PLUGIN_COOMAND_MODIFY_POS_2_EMPTY = PLUGIN_FORMS_COMMAND_PREFIX + "Position #2 is Empty";
-    String PLUGIN_COOMAND_MODIFY_DIFFERENT_WORLDS = PLUGIN_FORMS_COMMAND_PREFIX + "Positions are in Different Worlds";
-    String PLUGIN_COOMAND_MODIFY_SET_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Set of %d blocks with material %s was started!";
-    String PLUGIN_COOMAND_MODIFY_MOVE_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Move of %d blocks with offset %d was started!";
-    String PLUGIN_COOMAND_MODIFY_REPLACE_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Replace of %d blocks with material %s to %s was started!";
-    String PLUGIN_COOMAND_MODIFY_COPY_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Copied %d blocks to clipboard.";
-    String PLUGIN_COOMAND_MODIFY_CUT_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Cut %d blocks to clipboard.";
-    String PLUGIN_COOMAND_MODIFY_PASTE_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Pasted %d blocks from clipboard.";
-    String PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD = PLUGIN_FORMS_COMMAND_PREFIX + "Clipboard is empty.";
-    String PLUGIN_COOMAND_MODIFY_WALL_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Created wall with %d blocks of %s.";
-    String PLUGIN_COOMAND_MODIFY_CYLINDER_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Created cylinder with %d blocks of %s.";
-    String PLUGIN_COOMAND_MODIFY_FILL_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Filled %d blocks of %s in a radius of %d.";
-    String PLUGIN_COOMAND_MODIFY_FILLR_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Filled %d blocks of %s downwards in a radius of %d.";
-    String PLUGIN_COOMAND_MODIFY_FILL_RADIUS_TO_HIGH = PLUGIN_FORMS_COMMAND_PREFIX + "Can't fill Radius is to High! Max Radius is %d.";
-    String PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS = PLUGIN_FORMS_COMMAND_PREFIX + "Clipboard rotated 90° successfully!";
+    String PLUGIN_COMMAND_MODIFY_NO_UNDO_HISTORY = PLUGIN_FORMS_COMMAND_PREFIX + "There is no Undo History nothing was logged";
+    String PLUGIN_COMMAND_MODIFY_UNDO_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Undo of %d blocks was started!";
+    String PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL = PLUGIN_FORMS_COMMAND_PREFIX + "Bad Material Data!";
+    String PLUGIN_COMMAND_MODIFY_NO_POSITIONS = PLUGIN_FORMS_COMMAND_PREFIX + "No Positions set!";
+    String PLUGIN_COMMAND_MODIFY_POS_1_EMPTY = PLUGIN_FORMS_COMMAND_PREFIX + "Position #1 is Empty";
+    String PLUGIN_COMMAND_MODIFY_POS_2_EMPTY = PLUGIN_FORMS_COMMAND_PREFIX + "Position #2 is Empty";
+    String PLUGIN_COMMAND_MODIFY_DIFFERENT_WORLDS = PLUGIN_FORMS_COMMAND_PREFIX + "Positions are in Different Worlds";
+    String PLUGIN_COMMAND_MODIFY_SET_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Set of %d blocks with material %s was started!";
+    String PLUGIN_COMMAND_MODIFY_MOVE_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Move of %d blocks with offset %d was started!";
+    String PLUGIN_COMMAND_MODIFY_REPLACE_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Replace of %d blocks with material %s to %s was started!";
+    String PLUGIN_COMMAND_MODIFY_COPY_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Copied %d blocks to clipboard.";
+    String PLUGIN_COMMAND_MODIFY_CUT_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Cut %d blocks to clipboard.";
+    String PLUGIN_COMMAND_MODIFY_PASTE_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Pasted %d blocks from clipboard.";
+    String PLUGIN_COMMAND_MODIFY_NO_CLIPBOARD = PLUGIN_FORMS_COMMAND_PREFIX + "Clipboard is empty.";
+    String PLUGIN_COMMAND_MODIFY_WALL_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Created wall with %d blocks of %s.";
+    String PLUGIN_COMMAND_MODIFY_CYLINDER_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Created cylinder with %d blocks of %s.";
+    String PLUGIN_COMMAND_MODIFY_FILL_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Filled %d blocks of %s in a radius of %d.";
+    String PLUGIN_COMMAND_MODIFY_FILLR_STARTED = PLUGIN_FORMS_COMMAND_PREFIX + "Filled %d blocks of %s downwards in a radius of %d.";
+    String PLUGIN_COMMAND_MODIFY_FILL_RADIUS_TO_HIGH = PLUGIN_FORMS_COMMAND_PREFIX + "Can't fill Radius is to High! Max Radius is %d.";
+    String PLUGIN_COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS = PLUGIN_FORMS_COMMAND_PREFIX + "Clipboard rotated 90° successfully!";
 
 
 
