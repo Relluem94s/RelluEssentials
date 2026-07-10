@@ -137,7 +137,7 @@ public class Modify implements CommandConstruct {
                 RelluEssentials.getInstance().clipboard.put(p, new DoubleStore<>(newSelection, clipboardList));
 
                 p.sendMessage(String.format(
-                        Commands.CUT.getName().equalsIgnoreCase(strings[0]) ? PLUGIN_COOMAND_MODIFY_CUT_STARTED : PLUGIN_COOMAND_MODIFY_COPY_STARTED,
+                        Commands.CUT.getName().equalsIgnoreCase(strings[0]) ? PLUGIN_COMMAND_MODIFY_CUT_STARTED : PLUGIN_COMMAND_MODIFY_COPY_STARTED,
                         clipboardList.size()
                 ));
                 return true;
@@ -146,7 +146,7 @@ public class Modify implements CommandConstruct {
             if (Commands.PASTE.getName().equalsIgnoreCase(strings[0])) {
                 DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
                 if (clipboardList == null || clipboardList.getSecondValue() == null || clipboardList.getSecondValue().isEmpty()) {
-                    p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
+                    p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_CLIPBOARD);
                     return true;
                 }
 
@@ -181,7 +181,7 @@ public class Modify implements CommandConstruct {
                 }
 
                 addUndoHistory(p, history);
-                p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_PASTE_STARTED, clipboardList.getSecondValue().size()));
+                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_PASTE_STARTED, clipboardList.getSecondValue().size()));
                 return true;
             }
 
@@ -192,12 +192,12 @@ public class Modify implements CommandConstruct {
 
             List<List<ModifyHistoryEntry>> playerUndo = RelluEssentials.getInstance().undo.get(p);
             if (playerUndo == null || playerUndo.isEmpty()) {
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_UNDO_HISTORY);
+                p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_UNDO_HISTORY);
                 return true;
             }
-            List<ModifyHistoryEntry> lastHistory = playerUndo.remove(playerUndo.size() - 1);
+            List<ModifyHistoryEntry> lastHistory = playerUndo.removeLast();
             if (lastHistory == null || lastHistory.isEmpty()) {
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_UNDO_HISTORY);
+                p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_UNDO_HISTORY);
                 return true;
             }
 
@@ -216,7 +216,7 @@ public class Modify implements CommandConstruct {
 
             RelluEssentials.getInstance().undo.get(p).remove(playerUndo);
 
-            p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_UNDO_STARTED, lastHistory.size()));
+            p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_UNDO_STARTED, lastHistory.size()));
             return true;
         }
 
@@ -224,7 +224,7 @@ public class Modify implements CommandConstruct {
             if (Commands.WALL.getName().equalsIgnoreCase(strings[0])) {
                 Material material = Material.getMaterial(strings[1].toUpperCase());
                 if (material == null) {
-                    p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
+                    p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
                     return true;
                 }
 
@@ -262,12 +262,12 @@ public class Modify implements CommandConstruct {
                 bh.setBlocks(0);
                 addUndoHistory(p, history);
 
-                p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_WALL_STARTED, history.size(), material.name()));
+                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_WALL_STARTED, history.size(), material.name()));
                 return true;
             } else if (Commands.CYLINDER.getName().equalsIgnoreCase(strings[0])) {
                 Material material = Material.getMaterial(strings[1].toUpperCase());
                 if (material == null) {
-                    p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
+                    p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
                     return true;
                 }
 
@@ -315,7 +315,7 @@ public class Modify implements CommandConstruct {
                 bh.setBlocks(0);
                 addUndoHistory(p, history);
 
-                p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_CYLINDER_STARTED, history.size(), material.name()));
+                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_CYLINDER_STARTED, history.size(), material.name()));
                 return true;
             } else if (Commands.MOVE.getName().equalsIgnoreCase(strings[0])) {
                 if (!isInt(strings[1])) {
@@ -368,7 +368,7 @@ public class Modify implements CommandConstruct {
 
                 addUndoHistory(p, history);
 
-                p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_MOVE_STARTED, history.size(), offset));
+                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_MOVE_STARTED, history.size(), offset));
                 return true;
             }
 
@@ -378,13 +378,13 @@ public class Modify implements CommandConstruct {
 //            else if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
 //                DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
 //                if (clipboardList == null || clipboardList.getSecondValue() == null || clipboardList.getSecondValue().isEmpty()) {
-//                    p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_CLIPBOARD);
+//                    p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_CLIPBOARD);
 //                    return true;
 //                }
 //
 //                RelluEssentials.getInstance().clipboard.put(p, rotate(clipboardList.getSecondValue(), clipboardList.getValue()));
 //
-//                p.sendMessage(PLUGIN_COOMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
+//                p.sendMessage(PLUGIN_COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
 //                return true;
 //            }
 
@@ -400,7 +400,7 @@ public class Modify implements CommandConstruct {
             Material material = Material.getMaterial(strings[1].toUpperCase());
 
             if (material == null) {
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
+                p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
                 return true;
             }
 
@@ -437,7 +437,7 @@ public class Modify implements CommandConstruct {
 
             addUndoHistory(p, history);
 
-            p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_SET_STARTED, history.size(), material.name()));
+            p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_SET_STARTED, history.size(), material.name()));
 
             return true;
         }
@@ -446,7 +446,7 @@ public class Modify implements CommandConstruct {
             if (Commands.FILL.getName().equalsIgnoreCase(strings[0]) || Commands.FILLR.getName().equalsIgnoreCase(strings[0])) {
                 Material material = Material.getMaterial(strings[1].toUpperCase());
                 if (material == null) {
-                    p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
+                    p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
                     return true;
                 }
 
@@ -462,7 +462,7 @@ public class Modify implements CommandConstruct {
                 }
 
                 if(radius > MAX_RADIUS){
-                    p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_FILL_RADIUS_TO_HIGH, MAX_RADIUS));
+                    p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_FILL_RADIUS_TO_HIGH, MAX_RADIUS));
                 }
 
                 BlockHelper bh = new BlockHelper(material);
@@ -524,7 +524,7 @@ public class Modify implements CommandConstruct {
                 addUndoHistory(p, history);
 
                 p.sendMessage(String.format(
-                        Commands.FILL.getName().equalsIgnoreCase(strings[0]) ? PLUGIN_COOMAND_MODIFY_FILL_STARTED : PLUGIN_COOMAND_MODIFY_FILLR_STARTED,
+                        Commands.FILL.getName().equalsIgnoreCase(strings[0]) ? PLUGIN_COMMAND_MODIFY_FILL_STARTED : PLUGIN_COMMAND_MODIFY_FILLR_STARTED,
                         history.size(), material.name(), radius
                 ));
                 return true;
@@ -539,7 +539,7 @@ public class Modify implements CommandConstruct {
             Material toMaterial = Material.getMaterial(strings[2].toUpperCase());
 
             if (fromMaterial == null || toMaterial == null) {
-                p.sendMessage(PLUGIN_COOMAND_MODIFY_WRONG_MATERIAL);
+                p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
                 return true;
             }
 
@@ -577,7 +577,7 @@ public class Modify implements CommandConstruct {
             bh.setBlocks(0);
             addUndoHistory(p, history);
 
-            p.sendMessage(String.format(PLUGIN_COOMAND_MODIFY_REPLACE_STARTED, history.size(), fromMaterial.name(), toMaterial.name()));
+            p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_REPLACE_STARTED, history.size(), fromMaterial.name(), toMaterial.name()));
             return true;
         }
 
@@ -600,7 +600,7 @@ public class Modify implements CommandConstruct {
 
     private @Nullable Selection getSelection(Player p) {
         if (!RelluEssentials.getInstance().position.containsKey(p)) {
-            p.sendMessage(PLUGIN_COOMAND_MODIFY_NO_POSITIONS);
+            p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_POSITIONS);
             return null;
         }
 
@@ -608,17 +608,17 @@ public class Modify implements CommandConstruct {
         Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
 
         if (pos1 == null) {
-            p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_1_EMPTY);
+            p.sendMessage(PLUGIN_COMMAND_MODIFY_POS_1_EMPTY);
             return null;
         }
 
         if (pos2 == null) {
-            p.sendMessage(PLUGIN_COOMAND_MODIFY_POS_2_EMPTY);
+            p.sendMessage(PLUGIN_COMMAND_MODIFY_POS_2_EMPTY);
             return null;
         }
 
         if (pos1.getWorld() != pos2.getWorld()) {
-            p.sendMessage(PLUGIN_COOMAND_MODIFY_DIFFERENT_WORLDS);
+            p.sendMessage(PLUGIN_COMMAND_MODIFY_DIFFERENT_WORLDS);
             return null;
         }
 
