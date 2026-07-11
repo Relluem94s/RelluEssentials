@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -413,9 +412,7 @@ public class Modify implements CommandConstruct {
                     return true;
                 }
 
-                RelluEssentials.getInstance().clipboard.put(p, rotate(clipboardList.getSecondValue(), clipboardList.getValue(), p));
-
-
+                RelluEssentials.getInstance().clipboard.put(p, rotate(clipboardList.getSecondValue(), clipboardList.getValue()));
                 p.sendMessage(PLUGIN_COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
                 return true;
             }
@@ -685,7 +682,7 @@ public class Modify implements CommandConstruct {
         }
     }
 
-    public DoubleStore<Selection, List<ModifyClipboardEntry>> rotate(@NotNull List<ModifyClipboardEntry> entries, @NotNull Selection selection, @NotNull Player player) {
+    public DoubleStore<Selection, List<ModifyClipboardEntry>> rotate(@NotNull List<ModifyClipboardEntry> entries, @NotNull Selection selection) {
         List<ModifyClipboardEntry> rotatedEntries = entries.stream()
                 .map(entry -> {
                     Location oldLocation = entry.getLocation();
@@ -708,7 +705,7 @@ public class Modify implements CommandConstruct {
                             loc.getWorld(),
                             loc.getBlockX() - minX,
                             loc.getBlockY(),
-                            loc.getBlockZ() - minZ
+                            loc.getBlockZ() - minZ +1
                     );
                     return new ModifyClipboardEntry(normalizedLoc, entry.getMaterial(), entry.getData());
                 })
