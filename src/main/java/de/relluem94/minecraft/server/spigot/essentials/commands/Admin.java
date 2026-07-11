@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.api.RelluEssentialsAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.RelluEssentialsIntegration;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.CustomInventory;
@@ -77,6 +79,7 @@ public class Admin implements CommandConstruct {
         CLEAN_PROTECTIONS("cleanProtections"),
         CLEAN_LOCATIONS("cleanLocations"),
         CHAT("chat"),
+        INFO("info"),
         LIGHT("light"),
         NPC("npc"),
         PING("ping"),
@@ -129,6 +132,22 @@ public class Admin implements CommandConstruct {
                 InventoryHelper.openInventory(sender, inv);
                 return true;
             }
+
+            if (Commands.INFO.getName().equalsIgnoreCase(args[0])) {
+                p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_INFO_VERSION, RelluEssentials.getInstance().getDescription().getVersion()));
+
+                List<RelluEssentialsIntegration> integrations = RelluEssentialsAPI.getInstance().getIntegrations();
+                if (integrations.isEmpty()) {
+                    p.sendMessage(PLUGIN_COMMAND_ADMIN_INFO_INTEGRATIONS_NONE);
+                } else {
+                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_INFO_INTEGRATIONS_HEADER, integrations.size()));
+                    for (RelluEssentialsIntegration integration : integrations) {
+                        p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_INFO_INTEGRATIONS_ENTRY, integration.getPluginName(), integration.getPluginVersion()));
+                    }
+                }
+                return true;
+            }
+
             if (Commands.ADMIN_TOOLS.getName().equalsIgnoreCase(args[0])) {
                 if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
                     p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
