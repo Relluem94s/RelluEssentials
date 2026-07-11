@@ -115,6 +115,8 @@ public interface EventConstants {
 
     String PLUGIN_EVENT_DAMAGE_SHOW = PLUGIN_FORMS_COMMAND_PREFIX +  "Damage: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Last Damage: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Health: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
 
+    String INTEGRATION_REGISTERED = "Integration found: %s  " + PLUGIN_COLOR_COMMAND_ARG + "v%s";
+    String INTEGRATION_UNREGISTERED = "Integration removed: ";
 
     String PLUGIN_EVENT_POSITION_AXE_FIRST_RESET = PLUGIN_FORMS_COMMAND_PREFIX + "First position reset.";
     String PLUGIN_EVENT_POSITION_AXE_SECOND_RESET = PLUGIN_FORMS_COMMAND_PREFIX + "Second position reset.";

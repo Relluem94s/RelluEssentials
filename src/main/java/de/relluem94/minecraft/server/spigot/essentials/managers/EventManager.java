@@ -46,6 +46,7 @@ public class EventManager implements IEnable{
         pm.registerEvents(new GrapplingHockEvent(), RelluEssentials.getInstance());         eventCount++;
         pm.registerEvents(new PositionAxeListener(), RelluEssentials.getInstance());        eventCount++;
         pm.registerEvents(new PreventCoinManipulation(), RelluEssentials.getInstance());    eventCount++;
+        pm.registerEvents(new IntegrationListener(), RelluEssentials.getInstance());        eventCount++;
         consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_EVENTS_REGISTERED, eventCount));
     }
 }
