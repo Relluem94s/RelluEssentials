@@ -18,6 +18,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -64,7 +65,8 @@ public class Modify implements CommandConstruct {
         WALL("wall"),
         CYLINDER("cylinder"),
         FILL("fill"),
-        FILLR("fillr");
+        FILLR("fillr"),
+        PLANT("plant");
 
         private final String name;
         private final String[] subCommands;
@@ -384,7 +386,54 @@ public class Modify implements CommandConstruct {
                 RelluEssentials.getInstance().clipboard.put(p, rotate(clipboardList.getSecondValue(), clipboardList.getValue()));
                 p.sendMessage(PLUGIN_COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
                 return true;
-            } else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
+            }
+            else if (Commands.PLANT.getName().equalsIgnoreCase(strings[0])) {
+                Material material = Material.getMaterial(strings[1].toUpperCase());
+                if (material == null || !isPlantMaterial(material)) {
+                    p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
+                    return true;
+                }
+
+                Selection selection = getSelection(p);
+                if (selection == null) return true;
+
+                BlockHelper bh = new BlockHelper(material);
+                List<ModifyHistoryEntry> history = new ArrayList<>();
+
+                final long[] currentDelay = {0};
+                final int[] counter = {0};
+
+                forEachBlock(selection, block -> {
+                    Block below = block.getRelative(0, -1, 0);
+
+                    if (!below.getType().isSolid()) {
+                        return;
+                    }
+                    if (!block.isEmpty()) {
+                        return;
+                    }
+                    if (!material.equals(block.getType())) {
+                        checkAndRemoveProtection(block);
+
+                        ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
+                        history.add(entry);
+
+                        bh.addLocation(block.getLocation(), currentDelay[0]);
+                        counter[0]++;
+                        if (counter[0] >= BLOCKS_PER_TICK) {
+                            currentDelay[0]++;
+                            counter[0] = 0;
+                        }
+                    }
+                });
+
+                bh.setBlocks(0);
+                addUndoHistory(p, history);
+
+                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_PLANT_STARTED, history.size(), material.name()));
+                return true;
+            }
+            else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }
@@ -701,6 +750,18 @@ public class Modify implements CommandConstruct {
                 return tabList;
             }
 
+            if (strings[0].equalsIgnoreCase(Commands.PLANT.getName())) {
+                String input = strings[1].isEmpty() ? null : strings[1].toUpperCase();
+                tabList.addAll(Arrays.stream(Material.values())
+                        .filter(Modify::isPlantMaterial)
+                        .map(Material::name)
+                        .filter(name -> input == null || name.startsWith(input))
+                        .sorted()
+                        .toList());
+                return tabList;
+            }
+
+
             tabList.addAll(TabCompleterHelper.getMaterials(strings[1].isEmpty() ? null : strings[1]));
             return tabList;
         }
@@ -786,4 +847,17 @@ public class Modify implements CommandConstruct {
     }
 
 
+    private static boolean isPlantMaterial(Material material) {
+        return Tag.FLOWERS.isTagged(material)
+                || Tag.SAPLINGS.isTagged(material)
+                || Tag.CROPS.isTagged(material)
+                || material == Material.BAMBOO
+                || material == Material.BAMBOO_SAPLING
+                || material == Material.SUGAR_CANE
+                || material == Material.CACTUS
+                || material == Material.SWEET_BERRY_BUSH
+                || material == Material.KELP
+                || material == Material.SEA_PICKLE
+                || material == Material.LILY_PAD;
+    }
 }
