@@ -57,26 +57,27 @@ public enum MessageKey {
     COMMAND_HOME_DEATH_DELETE("command.home.death_delete"),
     COMMAND_HOME_NO_BED("command.home.no_bed"),
 
-    COMMAND_TP("command.tp"),
-    COMMAND_TP_TO("command.tp.to"),
-    COMMAND_TP_SEND_REQUEST("command.tp.send_request"),
-    COMMAND_TP_ACCEPT_NO_REQUEST("command.tp.accept_no_request"),
-    COMMAND_TP_REQUEST_EXPIRED("command.tp.request_expired"),
-
-    COMMAND_MARRY_SEND_REQUEST("command.marry.send_request"),
-    COMMAND_MARRY_RECEIVE_REQUEST("command.marry.receive_request"),
-    COMMAND_MARRY_MARRIED("command.marry.married"),
-    COMMAND_MARRY_DIVORCED("command.marry.divorced"),
-    COMMAND_MARRY_SELF_MARRIAGE("command.marry.self_marriage"),
-    COMMAND_MARRY_DIVORCE_NOT_MARRIED("command.marry.divorce_not_married"),
-    COMMAND_MARRY_ACCEPT_NO_REQUEST("command.marry.accept_no_request"),
-
-    COMMAND_WARP("command.warp"),
-    COMMAND_WARP_LIST_INFO("command.warp.list_info"),
-    COMMAND_WARP_ERROR_WORLD_UNLOADED("command.warp.error_world_unloaded"),
-    COMMAND_WARP_ERROR_NO_WARP_FOUND("command.warp.error_no_warp_found"),
-    COMMAND_WARP_ADD("command.warp.add"),
-    COMMAND_WARP_REMOVE("command.warp.remove");
+    COMMAND_MODIFY_NO_UNDO_HISTORY("command.modify.no_undo_history"),
+    COMMAND_MODIFY_UNDO_STARTED("command.modify.undo_started"),
+    COMMAND_MODIFY_WRONG_MATERIAL("command.modify.wrong_material"),
+    COMMAND_MODIFY_NO_POSITIONS("command.modify.no_positions"),
+    COMMAND_MODIFY_POS_1_EMPTY("command.modify.pos_1_empty"),
+    COMMAND_MODIFY_POS_2_EMPTY("command.modify.pos_2_empty"),
+    COMMAND_MODIFY_DIFFERENT_WORLDS("command.modify.different_worlds"),
+    COMMAND_MODIFY_SET_STARTED("command.modify.set_started"),
+    COMMAND_MODIFY_MOVE_STARTED("command.modify.move_started"),
+    COMMAND_MODIFY_REPLACE_STARTED("command.modify.replace_started"),
+    COMMAND_MODIFY_COPY_STARTED("command.modify.copy_started"),
+    COMMAND_MODIFY_CUT_STARTED("command.modify.cut_started"),
+    COMMAND_MODIFY_PASTE_STARTED("command.modify.paste_started"),
+    COMMAND_MODIFY_NO_CLIPBOARD("command.modify.no_clipboard"),
+    COMMAND_MODIFY_WALL_STARTED("command.modify.wall_started"),
+    COMMAND_MODIFY_CYLINDER_STARTED("command.modify.cylinder_started"),
+    COMMAND_MODIFY_FILL_STARTED("command.modify.fill_started"),
+    COMMAND_MODIFY_FILLR_STARTED("command.modify.fillr_started"),
+    COMMAND_MODIFY_FILL_RADIUS_TO_HIGH("command.modify.fill_radius_to_high"),
+    COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS("command.modify.clipboard_rotate_success"),
+    COMMAND_MODIFY_PLANT_STARTED("command.modify.plant_started");
 
 
     private final String key;
