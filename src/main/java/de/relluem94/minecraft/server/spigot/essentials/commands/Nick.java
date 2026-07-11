@@ -74,7 +74,7 @@ public class Nick implements CommandConstruct {
             return tabList;
         }
 
-        if (isPlayer(commandSender)) {
+        if (!isPlayer(commandSender)) {
             return tabList;
         }
 
