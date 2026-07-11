@@ -27,6 +27,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -107,13 +108,17 @@ public class Modify implements CommandConstruct {
 
                 BlockHelper bh = new BlockHelper(Material.AIR);
                 Location playerTargetLoc = p.getLocation().clone();
+                playerTargetLoc.setX(playerTargetLoc.getBlockX());
+                playerTargetLoc.setY(playerTargetLoc.getBlockY());
+                playerTargetLoc.setZ(playerTargetLoc.getBlockZ());
+
+
                 Selection newSelection = getRelativeCopySelection(selection, playerTargetLoc);
 
                 forEachBlock(selection, block -> {
                     ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
 
-
-                    ModifyClipboardEntry clipboardEntry = new ModifyClipboardEntry(block.getLocation().clone().subtract(playerTargetLoc), block.getType(), block.getBlockData());
+                    ModifyClipboardEntry clipboardEntry = getModifyClipboardEntry(block, p, playerTargetLoc);
                     clipboardList.add(clipboardEntry);
 
                     if (Commands.CUT.getName().equalsIgnoreCase(strings[0])) {
@@ -155,10 +160,14 @@ public class Modify implements CommandConstruct {
                 final int[] counter = {0};
 
                 Location playerTargetLoc = p.getLocation().clone();
+                playerTargetLoc.setX(playerTargetLoc.getBlockX());
+                playerTargetLoc.setY(playerTargetLoc.getBlockY());
+                playerTargetLoc.setZ(playerTargetLoc.getBlockZ());
+
+                float yaw = normalizeYaw(p.getLocation().getYaw());
 
                 for (ModifyClipboardEntry entry : clipboardList.getSecondValue()) {
-                    Location newLoc = entry.getLocation().clone().add(playerTargetLoc);
-                    Block block = newLoc.getBlock();
+                    Block block = getBlock(entry, yaw, playerTargetLoc);
 
                     ModifyHistoryEntry entryNew = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
                     history.add(entryNew);
@@ -323,12 +332,10 @@ public class Modify implements CommandConstruct {
                 }
 
                 int offset = Integer.parseInt(strings[1]);
-
                 Selection selection = getSelection(p);
                 if (selection == null) return true;
 
                 List<ModifyHistoryEntry> history = new ArrayList<>();
-
                 final long[] currentDelay = {0};
                 final int[] counter = {0};
 
@@ -350,12 +357,10 @@ public class Modify implements CommandConstruct {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-
                             newBlock.setType(block.getType());
                             newBlock.setBlockData(block.getBlockData());
 
                             block.setType(Material.AIR);
-
                         }
                     }.runTaskLater(RelluEssentials.getInstance(), currentDelay[0]);
 
@@ -367,32 +372,19 @@ public class Modify implements CommandConstruct {
                 });
 
                 addUndoHistory(p, history);
-
                 p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_MOVE_STARTED, history.size(), offset));
                 return true;
-            }
+            } else if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
+                DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
+                if (clipboardList == null || clipboardList.getSecondValue() == null || clipboardList.getSecondValue().isEmpty()) {
+                    p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_CLIPBOARD);
+                    return true;
+                }
 
-
-
-
-//            else if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
-//                DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
-//                if (clipboardList == null || clipboardList.getSecondValue() == null || clipboardList.getSecondValue().isEmpty()) {
-//                    p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_CLIPBOARD);
-//                    return true;
-//                }
-//
-//                RelluEssentials.getInstance().clipboard.put(p, rotate(clipboardList.getSecondValue(), clipboardList.getValue()));
-//
-//                p.sendMessage(PLUGIN_COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
-//                return true;
-//            }
-
-
-
-
-
-            else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
+                RelluEssentials.getInstance().clipboard.put(p, rotate(clipboardList.getSecondValue(), clipboardList.getValue()));
+                p.sendMessage(PLUGIN_COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
+                return true;
+            } else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
                 p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
                 return true;
             }
@@ -413,7 +405,6 @@ public class Modify implements CommandConstruct {
             final long[] currentDelay = {0};
             final int[] counter = {0};
 
-
             forEachBlock(selection, block -> {
                 if (material.equals(block.getType())) {
                     return;
@@ -432,13 +423,9 @@ public class Modify implements CommandConstruct {
                 }
             });
 
-
             bh.setBlocks(0);
-
             addUndoHistory(p, history);
-
             p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_SET_STARTED, history.size(), material.name()));
-
             return true;
         }
 
@@ -461,7 +448,7 @@ public class Modify implements CommandConstruct {
                     return true;
                 }
 
-                if(radius > MAX_RADIUS){
+                if (radius > MAX_RADIUS) {
                     p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_FILL_RADIUS_TO_HIGH, MAX_RADIUS));
                 }
 
@@ -480,9 +467,9 @@ public class Modify implements CommandConstruct {
                 visited.add(startBlock.getLocation());
 
                 int iterations = 0;
-                while(!queue.isEmpty()){
+                while (!queue.isEmpty()) {
                     iterations++;
-                    if(iterations >= MAX_ITERATIONS) break;
+                    if (iterations >= MAX_ITERATIONS) break;
 
                     Block block = queue.poll();
                     if (block.getLocation().distance(playerPos) > radius) continue;
@@ -500,12 +487,12 @@ public class Modify implements CommandConstruct {
 
                     int[][] directions;
                     if (Commands.FILL.getName().equalsIgnoreCase(strings[0])) {
-                        directions = new int[][]{{1,0,0},{-1,0,0},{0,0,1},{0,0,-1}};
+                        directions = new int[][]{{1, 0, 0}, {-1, 0, 0}, {0, 0, 1}, {0, 0, -1}};
                     } else {
-                        directions = new int[][]{{1,0,0},{-1,0,0},{0,0,1},{0,0,-1},{0,-1,0}};
+                        directions = new int[][]{{1, 0, 0}, {-1, 0, 0}, {0, 0, 1}, {0, 0, -1}, {0, -1, 0}};
                     }
 
-                    for (int[] dir : directions){
+                    for (int[] dir : directions) {
                         int nx = block.getX() + dir[0];
                         int ny = block.getY() + dir[1];
                         int nz = block.getZ() + dir[2];
@@ -556,13 +543,11 @@ public class Modify implements CommandConstruct {
                 if (block.getType() == toMaterial) {
                     return;
                 }
-
                 if (block.getType() != fromMaterial) {
                     return;
                 }
 
                 checkAndRemoveProtection(block);
-
                 ModifyHistoryEntry entry = new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData());
                 history.add(entry);
 
@@ -584,19 +569,6 @@ public class Modify implements CommandConstruct {
         p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
         return true;
     }
-
-    private static @NotNull Selection getRelativeCopySelection(@NotNull Selection selection, Location playerTargetLoc) {
-        Location pos1 = selection.getPos1().clone().subtract(playerTargetLoc);
-        Location pos2 = selection.getPos2().clone().subtract(playerTargetLoc);
-
-        pos1.setYaw(playerTargetLoc.getYaw());
-        pos1.setPitch(playerTargetLoc.getPitch());
-
-        pos2.setYaw(playerTargetLoc.getYaw());
-        pos2.setPitch(playerTargetLoc.getPitch());
-        return new Selection(pos1, pos2);
-    }
-
 
     private @Nullable Selection getSelection(Player p) {
         if (!RelluEssentials.getInstance().position.containsKey(p)) {
@@ -654,90 +626,47 @@ public class Modify implements CommandConstruct {
     }
 
     public DoubleStore<Selection, List<ModifyClipboardEntry>> rotate(@NotNull List<ModifyClipboardEntry> entries, @NotNull Selection selection) {
-        DoubleStore<Boolean, Boolean> orientation = determineOrientation(selection);
-
-        int zShift = 0;
-        int xShift = 0;
-
-        if(orientation.getValue() && orientation.getSecondValue()){
-            zShift += 0;
-        } else if(orientation.getValue()){
-            zShift += 0;
-            xShift += 0;
-        } else if(orientation.getSecondValue()){
-            zShift += 0;
-            xShift += 0;
-        }
-
-        int finalXShift = xShift;
-        int finalZShift = zShift;
         List<ModifyClipboardEntry> rotatedEntries = entries.stream()
                 .map(entry -> {
                     Location oldLocation = entry.getLocation();
-                    int newX = oldLocation.getBlockZ() + finalXShift;
-                    int newZ = -oldLocation.getBlockX() + finalZShift;
+                    int newX = oldLocation.getBlockZ();
+                    int newZ = -oldLocation.getBlockX();
                     int newY = oldLocation.getBlockY();
 
                     Location newLocation = new Location(oldLocation.getWorld(), newX, newY, newZ);
-
                     return new ModifyClipboardEntry(newLocation, entry.getMaterial(), entry.getData());
+                })
+                .toList();
+
+        int minX = rotatedEntries.stream().mapToInt(e -> e.getLocation().getBlockX()).min().orElse(0);
+        int minZ = rotatedEntries.stream().mapToInt(e -> e.getLocation().getBlockZ()).min().orElse(0);
+
+        List<ModifyClipboardEntry> normalizedEntries = rotatedEntries.stream()
+                .map(entry -> {
+                    Location loc = entry.getLocation();
+                    Location normalizedLoc = new Location(
+                            loc.getWorld(),
+                            loc.getBlockX() - minX,
+                            loc.getBlockY(),
+                            loc.getBlockZ() - minZ + 1
+                    );
+                    return new ModifyClipboardEntry(normalizedLoc, entry.getMaterial(), entry.getData());
                 })
                 .collect(Collectors.toList());
 
-        Selection rotatedSelection = getRotatedSelection(selection, zShift);
-        return new DoubleStore<>(rotatedSelection, rotatedEntries);
+        int maxX = normalizedEntries.stream().mapToInt(e -> e.getLocation().getBlockX()).max().orElse(0);
+        int maxZ = normalizedEntries.stream().mapToInt(e -> e.getLocation().getBlockZ()).max().orElse(0);
+        int minY = selection.getMinY();
+        int maxY = selection.getMaxY();
+
+        Location newPos1 = new Location(selection.getWorld(), 0, minY, 0,
+                selection.getPos1().getYaw(), selection.getPos1().getPitch());
+        Location newPos2 = new Location(selection.getWorld(), maxX, maxY, maxZ,
+                selection.getPos2().getYaw(), selection.getPos2().getPitch());
+
+        Selection rotatedSelection = new Selection(newPos1, newPos2);
+        return new DoubleStore<>(rotatedSelection, normalizedEntries);
     }
-
-    @Contract("_, _ -> new")
-    private static @NotNull Selection getRotatedSelection(@NotNull Selection selection, int zShift) {
-        Location newPos1 = new Location(
-                selection.getWorld(),
-                selection.getMinZ(),
-                selection.getMinY(),
-                -selection.getMaxX() + zShift,
-                selection.getPos1().getYaw(),
-                selection.getPos1().getPitch()
-        );
-
-        Location newPos2 = new Location(
-                selection.getWorld(),
-                selection.getMaxZ() + 1,
-                selection.getMaxY(),
-                -selection.getMinX() + zShift,
-                selection.getPos2().getYaw(),
-                selection.getPos2().getPitch()
-        );
-
-        return new Selection(newPos1, newPos2);
-    }
-
-    /**
-     *
-     * @param selection Selection
-     * @return DoubleStore<Boolean, Boolean>
-     *     <br>
-     *     if first = true X<br>
-     *     if second = true Z<br>
-     *     if both = true X = Z<br>
-     */
-    private static @NotNull DoubleStore<Boolean, Boolean> determineOrientation(@NotNull Selection selection) {
-        int xLength = selection.getMaxX() - selection.getMinX() + 1;
-        int zLength = selection.getMaxZ() - selection.getMinZ() + 1;
-
-        DoubleStore<Boolean, Boolean> result = new DoubleStore<>(false, false);
-
-        if (zLength > xLength) {
-            result.setSecondValue(true);
-        } else if (xLength > zLength) {
-            result.setValue(true);
-        } else {
-            result.setValue(true);
-            result.setSecondValue(true);
-        }
-
-        return result;
-    }
-
 
     private void undo(@NotNull ModifyHistoryEntry entry) {
         entry.getLocation().getBlock().setType(entry.getMaterial());
@@ -767,10 +696,10 @@ public class Modify implements CommandConstruct {
 
 
         if (strings.length == 2) {
-//            if (strings[0].equalsIgnoreCase(Commands.CLIPBOARD.getName())) {
-//                tabList.addAll(List.of(Commands.CLIPBOARD.getSubCommands()));
-//                return tabList;
-//            }
+            if (strings[0].equalsIgnoreCase(Commands.CLIPBOARD.getName())) {
+                tabList.addAll(List.of(Commands.CLIPBOARD.getSubCommands()));
+                return tabList;
+            }
 
             tabList.addAll(TabCompleterHelper.getMaterials(strings[1].isEmpty() ? null : strings[1]));
             return tabList;
@@ -787,4 +716,74 @@ public class Modify implements CommandConstruct {
 
         return tabList;
     }
+
+    private float normalizeYaw(float yaw) {
+        yaw = ((yaw % 360) + 360) % 360;
+        return Math.round(yaw / 90.0f) * 90.0f % 360.0f;
+    }
+
+    @Contract(pure = true)
+    private int @NonNull [] worldToLocal(int dx, int dz, float yaw) {
+        int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
+        return switch (roundedYaw) {
+            case 90 -> new int[]{-dz, dx};
+            case 180 -> new int[]{-dx, -dz};
+            case 270 -> new int[]{dz, -dx};
+            default -> new int[]{dx, dz};
+        };
+    }
+
+    @Contract(pure = true)
+    private int @NonNull [] relativeToWorld(int relX, int relZ, float yaw) {
+        int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
+        return switch (roundedYaw) {
+            case 90 -> new int[]{-relZ, relX};
+            case 180 -> new int[]{-relX, -relZ};
+            case 270 -> new int[]{relZ, -relX};
+            default -> new int[]{relX, relZ};
+        };
+    }
+
+    private @NonNull Block getBlock(@NonNull ModifyClipboardEntry entry, float yaw, @NonNull Location playerTargetLoc) {
+        int relX = entry.getLocation().getBlockX();
+        int relY = entry.getLocation().getBlockY();
+        int relZ = entry.getLocation().getBlockZ();
+
+        int[] world = relativeToWorld(relX, relZ, yaw);
+
+        Location newLoc = new Location(
+                playerTargetLoc.getWorld(),
+                playerTargetLoc.getBlockX() + world[0],
+                playerTargetLoc.getBlockY() + relY,
+                playerTargetLoc.getBlockZ() + world[1]
+        );
+        return newLoc.getBlock();
+    }
+
+    private @NonNull ModifyClipboardEntry getModifyClipboardEntry(Block block, Player p, Location playerTargetLoc) {
+        float yaw = normalizeYaw(p.getLocation().getYaw());
+
+        Location relLoc = new Location(
+                block.getWorld(),
+                block.getX() - playerTargetLoc.getBlockX(),
+                block.getY() - playerTargetLoc.getBlockY(),
+                block.getZ() - playerTargetLoc.getBlockZ()
+        );
+
+        int[] local = worldToLocal(relLoc.getBlockX(), relLoc.getBlockZ(), yaw);
+        Location localLoc = new Location(block.getWorld(), local[0], relLoc.getBlockY(), local[1]);
+        return new ModifyClipboardEntry(localLoc, block.getType(), block.getBlockData());
+    }
+
+    private static @NotNull Selection getRelativeCopySelection(@NotNull Selection selection, Location playerTargetLoc) {
+        Location pos1 = selection.getPos1().clone().subtract(playerTargetLoc);
+        Location pos2 = selection.getPos2().clone().subtract(playerTargetLoc);
+        pos1.setYaw(playerTargetLoc.getYaw());
+        pos1.setPitch(playerTargetLoc.getPitch());
+        pos2.setYaw(playerTargetLoc.getYaw());
+        pos2.setPitch(playerTargetLoc.getPitch());
+        return new Selection(pos1, pos2);
+    }
+
+
 }
