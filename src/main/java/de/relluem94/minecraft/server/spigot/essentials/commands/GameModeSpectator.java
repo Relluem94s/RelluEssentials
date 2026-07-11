@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -30,12 +31,10 @@ public class GameModeSpectator implements CommandConstruct {
         return new CommandsEnum[0];
     }
 
-    private static final String LANG_KEY = "PLUGIN_COMMAND_GAMEMODE";
-
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String[] args) {
         if (!Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
-            sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
@@ -62,8 +61,7 @@ public class GameModeSpectator implements CommandConstruct {
 
     private void gameMode(@NotNull Player p) {
         p.setGameMode(GameMode.SPECTATOR);
-        p.sendMessage(PLUGIN_FORMS_COMMAND_PREFIX + String.format(getText(p.getLocale(), LANG_KEY), p.getCustomName() + PLUGIN_COLOR_COMMAND, PLUGIN_COLOR_COMMAND_NAME + PLUGIN_COMMAND_NAME_GAME_MODE_3_NAME + PLUGIN_COLOR_COMMAND));
-    }
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(), PLUGIN_COMMAND_NAME_GAME_MODE_3_NAME));    }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {

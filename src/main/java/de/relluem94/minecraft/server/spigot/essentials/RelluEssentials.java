@@ -18,12 +18,11 @@ import java.util.Calendar;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.UUID;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
@@ -106,6 +105,7 @@ public class RelluEssentials extends JavaPlugin {
     public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
     public final Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
     public final Map<Player, DoubleStore<Location,Location>> position = new HashMap<>();
+    public static LanguageHelper languageHelper;
 
 
     public static final List<CommandWrapper> commandWrapperList = List.of(
@@ -214,6 +214,13 @@ public class RelluEssentials extends JavaPlugin {
         new WorldManager().enable();
         new GroupManager().enable();
         new PositionHighlightManager().enable();
+
+        RelluEssentials.languageHelper = new LanguageHelper(this);
+        RelluEssentials.languageHelper.loadLanguages();
+
+        String lang = getConfig().getString("language", "en_US");
+        RelluEssentials.languageHelper.setDefaultLanguage(lang);
+
         dm.afterWorldLoaded();
     }
 
@@ -225,13 +232,6 @@ public class RelluEssentials extends JavaPlugin {
         new WorldManager().disable();
         new CleanUpManager().disable();
         new ConfigManager().disable();
-    }
-
-    public static String getText(String language, String key) {
-        if (language.equals("de_DE")) {
-            return ResourceBundle.getBundle("lang", new Locale("de", "DE")).getString(key);
-        }
-        return ResourceBundle.getBundle("lang", new Locale("en", "US")).getString(key);
     }
 
     private void startLoading() {

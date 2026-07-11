@@ -1,12 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
-
 import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import lombok.NonNull;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -32,12 +30,13 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.utils.NetworkUtils;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+
 /**
  *
  * @author rellu
  */
 public class PlayerHelper {
-
     private PlayerHelper() {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
@@ -74,7 +73,14 @@ public class PlayerHelper {
         }
 
         if (!join) {
-            Bukkit.broadcastMessage(PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_COMMAND + String.format(getText(p.getLocale(), !isAFK ? "PLUGIN_COMMAND_AFK_ACTIVATED" : "PLUGIN_COMMAND_AFK_DEACTIVATED"), p.getCustomName() + "§f", !isAFK ? "§c" : "§a"));
+            Bukkit.broadcastMessage(
+                    languageHelper.getWithPrefix(
+                            !isAFK ? MessageKey.COMMAND_AFK_ACTIVATED : MessageKey.COMMAND_AFK_DEACTIVATED,
+                            p.getLocale(),
+                            p.getCustomName() + "§f",
+                            !isAFK ? "§c" : "§a"
+                    )
+            );
             isAFK = !isAFK; // Invert for single invertion ^_^
         }
 
