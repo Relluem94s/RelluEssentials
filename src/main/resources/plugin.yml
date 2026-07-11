@@ -174,3 +174,6 @@ commands:
     playerweather:
       description: Changes the Weather just for you
       usage: /playerweather
+    list:
+      description: Shows all Players and ther rank
+      usage: /list
