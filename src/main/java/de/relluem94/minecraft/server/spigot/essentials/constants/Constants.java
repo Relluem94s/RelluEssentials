@@ -60,40 +60,14 @@ public interface Constants {
 
     String PLUGIN_SIGN_NAME = PLUGIN_COLOR_MESSAGE + "[" + PLUGIN_NAME_SHORT + "]";
     String PLUGIN_SIGN_CLICK = PLUGIN_COLOR_MESSAGE + "[Click here]";
-    
-    String PLUGIN_MANAGER_START_MESSAGE = "starts configuring ...";
-    String PLUGIN_MANAGER_STOP_MESSAGE = "shutdown();";
-    String PLUGIN_MANAGER_START_TIME_MESSAGE = "wurde in %s ms gestartet!";
-    String PLUGIN_MANAGER_REGISTER_SKILLS = "Registriere Skills!";
-    String PLUGIN_MANAGER_SKILLS_REGISTERED = "Skills erfolgreich registriert!";
-    String PLUGIN_MANAGER_LOADING_CONFIGS = "Configs werden geladen!";
-    String PLUGIN_MANAGER_CONFIGS_LOADED = "Configs sind geladen!";
-    String PLUGIN_MANAGER_REGISTER_EVENTS = "Registriere Events!";
-    String PLUGIN_MANAGER_EVENTS_REGISTERED = "%s Events erfolgreich registriert!";
-    String PLUGIN_MANAGER_REGISTER_RECIPE = "Registriere Rezepte!";
-    String PLUGIN_MANAGER_RECIPE_REGISTERED = "%s Rezepte erfolgreich registriert!";
-    String PLUGIN_MANAGER_REGISTER_COMMANDS = "Registriere Befehle!";
-    String PLUGIN_MANAGER_COMMANDS_REGISTERED = "%s Befehle erfolgreich registriert!";
-    String PLUGIN_MANAGER_REGISTER_AUTOSAVE = "Registriere Auto Save!";
-    String PLUGIN_MANAGER_AUTOSAVE_REGISTERED = "Auto Save erfolgreich registriert!";
 
     String PLUGIN_INTERNAL_UTILITY_CLASS = "This is a Utility Class";
-
-    String PLUGIN_FOLDER_MKDIR_ERROR = "Couldn't create the Plugin Folder";
 
     
 
     /* ******************************************************************************* */
     /*                              COMMAND   STUFF                                    */
     /* ******************************************************************************* */
-    String PLUGIN_COMMAND_FLYMODE = PLUGIN_FORMS_COMMAND_PREFIX + "Der Flugmodus von %s" + PLUGIN_COLOR_COMMAND + " wurde " + PLUGIN_COLOR_COMMAND_ARG + "%s!";
-    String PLUGIN_COMMAND_FLYMODE_ACTIVATED = "aktiviert";
-    String PLUGIN_COMMAND_FLYMODE_DEACTIVATED = "deaktiviert";
-
-    String PLUGIN_COMMAND_NAME_GAME_MODE_0_NAME = "Survival";
-    String PLUGIN_COMMAND_NAME_GAME_MODE_1_NAME = "Creative";
-    String PLUGIN_COMMAND_NAME_GAME_MODE_2_NAME = "Adventure";
-    String PLUGIN_COMMAND_NAME_GAME_MODE_3_NAME = "Spectator";
 
     String PLUGIN_COMMAND_ADMIN_INFO_VERSION = PLUGIN_FORMS_COMMAND_PREFIX + "§7Plugin Version: §a%s";
     String PLUGIN_COMMAND_ADMIN_INFO_INTEGRATIONS_NONE = PLUGIN_FORMS_COMMAND_PREFIX + "§7Integrations: §cNone";
@@ -126,31 +100,9 @@ public interface Constants {
 
     String PLUGIN_COMMAND_GAMERULES = PLUGIN_FORMS_COMMAND_PREFIX + "Die Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "hat folgende Einstellungen:";
 
-    String PLUGIN_COMMAND_HOME = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "an den Bett Spawn teleportiert!";
-    String PLUGIN_COMMAND_HOME_TP = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest zu " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "teleportiert!";
-    String PLUGIN_COMMAND_HOME_NONE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast kein Home!";
-
-    String PLUGIN_COMMAND_HOME_LIST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast folgende Homes:";
-    String PLUGIN_COMMAND_HOME_LIST_NAME =  PLUGIN_COLOR_COMMAND + "Name: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + " §7(" + PLUGIN_COLOR_COMMAND_ARG + "%s§7)";
-    String PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast folgende Todespunkte:";
-    String PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME =  PLUGIN_COLOR_COMMAND + "Todespunkt: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + " §7(" + PLUGIN_COLOR_COMMAND_ARG + "%s§7)";
-
-    String PLUGIN_COMMAND_HOME_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast kein Home mit dem Namen " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "!";
-    String PLUGIN_COMMAND_HOME_EXISTS = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast bereits ein Home mit dem Namen " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "!";
-    String PLUGIN_COMMAND_HOME_RESERVED = PLUGIN_FORMS_COMMAND_PREFIX + "Du kannst kein Home mit dem Namen " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " speichern!";
-    String PLUGIN_COMMAND_HOME_NO_BED = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast kein Bett in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " an das du teleportiert werden kannst!";
-    String PLUGIN_COMMAND_HOME_SET = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast dein Home " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "gesetzt!";
-    String PLUGIN_COMMAND_HOME_DELETE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast dein Home " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "gelöscht!";
-    String PLUGIN_COMMAND_HOME_DEATH_DELETE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast dein Todespunkt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "gelöscht!";
-
     String PLUGIN_COMMAND_SUN = PLUGIN_FORMS_COMMAND_PREFIX + "Du lässt die Sonne in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "scheinen!";
-    String PLUGIN_COMMAND_SUN_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Die Sonne die Sonne scheint nur für dich!";
-
     String PLUGIN_COMMAND_RAIN = PLUGIN_FORMS_COMMAND_PREFIX + "Du lässt es in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " regnen!";
-    String PLUGIN_COMMAND_RAIN_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Es regnet nur für dich!";
-
     String PLUGIN_COMMAND_STORM = PLUGIN_FORMS_COMMAND_PREFIX + "Du lässt es in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " gewittern!";
-
     String PLUGIN_COMMAND_DAY = PLUGIN_FORMS_COMMAND_PREFIX + "Es ist jetzt Tag in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "!";
 
     String PLUGIN_COMMAND_GOD_ON = PLUGIN_FORMS_COMMAND_PREFIX + "Du bist der Gott!";

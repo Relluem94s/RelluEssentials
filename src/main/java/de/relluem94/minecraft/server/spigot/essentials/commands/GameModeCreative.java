@@ -60,7 +60,7 @@ public class GameModeCreative implements CommandConstruct {
 
     private void gameMode(@NotNull Player p) {
         p.setGameMode(org.bukkit.GameMode.CREATIVE);
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(), PLUGIN_COMMAND_NAME_GAME_MODE_1_NAME));
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(), languageHelper.get(MessageKey.COMMAND_GAMEMODE_CREATIVE)));
     }
 
     @Override

@@ -91,7 +91,7 @@ public class LanguageHelper {
         }
 
         public String get(MessageKey key, Object... args) {
-            return String.format(get(key), args);
+            return String.format(applyColors(get(key)), args);
         }
 
         public String get(MessageKey key, String language, Object... args) {
@@ -103,7 +103,7 @@ public class LanguageHelper {
         }
 
         public String getWithPrefix(MessageKey key, Object... args) {
-            return Constants.PLUGIN_FORMS_COMMAND_PREFIX + applyColors(get(key, args));
+            return Constants.PLUGIN_FORMS_COMMAND_PREFIX + get(key, args);
         }
 
         private @NonNull String applyColors(@NonNull String text) {

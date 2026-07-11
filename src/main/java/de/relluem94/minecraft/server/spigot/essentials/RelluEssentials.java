@@ -2,9 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_BORDER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_START_TIME_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_START_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_STOP_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_WORLD;
@@ -22,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
@@ -188,6 +186,12 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        RelluEssentials.languageHelper = new LanguageHelper(this);
+        RelluEssentials.languageHelper.loadLanguages();
+
+        String lang = getConfig().getString("language", "en_US");
+        RelluEssentials.languageHelper.setDefaultLanguage(lang);
+
         startLoading();
         new ConfigManager().enable();
         new ScoreBoardManager().enable();
@@ -215,18 +219,12 @@ public class RelluEssentials extends JavaPlugin {
         new GroupManager().enable();
         new PositionHighlightManager().enable();
 
-        RelluEssentials.languageHelper = new LanguageHelper(this);
-        RelluEssentials.languageHelper.loadLanguages();
-
-        String lang = getConfig().getString("language", "en_US");
-        RelluEssentials.languageHelper.setDefaultLanguage(lang);
-
         dm.afterWorldLoaded();
     }
 
     @Override
     public void onDisable() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_MANAGER_STOP_MESSAGE);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
         new SudoManager().disable();
         new AutoSaveManager().disable();
         new WorldManager().disable();
@@ -239,13 +237,13 @@ public class RelluEssentials extends JavaPlugin {
         start = Calendar.getInstance().getTimeInMillis();
         consoleSendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_MANAGER_START_MESSAGE);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     }
 
     private void stopLoading() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_START_TIME_MESSAGE, Calendar.getInstance().getTimeInMillis() - start));
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE, Calendar.getInstance().getTimeInMillis() - start));
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
         consoleSendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
     }

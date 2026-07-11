@@ -61,7 +61,7 @@ public class GameModeSpectator implements CommandConstruct {
 
     private void gameMode(@NotNull Player p) {
         p.setGameMode(GameMode.SPECTATOR);
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(), PLUGIN_COMMAND_NAME_GAME_MODE_3_NAME));    }
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(), languageHelper.get(MessageKey.COMMAND_GAMEMODE_SPECTATOR)));    }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {

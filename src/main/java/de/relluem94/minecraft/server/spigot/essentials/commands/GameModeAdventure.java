@@ -61,7 +61,7 @@ public class GameModeAdventure implements CommandConstruct {
 
     private void gameMode(@NotNull Player p) {
         p.setGameMode(GameMode.ADVENTURE);
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(), PLUGIN_COMMAND_NAME_GAME_MODE_2_NAME));
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(), languageHelper.get(MessageKey.COMMAND_GAMEMODE_ADVENTURE)));
     }
 
     @Override

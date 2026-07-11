@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Back;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 
 public class TeleportHelper {
@@ -34,7 +36,7 @@ public class TeleportHelper {
 
     public static void teleportBed(@NotNull Player p, boolean silent){
         if (p.getRespawnLocation() == null) {
-            p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO_BED, p.getWorld().getName()));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_NO_BED, p.getWorld().getName()));
         }
 
         Location spawn = p.getRespawnLocation();
@@ -44,13 +46,13 @@ public class TeleportHelper {
             return;
         }
 
-        addBackPointAndTeleport(PLUGIN_COMMAND_HOME, p, w, silent, spawn);
+        addBackPointAndTeleport(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME), p, w, silent, spawn);
     }
 
 
     public static void teleportHome(@NotNull Player p, LocationEntry locationEntry){
         if (p.getRespawnLocation() == null) {
-            p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO_BED, p.getWorld().getName()));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_NO_BED, p.getWorld().getName()));
         }
 
         Location home = locationEntry.getLocation();
@@ -61,7 +63,7 @@ public class TeleportHelper {
         }
 
         addBackPointAndTeleport("", p, w, true, home);
-        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_TP, locationEntry.getLocationName()));
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_TP, locationEntry.getLocationName()));
     }
 
     public static void teleportBack(Player p, @NotNull Location location){

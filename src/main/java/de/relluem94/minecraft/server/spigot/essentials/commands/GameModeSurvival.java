@@ -63,7 +63,7 @@ public class GameModeSurvival implements CommandConstruct {
     private void gameMode(@NotNull Player p) {
         p.setGameMode(GameMode.SURVIVAL);
         PlayerHelper.setFlying(p);
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(), PLUGIN_COMMAND_NAME_GAME_MODE_0_NAME));
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(), languageHelper.get(MessageKey.COMMAND_GAMEMODE_SURVIVAL)));
     }
 
     @Override

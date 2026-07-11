@@ -1,11 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportBed;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportHome;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -55,14 +56,14 @@ public class Home implements CommandConstruct {
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label, String @NotNull [] args) {
         if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
@@ -75,87 +76,81 @@ public class Home implements CommandConstruct {
             case 1:
                 if (args[0].equalsIgnoreCase(Commands.LIST.getName())) {
                     if (!pe.getHomes().isEmpty()) {
-                        p.sendMessage(PLUGIN_COMMAND_HOME_LIST);
-                        pe.getHomes().forEach(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_LIST));
+                        pe.getHomes().forEach(fle -> p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_LIST_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
                     } else {
-                        p.sendMessage(PLUGIN_COMMAND_HOME_NONE);
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_NONE));
                     }
 
-                    if(!pe.getDeaths().isEmpty()){
-                        p.sendMessage(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS);
-                        pe.getDeaths().forEach(fle -> p.sendMessage(String.format(PLUGIN_COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
+                    if (!pe.getDeaths().isEmpty()) {
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS));
+                        pe.getDeaths().forEach(fle -> p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS_NAME, fle.getLocationName(), locationToString(fle.getLocation()))));
                     }
                 } else {
-                    p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
                 }
                 return true;
             case 2:
                 LocationEntry le = new LocationEntry();
                 le.setLocation(p.getLocation());
                 le.setLocationName(args[1]);
-                le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
+                le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.getFirst());
                 le.setPlayerId(pe.getId());
 
                 if (args[0].equalsIgnoreCase(Commands.SET.getName())) {
                     if (homeExists(pe, le)) {
-                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_EXISTS, args[1]));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_EXISTS, args[1]));
                     } else if (!args[1].startsWith("death_")) {
                         RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
                         pe.getHomes().add(le);
-                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_SET, args[1]));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_SET, args[1]));
                     } else {
-                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_RESERVED, args[1]));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_RESERVED, args[1]));
                     }
                     return true;
                 } else if (args[0].equalsIgnoreCase(Commands.DELETE.getName())) {
                     if (homeExists(pe, le)) {
                         le = getLocationEntry(pe, le);
-
                         pe.getHomes().remove(le);
-                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DELETE, args[1]));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_DELETE, args[1]));
 
-                        if(le == null){
+                        if (le == null) {
                             return true;
                         }
 
                         RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
                         return true;
-                    }
-                    else if(deathExists(pe, le)){
+                    } else if (deathExists(pe, le)) {
                         le = getLocationEntry(pe, le);
                         pe.getDeaths().remove(le);
-                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, args[1]));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_DEATH_DELETE, args[1]));
 
-                        if(le == null){
+                        if (le == null) {
                             return true;
                         }
 
                         RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
                         return true;
-                    }
-                    else if(le.getLocationName().startsWith("death_") && le.getLocationName().contains("*")){
-                        for(LocationEntry dle : pe.getDeaths()){
-                            p.sendMessage(String.format(PLUGIN_COMMAND_HOME_DEATH_DELETE, dle.getLocationName()));
+                    } else if (le.getLocationName().startsWith("death_") && le.getLocationName().contains("*")) {
+                        for (LocationEntry dle : pe.getDeaths()) {
+                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_DEATH_DELETE, dle.getLocationName()));
                             RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(dle);
                         }
-
                         pe.getDeaths().clear();
                         return true;
-                    }
-                    else {
-                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[1]));
+                    } else {
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
                         return true;
                     }
-                }
-                else if(args[0].equalsIgnoreCase(Commands.TP.getName())){
+                } else if (args[0].equalsIgnoreCase(Commands.TP.getName())) {
                     le.setLocationName(args[1]);
-                    le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(0));
+                    le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.getFirst());
                     le.setPlayerId(pe.getId());
 
                     if (homeExists(pe, le) || deathExists(pe, le)) {
                         teleportHome(p, getLocationEntry(pe, le));
                     } else {
-                        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NOT_FOUND, args[1]));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
                     }
                     return true;
                 }
@@ -165,6 +160,7 @@ public class Home implements CommandConstruct {
         }
         return false;
     }
+
 
     private boolean homeExists(@NotNull PlayerEntry pe, LocationEntry le) {
         return pe.getHomes().stream().anyMatch(fle -> (fle.getLocationName().equals(le.getLocationName())));
