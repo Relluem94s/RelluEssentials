@@ -172,7 +172,16 @@ public enum MessageKey {
     COMMAND_WARP_ERROR_WORLD_UNLOADED("command.warp.error_world_unloaded"),
     COMMAND_WARP_ERROR_NO_WARP_FOUND("command.warp.error_no_warp_found"),
     COMMAND_WARP_ADD("command.warp.add"),
-    COMMAND_WARP_REMOVE("command.warp.remove");
+    COMMAND_WARP_REMOVE("command.warp.remove"),
+
+    COMMAND_WORLD_INFO("command.world.info"),
+    COMMAND_WORLD_CREATE_INFO("command.world.create_info"),
+    COMMAND_WORLD_NOT_LOADED("command.world.not_loaded"),
+    COMMAND_WORLD_UNLOAD("command.world.unload"),
+    COMMAND_WORLD_UNLOAD_NO_SAVE("command.world.unload_no_save"),
+    COMMAND_WORLD_LOAD("command.world.load"),
+    COMMAND_WORLD_CREATE("command.world.create"),
+    COMMAND_WORLD_WRONG_ARGUMENTS("command.world.wrong_arguments");
 
 
     private final String key;

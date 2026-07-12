@@ -1,19 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_CREATE_INFO;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_CREATE_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_INFO;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_LOAD_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_UNLOAD_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
@@ -51,6 +37,11 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
+
 @CommandName("world")
 public class Worlds implements CommandConstruct {
 
@@ -60,8 +51,8 @@ public class Worlds implements CommandConstruct {
             BlockCommandSender bcs = (BlockCommandSender) sender;
             CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
             Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
-            if(p == null){
-                sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, "No Player in Reach"));
+            if (p == null) {
+                sender.sendMessage(String.format(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER), "No Player in Reach"));
                 return true;
             }
 
@@ -69,76 +60,72 @@ public class Worlds implements CommandConstruct {
             return true;
         }
 
-        if(!isPlayer(sender)){
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+        if (!isPlayer(sender)) {
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
-        if(args.length == 0){
-            p.sendMessage(PLUGIN_COMMAND_WORLD_INFO);
+        if (args.length == 0) {
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_INFO));
             openWorldMenu(p);
             return true;
         }
 
-        if(args.length == 1){
+        if (args.length == 1) {
             if (!args[0].equalsIgnoreCase(Commands.LIST.getName())) {
                 teleportWorld(p, args[0]);
                 return true;
             }
 
             if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
                 return true;
             }
 
-            sendMessage(p, PLUGIN_COMMAND_WORLD);
+            sendMessage(p, languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_INFO));
             Bukkit.getWorlds().forEach(w -> sendMessage(p, w.getName()));
             return true;
         }
 
         if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
-        if(args.length == 2){
-            if(Commands.LOAD.getName().equalsIgnoreCase(args[0])){
+        if (args.length == 2) {
+            if (Commands.LOAD.getName().equalsIgnoreCase(args[0])) {
                 WorldHelper.loadWorld(args[1]);
-                p.sendMessage(PLUGIN_COMMAND_WORLD_LOAD_WORLD);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_LOAD));
                 return true;
-            }
-            else if(Commands.UNLOAD.getName().equalsIgnoreCase(args[0])){
+            } else if (Commands.UNLOAD.getName().equalsIgnoreCase(args[0])) {
                 unloadWorld(p, args[1], true);
                 return true;
-            }
-            else if(Commands.UNLOAD_NO_SAVE.getName().equalsIgnoreCase(args[0])){
+            } else if (Commands.UNLOAD_NO_SAVE.getName().equalsIgnoreCase(args[0])) {
                 unloadWorld(p, args[1], false);
                 return true;
-            }
-            else if(Commands.CREATE.getName().equalsIgnoreCase(args[0])){
-                p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_INFO);
+            } else if (Commands.CREATE.getName().equalsIgnoreCase(args[0])) {
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE_INFO));
                 return true;
-            }
-            else{
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+            } else {
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
                 return true;
             }
         }
 
-        if(args.length > 5){
-            p.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+        if (args.length > 5) {
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
             return true;
         }
 
         if (!args[0].equalsIgnoreCase(Commands.CREATE.getName())) {
-            p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
             return true;
         }
 
@@ -146,34 +133,33 @@ public class Worlds implements CommandConstruct {
         return true;
     }
 
-    private boolean isValidWorldEnvironment(String input){
+    private boolean isValidWorldEnvironment(String input) {
         return Arrays.stream(World.Environment.values())
                 .filter(env -> env.name().equalsIgnoreCase(input))
                 .findFirst()
                 .orElse(null) != null;
     }
 
-    private void createWorld(Player p, String @NotNull [] args){
-        if((WorldType.getByName(args[2].toUpperCase()) != null) && isValidWorldEnvironment(args[3]) && (Boolean.parseBoolean(args[4]))){
+    private void createWorld(Player p, String @NotNull [] args) {
+        if ((WorldType.getByName(args[2].toUpperCase()) != null) && isValidWorldEnvironment(args[3]) && (Boolean.parseBoolean(args[4]))) {
             WorldType type = WorldType.getByName(args[2].toUpperCase());
             World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
             boolean structures = Boolean.parseBoolean(args[4]);
             WorldHelper.createWorld(args[1], type, worldEnvironment, structures);
-            p.sendMessage(PLUGIN_COMMAND_WORLD_CREATE_WORLD);
-        }
-        else{
-            p.sendMessage(PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE));
+        } else {
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_WRONG_ARGUMENTS));
         }
     }
 
-    private void unloadWorld(@NotNull Player p, String name, boolean save){
+    private void unloadWorld(@NotNull Player p, String name, boolean save) {
         try {
             WorldHelper.unloadWorld(name, save);
-            p.sendMessage(save ? PLUGIN_COMMAND_WORLD_UNLOAD_WORLD : PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE);
-            
-        }
-        catch (WorldNotLoadedException ex) {
-                Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED, ex);
+            p.sendMessage(save
+                    ? languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD)
+                    : languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE));
+        } catch (WorldNotLoadedException ex) {
+            Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE, languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED), ex);
         }
     }
 

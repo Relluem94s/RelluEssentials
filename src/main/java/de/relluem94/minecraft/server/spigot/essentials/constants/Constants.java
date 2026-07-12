@@ -119,7 +119,6 @@ public interface Constants {
     String PLUGIN_COMMAND_RENAME_AIR = PLUGIN_FORMS_COMMAND_PREFIX + "Du kannst Luft nicht umbenennen! ";
     String PLUGIN_COMMAND_RENAME = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast dein Gegenstand umbenannt!";
 
-    String PLUGIN_COMMAND_WORLD = PLUGIN_FORMS_COMMAND_PREFIX + "Folgende Welten gibt es:";
     String PLUGIN_COMMAND_WORLD_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Die Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " existiert nicht";
 
     String PLUGIN_COMMAND_POKE = PLUGIN_FORMS_COMMAND_PREFIX + "Nutze /poke " + PLUGIN_COLOR_COMMAND_ARG + "<Name>" + PLUGIN_COLOR_COMMAND + " um einen Spieler anzustubsen";
@@ -152,22 +151,12 @@ public interface Constants {
     String PLUGIN_COMMAND_SIGN_COPY = PLUGIN_FORMS_COMMAND_PREFIX + "Click the Sign you want to copy";
     String PLUGIN_COMMAND_SIGN_EDIT = PLUGIN_FORMS_COMMAND_PREFIX + "Click the Sign you want to edit";
 
-    String PLUGIN_COMMAND_WORLD_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use this command with the following Subcommands: list load unload unloadNoSave";
-    String PLUGIN_COMMAND_WORLD_CREATE_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use this command with the following arguments: name(String) type(WordType String) environment (Environment as String) structures (boolean)";
-    String PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED = "World not loaded. Can't unload this World.";
-    String PLUGIN_COMMAND_WORLD_UNLOAD_WORLD = PLUGIN_FORMS_COMMAND_PREFIX + "World get's saved and unloaded.";
-    String PLUGIN_COMMAND_WORLD_UNLOAD_WORLD_NO_SAVE = PLUGIN_FORMS_COMMAND_PREFIX + "World get's unloaded without saving it.";
-    String PLUGIN_COMMAND_WORLD_LOAD_WORLD = PLUGIN_FORMS_COMMAND_PREFIX + "World get's loaded.";
-    String PLUGIN_COMMAND_WORLD_CREATE_WORLD = PLUGIN_FORMS_COMMAND_PREFIX + "World get's created.";
-    String PLUGIN_COMMAND_WORLD_WRONG_ARGUMENTS = PLUGIN_FORMS_COMMAND_PREFIX + "Can't create World, wrong parameters given!";
-
     String PLUGIN_COMMAND_SUDO_ACTIVATED = PLUGIN_FORMS_COMMAND_PREFIX + "You are now sudoing %s";
     String PLUGIN_COMMAND_SUDO_DEACTIVATED = PLUGIN_FORMS_COMMAND_PREFIX + "Exited.";
     String PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Can't Sudo Player " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + ". Player not found!";
 
     String PLUGIN_COMMAND_EXIT_KICK_MESSAGE = PLUGIN_COLOR_COMMAND + "exited.";
     String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COLOR_COMMAND + "Server is shutting down...";
-
 
     String PLUGIN_BAG_AMOUNT = "Amount: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     String PLUGIN_BAG_RETRIEVE = "Click to retrieve";
