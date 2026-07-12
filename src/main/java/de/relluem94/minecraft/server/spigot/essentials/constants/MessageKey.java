@@ -190,7 +190,10 @@ public enum MessageKey {
     COMMAND_TIME_DAY("command.time.day"),
     COMMAND_TIME_NIGHT("command.time.night"),
     COMMAND_HEAL("command.heal"),
-    COMMAND_GAMERULES("command.gamerules");
+    COMMAND_GAMERULES("command.gamerules"),
+    COMMAND_REPAIR("command.repair"),
+    COMMAND_CANNOT_REPAIR("command.cannot_repair"),
+    COMMAND_REPAIR_PLAYER("command.repair.player");
 
 
     private final String key;
