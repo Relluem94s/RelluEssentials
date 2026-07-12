@@ -60,11 +60,10 @@ public class Purse implements CommandConstruct {
             if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
                 p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
-                return true;
             } else {
                 p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-                return true;
             }
+            return true;
         }
 
         if (!TypeHelper.isInt(args[0])) {
@@ -103,6 +102,10 @@ public class Purse implements CommandConstruct {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        return List.of();
+        if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) return List.of();
+
+        return Bukkit.getOnlinePlayers().stream()
+                .map(Player::getName)
+                .toList();
     }
 }
