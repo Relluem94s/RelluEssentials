@@ -168,7 +168,6 @@ public interface Constants {
     String PLUGIN_COMMAND_EXIT_KICK_MESSAGE = PLUGIN_COLOR_COMMAND + "exited.";
     String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COLOR_COMMAND + "Server is shutting down...";
 
-    String PLUGIN_GRAPPLING_HOOK_COOLDOWN = PLUGIN_COLOR_NEGATIVE + "Please Slow down..";
 
     String PLUGIN_BAG_AMOUNT = "Amount: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     String PLUGIN_BAG_RETRIEVE = "Click to retrieve";

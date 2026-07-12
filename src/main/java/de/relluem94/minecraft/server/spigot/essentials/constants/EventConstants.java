@@ -16,10 +16,6 @@ public interface EventConstants {
     String PLUGIN_EVENT_DEATH = PLUGIN_FORMS_COMMAND_PREFIX + "Du starbst bei " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + PLUGIN_COMMAND_WHERE_STRING + PLUGIN_COLOR_COMMAND;
     String PLUGIN_EVENT_DEATH_TP = PLUGIN_FORMS_COMMAND_PREFIX + "Klicke diese Nachricht um dich zum Todespunkt zu teleportieren!";
 
-    String PLUGIN_EVENT_SKILL_REPAIR_DONE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast den Gegenstand repariert!";
-    String PLUGIN_EVENT_SKILL_REPAIR_WARNING = PLUGIN_FORMS_COMMAND_PREFIX + "Du benötigst mehr" + PLUGIN_COLOR_COMMAND_ARG + " %s " + PLUGIN_COLOR_COMMAND + "um diesen Gegenstand zu reparieren!";
-    String PLUGIN_EVENT_SKILL_SALVAGE_DONE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast" + PLUGIN_COLOR_COMMAND_ARG + " %s " + PLUGIN_COLOR_COMMAND + "erhalten!";
-    
     String PLUGIN_EVENT_SKULL_INFO_SPACER = "§8~~~~~~~~~~~~~~~~~~~~~~~";
     
     String PLUGIN_EVENT_NO_DEATH_MESSAGE = "death_%s";
@@ -117,6 +113,8 @@ public interface EventConstants {
 
     String INTEGRATION_REGISTERED = "Integration found: %s  " + PLUGIN_COLOR_COMMAND_ARG + "v%s";
     String INTEGRATION_UNREGISTERED = "Integration removed: ";
+
+    String PLUGIN_GRAPPLING_HOOK_COOLDOWN = PLUGIN_COLOR_NEGATIVE + "Please Slow down..";
 
     String PLUGIN_EVENT_POSITION_AXE_FIRST_RESET = PLUGIN_FORMS_COMMAND_PREFIX + "First position reset.";
     String PLUGIN_EVENT_POSITION_AXE_SECOND_RESET = PLUGIN_FORMS_COMMAND_PREFIX + "Second position reset.";
