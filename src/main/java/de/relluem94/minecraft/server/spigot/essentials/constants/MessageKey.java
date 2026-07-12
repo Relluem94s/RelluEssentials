@@ -201,7 +201,12 @@ public enum MessageKey {
     COMMAND_POKE_TITLE("command.poke.title"),
     COMMAND_POKE_SUBTITLE("command.poke.subtitle"),
     COMMAND_POKE_MESSAGE_TARGET("command.poke.message_target"),
-    COMMAND_POKE_MESSAGE_SENDER("command.poke.message_sender");
+    COMMAND_POKE_MESSAGE_SENDER("command.poke.message_sender"),
+    COMMAND_MSG_PLAYER_OFFLINE("command.msg.player_offline"),
+    COMMAND_MSG_NO_ONE_TO_REPLY("command.msg.no_one_to_reply"),
+    COMMAND_MSG_SPACER_IN("command.msg.spacer_in"),
+    COMMAND_MSG_SPACER_OUT("command.msg.spacer_out"),
+    COMMAND_MSG_INFO("command.msg.info");
 
 
     private final String key;

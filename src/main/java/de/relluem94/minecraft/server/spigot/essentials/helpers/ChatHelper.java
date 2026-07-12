@@ -1,8 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
-
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -10,14 +13,9 @@ import org.bukkit.entity.Player;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import static de.relluem94.rellulib.utils.StringUtils.implode;
 import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
-
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 
 /**
  *
@@ -121,8 +119,8 @@ public class ChatHelper {
         }
 
         if (Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-            target.sendMessage(p.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_IN + message);
-            p.sendMessage(target.getCustomName() + PLUGIN_COMMAND_MSG_SPACER_OUT + message);
+            target.sendMessage(p.getCustomName() + PLUGIN_FORMS_MSG_SPACER_IN + message);
+            p.sendMessage(target.getCustomName() + PLUGIN_FORMS_MSG_SPACER_OUT + message);
         } else {
             p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
         }
