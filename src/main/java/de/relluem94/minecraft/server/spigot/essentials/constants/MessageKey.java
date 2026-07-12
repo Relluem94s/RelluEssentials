@@ -201,7 +201,13 @@ public enum MessageKey {
     COMMAND_TEAM_TITLE("command.team.title"),
 
     COMMAND_GOD_ON("command.god.on"),
-    COMMAND_GOD_OFF("command.god.off");
+    COMMAND_GOD_OFF("command.god.off"),
+
+    COMMAND_WEATHER_SUN("command.weather.sun"),
+    COMMAND_WEATHER_RAIN("command.weather.rain"),
+    COMMAND_WEATHER_STORM("command.weather.storm"),
+    COMMAND_TIME_DAY("command.time.day"),
+    COMMAND_TIME_NIGHT("command.time.night");
 
 
     private final String key;
