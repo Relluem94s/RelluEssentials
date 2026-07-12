@@ -24,6 +24,8 @@ public enum MessageKey {
     COMMAND_INVALID("command.invalid"),
     COMMAND_PERMISSION_MISSING("command.permission_missing"),
     COMMAND_NOT_A_PLAYER("command.not_a_player"),
+    COMMAND_TARGET_NOT_A_PLAYER("command.target_not_a_player"),
+    COMMAND_NO_PLAYER_IN_REACH("command.no_player_in_reach"),
     COMMAND_TO_LESS_ARGUMENTS("command.to_less_arguments"),
     COMMAND_TO_MANY_ARGUMENTS("command.to_many_arguments"),
     COMMAND_WRONG_SUB_COMMAND("command.wrong_sub_command"),
@@ -111,8 +113,13 @@ public enum MessageKey {
     COMMAND_POSITION_SHIFT("command.position.shift"),
     COMMAND_POSITION_NEED_BOTH_POSITIONS("command.position.need_both_positions"),
     COMMAND_POSITION_EXPAND("command.position.expand"),
-    COMMAND_POSITION_DECREASE("command.position.decrease");
+    COMMAND_POSITION_DECREASE("command.position.decrease"),
 
+    COMMAND_COOKIES("command.cookies"),
+    COMMAND_COOKIES_PLAYER("command.cookies.player"),
+    COMMAND_COOKIES_LORE_1("command.cookies.lore_1"),
+    COMMAND_COOKIES_LORE_3("command.cookies.lore_3"),
+    COMMAND_COOKIES_DISPLAYNAME("command.cookies.displayname");
 
     private final String key;
     MessageKey(String key) {

@@ -71,12 +71,6 @@ public interface Constants {
 
     String PLUGIN_COMMAND_CRAFTINGBENCH = PLUGIN_FORMS_COMMAND_PREFIX + "Die Werkbank von %s" + PLUGIN_COLOR_COMMAND + " wurde geöffnet!";
 
-    String PLUGIN_COMMAND_COOKIES = PLUGIN_FORMS_COMMAND_PREFIX + "Ein Keks für dich, %s";
-    String PLUGIN_COMMAND_COOKIES_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast %s " + PLUGIN_COLOR_COMMAND + "ein Keks geschenkt!";
-    String PLUGIN_COMMAND_COOKIES_LORE_1 = PLUGIN_COLOR_COMMAND + "Mit viel Liebe gebacken von %s";
-    String PLUGIN_COMMAND_COOKIES_LORE_3 = PLUGIN_COLOR_COMMAND + "Wie selbstverliebt!";
-    String PLUGIN_COMMAND_COOKIES_DISPLAYNAME = PLUGIN_COLOR_COMMAND + "Schokoladenkeks";
-
     String PLUGIN_COMMAND_HEAD = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast ein Kopf von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erzeugt!";
     String PLUGIN_COMMAND_VANISH_DISABLE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast vanish für " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "deaktiviert!";
     String PLUGIN_COMMAND_VANISH_ENABLE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast vanish für " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "aktiviert!";
