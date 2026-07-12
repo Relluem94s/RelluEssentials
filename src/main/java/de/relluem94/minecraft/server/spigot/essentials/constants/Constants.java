@@ -76,8 +76,6 @@ public interface Constants {
 
     String PLUGIN_COMMAND_GAMERULES = PLUGIN_FORMS_COMMAND_PREFIX + "Die Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "hat folgende Einstellungen:";
 
-    String PLUGIN_COMMAND_HEAL = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest geheilt!"; 
-
     String PLUGIN_COMMAND_ENDERCHEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast deine Enderchest geöffnet!";
     String PLUGIN_COMMAND_ENDERCHEST_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast die Enderchest von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "geöffnet!";
 

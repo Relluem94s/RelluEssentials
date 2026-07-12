@@ -207,7 +207,8 @@ public enum MessageKey {
     COMMAND_WEATHER_RAIN("command.weather.rain"),
     COMMAND_WEATHER_STORM("command.weather.storm"),
     COMMAND_TIME_DAY("command.time.day"),
-    COMMAND_TIME_NIGHT("command.time.night");
+    COMMAND_TIME_NIGHT("command.time.night"),
+    COMMAND_HEAL("command.heal");
 
 
     private final String key;
