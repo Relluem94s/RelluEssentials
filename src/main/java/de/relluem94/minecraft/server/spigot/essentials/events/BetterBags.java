@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import java.util.*;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -40,6 +41,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.jetbrains.annotations.NotNull;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 public class BetterBags implements Listener {
@@ -348,7 +350,7 @@ public class BetterBags implements Listener {
                     }
 
                     int coins = itemCoins * is.getAmount();
-                    ChatHelper.sendMessageInActionBar(p, String.format(Constants.PLUGIN_COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
+                    ChatHelper.sendMessageInActionBar(p, languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
                     pe.setPurse(pe.getPurse() + coins);
 
                     p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);

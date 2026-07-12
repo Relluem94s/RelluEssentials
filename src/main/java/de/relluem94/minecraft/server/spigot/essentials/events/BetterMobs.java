@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -16,16 +17,13 @@ import org.bukkit.inventory.ItemStack;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EntityCoins;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.jetbrains.annotations.NotNull;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
 public class BetterMobs implements Listener {
@@ -71,8 +69,7 @@ public class BetterMobs implements Listener {
                 pe.setPurse(pe.getPurse() + coinsPerDeath);
                 pe.setUpdatedBy(pe.getId());
                 pe.setHasToBeUpdated(true);
-                ChatHelper.sendMessageInActionBar(p, String.format(Constants.PLUGIN_COMMAND_PURSE_GAIN, coinsPerDeath, StringHelper.formatDouble(pe.getPurse())));
-
+                ChatHelper.sendMessageInActionBar(p, languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN, StringHelper.formatInt(coinsPerDeath), StringHelper.formatDouble(pe.getPurse())));
 
                 if(BagHelper.hasBags(pe.getId())){
                     List<ItemStack> li = new ArrayList<>(e.getDrops());

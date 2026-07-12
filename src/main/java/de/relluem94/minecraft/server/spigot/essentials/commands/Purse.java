@@ -1,12 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TOTAL;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TOTAL_OTHER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TO_ITEM;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_INVALID;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -15,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import lombok.NonNull;
@@ -43,20 +38,20 @@ public class Purse implements CommandConstruct {
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(sender, Groups.getGroup("user").getId())) {
-            sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
         if (args.length == 0) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
-            p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL, StringHelper.formatDouble(pe.getPurse())));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL, StringHelper.formatDouble(pe.getPurse())));
             return true;
         }
 
@@ -64,19 +59,18 @@ public class Purse implements CommandConstruct {
         if (target != null) {
             if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getUniqueId());
-                p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
                 return true;
             } else {
-                p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
                 return true;
             }
         }
 
         if (!TypeHelper.isInt(args[0])) {
-            p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_VALUE_INVALID);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_VALUE_INVALID));
             return true;
-        } 
-
+        }
 
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         double purse = pe.getPurse();
@@ -95,9 +89,9 @@ public class Purse implements CommandConstruct {
             pe.setUpdatedBy(pe.getId());
 
             p.getInventory().addItem(coin);
-            p.sendMessage(String.format(PLUGIN_COMMAND_PURSE_TO_ITEM, StringHelper.formatInt(coins)));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM, StringHelper.formatInt(coins)));
         } else {
-            p.sendMessage(PLUGIN_COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY));
         }
         return true;
     }

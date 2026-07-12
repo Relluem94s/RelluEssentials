@@ -181,8 +181,14 @@ public enum MessageKey {
     COMMAND_WORLD_UNLOAD_NO_SAVE("command.world.unload_no_save"),
     COMMAND_WORLD_LOAD("command.world.load"),
     COMMAND_WORLD_CREATE("command.world.create"),
-    COMMAND_WORLD_WRONG_ARGUMENTS("command.world.wrong_arguments");
+    COMMAND_WORLD_WRONG_ARGUMENTS("command.world.wrong_arguments"),
 
+    COMMAND_PURSE_GAIN("command.purse.gain"),
+    COMMAND_PURSE_TO_ITEM("command.purse.to_item"),
+    COMMAND_PURSE_TO_ITEM_VALUE_INVALID("command.purse.to_item_value_invalid"),
+    COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY("command.purse.to_item_not_enough_money"),
+    COMMAND_PURSE_TOTAL("command.purse.total"),
+    COMMAND_PURSE_TOTAL_OTHER("command.purse.total_other");
 
     private final String key;
     MessageKey(String key) {
