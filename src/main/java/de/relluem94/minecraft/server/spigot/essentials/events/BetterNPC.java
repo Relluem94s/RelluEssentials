@@ -1,7 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import java.util.List;
-
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
+import de.relluem94.minecraft.server.spigot.essentials.constants.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
+import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -22,31 +29,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
-import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
+import java.util.List;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
@@ -373,7 +362,7 @@ public class BetterNPC implements Listener {
             }
             else if(
                 e.getView().getTitle().equals(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+"§dNPCs") ||
-                e.getView().getTitle().equals(Constants.PLUGIN_COMMAND_CUSTOMHEADS_TITLE)
+                e.getView().getTitle().equals(languageHelper.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE))
             ){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     p.getInventory().addItem(e.getCurrentItem().clone());

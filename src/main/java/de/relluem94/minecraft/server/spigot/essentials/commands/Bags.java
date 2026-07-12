@@ -89,12 +89,12 @@ public class Bags implements CommandConstruct {
                 p.openInventory(Objects.requireNonNull(BagHelper.getBag(bte.getId(), pe)));
             }
             else{
-                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_COMMAND_BAGS_NOT_FOUND, args[0]));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
             }
 
         }
         else{
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_COMMAND_BAGS_NOT_FOUND, args[0]));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
         }
         return true;
     }

@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_NOT_FOUND;
 
 public class TeleportHelper {
 
@@ -90,7 +89,7 @@ public class TeleportHelper {
         World w = location.getWorld();
         if (w == null) {
             if(!silent){
-                p.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
             }
 
             return null;
@@ -102,7 +101,7 @@ public class TeleportHelper {
         World w = Bukkit.getWorld(worldName);
         if (w == null) {
             if(!silent){
-                p.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
             }
 
             return null;

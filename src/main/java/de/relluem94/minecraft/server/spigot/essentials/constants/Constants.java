@@ -9,7 +9,6 @@ public interface Constants {
     String PLUGIN_EOL = System.lineSeparator();
 
     String PLUGIN_COLOR_COMMAND = "§f";
-    String PLUGIN_COLOR_COMMAND_NAME = "§b";
     String PLUGIN_COLOR_COMMAND_ARG = "§b";
     String PLUGIN_COLOR_MESSAGE = "§f";
     String PLUGIN_COLOR_CONSOLE = "§c";
@@ -23,7 +22,6 @@ public interface Constants {
     String PLUGIN_COLOR_POSITIVE = "§a";
     String PLUGIN_COLOR_NEGATIVE = "§c";
     String PLUGIN_COLOR_NEUTRAL = "§6";
-    
 
     String PLUGIN_NAME_RELLU = "Rellu";
     String PLUGIN_NAME_ESSENTIALS = "Essentials";
@@ -35,7 +33,6 @@ public interface Constants {
     String PLUGIN_NAME_BROADCAST = PLUGIN_COLOR_BROADCAST + "Broadcast";
     String PLUGIN_NAME_CHAT_CONSOLE = PLUGIN_COLOR_CONSOLE + "Console";
     String PLUGIN_NAME_MONEY = PLUGIN_COLOR_MONEY + "Coins" + PLUGIN_COLOR_MESSAGE;
-
 
     String PLUGIN_WORLD_LOBBY = "lobby";
     String PLUGIN_WORLD_WORLD = "world";
@@ -63,38 +60,4 @@ public interface Constants {
     String PLUGIN_SIGN_CLICK = PLUGIN_COLOR_MESSAGE + "[Click here]";
 
     String PLUGIN_INTERNAL_UTILITY_CLASS = "This is a Utility Class";
-
-    /* ******************************************************************************* */
-    /*                              COMMAND   STUFF                                    */
-    /* ******************************************************************************* */
-
-    String PLUGIN_COMMAND_WORLD_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Die Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " existiert nicht";
-
-    String PLUGIN_COMMAND_SPEED = PLUGIN_FORMS_COMMAND_PREFIX + "Geschwindigkeit wurde auf " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " gesetzt";
-    String PLUGIN_COMMAND_SPEED_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Nutze " + PLUGIN_COLOR_COMMAND_ARG + "/speed " + "<" + PLUGIN_COLOR_COMMAND_ARG + "0-10" + PLUGIN_COLOR_COMMAND + ">";
-
-    String PLUGIN_COMMAND_INVALID = PLUGIN_FORMS_COMMAND_PREFIX + "Invalid Data!";
-    String PLUGIN_COMMAND_PERMISSION_MISSING = PLUGIN_FORMS_COMMAND_PREFIX + "Dafür hast du leider keine Rechte!";
-    String PLUGIN_COMMAND_NOT_A_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du bist leider kein Spieler!";
-    String PLUGIN_COMMAND_TO_MANY_ARGUMENTS = PLUGIN_FORMS_COMMAND_PREFIX + "Zu viele Argumente!";
-    String PLUGIN_COMMAND_TARGET_NOT_A_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "%s" + PLUGIN_COLOR_COMMAND + " ist kein Spieler!";
-
-    String PLUGIN_COMMAND_SIGN_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use " + PLUGIN_COLOR_COMMAND_NAME + "/%s" + " " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_MESSAGE + " or " + PLUGIN_COLOR_COMMAND_ARG + "%s";
-    String PLUGIN_COMMAND_SIGN_COPY = PLUGIN_FORMS_COMMAND_PREFIX + "Click the Sign you want to copy";
-    String PLUGIN_COMMAND_SIGN_EDIT = PLUGIN_FORMS_COMMAND_PREFIX + "Click the Sign you want to edit";
-
-    String PLUGIN_COMMAND_EXIT_KICK_MESSAGE = PLUGIN_COLOR_COMMAND + "exited.";
-    String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COLOR_COMMAND + "Server is shutting down...";
-
-    String PLUGIN_BANK_INTEREST_NEXT_RUN = PLUGIN_COLOR_COMMAND + "Next Interest Payment Run in: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " seconds!";
-
-    String PLUGIN_COMMAND_CUSTOMHEADS_TITLE = PLUGIN_FORMS_COMMAND_PREFIX + "Heads";
-
-    String PLUGIN_COMMAND_LIST_HEADER = PLUGIN_FORMS_COMMAND_PREFIX + "Online Players " + PLUGIN_COLOR_MESSAGE_SPACER + "[" + PLUGIN_COLOR_NEUTRAL + "%s" + PLUGIN_COLOR_MESSAGE_SPACER + "]" + PLUGIN_COLOR_MESSAGE + ":";
-    String PLUGIN_COMMAND_LIST_ENTRY = PLUGIN_FORMS_WHITESPACE_SHORT + PLUGIN_COLOR_MESSAGE_SPACER + "- " + "%s%s " + PLUGIN_COLOR_MESSAGE_SPACER + "[" + "%s%s" + PLUGIN_COLOR_MESSAGE_SPACER + "]";
-
-    String PLUGIN_ITEM_SELL_PRICE_MESSAGE = PLUGIN_COLOR_NEGATIVE + "Sell: " + PLUGIN_NAME_MONEY + " per Item: %s " + PLUGIN_NAME_MONEY + " per Stack: %s";
-    String PLUGIN_ITEM_BUY_PRICE_MESSAGE = PLUGIN_COLOR_POSITIVE + "Buy: " + PLUGIN_NAME_MONEY + " per Item: %s " + PLUGIN_NAME_MONEY + " per Stack: %s";
-
-    String PLUGIN_POSITION_HIGHLIGHTING_DIFFERENT_WORLDS = PLUGIN_FORMS_COMMAND_PREFIX + "Positions are in different worlds, cannot highlight.";
 }

@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
@@ -10,7 +11,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NonNull;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -101,13 +104,13 @@ public class ChatHelper {
      * @param p Player
      * @param message String
      */
-    public static void sendMessageInActionBar(Player p, String message){
+    public static void sendMessageInActionBar(@NonNull Player p, String message){
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
     }
 
     public static void msg(CommandSender sender, Player target, String[] args, int start) {
         if (sender instanceof ConsoleCommandSender) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return;
         }
 
@@ -122,7 +125,7 @@ public class ChatHelper {
             target.sendMessage(p.getCustomName() + PLUGIN_FORMS_MSG_SPACER_IN + message);
             p.sendMessage(target.getCustomName() + PLUGIN_FORMS_MSG_SPACER_OUT + message);
         } else {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         }
     }
 }

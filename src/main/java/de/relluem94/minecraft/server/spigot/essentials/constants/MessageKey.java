@@ -227,6 +227,22 @@ public enum MessageKey {
     COMMAND_BACK_NO_LOCATION("command.back.no_location"),
     COMMAND_SETGROUP("command.setgroup"),
     COMMAND_SETGROUP_GROUP_NOT_FOUND("command.setgroup.group_not_found"),
+    COMMAND_SPEED("command.speed"),
+    COMMAND_SPEED_INFO("command.speed.info"),
+    COMMAND_SIGN_INFO("command.sign.info"),
+    COMMAND_SIGN_COPY("command.sign.copy"),
+    COMMAND_SIGN_EDIT("command.sign.edit"),
+    COMMAND_SIGN_COPIED("command.sign.copied"),
+    COMMAND_SIGN_COPY_TO_PASTE("command.sign.copy_to_paste"),
+    COMMAND_SIGN_PASTED("command.sign.pasted"),
+    COMMAND_SIGN_OPENED("command.sign.opened"),
+    COMMAND_LIST_HEADER("command.list.header"),
+    COMMAND_LIST_ENTRY("command.list.entry"),
+    COMMAND_EXIT_KICK_MESSAGE("command.exit.kick_message"),
+    COMMAND_EXIT_SERVER_SHUTTING_DOWN("command.exit.server_shutting_down"),
+    COMMAND_POSITION_HIGHLIGHTING_DIFFERENT_WORLDS("command.position.highlighting_different_worlds"),
+    COMMAND_CUSTOMHEADS_TITLE("command.customheads_title"),
+    COMMAND_BAGS_NOT_FOUND("command.bags_not_found"),
     PLUGIN_BAG_AMOUNT("plugin.bag.amount"),
     PLUGIN_BAG_RETRIEVE("plugin.bag.retrieve"),
     PLUGIN_BAG_CLICK_TO_OPEN("plugin.bag.click_to_open"),
@@ -236,8 +252,10 @@ public enum MessageKey {
     PLUGIN_BAGS_SAVED("plugin.bags.saved"),
     PLUGIN_PLAYERS_SAVED("plugin.players.saved"),
     PLUGIN_PLAYERS_INVENTORY_SAVED("plugin.players.inventory_saved"),
-    PLUGIN_COMMAND_BAGS_NOT_FOUND("plugin.command.bags_not_found");
-
+    PLUGIN_COMMAND_WORLD_NOT_FOUND("plugin.command.world_not_found"),
+    PLUGIN_BANK_INTEREST_NEXT_RUN("plugin.bank.interest_next_run"),
+    PLUGIN_ITEM_SELL_PRICE_MESSAGE("plugin.item.sell_price_message"),
+    PLUGIN_ITEM_BUY_PRICE_MESSAGE("plugin.item.buy_price_message");
 
     private final String key;
     MessageKey(String key) {

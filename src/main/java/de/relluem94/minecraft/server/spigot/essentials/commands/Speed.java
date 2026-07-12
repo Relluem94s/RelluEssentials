@@ -1,30 +1,25 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_INVALID;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_SPEED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_SPEED_INFO;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
-
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import lombok.NonNull;
-
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 @CommandName("speed")
 public class Speed implements CommandConstruct {
@@ -32,23 +27,23 @@ public class Speed implements CommandConstruct {
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String @NotNull [] args) {
         if (args.length != 1) {
-            sender.sendMessage(PLUGIN_COMMAND_SPEED_INFO);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SPEED_INFO));
             return true;
         } 
 
         if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
         if (!args[0].matches("^\\d+$")) {
-            p.sendMessage(PLUGIN_COMMAND_INVALID);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
         } 
 
         float speed = parseSpeed(args[0]);
@@ -57,7 +52,7 @@ public class Speed implements CommandConstruct {
         } else {
             p.setWalkSpeed(speed);
         }
-        p.sendMessage(String.format(PLUGIN_COMMAND_SPEED, args[0]));
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SPEED, args[0]));
         return true;
     }
 

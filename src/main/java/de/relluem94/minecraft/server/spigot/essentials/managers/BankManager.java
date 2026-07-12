@@ -1,16 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
+import org.bukkit.Bukkit;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import org.bukkit.Bukkit;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 
 public class BankManager implements IEnable {
 
@@ -25,7 +28,10 @@ public class BankManager implements IEnable {
     private void triggerNext(){
         Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
             BankerHelper.doInterest();
-            ChatHelper.consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, String.format(Constants.PLUGIN_BANK_INTEREST_NEXT_RUN, getSecondsUntilMidnight()));
+            ChatHelper.consoleSendMessage(
+                    Constants.PLUGIN_NAME_CONSOLE,
+                    languageHelper.get(MessageKey.PLUGIN_BANK_INTEREST_NEXT_RUN, String.valueOf(getSecondsUntilMidnight()))
+            );
             triggerNext();
         }, 20 *  getSecondsUntilMidnight());
     }
