@@ -73,7 +73,13 @@ public class Worlds implements CommandConstruct {
         }
 
         if (args.length == 0) {
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_INFO));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_INFO,
+                    Commands.LIST.getName(),
+                    Commands.LOAD.getName(),
+                    Commands.UNLOAD.getName(),
+                    Commands.UNLOAD_NO_SAVE.getName(),
+                    Commands.CREATE.getName()
+            ));
             openWorldMenu(p);
             return true;
         }
