@@ -196,7 +196,12 @@ public enum MessageKey {
     COMMAND_REPAIR_PLAYER("command.repair.player"),
     COMMAND_WHERE("command.where"),
     COMMAND_WHERE_STRING("command.where_string"),
-    COMMAND_BROADCAST_INFO("command.broadcast.info");
+    COMMAND_BROADCAST_INFO("command.broadcast.info"),
+    COMMAND_POKE("command.poke"),
+    COMMAND_POKE_TITLE("command.poke.title"),
+    COMMAND_POKE_SUBTITLE("command.poke.subtitle"),
+    COMMAND_POKE_MESSAGE_TARGET("command.poke.message_target"),
+    COMMAND_POKE_MESSAGE_SENDER("command.poke.message_sender");
 
 
     private final String key;

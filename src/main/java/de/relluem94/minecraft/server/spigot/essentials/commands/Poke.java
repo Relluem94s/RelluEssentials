@@ -1,15 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_POKE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_POKE_MESSAGE_SENDER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_POKE_MESSAGE_TARGET;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_POKE_SUBTITLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_POKE_TITLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
@@ -38,28 +32,29 @@ public class Poke implements CommandConstruct {
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (args.length == 0) {
             if (!Permission.isAuthorized(sender, Groups.getGroup("vip").getId())) {
-                sendMessage(sender, PLUGIN_COMMAND_PERMISSION_MISSING);
+                sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
                 return true;
-            } 
+            }
 
-            sendMessage(sender, PLUGIN_COMMAND_POKE);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POKE));
             return true;
         } 
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
             return true;
         }
 
         if (!Permission.isAuthorized(sender, Groups.getGroup("vip").getId())) {
-            sendMessage(sender, PLUGIN_COMMAND_PERMISSION_MISSING);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
+        String senderName = isPlayer(sender) ? ((Player) sender).getDisplayName() : PLUGIN_NAME_CHAT_CONSOLE + sender.getName();
         poke(target);
-        sendMessage(target, String.format(PLUGIN_COMMAND_POKE_MESSAGE_TARGET, isPlayer(sender) ? ((Player)sender).getDisplayName() : PLUGIN_NAME_CHAT_CONSOLE + sender.getName()));
-        sendMessage(sender, String.format(PLUGIN_COMMAND_POKE_MESSAGE_SENDER, target.getDisplayName()));
+        target.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POKE_MESSAGE_TARGET, senderName));
+        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POKE_MESSAGE_SENDER, target.getDisplayName()));
         return true;
     }
 
@@ -68,7 +63,11 @@ public class Poke implements CommandConstruct {
         target.getWorld().playEffect(target.getLocation(), Effect.MOBSPAWNER_FLAMES, 5);
         target.getWorld().playEffect(target.getLocation(), Effect.EXTINGUISH, 5);
         target.getWorld().playEffect(target.getLocation(), Effect.ENDERDRAGON_GROWL, 5);
-        target.sendTitle(PLUGIN_COMMAND_POKE_TITLE, PLUGIN_COMMAND_POKE_SUBTITLE, 5, 80, 5);
+        target.sendTitle(
+                languageHelper.get(MessageKey.COMMAND_POKE_TITLE),
+                languageHelper.get(MessageKey.COMMAND_POKE_SUBTITLE),
+                5, 80, 5
+        );
     }
 
     @Override
