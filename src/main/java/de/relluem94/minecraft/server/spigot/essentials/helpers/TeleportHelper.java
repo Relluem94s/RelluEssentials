@@ -11,7 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_BACK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_NOT_FOUND;
 
 public class TeleportHelper {
 
@@ -27,7 +28,7 @@ public class TeleportHelper {
 
         Location spawn = w.getSpawnLocation();
 
-        addBackPointAndTeleport(PLUGIN_COMMAND_SPAWN, p, Bukkit.getWorld(name), silent, spawn);
+        addBackPointAndTeleport(languageHelper.get(MessageKey.COMMAND_SPAWN), p, Bukkit.getWorld(name), silent, spawn);
     }
 
     public static void teleportBed(Player p){

@@ -206,7 +206,24 @@ public enum MessageKey {
     COMMAND_MSG_NO_ONE_TO_REPLY("command.msg.no_one_to_reply"),
     COMMAND_MSG_SPACER_IN("command.msg.spacer_in"),
     COMMAND_MSG_SPACER_OUT("command.msg.spacer_out"),
-    COMMAND_MSG_INFO("command.msg.info");
+    COMMAND_MSG_INFO("command.msg.info"),
+
+    COMMAND_CRAFTINGBENCH("command.craftingbench"),
+    COMMAND_CRAFTINGBENCH_TITLE("command.craftingbench.title"),
+    COMMAND_HEAD("command.head"),
+    COMMAND_MORE("command.more"),
+    COMMAND_MORE_PLAYER("command.more.player"),
+    COMMAND_ENDERCHEST("command.enderchest"),
+    COMMAND_ENDERCHEST_PLAYER("command.enderchest.player"),
+    COMMAND_INVENTORY("command.inventory"),
+    COMMAND_INVENTORY_PLAYER("command.inventory.player"),
+    COMMAND_SPAWN("command.spawn"),
+    COMMAND_NICK("command.nick"),
+    COMMAND_SUICIDE("command.suicide"),
+    COMMAND_PRINT_INFO("command.print.info"),
+    COMMAND_RENAME_INFO("command.rename.info"),
+    COMMAND_RENAME_AIR("command.rename.air"),
+    COMMAND_RENAME("command.rename");
 
 
     private final String key;

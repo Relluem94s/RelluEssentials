@@ -68,30 +68,6 @@ public interface Constants {
     /*                              COMMAND   STUFF                                    */
     /* ******************************************************************************* */
 
-    String PLUGIN_COMMAND_CRAFTINGBENCH = PLUGIN_FORMS_COMMAND_PREFIX + "Die Werkbank von %s" + PLUGIN_COLOR_COMMAND + " wurde geöffnet!";
-    String PLUGIN_COMMAND_HEAD = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast ein Kopf von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erzeugt!";
-
-    String PLUGIN_COMMAND_MORE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast mehr von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erzeugt!";
-    String PLUGIN_COMMAND_MORE_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast mehr von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erhalten!";
-
-    String PLUGIN_COMMAND_ENDERCHEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast deine Enderchest geöffnet!";
-    String PLUGIN_COMMAND_ENDERCHEST_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast die Enderchest von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "geöffnet!";
-
-    String PLUGIN_COMMAND_INVENTORY = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast dein Inventar geöffnet!";
-    String PLUGIN_COMMAND_INVENTORY_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast das Inventar von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "geöffnet!";
-
-    String PLUGIN_COMMAND_SPAWN = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "an den Spawn teleportiert!";
-
-    String PLUGIN_COMMAND_NICK = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast den Spieler " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "umbenannt!";
-
-    String PLUGIN_COMMAND_SUICIDE = PLUGIN_FORMS_COMMAND_PREFIX + "Der Spieler " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "hat sich umgebracht!";
-
-    String PLUGIN_COMMAND_PRINT_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Nutze " + PLUGIN_COLOR_COMMAND_ARG + "/print " + "<" + PLUGIN_COLOR_COMMAND_ARG + "nachricht" + PLUGIN_COLOR_COMMAND + ">";
-
-    String PLUGIN_COMMAND_RENAME_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Nutze " + PLUGIN_COLOR_COMMAND_ARG + "/rename " + "<" + PLUGIN_COLOR_COMMAND_ARG + "name" + PLUGIN_COLOR_COMMAND + ">";
-    String PLUGIN_COMMAND_RENAME_AIR = PLUGIN_FORMS_COMMAND_PREFIX + "Du kannst Luft nicht umbenennen! ";
-    String PLUGIN_COMMAND_RENAME = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast dein Gegenstand umbenannt!";
-
     String PLUGIN_COMMAND_WORLD_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Die Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " existiert nicht";
 
     String PLUGIN_COMMAND_SPEED = PLUGIN_FORMS_COMMAND_PREFIX + "Geschwindigkeit wurde auf " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " gesetzt";
