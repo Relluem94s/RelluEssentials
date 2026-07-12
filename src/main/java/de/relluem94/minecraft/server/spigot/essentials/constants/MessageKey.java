@@ -132,7 +132,20 @@ public enum MessageKey {
     COMMAND_PLAYERINFO_MINED("command.playerinfo.mined"),
     COMMAND_PLAYERINFO_DEATHS("command.playerinfo.deaths"),
     COMMAND_PLAYERINFO_JUMPED("command.playerinfo.jumped"),
-    COMMAND_PLAYERINFO_LEFT_GAME("command.playerinfo.left_game");
+    COMMAND_PLAYERINFO_LEFT_GAME("command.playerinfo.left_game"),
+
+    COMMAND_PROTECT_COMMAND_INFO("command.protect.command_info"),
+    COMMAND_PROTECT_INFO("command.protect.info"),
+    COMMAND_PROTECT_ADD("command.protect.add"),
+    COMMAND_PROTECT_REMOVE("command.protect.remove"),
+    COMMAND_PROTECT_FLAG("command.protect.flag"),
+    COMMAND_PROTECT_FLAG_NOT_FOUND("command.protect.flag_not_found"),
+    COMMAND_PROTECT_RIGHT("command.protect.right"),
+    COMMAND_PROTECT_FLAG_ADD("command.protect.flag_add"),
+    COMMAND_PROTECT_FLAG_REMOVE("command.protect.flag_remove"),
+    COMMAND_PROTECT_RIGHT_ADD("command.protect.right_add"),
+    COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND("command.protect.right_player_notfound"),
+    COMMAND_PROTECT_RIGHT_REMOVE("command.protect.right_remove");
 
 
     private final String key;
