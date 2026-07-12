@@ -97,7 +97,21 @@ public enum MessageKey {
     COMMAND_ADMIN_INFO_VERSION("command.admin.info_version"),
     COMMAND_ADMIN_INFO_INTEGRATIONS_NONE("command.admin.info_integrations_none"),
     COMMAND_ADMIN_INFO_INTEGRATIONS_HEADER("command.admin.info_integrations_header"),
-    COMMAND_ADMIN_INFO_INTEGRATIONS_ENTRY("command.admin.info_integrations_entry");
+    COMMAND_ADMIN_INFO_INTEGRATIONS_ENTRY("command.admin.info_integrations_entry"),
+    COMMAND_POSITION_INFO_1("command.position.info_1"),
+    COMMAND_POSITION_INFO_2("command.position.info_2"),
+    COMMAND_POSITION_INFO_3("command.position.info_3"),
+    COMMAND_POSITION_NO_POSITIONS("command.position.no_positions"),
+    COMMAND_POSITION_CLEAR("command.position.clear"),
+    COMMAND_POSITION_SET_FIRST("command.position.set_first"),
+    COMMAND_POSITION_SET_SECOND("command.position.set_second"),
+    COMMAND_POSITION_REMOVE_FIRST("command.position.remove_first"),
+    COMMAND_POSITION_REMOVE_SECOND("command.position.remove_second"),
+    COMMAND_POSITION_INVALID_AMOUNT("command.position.invalid_amount"),
+    COMMAND_POSITION_SHIFT("command.position.shift"),
+    COMMAND_POSITION_NEED_BOTH_POSITIONS("command.position.need_both_positions"),
+    COMMAND_POSITION_EXPAND("command.position.expand"),
+    COMMAND_POSITION_DECREASE("command.position.decrease");
 
 
     private final String key;
