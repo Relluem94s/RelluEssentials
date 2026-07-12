@@ -69,15 +69,6 @@ public interface Constants {
     /*                              COMMAND   STUFF                                    */
     /* ******************************************************************************* */
 
-    String PLUGIN_COMMAND_ADMIN_INFO_VERSION = PLUGIN_FORMS_COMMAND_PREFIX + "§7Plugin Version: §a%s";
-    String PLUGIN_COMMAND_ADMIN_INFO_INTEGRATIONS_NONE = PLUGIN_FORMS_COMMAND_PREFIX + "§7Integrations: §cNone";
-    String PLUGIN_COMMAND_ADMIN_INFO_INTEGRATIONS_HEADER = PLUGIN_FORMS_COMMAND_PREFIX + "§7Integrations §8[§a%d§8]§7:";
-    String PLUGIN_COMMAND_ADMIN_INFO_INTEGRATIONS_ENTRY = PLUGIN_FORMS_COMMAND_PREFIX + "§8- §d%s §7v%s";
-
-    String PLUGIN_COMMAND_ADMIN_PING = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast ein Ping von " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "ms!";
-    String PLUGIN_COMMAND_ADMIN_PING_OTHER = PLUGIN_FORMS_COMMAND_PREFIX + "Der Spieler " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " hast ein Ping von " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "ms!";
-    String PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND  = PLUGIN_FORMS_COMMAND_PREFIX + "Der Spieler " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "wurde nicht gefunden";
-
     String PLUGIN_COMMAND_CRAFTINGBENCH = PLUGIN_FORMS_COMMAND_PREFIX + "Die Werkbank von %s" + PLUGIN_COLOR_COMMAND + " wurde geöffnet!";
 
     String PLUGIN_COMMAND_COOKIES = PLUGIN_FORMS_COMMAND_PREFIX + "Ein Keks für dich, %s";
@@ -168,7 +159,6 @@ public interface Constants {
     String PLUGIN_COMMAND_PURSE_TOTAL = PLUGIN_FORMS_COMMAND_PREFIX + "You have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
     String PLUGIN_COMMAND_PURSE_TOTAL_OTHER = PLUGIN_FORMS_COMMAND_PREFIX + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " has " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in the Purse!";
 
-
     String PLUGIN_COMMAND_POSITION_INFO_1 = PLUGIN_FORMS_COMMAND_PREFIX + "Your Positions are:";
     String PLUGIN_COMMAND_POSITION_INFO_2 = PLUGIN_FORMS_WHITESPACE_SHORT + "#1 Position is %s";
     String PLUGIN_COMMAND_POSITION_INFO_3 = PLUGIN_FORMS_WHITESPACE_SHORT + "#2 Position is %s";
@@ -202,19 +192,7 @@ public interface Constants {
     String PLUGIN_COMMAND_SIGN_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use " + PLUGIN_COLOR_COMMAND_NAME + "/%s" + " " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_MESSAGE + " or " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     String PLUGIN_COMMAND_SIGN_COPY = PLUGIN_FORMS_COMMAND_PREFIX + "Click the Sign you want to copy";
     String PLUGIN_COMMAND_SIGN_EDIT = PLUGIN_FORMS_COMMAND_PREFIX + "Click the Sign you want to edit";
-    String PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE = PLUGIN_FORMS_COMMAND_PREFIX + "Click the Redstone Lamp you want to Lit. Use this Command again to disable the Light Toogle Mode.";
-    String PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE_DISABLED = PLUGIN_FORMS_COMMAND_PREFIX + "Light Toogle Mode is now disabled.";
-    String PLUGIN_COMMAND_ADMIN_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use this command with the following Subcommands: npc, chat, light, afk, top, ping, cleanProtections";
-    String PLUGIN_COMMAND_ADMIN_CHAT_CLEARED = PLUGIN_FORMS_COMMAND_PREFIX + "Chat was cleared";
-    String PLUGIN_COMMAND_ADMIN_TOP = PLUGIN_FORMS_COMMAND_PREFIX + "Teleported to the highest Block";
-    String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS ="ID: " + PLUGIN_COLOR_COMMAND_ARG + "#%s" + PLUGIN_COLOR_COMMAND + " PMat: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " != LMat: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
-    String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START = PLUGIN_FORMS_COMMAND_PREFIX + "Checking " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Protection Materials against their Location Materials";
-    String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP = PLUGIN_FORMS_COMMAND_PREFIX + "Cleaning Up " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Protections";
-    String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END = PLUGIN_FORMS_COMMAND_PREFIX + "Reduced to " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Protections";
-    String PLUGIN_COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END = PLUGIN_FORMS_COMMAND_PREFIX + "§a%d " + PLUGIN_COLOR_COMMAND + "old Protections got cleaned.";
-    String PLUGIN_COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END = PLUGIN_FORMS_COMMAND_PREFIX + "§a%d " + PLUGIN_COLOR_COMMAND + "old Locations got cleaned.";
-    String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE = PLUGIN_FORMS_COMMAND_PREFIX + "No Protections to Clean Up";
-    String PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE = PLUGIN_FORMS_COMMAND_PREFIX + "Progress: §e%d/%d §7(§a%d%%§7)";
+
     String PLUGIN_COMMAND_WORLD_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use this command with the following Subcommands: list load unload unloadNoSave";
     String PLUGIN_COMMAND_WORLD_CREATE_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Use this command with the following arguments: name(String) type(WordType String) environment (Environment as String) structures (boolean)";
     String PLUGIN_COMMAND_WORLD_WORLD_NOT_LOADED = "World not loaded. Can't unload this World.";
@@ -228,7 +206,6 @@ public interface Constants {
     String PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Can't Sudo Player " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + ". Player not found!";
     String PLUGIN_COMMAND_EXIT_KICK_MESSAGE = PLUGIN_COLOR_COMMAND + "exited.";
     String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COLOR_COMMAND + "Server is shutting down...";
-
 
     String PLUGIN_COMMAND_TP_REQUEST_TARGET = PLUGIN_FORMS_COMMAND_PREFIX + "Teleport Anfrage von " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND;
     String PLUGIN_COMMAND_TP_REQUEST_EXPIRED = PLUGIN_FORMS_COMMAND_PREFIX + "Teleport Anfrage ist abgelaufen!";

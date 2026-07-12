@@ -21,7 +21,6 @@ public enum MessageKey {
     PLUGIN_MANAGER_AUTOSAVE_REGISTERED("plugin.manager.autosave_registered"),
     PLUGIN_FOLDER_MKDIR_ERROR("plugin.folder.mkdir_error"),
 
-
     COMMAND_INVALID("command.invalid"),
     COMMAND_PERMISSION_MISSING("command.permission_missing"),
     COMMAND_NOT_A_PLAYER("command.not_a_player"),
@@ -77,7 +76,28 @@ public enum MessageKey {
     COMMAND_MODIFY_FILLR_STARTED("command.modify.fillr_started"),
     COMMAND_MODIFY_FILL_RADIUS_TO_HIGH("command.modify.fill_radius_to_high"),
     COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS("command.modify.clipboard_rotate_success"),
-    COMMAND_MODIFY_PLANT_STARTED("command.modify.plant_started");
+    COMMAND_MODIFY_PLANT_STARTED("command.modify.plant_started"),
+
+    COMMAND_ADMIN_LIGHT_TOGGLE("command.admin.light_toggle"),
+    COMMAND_ADMIN_LIGHT_TOGGLE_DISABLED("command.admin.light_toggle_disabled"),
+    COMMAND_ADMIN_INFO("command.admin.info"),
+    COMMAND_ADMIN_CHAT_CLEARED("command.admin.chat_cleared"),
+    COMMAND_ADMIN_TOP("command.admin.top"),
+    COMMAND_ADMIN_CLEAN_PROTECTIONS("command.admin.clean_protections"),
+    COMMAND_ADMIN_CLEAN_PROTECTIONS_START("command.admin.clean_protections_start"),
+    COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP("command.admin.clean_protections_cleaning_up"),
+    COMMAND_ADMIN_CLEAN_PROTECTIONS_END("command.admin.clean_protections_end"),
+    COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END("command.admin.clean_old_protections_end"),
+    COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END("command.admin.clean_old_locations_end"),
+    COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE("command.admin.clean_protections_none"),
+    COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE("command.admin.clean_protections_percentage"),
+    COMMAND_ADMIN_PING("command.admin.ping"),
+    COMMAND_ADMIN_PING_OTHER("command.admin.ping_other"),
+    COMMAND_ADMIN_PING_OTHER_NOT_FOUND("command.admin.ping_other_not_found"),
+    COMMAND_ADMIN_INFO_VERSION("command.admin.info_version"),
+    COMMAND_ADMIN_INFO_INTEGRATIONS_NONE("command.admin.info_integrations_none"),
+    COMMAND_ADMIN_INFO_INTEGRATIONS_HEADER("command.admin.info_integrations_header"),
+    COMMAND_ADMIN_INFO_INTEGRATIONS_ENTRY("command.admin.info_integrations_entry");
 
 
     private final String key;
