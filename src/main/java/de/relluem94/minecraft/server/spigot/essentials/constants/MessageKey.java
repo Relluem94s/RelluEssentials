@@ -156,7 +156,15 @@ public enum MessageKey {
     COMMAND_MARRY_DIVORCE_NOT_MARRIED("command.marry.divorce_not_married"),
     COMMAND_MARRY_INFO("command.marry.info"),
     COMMAND_MARRY_DIVORCED("command.marry.divorced"),
-    COMMAND_MARRY_SELF_MARRIAGE("command.marry.self_marriage");
+    COMMAND_MARRY_SELF_MARRIAGE("command.marry.self_marriage"),
+
+    COMMAND_TP_REQUEST_TARGET("command.tp.request_target"),
+    COMMAND_TP_REQUEST_EXPIRED("command.tp.request_expired"),
+    COMMAND_TP("command.tp"),
+    COMMAND_TP_TO("command.tp.to"),
+    COMMAND_TP_INFO("command.tp.info"),
+    COMMAND_TP_ACCEPT_NO_REQUEST("command.tp.accept_no_request"),
+    COMMAND_TP_SEND_REQUEST("command.tp.send_request");
 
 
     private final String key;
