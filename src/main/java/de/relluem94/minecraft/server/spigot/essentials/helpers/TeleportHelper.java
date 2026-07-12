@@ -83,10 +83,8 @@ public class TeleportHelper {
         }
 
         addBackPointAndTeleport("", p, w, true, location, true);
-        p.sendMessage(PLUGIN_COMMAND_WARP);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP));
     }
-
-
 
     private static @Nullable World getWorld(Player p, boolean silent, @NotNull Location location, String worldName) {
         World w = location.getWorld();

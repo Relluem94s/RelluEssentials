@@ -164,7 +164,15 @@ public enum MessageKey {
     COMMAND_TP_TO("command.tp.to"),
     COMMAND_TP_INFO("command.tp.info"),
     COMMAND_TP_ACCEPT_NO_REQUEST("command.tp.accept_no_request"),
-    COMMAND_TP_SEND_REQUEST("command.tp.send_request");
+    COMMAND_TP_SEND_REQUEST("command.tp.send_request"),
+
+    COMMAND_WARP("command.warp"),
+    COMMAND_WARP_LIST_INFO("command.warp.list_info"),
+    COMMAND_WARP_LIST("command.warp.list"),
+    COMMAND_WARP_ERROR_WORLD_UNLOADED("command.warp.error_world_unloaded"),
+    COMMAND_WARP_ERROR_NO_WARP_FOUND("command.warp.error_no_warp_found"),
+    COMMAND_WARP_ADD("command.warp.add"),
+    COMMAND_WARP_REMOVE("command.warp.remove");
 
 
     private final String key;
