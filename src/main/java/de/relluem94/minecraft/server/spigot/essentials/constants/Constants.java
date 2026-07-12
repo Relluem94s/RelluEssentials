@@ -190,17 +190,6 @@ public interface Constants {
     String PLUGIN_PLAYERS_INVENTORY_SAVED = "%s%s Player(s) Inventory saved!";
     String PLUGIN_COMMAND_BAGS_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "The searched Bag " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "was not found!";
 
-    String PLUGIN_COMMAND_MARRY_SEND_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast eine Hochzeitsanfrage an " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " geschickt!";
-    String PLUGIN_COMMAND_MARRY_RECEIVE_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast eine Hochzeitsanfrage von " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " bekommen!";
-    String PLUGIN_COMMAND_MARRY_MARRIED = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "geheiratet!";
-    String PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED = PLUGIN_FORMS_COMMAND_PREFIX + "Hochzeitsanfrage ist abgelaufen!";
-    String PLUGIN_COMMAND_MARRY_REQUEST_IS_MARRIED = PLUGIN_FORMS_COMMAND_PREFIX + "Hochzeitsanfrage ist ungültig, Spieler ist bereits verheitratet!";
-    String PLUGIN_COMMAND_MARRY_ACCEPT_NO_REQUEST = PLUGIN_FORMS_COMMAND_PREFIX + "Keine offene Hochzeitsanfrage!";
-    String PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED = PLUGIN_FORMS_COMMAND_PREFIX + "Du bist nicht verheiratet!";
-    String PLUGIN_COMMAND_MARRY_INFO = PLUGIN_FORMS_COMMAND_PREFIX + "Nutze " + PLUGIN_COLOR_COMMAND_ARG + "/marry <name>" + PLUGIN_COLOR_COMMAND + ", " + PLUGIN_COLOR_COMMAND_ARG + "/marry accept"+ PLUGIN_COLOR_COMMAND + " oder " + PLUGIN_COLOR_COMMAND_ARG + "/marry divorce";
-    String PLUGIN_COMMAND_MARRY_DIVORCED = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast dich von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "getrennt!";
-    String PLUGIN_COMMAND_MARRY_SELF_MARRIAGE = PLUGIN_FORMS_COMMAND_PREFIX + "Du kannst dich nicht selbst heiraten!";
-
     String PLUGIN_COMMAND_BACK = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest zurück teleportiert!";
     String PLUGIN_COMMAND_BACK_NO_LOCATION = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast kein Back Punkt gesetzt!";
 

@@ -145,7 +145,18 @@ public enum MessageKey {
     COMMAND_PROTECT_FLAG_REMOVE("command.protect.flag_remove"),
     COMMAND_PROTECT_RIGHT_ADD("command.protect.right_add"),
     COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND("command.protect.right_player_notfound"),
-    COMMAND_PROTECT_RIGHT_REMOVE("command.protect.right_remove");
+    COMMAND_PROTECT_RIGHT_REMOVE("command.protect.right_remove"),
+
+    COMMAND_MARRY_SEND_REQUEST("command.marry.send_request"),
+    COMMAND_MARRY_RECEIVE_REQUEST("command.marry.receive_request"),
+    COMMAND_MARRY_MARRIED("command.marry.married"),
+    COMMAND_MARRY_REQUEST_EXPIRED("command.marry.request_expired"),
+    COMMAND_MARRY_REQUEST_IS_MARRIED("command.marry.request_is_married"),
+    COMMAND_MARRY_ACCEPT_NO_REQUEST("command.marry.accept_no_request"),
+    COMMAND_MARRY_DIVORCE_NOT_MARRIED("command.marry.divorce_not_married"),
+    COMMAND_MARRY_INFO("command.marry.info"),
+    COMMAND_MARRY_DIVORCED("command.marry.divorced"),
+    COMMAND_MARRY_SELF_MARRIAGE("command.marry.self_marriage");
 
 
     private final String key;
