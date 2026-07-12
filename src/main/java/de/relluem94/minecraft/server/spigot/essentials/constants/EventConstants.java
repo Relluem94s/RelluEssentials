@@ -8,18 +8,22 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
  */
 public interface EventConstants {
 
+
+    String PLUGIN_EVENT_SKULL_INFO_SPACER = "§8~~~~~~~~~~~~~~~~~~~~~~~";
+    String PLUGIN_EVENT_NO_DEATH_MESSAGE = "death_%s";
+
     //==============================================================================//
     //                             EVENT   STUFF                                    //
     //==============================================================================//
     String PLUGIN_EVENT_JOIN_MESSAGE = PLUGIN_COLOR_POSITIVE + "[" + PLUGIN_SYMBOL_BLACK_FOUR_POINTED_STAR + "] " + PLUGIN_COLOR_MESSAGE + "%s" + PLUGIN_COLOR_COMMAND + " hat den Server betreten.";
     String PLUGIN_EVENT_QUIT_MESSAGE = PLUGIN_COLOR_NEGATIVE + "[" + PLUGIN_SYMBOL_CROSS_MARK + "] " + PLUGIN_COLOR_MESSAGE + "%s" + PLUGIN_COLOR_COMMAND + " hat den Server verlassen.";
+
     String PLUGIN_COMMAND_WHERE_STRING = PLUGIN_COLOR_COMMAND + "X: " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "Y: " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "Z: " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "Welt: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
+
     String PLUGIN_EVENT_DEATH = PLUGIN_FORMS_COMMAND_PREFIX + "Du starbst bei " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + PLUGIN_COMMAND_WHERE_STRING + PLUGIN_COLOR_COMMAND;
     String PLUGIN_EVENT_DEATH_TP = PLUGIN_FORMS_COMMAND_PREFIX + "Klicke diese Nachricht um dich zum Todespunkt zu teleportieren!";
 
-    String PLUGIN_EVENT_SKULL_INFO_SPACER = "§8~~~~~~~~~~~~~~~~~~~~~~~";
-    
-    String PLUGIN_EVENT_NO_DEATH_MESSAGE = "death_%s";
+
 
     String PLUGIN_EVENT_PROTECT_RIGHTS = "IDs";
     String PLUGIN_EVENT_PROTECT_FLAGS = "flags";
@@ -60,9 +64,9 @@ public interface EventConstants {
 
     String PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN = PLUGIN_COLOR_NEGATIVE + "Der Server ist leider voll";
 
+
     String PLUGIN_EVENT_NPC_BAGS_NO_COINS = PLUGIN_FORMS_COMMAND_PREFIX + "To less " + PLUGIN_NAME_MONEY;
     String PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "Error no Bag found";
-
     String PLUGIN_EVENT_NPC_BAGS_BOUGHT = PLUGIN_FORMS_COMMAND_PREFIX + "You bought a %s";
     String PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT = PLUGIN_FORMS_COMMAND_PREFIX + "You already Bought a %s";
 
@@ -70,13 +74,21 @@ public interface EventConstants {
     String PLUGIN_EVENT_NPC_BANKER_DEPOIST_NO_COINS_MESSAGE = PLUGIN_FORMS_COMMAND_PREFIX  + "To less " + PLUGIN_NAME_MONEY + " to do a transaction";
     String PLUGIN_EVENT_NPC_BANKER_DEPOIST_LIMIT_MESSAGE = PLUGIN_FORMS_COMMAND_PREFIX  + "Your Bank Account is full. Consider Upgrading it!";
     String PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE = PLUGIN_FORMS_COMMAND_PREFIX  + "You have withdrawn " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " from your Bank Account";
-
     String PLUGIN_EVENT_NPC_BANKER_TRANSACTION = PLUGIN_FORMS_COMMAND_PREFIX  + "Your transactions are:";
-
     String PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE = PLUGIN_SYMBOL_RIGHT_POINTING_ANGLE_BRACKET + PLUGIN_COLOR_MESSAGE;
     String PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE = PLUGIN_SYMBOL_LEFT_POINTING_ANGLE_BRACKET + PLUGIN_COLOR_MESSAGE;
     String PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST = Constants.PLUGIN_FORMS_WHITESPACE_SHORT + "%s Transaction with " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " on %s";
     String PLUGIN_EVENT_NPC_BANKER_TOTAL = PLUGIN_FORMS_COMMAND_PREFIX + "You have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Bank!";
+    String PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS = PLUGIN_FORMS_COMMAND_PREFIX + "You don't have enough " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "The initial Account costs %sCoins!";
+    String PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT = PLUGIN_FORMS_COMMAND_PREFIX + "Welcome to your new Bank Account";
+    String PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT = PLUGIN_FORMS_COMMAND_PREFIX + "You already have a greater Tier";
+    String PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT =  PLUGIN_FORMS_COMMAND_PREFIX + "It's already your Account Tier";
+    String PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE = PLUGIN_FORMS_COMMAND_PREFIX + "You Bought the Upgrade with your Purse";
+    String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK = PLUGIN_FORMS_COMMAND_PREFIX + "You Bought the Upgrade with your Bank Account";
+    String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH = PLUGIN_FORMS_COMMAND_PREFIX + "You Bought the Upgrade with your Purse and Bank Account";
+    String PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS = PLUGIN_FORMS_COMMAND_PREFIX + "To less " + PLUGIN_NAME_MONEY;
+    String PLUGIN_EVENT_NPC_BANKER_INTEREST = PLUGIN_FORMS_COMMAND_PREFIX + "You earnd " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in interest!";
+
 
     String PLUGIN_EVENT_NPC_BUY = PLUGIN_FORMS_COMMAND_PREFIX + "Bought %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You now have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
     String PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS = PLUGIN_FORMS_COMMAND_PREFIX  + "Can't buy %s for " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "You only have " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in your Purse!";
@@ -88,22 +100,19 @@ public interface EventConstants {
     String PLUGIN_EVENT_NPC_SELL_NO_PRICE = PLUGIN_FORMS_COMMAND_PREFIX + "You can't sell this Item!";
     String PLUGIN_EVENT_NPC_SELL_RENAMED = PLUGIN_FORMS_COMMAND_PREFIX + "You can't sell this Item!";
     String PLUGIN_EVENT_NPC_SELL_USED_ITEM = PLUGIN_FORMS_COMMAND_PREFIX + "You can't sell used Item!";
-    String PLUGIN_EVENT_BAG_COLLECT = "Added %sx %s to your Bag";
-    String PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS = PLUGIN_FORMS_COMMAND_PREFIX + "You don't have enough " + PLUGIN_NAME_MONEY + "." + PLUGIN_EOL + PLUGIN_FORMS_WHITESPACE_SHORT + "The initial Account costs %sCoins!";
-    String PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT = PLUGIN_FORMS_COMMAND_PREFIX + "Welcome to your new Bank Account";
-    String PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS =  PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " verloren!";
     String PLUGIN_EVENT_NPC_SPAWN =  PLUGIN_FORMS_COMMAND_PREFIX + "A %s " + PLUGIN_COLOR_COMMAND + "NPC was placed!";
-    String PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT = PLUGIN_FORMS_COMMAND_PREFIX + "No End Point found! Can't teleport.";
-    String PLUGIN_EVENT_LIGHTS_TOOGLE = PLUGIN_FORMS_COMMAND_PREFIX + "You toogled the Light";
-    String PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT = PLUGIN_FORMS_COMMAND_PREFIX + "You already have a greater Tier";
-    String PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT =  PLUGIN_FORMS_COMMAND_PREFIX + "It's already your Account Tier";
-    String PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE = PLUGIN_FORMS_COMMAND_PREFIX + "You Bought the Upgrade with your Purse";
-    String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK = PLUGIN_FORMS_COMMAND_PREFIX + "You Bought the Upgrade with your Bank Account";
-    String PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH = PLUGIN_FORMS_COMMAND_PREFIX + "You Bought the Upgrade with your Purse and Bank Account";
-    String PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS = PLUGIN_FORMS_COMMAND_PREFIX + "To less " + PLUGIN_NAME_MONEY;
-    String PLUGIN_EVENT_NPC_BANKER_INTEREST = PLUGIN_FORMS_COMMAND_PREFIX + "You earnd " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " in interest!";
+
+
 
     String PLUGIN_EVENT_DAMAGE_SHOW = PLUGIN_FORMS_COMMAND_PREFIX +  "Damage: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Last Damage: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " Health: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
+
+    String PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS =  PLUGIN_FORMS_COMMAND_PREFIX + "Du hast " + PLUGIN_COLOR_MONEY + "%s " + PLUGIN_NAME_MONEY + " verloren!";
+
+    String PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT = PLUGIN_FORMS_COMMAND_PREFIX + "No End Point found! Can't teleport.";
+
+    String PLUGIN_EVENT_LIGHTS_TOOGLE = PLUGIN_FORMS_COMMAND_PREFIX + "You toogled the Light";
+
+    String PLUGIN_EVENT_BAG_COLLECT = "Added %sx %s to your Bag";
 
     String INTEGRATION_REGISTERED = "Integration found: %s  " + PLUGIN_COLOR_COMMAND_ARG + "v%s";
     String INTEGRATION_UNREGISTERED = "Integration removed: ";
