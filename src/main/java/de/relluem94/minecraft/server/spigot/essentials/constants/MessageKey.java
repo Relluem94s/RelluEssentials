@@ -195,7 +195,8 @@ public enum MessageKey {
     COMMAND_CANNOT_REPAIR("command.cannot_repair"),
     COMMAND_REPAIR_PLAYER("command.repair.player"),
     COMMAND_WHERE("command.where"),
-    COMMAND_WHERE_STRING("command.where_string");
+    COMMAND_WHERE_STRING("command.where_string"),
+    COMMAND_BROADCAST_INFO("command.broadcast.info");
 
 
     private final String key;
