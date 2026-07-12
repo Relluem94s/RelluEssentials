@@ -65,12 +65,7 @@ public interface Constants {
     /* ******************************************************************************* */
 
     String PLUGIN_COMMAND_CRAFTINGBENCH = PLUGIN_FORMS_COMMAND_PREFIX + "Die Werkbank von %s" + PLUGIN_COLOR_COMMAND + " wurde geöffnet!";
-
     String PLUGIN_COMMAND_HEAD = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast ein Kopf von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erzeugt!";
-
-    String PLUGIN_COMMAND_VANISH_DISABLE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast vanish für " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "deaktiviert!";
-    String PLUGIN_COMMAND_VANISH_ENABLE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast vanish für " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "aktiviert!";
-    String PLUGIN_COMMAND_VANISH = PLUGIN_FORMS_COMMAND_PREFIX + "Dein vanish wurde umgeschaltet!";
 
     String PLUGIN_COMMAND_MORE = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast mehr von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erzeugt!";
     String PLUGIN_COMMAND_MORE_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast mehr von " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " erhalten!";
@@ -171,8 +166,6 @@ public interface Constants {
 
     String PLUGIN_COMMAND_LIST_HEADER = PLUGIN_FORMS_COMMAND_PREFIX + "Online Players " + PLUGIN_COLOR_MESSAGE_SPACER + "[" + PLUGIN_COLOR_NEUTRAL + "%s" + PLUGIN_COLOR_MESSAGE_SPACER + "]" + PLUGIN_COLOR_MESSAGE + ":";
     String PLUGIN_COMMAND_LIST_ENTRY = PLUGIN_FORMS_WHITESPACE_SHORT + PLUGIN_COLOR_MESSAGE_SPACER + "- " + "%s%s " + PLUGIN_COLOR_MESSAGE_SPACER + "[" + "%s%s" + PLUGIN_COLOR_MESSAGE_SPACER + "]";
-
-    String PLUGIN_COMMAND_TEAM_TITLE = PLUGIN_FORMS_COMMAND_PREFIX + "Team:";
 
     String PLUGIN_ITEM_SELL_PRICE_MESSAGE = PLUGIN_COLOR_NEGATIVE + "Sell: " + PLUGIN_NAME_MONEY + " per Item: %s " + PLUGIN_NAME_MONEY + " per Stack: %s";
     String PLUGIN_ITEM_BUY_PRICE_MESSAGE = PLUGIN_COLOR_POSITIVE + "Buy: " + PLUGIN_NAME_MONEY + " per Item: %s " + PLUGIN_NAME_MONEY + " per Stack: %s";

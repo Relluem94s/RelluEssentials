@@ -192,7 +192,14 @@ public enum MessageKey {
 
     COMMAND_SUDO_ACTIVATED("command.sudo.activated"),
     COMMAND_SUDO_DEACTIVATED("command.sudo.deactivated"),
-    COMMAND_SUDO_PLAYER_NOT_FOUND("command.sudo.player_not_found");
+    COMMAND_SUDO_PLAYER_NOT_FOUND("command.sudo.player_not_found"),
+
+    COMMAND_VANISH("command.vanish"),
+    COMMAND_VANISH_ENABLE("command.vanish.enable"),
+    COMMAND_VANISH_DISABLE("command.vanish.disable"),
+
+    COMMAND_TEAM_TITLE("command.team.title");
+
 
     private final String key;
     MessageKey(String key) {

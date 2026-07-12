@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -19,8 +20,9 @@ import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 @CommandName("vanish")
@@ -38,27 +40,28 @@ public class Vanish implements CommandConstruct {
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
-
         if (args.length == 0) {
-            sendMessage(p, PLUGIN_COMMAND_VANISH);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_VANISH));
             boolean canSee = !isVanished.contains(p);
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (canSee) {
                     onlinePlayer.hidePlayer(RelluEssentials.getInstance(), p);
                     isVanished.add(p);
-                }
-                else {
+                } else {
                     onlinePlayer.showPlayer(RelluEssentials.getInstance(), p);
                     isVanished.remove(p);
                 }
             }
 
-            sendMessage(p, String.format(canSee ? PLUGIN_COMMAND_VANISH_ENABLE : PLUGIN_COMMAND_VANISH_DISABLE, p.getCustomName()));
+            p.sendMessage(languageHelper.getWithPrefix(
+                    canSee ? MessageKey.COMMAND_VANISH_ENABLE : MessageKey.COMMAND_VANISH_DISABLE,
+                    p.getCustomName()
+            ));
 
             return true;
         }
@@ -69,7 +72,7 @@ public class Vanish implements CommandConstruct {
             return true;
         }
 
-        sendMessage(target, PLUGIN_COMMAND_VANISH);
+        target.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_VANISH));
 
         boolean canSee = false;
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
@@ -81,7 +84,10 @@ public class Vanish implements CommandConstruct {
             }
         }
 
-        sendMessage(p, String.format(canSee ? PLUGIN_COMMAND_VANISH_ENABLE : PLUGIN_COMMAND_VANISH_DISABLE, p.getCustomName()));
+        p.sendMessage(languageHelper.getWithPrefix(
+                canSee ? MessageKey.COMMAND_VANISH_ENABLE : MessageKey.COMMAND_VANISH_DISABLE,
+                target.getCustomName()
+        ));
 
         return true;
     }
@@ -103,7 +109,7 @@ public class Vanish implements CommandConstruct {
             return tabList;
         }
 
-        if(strings.length > 1){
+        if (strings.length > 1) {
             return tabList;
         }
 
