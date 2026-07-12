@@ -1,7 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static java.lang.Math.round;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WHERE_STRING;
+
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import org.bukkit.Location;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
@@ -34,10 +36,10 @@ public class StringHelper {
      */
     public static @NotNull String locationToString(@NotNull Location l) {
         World world = l.getWorld();
-        if(world == null){
-            return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), "null");
+        if (world == null) {
+            return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), "null");
         }
-        return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), world.getName());
+        return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), world.getName());
     }
 
     /**
@@ -52,10 +54,10 @@ public class StringHelper {
         }
 
         World world = l.getWorld();
-        if(world == null){
-            return String.format(PLUGIN_COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), "null");
+        if (world == null) {
+            return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), "null");
         }
-        return String.format(PLUGIN_COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), world.getName());
+        return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), world.getName());
     }
 
     public static @NotNull String firstCharToUpper(@NotNull String s){

@@ -1,9 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_INVALID;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.ArrayList;
@@ -14,7 +10,6 @@ import java.util.logging.Logger;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -39,7 +34,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.scheduler.BukkitRunnable;
 
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,6 +52,10 @@ import de.relluem94.minecraft.server.spigot.essentials.items.RelluPickaxe;
 import de.relluem94.minecraft.server.spigot.essentials.items.RelluShield;
 import de.relluem94.minecraft.server.spigot.essentials.items.RelluSword;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+
+
 @CommandName("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")
 public class TestCommand implements CommandConstruct {
 
@@ -65,24 +63,24 @@ public class TestCommand implements CommandConstruct {
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if (!p.getName().equalsIgnoreCase("Relluem94")) {
-            sender.sendMessage(PLUGIN_COMMAND_INVALID);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
             return true;
         }
 
         if (args.length < 1) {
-            sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
             return true;   
         }
 
         if (args.length > 1) {
-            sender.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
             return true;   
         }
 

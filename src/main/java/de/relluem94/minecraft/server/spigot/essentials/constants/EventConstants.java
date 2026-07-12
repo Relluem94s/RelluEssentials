@@ -13,6 +13,7 @@ public interface EventConstants {
     //==============================================================================//
     String PLUGIN_EVENT_JOIN_MESSAGE = PLUGIN_COLOR_POSITIVE + "[" + PLUGIN_SYMBOL_BLACK_FOUR_POINTED_STAR + "] " + PLUGIN_COLOR_MESSAGE + "%s" + PLUGIN_COLOR_COMMAND + " hat den Server betreten.";
     String PLUGIN_EVENT_QUIT_MESSAGE = PLUGIN_COLOR_NEGATIVE + "[" + PLUGIN_SYMBOL_CROSS_MARK + "] " + PLUGIN_COLOR_MESSAGE + "%s" + PLUGIN_COLOR_COMMAND + " hat den Server verlassen.";
+    String PLUGIN_COMMAND_WHERE_STRING = PLUGIN_COLOR_COMMAND + "X: " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "Y: " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "Z: " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "Welt: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
     String PLUGIN_EVENT_DEATH = PLUGIN_FORMS_COMMAND_PREFIX + "Du starbst bei " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + PLUGIN_COMMAND_WHERE_STRING + PLUGIN_COLOR_COMMAND;
     String PLUGIN_EVENT_DEATH_TP = PLUGIN_FORMS_COMMAND_PREFIX + "Klicke diese Nachricht um dich zum Todespunkt zu teleportieren!";
 
