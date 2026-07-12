@@ -54,16 +54,11 @@ public interface Constants {
     String PLUGIN_SYMBOL_LEFT_POINTING_ANGLE_BRACKET = PLUGIN_COLOR_NEGATIVE + "〈";
     String PLUGIN_SYMBOL_CROSS_MARK = PLUGIN_COLOR_NEGATIVE + "❌";
     String PLUGIN_SYMBOL_BLACK_FOUR_POINTED_STAR = PLUGIN_COLOR_POSITIVE + "✦";
-    String PLUGIN_SYMBOL_HEART = PLUGIN_COLOR_NEGATIVE + "♥";
-    // ❌ Cross Mark (U+274C)
-    // ✦ Black Four Pointed Star (U+2726)
 
     String PLUGIN_SIGN_NAME = PLUGIN_COLOR_MESSAGE + "[" + PLUGIN_NAME_SHORT + "]";
     String PLUGIN_SIGN_CLICK = PLUGIN_COLOR_MESSAGE + "[Click here]";
 
     String PLUGIN_INTERNAL_UTILITY_CLASS = "This is a Utility Class";
-
-    
 
     /* ******************************************************************************* */
     /*                              COMMAND   STUFF                                    */
@@ -233,19 +228,6 @@ public interface Constants {
     String PLUGIN_BANK_INTEREST_NEXT_RUN = PLUGIN_COLOR_COMMAND + "Next Interest Payment Run in: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " seconds!";
 
     String PLUGIN_COMMAND_CUSTOMHEADS_TITLE = PLUGIN_FORMS_COMMAND_PREFIX + "Heads";
-
-    String PLUGIN_COMMAND_PLAYERINFO = PLUGIN_FORMS_COMMAND_PREFIX + "Player Information: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
-    String PLUGIN_COMMAND_PLAYERINFO_HOMES = "Homes: %s";
-    String PLUGIN_COMMAND_PLAYERINFO_DEATHPOINTS = "DeathPoints: %s";
-    String PLUGIN_COMMAND_PLAYERINFO_GROUP = "Group: %s";
-    String PLUGIN_COMMAND_PLAYERINFO_MARRIED_TO = "Married: %s " + PLUGIN_SYMBOL_HEART + PLUGIN_COLOR_COMMAND + " %s";
-    String PLUGIN_COMMAND_PLAYERINFO_MARRIED_SINCE = "Married since: %s";
-    String PLUGIN_COMMAND_PLAYERINFO_LAST_ONLINE = "Last Online: %s";
-    String PLUGIN_COMMAND_PLAYERINFO_FIRST_ONLINE = "First Online: %s";
-    String PLUGIN_COMMAND_PLAYERINFO_MINED = "%s mined: %s";
-    String PLUGIN_COMMAND_PLAYERINFO_DEATHS = "Deaths: %s";
-    String PLUGIN_COMMAND_PLAYERINFO_JUMPED = "Jumped: %s";
-    String PLUGIN_COMMAND_PLAYERINFO_LEFT_GAME = "Left Game: %s";
 
     String PLUGIN_COMMAND_LIST_HEADER = PLUGIN_FORMS_COMMAND_PREFIX + "Online Players " + PLUGIN_COLOR_MESSAGE_SPACER + "[" + PLUGIN_COLOR_NEUTRAL + "%s" + PLUGIN_COLOR_MESSAGE_SPACER + "]" + PLUGIN_COLOR_MESSAGE + ":";
     String PLUGIN_COMMAND_LIST_ENTRY = PLUGIN_FORMS_WHITESPACE_SHORT + PLUGIN_COLOR_MESSAGE_SPACER + "- " + "%s%s " + PLUGIN_COLOR_MESSAGE_SPACER + "[" + "%s%s" + PLUGIN_COLOR_MESSAGE_SPACER + "]";

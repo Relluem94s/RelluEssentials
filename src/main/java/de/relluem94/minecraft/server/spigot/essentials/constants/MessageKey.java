@@ -119,7 +119,21 @@ public enum MessageKey {
     COMMAND_COOKIES_PLAYER("command.cookies.player"),
     COMMAND_COOKIES_LORE_1("command.cookies.lore_1"),
     COMMAND_COOKIES_LORE_3("command.cookies.lore_3"),
-    COMMAND_COOKIES_DISPLAYNAME("command.cookies.displayname");
+    COMMAND_COOKIES_DISPLAYNAME("command.cookies.displayname"),
+
+    COMMAND_PLAYERINFO("command.playerinfo"),
+    COMMAND_PLAYERINFO_HOMES("command.playerinfo.homes"),
+    COMMAND_PLAYERINFO_DEATHPOINTS("command.playerinfo.deathpoints"),
+    COMMAND_PLAYERINFO_GROUP("command.playerinfo.group"),
+    COMMAND_PLAYERINFO_MARRIED_TO("command.playerinfo.married_to"),
+    COMMAND_PLAYERINFO_MARRIED_SINCE("command.playerinfo.married_since"),
+    COMMAND_PLAYERINFO_LAST_ONLINE("command.playerinfo.last_online"),
+    COMMAND_PLAYERINFO_FIRST_ONLINE("command.playerinfo.first_online"),
+    COMMAND_PLAYERINFO_MINED("command.playerinfo.mined"),
+    COMMAND_PLAYERINFO_DEATHS("command.playerinfo.deaths"),
+    COMMAND_PLAYERINFO_JUMPED("command.playerinfo.jumped"),
+    COMMAND_PLAYERINFO_LEFT_GAME("command.playerinfo.left_game");
+
 
     private final String key;
     MessageKey(String key) {
