@@ -81,9 +81,6 @@ public interface Constants {
     String PLUGIN_COMMAND_STORM = PLUGIN_FORMS_COMMAND_PREFIX + "Du lässt es in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + " gewittern!";
     String PLUGIN_COMMAND_DAY = PLUGIN_FORMS_COMMAND_PREFIX + "Es ist jetzt Tag in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "!";
 
-    String PLUGIN_COMMAND_GOD_ON = PLUGIN_FORMS_COMMAND_PREFIX + "Du bist der Gott!";
-    String PLUGIN_COMMAND_GOD_OFF = PLUGIN_FORMS_COMMAND_PREFIX + "Du bist wieder sterblich!";
-
     String PLUGIN_COMMAND_HEAL = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest geheilt!"; 
 
     String PLUGIN_COMMAND_NIGHT = PLUGIN_FORMS_COMMAND_PREFIX + "Es ist jetzt Nacht in der Welt " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + "!";

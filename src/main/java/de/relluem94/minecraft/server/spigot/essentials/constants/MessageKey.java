@@ -198,7 +198,10 @@ public enum MessageKey {
     COMMAND_VANISH_ENABLE("command.vanish.enable"),
     COMMAND_VANISH_DISABLE("command.vanish.disable"),
 
-    COMMAND_TEAM_TITLE("command.team.title");
+    COMMAND_TEAM_TITLE("command.team.title"),
+
+    COMMAND_GOD_ON("command.god.on"),
+    COMMAND_GOD_OFF("command.god.off");
 
 
     private final String key;
