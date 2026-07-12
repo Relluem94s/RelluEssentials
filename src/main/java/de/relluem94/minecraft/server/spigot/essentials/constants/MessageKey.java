@@ -188,7 +188,11 @@ public enum MessageKey {
     COMMAND_PURSE_TO_ITEM_VALUE_INVALID("command.purse.to_item_value_invalid"),
     COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY("command.purse.to_item_not_enough_money"),
     COMMAND_PURSE_TOTAL("command.purse.total"),
-    COMMAND_PURSE_TOTAL_OTHER("command.purse.total_other");
+    COMMAND_PURSE_TOTAL_OTHER("command.purse.total_other"),
+
+    COMMAND_SUDO_ACTIVATED("command.sudo.activated"),
+    COMMAND_SUDO_DEACTIVATED("command.sudo.deactivated"),
+    COMMAND_SUDO_PLAYER_NOT_FOUND("command.sudo.player_not_found");
 
     private final String key;
     MessageKey(String key) {
