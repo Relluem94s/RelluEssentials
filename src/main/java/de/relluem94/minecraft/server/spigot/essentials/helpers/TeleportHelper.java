@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_BACK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_NOT_FOUND;
 
 public class TeleportHelper {
@@ -74,7 +73,7 @@ public class TeleportHelper {
         }
 
         addBackPointAndTeleport("", p, w, true, location, false);
-        p.sendMessage(PLUGIN_COMMAND_BACK);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_BACK));
     }
 
     public static void teleportWarp(Player p, @NotNull Location location){

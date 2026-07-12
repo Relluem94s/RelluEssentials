@@ -76,7 +76,6 @@ public interface Constants {
     String PLUGIN_COMMAND_INVALID = PLUGIN_FORMS_COMMAND_PREFIX + "Invalid Data!";
     String PLUGIN_COMMAND_PERMISSION_MISSING = PLUGIN_FORMS_COMMAND_PREFIX + "Dafür hast du leider keine Rechte!";
     String PLUGIN_COMMAND_NOT_A_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "Du bist leider kein Spieler!";
-    String PLUGIN_COMMAND_TO_LESS_ARGUMENTS = PLUGIN_FORMS_COMMAND_PREFIX + "Zu wenig Argumente!";
     String PLUGIN_COMMAND_TO_MANY_ARGUMENTS = PLUGIN_FORMS_COMMAND_PREFIX + "Zu viele Argumente!";
     String PLUGIN_COMMAND_TARGET_NOT_A_PLAYER = PLUGIN_FORMS_COMMAND_PREFIX + "%s" + PLUGIN_COLOR_COMMAND + " ist kein Spieler!";
 
@@ -87,23 +86,6 @@ public interface Constants {
     String PLUGIN_COMMAND_EXIT_KICK_MESSAGE = PLUGIN_COLOR_COMMAND + "exited.";
     String PLUGIN_COMMAND_EXIT_SERVER_SHUTTING_DOWN = PLUGIN_COLOR_COMMAND + "Server is shutting down...";
 
-    String PLUGIN_BAG_AMOUNT = "Amount: " + PLUGIN_COLOR_COMMAND_ARG + "%s";
-    String PLUGIN_BAG_RETRIEVE = "Click to retrieve";
-    String PLUGIN_BAG_CLICK_TO_OPEN = "Click to open";
-    String PLUGIN_BAG_CLICK_TO_BUY = "Click to buy this Bag";
-    String PLUGIN_BAG_COST_TO_BUY = "Costs: %s";
-    String PLUGIN_BAG_GUI_TITLE =  PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE + "Bags";
-
-    String PLUGIN_BAGS_SAVED = "%s%s Bag(s) saved!";
-    String PLUGIN_PLAYERS_SAVED = "%s%s Player(s) saved!";
-    String PLUGIN_PLAYERS_INVENTORY_SAVED = "%s%s Player(s) Inventory saved!";
-    String PLUGIN_COMMAND_BAGS_NOT_FOUND = PLUGIN_FORMS_COMMAND_PREFIX + "The searched Bag " + PLUGIN_COLOR_COMMAND_ARG + "%s " + PLUGIN_COLOR_COMMAND + "was not found!";
-
-    String PLUGIN_COMMAND_BACK = PLUGIN_FORMS_COMMAND_PREFIX + "Du wurdest zurück teleportiert!";
-    String PLUGIN_COMMAND_BACK_NO_LOCATION = PLUGIN_FORMS_COMMAND_PREFIX + "Du hast kein Back Punkt gesetzt!";
-
-    String PLUGIN_COMMAND_SETGROUP = PLUGIN_COLOR_COMMAND + "Group " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " for Player " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " was set!";
-    String PLUGIN_COMMAND_SETGROUP_GROUP_NOT_FOUND = PLUGIN_COLOR_COMMAND + "Group " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " not found!";
     String PLUGIN_BANK_INTEREST_NEXT_RUN = PLUGIN_COLOR_COMMAND + "Next Interest Payment Run in: " + PLUGIN_COLOR_COMMAND_ARG + "%s" + PLUGIN_COLOR_COMMAND + " seconds!";
 
     String PLUGIN_COMMAND_CUSTOMHEADS_TITLE = PLUGIN_FORMS_COMMAND_PREFIX + "Heads";

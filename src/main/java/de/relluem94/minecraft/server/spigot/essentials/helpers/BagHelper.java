@@ -1,24 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAGS_SAVED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_AMOUNT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_CLICK_TO_BUY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_CLICK_TO_OPEN;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_COST_TO_BUY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_GUI_TITLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_BAG_RETRIEVE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SPACER_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_INTERNAL_UTILITY_CLASS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_PREFIX;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.ListIterator;
-
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -27,22 +20,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.*;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 public class BagHelper {
 
@@ -59,7 +45,7 @@ public class BagHelper {
             return null;
         }
 
-        Inventory inv = InventoryHelper.createInventory(54, PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE+ be.getBagType().getDisplayName());
+        Inventory inv = InventoryHelper.createInventory(54, PLUGIN_FORMS_COMMAND_PREFIX + be.getBagType().getDisplayName());
         InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
 
         inv.setItem(10, getItemStack(be, 0));
@@ -98,7 +84,7 @@ public class BagHelper {
         return inv;
     }
 
-    public static final String MAIN_GUI = PLUGIN_BAG_GUI_TITLE;
+    public static final String MAIN_GUI = languageHelper.get(MessageKey.PLUGIN_BAG_GUI_TITLE);
 
     public static Inventory getBags(boolean npc, String title){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title), CustomItems.npc_gui_disabled.getCustomItem());
@@ -117,7 +103,6 @@ public class BagHelper {
     public static Inventory getBags(PlayerEntry pe){
         Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI), CustomItems.npc_gui_disabled.getCustomItem());
         ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().listIterator();
-
         int slot = 0;
         while(bagTypeEntryListIterator.hasNext()){
             slot = InventoryHelper.getNextSlot(slot);
@@ -134,10 +119,13 @@ public class BagHelper {
     public static @NotNull ItemHelper getItem(BagTypeEntry bte, boolean npc){
         String[] lore;
         if(npc){
-            lore = new String[]{PLUGIN_BAG_CLICK_TO_BUY, String.format(PLUGIN_BAG_COST_TO_BUY,  bte.getCost())};
+            lore = new String[]{
+                    languageHelper.get(MessageKey.PLUGIN_BAG_CLICK_TO_BUY),
+                    languageHelper.get(MessageKey.PLUGIN_BAG_COST_TO_BUY, bte.getCost())
+            };
         }
         else{
-            lore = new String[]{PLUGIN_BAG_CLICK_TO_OPEN};
+            lore = new String[]{languageHelper.get(MessageKey.PLUGIN_BAG_CLICK_TO_OPEN)};
         }
         return new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG), bte.getDisplayName(), Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore));
     }
@@ -193,8 +181,8 @@ public class BagHelper {
         }
 
         List<String> lore = new ArrayList<>();
-        lore.add(String.format(PLUGIN_BAG_AMOUNT, value));
-        lore.add(PLUGIN_BAG_RETRIEVE);
+        lore.add(languageHelper.get(MessageKey.PLUGIN_BAG_AMOUNT, value));
+        lore.add(languageHelper.get(MessageKey.PLUGIN_BAG_RETRIEVE));
 
         im.setLore(lore);
         is.setItemMeta(im);
@@ -372,7 +360,12 @@ public class BagHelper {
             }
         }
         if(updatedBags != 0){
-            sendMessageInChannel(String.format(PLUGIN_BAGS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedBags), PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+            sendMessageInChannel(
+                    languageHelper.get(MessageKey.PLUGIN_BAGS_SAVED, updatedBags),
+                    PLUGIN_NAME_CHAT_CONSOLE,
+                    BetterChatFormat.ADMIN_CHANNEL,
+                    Groups.getGroup("admin")
+            );
         }
     }
 }

@@ -1,23 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import java.util.Objects;
-import java.util.Properties;
-import java.util.UUID;
-
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
-import lombok.NonNull;
-import org.bukkit.*;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.RayTraceResult;
-import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.json.JSONObject;
-
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
@@ -29,8 +15,23 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManage
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.utils.NetworkUtils;
+import lombok.NonNull;
+import org.bukkit.*;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
+
+import java.util.Objects;
+import java.util.Properties;
+import java.util.UUID;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 /**
  *
@@ -189,7 +190,12 @@ public class PlayerHelper {
         }
 
         if(updatedPlayers != 0){
-            ChatHelper.sendMessageInChannel(String.format(Constants.PLUGIN_PLAYERS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedPlayers), Constants.PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+            sendMessageInChannel(
+                    languageHelper.get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers),
+                    PLUGIN_NAME_CHAT_CONSOLE,
+                    BetterChatFormat.ADMIN_CHANNEL,
+                    Groups.getGroup("admin")
+            );
         }
     }
 
@@ -201,7 +207,12 @@ public class PlayerHelper {
         }
 
         if(updatedPlayers != 0){
-            ChatHelper.sendMessageInChannel(String.format(Constants.PLUGIN_PLAYERS_INVENTORY_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedPlayers), Constants.PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+            sendMessageInChannel(
+                    languageHelper.get(MessageKey.PLUGIN_PLAYERS_INVENTORY_SAVED, updatedPlayers),
+                    PLUGIN_NAME_CHAT_CONSOLE,
+                    BetterChatFormat.ADMIN_CHANNEL,
+                    Groups.getGroup("admin")
+            );
         }
     }
 

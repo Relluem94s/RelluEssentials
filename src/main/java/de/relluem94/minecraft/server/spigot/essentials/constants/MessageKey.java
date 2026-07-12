@@ -207,7 +207,6 @@ public enum MessageKey {
     COMMAND_MSG_SPACER_IN("command.msg.spacer_in"),
     COMMAND_MSG_SPACER_OUT("command.msg.spacer_out"),
     COMMAND_MSG_INFO("command.msg.info"),
-
     COMMAND_CRAFTINGBENCH("command.craftingbench"),
     COMMAND_CRAFTINGBENCH_TITLE("command.craftingbench.title"),
     COMMAND_HEAD("command.head"),
@@ -223,7 +222,21 @@ public enum MessageKey {
     COMMAND_PRINT_INFO("command.print.info"),
     COMMAND_RENAME_INFO("command.rename.info"),
     COMMAND_RENAME_AIR("command.rename.air"),
-    COMMAND_RENAME("command.rename");
+    COMMAND_RENAME("command.rename"),
+    COMMAND_BACK("command.back"),
+    COMMAND_BACK_NO_LOCATION("command.back.no_location"),
+    COMMAND_SETGROUP("command.setgroup"),
+    COMMAND_SETGROUP_GROUP_NOT_FOUND("command.setgroup.group_not_found"),
+    PLUGIN_BAG_AMOUNT("plugin.bag.amount"),
+    PLUGIN_BAG_RETRIEVE("plugin.bag.retrieve"),
+    PLUGIN_BAG_CLICK_TO_OPEN("plugin.bag.click_to_open"),
+    PLUGIN_BAG_CLICK_TO_BUY("plugin.bag.click_to_buy"),
+    PLUGIN_BAG_COST_TO_BUY("plugin.bag.cost_to_buy"),
+    PLUGIN_BAG_GUI_TITLE("plugin.bag.gui_title"),
+    PLUGIN_BAGS_SAVED("plugin.bags.saved"),
+    PLUGIN_PLAYERS_SAVED("plugin.players.saved"),
+    PLUGIN_PLAYERS_INVENTORY_SAVED("plugin.players.inventory_saved"),
+    PLUGIN_COMMAND_BAGS_NOT_FOUND("plugin.command.bags_not_found");
 
 
     private final String key;
