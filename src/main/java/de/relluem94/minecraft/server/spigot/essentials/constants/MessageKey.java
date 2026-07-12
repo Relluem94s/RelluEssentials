@@ -29,20 +29,16 @@ public enum MessageKey {
     COMMAND_TO_LESS_ARGUMENTS("command.to_less_arguments"),
     COMMAND_TO_MANY_ARGUMENTS("command.to_many_arguments"),
     COMMAND_WRONG_SUB_COMMAND("command.wrong_sub_command"),
-
     COMMAND_FLYMODE("command.flymode"),
     COMMAND_FLYMODE_ACTIVATED("command.flymode.activated"),
     COMMAND_FLYMODE_DEACTIVATED("command.flymode.deactivated"),
-
     COMMAND_GAMEMODE("command.gamemode"),
     COMMAND_GAMEMODE_SURVIVAL("command.gamemode.survival"),
     COMMAND_GAMEMODE_CREATIVE("command.gamemode.creative"),
     COMMAND_GAMEMODE_ADVENTURE("command.gamemode.adventure"),
     COMMAND_GAMEMODE_SPECTATOR("command.gamemode.spectator"),
-
     COMMAND_AFK_ACTIVATED("command.afk.activated"),
     COMMAND_AFK_DEACTIVATED("command.afk.deactivated"),
-
     COMMAND_HOME("command.home"),
     COMMAND_HOME_TP("command.home.tp"),
     COMMAND_HOME_NONE("command.home.none"),
@@ -57,7 +53,6 @@ public enum MessageKey {
     COMMAND_HOME_LIST_DEATHPOINTS_NAME("command.home.list_deathpoints_name"),
     COMMAND_HOME_DEATH_DELETE("command.home.death_delete"),
     COMMAND_HOME_NO_BED("command.home.no_bed"),
-
     COMMAND_MODIFY_NO_UNDO_HISTORY("command.modify.no_undo_history"),
     COMMAND_MODIFY_UNDO_STARTED("command.modify.undo_started"),
     COMMAND_MODIFY_WRONG_MATERIAL("command.modify.wrong_material"),
@@ -79,7 +74,6 @@ public enum MessageKey {
     COMMAND_MODIFY_FILL_RADIUS_TO_HIGH("command.modify.fill_radius_to_high"),
     COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS("command.modify.clipboard_rotate_success"),
     COMMAND_MODIFY_PLANT_STARTED("command.modify.plant_started"),
-
     COMMAND_ADMIN_LIGHT_TOGGLE("command.admin.light_toggle"),
     COMMAND_ADMIN_LIGHT_TOGGLE_DISABLED("command.admin.light_toggle_disabled"),
     COMMAND_ADMIN_INFO("command.admin.info"),
@@ -114,13 +108,11 @@ public enum MessageKey {
     COMMAND_POSITION_NEED_BOTH_POSITIONS("command.position.need_both_positions"),
     COMMAND_POSITION_EXPAND("command.position.expand"),
     COMMAND_POSITION_DECREASE("command.position.decrease"),
-
     COMMAND_COOKIES("command.cookies"),
     COMMAND_COOKIES_PLAYER("command.cookies.player"),
     COMMAND_COOKIES_LORE_1("command.cookies.lore_1"),
     COMMAND_COOKIES_LORE_3("command.cookies.lore_3"),
     COMMAND_COOKIES_DISPLAYNAME("command.cookies.displayname"),
-
     COMMAND_PLAYERINFO("command.playerinfo"),
     COMMAND_PLAYERINFO_HOMES("command.playerinfo.homes"),
     COMMAND_PLAYERINFO_DEATHPOINTS("command.playerinfo.deathpoints"),
@@ -133,7 +125,6 @@ public enum MessageKey {
     COMMAND_PLAYERINFO_DEATHS("command.playerinfo.deaths"),
     COMMAND_PLAYERINFO_JUMPED("command.playerinfo.jumped"),
     COMMAND_PLAYERINFO_LEFT_GAME("command.playerinfo.left_game"),
-
     COMMAND_PROTECT_COMMAND_INFO("command.protect.command_info"),
     COMMAND_PROTECT_INFO("command.protect.info"),
     COMMAND_PROTECT_ADD("command.protect.add"),
@@ -146,7 +137,6 @@ public enum MessageKey {
     COMMAND_PROTECT_RIGHT_ADD("command.protect.right_add"),
     COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND("command.protect.right_player_notfound"),
     COMMAND_PROTECT_RIGHT_REMOVE("command.protect.right_remove"),
-
     COMMAND_MARRY_SEND_REQUEST("command.marry.send_request"),
     COMMAND_MARRY_RECEIVE_REQUEST("command.marry.receive_request"),
     COMMAND_MARRY_MARRIED("command.marry.married"),
@@ -157,7 +147,6 @@ public enum MessageKey {
     COMMAND_MARRY_INFO("command.marry.info"),
     COMMAND_MARRY_DIVORCED("command.marry.divorced"),
     COMMAND_MARRY_SELF_MARRIAGE("command.marry.self_marriage"),
-
     COMMAND_TP_REQUEST_TARGET("command.tp.request_target"),
     COMMAND_TP_REQUEST_EXPIRED("command.tp.request_expired"),
     COMMAND_TP("command.tp"),
@@ -165,7 +154,6 @@ public enum MessageKey {
     COMMAND_TP_INFO("command.tp.info"),
     COMMAND_TP_ACCEPT_NO_REQUEST("command.tp.accept_no_request"),
     COMMAND_TP_SEND_REQUEST("command.tp.send_request"),
-
     COMMAND_WARP("command.warp"),
     COMMAND_WARP_LIST_INFO("command.warp.list_info"),
     COMMAND_WARP_LIST("command.warp.list"),
@@ -173,7 +161,6 @@ public enum MessageKey {
     COMMAND_WARP_ERROR_NO_WARP_FOUND("command.warp.error_no_warp_found"),
     COMMAND_WARP_ADD("command.warp.add"),
     COMMAND_WARP_REMOVE("command.warp.remove"),
-
     COMMAND_WORLD_INFO("command.world.info"),
     COMMAND_WORLD_CREATE_INFO("command.world.create_info"),
     COMMAND_WORLD_NOT_LOADED("command.world.not_loaded"),
@@ -182,33 +169,28 @@ public enum MessageKey {
     COMMAND_WORLD_LOAD("command.world.load"),
     COMMAND_WORLD_CREATE("command.world.create"),
     COMMAND_WORLD_WRONG_ARGUMENTS("command.world.wrong_arguments"),
-
     COMMAND_PURSE_GAIN("command.purse.gain"),
     COMMAND_PURSE_TO_ITEM("command.purse.to_item"),
     COMMAND_PURSE_TO_ITEM_VALUE_INVALID("command.purse.to_item_value_invalid"),
     COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY("command.purse.to_item_not_enough_money"),
     COMMAND_PURSE_TOTAL("command.purse.total"),
     COMMAND_PURSE_TOTAL_OTHER("command.purse.total_other"),
-
     COMMAND_SUDO_ACTIVATED("command.sudo.activated"),
     COMMAND_SUDO_DEACTIVATED("command.sudo.deactivated"),
     COMMAND_SUDO_PLAYER_NOT_FOUND("command.sudo.player_not_found"),
-
     COMMAND_VANISH("command.vanish"),
     COMMAND_VANISH_ENABLE("command.vanish.enable"),
     COMMAND_VANISH_DISABLE("command.vanish.disable"),
-
     COMMAND_TEAM_TITLE("command.team.title"),
-
     COMMAND_GOD_ON("command.god.on"),
     COMMAND_GOD_OFF("command.god.off"),
-
     COMMAND_WEATHER_SUN("command.weather.sun"),
     COMMAND_WEATHER_RAIN("command.weather.rain"),
     COMMAND_WEATHER_STORM("command.weather.storm"),
     COMMAND_TIME_DAY("command.time.day"),
     COMMAND_TIME_NIGHT("command.time.night"),
-    COMMAND_HEAL("command.heal");
+    COMMAND_HEAL("command.heal"),
+    COMMAND_GAMERULES("command.gamerules");
 
 
     private final String key;
