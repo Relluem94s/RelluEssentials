@@ -1,13 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_COOKIES;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_COOKIES_DISPLAYNAME;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_COOKIES_LORE_1;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_COOKIES_LORE_3;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_COOKIES_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -16,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -73,7 +67,7 @@ public class Cookies implements CommandConstruct {
             CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
             Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
             if(p == null){
-                sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, "No Player in Reach"));
+                sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, languageHelper.get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
                 return true;
             }
 
@@ -82,7 +76,7 @@ public class Cookies implements CommandConstruct {
         }
 
         if(!isPlayer(sender)){
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
@@ -90,7 +84,7 @@ public class Cookies implements CommandConstruct {
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
@@ -101,18 +95,18 @@ public class Cookies implements CommandConstruct {
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            p.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
             return true;
         }
 
-        sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES_PLAYER, target.getCustomName()));
+        sendMessage(p, languageHelper.get(MessageKey.COMMAND_COOKIES_PLAYER, target.getCustomName()));
         getCookies(getCookie(p), target);
         return true;
     }
 
     private void getCookies(ItemStack is, @NotNull Player p) {
         p.getWorld().dropItem(p.getLocation(), is);
-        sendMessage(p, String.format(PLUGIN_COMMAND_COOKIES, p.getCustomName()));
+        sendMessage(p, languageHelper.get(MessageKey.COMMAND_COOKIES, p.getCustomName()));
     }
 
     private @NotNull ItemStack getCookie(Player p) {
@@ -123,8 +117,15 @@ public class Cookies implements CommandConstruct {
             return is;
         }
 
-        im.setDisplayName(PLUGIN_COMMAND_COOKIES_DISPLAYNAME);
-        im.setLore(Arrays.asList(String.format(PLUGIN_COMMAND_COOKIES_LORE_1, p.getCustomName()), PLUGIN_COMMAND_COOKIES_LORE_3));
+        im.setDisplayName(languageHelper.get(MessageKey.COMMAND_COOKIES_DISPLAYNAME));
+        im.setLore(
+            Arrays.asList(
+                languageHelper.get(MessageKey.COMMAND_COOKIES_LORE_1,
+                p.getCustomName()),
+                languageHelper.get(MessageKey.COMMAND_COOKIES_LORE_3
+                )
+            )
+        );
         is.setItemMeta(im);
         return is;
     }

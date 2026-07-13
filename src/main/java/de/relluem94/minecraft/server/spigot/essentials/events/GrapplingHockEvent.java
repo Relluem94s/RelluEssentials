@@ -1,8 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,9 +11,10 @@ import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import java.util.ArrayList;
+import java.util.List;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
@@ -52,7 +52,7 @@ public class GrapplingHockEvent implements Listener {
                 }.runTaskLater(RelluEssentials.getInstance(), 50L);
             }
             else{
-                e.getPlayer().sendMessage(Constants.PLUGIN_GRAPPLING_HOOK_COOLDOWN);
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
             }
             
         }

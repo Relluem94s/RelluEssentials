@@ -2,13 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -18,23 +18,19 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isInt;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -80,19 +76,19 @@ public class Modify implements CommandConstruct {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String string, @NotNull String[] strings) {
         if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) {
-            commandSender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
         if (!isPlayer(commandSender)) {
-            commandSender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) commandSender;
 
         if (strings.length == 0) {
-            p.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
             return true;
         }
 
@@ -142,18 +138,18 @@ public class Modify implements CommandConstruct {
                 }
 
                 RelluEssentials.getInstance().clipboard.put(p, new DoubleStore<>(newSelection, clipboardList));
-
-                p.sendMessage(String.format(
-                        Commands.CUT.getName().equalsIgnoreCase(strings[0]) ? PLUGIN_COMMAND_MODIFY_CUT_STARTED : PLUGIN_COMMAND_MODIFY_COPY_STARTED,
-                        clipboardList.size()
-                ));
+                p.sendMessage(
+                        Commands.CUT.getName().equalsIgnoreCase(strings[0])
+                                ? languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_CUT_STARTED, clipboardList.size())
+                                : languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_COPY_STARTED, clipboardList.size())
+                );
                 return true;
             }
 
             if (Commands.PASTE.getName().equalsIgnoreCase(strings[0])) {
                 DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
                 if (clipboardList == null || clipboardList.getSecondValue() == null || clipboardList.getSecondValue().isEmpty()) {
-                    p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_CLIPBOARD);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
                     return true;
                 }
 
@@ -192,23 +188,23 @@ public class Modify implements CommandConstruct {
                 }
 
                 addUndoHistory(p, history);
-                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_PASTE_STARTED, clipboardList.getSecondValue().size()));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED, clipboardList.getSecondValue().size()));
                 return true;
             }
 
             if (!Commands.UNDO.getName().equalsIgnoreCase(strings[0])) {
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
                 return true;
             }
 
             List<List<ModifyHistoryEntry>> playerUndo = RelluEssentials.getInstance().undo.get(p);
             if (playerUndo == null || playerUndo.isEmpty()) {
-                p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_UNDO_HISTORY);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_UNDO_HISTORY));
                 return true;
             }
             List<ModifyHistoryEntry> lastHistory = playerUndo.removeLast();
             if (lastHistory == null || lastHistory.isEmpty()) {
-                p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_UNDO_HISTORY);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_UNDO_HISTORY));
                 return true;
             }
 
@@ -227,7 +223,7 @@ public class Modify implements CommandConstruct {
 
             RelluEssentials.getInstance().undo.get(p).remove(playerUndo);
 
-            p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_UNDO_STARTED, lastHistory.size()));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_UNDO_STARTED, lastHistory.size()));
             return true;
         }
 
@@ -235,7 +231,7 @@ public class Modify implements CommandConstruct {
             if (Commands.WALL.getName().equalsIgnoreCase(strings[0])) {
                 Material material = Material.getMaterial(strings[1].toUpperCase());
                 if (material == null) {
-                    p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
                     return true;
                 }
 
@@ -273,12 +269,12 @@ public class Modify implements CommandConstruct {
                 bh.setBlocks(0);
                 addUndoHistory(p, history);
 
-                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_WALL_STARTED, history.size(), material.name()));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_WALL_STARTED, history.size(), material.name()));
                 return true;
             } else if (Commands.CYLINDER.getName().equalsIgnoreCase(strings[0])) {
                 Material material = Material.getMaterial(strings[1].toUpperCase());
                 if (material == null) {
-                    p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
                     return true;
                 }
 
@@ -326,11 +322,11 @@ public class Modify implements CommandConstruct {
                 bh.setBlocks(0);
                 addUndoHistory(p, history);
 
-                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_CYLINDER_STARTED, history.size(), material.name()));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_CYLINDER_STARTED, history.size(), material.name()));
                 return true;
             } else if (Commands.MOVE.getName().equalsIgnoreCase(strings[0])) {
                 if (!isInt(strings[1])) {
-                    p.sendMessage(PLUGIN_COMMAND_INVALID);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
                 }
 
                 int offset = Integer.parseInt(strings[1]);
@@ -374,23 +370,23 @@ public class Modify implements CommandConstruct {
                 });
 
                 addUndoHistory(p, history);
-                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_MOVE_STARTED, history.size(), offset));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_MOVE_STARTED, history.size(), offset));
                 return true;
             } else if (strings[1].equalsIgnoreCase(Commands.CLIPBOARD.getSubCommands()[0])) {
                 DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardList = RelluEssentials.getInstance().clipboard.get(p);
                 if (clipboardList == null || clipboardList.getSecondValue() == null || clipboardList.getSecondValue().isEmpty()) {
-                    p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_CLIPBOARD);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
                     return true;
                 }
 
                 RelluEssentials.getInstance().clipboard.put(p, rotate(clipboardList.getSecondValue(), clipboardList.getValue()));
-                p.sendMessage(PLUGIN_COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS));
                 return true;
             }
             else if (Commands.PLANT.getName().equalsIgnoreCase(strings[0])) {
                 Material material = Material.getMaterial(strings[1].toUpperCase());
                 if (material == null || !isPlantMaterial(material)) {
-                    p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
                     return true;
                 }
 
@@ -430,18 +426,18 @@ public class Modify implements CommandConstruct {
                 bh.setBlocks(0);
                 addUndoHistory(p, history);
 
-                p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_PLANT_STARTED, history.size(), material.name()));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_PLANT_STARTED, history.size(), material.name()));
                 return true;
             }
             else if (!Commands.SET.getName().equalsIgnoreCase(strings[0])) {
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
                 return true;
             }
 
             Material material = Material.getMaterial(strings[1].toUpperCase());
 
             if (material == null) {
-                p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
                 return true;
             }
 
@@ -474,7 +470,7 @@ public class Modify implements CommandConstruct {
 
             bh.setBlocks(0);
             addUndoHistory(p, history);
-            p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_SET_STARTED, history.size(), material.name()));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_SET_STARTED, history.size(), material.name()));
             return true;
         }
 
@@ -482,23 +478,23 @@ public class Modify implements CommandConstruct {
             if (Commands.FILL.getName().equalsIgnoreCase(strings[0]) || Commands.FILLR.getName().equalsIgnoreCase(strings[0])) {
                 Material material = Material.getMaterial(strings[1].toUpperCase());
                 if (material == null) {
-                    p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
                     return true;
                 }
 
                 if (!isInt(strings[2])) {
-                    p.sendMessage(PLUGIN_COMMAND_INVALID);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
                     return true;
                 }
 
                 int radius = Integer.parseInt(strings[2]);
                 if (radius <= 0) {
-                    p.sendMessage(PLUGIN_COMMAND_INVALID);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
                     return true;
                 }
 
                 if (radius > MAX_RADIUS) {
-                    p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_FILL_RADIUS_TO_HIGH, MAX_RADIUS));
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_RADIUS_TO_HIGH, MAX_RADIUS));
                 }
 
                 BlockHelper bh = new BlockHelper(material);
@@ -559,15 +555,16 @@ public class Modify implements CommandConstruct {
                 bh.setBlocks(0);
                 addUndoHistory(p, history);
 
-                p.sendMessage(String.format(
-                        Commands.FILL.getName().equalsIgnoreCase(strings[0]) ? PLUGIN_COMMAND_MODIFY_FILL_STARTED : PLUGIN_COMMAND_MODIFY_FILLR_STARTED,
-                        history.size(), material.name(), radius
-                ));
+                p.sendMessage(
+                        Commands.FILL.getName().equalsIgnoreCase(strings[0])
+                                ? languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_STARTED, history.size(), material.name(), radius)
+                                : languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_FILLR_STARTED, history.size(), material.name(), radius)
+                );
                 return true;
             }
 
             if (!Commands.REPLACE.getName().equalsIgnoreCase(strings[0])) {
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
                 return true;
             }
 
@@ -575,7 +572,7 @@ public class Modify implements CommandConstruct {
             Material toMaterial = Material.getMaterial(strings[2].toUpperCase());
 
             if (fromMaterial == null || toMaterial == null) {
-                p.sendMessage(PLUGIN_COMMAND_MODIFY_WRONG_MATERIAL);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
                 return true;
             }
 
@@ -611,17 +608,17 @@ public class Modify implements CommandConstruct {
             bh.setBlocks(0);
             addUndoHistory(p, history);
 
-            p.sendMessage(String.format(PLUGIN_COMMAND_MODIFY_REPLACE_STARTED, history.size(), fromMaterial.name(), toMaterial.name()));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_REPLACE_STARTED, history.size(), fromMaterial.name(), toMaterial.name()));
             return true;
         }
 
-        p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
         return true;
     }
 
     private @Nullable Selection getSelection(Player p) {
         if (!RelluEssentials.getInstance().position.containsKey(p)) {
-            p.sendMessage(PLUGIN_COMMAND_MODIFY_NO_POSITIONS);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_POSITIONS));
             return null;
         }
 
@@ -629,97 +626,21 @@ public class Modify implements CommandConstruct {
         Location pos2 = RelluEssentials.getInstance().position.get(p).getSecondValue();
 
         if (pos1 == null) {
-            p.sendMessage(PLUGIN_COMMAND_MODIFY_POS_1_EMPTY);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_POS_1_EMPTY));
             return null;
         }
 
         if (pos2 == null) {
-            p.sendMessage(PLUGIN_COMMAND_MODIFY_POS_2_EMPTY);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_POS_2_EMPTY));
             return null;
         }
 
         if (pos1.getWorld() != pos2.getWorld()) {
-            p.sendMessage(PLUGIN_COMMAND_MODIFY_DIFFERENT_WORLDS);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_DIFFERENT_WORLDS));
             return null;
         }
 
         return new Selection(pos1, pos2);
-    }
-
-    private static void addUndoHistory(Player p, List<ModifyHistoryEntry> history) {
-        List<List<ModifyHistoryEntry>> playerUndoList = RelluEssentials.getInstance().undo.getOrDefault(p, new ArrayList<>());
-        playerUndoList.add(history);
-        RelluEssentials.getInstance().undo.put(p, playerUndoList);
-    }
-
-    private static void checkAndRemoveProtection(Block block) {
-        if (ProtectionHelper.isLockAble(block)) {
-            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
-
-            if (protection != null) {
-                RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(protection);
-                RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(block.getLocation());
-            }
-        }
-    }
-
-    public void forEachBlock(@NotNull Selection selection, Consumer<Block> action) {
-        for (int y = selection.getMinY(); y <= selection.getMaxY(); y++) {
-            for (int x = selection.getMinX(); x <= selection.getMaxX(); x++) {
-                for (int z = selection.getMinZ(); z <= selection.getMaxZ(); z++) {
-                    Block block = new Location(selection.getWorld(), x, y, z).getBlock();
-                    action.accept(block);
-                }
-            }
-        }
-    }
-
-    public DoubleStore<Selection, List<ModifyClipboardEntry>> rotate(@NotNull List<ModifyClipboardEntry> entries, @NotNull Selection selection) {
-        List<ModifyClipboardEntry> rotatedEntries = entries.stream()
-                .map(entry -> {
-                    Location oldLocation = entry.getLocation();
-                    int newX = oldLocation.getBlockZ();
-                    int newZ = -oldLocation.getBlockX();
-                    int newY = oldLocation.getBlockY();
-
-                    Location newLocation = new Location(oldLocation.getWorld(), newX, newY, newZ);
-                    return new ModifyClipboardEntry(newLocation, entry.getMaterial(), entry.getData());
-                })
-                .toList();
-
-        int minX = rotatedEntries.stream().mapToInt(e -> e.getLocation().getBlockX()).min().orElse(0);
-        int minZ = rotatedEntries.stream().mapToInt(e -> e.getLocation().getBlockZ()).min().orElse(0);
-
-        List<ModifyClipboardEntry> normalizedEntries = rotatedEntries.stream()
-                .map(entry -> {
-                    Location loc = entry.getLocation();
-                    Location normalizedLoc = new Location(
-                            loc.getWorld(),
-                            loc.getBlockX() - minX,
-                            loc.getBlockY(),
-                            loc.getBlockZ() - minZ + 1
-                    );
-                    return new ModifyClipboardEntry(normalizedLoc, entry.getMaterial(), entry.getData());
-                })
-                .collect(Collectors.toList());
-
-        int maxX = normalizedEntries.stream().mapToInt(e -> e.getLocation().getBlockX()).max().orElse(0);
-        int maxZ = normalizedEntries.stream().mapToInt(e -> e.getLocation().getBlockZ()).max().orElse(0);
-        int minY = selection.getMinY();
-        int maxY = selection.getMaxY();
-
-        Location newPos1 = new Location(selection.getWorld(), 0, minY, 0,
-                selection.getPos1().getYaw(), selection.getPos1().getPitch());
-        Location newPos2 = new Location(selection.getWorld(), maxX, maxY, maxZ,
-                selection.getPos2().getYaw(), selection.getPos2().getPitch());
-
-        Selection rotatedSelection = new Selection(newPos1, newPos2);
-        return new DoubleStore<>(rotatedSelection, normalizedEntries);
-    }
-
-    private void undo(@NotNull ModifyHistoryEntry entry) {
-        entry.getLocation().getBlock().setType(entry.getMaterial());
-        entry.getLocation().getBlock().setBlockData(entry.getData());
     }
 
     @Override
@@ -743,7 +664,6 @@ public class Modify implements CommandConstruct {
             return tabList;
         }
 
-
         if (strings.length == 2) {
             if (strings[0].equalsIgnoreCase(Commands.CLIPBOARD.getName())) {
                 tabList.addAll(List.of(Commands.CLIPBOARD.getSubCommands()));
@@ -753,14 +673,13 @@ public class Modify implements CommandConstruct {
             if (strings[0].equalsIgnoreCase(Commands.PLANT.getName())) {
                 String input = strings[1].isEmpty() ? null : strings[1].toUpperCase();
                 tabList.addAll(Arrays.stream(Material.values())
-                        .filter(Modify::isPlantMaterial)
+                        .filter(ModifyHelper::isPlantMaterial)
                         .map(Material::name)
                         .filter(name -> input == null || name.startsWith(input))
                         .sorted()
                         .toList());
                 return tabList;
             }
-
 
             tabList.addAll(TabCompleterHelper.getMaterials(strings[1].isEmpty() ? null : strings[1]));
             return tabList;
@@ -776,88 +695,5 @@ public class Modify implements CommandConstruct {
         }
 
         return tabList;
-    }
-
-    private float normalizeYaw(float yaw) {
-        yaw = ((yaw % 360) + 360) % 360;
-        return Math.round(yaw / 90.0f) * 90.0f % 360.0f;
-    }
-
-    @Contract(pure = true)
-    private int @NonNull [] worldToLocal(int dx, int dz, float yaw) {
-        int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
-        return switch (roundedYaw) {
-            case 90 -> new int[]{-dz, dx};
-            case 180 -> new int[]{-dx, -dz};
-            case 270 -> new int[]{dz, -dx};
-            default -> new int[]{dx, dz};
-        };
-    }
-
-    @Contract(pure = true)
-    private int @NonNull [] relativeToWorld(int relX, int relZ, float yaw) {
-        int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
-        return switch (roundedYaw) {
-            case 90 -> new int[]{-relZ, relX};
-            case 180 -> new int[]{-relX, -relZ};
-            case 270 -> new int[]{relZ, -relX};
-            default -> new int[]{relX, relZ};
-        };
-    }
-
-    private @NonNull Block getBlock(@NonNull ModifyClipboardEntry entry, float yaw, @NonNull Location playerTargetLoc) {
-        int relX = entry.getLocation().getBlockX();
-        int relY = entry.getLocation().getBlockY();
-        int relZ = entry.getLocation().getBlockZ();
-
-        int[] world = relativeToWorld(relX, relZ, yaw);
-
-        Location newLoc = new Location(
-                playerTargetLoc.getWorld(),
-                playerTargetLoc.getBlockX() + world[0],
-                playerTargetLoc.getBlockY() + relY,
-                playerTargetLoc.getBlockZ() + world[1]
-        );
-        return newLoc.getBlock();
-    }
-
-    private @NonNull ModifyClipboardEntry getModifyClipboardEntry(Block block, Player p, Location playerTargetLoc) {
-        float yaw = normalizeYaw(p.getLocation().getYaw());
-
-        Location relLoc = new Location(
-                block.getWorld(),
-                block.getX() - playerTargetLoc.getBlockX(),
-                block.getY() - playerTargetLoc.getBlockY(),
-                block.getZ() - playerTargetLoc.getBlockZ()
-        );
-
-        int[] local = worldToLocal(relLoc.getBlockX(), relLoc.getBlockZ(), yaw);
-        Location localLoc = new Location(block.getWorld(), local[0], relLoc.getBlockY(), local[1]);
-        return new ModifyClipboardEntry(localLoc, block.getType(), block.getBlockData());
-    }
-
-    private static @NotNull Selection getRelativeCopySelection(@NotNull Selection selection, Location playerTargetLoc) {
-        Location pos1 = selection.getPos1().clone().subtract(playerTargetLoc);
-        Location pos2 = selection.getPos2().clone().subtract(playerTargetLoc);
-        pos1.setYaw(playerTargetLoc.getYaw());
-        pos1.setPitch(playerTargetLoc.getPitch());
-        pos2.setYaw(playerTargetLoc.getYaw());
-        pos2.setPitch(playerTargetLoc.getPitch());
-        return new Selection(pos1, pos2);
-    }
-
-
-    private static boolean isPlantMaterial(Material material) {
-        return Tag.FLOWERS.isTagged(material)
-                || Tag.SAPLINGS.isTagged(material)
-                || Tag.CROPS.isTagged(material)
-                || material == Material.BAMBOO
-                || material == Material.BAMBOO_SAPLING
-                || material == Material.SUGAR_CANE
-                || material == Material.CACTUS
-                || material == Material.SWEET_BERRY_BUSH
-                || material == Material.KELP
-                || material == Material.SEA_PICKLE
-                || material == Material.LILY_PAD;
     }
 }

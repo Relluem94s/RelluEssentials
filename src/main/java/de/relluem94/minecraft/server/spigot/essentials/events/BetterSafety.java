@@ -1,13 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 public class BetterSafety implements Listener {
 
@@ -19,7 +19,7 @@ public class BetterSafety implements Listener {
             if (!Permission.isAuthorized(e.getPlayer(), Groups.getGroup("admin").getId())) {
                 if (e.getMessage().toLowerCase().startsWith(s2b)) {
                     e.setCancelled(true);
-                    e.getPlayer().sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
                 }
             }
         }

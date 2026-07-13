@@ -2,9 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_BORDER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_START_TIME_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_START_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_STOP_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_WORLD;
@@ -18,12 +15,12 @@ import java.util.Calendar;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.UUID;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
@@ -106,6 +103,7 @@ public class RelluEssentials extends JavaPlugin {
     public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
     public final Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
     public final Map<Player, DoubleStore<Location,Location>> position = new HashMap<>();
+    public static LanguageHelper languageHelper;
 
 
     public static final List<CommandWrapper> commandWrapperList = List.of(
@@ -188,6 +186,12 @@ public class RelluEssentials extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        RelluEssentials.languageHelper = new LanguageHelper(this);
+        RelluEssentials.languageHelper.loadLanguages();
+
+        String lang = getConfig().getString("language", "en_US");
+        RelluEssentials.languageHelper.setDefaultLanguage(lang);
+
         startLoading();
         new ConfigManager().enable();
         new ScoreBoardManager().enable();
@@ -214,12 +218,13 @@ public class RelluEssentials extends JavaPlugin {
         new WorldManager().enable();
         new GroupManager().enable();
         new PositionHighlightManager().enable();
+
         dm.afterWorldLoaded();
     }
 
     @Override
     public void onDisable() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_MANAGER_STOP_MESSAGE);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
         new SudoManager().disable();
         new AutoSaveManager().disable();
         new WorldManager().disable();
@@ -227,25 +232,18 @@ public class RelluEssentials extends JavaPlugin {
         new ConfigManager().disable();
     }
 
-    public static String getText(String language, String key) {
-        if (language.equals("de_DE")) {
-            return ResourceBundle.getBundle("lang", new Locale("de", "DE")).getString(key);
-        }
-        return ResourceBundle.getBundle("lang", new Locale("en", "US")).getString(key);
-    }
-
     private void startLoading() {
         setInstance(this);
         start = Calendar.getInstance().getTimeInMillis();
         consoleSendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_MANAGER_START_MESSAGE);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     }
 
     private void stopLoading() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_START_TIME_MESSAGE, Calendar.getInstance().getTimeInMillis() - start));
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE, Calendar.getInstance().getTimeInMillis() - start));
         consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
         consoleSendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
     }

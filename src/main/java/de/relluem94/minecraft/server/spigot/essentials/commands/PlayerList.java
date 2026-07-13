@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -17,8 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_LIST_ENTRY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_LIST_HEADER;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 @CommandName("list")
 public class PlayerList implements CommandConstruct {
@@ -32,7 +32,7 @@ public class PlayerList implements CommandConstruct {
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
 
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
-        sender.sendMessage(String.format(PLUGIN_COMMAND_LIST_HEADER, onlinePlayers.size()));
+        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_LIST_HEADER, onlinePlayers.size()));
         for (Player player : onlinePlayers) {
             if(sender instanceof Player p){
                 if(!p.canSee(player)){
@@ -40,7 +40,7 @@ public class PlayerList implements CommandConstruct {
                 }
             }
             PlayerEntry pet = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player.getUniqueId());
-            sender.sendMessage(String.format(PLUGIN_COMMAND_LIST_ENTRY,
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_LIST_ENTRY,
                     pet.getGroup().getPrefix(), pet.getCustomName(),
                     pet.getGroup().getPrefix(), pet.getGroup().getName()));
         }

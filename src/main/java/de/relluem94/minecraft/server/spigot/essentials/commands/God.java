@@ -1,16 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_GOD_OFF;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_GOD_ON;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
-
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -29,6 +19,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
 @CommandName("god")
 public class God implements CommandConstruct {
 
@@ -42,45 +37,47 @@ public class God implements CommandConstruct {
 
         if (isCMDBlock(sender) || isConsole(sender)) {
             if (args.length < 1) {
-                sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
-                return true;   
+                sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+                return true;
             }
-            
+
             toggleGodMode(sender, args[0]);
-            return true; 
+            return true;
         }
 
         if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
-            
+
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
         if (args.length > 0) {
-            p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
-            return true;   
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+            return true;
         }
 
         toggleGodMode(p);
         return true;
     }
 
-    private void toggleGodMode(@NotNull Player p){
-        p.sendMessage(!p.isInvulnerable() ? PLUGIN_COMMAND_GOD_ON : PLUGIN_COMMAND_GOD_OFF);
+    private void toggleGodMode(@NotNull Player p) {
+        p.sendMessage(!p.isInvulnerable()
+                ? languageHelper.getWithPrefix(MessageKey.COMMAND_GOD_ON)
+                : languageHelper.getWithPrefix(MessageKey.COMMAND_GOD_OFF));
         p.setInvulnerable(!p.isInvulnerable());
     }
 
     private void toggleGodMode(CommandSender sender, String targetName) {
         Player target = Bukkit.getPlayer(targetName);
-        
+
         if (target == null) {
-            sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, targetName));
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
             return;
         }
 
@@ -99,7 +96,7 @@ public class God implements CommandConstruct {
             return tabList;
         }
 
-        if(strings.length > 1){
+        if (strings.length > 1) {
             return tabList;
         }
 

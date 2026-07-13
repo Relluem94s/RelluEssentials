@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -19,8 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 @CommandName("day")
@@ -34,32 +34,32 @@ public class Day implements CommandConstruct {
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         } 
 
         if (args.length == 0) {
             p.getWorld().setTime(0L);
-            p.sendMessage(String.format(PLUGIN_COMMAND_DAY, p.getWorld().getName()));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TIME_DAY, p.getWorld().getName()));
             return true;
         }
 
         World world = Bukkit.getWorld(args[0]);
 
         if(world == null){
-            p.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, args[0]));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, args[0]));
             return true;
         }
 
         world.setTime(0L);
-        p.sendMessage(String.format(PLUGIN_COMMAND_DAY, world.getName()));
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TIME_DAY, world.getName()));
         return true;
     }
 

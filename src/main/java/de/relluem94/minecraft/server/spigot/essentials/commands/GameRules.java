@@ -1,18 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_POSITIVE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_GAMERULES;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WORLD_NOT_FOUND;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -47,7 +43,7 @@ public class GameRules implements CommandConstruct {
 
         if (isCMDBlock(sender) || isConsole(sender)) {
             if (args.length < 1) {
-                sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+                sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
                 return true;   
             }
 
@@ -58,14 +54,14 @@ public class GameRules implements CommandConstruct {
 
 
         if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;   
         }
 
@@ -75,7 +71,7 @@ public class GameRules implements CommandConstruct {
         }
 
         if (args.length > 1) {
-            p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
             return true;   
         }
 
@@ -85,7 +81,7 @@ public class GameRules implements CommandConstruct {
 
     private void showGameRule(CommandSender sender, @NotNull World world) {
         String[] gameRules = world.getGameRules();
-        sendMessage(sender, String.format(PLUGIN_COMMAND_GAMERULES, world.getName()));
+        sendMessage(sender, languageHelper.getWithPrefix(MessageKey.COMMAND_GAMERULES, world.getName()));
         for (String gameRule : gameRules) {
             Object value = world.getGameRuleValue(Objects.requireNonNull(GameRule.getByName(gameRule)));
             String color;
@@ -102,7 +98,7 @@ public class GameRules implements CommandConstruct {
     private void showGameRulesForWorld(CommandSender sender, String name){
         World world = Bukkit.getWorld(name);
         if (world == null) {
-            sender.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, name));
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, name));
             return;
         }
 

@@ -1,11 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_AUTOSAVE_REGISTERED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_REGISTER_AUTOSAVE;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -18,7 +17,7 @@ public class AutoSaveManager implements IEnable, IDisable {
 
     @Override
     public void enable() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_REGISTER_AUTOSAVE);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE));
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -40,7 +39,7 @@ public class AutoSaveManager implements IEnable, IDisable {
             }
         }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 *  60 * AUTO_SAVE_MINUTES);
 
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_AUTOSAVE_REGISTERED);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_AUTOSAVE_REGISTERED));
     }
 
     @Override

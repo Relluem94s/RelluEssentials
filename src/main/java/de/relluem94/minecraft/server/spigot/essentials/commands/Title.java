@@ -1,8 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import static de.relluem94.rellulib.utils.StringUtils.implode;
@@ -25,18 +22,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+
 @CommandName("title")
 public class Title implements CommandConstruct {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String @NotNull [] args) {
         if (args.length < 2) {
-            sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
             return true;
         } 
 
         if (!Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
-            sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         } 
 
@@ -47,7 +47,7 @@ public class Title implements CommandConstruct {
     private void title(String @NotNull [] args, CommandSender commandSender){
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            commandSender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER));
             return;
         }   
 

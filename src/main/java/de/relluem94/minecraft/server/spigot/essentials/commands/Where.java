@@ -1,13 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WHERE;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -32,7 +30,7 @@ public class Where implements CommandConstruct {
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String @NotNull [] args) {
         if (args.length > 0) {
             if (!Permission.isAuthorized(sender, Groups.getGroup("mod").getId())) {
-                sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
                 return true;
             }
 
@@ -41,14 +39,14 @@ public class Where implements CommandConstruct {
         } 
 
         if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("user").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
@@ -59,7 +57,7 @@ public class Where implements CommandConstruct {
     private void where(CommandSender commandSender, String targetArg){
         Player target = Bukkit.getPlayer(targetArg);
         if (target == null) {
-            commandSender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, targetArg));
+            commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetArg));
             return;
         }
 
@@ -67,7 +65,7 @@ public class Where implements CommandConstruct {
     }
 
     private void where(@NotNull CommandSender sender, @NotNull Player target){
-        sender.sendMessage(String.format(PLUGIN_COMMAND_WHERE, target.getCustomName(), locationToString(target.getLocation())));
+        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WHERE, target.getCustomName(), locationToString(target.getLocation())));
     }
 
     @Override

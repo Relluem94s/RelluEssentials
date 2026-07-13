@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -56,12 +57,12 @@ public class Position implements CommandConstruct {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if(!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())){
-            commandSender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
         if(!isPlayer(commandSender)){
-            commandSender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
@@ -69,20 +70,21 @@ public class Position implements CommandConstruct {
 
         if(strings.length == 0){
             if(!RelluEssentials.getInstance().position.containsKey(p)){
-                p.sendMessage(PLUGIN_COMMAND_POSITION_INFO_NO_POSITIONS);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_NO_POSITIONS));
                 return true;
             }
 
-            p.sendMessage(PLUGIN_COMMAND_POSITION_INFO_1);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_1));
 
             Location first = RelluEssentials.getInstance().position.get(p).getValue();
             Location second = RelluEssentials.getInstance().position.get(p).getSecondValue();
 
-            String firstLocationString = first == null ? PLUGIN_COMMAND_POSITION_LOCATION_NOT_AVAILIBLE : StringHelper.locationToString(first);
-            String secondLocationString = second == null ? PLUGIN_COMMAND_POSITION_LOCATION_NOT_AVAILIBLE : StringHelper.locationToString(second);
+            String notAvailable = languageHelper.get(MessageKey.COMMAND_POSITION_NO_POSITIONS);
+            String firstLocationString = first == null ? notAvailable : StringHelper.locationToString(first);
+            String secondLocationString = second == null ? notAvailable : StringHelper.locationToString(second);
 
-            p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_INFO_2, firstLocationString));
-            p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_INFO_3, secondLocationString));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_2, firstLocationString));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_3, secondLocationString));
             return true;
         }
 
@@ -98,55 +100,55 @@ public class Position implements CommandConstruct {
 
         if(cmd.equals(Commands.CLEAR.getName())){
             if(strings.length != 1){
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
                 return true;
             }
             RelluEssentials.getInstance().position.put(p, new DoubleStore<>(null, null));
-            p.sendMessage(PLUGIN_COMMAND_POSITION_CLEAR);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_CLEAR));
             return true;
         }
 
         if(cmd.equals(Commands.SET.getName())){
             if(strings.length != 2){
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
                 return true;
             }
             String sub = strings[1].toLowerCase();
             Location location = PlayerHelper.getLookingLocation(p, 100);
             if(sub.equals(Commands.SET.getSubCommands()[0])){
                 positions.setValue(location);
-                p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_SET_FIRST, locationToString(location)));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_SET_FIRST, locationToString(location)));
             }
             else if(sub.equals(Commands.SET.getSubCommands()[1])){
                 positions.setSecondValue(location);
-                p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_SET_SECOND, locationToString(location)));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_SET_SECOND, locationToString(location)));
             } else {
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
             }
             return true;
         }
 
         if(cmd.equals(Commands.REMOVE.getName())){
             if(strings.length != 2){
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
                 return true;
             }
             String sub = strings[1].toLowerCase();
             if(sub.equals(Commands.REMOVE.getSubCommands()[0])){
                 positions.setValue(null);
-                p.sendMessage(PLUGIN_COMMAND_POSITION_REMOVE_FIRST);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_FIRST));
             }
             else if(sub.equals(Commands.REMOVE.getSubCommands()[1])){
                 positions.setSecondValue(null);
-                p.sendMessage(PLUGIN_COMMAND_POSITION_REMOVE_SECOND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_SECOND));
             } else {
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
             }
             return true;
         }
 
         if(strings.length != 2){
-            p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
             return true;
         }
 
@@ -154,7 +156,7 @@ public class Position implements CommandConstruct {
         try {
             amount = Integer.parseInt(strings[1]);
         } catch (NumberFormatException e) {
-            p.sendMessage(PLUGIN_COMMAND_POSITION_INVALID_AMOUNT);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_INVALID_AMOUNT));
             return true;
         }
 
@@ -162,7 +164,7 @@ public class Position implements CommandConstruct {
 
         if(cmd.equals(Commands.SHIFT.getName())){
             if(first == null && second == null){
-                p.sendMessage(PLUGIN_COMMAND_POSITION_INFO_NO_POSITIONS);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_NO_POSITIONS));
                 return true;
             }
 
@@ -182,13 +184,13 @@ public class Position implements CommandConstruct {
                 positions.setSecondValue(second);
             }
 
-            p.sendMessage(String.format(PLUGIN_COMMAND_POSITION_SHIFT, amount));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_SHIFT, amount));
             return true;
         }
 
         if(cmd.equals(Commands.EXPAND.getName()) || cmd.equals(Commands.DECREASE.getName())){
             if(first == null || second == null){
-                p.sendMessage(PLUGIN_COMMAND_POSITION_NEED_BOTH_POSITIONS);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_NEED_BOTH_POSITIONS));
                 return true;
             }
 
@@ -213,12 +215,12 @@ public class Position implements CommandConstruct {
                 positions.setSecondValue(farther);
             }
 
-            String action = cmd.equals(Commands.EXPAND.getName()) ? PLUGIN_COMMAND_POSITION_EXPAND : PLUGIN_COMMAND_POSITION_DECREASE;
-            p.sendMessage(String.format(action, amount));
+            MessageKey actionKey = cmd.equals(Commands.EXPAND.getName()) ? MessageKey.COMMAND_POSITION_EXPAND : MessageKey.COMMAND_POSITION_DECREASE;
+            p.sendMessage(languageHelper.getWithPrefix(actionKey, amount));
             return true;
         }
 
-        p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         return true;
     }
 

@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_POSITION_HIGHLIGHTING_DIFFERENT_WORLDS;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 public class PositionHighlightManager implements IEnable {
 
@@ -41,7 +42,8 @@ public class PositionHighlightManager implements IEnable {
                     World w = firstLocation != null ? firstLocation.getWorld() : secondLocation.getWorld();
                     if (firstLocation != null && secondLocation != null) {
                         if (!Objects.equals(firstLocation.getWorld(), secondLocation.getWorld())) {
-                            p.sendMessage(PLUGIN_POSITION_HIGHLIGHTING_DIFFERENT_WORLDS);
+                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POSITION_HIGHLIGHTING_DIFFERENT_WORLDS));
+
                             continue;
                         }
 
