@@ -315,7 +315,14 @@ public enum MessageKey {
     PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK("plugin.event.npc_banker.buy_using_bank"),
     PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH("plugin.event.npc_banker.buy_using_both"),
     PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS("plugin.event.npc_banker.not_enough_coins"),
-    PLUGIN_EVENT_NPC_BANKER_INTEREST("plugin.event.npc_banker.interest");
+    PLUGIN_EVENT_NPC_BANKER_INTEREST("plugin.event.npc_banker.interest"),
+    PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN("plugin.event.to_many_players.cant_join"),
+    PLUGIN_EVENT_NPC_BAGS_NO_COINS("plugin.event.npc_bags.no_coins"),
+    PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND("plugin.event.npc_bags.no_bag_found"),
+    PLUGIN_EVENT_NPC_BAGS_BOUGHT("plugin.event.npc_bags.bought"),
+    PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT("plugin.event.npc_bags.already_bought"),
+    PLUGIN_EVENT_DAMAGE_SHOW("plugin.event.damage.show"),
+    PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS("plugin.event.player_death.lost_coins");
 
 
 

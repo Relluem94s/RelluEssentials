@@ -148,18 +148,18 @@ public class BetterNPC implements Listener {
                         RelluEssentials.getInstance().getDatabaseHelper().insertBag(bt.getId(), pe.getId());
                         RelluEssentials.getInstance().getPlayerAPI().putPlayerBagEntry(pe.getId(), RelluEssentials.getInstance().getDatabaseHelper().getBag(bt.getId(), pe.getId()));
                         
-                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
                     }
                     else{
-                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BAGS_NO_COINS);
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_COINS, PLUGIN_NAME_MONEY));
                     }
                 }
                 else{
-                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT, bt.getDisplayName()));
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT, bt.getDisplayName()));
                 }
             }
             else{
-                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND));
             }
         }
         else{

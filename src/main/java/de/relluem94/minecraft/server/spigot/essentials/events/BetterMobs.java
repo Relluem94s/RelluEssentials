@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EntityCoins;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
@@ -49,7 +48,7 @@ public class BetterMobs implements Listener {
             double losses = purse / 2;
             if(purse - losses >= 1){
                 pe.setPurse(purse - losses);
-                p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS, StringHelper.formatDouble(losses)));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS, StringHelper.formatDouble(losses), PLUGIN_NAME_MONEY));
             }
             else{
                 pe.setPurse(0);
@@ -108,7 +107,7 @@ public class BetterMobs implements Listener {
         if (e.getEntity() instanceof Monster m && e.getDamager() instanceof Player p) {
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             if(pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)){
-                p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(), m.getLastDamage(), m.getHealth()));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(), m.getLastDamage(), m.getHealth()));
             }
             if(p.getInventory().getItemInMainHand().hasItemMeta() &&  hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.thunderstrike)){
                 if(m.getLocation().getWorld() == null){
