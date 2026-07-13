@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -39,8 +41,11 @@ public class Exit implements CommandConstruct {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        Bukkit.getOnlinePlayers().forEach(op ->
-                                op.kickPlayer(languageHelper.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN)));
+                        Bukkit.getOnlinePlayers().forEach(op ->{
+                            TeleportHelper.teleportWorld(op, PLUGIN_WORLD_LOBBY, true);
+                            op.kickPlayer(languageHelper.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
+                        });
+
                     }
                 }.runTaskLater(RelluEssentials.getInstance(), 10L);
 
@@ -59,6 +64,7 @@ public class Exit implements CommandConstruct {
             return true;
         }
 
+        TeleportHelper.teleportWorld(p, PLUGIN_WORLD_LOBBY, true);
         p.kickPlayer(languageHelper.get(MessageKey.COMMAND_EXIT_KICK_MESSAGE));
         return true;
     }
