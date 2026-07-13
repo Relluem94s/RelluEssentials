@@ -287,7 +287,18 @@ public enum MessageKey {
     PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE("plugin.event.protect_block.disallow_admin_overwrite"),
     PLUGIN_EVENT_PROTECT_BLOCK_ALLOW("plugin.event.protect_block.allow"),
     PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW("plugin.event.protect_block.disallow"),
-    PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE("plugin.event.protect_block.autoclose");
+    PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE("plugin.event.protect_block.autoclose"),
+
+    PLUGIN_EVENT_NPC_BUY("plugin.event.npc.buy"),
+    PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS("plugin.event.npc.buy_not_enough_coins"),
+    PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL("plugin.event.npc.buy_inventory_full"),
+    PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE("plugin.event.npc.buy_not_tradeable"),
+    PLUGIN_EVENT_NPC_SELL("plugin.event.npc.sell"),
+    PLUGIN_EVENT_NPC_SELL_ENCHANTED("plugin.event.npc.sell_enchanted"),
+    PLUGIN_EVENT_NPC_SELL_NO_PRICE("plugin.event.npc.sell_no_price"),
+    PLUGIN_EVENT_NPC_SELL_RENAMED("plugin.event.npc.sell_renamed"),
+    PLUGIN_EVENT_NPC_SELL_USED_ITEM("plugin.event.npc.sell_used_item"),
+    PLUGIN_EVENT_NPC_SPAWN("plugin.event.npc.spawn");
 
 
 

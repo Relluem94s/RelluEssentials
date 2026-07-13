@@ -64,7 +64,7 @@ public class BetterNPC implements Listener {
                     if(RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().get(i).equals(e.getItem())){
                         NPCHelper nh = new NPCHelper(location, RelluEssentials.getInstance().getNpcAPI().getNPC(i));
                         nh.spawn();
-                        e.getPlayer().sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
+                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
                     }
                 }
             }
@@ -210,19 +210,19 @@ public class BetterNPC implements Listener {
                             pe.setUpdatedBy(pe.getId());
                             pe.setHasToBeUpdated(true);
     
-                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
+                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                             p.playSound(p, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
                         }
                         else{
-                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL, itemDisplayname, StringHelper.formatDouble(coins)));
+                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL, itemDisplayname, StringHelper.formatDouble(coins)));
                         }
                     }
                     else{
-                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                     }
                 }
                 else{
-                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
                 }
             }
             else if(inv.getType().equals(InventoryType.PLAYER)){
@@ -261,24 +261,24 @@ public class BetterNPC implements Listener {
                     pe.setUpdatedBy(pe.getId());
                     pe.setHasToBeUpdated(true);
 
-                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SELL, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
                     p.playSound(p, Sound.ENTITY_WANDERING_TRADER_NO, SoundCategory.MASTER, 1f, 1f);
                 }
                 else {
                     if(!is.getItemMeta().getEnchants().isEmpty()){
-                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_ENCHANTED);
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED));
                     }
                     else{
                         if(damageable.hasDamage()){
-                            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_USED_ITEM);
+                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_USED_ITEM));
                         }
                         else{
                             if(sellPricePerItem == 0){
-                                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_NO_PRICE);
+                                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
                             }
                             else{
                                 if(is.getItemMeta().hasDisplayName()){
-                                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_RENAMED);
+                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
                                 }
                             }
                         }
