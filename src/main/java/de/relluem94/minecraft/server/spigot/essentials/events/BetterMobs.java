@@ -1,9 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import de.relluem94.minecraft.server.spigot.essentials.constants.*;
+import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EntityCoins;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -14,16 +20,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
 public class BetterMobs implements Listener {
@@ -69,7 +72,16 @@ public class BetterMobs implements Listener {
                 pe.setPurse(pe.getPurse() + coinsPerDeath);
                 pe.setUpdatedBy(pe.getId());
                 pe.setHasToBeUpdated(true);
-                ChatHelper.sendMessageInActionBar(p, languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN, StringHelper.formatInt(coinsPerDeath), StringHelper.formatDouble(pe.getPurse())));
+                ChatHelper.sendMessageInActionBar(
+                        p,
+                        languageHelper.getWithPrefix(
+                                MessageKey.COMMAND_PURSE_GAIN,
+                                StringHelper.formatInt(coinsPerDeath),
+                                PLUGIN_NAME_MONEY,
+                                StringHelper.formatDouble(pe.getPurse()),
+                                PLUGIN_NAME_MONEY
+                        )
+                );
 
                 if(BagHelper.hasBags(pe.getId())){
                     List<ItemStack> li = new ArrayList<>(e.getDrops());

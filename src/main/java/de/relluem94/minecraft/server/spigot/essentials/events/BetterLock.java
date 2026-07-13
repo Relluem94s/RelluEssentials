@@ -492,7 +492,7 @@ public class BetterLock implements Listener {
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
             ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
-                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                 boolean update = false;
                 if(pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)){
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
@@ -535,7 +535,7 @@ public class BetterLock implements Listener {
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
             ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
-                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                 boolean update = false;
                 if(pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)){
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
@@ -595,7 +595,7 @@ public class BetterLock implements Listener {
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
             ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
-                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                 
                 UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
                 int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(uuid).getId();
@@ -617,7 +617,7 @@ public class BetterLock implements Listener {
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
             ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
-                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                 
                 UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
                 int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(uuid).getId();
@@ -722,7 +722,7 @@ public class BetterLock implements Listener {
                 ) {  
                     if (ProtectionHelper.hasRights(protection, pe.getId())) {
                         if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)){
-                            e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                            e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                         }
                         else{
                             if (Permission.isAuthorized(e.getPlayer(), Groups.getGroup("mod").getId())) {
@@ -738,7 +738,7 @@ public class BetterLock implements Listener {
                     }
                     else{
                         // If Notify protection self on
-                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
 
                         Openable openable = (Openable) b.getBlockData();
 
@@ -814,7 +814,7 @@ public class BetterLock implements Listener {
                 if (protection != null && pe != null && pe.getPlayerState().equals(PlayerState.DEFAULT)) { 
                     if (ProtectionHelper.hasRights(protection, pe.getId())) {
                         if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)){
-                            e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                            e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                         }
                         else{
                             if (Permission.isAuthorized(e.getPlayer(), Groups.getGroup("mod").getId())) {
@@ -829,7 +829,7 @@ public class BetterLock implements Listener {
                     }
                     else{
                         // If Notify protection self on
-                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                     }
                 }
             }

@@ -298,7 +298,24 @@ public enum MessageKey {
     PLUGIN_EVENT_NPC_SELL_NO_PRICE("plugin.event.npc.sell_no_price"),
     PLUGIN_EVENT_NPC_SELL_RENAMED("plugin.event.npc.sell_renamed"),
     PLUGIN_EVENT_NPC_SELL_USED_ITEM("plugin.event.npc.sell_used_item"),
-    PLUGIN_EVENT_NPC_SPAWN("plugin.event.npc.spawn");
+    PLUGIN_EVENT_NPC_SPAWN("plugin.event.npc.spawn"),
+
+    PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE("plugin.event.npc_banker.deposit_message"),
+    PLUGIN_EVENT_NPC_BANKER_DEPOSIT_NO_COINS_MESSAGE("plugin.event.npc_banker.deposit_no_coins_message"),
+    PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LIMIT_MESSAGE("plugin.event.npc_banker.deposit_limit_message"),
+    PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE("plugin.event.npc_banker.withdraw_message"),
+    PLUGIN_EVENT_NPC_BANKER_TRANSACTION("plugin.event.npc_banker.transaction"),
+    PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST("plugin.event.npc_banker.transaction_list"),
+    PLUGIN_EVENT_NPC_BANKER_TOTAL("plugin.event.npc_banker.total"),
+    PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS("plugin.event.npc_banker.open_account_to_less_coins"),
+    PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT("plugin.event.npc_banker.open_account"),
+    PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT("plugin.event.npc_banker.buy_lower_account"),
+    PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT("plugin.event.npc_banker.buy_already_bought"),
+    PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE("plugin.event.npc_banker.buy_using_purse"),
+    PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK("plugin.event.npc_banker.buy_using_bank"),
+    PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH("plugin.event.npc_banker.buy_using_both"),
+    PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS("plugin.event.npc_banker.not_enough_coins"),
+    PLUGIN_EVENT_NPC_BANKER_INTEREST("plugin.event.npc_banker.interest");
 
 
 

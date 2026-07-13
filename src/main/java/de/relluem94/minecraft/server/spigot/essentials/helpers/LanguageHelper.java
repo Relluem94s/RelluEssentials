@@ -5,7 +5,9 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,11 +73,7 @@ public class LanguageHelper {
     }
 
     public String get(MessageKey key, Object... args) {
-        return String.format(applyColors(get(key)), args);
-    }
-
-    public String get(MessageKey key, String language, Object... args) {
-        return String.format(get(key, language), args);
+        return String.format(get(key), args);
     }
 
     public String getWithPrefix(MessageKey key) {
