@@ -255,7 +255,41 @@ public enum MessageKey {
     PLUGIN_COMMAND_WORLD_NOT_FOUND("plugin.command.world_not_found"),
     PLUGIN_BANK_INTEREST_NEXT_RUN("plugin.bank.interest_next_run"),
     PLUGIN_ITEM_SELL_PRICE_MESSAGE("plugin.item.sell_price_message"),
-    PLUGIN_ITEM_BUY_PRICE_MESSAGE("plugin.item.buy_price_message");
+    PLUGIN_ITEM_BUY_PRICE_MESSAGE("plugin.item.buy_price_message"),
+
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO("plugin.event.protected_block.info"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID("plugin.event.protected_block.info_id"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED("plugin.event.protected_block.info_created"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED("plugin.event.protected_block.info_updated"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION("plugin.event.protected_block.info_location"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID("plugin.event.protected_block.info_player_id"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_UUID("plugin.event.protected_block.info_player_uuid"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_NAME("plugin.event.protected_block.info_player_name"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN("plugin.event.protected_block.info_player_last_login"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_MATERIAL("plugin.event.protected_block.info_material"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_FLAGS("plugin.event.protected_block.info_flags"),
+    PLUGIN_EVENT_PROTECTED_BLOCK_INFO_RIGHTS("plugin.event.protected_block.info_rights"),
+
+    PLUGIN_EVENT_PROTECT_BLOCK_ADD("plugin.event.protect_block.add"),
+    PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY("plugin.event.protect_block.add_chest_deny"),
+    PLUGIN_EVENT_PROTECT_BLOCK_REMOVE("plugin.event.protect_block.remove"),
+
+    PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD("plugin.event.protect_block.flag_add"),
+    PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD_FAILED("plugin.event.protect_block.flag_add_failed"),
+    PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE("plugin.event.protect_block.flag_remove"),
+    PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE_FAILED("plugin.event.protect_block.flag_remove_failed"),
+
+    PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD("plugin.event.protect_block.right_add"),
+    PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED("plugin.event.protect_block.right_add_failed"),
+    PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE("plugin.event.protect_block.right_remove"),
+    PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED("plugin.event.protect_block.right_remove_failed"),
+
+    PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE("plugin.event.protect_block.disallow_admin_overwrite"),
+    PLUGIN_EVENT_PROTECT_BLOCK_ALLOW("plugin.event.protect_block.allow"),
+    PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW("plugin.event.protect_block.disallow"),
+    PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE("plugin.event.protect_block.autoclose");
+
+
 
     private final String key;
     MessageKey(String key) {
