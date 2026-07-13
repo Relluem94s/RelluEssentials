@@ -1,17 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.rellulib.utils.TypeUtils;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -19,13 +16,15 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.rellulib.utils.TypeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 @CommandName("teleport")
 public class Teleport implements CommandConstruct {
@@ -155,8 +154,10 @@ public class Teleport implements CommandConstruct {
 
             if (!args[0].equalsIgnoreCase(Commands.TO.getName())) {
                 p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_INFO,
+                        command.getName(),
                         command.getName(), Commands.ACCEPT.getName(),
-                        Commands.TO.getName()
+                        command.getName(), Commands.TO.getName(),
+                        command.getName()
                 ));
                 return true;
             }
