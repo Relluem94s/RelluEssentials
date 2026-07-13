@@ -322,9 +322,17 @@ public enum MessageKey {
     PLUGIN_EVENT_NPC_BAGS_BOUGHT("plugin.event.npc_bags.bought"),
     PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT("plugin.event.npc_bags.already_bought"),
     PLUGIN_EVENT_DAMAGE_SHOW("plugin.event.damage.show"),
-    PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS("plugin.event.player_death.lost_coins");
-
-
+    PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS("plugin.event.player_death.lost_coins"),
+    PLUGIN_EVENT_JOIN_MESSAGE("plugin.event.join_message"),
+    PLUGIN_EVENT_QUIT_MESSAGE("plugin.event.quit_message"),
+    PLUGIN_EVENT_DEATH("plugin.event.death"),
+    PLUGIN_EVENT_DEATH_TP("plugin.event.death_tp"),
+    PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT("plugin.event.sign_up_or_down.no_end_point"),
+    PLUGIN_EVENT_LIGHTS_TOGGLE("plugin.event.lights_toggle"),
+    PLUGIN_EVENT_BAG_COLLECT("plugin.event.bag_collect"),
+    INTEGRATION_REGISTERED("plugin.integration.registered"),
+    INTEGRATION_UNREGISTERED("plugin.integration.unregistered"),
+    PLUGIN_GRAPPLING_HOOK_COOLDOWN("plugin.grappling_hook.cooldown");
 
     private final String key;
     MessageKey(String key) {

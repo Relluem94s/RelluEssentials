@@ -18,7 +18,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_JOIN_MESSAGE;
 
 public class BetterPlayerJoin implements Listener {
 
@@ -62,7 +61,7 @@ public class BetterPlayerJoin implements Listener {
 
         PlayerHelper.setFlying(p);
         PlayerHelper.setAFK(p, true);
-        Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
+        Bukkit.broadcastMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
        
         WorldHelper.loadWorldGroupInventory(p);
 

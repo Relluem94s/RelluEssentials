@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
@@ -290,7 +289,7 @@ public class BagHelper {
 
                 be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
                 be.setHasToBeUpdated(true);
-                ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName()));
+                ChatHelper.sendMessageInActionBar(p, languageHelper.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(), i.getName()));
                 p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
                 lio.add(i);
             }
@@ -312,7 +311,7 @@ public class BagHelper {
                     if(slot != -1){
                         be.setSlotValue(slot, be.getSlotValue(slot) + i.getAmount());
                         be.setHasToBeUpdated(true);
-                        ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(), i.getType().name().replace("_", " ").toLowerCase()));
+                        ChatHelper.sendMessageInActionBar(p, languageHelper.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(), i.getType().name().replace("_", " ").toLowerCase()));
                         p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
                         lio.add(i);
                     }
@@ -335,7 +334,7 @@ public class BagHelper {
             if(slot != -1){
                 be.setSlotValue(slot, be.getSlotValue(slot) + item.getItemStack().getAmount());
                 be.setHasToBeUpdated(true);
-                ChatHelper.sendMessageInActionBar(p, String.format(EventConstants.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(), item.getName()));
+                ChatHelper.sendMessageInActionBar(p, languageHelper.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(), item.getName()));
                 p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
                 item.getItemStack().setAmount(0);
                 return true;

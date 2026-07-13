@@ -1,12 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.api;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_COMMAND_PREFIX;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.INTEGRATION_REGISTERED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.INTEGRATION_UNREGISTERED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 public class RelluEssentialsAPI {
@@ -26,13 +26,13 @@ public class RelluEssentialsAPI {
 
     public void registerIntegration(RelluEssentialsIntegration integration) {
         integrations.add(integration);
-        consoleSendMessage(PLUGIN_FORMS_COMMAND_PREFIX, String.format(INTEGRATION_REGISTERED, integration.getPluginName(), integration.getPluginVersion()));
+        consoleSendMessage(PLUGIN_FORMS_COMMAND_PREFIX, languageHelper.get(MessageKey.INTEGRATION_REGISTERED, integration.getPluginName(), integration.getPluginVersion()));
         integration.onRelluEssentialsInit(this);
     }
 
     public void unregisterIntegration(RelluEssentialsIntegration integration) {
         integrations.remove(integration);
-        consoleSendMessage(PLUGIN_FORMS_COMMAND_PREFIX, INTEGRATION_UNREGISTERED + integration.getPluginName());
+        consoleSendMessage(PLUGIN_FORMS_COMMAND_PREFIX, languageHelper.get(MessageKey.INTEGRATION_UNREGISTERED, integration.getPluginName()));
         integration.onRelluEssentialsShutdown();
     }
 }

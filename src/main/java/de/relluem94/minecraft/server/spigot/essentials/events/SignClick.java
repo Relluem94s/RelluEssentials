@@ -1,20 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import de.relluem94.minecraft.server.spigot.essentials.CustomSigns;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -23,8 +23,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 public class SignClick implements Listener {
 
@@ -87,7 +88,7 @@ public class SignClick implements Listener {
                 }
             }
             if (!endPoint) {
-                player.sendMessage(EventConstants.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT);
+                player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
             }
             return;
         }
@@ -115,7 +116,7 @@ public class SignClick implements Listener {
                 }
             }
             if (!endPoint) {
-                player.sendMessage(EventConstants.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT);
+                player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
             }
             return;
         }
