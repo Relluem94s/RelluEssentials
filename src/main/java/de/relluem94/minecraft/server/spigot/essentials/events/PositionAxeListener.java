@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 public class PositionAxeListener implements Listener {
 
@@ -48,25 +49,25 @@ public class PositionAxeListener implements Listener {
             return;
         }
 
-        DoubleStore<Location, Location> positions = RelluEssentials.getInstance().position.computeIfAbsent(player, k -> new DoubleStore<>(null, null));
+        DoubleStore<Location, Location> positions = RelluEssentials.getInstance().position.computeIfAbsent(player, _ -> new DoubleStore<>(null, null));
 
         Location clickedLocation = event.getClickedBlock().getLocation();
 
         if (player.isSneaking()) {
             if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 positions.setValue(null);
-                player.sendMessage(PLUGIN_EVENT_POSITION_AXE_FIRST_RESET);
+                player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_FIRST_RESET));
             } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 positions.setSecondValue(null);
-                player.sendMessage(PLUGIN_EVENT_POSITION_AXE_SECOND_RESET);
+                player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_SECOND_RESET));
             }
         } else {
             if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
                 positions.setValue(clickedLocation);
-                player.sendMessage(String.format(PLUGIN_EVENT_POSITION_AXE_FIRST_SET, clickedLocation.getBlockX(), clickedLocation.getBlockY(), clickedLocation.getBlockZ()));
+                player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_FIRST_SET, clickedLocation.getBlockX(), clickedLocation.getBlockY(), clickedLocation.getBlockZ()));
             } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 positions.setSecondValue(clickedLocation);
-                player.sendMessage(String.format(PLUGIN_EVENT_POSITION_AXE_SECOND_SET, clickedLocation.getBlockX(), clickedLocation.getBlockY(), clickedLocation.getBlockZ()));
+                player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_SECOND_SET, clickedLocation.getBlockX(), clickedLocation.getBlockY(), clickedLocation.getBlockZ()));
             }
         }
     }

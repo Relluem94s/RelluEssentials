@@ -332,7 +332,12 @@ public enum MessageKey {
     PLUGIN_EVENT_BAG_COLLECT("plugin.event.bag_collect"),
     INTEGRATION_REGISTERED("plugin.integration.registered"),
     INTEGRATION_UNREGISTERED("plugin.integration.unregistered"),
-    PLUGIN_GRAPPLING_HOOK_COOLDOWN("plugin.grappling_hook.cooldown");
+    PLUGIN_GRAPPLING_HOOK_COOLDOWN("plugin.grappling_hook.cooldown"),
+    PLUGIN_EVENT_POSITION_AXE_FIRST_RESET("plugin.event.position_axe.first_reset"),
+    PLUGIN_EVENT_POSITION_AXE_SECOND_RESET("plugin.event.position_axe.second_reset"),
+    PLUGIN_EVENT_POSITION_AXE_FIRST_SET("plugin.event.position_axe.first_set"),
+    PLUGIN_EVENT_POSITION_AXE_SECOND_SET("plugin.event.position_axe.second_set");
+
 
     private final String key;
     MessageKey(String key) {

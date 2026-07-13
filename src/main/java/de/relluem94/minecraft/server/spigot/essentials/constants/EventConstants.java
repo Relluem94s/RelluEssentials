@@ -20,12 +20,4 @@ public interface EventConstants {
     String PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE = PLUGIN_SYMBOL_RIGHT_POINTING_ANGLE_BRACKET + PLUGIN_COLOR_MESSAGE;
     String PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE = PLUGIN_SYMBOL_LEFT_POINTING_ANGLE_BRACKET + PLUGIN_COLOR_MESSAGE;
 
-    //==============================================================================//
-    //                             EVENT   STUFF                                    //
-    //==============================================================================//
-
-    String PLUGIN_EVENT_POSITION_AXE_FIRST_RESET = PLUGIN_FORMS_COMMAND_PREFIX + "First position reset.";
-    String PLUGIN_EVENT_POSITION_AXE_SECOND_RESET = PLUGIN_FORMS_COMMAND_PREFIX + "Second position reset.";
-    String PLUGIN_EVENT_POSITION_AXE_FIRST_SET = PLUGIN_FORMS_COMMAND_PREFIX + "First position set to " + PLUGIN_COLOR_COMMAND_ARG + "(%d, %d, %d)";
-    String PLUGIN_EVENT_POSITION_AXE_SECOND_SET = PLUGIN_FORMS_COMMAND_PREFIX + "Second position set to " + PLUGIN_COLOR_COMMAND_ARG + "(%d, %d, %d)";
 }
