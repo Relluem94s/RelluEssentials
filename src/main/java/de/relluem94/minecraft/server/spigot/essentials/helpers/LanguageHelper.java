@@ -24,7 +24,7 @@ public class LanguageHelper {
     }
 
     public void loadLanguages() {
-        String[] availableLanguages = {"de_DE", "en_US"};
+        String[] availableLanguages = {"de_DE", "en_US", "dk_DK"};
         for (String lang : availableLanguages) {
             String fileName = "lang/" + lang + ".properties";
             try (InputStream is = plugin.getResource(fileName)) {
