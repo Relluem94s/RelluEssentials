@@ -3,7 +3,10 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
-import de.relluem94.minecraft.server.spigot.essentials.constants.*;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
@@ -36,8 +39,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MONEY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
@@ -356,7 +358,7 @@ public class BetterNPC implements Listener {
                         p.sendMessage(
                                 languageHelper.getWithPrefix(
                                         MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST,
-                                        bte.getValue() > 1 ? EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE : EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE,
+                                        bte.getValue() > 1 ? PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE : PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE,
                                         PLUGIN_COLOR_MONEY,
                                         StringHelper.formatDouble(bte.getValue()),
                                         PLUGIN_NAME_MONEY,

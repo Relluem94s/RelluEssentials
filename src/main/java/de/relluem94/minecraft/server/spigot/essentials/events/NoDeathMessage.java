@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 public class NoDeathMessage implements Listener {
