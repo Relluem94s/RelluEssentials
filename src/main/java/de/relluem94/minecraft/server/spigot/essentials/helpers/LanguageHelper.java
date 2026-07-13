@@ -54,7 +54,7 @@ public class LanguageHelper {
         return get(key, defaultLanguage);
     }
 
-    public String get(MessageKey key, String language) {
+    private @NonNull String get(MessageKey key, String language) {
         Properties props = languages.getOrDefault(language, languages.get(defaultLanguage));
 
         if (props == null) {
