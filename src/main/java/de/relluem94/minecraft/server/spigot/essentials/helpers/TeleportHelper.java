@@ -26,7 +26,7 @@ public class TeleportHelper {
 
         Location spawn = w.getSpawnLocation();
 
-        addBackPointAndTeleport(languageHelper.get(MessageKey.COMMAND_SPAWN), p, Bukkit.getWorld(name), silent, spawn);
+        addBackPointAndTeleport(languageHelper.getWithPrefix(MessageKey.COMMAND_SPAWN), p, Bukkit.getWorld(name), silent, spawn);
     }
 
     public static void teleportBed(Player p){
