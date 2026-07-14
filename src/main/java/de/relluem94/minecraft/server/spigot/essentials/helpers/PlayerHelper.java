@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlaye
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.items.GrapplingHook;
 import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
-import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import de.relluem94.rellulib.utils.NetworkUtils;
@@ -137,7 +136,6 @@ public class PlayerHelper {
     public static void setGroup(Player p, GroupEntry g) {
         p.setCustomName(g.getPrefix() + getCustomName(p));
         p.setPlayerListName(p.getCustomName());
-        p.setScoreboard(ScoreBoardManager.board);
     }
 
     public static void updateGroup(OfflinePlayer p, GroupEntry g) {

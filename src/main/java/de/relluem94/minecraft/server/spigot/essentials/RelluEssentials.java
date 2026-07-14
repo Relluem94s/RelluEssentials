@@ -1,30 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_BORDER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_WORLD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_WORLD_NETHER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_WORLD_THE_END;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import de.relluem94.minecraft.server.spigot.essentials.api.*;
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.types.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
+import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
+import de.relluem94.rellulib.stores.DoubleStore;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -35,19 +24,11 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import java.io.File;
+import java.util.*;
 
-import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.types.Vector2Location;
-import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
-import de.relluem94.rellulib.stores.DoubleStore;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 public class RelluEssentials extends JavaPlugin {
 
@@ -194,7 +175,6 @@ public class RelluEssentials extends JavaPlugin {
 
         startLoading();
         new ConfigManager().enable();
-        new ScoreBoardManager().enable();
         new CommandManager().enable();
         DatabaseManager dm = new DatabaseManager(
             getConfig().getString("database.host"), 
@@ -218,6 +198,7 @@ public class RelluEssentials extends JavaPlugin {
         new WorldManager().enable();
         new GroupManager().enable();
         new PositionHighlightManager().enable();
+        new ScoreBoardManager().enable();
 
         dm.afterWorldLoaded();
     }

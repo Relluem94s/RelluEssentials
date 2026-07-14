@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -70,6 +71,12 @@ public class BetterPlayerJoin implements Listener {
          if(WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)){
             PlayerHelper.setLobbyItems(p);
         }
+
+        Bukkit.getScheduler().runTaskLater(
+                RelluEssentials.getInstance(),
+                () -> ScoreBoardManager.applyToPlayer(e.getPlayer()),
+                10L
+        );
     }
 
     @EventHandler
