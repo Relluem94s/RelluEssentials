@@ -1,14 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static java.lang.Math.round;
-
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import org.bukkit.Location;
-
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 /**
  *
@@ -35,11 +33,7 @@ public class StringHelper {
      * @return String with Location
      */
     public static @NotNull String locationToString(@NotNull Location l) {
-        World world = l.getWorld();
-        if (world == null) {
-            return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), "null");
-        }
-        return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), world.getName());
+        return locationToString(l, false);
     }
 
     /**
