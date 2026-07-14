@@ -42,7 +42,7 @@ public class ScoreBoardManager implements IEnable {
         playerBoards.put(player.getUniqueId(), board);
 
         Objective objective = board.registerNewObjective(
-                "relluEssentials", Criteria.DUMMY,
+                PLUGIN_NAME_RELLU + PLUGIN_NAME_ESSENTIALS, Criteria.DUMMY,
                 ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "Info"
         );
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
