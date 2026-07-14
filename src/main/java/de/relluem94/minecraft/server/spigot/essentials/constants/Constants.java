@@ -41,6 +41,7 @@ public interface Constants {
     String PLUGIN_FORMS_SPACER_CHANNEL = " >> " + PLUGIN_COLOR_COMMAND;
     String PLUGIN_FORMS_SPACER_MESSAGE = PLUGIN_COLOR_MESSAGE_SPACER + " >> " + PLUGIN_COLOR_MESSAGE;
     String PLUGIN_FORMS_BORDER = "<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>";
+    String PLUGIN_FORMS_SCOREBOARD_BORDER = "~*~*~*~*~*~*~*~*~*~*~*~*~*~";
     String PLUGIN_FORMS_COMMAND_PREFIX = PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_COMMAND;
     String PLUGIN_FORMS_MSG_SPACER_IN = "§9 >> §f";
     String PLUGIN_FORMS_MSG_SPACER_OUT = "§9 << §f";

@@ -20,6 +20,9 @@ public enum MessageKey {
     PLUGIN_MANAGER_REGISTER_AUTOSAVE("plugin.manager.register_autosave"),
     PLUGIN_MANAGER_AUTOSAVE_REGISTERED("plugin.manager.autosave_registered"),
     PLUGIN_FOLDER_MKDIR_ERROR("plugin.folder.mkdir_error"),
+    PLUGIN_SCOREBOARD_RANK("plugin.scoreboard.rank"),
+    PLUGIN_SCOREBOARD_PURSE("plugin.scoreboard.purse"),
+    PLUGIN_SCOREBOARD_WORLD("plugin.scoreboard.world"),
 
     COMMAND_INVALID("command.invalid"),
     COMMAND_PERMISSION_MISSING("command.permission_missing"),
