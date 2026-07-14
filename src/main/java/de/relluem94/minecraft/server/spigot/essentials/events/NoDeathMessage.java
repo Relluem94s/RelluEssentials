@@ -2,11 +2,14 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import org.bukkit.Bukkit;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -52,8 +55,11 @@ public class NoDeathMessage implements Listener {
         String locationName = le.getLocationName();
         Location leLocation = le.getLocation();
 
-        Bukkit.getConsoleSender().getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw " + p.getName() + " [\"\",{\"text\":\"" + languageHelper.get(MessageKey.PLUGIN_EVENT_DEATH_TP) + "\",\"color\":\"aqua\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/home " + le.getLocationName() + "\"}}]");
-        
+        TextComponent message = new TextComponent(languageHelper.get(MessageKey.PLUGIN_EVENT_DEATH_TP));
+        message.setColor(ChatColor.AQUA);
+        message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + Home.Commands.TP.getName() + " " + le.getLocationName()));
+        p.spigot().sendMessage(message);
+
         RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
         le = RelluEssentials.getInstance().getDatabaseHelper().getLocation(location, locationType.getId());
 
