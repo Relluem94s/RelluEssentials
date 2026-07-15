@@ -46,15 +46,13 @@ public class DatabaseManager implements IEnable{
         RelluEssentials.getInstance().setBankAPI(new BankAPI(dBH.getBankTiers()));
         RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));
 
+        RelluEssentials.settingEntriesList.addAll(dBH.getAllSettings());
         for(WorldGroupEntry wge: dBH.getWorldGroups()){
             for(WorldEntry we: dBH.getWorldByGroup(wge)){
                 consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName());
                 RelluEssentials.getInstance().worldsMap.put(wge, we);
             }
         }
-
-        RelluEssentials.settingEntriesList.addAll(dBH.getAllSettings());
-        RelluEssentials.worldGroupSettingEntriesList.addAll(dBH.getAllWorldGroupSettings());
 
         RelluEssentials.getInstance().groupEntryList.addAll(dBH.getGroups());
 
