@@ -198,8 +198,12 @@ public class PatchHelper {
         databaseHelper.executeScript(v + "alterMonsterBag.sql");
         databaseHelper.executeScript(v + "insertProtectionLocks.sql");
         databaseHelper.executeScript(v + "insertAnimalBagType.sql");
+        databaseHelper.executeScript(v + "insertSettings.sql");
         databaseHelper.executeScript(v + "updateFischerNPCTurtleScute.sql");
         databaseHelper.executeScript(v + "updateFloristNPCShortGrass.sql");
+        databaseHelper.executeScript(v + "updateWorldGroupSettings_newColumn.sql");
+        databaseHelper.executeScript(v + "updateWorldGroupSettings_moveValues.sql");
+        databaseHelper.executeScript(v + "updateWorldGroupSettings_removeColumnAndRename.sql");
         databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
         databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }
