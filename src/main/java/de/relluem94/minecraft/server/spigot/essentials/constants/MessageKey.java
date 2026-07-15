@@ -23,6 +23,7 @@ public enum MessageKey {
     PLUGIN_SCOREBOARD_RANK("plugin.scoreboard.rank"),
     PLUGIN_SCOREBOARD_PURSE("plugin.scoreboard.purse"),
     PLUGIN_SCOREBOARD_WORLD("plugin.scoreboard.world"),
+    PLUGIN_DATABASE_ADDING_WORLD("plugin.database.adding_world"),
 
     COMMAND_INVALID("command.invalid"),
     COMMAND_PERMISSION_MISSING("command.permission_missing"),

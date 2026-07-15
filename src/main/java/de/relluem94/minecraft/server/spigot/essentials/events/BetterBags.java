@@ -361,8 +361,6 @@ public class BetterBags implements Listener {
             String worldName = p.getWorld().getName();
             boolean collectBagEnabled = RelluEssentials.getInstance().collectBagWorlds.contains(worldName);
 
-            p.sendMessage(" bagEnabled? " + collectBagEnabled);
-
             if(collectBagEnabled && BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(), p, pe)){
                 p.getInventory().remove(is);
                 e.setCancelled(true);

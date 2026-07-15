@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.*;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
@@ -11,6 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -59,7 +61,7 @@ public class DatabaseManager implements IEnable{
                     RelluEssentials.getInstance().collectBagWorlds.add(we.getName());
                 }
 
-                consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName() + " with " + wge.getSettings().size() + " settings");
+                consoleSendMessage(PLUGIN_NAME_CONSOLE,languageHelper.get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(), we.getName(), wge.getSettings().size()));
             }
         }
 
