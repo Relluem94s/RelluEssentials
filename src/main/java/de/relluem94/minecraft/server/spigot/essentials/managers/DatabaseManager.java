@@ -47,10 +47,18 @@ public class DatabaseManager implements IEnable{
         RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));
 
         RelluEssentials.settingEntriesList.addAll(dBH.getAllSettings());
+
         for(WorldGroupEntry wge: dBH.getWorldGroups()){
             for(WorldEntry we: dBH.getWorldByGroup(wge)){
                 consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName());
                 RelluEssentials.getInstance().worldsMap.put(wge, we);
+
+                boolean hasCollectBag = wge.getSettings().stream()
+                        .anyMatch(s -> "COLLECT_BAG".equals(s.getSettingEntry().getName()));
+
+                if (hasCollectBag) {
+                    RelluEssentials.getInstance().collectBagWorlds.add(we.getName());
+                }
             }
         }
 

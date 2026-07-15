@@ -14,7 +14,6 @@ import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
@@ -238,12 +237,8 @@ public class DatabaseHelper {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     while (rs.next()) {
-                        WorldGroupEntry wge = WorldMapper.mapWorldGroup(rs);
+                        WorldGroupEntry wge = WorldMapper.mapWorldGroup(rs, allWorldGroupSettings);
 
-                        List<WorldGroupSettingEntry> groupSettings = allWorldGroupSettings.stream()
-                                .filter(s -> s.getWorldGroupEntry().getId() == wge.getId())
-                                .collect(Collectors.toList());
-                        wge.setSettings(groupSettings);
                         worldGroupEntryList.add(wge);
                     }
                 }
@@ -369,7 +364,7 @@ public class DatabaseHelper {
                 ps.execute();
                 try (ResultSet rs = ps.getResultSet()) {
                     if (rs.next()) {
-                        return WorldMapper.mapWorldGroup(rs);
+                        return WorldMapper.mapWorldGroup(rs, getAllWorldGroupSettings());
                     }
                 }
             }

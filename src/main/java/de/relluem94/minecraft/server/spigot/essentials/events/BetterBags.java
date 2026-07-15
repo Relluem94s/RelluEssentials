@@ -1,9 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import java.util.*;
-
+import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -25,21 +32,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.rellulib.stores.DoubleStore;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
@@ -363,7 +358,10 @@ public class BetterBags implements Listener {
                 }
             }
 
-            if(BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(), p, pe)){
+            String worldName = p.getWorld().getName();
+            boolean collectBagEnabled = RelluEssentials.getInstance().collectBagWorlds.contains(worldName);
+
+            if(collectBagEnabled && BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(), p, pe)){
                 p.getInventory().remove(is);
                 e.setCancelled(true);
                 e.getItem().remove();
