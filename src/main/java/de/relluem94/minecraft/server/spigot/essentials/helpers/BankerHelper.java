@@ -213,7 +213,7 @@ public class BankerHelper {
         BankAccountEntry bae = RelluEssentials.getInstance().bankInterestMap.get(p.getUniqueId());
 
         double interest = (bae.getValue() / 100) * bae.getTier().getInterest();
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST, StringHelper.formatDouble(interest)));
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST, StringHelper.formatDouble(interest), PLUGIN_NAME_MONEY));
 
         RelluEssentials.getInstance().getDatabaseHelper().addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(), bae.getTier().getId());
         RelluEssentials.getInstance().bankInterestMap.remove(p.getUniqueId());
