@@ -44,11 +44,9 @@ public class WorldMapper {
         worldGroupEntry.setDeleted(rs.getString(FIELD_DELETED));
         worldGroupEntry.setDeletedBy(rs.getInt(FIELD_DELETEDBY));
         worldGroupEntry.setName(rs.getString(FIELD_NAME));
-
-        groupSettings.stream()
+        worldGroupEntry.setSettings(groupSettings.stream()
                 .filter(s -> s.getWorldGroupEntryFk() == worldGroupEntry.getId())
-                .collect(Collectors.toList());
-        worldGroupEntry.setSettings(groupSettings);
+                .collect(Collectors.toList()));
         return worldGroupEntry;
     }
 

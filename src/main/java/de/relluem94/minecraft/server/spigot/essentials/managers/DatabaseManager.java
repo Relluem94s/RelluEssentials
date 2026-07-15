@@ -50,7 +50,6 @@ public class DatabaseManager implements IEnable{
 
         for(WorldGroupEntry wge: dBH.getWorldGroups()){
             for(WorldEntry we: dBH.getWorldByGroup(wge)){
-                consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName());
                 RelluEssentials.getInstance().worldsMap.put(wge, we);
 
                 boolean hasCollectBag = wge.getSettings().stream()
@@ -59,6 +58,8 @@ public class DatabaseManager implements IEnable{
                 if (hasCollectBag) {
                     RelluEssentials.getInstance().collectBagWorlds.add(we.getName());
                 }
+
+                consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName() + " with " + wge.getSettings().size() + " settings");
             }
         }
 
