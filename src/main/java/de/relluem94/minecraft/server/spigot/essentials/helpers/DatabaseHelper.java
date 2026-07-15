@@ -1,50 +1,23 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.dbmapper.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
+import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.*;
+import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.dbmapper.*;
-import org.bukkit.Location;
-import org.jetbrains.annotations.NotNull;
-
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLockEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupInventoryEntry;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 /**
  *
@@ -216,6 +189,43 @@ public class DatabaseHelper {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
         return null;
+    }
+
+    public List<SettingEntry> getAllSettings() {
+        List<SettingEntry> lse = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getAllSettings.sql"))) {
+                ps.execute();
+                try (ResultSet rs = ps.getResultSet()) {
+                    while (rs.next()) {
+                        SettingEntry se = SettingMapper.mapSetting(rs);
+                        lse.add(se);
+                    }
+                }
+            }
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return lse;
+    }
+
+
+    public List<WorldGroupSettingEntry> getAllWorldGroupSettings() {
+        List<WorldGroupSettingEntry> lwgse = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getAllWorldGroupSettings.sql"))) {
+                ps.execute();
+                try (ResultSet rs = ps.getResultSet()) {
+                    while (rs.next()) {
+                        WorldGroupSettingEntry wgse = WorldGroupSettingMapper.mapWorldGroupSetting(rs);
+                        lwgse.add(wgse);
+                    }
+                }
+            }
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return lwgse;
     }
 
     public List<WorldGroupEntry> getWorldGroups() {

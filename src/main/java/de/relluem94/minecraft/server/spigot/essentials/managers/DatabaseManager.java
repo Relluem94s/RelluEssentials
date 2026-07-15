@@ -1,33 +1,22 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
+import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
-import de.relluem94.rellulib.stores.DoubleStore;
-
 import java.util.Collections;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 public class DatabaseManager implements IEnable{
 
     private final DatabaseHelper dBH;
-    private PluginInformationEntry pie;
 
     public DatabaseManager(String host, String user, String password, int port){
         dBH = new DatabaseHelper(host, user, password, port);
@@ -35,7 +24,7 @@ public class DatabaseManager implements IEnable{
 
     @Override
     public void enable() {
-        pie = dBH.getPluginInformation();
+        PluginInformationEntry pie = dBH.getPluginInformation();
         RelluEssentials.getInstance().setPluginInformation(pie);
         dBH.init();
 
@@ -64,6 +53,9 @@ public class DatabaseManager implements IEnable{
             }
         }
 
+        RelluEssentials.settingEntriesList.addAll(dBH.getAllSettings());
+        RelluEssentials.worldGroupSettingEntriesList.addAll(dBH.getAllWorldGroupSettings());
+
         RelluEssentials.getInstance().groupEntryList.addAll(dBH.getGroups());
 
         for(int i = 0; i < RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().size(); i++){
@@ -73,8 +65,6 @@ public class DatabaseManager implements IEnable{
     }
 
     public void afterWorldLoaded(){
-        
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -83,16 +73,9 @@ public class DatabaseManager implements IEnable{
                 RelluEssentials.getInstance().getPlayerAPI().reloadPlayerHomes();
             }
         }.runTaskLater(RelluEssentials.getInstance(), 1L);
-
-
-       
     }
 
     public DatabaseHelper getDatabaseHelper() {
         return dBH;
-    }
-
-    public PluginInformationEntry getPluginInformation() {
-        return pie;
     }
 }
