@@ -59,4 +59,6 @@ public interface DatabaseMappings {
     String FIELD_SEED = "seed";
     String FIELD_MIN_INT = "min_int";
     String FIELD_MAX_INT = "max_int";
+    String FIELD_SETTING_FK = "setting_fk";
+    String FIELD_WORLD_GORUP_FK = "world_group_fk";
 }

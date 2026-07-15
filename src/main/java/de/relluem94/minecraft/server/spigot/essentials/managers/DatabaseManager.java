@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.*;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
@@ -11,6 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -47,10 +49,19 @@ public class DatabaseManager implements IEnable{
         RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));
 
         RelluEssentials.settingEntriesList.addAll(dBH.getAllSettings());
+
         for(WorldGroupEntry wge: dBH.getWorldGroups()){
             for(WorldEntry we: dBH.getWorldByGroup(wge)){
-                consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName());
                 RelluEssentials.getInstance().worldsMap.put(wge, we);
+
+                boolean hasCollectBag = wge.getSettings().stream()
+                        .anyMatch(s -> "COLLECT_BAG".equals(s.getSettingEntry().getName()));
+
+                if (hasCollectBag) {
+                    RelluEssentials.getInstance().collectBagWorlds.add(we.getName());
+                }
+
+                consoleSendMessage(PLUGIN_NAME_CONSOLE,languageHelper.get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(), we.getName(), wge.getSettings().size()));
             }
         }
 

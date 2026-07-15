@@ -76,7 +76,7 @@ public class RelluEssentials extends JavaPlugin {
 
     public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
     public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
-
+    public final Set<String> collectBagWorlds = new HashSet<>();
 
     public final String[] oreRespawn = new String[]{PLUGIN_WORLD_WORLD_NETHER}; //TODO has to be done in Config (new Table?) #IsComming
     public static final boolean MONEY_LOST_ON_DEATH = true;

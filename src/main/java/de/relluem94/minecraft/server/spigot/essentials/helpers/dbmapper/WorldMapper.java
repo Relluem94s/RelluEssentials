@@ -5,11 +5,14 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMapping
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupInventoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupSettingEntry;
 import org.json.JSONObject;
 import org.jspecify.annotations.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
 
@@ -31,7 +34,7 @@ public class WorldMapper {
         return worldEntry;
     }
 
-    public static @NonNull WorldGroupEntry mapWorldGroup(@NonNull ResultSet rs) throws SQLException {
+    public static @NonNull WorldGroupEntry mapWorldGroup(@NonNull ResultSet rs, @NonNull List<WorldGroupSettingEntry> groupSettings) throws SQLException {
         WorldGroupEntry worldGroupEntry = new WorldGroupEntry();
         worldGroupEntry.setId(rs.getInt(FIELD_ID));
         worldGroupEntry.setCreated(rs.getString(FIELD_CREATED));
@@ -41,6 +44,9 @@ public class WorldMapper {
         worldGroupEntry.setDeleted(rs.getString(FIELD_DELETED));
         worldGroupEntry.setDeletedBy(rs.getInt(FIELD_DELETEDBY));
         worldGroupEntry.setName(rs.getString(FIELD_NAME));
+        worldGroupEntry.setSettings(groupSettings.stream()
+                .filter(s -> s.getWorldGroupEntryFk() == worldGroupEntry.getId())
+                .collect(Collectors.toList()));
         return worldGroupEntry;
     }
 
