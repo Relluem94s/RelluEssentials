@@ -69,23 +69,23 @@ public class RelluEssentials extends JavaPlugin {
     public final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
     public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
     public final Map<Material, Material> crops = new EnumMap<>(Material.class);
-    public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
-
     public final List<GroupEntry> groupEntryList = new ArrayList<>();
     public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
     public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
     public static final Map<Player, Player> reply = new HashMap<>();
 
+    public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
+    public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
+
+
     public final String[] oreRespawn = new String[]{PLUGIN_WORLD_WORLD_NETHER}; //TODO has to be done in Config (new Table?) #IsComming
     public static final boolean MONEY_LOST_ON_DEATH = true;
     public final String[] worlds = new String[]{PLUGIN_WORLD_WORLD, PLUGIN_WORLD_WORLD_NETHER, PLUGIN_WORLD_WORLD_THE_END, PLUGIN_WORLD_LOBBY};
-
 
     public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
     public final Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
     public final Map<Player, DoubleStore<Location,Location>> position = new HashMap<>();
     public static LanguageHelper languageHelper;
-
 
     public static final List<CommandWrapper> commandWrapperList = List.of(
             new CommandWrapper(new Admin()),
@@ -149,7 +149,6 @@ public class RelluEssentials extends JavaPlugin {
     );
     
     public static synchronized RelluEssentials getInstance() {
-        
         return instance;
     }
 
@@ -185,8 +184,6 @@ public class RelluEssentials extends JavaPlugin {
 
         dm.enable();
         databaseHelper = dm.getDatabaseHelper();
-        
-
 
         new EventManager().enable();
         new SkillManager().enable();

@@ -4,6 +4,8 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  *
  * @author rellu
@@ -20,4 +22,5 @@ public class WorldGroupEntry {
     private String deleted;
     private int deletedBy;
     private String name;
+    private List<WorldGroupSettingEntry> settings;
 }
