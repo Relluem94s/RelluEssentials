@@ -2,13 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.areBlocksMaterial;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,13 +19,21 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.areBlocksMaterial;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
 public class CloudSailor implements Listener {
 
     private final Random random = new Random();
 
     @EventHandler
-    public void mobDeath(EntityDeathEvent event) {
+    public void mobDeath(@NonNull EntityDeathEvent event) {
         LivingEntity e = event.getEntity();
         if (e instanceof Chicken) {
             int i = random.nextInt(150);
@@ -46,7 +47,7 @@ public class CloudSailor implements Listener {
     }
 
     @EventHandler
-    public void cloudBootsCrafting(PrepareItemCraftEvent e) {
+    public void cloudBootsCrafting(@NonNull PrepareItemCraftEvent e) {
         if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta() && CustomItems.cloudBoots.equalsExact(e.getRecipe().getResult())) {
             for (ItemStack is : e.getInventory().getMatrix()) {
                 if (is != null) {
@@ -64,9 +65,9 @@ public class CloudSailor implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onFallDamage(EntityDamageEvent e) {
+    public void onFallDamage(@NonNull EntityDamageEvent e) {
         if (e.getEntity() instanceof Player p) {
-            if (isInWorld(p, Arrays.asList(RelluEssentials.getInstance().worlds))) {
+            if (isInWorld(p, RelluEssentials.getInstance().useCloudsailorWorlds.stream().toList())) {
                 if (e.getCause().equals(DamageCause.FALL)) {
                     if (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem())) {
                         e.setCancelled(true);
@@ -80,21 +81,21 @@ public class CloudSailor implements Listener {
     }
 
     @EventHandler
-    public void onSail(PlayerMoveEvent e) {
+    public void onSail(@NonNull PlayerMoveEvent e) {
         Player p = e.getPlayer();
-        if (isInWorld(p, Arrays.asList(RelluEssentials.getInstance().worlds))) {
+        if (isInWorld(p, RelluEssentials.getInstance().useCloudsailorWorlds.stream().toList())) {
             if (e.getTo() != null && !e.getFrom().getBlock().getLocation().equals(e.getTo().getBlock().getLocation())) {
                 if (p.getInventory().getItemInOffHand().equals(CustomItems.cloudSailor.getCustomItem()) || (p.getInventory().getBoots() != null && p.getInventory().getBoots().equals(CustomItems.cloudBoots.getCustomItem()))) {
                     if (!p.isFlying() && !p.isSneaking()) {
 
                         List<Block> blocks = new ArrayList<>();
                         blocks.add(p.getLocation().getBlock().getRelative(BlockFace.DOWN));
-                        blocks.add(blocks.get(0).getRelative(BlockFace.DOWN));
+                        blocks.add(blocks.getFirst().getRelative(BlockFace.DOWN));
 
-                        blocks.add(blocks.get(0).getRelative(BlockFace.EAST));
-                        blocks.add(blocks.get(0).getRelative(BlockFace.NORTH));
-                        blocks.add(blocks.get(0).getRelative(BlockFace.SOUTH));
-                        blocks.add(blocks.get(0).getRelative(BlockFace.WEST));
+                        blocks.add(blocks.getFirst().getRelative(BlockFace.EAST));
+                        blocks.add(blocks.getFirst().getRelative(BlockFace.NORTH));
+                        blocks.add(blocks.getFirst().getRelative(BlockFace.SOUTH));
+                        blocks.add(blocks.getFirst().getRelative(BlockFace.WEST));
 
                         if (areBlocksMaterial(blocks, Material.AIR)) {
                             Vector dir = p.getLocation().getDirection().multiply(0.5);

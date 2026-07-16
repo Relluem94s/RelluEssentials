@@ -199,6 +199,7 @@ public class PatchHelper {
         databaseHelper.executeScript(v + "insertProtectionLocks.sql");
         databaseHelper.executeScript(v + "insertAnimalBagType.sql");
         databaseHelper.executeScript(v + "insertSettings.sql");
+        databaseHelper.executeScript(v + "insertWorldGroupSettingsCloudsailor.sql");
         databaseHelper.executeScript(v + "updateFischerNPCTurtleScute.sql");
         databaseHelper.executeScript(v + "updateFloristNPCShortGrass.sql");
         databaseHelper.executeScript(v + "updateWorldGroupSettings_newColumn.sql");

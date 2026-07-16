@@ -9,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collections;
 
@@ -54,11 +55,13 @@ public class DatabaseManager implements IEnable{
             for(WorldEntry we: dBH.getWorldByGroup(wge)){
                 RelluEssentials.getInstance().worldsMap.put(wge, we);
 
-                boolean hasCollectBag = wge.getSettings().stream()
-                        .anyMatch(s -> "COLLECT_BAG".equals(s.getSettingEntry().getName()));
 
-                if (hasCollectBag) {
+                if (getWorldNameBySetting(wge, "COLLECT_BAG")) {
                     RelluEssentials.getInstance().collectBagWorlds.add(we.getName());
+                }
+
+                if (getWorldNameBySetting(wge, "USE_CLOUDSAILOR")) {
+                    RelluEssentials.getInstance().useCloudsailorWorlds.add(we.getName());
                 }
 
                 consoleSendMessage(PLUGIN_NAME_CONSOLE,languageHelper.get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(), we.getName(), wge.getSettings().size()));
@@ -71,6 +74,11 @@ public class DatabaseManager implements IEnable{
             ItemStack[] isa = BagHelper.getItemStacks(RelluEssentials.getInstance().getBagAPI().getBagTypeEntryList().get(i));
             Collections.addAll(RelluEssentials.getInstance().bagBlocks2collect, isa);
         }
+    }
+
+    private static boolean getWorldNameBySetting(@NonNull WorldGroupEntry wge, String setting) {
+        return wge.getSettings().stream()
+                .anyMatch(s -> setting.equals(s.getSettingEntry().getName()));
     }
 
     public void afterWorldLoaded(){
