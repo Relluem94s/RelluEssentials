@@ -64,6 +64,10 @@ public class DatabaseManager implements IEnable{
                     RelluEssentials.getInstance().useCloudsailorWorlds.add(we.getName());
                 }
 
+                if (getWorldNameBySetting(wge, "DEATH_LOSE_COINS")) {
+                    RelluEssentials.getInstance().deathLoseCoins.add(we.getName());
+                }
+
                 consoleSendMessage(PLUGIN_NAME_CONSOLE,languageHelper.get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(), we.getName(), wge.getSettings().size()));
             }
         }
