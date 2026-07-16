@@ -79,8 +79,7 @@ public class RelluEssentials extends JavaPlugin {
     public final Set<String> collectBagWorlds = new HashSet<>();
     public final Set<String> useCloudsailorWorlds = new HashSet<>();
     public final Set<String> deathLoseCoins = new HashSet<>();
-
-    public final String[] oreRespawn = new String[]{PLUGIN_WORLD_WORLD_NETHER}; //TODO has to be done in Config (new Table?) #IsComming
+    public final Set<String> oreRespawn = new HashSet<>();
 
     public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
     public final Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
