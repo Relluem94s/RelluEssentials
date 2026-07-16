@@ -202,6 +202,7 @@ public class PatchHelper {
         databaseHelper.executeScript(v + "insertWorldGroupSettingsCloudsailor.sql");
         databaseHelper.executeScript(v + "insertWorldGroupSettingsCoinsLose.sql");
         databaseHelper.executeScript(v + "insertWorldGroupSettingsDeathPoint.sql");
+        databaseHelper.executeScript(v + "insertWorldGroupSettingsScoreBoardShow.sql");
         databaseHelper.executeScript(v + "updateFischerNPCTurtleScute.sql");
         databaseHelper.executeScript(v + "updateFloristNPCShortGrass.sql");
         databaseHelper.executeScript(v + "updateWorldGroupSettings_newColumn.sql");

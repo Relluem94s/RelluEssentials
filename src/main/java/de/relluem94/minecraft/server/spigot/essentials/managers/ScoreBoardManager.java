@@ -10,10 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 import org.jspecify.annotations.NonNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
@@ -22,6 +19,7 @@ public class ScoreBoardManager implements IEnable {
 
     public static final ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
     private static final Map<UUID, Scoreboard> playerBoards = new HashMap<>();
+    private static final Set<UUID> hiddenBoards = new HashSet<>(); // NEU
 
     @Override
     public void enable() {
@@ -38,6 +36,13 @@ public class ScoreBoardManager implements IEnable {
     public static void applyToPlayer(Player player) {
         if (sm == null) return;
 
+        String currentWorld = player.getWorld().getName();
+        if (!RelluEssentials.getInstance().scoreboardShow.contains(currentWorld)) {
+            hiddenBoards.add(player.getUniqueId());
+            player.setScoreboard(sm.getMainScoreboard());
+            return;
+        }
+
         Scoreboard board = sm.getNewScoreboard();
         playerBoards.put(player.getUniqueId(), board);
 
@@ -51,7 +56,21 @@ public class ScoreBoardManager implements IEnable {
         updatePlayer(player);
     }
 
+    public static void setScoreboardVisible(Player player, boolean visible) {
+        if (visible) {
+            hiddenBoards.remove(player.getUniqueId());
+            applyToPlayer(player);
+        } else {
+            hiddenBoards.add(player.getUniqueId());
+            if (sm != null) {
+                player.setScoreboard(sm.getMainScoreboard());
+            }
+        }
+    }
+
     public static void updatePlayer(@NonNull Player player) {
+        if (hiddenBoards.contains(player.getUniqueId())) return;
+
         Scoreboard board = playerBoards.get(player.getUniqueId());
         if (board == null) return;
 
@@ -84,7 +103,7 @@ public class ScoreBoardManager implements IEnable {
     }
 
     public static void removePlayer(UUID uuid) {
+        hiddenBoards.remove(uuid);
         playerBoards.remove(uuid);
     }
-
 }
