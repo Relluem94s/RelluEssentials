@@ -72,6 +72,7 @@ public class RelluEssentials extends JavaPlugin {
     public final Set<String> deathLoseCoins = new HashSet<>();
     public final Set<String> deathCreateHome = new HashSet<>();
     public final Set<String> oreRespawn = new HashSet<>();
+    public final Set<String> scoreboardShow = new HashSet<>();
 
     public static final Map<Player, Player> reply = new HashMap<>();
     public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();

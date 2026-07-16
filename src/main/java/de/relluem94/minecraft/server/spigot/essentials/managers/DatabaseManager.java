@@ -55,7 +55,6 @@ public class DatabaseManager implements IEnable{
             for(WorldEntry we: dBH.getWorldByGroup(wge)){
                 RelluEssentials.getInstance().worldsMap.put(wge, we);
 
-
                 if (getWorldNameBySetting(wge, "COLLECT_BAG")) {
                     RelluEssentials.getInstance().collectBagWorlds.add(we.getName());
                 }
@@ -74,6 +73,10 @@ public class DatabaseManager implements IEnable{
 
                 if (getWorldNameBySetting(wge, "DEATH_CREATE_HOME")) {
                     RelluEssentials.getInstance().deathCreateHome.add(we.getName());
+                }
+
+                if (getWorldNameBySetting(wge, "SCOREBOARD_SHOW")) {
+                    RelluEssentials.getInstance().scoreboardShow.add(we.getName());
                 }
 
                 consoleSendMessage(PLUGIN_NAME_CONSOLE,languageHelper.get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(), we.getName(), wge.getSettings().size()));
