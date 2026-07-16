@@ -6,5 +6,4 @@
 INSERT INTO
     `world_group_setting` (`CREATED`, `CREATEDBY`, `setting_fk`, `world_group_fk`, `value`)
 VALUES
-    (NOW(), 1, 9, 1, 1),
-    (NOW(), 1, 9, 2, 1);
+    (NOW(), 1, 8, 2, 1);

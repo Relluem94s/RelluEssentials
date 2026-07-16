@@ -20,6 +20,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,10 @@ public class BetterMobs implements Listener {
     }
     
     @EventHandler
-    public void onKill(PlayerDeathEvent e) {
-        if(RelluEssentials.MONEY_LOST_ON_DEATH){
+    public void onKill(@NonNull PlayerDeathEvent e) {
+        String worldName = e.getEntity().getWorld().getName();
+        boolean deathLoseCoinsActive = RelluEssentials.getInstance().deathLoseCoins.contains(worldName);
+        if(deathLoseCoinsActive){
             Player p = e.getEntity();
             PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
             
