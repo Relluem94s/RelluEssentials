@@ -8,6 +8,5 @@ public class CleanUpManager implements IDisable {
     public void disable() {
         RelluEssentials.getInstance().locationTypeEntryList.clear();
         RelluEssentials.getInstance().groupEntryList.clear();
-        RelluEssentials.getInstance().selections.clear();
     }
 }
