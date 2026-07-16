@@ -82,7 +82,10 @@ public class DatabaseManager implements IEnable{
 
     private static boolean getWorldNameBySetting(@NonNull WorldGroupEntry wge, String setting) {
         return wge.getSettings().stream()
-                .anyMatch(s -> setting.equals(s.getSettingEntry().getName()));
+                .filter(s -> setting.equals(s.getSettingEntry().getName()))
+                .findFirst()
+                .map(WorldGroupSettingEntry::isValue)
+                .orElse(false);
     }
 
     public void afterWorldLoaded(){
