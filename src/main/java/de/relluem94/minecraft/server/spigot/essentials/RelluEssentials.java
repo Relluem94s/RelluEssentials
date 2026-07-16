@@ -9,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.types.Vector2Location;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
 import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
@@ -41,6 +40,7 @@ public class RelluEssentials extends JavaPlugin {
     @Getter
     private PluginInformationEntry pluginInformation;
 
+    public static LanguageHelper languageHelper;
     private static Banker banker;
 
     @Getter
@@ -65,26 +65,23 @@ public class RelluEssentials extends JavaPlugin {
     @Getter
     private WarpAPI warpAPI;
 
-    public final Map<Integer, Vector2Location> selections = new HashMap<>();
-    public final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
-    public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
-    public final Map<Material, Material> crops = new EnumMap<>(Material.class);
-    public final List<GroupEntry> groupEntryList = new ArrayList<>();
-    public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
-    public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
-    public static final Map<Player, Player> reply = new HashMap<>();
-
     public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
-    public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create() ;
+    public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
     public final Set<String> collectBagWorlds = new HashSet<>();
     public final Set<String> useCloudsailorWorlds = new HashSet<>();
     public final Set<String> deathLoseCoins = new HashSet<>();
     public final Set<String> oreRespawn = new HashSet<>();
 
+    public static final Map<Player, Player> reply = new HashMap<>();
     public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
     public final Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
-    public final Map<Player, DoubleStore<Location,Location>> position = new HashMap<>();
-    public static LanguageHelper languageHelper;
+    public final Map<Player, DoubleStore<Location, Location>> position = new HashMap<>();
+    public final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
+    public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
+    public final Map<Material, Material> crops = new EnumMap<>(Material.class);
+    public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
+    public final List<GroupEntry> groupEntryList = new ArrayList<>();
+    public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
 
     public static final List<CommandWrapper> commandWrapperList = List.of(
             new CommandWrapper(new Admin()),
@@ -146,20 +143,20 @@ public class RelluEssentials extends JavaPlugin {
             // THIS IS A DEV COMMAND
             new CommandWrapper(new TestCommand())
     );
-    
+
     public static synchronized RelluEssentials getInstance() {
         return instance;
     }
 
-    private static synchronized void setInstance(RelluEssentials re){
+    private static synchronized void setInstance(RelluEssentials re) {
         instance = re;
     }
 
-    public static void setBanker(Banker banker){
+    public static void setBanker(Banker banker) {
         RelluEssentials.banker = banker;
     }
 
-    public static Banker getBanker(){
+    public static Banker getBanker() {
         return RelluEssentials.banker;
     }
 
@@ -175,10 +172,10 @@ public class RelluEssentials extends JavaPlugin {
         new ConfigManager().enable();
         new CommandManager().enable();
         DatabaseManager dm = new DatabaseManager(
-            getConfig().getString("database.host"), 
-            getConfig().getString("database.user"), 
-            getConfig().getString("database.password"), 
-            getConfig().getInt("database.port")
+                getConfig().getString("database.host"),
+                getConfig().getString("database.user"),
+                getConfig().getString("database.password"),
+                getConfig().getInt("database.port")
         );
 
         dm.enable();
@@ -225,11 +222,11 @@ public class RelluEssentials extends JavaPlugin {
         consoleSendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
     }
 
-    public RelluEssentials(){
+    public RelluEssentials() {
         super();
     }
 
-    protected RelluEssentials(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file){
+    protected RelluEssentials(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
         isUnitTest = true;
     }
