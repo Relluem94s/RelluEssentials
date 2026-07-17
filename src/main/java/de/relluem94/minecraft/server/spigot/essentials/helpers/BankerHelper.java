@@ -11,6 +11,10 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -48,25 +52,44 @@ public class BankerHelper {
     public static final ItemHelper npc_gui_balance_total = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL, Type.NPC_GUI, Rarity.NONE);
     public static final ItemHelper npc_gui_balance_transactions = new ItemHelper(Material.MAP, 1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS, Type.NPC_GUI, Rarity.NONE);
 
+    public static @NotNull ItemStack addLoreLine(@NotNull ItemStack is, String line) {
+        ItemMeta im = is.getItemMeta();
+        if (im == null) return is;
 
+        List<String> lore = im.getLore() != null ? new ArrayList<>(im.getLore()) : new ArrayList<>();
+        if(lore.size() == 1){
+            lore.add(line);
+        }
+        else{
+            lore.set(1, line);
+        }
+
+        im.setLore(lore);
+        is.setItemMeta(im);
+        return is;
+    }
 
     public static final Material UPGRADE_MATERIAL = Material.AMETHYST_SHARD;
 
-    public static List<ItemHelper> getBankTiers(){
+    public static @NonNull List<ItemHelper> getBankTiers(){
         List<ItemHelper> lih = new ArrayList<>();
         for(int i = 0; i < RelluEssentials.getInstance().getBankAPI().getBankTiers().size(); i++){
             BankTierEntry bte = RelluEssentials.getInstance().getBankAPI().getBankTiers().get(i);
-            String lore1 = "Costs: " + bte.getCost();
-            String lore2 = "Interest: " + bte.getInterest();
-            String lore3 = "Limit: " + bte.getLimit();
-            lih.add(new ItemHelper(new ItemStack(UPGRADE_MATERIAL, 1), bte.getName(), Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore1, lore2, lore3)));
+            String lore1 = languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_COST_LORE,     bte.getCost());
+            String lore2 = languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST_LORE, bte.getInterest());
+            String lore3 = languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_LIMIT_LORE,    bte.getLimit());
+
+
+            ItemHelper itemHelper = new ItemHelper(new ItemStack(UPGRADE_MATERIAL, 1), bte.getName(), Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore1, lore2, lore3));
+            itemHelper.setData(new NamespacedKey(RelluEssentials.getInstance(), "cost"), ""+bte.getCost());
+            lih.add(itemHelper);
         }
         return lih;
     }
 
 
 
-    public static void deposit(PlayerEntry pe, Player p, BankAccountEntry bae, float percentage){
+    public static void deposit(@NonNull PlayerEntry pe, Player p, BankAccountEntry bae, float percentage){
         double purse = pe.getPurse();
         if(purse >= 1){
             double transactionValue = (purse / 100)  * percentage;
@@ -119,7 +142,7 @@ public class BankerHelper {
         }
     }
 
-    public static void withdraw(PlayerEntry pe, Player p, BankAccountEntry bae, float percentage){
+    public static void withdraw(@NonNull PlayerEntry pe, Player p, @NonNull BankAccountEntry bae, float percentage){
         double bank = bae.getValue();
         double purse = pe.getPurse();
         if(bank >= 1){
@@ -153,8 +176,11 @@ public class BankerHelper {
             if(!ih.getCustomItem().equals(itemStack)){
                 continue;
             }
+            long costs = 0;
+            if(ih.hasData(new NamespacedKey(RelluEssentials.getInstance(), "cost"))){
+                costs = Long.parseLong(ih.getData(new NamespacedKey(RelluEssentials.getInstance(), "cost")));
+            }
 
-            long costs = Long.parseLong(ih.getLore().getFirst().replace("Costs: ", ""));
             BankTierEntry bt = getBankTierEntryByCost(costs);
 
             if(!checkAccount(p, bae, bt, costs)){
@@ -205,7 +231,7 @@ public class BankerHelper {
         }
     }
 
-    public static void doInterest(Player p){
+    public static void doInterest(@NonNull Player p){
         if(!RelluEssentials.getInstance().bankInterestMap.containsKey(p.getUniqueId())){
             return;
         }
@@ -254,7 +280,7 @@ public class BankerHelper {
         }
     }
 
-    public static BankTierEntry getBankTierEntryByCost(long costs){
+    public static @Nullable BankTierEntry getBankTierEntryByCost(long costs){
         for(BankTierEntry bte: RelluEssentials.getInstance().getBankAPI().getBankTiers()){
             if(bte.getCost() == costs){
                 return bte;
