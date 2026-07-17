@@ -55,7 +55,7 @@
         <repository>
             <id>checkItemPrice</id>
             <name>Relluem94s</name>
-            <url>https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo</url>
+            <url>https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckItemPriceMojo</url>
         </repository>
         <repository>
             <id>annotationProcessor</id>
