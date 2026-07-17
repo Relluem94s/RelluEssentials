@@ -327,6 +327,7 @@ public enum MessageKey {
     PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT("plugin.event.npc_bags.already_bought"),
     PLUGIN_EVENT_DAMAGE_SHOW("plugin.event.damage.show"),
     PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS("plugin.event.player_death.lost_coins"),
+    PLUGIN_EVENT_FIRST_JOIN_MESSAGE("plugin.event.first_join_message"),
     PLUGIN_EVENT_JOIN_MESSAGE("plugin.event.join_message"),
     PLUGIN_EVENT_QUIT_MESSAGE("plugin.event.quit_message"),
     PLUGIN_EVENT_DEATH("plugin.event.death"),
