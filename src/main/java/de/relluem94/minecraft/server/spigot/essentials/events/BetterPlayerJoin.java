@@ -17,12 +17,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.jspecify.annotations.NonNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 public class BetterPlayerJoin implements Listener {
 
-    private void addPlayer(Player p) {
+    private void addPlayer(@NonNull Player p) {
         PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
         if (pe == null) {
             pe = new PlayerEntry();
@@ -34,6 +35,7 @@ public class BetterPlayerJoin implements Listener {
             RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
 
             pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
+            p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
         }
         else{
             if(pe.getName() == null){
