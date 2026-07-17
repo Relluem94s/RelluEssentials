@@ -14,6 +14,8 @@
         <plugin.website>https://www.relluem94.de</plugin.website>
         <plugin.main>de.relluem94.minecraft.server.spigot.essentials.RelluEssentials</plugin.main>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <relluessentials.processor.version>1.0.3</relluessentials.processor.version>
+        <junit.version>6.1.0</junit.version>
         <maven.compiler.release>25</maven.compiler.release>
     </properties>
     <distributionManagement>
@@ -134,19 +136,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>6.1.0</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>6.1.0</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
-            <version>6.1.0</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -168,7 +170,7 @@
         <dependency>
             <groupId>de.relluem94</groupId>
             <artifactId>relluessentials-processor</artifactId>
-            <version>1.0.2</version>
+            <version>${relluessentials.processor.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -196,7 +198,7 @@
                         <path>
                             <groupId>de.relluem94</groupId>
                             <artifactId>relluessentials-processor</artifactId>
-                            <version>1.0.2</version>
+                            <version>${relluessentials.processor.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
