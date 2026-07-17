@@ -304,6 +304,11 @@ public enum MessageKey {
     PLUGIN_EVENT_NPC_SELL_USED_ITEM("plugin.event.npc.sell_used_item"),
     PLUGIN_EVENT_NPC_SPAWN("plugin.event.npc.spawn"),
 
+    PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE("plugin.event.npc_banker.deposit_lore"),
+    PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE("plugin.event.npc_banker.withdraw_lore"),
+    PLUGIN_EVENT_NPC_BANKER_COST_LORE("plugin.event.npc_banker.cost_lore"),
+    PLUGIN_EVENT_NPC_BANKER_INTEREST_LORE("plugin.event.npc_banker.interest_lore"),
+    PLUGIN_EVENT_NPC_BANKER_LIMIT_LORE("plugin.event.npc_banker.limit_lore"),
     PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE("plugin.event.npc_banker.deposit_message"),
     PLUGIN_EVENT_NPC_BANKER_DEPOSIT_NO_COINS_MESSAGE("plugin.event.npc_banker.deposit_no_coins_message"),
     PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LIMIT_MESSAGE("plugin.event.npc_banker.deposit_limit_message"),

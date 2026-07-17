@@ -1,16 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-
+import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -21,10 +15,13 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import java.util.Base64;
-
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.*;
 
 /**
  *
@@ -47,14 +44,14 @@ public class ItemHelper implements IItemHelper {
 
     @Getter
     private List<String> lore;
-    
+
     /**
      *
-     * @param material Bukkit Material
-     * @param amount Integer
+     * @param material    Bukkit Material
+     * @param amount      Integer
      * @param displayName String
-     * @param itemType ItemType
-     * @param itemRarity ItemRarity
+     * @param itemType    ItemType
+     * @param itemRarity  ItemRarity
      */
     public ItemHelper(Material material, int amount, String displayName, Type itemType, Rarity itemRarity) {
         this.amount = amount;
@@ -66,7 +63,7 @@ public class ItemHelper implements IItemHelper {
         is = new ItemStack(this.material, this.amount);
 
         ItemMeta im = is.getItemMeta();
-        if(im == null){
+        if (im == null) {
             return;
         }
 
@@ -76,12 +73,12 @@ public class ItemHelper implements IItemHelper {
 
     /**
      *
-     * @param material Bukkit Material
-     * @param amount Integer
+     * @param material    Bukkit Material
+     * @param amount      Integer
      * @param displayName String
-     * @param itemType ItemType
-     * @param itemRarity ItemRarity
-     * @param lore List String
+     * @param itemType    ItemType
+     * @param itemRarity  ItemRarity
+     * @param lore        List String
      */
     public ItemHelper(Material material, int amount, String displayName, Type itemType, Rarity itemRarity, List<String> lore) {
         this.amount = amount;
@@ -94,7 +91,7 @@ public class ItemHelper implements IItemHelper {
         is = new ItemStack(this.material, this.amount);
 
         ItemMeta im = is.getItemMeta();
-        if(im == null){
+        if (im == null) {
             return;
         }
 
@@ -103,12 +100,12 @@ public class ItemHelper implements IItemHelper {
         is.setItemMeta(im);
     }
 
-     /**
+    /**
      *
-     * @param is ItemStack
+     * @param is          ItemStack
      * @param displayName String
-     * @param itemType ItemType
-     * @param itemRarity ItemRarity
+     * @param itemType    ItemType
+     * @param itemRarity  ItemRarity
      */
     public ItemHelper(ItemStack is, String displayName, Type itemType, Rarity itemRarity) {
         this.amount = is.getAmount();
@@ -120,7 +117,7 @@ public class ItemHelper implements IItemHelper {
         this.is = is;
 
         ItemMeta im = is.getItemMeta();
-        if(im == null){
+        if (im == null) {
             return;
         }
 
@@ -128,15 +125,15 @@ public class ItemHelper implements IItemHelper {
         is.setItemMeta(im);
     }
 
-     /**
+    /**
      *
-     * @param is ItemStack
+     * @param is          ItemStack
      * @param displayName String
-     * @param itemType ItemType
-     * @param itemRarity ItemRarity
-     * @param lore List String
+     * @param itemType    ItemType
+     * @param itemRarity  ItemRarity
+     * @param lore        List String
      */
-    public ItemHelper(ItemStack is, String displayName, Type itemType, Rarity itemRarity, List<String> lore) {
+    public ItemHelper(@NonNull ItemStack is, String displayName, Type itemType, Rarity itemRarity, List<String> lore) {
         this.amount = is.getAmount();
         this.material = is.getType();
         this.displayName = displayName;
@@ -147,7 +144,7 @@ public class ItemHelper implements IItemHelper {
         this.is = is;
 
         ItemMeta im = is.getItemMeta();
-        if(im == null){
+        if (im == null) {
             return;
         }
 
@@ -162,7 +159,7 @@ public class ItemHelper implements IItemHelper {
      */
     public ItemStack getCustomItem() {
         init();
-        addItemRarity();        
+        addItemRarity();
         return postInit(is);
     }
 
@@ -200,6 +197,47 @@ public class ItemHelper implements IItemHelper {
         is.setItemMeta(itemMeta);
     }
 
+    public void setData(NamespacedKey key, String value) {
+        ItemMeta itemMeta = is.getItemMeta();
+        if (itemMeta == null) return;
+        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, value);
+        is.setItemMeta(itemMeta);
+    }
+
+    public String getData(NamespacedKey key) {
+        ItemMeta itemMeta = is.getItemMeta();
+        if (itemMeta == null) return null;
+        return itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+    }
+
+    public boolean hasData(NamespacedKey key) {
+        ItemMeta itemMeta = is.getItemMeta();
+        if (itemMeta == null) return false;
+        return itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING);
+    }
+
+    @SuppressWarnings("unused")
+    public void removeData(NamespacedKey key) {
+        ItemMeta itemMeta = is.getItemMeta();
+        if (itemMeta == null) return;
+        itemMeta.getPersistentDataContainer().remove(key);
+        is.setItemMeta(itemMeta);
+    }
+
+    @SuppressWarnings("unused")
+    public static @Nullable Object getData(@NonNull ItemStack is, NamespacedKey key) {
+        ItemMeta itemMeta = is.getItemMeta();
+        if (itemMeta == null) return null;
+        return itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+    }
+
+    @SuppressWarnings("unused")
+    public static boolean hasData(@NonNull ItemStack is, NamespacedKey key) {
+        ItemMeta itemMeta = is.getItemMeta();
+        if (itemMeta == null) return false;
+        return itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING);
+    }
+
     /**
      *
      * @param compare ItemStack
@@ -219,7 +257,7 @@ public class ItemHelper implements IItemHelper {
             return false;
         }
 
-        if(item.getItemMeta() == null){
+        if (item.getItemMeta() == null) {
             return false;
         }
 
@@ -245,7 +283,7 @@ public class ItemHelper implements IItemHelper {
             return false;
         }
 
-        return Objects.requireNonNull(item.getItemMeta()).getDisplayName().equals(Objects.requireNonNull(compare.getItemMeta()).getDisplayName()) ;
+        return Objects.requireNonNull(item.getItemMeta()).getDisplayName().equals(Objects.requireNonNull(compare.getItemMeta()).getDisplayName());
     }
 
     /**
@@ -293,8 +331,8 @@ public class ItemHelper implements IItemHelper {
             locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
             locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
             locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
-            
-            if(ir.level != -1){
+
+            if (ir.level != -1) {
                 locLore.add(ir.getPrefix() + ir.getDisplayName());
             }
 
@@ -303,7 +341,7 @@ public class ItemHelper implements IItemHelper {
         }
     }
 
-    public static List<String> remove(List<String> locLore){
+    public static List<String> remove(List<String> locLore) {
         locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
         locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
         locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
@@ -352,7 +390,7 @@ public class ItemHelper implements IItemHelper {
     }
 
     @SuppressWarnings("unused")
-    public static ItemStack setDisplayName(ItemStack is, String displayName){
+    public static ItemStack setDisplayName(ItemStack is, String displayName) {
         ItemMeta im = is.getItemMeta();
 
         Objects.requireNonNull(im).setDisplayName(displayName);
@@ -362,34 +400,33 @@ public class ItemHelper implements IItemHelper {
     }
 
     @Contract("_ -> new")
-    public static @NotNull ItemStack getCleanItemStack(@NotNull ItemStack is){
+    public static @NotNull ItemStack getCleanItemStack(@NotNull ItemStack is) {
         return new ItemStack(is.getType(), 1);
     }
 
     @Contract("_ -> new")
     @SuppressWarnings("unused")
-    public static @NotNull ItemStack getCleanItemStackWithAmount(@NotNull ItemStack is){
+    public static @NotNull ItemStack getCleanItemStackWithAmount(@NotNull ItemStack is) {
         return new ItemStack(is.getType(), is.getAmount());
     }
 
     @Contract("_, _ -> param1")
     public static @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item, EnchantmentHelper enchantment) {
-        if(item.getItemMeta() instanceof EnchantmentStorageMeta meta){
+        if (item.getItemMeta() instanceof EnchantmentStorageMeta meta) {
             meta.getPersistentDataContainer().set(enchantment.getKey(), PersistentDataType.INTEGER, enchantment.getStartLevel());
             item.setItemMeta(meta);
         }
-        
+
         return item;
     }
 
-    public static String getItemName(@NotNull ItemStack is){
+    public static String getItemName(@NotNull ItemStack is) {
         String name = "";
-        if(is.hasItemMeta()){
+        if (is.hasItemMeta()) {
             ItemMeta meta = is.getItemMeta();
-            if (Objects.requireNonNull(meta).hasDisplayName()){
+            if (Objects.requireNonNull(meta).hasDisplayName()) {
                 name = meta.getDisplayName();
-            }
-            else {
+            } else {
                 name = "ERROR_404_NAME_NOT_FOUND_EXCEPTION";
             }
         }
@@ -398,7 +435,7 @@ public class ItemHelper implements IItemHelper {
     }
 
 
-    public static ItemStack getSmeltedItemStack(ItemStack is){
+    public static ItemStack getSmeltedItemStack(ItemStack is) {
         ItemStack result = null;
         Iterator<Recipe> iterator = Bukkit.recipeIterator();
         while (iterator.hasNext()) {
@@ -410,16 +447,16 @@ public class ItemHelper implements IItemHelper {
                 continue;
             }
 
-            if( recipe.getResult().getType() != is.getType()){
+            if (recipe.getResult().getType() != is.getType()) {
                 result = recipe.getResult();
                 break;
             }
-           
+
         }
-        
-        if(result != null){
+
+        if (result != null) {
             result.setAmount(is.getAmount());
-            
+
         }
         return result;
     }
@@ -432,12 +469,11 @@ public class ItemHelper implements IItemHelper {
             dataOutput.writeObject(stack);
             dataOutput.close();
             return Base64.getEncoder().encodeToString(outputStream.toByteArray());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Unable to save item stack.", e);
         }
     }
-   
+
     public static ItemStack itemFrom64(@NonNull String data) throws IOException {
         try {
             String cleaned = data.replaceAll("\\s+", "");
@@ -446,11 +482,9 @@ public class ItemHelper implements IItemHelper {
             try (BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
                 return (ItemStack) dataInput.readObject();
             }
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             throw new IOException("Unable to decode class type.", e);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw new IOException("Invalid Base64 data: " + e.getMessage(), e);
         }
     }
