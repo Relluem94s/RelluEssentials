@@ -18,7 +18,7 @@ public class LangFileTest {
     @ParameterizedTest(name = "Checking lang file: {0}")
     @ValueSource(strings = {
             "lang/de_DE.properties",
-            "lang/dk_DK.properties",
+            "lang/da_DK.properties",
             "lang/en_US.properties"
     })
     @DisplayName("All MessageKeys should be present in lang files")
