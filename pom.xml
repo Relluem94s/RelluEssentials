@@ -81,6 +81,18 @@
                 <skipTests>true</skipTests>
             </properties>
         </profile>
+        <profile>
+            <id>github</id>
+            <repositories>
+                <repository>
+                    <id>rellulib</id>
+                    <name>RelluLib</name>
+                    <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
+                    <snapshots><enabled>true</enabled></snapshots>
+                    <releases><enabled>true</enabled></releases>
+                </repository>
+            </repositories>
+        </profile>
     </profiles>
     <dependencies>
         <dependency>
