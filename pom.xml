@@ -16,6 +16,7 @@
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <relluessentials.processor.version>1.0.3</relluessentials.processor.version>
         <junit.version>6.1.0</junit.version>
+        <mockito.version>5.23.0</mockito.version>
         <maven.compiler.release>25</maven.compiler.release>
     </properties>
     <distributionManagement>
@@ -172,7 +173,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.23.0</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -223,6 +224,7 @@
                         </goals>
                         <configuration>
                             <minimizeJar>true</minimizeJar>
+                            <createSourcesJar>false</createSourcesJar>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <filters>
                                 <filter>
@@ -244,7 +246,7 @@
                 <version>3.5.6</version>
                 <configuration>
                     <!--suppress UnresolvedMavenProperty -->
-                    <argLine>${surefireArgLine} -Xshare:off</argLine>
+                    <argLine>${surefireArgLine} -Xshare:off -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar</argLine>
                     <forkCount>1</forkCount>
                     <reuseForks>true</reuseForks>
                 </configuration>
