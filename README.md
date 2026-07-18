@@ -37,11 +37,13 @@ What does the plugin include?
 * Teleport to your Bed spawn location or set list tp to homes that get saved in players.yml (`/home`)
 * Open the Inventory (`/inv`)
 * Message other Players (`/msg`)
+* Modify Blocks with (`/modify`)
 * Get More Stuff (`/more`)
 * Nick Player (`/nick`)
 * Change time to Night (`/night`)
 * Set Permission Group (`/setGroup`)
 * Poke a Player if he does not respond (`/poke`)
+*  Set Positions for Modify Command (`/postion`)
 * Portable Crafting Bench (`/craft`)
 * Print Message in Chat in Player / Command Block Name (`/print`)
 * Protect your Chests, Doors and other Blocks with (`/protect`)
@@ -50,7 +52,6 @@ What does the plugin include?
 * Save, Reload your config or more (`/rellu`)
 * Rename item in your Hand (`/rename`)
 * Repair your favorite Tools (`/repair`)
-* Does a rollback of a player (`/rollback`) (WIP)
 * Edit or Copy your Signs (`/sign`)
 * Teleport to World Spawn (`/spawn`)
 * Change your Speed with (`/speed`)
@@ -66,8 +67,7 @@ What does the plugin include?
 * Warps you to a defined Point (`/warp`)
 * Show where a Player is (`/where`)
 * Show Worlds or Teleport to the spawn (`/world`)
-* Set Positions for Modify Command (`/postion`)
-* Modify selected Blocks (`/modify`)
+
 
 
 ## NPCs
@@ -169,45 +169,10 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [Rell
 # Documentation
 How it is working? What's under the hood?
 
-## Helpers
-- [AttributeHelper](./docs/helpers/AttributeHelper.md)
-- [AnnotationHelper](./docs/helpers/AnnotationHelper.md)
-- [BagHelper](./docs/helpers/BagHelper.md)
-- [BankerHelper](./docs/helpers/BankerHelper.md)
-- [BlockHelper](./docs/helpers/BlockHelper.md)
-- [ChatHelper](./docs/helpers/ChatHelper.md)
-- [ConfigHelper](./docs/helpers/ConfigHelper.md)
-- DatabaseHelper
-- [EnchantmentHelper](./docs/helpers/EnchantmentHelper.md)
-- [ExperienceHelper](./docs/helpers/ExperienceHelper.md)
-- [InventoryHelper](./docs/helpers/InventoryHelper.md)
-- [ItemHelper](./docs/helpers/ItemHelper.md)
-- [MobHelper](./docs/helpers/MobHelper.md)
-- [PlayerHelper](./docs/helpers/PlayerHelper.md)
-- [ProtectionHelper](./docs/helpers/ProtectionHelper.md)
-- [PatchHelper](./docs/helpers/PatchHelper.md)
-- [TabCompleterHelper](./docs/helpers/TabCompleterHelper.md)
-- [TeleportHelper](./docs/helpers/TeleportHelper.md)
-- [RecipeHelper](./docs/helpers/RecipeHelper.md)
-- [SignHelper](./docs/helpers/SignHelper.md)
-- [NPCHelper](./docs/helpers/NPCHelper.md)
-- [PlayerHeadHelper](./docs/helpers/PlayerHeadHelper.md)
-- [StringHelper](./docs/helpers/StringHelper.md)
-- [LanguageHelper](./docs/helpers/LanguageHelper.md)
-- [ModifyHelper](./docs/helpers/ModifyHelper.md)
-- [TypeHelper](./docs/helpers/TypeHelper.md)
-- [UUIDHelper](./docs/helpers/UUIDHelper.md)
-- [WorldHelper](./docs/helpers/WorldHelper.md)
-
-
-## API
-- BagAPI
-- BankAPI
-- NPCAPI
-- PlayerAPI
-- ProtectionAPI
-- WarpAPI
-
+## JavaDocs
+```shell
+mvn clean site:run -P docs -Dport=9090
+```
 
 ## Database Model
 ![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.svg)
