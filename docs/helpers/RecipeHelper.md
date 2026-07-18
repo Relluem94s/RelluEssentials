@@ -1,22 +1,42 @@
-# Documentation
+# RecipeHelper
 
-## `public RecipeHelper(String name, Shaped shape, ItemStack result)`
+A utility class that simplifies the creation of both shaped and shapeless Minecraft crafting recipes.
 
- * **Parameters:**
-   * `name` — String
-   * `shape` — Shaped
-   * `result` — ItemStack
+---
 
-## `public RecipeHelper(String name, Material[] ingredients, ItemStack result)`
+## Constructors
 
- * **Parameters:**
-   * `name` — String
-   * `ingredients` — Material[]
-   * `result` — ItemStack
+### `public RecipeHelper(String name, Shaped shape, ItemStack result)`
 
-## `public Recipe getRecipe()`
+Creates a helper for a **shaped** crafting recipe.
 
-creates Recipe from Helper
+| Parameter | Type        | Description                                              |
+|-----------|-------------|----------------------------------------------------------|
+| `name`    | `String`    | Unique identifier used to create the `NamespacedKey`     |
+| `shape`   | `Shaped`    | Defines the grid layout and ingredient mapping           |
+| `result`  | `ItemStack` | The item produced when the recipe is crafted             |
 
- * **Returns:** Recipe
+---
 
+### `public RecipeHelper(String name, Material[] ingredients, ItemStack result)`
+
+Creates a helper for a **shapeless** crafting recipe.
+
+| Parameter      | Type          | Description                                          |
+|----------------|---------------|------------------------------------------------------|
+| `name`         | `String`      | Unique identifier used to create the `NamespacedKey` |
+| `ingredients`  | `Material[]`  | Array of materials required, order does not matter   |
+| `result`       | `ItemStack`   | The item produced when the recipe is crafted         |
+
+---
+
+## Methods
+
+### `public Recipe getRecipe()`
+
+Builds and returns a `Recipe` based on the constructor used.
+
+- If constructed with a `Shaped` argument, returns a `ShapedRecipe` with the defined grid layout and ingredient mapping.
+- If constructed with a `Material[]` argument, returns a `ShapelessRecipe` with all provided ingredients added.
+
+**Returns:** `Recipe` — either a `ShapedRecipe` or `ShapelessRecipe` instance
