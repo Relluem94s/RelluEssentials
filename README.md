@@ -192,8 +192,6 @@ How it is working? What's under the hood?
 - [TypeHelper](./docs/helpers/TypeHelper.md)
 - [UUIDHelper](./docs/helpers/UUIDHelper.md)
 - [WorldHelper](./docs/helpers/WorldHelper.md)
-- others
-  - [Vector2Location](./docs/helpers/Vector2Location.md)
 
 
 ## API
