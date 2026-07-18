@@ -2,15 +2,14 @@
 
 ## `public static UUID dashed(String id)`
 
-converts unDashed UUID (short) to dashed UUID (long)
+Converts an undashed UUID (short format) to a dashed UUID (long format).
 
- * **Parameters:** `id` — String
- * **Returns:** UUID
+* **Parameters:** `id` — String
+* **Returns:** UUID
 
 ## `public static String unDashed(UUID id)`
 
-converts dashed UUID (long) to unDashed UUID (short)
+Converts a dashed UUID (long format) to an undashed UUID (short format).
 
- * **Parameters:** `id` — 
- * **Returns:** String
-
+* **Parameters:** `id` — UUID
+* **Returns:** String
