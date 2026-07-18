@@ -46,24 +46,32 @@
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>rellulib</id>
+            <id>github</id>
             <name>Relluem94s</name>
             <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
         </repository>
         <repository>
             <id>checkEntityCoins</id>
             <name>Relluem94s</name>
             <url>https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
         </repository>
         <repository>
             <id>checkItemPrice</id>
             <name>Relluem94s</name>
             <url>https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckItemPriceMojo</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
         </repository>
         <repository>
             <id>annotationProcessor</id>
             <name>Relluem94s</name>
             <url>https://maven.pkg.github.com/Relluem94s/RelluEssentials-Annotation-Processor</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
         </repository>
     </repositories>
     <profiles>
@@ -78,7 +86,7 @@
             <id>github</id>
             <repositories>
                 <repository>
-                    <id>rellulib</id>
+                    <id>github</id>
                     <name>RelluLib</name>
                     <url>https://maven.pkg.github.com/Relluem94s/RelluLib</url>
                     <snapshots><enabled>true</enabled></snapshots>
