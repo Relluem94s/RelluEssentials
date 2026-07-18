@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- *
+ * A utility class for creating and managing custom Minecraft ItemStack objects with extended metadata support.
  * @author rellu
  */
 public class ItemHelper implements IItemHelper {

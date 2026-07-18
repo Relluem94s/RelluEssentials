@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 /**
+ * Utility class providing helper methods for string manipulation, Minecraft color code conversion, location formatting, and human-readable number scaling.
  *
  * @author rellu
  */
@@ -21,7 +22,7 @@ public class StringHelper {
     /**
      *
      * @param message String
-     * @return String replaces & with § to trigger the ChatColor codes
+     * @return String replaces &amp; with &#167; to trigger the ChatColor codes
      */
     public static String replaceColor(String message) {
         return message.replace("&", "§");

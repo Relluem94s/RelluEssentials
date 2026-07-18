@@ -71,7 +71,7 @@ public class PermissionsGroup implements CommandConstruct {
     private static @Nullable GroupEntry checkGroupExists(String groupName, Player p) {
         GroupEntry g = Groups.getGroup(groupName);
 
-        if(Groups.groupExists(groupName)){
+        if(!Groups.groupExists(groupName)){
             p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SETGROUP_GROUP_NOT_FOUND, groupName));
             return null;
         }

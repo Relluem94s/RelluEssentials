@@ -49,6 +49,24 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 /**
+ * Handles all block protection related events in the plugin.
+ *
+ * <p>This listener manages the lifecycle of block protections, including:
+ * <ul>
+ *   <li>Placing and removing protections on lockable blocks</li>
+ *   <li>Preventing unauthorized access to protected blocks</li>
+ *   <li>Managing protection flags (e.g., auto-close, allow hopper, allow redstone)</li>
+ *   <li>Managing access rights for protected blocks</li>
+ *   <li>Protecting blocks from environmental interactions such as pistons, explosions, water flow and redstone</li>
+ *   <li>Handling auto-sell hoppers for item conversion</li>
+ * </ul>
+ *
+ * <p>Protections are stored persistently via the database and cached in memory
+ * through the {@code ProtectionAPI}. Each protection can hold a set of flags
+ * and a list of player IDs that are granted access rights.
+ *
+ * @see de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper
+ * @see de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry
  *
  * @author rellu
  */

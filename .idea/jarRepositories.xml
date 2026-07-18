@@ -52,6 +52,11 @@
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="annotationProcessor" />
+      <option name="name" value="Relluem94s" />
+      <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluEssentials-Annotation-Processor" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="checkEntityCoins" />
       <option name="name" value="Relluem94s" />
       <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluMavenPlugin-CheckEntityCoinsMojo" />
@@ -70,6 +75,11 @@
       <option name="id" value="github" />
       <option name="name" value="Relluem94s" />
       <option name="url" value="https://maven.pkg.github.com/Relluem94s/RelluLib" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="spotbugs" />
+      <option name="name" value="spotbugs" />
+      <option name="url" value="https://oss.sonatype.org/content/repositories/releases/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="jboss.community" />

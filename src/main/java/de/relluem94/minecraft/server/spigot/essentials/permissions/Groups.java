@@ -8,6 +8,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
+ * Utility class for managing permission groups.
+ *
+ * <p>Provides static methods to retrieve, check and add permission groups.
+ * Groups are stored in a list managed by {@link RelluEssentials} and persisted
+ * via the database helper.</p>
+ *
+ * <p>This class cannot be instantiated.</p>
  *
  * @author rellu
  */
@@ -29,22 +36,29 @@ public class Groups {
                 return ge;
             }
         }
-        if(!groupExists("user")){
-            return new GroupEntry(1, "user", "§8");
+        if(groupExists("user")){
+            return getGroup("user");
         }
         else{
-            return getGroup("user");
+            return new GroupEntry(1, "user", "§8");
         }
     }
 
+    /**
+     * Returns {@code true} if a group with the given name exists, {@code false} otherwise.
+     *
+     * @param name the name of the group to check
+     * @return {@code true} if the group exists, {@code false} otherwise
+     */
     public static boolean groupExists(String name) {
         for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
             if (ge.getName().equalsIgnoreCase(name)) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
+
     /**
      * Returns a GroupEntry if a Group is found by id<br>
      * Returns null if no Group is found
@@ -69,7 +83,7 @@ public class Groups {
      */
     @SuppressWarnings("unused")
     public static boolean addGroup(@NotNull GroupEntry groupEntry) {
-        if (groupExists(groupEntry.getName())) {
+        if (!groupExists(groupEntry.getName())) {
             RelluEssentials.getInstance().getDatabaseHelper().insertGroup(groupEntry);
             RelluEssentials.getInstance().groupEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
             return true;
