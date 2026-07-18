@@ -68,6 +68,7 @@
         </repository>
         <repository>
             <id>annotationProcessor</id>
+            <name>Relluem94s</name>
             <url>https://maven.pkg.github.com/Relluem94s/RelluEssentials-Annotation-Processor</url>
             <releases><enabled>true</enabled></releases>
             <snapshots><enabled>false</enabled></snapshots>
