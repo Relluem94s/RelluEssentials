@@ -82,7 +82,9 @@ public class RelluEssentials extends JavaPlugin {
     public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
     public final Map<Material, Material> crops = new EnumMap<>(Material.class);
     public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
+    @Getter
     public final List<GroupEntry> groupEntryList = new ArrayList<>();
+    @Getter
     public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
 
     public static final List<CommandWrapper> commandWrapperList = List.of(
