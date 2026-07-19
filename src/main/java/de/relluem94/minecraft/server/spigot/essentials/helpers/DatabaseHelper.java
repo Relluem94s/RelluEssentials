@@ -1,22 +1,26 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.dbmapper.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.SqlResourceLoader;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
+import lombok.Setter;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.sql.*;
+import javax.sql.DataSource;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 /**
@@ -25,54 +29,22 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
  */
 public class DatabaseHelper {
 
-    public static final int DB_TEST_PORT = 65065;
+    private final DataSource dataSource;
+    private final DataSource dataSourceNoSchema;
+    private final SqlResourceLoader sqlResourceLoader;
+    @Setter
+    private IPatchHelper patchHelper;
 
-    private final String user;
-    private final String password;
-
-    private static final String CONNECTOR = "jdbc:mysql";
-    private final String connectorString;
-    private final String connectorStringInit;
-
-    public DatabaseHelper(String host, String user, String password, int port) {
-        if (RelluEssentials.getInstance().isUnitTest()) {
-            this.user = "root";
-            this.password = "";
-            port = DB_TEST_PORT;
-        } else {
-            this.user = user;
-            this.password = password;
-        }
-
-        connectorString = CONNECTOR + "://" + host + ":" + port + "/" + PLUGIN_DATABASE_NAME + "?useSSL=false&allowPublicKeyRetrieval=true";
-        connectorStringInit = CONNECTOR + "://" + host + ":" + port + "?useSSL=false&allowPublicKeyRetrieval=true";
-    }
-
-    public String readResource(final String fileName) throws FileNotFoundException {
-
-        String out;
-        try (InputStream is = getClass().getResourceAsStream("/" + fileName);
-             InputStreamReader isr = new InputStreamReader(Objects.requireNonNull(is));
-             BufferedReader br = new BufferedReader(isr)) {
-            String line;
-            StringBuilder sb = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                sb.append(line).append(Constants.PLUGIN_EOL);
-            }
-
-            out = sb.toString();
-        } catch (IOException | NullPointerException e) {
-            throw new FileNotFoundException(String.format("File %s was not found!", fileName));
-        }
-
-        return out;
+    public DatabaseHelper(DataSource dataSource, DataSource dataSourceNoSchema,
+                          SqlResourceLoader sqlResourceLoader) {
+        this.dataSource = dataSource;
+        this.dataSourceNoSchema = dataSourceNoSchema;
+        this.sqlResourceLoader = sqlResourceLoader;
     }
 
     public void init() {
-        PatchHelper ph = new PatchHelper(this);
-        ph.applyPatch(getPluginInformation().getDbVersion());
+        patchHelper.applyPatch(getPluginInformation().getDbVersion());
     }
-
 
     @FunctionalInterface
     private interface StatementConfigurer {
@@ -89,10 +61,9 @@ public class DatabaseHelper {
         void consume(ResultSet rs) throws SQLException;
     }
 
-    @SuppressWarnings("SameParameterValue")
     private void queryForEach(String sqlFile, StatementConfigurer configurer, RowConsumer consumer) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
-             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + sqlFile))) {
             configurer.configure(ps);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -107,8 +78,8 @@ public class DatabaseHelper {
 
     private <T> List<T> queryList(String sqlFile, StatementConfigurer configurer, RowMapper<T> mapper) {
         List<T> results = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
-             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + sqlFile))) {
             configurer.configure(ps);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -123,8 +94,8 @@ public class DatabaseHelper {
     }
 
     private <T> T querySingle(String sqlFile, StatementConfigurer configurer, RowMapper<T> mapper) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
-             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + sqlFile))) {
             configurer.configure(ps);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -138,10 +109,9 @@ public class DatabaseHelper {
         return null;
     }
 
-    @SuppressWarnings("SameParameterValue")
     private <T> T querySingleNoSchema(String sqlFile, StatementConfigurer configurer, RowMapper<T> mapper) {
-        try (Connection connection = DriverManager.getConnection(connectorStringInit, user, password);
-             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+        try (Connection connection = dataSourceNoSchema.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + sqlFile))) {
             configurer.configure(ps);
             ps.execute();
             try (ResultSet rs = ps.getResultSet()) {
@@ -156,8 +126,8 @@ public class DatabaseHelper {
     }
 
     private void executeUpdate(String sqlFile, StatementConfigurer configurer) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
-             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + sqlFile))) {
             configurer.configure(ps);
             ps.execute();
         } catch (SQLException | FileNotFoundException ex) {
@@ -166,8 +136,8 @@ public class DatabaseHelper {
     }
 
     private int executeUpdateWithCount(String sqlFile) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
-             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + sqlFile))) {
             return ps.executeUpdate();
         } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
@@ -176,7 +146,7 @@ public class DatabaseHelper {
     }
 
     void script(@NotNull Connection connection, String script) {
-        try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script))) {
+        try (PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + script))) {
             ps.execute();
         } catch (SQLException | FileNotFoundException ey) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ey);
@@ -184,7 +154,7 @@ public class DatabaseHelper {
     }
 
     void executeScript(String script) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
+        try (Connection connection = dataSource.getConnection()) {
             script(connection, script);
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
@@ -192,14 +162,12 @@ public class DatabaseHelper {
     }
 
     void executeScriptNoSchema(String script) {
-        try (Connection connection = DriverManager.getConnection(connectorStringInit, user,
-                password)) {
+        try (Connection connection = dataSourceNoSchema.getConnection()) {
             script(connection, script);
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
-
 
     public LocationEntry getLocation(@NotNull Location l, int type) {
         return querySingle("getLocationByLocation.sql", ps -> {

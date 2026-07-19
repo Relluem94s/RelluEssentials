@@ -5,12 +5,14 @@ import de.relluem94.minecraft.server.spigot.essentials.api.*;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
 
+import java.sql.SQLException;
 import java.util.Collections;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
@@ -22,7 +24,16 @@ public class DatabaseManager implements IEnable{
     private final DatabaseHelper dBH;
 
     public DatabaseManager(String host, String user, String password, int port){
-        dBH = new DatabaseHelper(host, user, password, port);
+        try {
+            dBH = DatabaseHelperFactory.createForProduction(host, port, user, password, RelluEssentials.getInstance().getPlayerAPI());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public DatabaseManager(DatabaseHelper databaseHelper) {
+        this.dBH = databaseHelper;
     }
 
     @Override
