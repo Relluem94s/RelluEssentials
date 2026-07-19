@@ -15,8 +15,6 @@
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
           <entry name="$MAVEN_REPOSITORY$/de/relluem94/relluessentials-processor/1.0.3/relluessentials-processor-1.0.3.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-          <entry name="$MAVEN_REPOSITORY$/de/relluem94/relluessentials-processor/1.0.3/relluessentials-processor-1.0.3.jar" />
         </processorPath>
         <module name="relluessentials" />
       </profile>
