@@ -121,6 +121,7 @@ public class DatabaseHelper {
             }
         } catch (SQLException | FileNotFoundException ex) {
             Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            throw new RuntimeException(ex);
         }
         return null;
     }
@@ -145,28 +146,21 @@ public class DatabaseHelper {
         }
     }
 
-    void script(@NotNull Connection connection, String script) {
-        try (PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + script))) {
+    private void executeUpdateNoSchema(String sqlFile) {
+        try (Connection connection = dataSourceNoSchema.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + sqlFile))) {
             ps.execute();
-        } catch (SQLException | FileNotFoundException ey) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, null, ey);
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 
     void executeScript(String script) {
-        try (Connection connection = dataSource.getConnection()) {
-            script(connection, script);
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate(script, _ -> {});
     }
 
     void executeScriptNoSchema(String script) {
-        try (Connection connection = dataSourceNoSchema.getConnection()) {
-            script(connection, script);
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdateNoSchema(script);
     }
 
     public LocationEntry getLocation(@NotNull Location l, int type) {

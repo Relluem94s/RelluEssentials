@@ -223,97 +223,26 @@ public class PatchHelper implements IPatchHelper {
     }
 
     public void applyPatch(int version) {
-        switch (version) {
-            case -1:
-            case 0:
-                patch1();
-                patch2();
-                patch3();
-                patch4();
-                patch5();
-                patch6();
-                patch7();
-                patch8();
-                patch9();
-                patch10();
-                finishPatching();
-                break;
-            case 1:
-                patch2();
-                patch3();
-                patch4();
-                patch5();
-                patch6();
-                patch7();
-                patch8();
-                patch9();
-                patch10();
-                finishPatching();
-                break;
-            case 2:
-                patch3();
-                patch4();
-                patch5();
-                patch6();
-                patch7();
-                patch8();
-                patch9();
-                patch10();
-                finishPatching();
-                break;
-            case 3:
-                patch4();
-                patch5();
-                patch6();
-                patch7();
-                patch8();
-                patch9();
-                patch10();
-                finishPatching();
-                break;
-            case 4:
-                patch5();
-                patch6();
-                patch7();
-                patch8();
-                patch9();
-                patch10();
-                finishPatching();
-                break;
-            case 5:
-                patch6();
-                patch7();
-                patch8();
-                patch9();
-                patch10();
-                finishPatching();
-                break;
-            case 6:
-                patch7();
-                patch8();
-                patch9();
-                patch10();
-                finishPatching();
-                break;
-            case 7:
-                patch8();
-                patch9();
-                patch10();
-                finishPatching();
-                break;
-            case 8:
-                patch9();
-                patch10();
-                finishPatching();
-                break;
-            case 9:
-                patch10();
-                finishPatching();
-                break;
-            default:
-                // Add Scripts here for Development without its own patch version
-                break;
-        }
-    }
+        List<Runnable> allPatches = List.of(
+                this::patch1,
+                this::patch2,
+                this::patch3,
+                this::patch4,
+                this::patch5,
+                this::patch6,
+                this::patch7,
+                this::patch8,
+                this::patch9,
+                this::patch10
+        );
 
+        int startIndex = Math.max(version, 0);
+
+        if (startIndex >= allPatches.size()) {
+            return;
+        }
+
+        allPatches.subList(startIndex, allPatches.size()).forEach(Runnable::run);
+        finishPatching();
+    }
 }
