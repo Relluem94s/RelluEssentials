@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.dbmapper;
+package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;

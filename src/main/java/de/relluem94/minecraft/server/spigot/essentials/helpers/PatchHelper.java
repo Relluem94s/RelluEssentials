@@ -1,29 +1,42 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-public class PatchHelper {
+public class PatchHelper implements IPatchHelper {
 
     private final DatabaseHelper databaseHelper;
+    private final PlayerAPI playerAPI;
+    private final Consumer<PluginInformationEntry> onPatchingFinished;
+    private final ConfigHelper configHelper;
 
-    public PatchHelper(DatabaseHelper databaseHelper) {
+    public PatchHelper(DatabaseHelper databaseHelper, PlayerAPI playerAPI,
+                       Consumer<PluginInformationEntry> onPatchingFinished, ConfigHelper configHelper) {
         this.databaseHelper = databaseHelper;
+        this.playerAPI = playerAPI;
+        this.onPatchingFinished = onPatchingFinished;
+        this.configHelper = configHelper;
     }
 
-    private void finishPatching(){
-        List<PlayerEntry> pel = databaseHelper.getPlayers();
-        pel.forEach(p -> RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(UUID.fromString(p.getUuid()), p));
+    private void finishPatching() {
+        List<PlayerEntry> players = databaseHelper.getPlayers();
+        players.forEach(p -> playerAPI.putPlayerEntry(UUID.fromString(p.getUuid()), p));
 
-        RelluEssentials.getInstance().setPluginInformation(databaseHelper.getPluginInformation());
+        PluginInformationEntry pluginInformation = databaseHelper.getPluginInformation();
+        onPatchingFinished.accept(pluginInformation);
     }
+
 
     private void patch1() {
         String v = "patches/v1/";
@@ -40,11 +53,8 @@ public class PatchHelper {
         databaseHelper.executeScript(v + "insertLocationTypes.sql");
         databaseHelper.executeScript(v + "insertPluginInformation.sql");
 
-
-        ConfigHelper ch = new ConfigHelper("players");
-
-        if (ch.isConfigFound()) {
-            List<PlayerEntry> pe = ch.getPlayers();
+        if (configHelper.isConfigFound()) {
+            List<PlayerEntry> pe = configHelper.getPlayers();
             pe.forEach(databaseHelper::insertPlayer);
 
             for (PlayerEntry p : pe) {
@@ -55,7 +65,7 @@ public class PatchHelper {
                 pu.setUpdatedBy(1);
                 databaseHelper.updatePlayer(pu);
 
-                List<LocationEntry> lel = ch.getHomes(pu);
+                List<LocationEntry> lel = configHelper.getHomes(pu);
                 lel.forEach(databaseHelper::insertLocation);
             }
         }

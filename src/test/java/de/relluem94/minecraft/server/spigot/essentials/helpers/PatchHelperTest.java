@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
@@ -27,27 +26,23 @@ class PatchHelperTest {
     @Mock
     private DatabaseHelper databaseHelper;
     @Mock
-    private RelluEssentials relluEssentialsMock;
-    @Mock
     private PlayerAPI playerAPIMock;
+    @Mock
+    private ConfigHelper configHelperMock;
 
     private PatchHelper patchHelper;
 
     private MockedStatic<ChatHelper> chatHelperMock;
-    private MockedStatic<RelluEssentials> relluEssentialsMockedStatic;
 
     @BeforeEach
     void setUp() {
         chatHelperMock = mockStatic(ChatHelper.class);
-        relluEssentialsMockedStatic = mockStatic(RelluEssentials.class);
-        relluEssentialsMockedStatic.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-        patchHelper = new PatchHelper(databaseHelper);
+        patchHelper = new PatchHelper(databaseHelper, playerAPIMock, _ -> {}, configHelperMock);
     }
 
     @AfterEach
     void tearDown() {
         chatHelperMock.close();
-        relluEssentialsMockedStatic.close();
     }
 
     @Test
@@ -272,7 +267,6 @@ class PatchHelperTest {
 
     @Test
     void finishPatching_whenPlayersExist_putsEachPlayerIntoPlayerAPI() {
-        when(relluEssentialsMock.getPlayerAPI()).thenReturn(playerAPIMock);
         PlayerEntry playerEntryOne = buildPlayerEntryWithUuid(UUID.randomUUID());
         PlayerEntry playerEntryTwo = buildPlayerEntryWithUuid(UUID.randomUUID());
         when(databaseHelper.getPlayers()).thenReturn(List.of(playerEntryOne, playerEntryTwo));
