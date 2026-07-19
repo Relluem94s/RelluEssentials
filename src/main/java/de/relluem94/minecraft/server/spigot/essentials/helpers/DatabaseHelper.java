@@ -73,6 +73,108 @@ public class DatabaseHelper {
         ph.applyPatch(getPluginInformation().getDbVersion());
     }
 
+
+    @FunctionalInterface
+    private interface StatementConfigurer {
+        void configure(PreparedStatement ps) throws SQLException;
+    }
+
+    @FunctionalInterface
+    private interface RowMapper<T> {
+        T map(ResultSet rs) throws SQLException;
+    }
+
+    @FunctionalInterface
+    private interface RowConsumer {
+        void consume(ResultSet rs) throws SQLException;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private void queryForEach(String sqlFile, StatementConfigurer configurer, RowConsumer consumer) {
+        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
+             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+            configurer.configure(ps);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    consumer.consume(rs);
+                }
+            }
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+    }
+
+    private <T> List<T> queryList(String sqlFile, StatementConfigurer configurer, RowMapper<T> mapper) {
+        List<T> results = new ArrayList<>();
+        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
+             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+            configurer.configure(ps);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                while (rs.next()) {
+                    results.add(mapper.map(rs));
+                }
+            }
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return results;
+    }
+
+    private <T> T querySingle(String sqlFile, StatementConfigurer configurer, RowMapper<T> mapper) {
+        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
+             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+            configurer.configure(ps);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                if (rs.next()) {
+                    return mapper.map(rs);
+                }
+            }
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private <T> T querySingleNoSchema(String sqlFile, StatementConfigurer configurer, RowMapper<T> mapper) {
+        try (Connection connection = DriverManager.getConnection(connectorStringInit, user, password);
+             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+            configurer.configure(ps);
+            ps.execute();
+            try (ResultSet rs = ps.getResultSet()) {
+                if (rs.next()) {
+                    return mapper.map(rs);
+                }
+            }
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    private void executeUpdate(String sqlFile, StatementConfigurer configurer) {
+        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
+             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+            configurer.configure(ps);
+            ps.execute();
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+    }
+
+    private int executeUpdateWithCount(String sqlFile) {
+        try (Connection connection = DriverManager.getConnection(connectorString, user, password);
+             PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + sqlFile))) {
+            return ps.executeUpdate();
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            return 0;
+        }
+    }
+
     void script(@NotNull Connection connection, String script) {
         try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/" + script))) {
             ps.execute();
@@ -98,919 +200,421 @@ public class DatabaseHelper {
         }
     }
 
-    public List<CropEntry> getCrops() {
-        List<CropEntry> lce = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getCrops.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        lce.add(MiscMapper.mapCrop(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+
+    public LocationEntry getLocation(@NotNull Location l, int type) {
+        return querySingle("getLocationByLocation.sql", ps -> {
+            ps.setFloat(1, (float) l.getX());
+            ps.setFloat(2, (float) l.getY());
+            ps.setFloat(3, (float) l.getZ());
+            ps.setInt(4, type);
+        }, LocationMapper::mapLocation);
+    }
+
+    public PlayerPartnerEntry getPlayerPartner(int playerFK) {
+        return querySingle("getPlayerPartner.sql", ps -> {
+            ps.setInt(1, playerFK);
+            ps.setInt(2, playerFK);
+        }, PlayerMapper::mapPlayerPartner);
+    }
+
+    public PluginInformationEntry getPluginInformation() {
+        PluginInformationEntry fallback = new PluginInformationEntry();
+        try {
+            return querySingleNoSchema("getPluginInformation.sql", _ -> {}, MiscMapper::mapPluginInformation);
+        } catch (Exception ex) {
+            consoleSendMessage(PLUGIN_NAME_CONSOLE, "Init Database..");
+            fallback.setDbVersion(-1);
+            return fallback;
         }
-        return lce;
+    }
+
+    public List<CropEntry> getCrops() {
+        return queryList("getCrops.sql", _ -> {}, MiscMapper::mapCrop);
     }
 
     public List<DropEntry> getDrops() {
-        List<DropEntry> lde = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getDrops.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        lde.add(MiscMapper.mapDrop(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return lde;
+        return queryList("getDrops.sql", _ -> {}, MiscMapper::mapDrop);
+    }
+
+    public List<SettingEntry> getAllSettings() {
+        return queryList("getAllSettings.sql", _ -> {}, SettingMapper::mapSetting);
+    }
+
+    public List<WorldGroupSettingEntry> getAllWorldGroupSettings() {
+        return queryList("getAllWorldGroupSettings.sql", _ -> {}, WorldGroupSettingMapper::mapWorldGroupSetting);
+    }
+
+    public List<LocationTypeEntry> getLocationTypes() {
+        return queryList("getLocationTypes.sql", _ -> {}, LocationMapper::mapLocationType);
+    }
+
+    public List<LocationEntry> getWarps() {
+        return queryList("getWarps.sql", _ -> {}, LocationMapper::mapLocation);
+    }
+
+    public List<GroupEntry> getGroups() {
+        return queryList("getGroups.sql", _ -> {}, PlayerMapper::mapGroup);
+    }
+
+    public List<NPCEntry> getNPCs() {
+        return queryList("getNPCs.sql", _ -> {}, NPCMapper::mapNPC);
+    }
+
+    public List<ProtectionLockEntry> getProtectionLocks() {
+        return queryList("getProtectionLocks.sql", _ -> {}, ProtectionMapper::mapProtectionLock);
+    }
+
+    public List<BankTierEntry> getBankTiers() {
+        return queryList("getBankTiers.sql", _ -> {}, BankMapper::mapBankTier);
+    }
+
+    public List<BagTypeEntry> getBagTypes() {
+        return queryList("getBagTypes.sql", _ -> {}, BagMapper::mapBagType);
+    }
+
+    public BagTypeEntry getBagType(int type) {
+        return querySingle("getBagTypeById.sql", ps -> ps.setInt(1, type), BagMapper::mapBagType);
+    }
+
+    public BankTierEntry getBankTier(int id) {
+        return querySingle("getBankTier.sql", ps -> ps.setInt(1, id), BankMapper::mapBankTier);
+    }
+
+    public LocationEntry getLocation(int id) {
+        return querySingle("getLocationById.sql", ps -> ps.setInt(1, id), LocationMapper::mapLocation);
     }
 
     public void insertPlayerPartner(@NotNull PlayerPartnerEntry ppe) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayerPartner.sql"))) {
-                ps.setInt(1, ppe.getCreatedBy());
-                ps.setInt(2, ppe.getFirstPartnerId());
-                ps.setInt(3, ppe.getSecondPartnerId());
-                ps.setBoolean(4, ppe.isShareProtections());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("insertPlayerPartner.sql", ps -> {
+            ps.setInt(1, ppe.getCreatedBy());
+            ps.setInt(2, ppe.getFirstPartnerId());
+            ps.setInt(3, ppe.getSecondPartnerId());
+            ps.setBoolean(4, ppe.isShareProtections());
+        });
     }
 
     public void deletePlayerPartner(@NotNull PlayerPartnerEntry ppe) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/deletePlayerPartner.sql"))) {
-                ps.setInt(1, ppe.getDeletedBy());
-                ps.setInt(2, ppe.getId());
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("deletePlayerPartner.sql", ps -> {
+            ps.setInt(1, ppe.getDeletedBy());
+            ps.setInt(2, ppe.getId());
+        });
+    }
+
+    public void insertPlayer(@NotNull PlayerEntry pe) {
+        executeUpdate("insertPlayer.sql", ps -> {
+            ps.setInt(1, pe.getCreatedBy());
+            ps.setString(2, pe.getUuid());
+            ps.setString(3, pe.getName());
+            ps.setString(4, pe.getCustomName());
+            ps.setInt(5, pe.getGroup().getId());
+        });
+    }
+
+    public void updatePlayer(@NotNull PlayerEntry pe) {
+        executeUpdate("updatePlayer.sql", ps -> {
+            ps.setInt(1, pe.getId());
+            ps.setInt(2, pe.getGroup().getId());
+            ps.setBoolean(3, pe.isAfk());
+            ps.setBoolean(4, pe.isFlying());
+            ps.setString(5, pe.getName());
+            ps.setString(6, pe.getCustomName());
+            ps.setDouble(7, pe.getPurse());
+            ps.setString(8, pe.getUuid());
+        });
+    }
+
+    public void insertLocation(@NotNull LocationEntry le) {
+        executeUpdate("insertLocation.sql", ps -> {
+            Location l = le.getLocation();
+            ps.setInt(1, le.getPlayerId());
+            ps.setFloat(2, (float) l.getX());
+            ps.setFloat(3, (float) l.getY());
+            ps.setFloat(4, (float) l.getZ());
+            ps.setFloat(5, l.getYaw());
+            ps.setFloat(6, l.getPitch());
+            ps.setString(7, Objects.requireNonNull(l.getWorld()).getName());
+            ps.setString(8, le.getLocationName());
+            ps.setInt(9, le.getLocationType().getId());
+            ps.setInt(10, le.getPlayerId());
+        });
+    }
+
+    public void deleteLocation(@NotNull LocationEntry le) {
+        executeUpdate("deleteLocation.sql", ps -> {
+            ps.setInt(1, le.getPlayerId());
+            ps.setInt(2, le.getId());
+        });
+    }
+
+    public void insertProtection(@NotNull ProtectionEntry pe) {
+        executeUpdate("insertProtection.sql", ps -> {
+            ps.setInt(1, pe.getLocationEntry().getPlayerId());
+            ps.setInt(2, pe.getLocationEntry().getId());
+            ps.setString(3, pe.getMaterialName());
+            ps.setString(4, pe.getFlags().toString());
+            ps.setString(5, pe.getRights().toString());
+        });
+    }
+
+    public void updateProtectionFlag(@NotNull ProtectionEntry pe) {
+        executeUpdate("updateProtectionFlags.sql", ps -> {
+            ps.setInt(1, pe.getLocationEntry().getPlayerId());
+            ps.setString(2, pe.getFlags().toString());
+            ps.setInt(3, pe.getId());
+        });
+    }
+
+    public void updateProtectionRight(@NotNull ProtectionEntry pe) {
+        executeUpdate("updateProtectionRights.sql", ps -> {
+            ps.setInt(1, pe.getLocationEntry().getPlayerId());
+            ps.setString(2, pe.getRights().toString());
+            ps.setInt(3, pe.getId());
+        });
     }
 
     @SuppressWarnings("unused")
     public void updatePlayerPartner(@NotNull PlayerPartnerEntry ppe) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayerPartner.sql"))) {
-                ps.setInt(1, ppe.getUpdatedBy());
-                ps.setBoolean(2, ppe.isShareProtections());
-                ps.setInt(1, ppe.getId());
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public PlayerPartnerEntry getPlayerPartner(int playerFK) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayerPartner.sql"))) {
-                ps.setInt(1, playerFK);
-                ps.setInt(2, playerFK);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        return PlayerMapper.mapPlayerPartner(rs);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
-    }
-
-    public List<SettingEntry> getAllSettings() {
-        List<SettingEntry> lse = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getAllSettings.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        SettingEntry se = SettingMapper.mapSetting(rs);
-                        lse.add(se);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return lse;
-    }
-
-
-    public List<WorldGroupSettingEntry> getAllWorldGroupSettings() {
-        List<WorldGroupSettingEntry> lwgse = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getAllWorldGroupSettings.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        WorldGroupSettingEntry wgse = WorldGroupSettingMapper.mapWorldGroupSetting(rs);
-                        lwgse.add(wgse);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return lwgse;
+        executeUpdate("updatePlayerPartner.sql", ps -> {
+            ps.setInt(1, ppe.getUpdatedBy());
+            ps.setBoolean(2, ppe.isShareProtections());
+            ps.setInt(3, ppe.getId());
+        });
     }
 
     public List<WorldGroupEntry> getWorldGroups() {
-        List<WorldGroupEntry> worldGroupEntryList = new ArrayList<>();
         List<WorldGroupSettingEntry> allWorldGroupSettings = getAllWorldGroupSettings();
-
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroups.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        WorldGroupEntry wge = WorldMapper.mapWorldGroup(rs, allWorldGroupSettings);
-
-                        worldGroupEntryList.add(wge);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return worldGroupEntryList;
+        return queryList("getWorldGroups.sql", _ -> {
+        }, rs -> WorldMapper.mapWorldGroup(rs, allWorldGroupSettings));
     }
 
     public List<WorldEntry> getWorldByGroup(@NotNull WorldGroupEntry wge) {
-        List<WorldEntry> lwe = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldByGroup.sql"))) {
-                ps.setInt(1, wge.getId());
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        WorldEntry we = WorldMapper.mapWorld(rs);
-                        we.setWorldGroupEntry(wge);
-                        lwe.add(we);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return lwe;
+        return queryList("getWorldByGroup.sql", ps -> ps.setInt(1, wge.getId()), rs -> {
+            WorldEntry we = WorldMapper.mapWorld(rs);
+            we.setWorldGroupEntry(wge);
+            return we;
+        });
     }
 
     public void insertWorldGroupInventory(@NotNull WorldGroupInventoryEntry worldGroupInventoryEntry) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertWorldInventoryByGroupAndPlayer.sql"))) {
-                ps.setInt(1, worldGroupInventoryEntry.getPlayerId());
-                ps.setInt(2, worldGroupInventoryEntry.getPlayerId());
-                ps.setInt(3, worldGroupInventoryEntry.getWorldGroupEntry().getId());
-                ps.setString(4, worldGroupInventoryEntry.getInventory().toString());
-                ps.setDouble(5, worldGroupInventoryEntry.getHealth());
-                ps.setInt(6, worldGroupInventoryEntry.getFoodLevel());
-                ps.setInt(7, worldGroupInventoryEntry.getTotalExperience());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("insertWorldInventoryByGroupAndPlayer.sql", ps -> {
+            ps.setInt(1, worldGroupInventoryEntry.getPlayerId());
+            ps.setInt(2, worldGroupInventoryEntry.getPlayerId());
+            ps.setInt(3, worldGroupInventoryEntry.getWorldGroupEntry().getId());
+            ps.setString(4, worldGroupInventoryEntry.getInventory().toString());
+            ps.setDouble(5, worldGroupInventoryEntry.getHealth());
+            ps.setInt(6, worldGroupInventoryEntry.getFoodLevel());
+            ps.setInt(7, worldGroupInventoryEntry.getTotalExperience());
+        });
     }
 
     public void updateWorldGroupInventory(@NotNull WorldGroupInventoryEntry worldGroupInventoryEntry) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateWorldInventoryByGroupAndPlayer.sql"))) {
-                ps.setInt(1, worldGroupInventoryEntry.getUpdatedBy());
-                ps.setString(2, worldGroupInventoryEntry.getInventory().toString());
-                ps.setDouble(3, worldGroupInventoryEntry.getHealth());
-                ps.setInt(4, worldGroupInventoryEntry.getFoodLevel());
-                ps.setInt(5, worldGroupInventoryEntry.getTotalExperience());
-                ps.setInt(6, worldGroupInventoryEntry.getPlayerId());
-                ps.setInt(7, worldGroupInventoryEntry.getWorldGroupEntry().getId());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("updateWorldInventoryByGroupAndPlayer.sql", ps -> {
+            ps.setInt(1, worldGroupInventoryEntry.getUpdatedBy());
+            ps.setString(2, worldGroupInventoryEntry.getInventory().toString());
+            ps.setDouble(3, worldGroupInventoryEntry.getHealth());
+            ps.setInt(4, worldGroupInventoryEntry.getFoodLevel());
+            ps.setInt(5, worldGroupInventoryEntry.getTotalExperience());
+            ps.setInt(6, worldGroupInventoryEntry.getPlayerId());
+            ps.setInt(7, worldGroupInventoryEntry.getWorldGroupEntry().getId());
+        });
     }
 
     public WorldGroupInventoryEntry getWorldGroupInventory(@NotNull PlayerEntry pe, @NotNull WorldGroupEntry wge) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldInventoryByGroupAndPlayer.sql"))) {
-                ps.setInt(1, wge.getId());
-                ps.setInt(2, pe.getId());
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        WorldGroupInventoryEntry worldGroupInventoryEntry = WorldMapper.mapWorldGroupInventory(rs);
-                        worldGroupInventoryEntry.setWorldGroupEntry(wge);
-                        return worldGroupInventoryEntry;
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
+        return querySingle("getWorldInventoryByGroupAndPlayer.sql", ps -> {
+            ps.setInt(1, wge.getId());
+            ps.setInt(2, pe.getId());
+        }, rs -> {
+            WorldGroupInventoryEntry worldGroupInventoryEntry = WorldMapper.mapWorldGroupInventory(rs);
+            worldGroupInventoryEntry.setWorldGroupEntry(wge);
+            return worldGroupInventoryEntry;
+        });
     }
 
     @SuppressWarnings("unused")
     public void insertWorld(@NotNull WorldEntry we) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertWorld.sql"))) {
-
-                ps.setInt(1, we.getCreatedBy());
-                ps.setString(2, we.getName());
-                ps.setInt(3, we.getWorldGroupEntry().getId());
-                ps.setInt(4, we.getGroupEntry().getId());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("insertWorld.sql", ps -> {
+            ps.setInt(1, we.getCreatedBy());
+            ps.setString(2, we.getName());
+            ps.setInt(3, we.getWorldGroupEntry().getId());
+            ps.setInt(4, we.getGroupEntry().getId());
+        });
     }
 
     @SuppressWarnings("unused")
     public void insertWorldGroup(@NotNull WorldGroupEntry wge) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertWorldGroup.sql"))) {
-                ps.setInt(1, wge.getCreatedBy());
-                ps.setString(2, wge.getName());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("insertWorldGroup.sql", ps -> {
+            ps.setInt(1, wge.getCreatedBy());
+            ps.setString(2, wge.getName());
+        });
     }
 
     @SuppressWarnings("unused")
     public WorldGroupEntry getWorldGroup(String name) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWorldGroupByName.sql"))) {
-                ps.setString(1, name);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        return WorldMapper.mapWorldGroup(rs, getAllWorldGroupSettings());
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
+        return querySingle("getWorldGroupByName.sql", ps -> ps.setString(1, name),
+                rs -> WorldMapper.mapWorldGroup(rs, getAllWorldGroupSettings()));
     }
 
     public List<LocationEntry> getLocations(int id, int type) {
-        List<LocationEntry> lle = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationsByPlayer.sql"))) {
-                ps.setInt(1, id);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        if (type != rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK)) {
-                            continue;
-                        }
-                        lle.add(LocationMapper.mapLocation(rs));
-                    }
-                }
+        return queryList("getLocationsByPlayer.sql", ps -> ps.setInt(1, id), rs -> {
+            if (type != rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK)) {
+                return null;
             }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return lle;
-    }
-
-    public LocationEntry getLocation(@NotNull Location l, int type) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationByLocation.sql"))) {
-                ps.setFloat(1, (float) l.getX());
-                ps.setFloat(2, (float) l.getY());
-                ps.setFloat(3, (float) l.getZ());
-                ps.setInt(4, type);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        return LocationMapper.mapLocation(rs);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
-    }
-
-    public LocationEntry getLocation(int id) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationById.sql"))) {
-                ps.setInt(1, id);
-
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        return LocationMapper.mapLocation(rs);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
-    }
-
-    public PluginInformationEntry getPluginInformation() {
-        PluginInformationEntry pie = new PluginInformationEntry();
-        try (Connection connection = DriverManager.getConnection(connectorStringInit, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPluginInformation.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        return MiscMapper.mapPluginInformation(rs);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            consoleSendMessage(PLUGIN_NAME_CONSOLE, "Init Database..");
-            pie.setDbVersion(-1); // standard pie if no Database version was found
-            return pie;
-        }
-        return null;
+            return LocationMapper.mapLocation(rs);
+        }).stream().filter(Objects::nonNull).toList();
     }
 
     public PlayerEntry getPlayer(String uuid) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayer.sql"))) {
-                ps.setString(1, uuid);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        PlayerEntry p = PlayerMapper.mapPlayer(rs);
-                        p.setHomes(getLocations(p.getId(), 1));
-                        p.setDeaths(getLocations(p.getId(), 2));
-                        p.setPartner(getPlayerPartner(p.getId()));
-                        p.setPlayerState(PlayerState.DEFAULT);
-                        return p;
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
+        return querySingle("getPlayer.sql", ps -> ps.setString(1, uuid), rs -> {
+            PlayerEntry p = PlayerMapper.mapPlayer(rs);
+            p.setHomes(getLocations(p.getId(), 1));
+            p.setDeaths(getLocations(p.getId(), 2));
+            p.setPartner(getPlayerPartner(p.getId()));
+            p.setPlayerState(PlayerState.DEFAULT);
+            return p;
+        });
     }
 
     public BankAccountEntry getPlayerBankAccount(int playerFK) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBankAccountByPlayer.sql"))) {
-                ps.setInt(1, playerFK);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        BankAccountEntry bae = BankMapper.mapBankAccount(rs);
-                        bae.setTier(getBankTier(rs.getInt(DatabaseMappings.FIELD_BANK_TIER_FK)));
-                        return bae;
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
-    }
-
-    public BankTierEntry getBankTier(int id) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBankTier.sql"))) {
-                ps.setInt(1, id);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        return BankMapper.mapBankTier(rs);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
-    }
-
-    public List<BankTierEntry> getBankTiers() {
-        List<BankTierEntry> bankTierEntryList = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBankTiers.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        bankTierEntryList.add(BankMapper.mapBankTier(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return bankTierEntryList;
+        return querySingle("getBankAccountByPlayer.sql", ps -> ps.setInt(1, playerFK), rs -> {
+            BankAccountEntry bae = BankMapper.mapBankAccount(rs);
+            bae.setTier(getBankTier(rs.getInt(DatabaseMappings.FIELD_BANK_TIER_FK)));
+            return bae;
+        });
     }
 
     public void insertBankAccount(@NotNull BankAccountEntry bae) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertBankAccount.sql"))) {
-                ps.setInt(1, 1);
-                ps.setInt(2, bae.getPlayerId());
-                ps.setDouble(3, bae.getValue());
-                ps.setInt(4, bae.getTier().getId());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("insertBankAccount.sql", ps -> {
+            ps.setInt(1, 1);
+            ps.setInt(2, bae.getPlayerId());
+            ps.setDouble(3, bae.getValue());
+            ps.setInt(4, bae.getTier().getId());
+        });
     }
 
     public void addTransactionToBank(int playerFK, int bankAccountFK, double transactionValue, double bankaccountTotal, int tier) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertBankTransaction.sql"))) {
-                ps.setInt(1, playerFK);
-                ps.setInt(2, bankAccountFK);
-                ps.setDouble(3, transactionValue);
-
-                ps.execute();
-                updateBankAccount(playerFK, transactionValue, bankaccountTotal, tier);
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("insertBankTransaction.sql", ps -> {
+            ps.setInt(1, playerFK);
+            ps.setInt(2, bankAccountFK);
+            ps.setDouble(3, transactionValue);
+        });
+        updateBankAccount(playerFK, transactionValue, bankaccountTotal, tier);
     }
 
     public void updateBankAccount(int playerFK, double transactionValue, double bankaccountTotal, int tier) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateBankAccount.sql"))) {
-
-                ps.setInt(1, playerFK);
-                ps.setDouble(2, (bankaccountTotal + transactionValue));
-                ps.setInt(3, tier);
-                ps.setInt(4, playerFK);
-                ps.execute();
-
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("updateBankAccount.sql", ps -> {
+            ps.setInt(1, playerFK);
+            ps.setDouble(2, bankaccountTotal + transactionValue);
+            ps.setInt(3, tier);
+            ps.setInt(4, playerFK);
+        });
     }
 
     public List<BankTransactionEntry> getTransactionsToBankFromPlayer(int bankAccountFK) {
-        List<BankTransactionEntry> bte = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBankAccountTransactionsByPlayer.sql"))) {
-                ps.setInt(1, bankAccountFK);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        bte.add(BankMapper.mapBankTransaction(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return bte;
+        return queryList("getBankAccountTransactionsByPlayer.sql", ps -> ps.setInt(1, bankAccountFK), BankMapper::mapBankTransaction);
     }
 
     public ProtectionEntry getProtectionByLocation(@NotNull Location l) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getProtectionByLocation.sql"))) {
-                ps.setFloat(1, (float) l.getX());
-                ps.setFloat(2, (float) l.getY());
-                ps.setFloat(3, (float) l.getZ());
-                ps.setString(4, Objects.requireNonNull(l.getWorld()).getName());
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        ProtectionEntry pe = ProtectionMapper.mapProtection(rs);
-                        pe.setLocationEntry(getLocation(l, 5));
-                        return pe;
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
-    }
-
-    public void insertProtection(@NotNull ProtectionEntry pe) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertProtection.sql"))) {
-
-                ps.setInt(1, pe.getLocationEntry().getPlayerId());
-                ps.setInt(2, pe.getLocationEntry().getId());
-                ps.setString(3, pe.getMaterialName());
-                ps.setString(4, pe.getFlags().toString());
-                ps.setString(5, pe.getRights().toString());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        return querySingle("getProtectionByLocation.sql", ps -> {
+            ps.setFloat(1, (float) l.getX());
+            ps.setFloat(2, (float) l.getY());
+            ps.setFloat(3, (float) l.getZ());
+            ps.setString(4, Objects.requireNonNull(l.getWorld()).getName());
+        }, rs -> {
+            ProtectionEntry pe = ProtectionMapper.mapProtection(rs);
+            pe.setLocationEntry(getLocation(l, 5));
+            return pe;
+        });
     }
 
     public void deleteProtection(@NotNull ProtectionEntry pe) {
         deleteLocation(pe.getLocationEntry());
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteProtection.sql"))) {
-                ps.setInt(1, pe.getLocationEntry().getPlayerId());
-                ps.setInt(2, pe.getId());
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public void updateProtectionFlag(@NotNull ProtectionEntry pe) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateProtectionFlags.sql"))) {
-                ps.setInt(1, pe.getLocationEntry().getPlayerId());
-                ps.setString(2, pe.getFlags().toString());
-                ps.setInt(3, pe.getId());
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public void updateProtectionRight(@NotNull ProtectionEntry pe) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateProtectionRights.sql"))) {
-                ps.setInt(1, pe.getLocationEntry().getPlayerId());
-                ps.setString(2, pe.getRights().toString());
-                ps.setInt(3, pe.getId());
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        executeUpdate("deleteProtection.sql", ps -> {
+            ps.setInt(1, pe.getLocationEntry().getPlayerId());
+            ps.setInt(2, pe.getId());
+        });
     }
 
     public Map<Location, ProtectionEntry> getProtections() {
-        Map<Location, ProtectionEntry> pel = new HashMap<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getProtections.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        LocationEntry loc = getLocation(rs.getInt(DatabaseMappings.FIELD_LOCATION_FK));
-
-                        if (loc != null) {
-                            ProtectionEntry pe = ProtectionMapper.mapProtection(rs);
-                            pe.setLocationEntry(loc);
-                            pel.put(loc.getLocation(), pe);
-                        } else {
-                            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE,
-                                    "Protection Entry ({0}) without LocationEntry found, this should be due a bug.",
-                                    rs.getInt(DatabaseMappings.FIELD_ID));
-                        }
-                    }
-                }
+        Map<Location, ProtectionEntry> protectionsByLocation = new HashMap<>();
+        queryForEach("getProtections.sql", _ -> {
+        }, rs -> {
+            LocationEntry loc = getLocation(rs.getInt(DatabaseMappings.FIELD_LOCATION_FK));
+            if (loc != null) {
+                ProtectionEntry pe = ProtectionMapper.mapProtection(rs);
+                pe.setLocationEntry(loc);
+                protectionsByLocation.put(loc.getLocation(), pe);
+            } else {
+                Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE,
+                        "Protection Entry ({0}) without LocationEntry found, this should be due a bug.",
+                        rs.getInt(DatabaseMappings.FIELD_ID));
             }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return pel;
+        });
+        return protectionsByLocation;
     }
 
     public List<PlayerEntry> getPlayers() {
-        List<PlayerEntry> pel = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getPlayers.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        PlayerEntry p = PlayerMapper.mapPlayer(rs);
-                        p.setHomes(getLocations(p.getId(), 1));
-                        p.setDeaths(getLocations(p.getId(), 2));
-                        p.setPartner(getPlayerPartner(p.getId()));
-                        p.setPlayerState(PlayerState.DEFAULT);
-
-                        pel.add(p);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return pel;
-    }
-
-    public void insertPlayer(@NotNull PlayerEntry pe) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertPlayer.sql"))) {
-                ps.setInt(1, pe.getCreatedBy());
-                ps.setString(2, pe.getUuid());
-                ps.setString(3, pe.getName());
-                ps.setString(4, pe.getCustomName());
-                ps.setInt(5, pe.getGroup().getId());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
+        return queryList("getPlayers.sql", _ -> {
+        }, rs -> {
+            PlayerEntry p = PlayerMapper.mapPlayer(rs);
+            p.setHomes(getLocations(p.getId(), 1));
+            p.setDeaths(getLocations(p.getId(), 2));
+            p.setPartner(getPlayerPartner(p.getId()));
+            p.setPlayerState(PlayerState.DEFAULT);
+            return p;
+        });
     }
 
     public void insertGroup(@NotNull GroupEntry ge) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertGroup.sql"))) {
-                ps.setInt(1, ge.getId());
-                ps.setString(2, ge.getName());
-                ps.setString(3, ge.getPrefix());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public void updatePlayer(@NotNull PlayerEntry pe) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updatePlayer.sql"))) {
-                ps.setInt(1, pe.getId());
-                ps.setInt(2, pe.getGroup().getId());
-                ps.setBoolean(3, pe.isAfk());
-                ps.setBoolean(4, pe.isFlying());
-                ps.setString(5, pe.getName());
-                ps.setString(6, pe.getCustomName());
-                ps.setDouble(7, pe.getPurse());
-                ps.setString(8, pe.getUuid());
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public List<LocationTypeEntry> getLocationTypes() {
-        List<LocationTypeEntry> ll = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getLocationTypes.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        ll.add(LocationMapper.mapLocationType(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return ll;
-    }
-
-    public List<LocationEntry> getWarps() {
-        List<LocationEntry> ll = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getWarps.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        ll.add(LocationMapper.mapLocation(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return ll;
-    }
-
-    public void insertLocation(@NotNull LocationEntry le) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertLocation.sql"))) {
-                Location l = le.getLocation();
-
-                ps.setInt(1, le.getPlayerId());
-                ps.setFloat(2, (float) l.getX());
-                ps.setFloat(3, (float) l.getY());
-                ps.setFloat(4, (float) l.getZ());
-                ps.setFloat(5, l.getYaw());
-                ps.setFloat(6, l.getPitch());
-                ps.setString(7, Objects.requireNonNull(l.getWorld()).getName());
-                ps.setString(8, le.getLocationName());
-                ps.setInt(9, le.getLocationType().getId());
-                ps.setInt(10, le.getPlayerId());
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public void deleteLocation(@NotNull LocationEntry le) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/deleteLocation.sql"))) {
-                ps.setInt(1, le.getPlayerId());
-                ps.setInt(2, le.getId());
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public List<GroupEntry> getGroups() {
-        List<GroupEntry> gel = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getGroups.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        gel.add(PlayerMapper.mapGroup(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return gel;
-    }
-
-    public BagTypeEntry getBagType(int type) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBagTypeById.sql"))) {
-                ps.setInt(1, type);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        return BagMapper.mapBagType(rs);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
+        executeUpdate("insertGroup.sql", ps -> {
+            ps.setInt(1, ge.getId());
+            ps.setString(2, ge.getName());
+            ps.setString(3, ge.getPrefix());
+        });
     }
 
     public BagEntry getBag(int type, int playerFK) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBagByPlayerAndType.sql"))) {
-                ps.setInt(1, type);
-                ps.setInt(2, playerFK);
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    if (rs.next()) {
-                        BagEntry be = BagMapper.mapBag(rs);
-                        be.setBagType(getBagType(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK)));
-                        return be;
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
+        return querySingle("getBagByPlayerAndType.sql", ps -> {
+            ps.setInt(1, type);
+            ps.setInt(2, playerFK);
+        }, rs -> {
+            BagEntry be = BagMapper.mapBag(rs);
+            be.setBagType(getBagType(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK)));
+            return be;
+        });
     }
 
     public void insertBag(int type, int id) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/insertBag.sql"))) {
-                ps.setInt(1, id);
-                ps.setInt(2, id);
-                ps.setInt(3, type);
-
-                ps.execute();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public List<BagTypeEntry> getBagTypes() {
-        List<BagTypeEntry> bagTypeEntryList = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBagTypes.sql"))) {
-                ps.execute();
-
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        bagTypeEntryList.add(BagMapper.mapBagType(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return bagTypeEntryList;
+        executeUpdate("insertBag.sql", ps -> {
+            ps.setInt(1, id);
+            ps.setInt(2, id);
+            ps.setInt(3, type);
+        });
     }
 
     public List<BagEntry> getBags() {
-        List<BagEntry> bel = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getBags.sql"))) {
-                ps.execute();
-
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        BagEntry be = BagMapper.mapBag(rs);
-                        be.setBagType(getBagType(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK)));
-                        bel.add(be);
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return bel;
+        return queryList("getBags.sql", _ -> {
+        }, rs -> {
+            BagEntry be = BagMapper.mapBag(rs);
+            be.setBagType(getBagType(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK)));
+            return be;
+        });
     }
 
     public void updateBagEntry(@NotNull BagEntry be) {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/updateBag.sql"))) {
-                ps.setInt(1, be.getPlayerId());
-                for (int i = 0; i < BagHelper.BAG_SIZE; i++) {
-                    ps.setInt(i + 2, be.getSlotValue(i));
-                }
-                ps.setInt(BagHelper.BAG_SIZE + 2, be.getId());
-                ps.execute();
+        executeUpdate("updateBag.sql", ps -> {
+            ps.setInt(1, be.getPlayerId());
+            for (int i = 0; i < BagHelper.BAG_SIZE; i++) {
+                ps.setInt(i + 2, be.getSlotValue(i));
             }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-    }
-
-    public List<NPCEntry> getNPCs() {
-        List<NPCEntry> bel = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getNPCs.sql"))) {
-                ps.execute();
-
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        bel.add(NPCMapper.mapNPC(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return bel;
-    }
-
-    public List<ProtectionLockEntry> getProtectionLocks() {
-        List<ProtectionLockEntry> bel = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/getProtectionLocks.sql"))) {
-                ps.execute();
-                try (ResultSet rs = ps.getResultSet()) {
-                    while (rs.next()) {
-                        bel.add(ProtectionMapper.mapProtectionLock(rs));
-                    }
-                }
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return bel;
+            ps.setInt(BagHelper.BAG_SIZE + 2, be.getId());
+        });
     }
 
     public int cleanupLocations() {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/cleanupLocations.sql"))) {
-                return ps.executeUpdate();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-            return 0;
-        }
+        return executeUpdateWithCount("cleanupLocations.sql");
     }
 
     public int cleanupProtections() {
-        try (Connection connection = DriverManager.getConnection(connectorString, user, password)) {
-            try (PreparedStatement ps = connection.prepareStatement(readResource("sqls/cleanupProtections.sql"))) {
-                return ps.executeUpdate();
-            }
-        } catch (SQLException | FileNotFoundException ex) {
-            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-            return 0;
-        }
+        return executeUpdateWithCount("cleanupProtections.sql");
     }
 }
