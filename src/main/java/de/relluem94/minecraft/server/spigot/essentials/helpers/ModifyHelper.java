@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
@@ -21,6 +22,10 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ModifyHelper {
+    private ModifyHelper() {
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
+
     public static float normalizeYaw(float yaw) {
         yaw = ((yaw % 360) + 360) % 360;
         return Math.round(yaw / 90.0f) * 90.0f % 360.0f;
