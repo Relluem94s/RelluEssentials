@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -102,14 +103,10 @@ public class TabCompleterHelper {
         return groups;
     }
 
-    public static @NotNull List<String> getPluginCommands(){
-        List<String> commands = new ArrayList<>();
-
-        for(CommandWrapper commandWrapper : RelluEssentials.commandWrapperList){
-            commands.add(commandWrapper.getCommandName());
-        }
-
-        return commands;
+    public static List<String> getPluginCommands() {
+        return RelluEssentials.getInstance().getCommandWrapperList().stream()
+                .map(CommandWrapper::getCommandName)
+                .collect(Collectors.toList());
     }
 
     public static @NotNull List<String> getWarps(World world){
