@@ -86,7 +86,7 @@ public class RelluEssentials extends JavaPlugin {
     public final List<GroupEntry> groupEntryList = new ArrayList<>();
     @Getter
     public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
-
+    @Getter
     public static final List<CommandWrapper> commandWrapperList = List.of(
             new CommandWrapper(new Admin()),
             new CommandWrapper(new AFK()),
