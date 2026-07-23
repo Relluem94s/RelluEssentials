@@ -3,17 +3,23 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.db;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.ClasspathSqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatchHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
 
 import java.sql.SQLException;
+import java.util.function.Consumer;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
 
 public class DatabaseHelperFactory {
+    private DatabaseHelperFactory() {
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
 
     public static DatabaseHelper createForProduction(String host, int port, String user,
                                                      String password, PlayerAPI playerAPI) throws SQLException {
@@ -45,7 +51,7 @@ public class DatabaseHelperFactory {
         IPatchHelper patchHelper = new PatchHelper(
                 databaseHelper,
                 playerAPI,
-                pluginInfo -> {},
+                noOpPluginInfoConsumer(),
                 new ConfigHelper("players")
         );
 
@@ -65,5 +71,9 @@ public class DatabaseHelperFactory {
             ds.setDatabaseName(schema);
         }
         return ds;
+    }
+
+    static Consumer<PluginInformationEntry> noOpPluginInfoConsumer() {
+        return _ -> {};
     }
 }
