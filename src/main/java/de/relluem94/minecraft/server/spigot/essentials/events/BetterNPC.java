@@ -177,15 +177,15 @@ public class BetterNPC implements Listener {
             Integer buyPricePerItem;
             Integer sellPricePerItem;
 
-            if(itemMeta.getPersistentDataContainer().has(itemSellPrice, PersistentDataType.INTEGER)){
-                sellPricePerItem = itemMeta.getPersistentDataContainer().get(itemSellPrice, PersistentDataType.INTEGER);
+            if(itemMeta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER)){
+                sellPricePerItem = itemMeta.getPersistentDataContainer().get(itemSellPrice(), PersistentDataType.INTEGER);
             }
             else{
                 sellPricePerItem = ItemPrice.from(is.getType()).getSellPrice();
             }
 
-            if(itemMeta.getPersistentDataContainer().has(itemBuyPrice, PersistentDataType.INTEGER)){
-                buyPricePerItem = itemMeta.getPersistentDataContainer().get(itemBuyPrice, PersistentDataType.INTEGER);
+            if(itemMeta.getPersistentDataContainer().has(itemBuyPrice(), PersistentDataType.INTEGER)){
+                buyPricePerItem = itemMeta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER);
             }
             else{
                 buyPricePerItem = ItemPrice.from(is.getType()).getBuyPrice();

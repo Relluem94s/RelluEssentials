@@ -46,8 +46,8 @@ public class NPCAPI {
                             int sellPricePerItem = ItemPrice.from(itemStack.getType()).getSellPrice();
 
                             ItemMeta itemMeta =  itemStack.getItemMeta();
-                            Objects.requireNonNull(itemMeta).getPersistentDataContainer().set(itemSellPrice, PersistentDataType.INTEGER, sellPricePerItem);
-                            Objects.requireNonNull(itemMeta).getPersistentDataContainer().set(itemBuyPrice, PersistentDataType.INTEGER, buyPricePerItem);
+                            Objects.requireNonNull(itemMeta).getPersistentDataContainer().set(itemSellPrice(), PersistentDataType.INTEGER, sellPricePerItem);
+                            Objects.requireNonNull(itemMeta).getPersistentDataContainer().set(itemBuyPrice(), PersistentDataType.INTEGER, buyPricePerItem);
 
                             itemMeta.setLore(List.of(
                                     languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,

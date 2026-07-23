@@ -2,11 +2,16 @@ package de.relluem94.minecraft.server.spigot.essentials.constants;
 
 import org.bukkit.entity.EntityType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class EntityCoinsTest {
 
     @Test
@@ -33,6 +38,16 @@ class EntityCoinsTest {
         EntityCoins result = EntityCoins.from(EntityType.CREEPER);
         assertEquals(EntityCoins.CREEPER, result);
         assertEquals(25, result.getCoins());
+    }
+
+    @Test
+    void fromReturnsUnknownWhenValueOfThrowsIllegalArgumentException() {
+        EntityType mockType = mock(EntityType.class);
+        when(mockType.name()).thenReturn("NON_EXISTENT_ENTITY_TYPE");
+
+        EntityCoins result = EntityCoins.from(mockType);
+
+        assertEquals(EntityCoins.UNKNOWN, result);
     }
 
     @Test

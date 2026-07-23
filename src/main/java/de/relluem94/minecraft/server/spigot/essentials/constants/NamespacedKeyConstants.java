@@ -3,10 +3,21 @@ package de.relluem94.minecraft.server.spigot.essentials.constants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import org.bukkit.NamespacedKey;
 
-public interface NamespacedKeyConstants {
-    NamespacedKey itemCoins = new NamespacedKey(RelluEssentials.getInstance(), "coins");
+public final class NamespacedKeyConstants {
 
-    NamespacedKey itemSellPrice = new NamespacedKey(RelluEssentials.getInstance(), "itemSellPrice");
-    NamespacedKey itemBuyPrice = new NamespacedKey(RelluEssentials.getInstance(), "itemBuyPrice");
+    public static NamespacedKey itemCoins() {
+        return new NamespacedKey(RelluEssentials.getInstance(), "coins");
+    }
 
+    public static NamespacedKey itemSellPrice() {
+        return new NamespacedKey(RelluEssentials.getInstance(), "itemSellPrice");
+    }
+
+    public static NamespacedKey itemBuyPrice() {
+        return new NamespacedKey(RelluEssentials.getInstance(), "itemBuyPrice");
+    }
+
+    private NamespacedKeyConstants() {
+        throw new IllegalStateException();
+    }
 }

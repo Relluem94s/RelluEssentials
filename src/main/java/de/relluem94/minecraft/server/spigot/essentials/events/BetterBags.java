@@ -337,8 +337,8 @@ public class BetterBags implements Listener {
             if(CustomItems.coins.almostEquals(is)){
                 ItemMeta im = is.getItemMeta();
 
-                if(im != null && im.getPersistentDataContainer().has(itemCoins, PersistentDataType.INTEGER)){
-                    Integer itemCoins = im.getPersistentDataContainer().get(NamespacedKeyConstants.itemCoins, PersistentDataType.INTEGER);
+                if(im != null && im.getPersistentDataContainer().has(itemCoins(), PersistentDataType.INTEGER)){
+                    Integer itemCoins = im.getPersistentDataContainer().get(NamespacedKeyConstants.itemCoins(), PersistentDataType.INTEGER);
 
                     if(itemCoins == null){
                         itemCoins = 0;

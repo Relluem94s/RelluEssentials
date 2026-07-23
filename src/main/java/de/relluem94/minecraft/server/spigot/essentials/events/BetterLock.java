@@ -166,7 +166,7 @@ public class BetterLock implements Listener {
                     ItemStack coin = CustomItems.coins.getCustomItem();
                     ItemMeta im = coin.getItemMeta();
                     Objects.requireNonNull(im).setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
-                    im.getPersistentDataContainer().set(itemCoins, PersistentDataType.INTEGER, sellPriceItem);
+                    im.getPersistentDataContainer().set(itemCoins(), PersistentDataType.INTEGER, sellPriceItem);
 
                     coin.setItemMeta(im);
 
