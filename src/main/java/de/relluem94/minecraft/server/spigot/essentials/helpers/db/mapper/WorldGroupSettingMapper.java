@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.SettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupSettingEntry;
 import org.jspecify.annotations.NonNull;
@@ -12,6 +13,10 @@ import java.util.Optional;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
 
 public class WorldGroupSettingMapper {
+    private WorldGroupSettingMapper() {
+        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
+
     public static @NonNull WorldGroupSettingEntry mapWorldGroupSetting(@NonNull ResultSet rs) throws SQLException {
         WorldGroupSettingEntry wgse = new WorldGroupSettingEntry();
 

@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
 
 public class LocationMapper {
-
     private LocationMapper() {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
