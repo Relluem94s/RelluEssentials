@@ -3,13 +3,12 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.entity.Villager;
 import org.jspecify.annotations.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Function;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
 
@@ -18,7 +17,7 @@ public class NPCMapper {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
-    public static @NonNull NPCEntry mapNPC(@NonNull ResultSet rs) throws SQLException {
+    public static @NonNull NPCEntry mapNPC(@NonNull ResultSet rs, @NonNull Function<String, Villager.Profession> professionResolver) throws SQLException {
         NPCEntry npcEntry = new NPCEntry();
 
         npcEntry.setId(rs.getInt(FIELD_ID));
@@ -30,8 +29,7 @@ public class NPCMapper {
         npcEntry.setDeletedBy(rs.getInt(FIELD_DELETEDBY));
 
         npcEntry.setName(rs.getString(FIELD_NAME));
-        Villager.Profession profession = Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(rs.getString(FIELD_PROFESSION).toLowerCase()));
-        npcEntry.setProfession(profession);
+        npcEntry.setProfession(professionResolver.apply(rs.getString(FIELD_PROFESSION).toLowerCase()));
         npcEntry.setType(NPC.Type.valueOf(rs.getString(FIELD_TYPE)));
 
         for (int i = 0; i <= 27; i++) {

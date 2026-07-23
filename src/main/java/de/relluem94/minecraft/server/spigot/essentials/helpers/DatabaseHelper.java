@@ -8,6 +8,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatch
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import lombok.Setter;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
@@ -219,7 +221,7 @@ public class DatabaseHelper {
     }
 
     public List<NPCEntry> getNPCs() {
-        return queryList("getNPCs.sql", _ -> {}, NPCMapper::mapNPC);
+        return queryList("getNPCs.sql", _ -> {}, rs -> NPCMapper.mapNPC(rs, key -> Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(key))));
     }
 
     public List<ProtectionLockEntry> getProtectionLocks() {
