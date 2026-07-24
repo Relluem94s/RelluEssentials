@@ -39,8 +39,10 @@ public class ItemHelper implements IItemHelper {
 
     @Getter
     private final String displayName;
-    private final Type it;
-    private final Rarity ir;
+    @Getter
+    private final Type itemType;
+    @Getter
+    private final Rarity rarity;
 
     @Getter
     private List<String> lore;
@@ -57,8 +59,8 @@ public class ItemHelper implements IItemHelper {
         this.amount = amount;
         this.material = material;
         this.displayName = displayName;
-        this.it = itemType;
-        this.ir = itemRarity;
+        this.itemType = itemType;
+        this.rarity = itemRarity;
 
         is = new ItemStack(this.material, this.amount);
 
@@ -85,8 +87,8 @@ public class ItemHelper implements IItemHelper {
         this.material = material;
         this.displayName = displayName;
         this.lore = lore;
-        this.it = itemType;
-        this.ir = itemRarity;
+        this.itemType = itemType;
+        this.rarity = itemRarity;
 
         is = new ItemStack(this.material, this.amount);
 
@@ -111,8 +113,8 @@ public class ItemHelper implements IItemHelper {
         this.amount = is.getAmount();
         this.material = is.getType();
         this.displayName = displayName;
-        this.it = itemType;
-        this.ir = itemRarity;
+        this.itemType = itemType;
+        this.rarity = itemRarity;
 
         this.is = is;
 
@@ -138,8 +140,8 @@ public class ItemHelper implements IItemHelper {
         this.material = is.getType();
         this.displayName = displayName;
         this.lore = lore;
-        this.it = itemType;
-        this.ir = itemRarity;
+        this.itemType = itemType;
+        this.rarity = itemRarity;
 
         this.is = is;
 
@@ -178,7 +180,7 @@ public class ItemHelper implements IItemHelper {
      */
     @SuppressWarnings("unused")
     public Type getItemType() {
-        return it;
+        return itemType;
     }
 
     /**
@@ -332,8 +334,8 @@ public class ItemHelper implements IItemHelper {
             locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
             locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
 
-            if (ir.level != -1) {
-                locLore.add(ir.getPrefix() + ir.getDisplayName());
+            if (rarity.level != -1) {
+                locLore.add(rarity.getPrefix() + rarity.getDisplayName());
             }
 
             im.setLore(locLore);
