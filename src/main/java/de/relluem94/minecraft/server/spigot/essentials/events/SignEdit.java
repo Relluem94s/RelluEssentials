@@ -1,5 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
@@ -9,13 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.jetbrains.annotations.NotNull;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 public class SignEdit implements Listener {
 
@@ -23,33 +24,32 @@ public class SignEdit implements Listener {
     public void onChangeSignEditSign(@NotNull PlayerInteractEvent e) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(e.getPlayer().getUniqueId());
         if (!pe.getPlayerState().equals(PlayerState.DEFAULT) && e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND) && !e.getPlayer().isSneaking() && (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK)) {
-                Block b =  e.getClickedBlock();
-                if (b != null && SignHelper.isBlockASign(b)) {
-                    Sign sign = (Sign) e.getClickedBlock().getState();
-                    if(pe.getPlayerState().equals(PlayerState.SIGN_EDIT)){
-                        e.getPlayer().openSign(sign);
-                        pe.setPlayerState(PlayerState.DEFAULT);
+            Block b = e.getClickedBlock();
+            if (b != null && SignHelper.isBlockASign(b)) {
+                Sign sign = (Sign) e.getClickedBlock().getState();
+                if(pe.getPlayerState().equals(PlayerState.SIGN_EDIT)){
+                    e.getPlayer().openSign(sign);
+                    pe.setPlayerState(PlayerState.DEFAULT);
 
-                        e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_EDIT);
-                    }
-                    else if(pe.getPlayerState().equals(PlayerState.SIGN_COPY)){
-                        pe.setPlayerStateParameter(sign);
-                        pe.setPlayerState(PlayerState.SIGN_PASTE);
-                        e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_COPY);
-                        e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_COPY_TO_PASTE_MESSAGE);
-                    }
-                    else if(pe.getPlayerState().equals(PlayerState.SIGN_PASTE)){
-                        if(pe.getPlayerStateParameter() instanceof Sign){
-                            updateSign(sign, (Sign) pe.getPlayerStateParameter());
-                            e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_SIGN_PASTE);
-                        }
-                        pe.setPlayerState(PlayerState.DEFAULT);
-                    }
-                    e.setCancelled(true);
-                    e.setUseInteractedBlock(Event.Result.DENY);
-                    e.setUseItemInHand(Event.Result.DENY);
+                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_OPENED));
                 }
-            
+                else if(pe.getPlayerState().equals(PlayerState.SIGN_COPY)){
+                    pe.setPlayerStateParameter(sign);
+                    pe.setPlayerState(PlayerState.SIGN_PASTE);
+                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_COPIED));
+                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_COPY_TO_PASTE));
+                }
+                else if(pe.getPlayerState().equals(PlayerState.SIGN_PASTE)){
+                    if(pe.getPlayerStateParameter() instanceof Sign){
+                        updateSign(sign, (Sign) pe.getPlayerStateParameter());
+                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_PASTED));
+                    }
+                    pe.setPlayerState(PlayerState.DEFAULT);
+                }
+                e.setCancelled(true);
+                e.setUseInteractedBlock(Event.Result.DENY);
+                e.setUseItemInHand(Event.Result.DENY);
+            }
         }
     }
 

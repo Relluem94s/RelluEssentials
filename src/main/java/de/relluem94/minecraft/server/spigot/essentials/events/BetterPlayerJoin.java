@@ -1,7 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_JOIN_MESSAGE;
-
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,20 +17,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.jspecify.annotations.NonNull;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 public class BetterPlayerJoin implements Listener {
 
-    private void addPlayer(Player p) {
+    private void addPlayer(@NonNull Player p) {
         PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
         if (pe == null) {
             pe = new PlayerEntry();
@@ -34,6 +35,7 @@ public class BetterPlayerJoin implements Listener {
             RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
 
             pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
+            p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
         }
         else{
             if(pe.getName() == null){
@@ -62,7 +64,7 @@ public class BetterPlayerJoin implements Listener {
 
         PlayerHelper.setFlying(p);
         PlayerHelper.setAFK(p, true);
-        Bukkit.broadcastMessage(String.format(PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
+        Bukkit.broadcastMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
        
         WorldHelper.loadWorldGroupInventory(p);
 
@@ -71,6 +73,12 @@ public class BetterPlayerJoin implements Listener {
          if(WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)){
             PlayerHelper.setLobbyItems(p);
         }
+
+        Bukkit.getScheduler().runTaskLater(
+                RelluEssentials.getInstance(),
+                () -> ScoreBoardManager.applyToPlayer(e.getPlayer()),
+                10L
+        );
     }
 
     @EventHandler
@@ -79,7 +87,7 @@ public class BetterPlayerJoin implements Listener {
         int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
 
         if(onlinePlayers >= maxPlayers){
-                e.disallow(PlayerLoginEvent.Result.KICK_FULL, EventConstants.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN);
+                e.disallow(PlayerLoginEvent.Result.KICK_FULL, languageHelper.get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN));
         }
     }
 

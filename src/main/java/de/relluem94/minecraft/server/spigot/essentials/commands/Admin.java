@@ -1,24 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CHAT_CLEARED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_PING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_PING_OTHER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_ADMIN_TOP;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WRONG_SUB_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import de.relluem94.minecraft.server.spigot.essentials.api.RelluEssentialsAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.RelluEssentialsIntegration;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.CustomInventory;
@@ -67,12 +58,12 @@ public class Admin implements CommandConstruct {
             return tabList;
         }
 
-        if(strings.length == 1){
+        if (strings.length == 1) {
             tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
             return tabList;
         }
 
-        if(strings.length == 2){
+        if (strings.length == 2) {
             if (Commands.PING.getName().equalsIgnoreCase(strings[0])) {
                 tabList.addAll(TabCompleterHelper.getOnlinePlayers());
             }
@@ -87,7 +78,9 @@ public class Admin implements CommandConstruct {
 
         AFK("afk"),
         CLEAN_PROTECTIONS("cleanProtections"),
+        CLEAN_LOCATIONS("cleanLocations"),
         CHAT("chat"),
+        INFO("info"),
         LIGHT("light"),
         NPC("npc"),
         PING("ping"),
@@ -106,31 +99,31 @@ public class Admin implements CommandConstruct {
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
         if (args.length == 0) {
-            p.sendMessage(Constants.PLUGIN_COMMAND_ADMIN_INFO);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_INFO));
             return true;
         } else if (args.length == 1) {
             if (Commands.NPC.getName().equalsIgnoreCase(args[0])) {
                 if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                    p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
                     return true;
                 }
 
                 org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
-                    InventoryHelper.createInventory(18,
-                    Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+ "§dNPCs"),
-                    CustomItems.npc_gui_disabled.getCustomItem()
+                        InventoryHelper.createInventory(18,
+                                Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs"),
+                        CustomItems.npc_gui_disabled.getCustomItem()
                 );
 
                 for (int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCs().size(); i++) {
@@ -140,71 +133,132 @@ public class Admin implements CommandConstruct {
                 InventoryHelper.openInventory(sender, inv);
                 return true;
             }
+
+            if (Commands.INFO.getName().equalsIgnoreCase(args[0])) {
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_INFO_VERSION,
+                        RelluEssentials.getInstance().getDescription().getVersion()));
+
+                List<RelluEssentialsIntegration> integrations = RelluEssentialsAPI.getInstance().getIntegrations();
+                if (integrations.isEmpty()) {
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_INFO_INTEGRATIONS_NONE));
+                } else {
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_INFO_INTEGRATIONS_HEADER, integrations.size()));
+                    for (RelluEssentialsIntegration integration : integrations) {
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_INFO_INTEGRATIONS_ENTRY,
+                                integration.getPluginName(), integration.getPluginVersion()));
+                    }
+                }
+                return true;
+            }
+
             if (Commands.ADMIN_TOOLS.getName().equalsIgnoreCase(args[0])) {
                 if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                    p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
                     return true;
                 }
 
-                org.bukkit.inventory.Inventory inv = InventoryHelper.getCustomItemInventory(new CustomInventory(ItemHelper.Type.ADMIN_TOOL, 9, Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+ "§dAdmin Tools"));
+                org.bukkit.inventory.Inventory inv = InventoryHelper.getCustomItemInventory(
+                        new CustomInventory(ItemHelper.Type.ADMIN_TOOL, 9,
+                                Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dAdmin Tools"));
                 InventoryHelper.openInventory(sender, inv);
                 return true;
-            }
-            else if (Commands.PING.getName().equalsIgnoreCase(args[0])) {
-                p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_PING, p.getPing()));
+            } else if (Commands.PING.getName().equalsIgnoreCase(args[0])) {
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_PING, p.getPing()));
                 return true;
-            }
-            else if (Commands.CHAT.getName().equalsIgnoreCase(args[0])) {
+            } else if (Commands.CHAT.getName().equalsIgnoreCase(args[0])) {
                 for (Player bp : Bukkit.getOnlinePlayers()) {
                     for (int i = 0; i < 100; i++) {
                         bp.sendMessage("");
                     }
                 }
-                p.sendMessage(PLUGIN_COMMAND_ADMIN_CHAT_CLEARED);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CHAT_CLEARED));
                 return true;
-            }
-            else if (Commands.LIGHT.getName().equalsIgnoreCase(args[0])) {
+            } else if (Commands.LIGHT.getName().equalsIgnoreCase(args[0])) {
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
                 if (pe.getPlayerState().equals(PlayerState.LIGHT_TOGGLE)) {
                     pe.setPlayerState(PlayerState.DEFAULT);
-                    p.sendMessage(Constants.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE_DISABLED);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_LIGHT_TOGGLE_DISABLED));
                 } else {
-                    p.sendMessage(Constants.PLUGIN_COMMAND_ADMIN_LIGHT_TOOGLE);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_LIGHT_TOGGLE));
                     pe.setPlayerState(PlayerState.LIGHT_TOGGLE);
                 }
                 return true;
-            }
-            else if (Commands.CLEAN_PROTECTIONS.getName().equalsIgnoreCase(args[0])) {
+            } else if (Commands.CLEAN_PROTECTIONS.getName().equalsIgnoreCase(args[0])) {
+                HashMap<Location, ProtectionEntry> protectionEntryList = new HashMap<>(
+                        RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList()
+                );
+
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
+                        protectionEntryList.size()));
+
+                List<Location> locations = new ArrayList<>(protectionEntryList.keySet());
+                int[] index = {0};
                 HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
+                int total = locations.size();
 
-                p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
-                        RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size()));
-                for (Location l : RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().keySet()) {
-                    ProtectionEntry pe = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().get(l);
-                    if (!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))) {
-                        removeMap.put(l, pe);
-                        p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS, pe.getId(),
-                                pe.getMaterialName(), l.getBlock().getType().name()));
-                        RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(pe);
-                    }
-                }
+                Bukkit.getScheduler().runTaskTimer(
+                        RelluEssentials.getInstance(),
+                        task -> {
+                            int batchSize = 5;
+                            int processed = 0;
 
-                if (removeMap.isEmpty()) {
-                    p.sendMessage(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE);
-                    
-                }
-                else {
-                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP, removeMap.size()));
-                    for (Location l : removeMap.keySet()) {
-                        RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(l);
-                    }
-                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
-                            RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size()));
-                }
+                            while (index[0] < locations.size() && processed < batchSize) {
+                                Location l = locations.get(index[0]);
+                                ProtectionEntry pe = protectionEntryList.get(l);
+
+                                if (!l.getChunk().isLoaded()) {
+                                    l.getChunk().load();
+                                }
+
+                                if (!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))) {
+                                    removeMap.put(l, pe);
+                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS,
+                                            pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
+                                    RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(pe);
+                                }
+
+                                index[0]++;
+                                processed++;
+                            }
+
+                            int percent = (int) Math.round((index[0] / (double) total) * 100);
+                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE,
+                                    index[0], total, percent));
+
+                            if (index[0] >= locations.size()) {
+                                task.cancel();
+
+                                if (removeMap.isEmpty()) {
+                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE));
+                                } else {
+                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP,
+                                            removeMap.size()));
+                                    for (Location l : removeMap.keySet()) {
+                                        RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(l);
+                                    }
+                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
+                                            RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size()));
+                                }
+                            }
+                        },
+                        0L,
+                        300L
+                );
+
+                int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupProtections();
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END, deleted));
                 return true;
-            }
-            else if (Commands.AFK.getName().equalsIgnoreCase(args[0])) {
+            } else if (Commands.CLEAN_LOCATIONS.getName().equalsIgnoreCase(args[0])) {
+                if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+                    return true;
+                }
+
+                int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupLocations();
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END, deleted));
+                return true;
+            } else if (Commands.AFK.getName().equalsIgnoreCase(args[0])) {
                 PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
                 if (pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)) {
@@ -216,34 +270,29 @@ public class Admin implements CommandConstruct {
                     pe.setPlayerState(PlayerState.FAKE_AFK_ACTIVE);
                 }
                 return true;
-            }
-            else if (Commands.TOP.getName().equalsIgnoreCase(args[0])) {
+            } else if (Commands.TOP.getName().equalsIgnoreCase(args[0])) {
                 Location l = p.getWorld().getHighestBlockAt(p.getLocation()).getLocation().add(0, 1, 0);
-                p.sendMessage(PLUGIN_COMMAND_ADMIN_TOP);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_TOP));
                 p.teleport(l);
                 return true;
-            }
-            else {
-                p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+            } else {
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
                 return true;
             }
-        }
-        else if (args.length == 2) {
+        } else if (args.length == 2) {
             if (Commands.PING.getName().equalsIgnoreCase(args[0])) {
                 Player target = Bukkit.getPlayer(args[1]);
                 if (target == null) {
-                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_PING_OTHER_NOT_FOUND, args[1]));
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_PING_OTHER_NOT_FOUND, args[1]));
                     return true;
                 }
 
-                if (isPlayer(sender)) {
-                    p.sendMessage(String.format(PLUGIN_COMMAND_ADMIN_PING_OTHER, target.getCustomName(), target.getPing()));
-                }
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_PING_OTHER,
+                        target.getCustomName(), target.getPing()));
             }
             return true;
-        }
-        else {
-            p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+        } else {
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
             return true;
         }
     }

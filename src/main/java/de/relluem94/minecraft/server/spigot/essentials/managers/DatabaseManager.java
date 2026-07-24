@@ -1,41 +1,44 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.BagAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.BankAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.NPCAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.ProtectionAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
+import de.relluem94.minecraft.server.spigot.essentials.api.*;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.rellulib.stores.DoubleStore;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jspecify.annotations.NonNull;
 
+import java.sql.SQLException;
 import java.util.Collections;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 public class DatabaseManager implements IEnable{
 
     private final DatabaseHelper dBH;
-    private PluginInformationEntry pie;
 
     public DatabaseManager(String host, String user, String password, int port){
-        dBH = new DatabaseHelper(host, user, password, port);
+        try {
+            dBH = DatabaseHelperFactory.createForProduction(host, port, user, password, RelluEssentials.getInstance().getPlayerAPI());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public DatabaseManager(DatabaseHelper databaseHelper) {
+        this.dBH = databaseHelper;
     }
 
     @Override
     public void enable() {
-        pie = dBH.getPluginInformation();
+        PluginInformationEntry pie = dBH.getPluginInformation();
         RelluEssentials.getInstance().setPluginInformation(pie);
         dBH.init();
 
@@ -57,10 +60,37 @@ public class DatabaseManager implements IEnable{
         RelluEssentials.getInstance().setBankAPI(new BankAPI(dBH.getBankTiers()));
         RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));
 
+        RelluEssentials.settingEntriesList.addAll(dBH.getAllSettings());
+
         for(WorldGroupEntry wge: dBH.getWorldGroups()){
             for(WorldEntry we: dBH.getWorldByGroup(wge)){
-                consoleSendMessage(PLUGIN_NAME_CONSOLE,"Adding World: " + wge.getName() + " " + we.getName());
                 RelluEssentials.getInstance().worldsMap.put(wge, we);
+
+                if (getWorldNameBySetting(wge, "COLLECT_BAG")) {
+                    RelluEssentials.getInstance().collectBagWorlds.add(we.getName());
+                }
+
+                if (getWorldNameBySetting(wge, "USE_CLOUDSAILOR")) {
+                    RelluEssentials.getInstance().useCloudsailorWorlds.add(we.getName());
+                }
+
+                if (getWorldNameBySetting(wge, "DEATH_LOSE_COINS")) {
+                    RelluEssentials.getInstance().deathLoseCoins.add(we.getName());
+                }
+
+                if (getWorldNameBySetting(wge, "ORE_RESPAWN")) {
+                    RelluEssentials.getInstance().oreRespawn.add(we.getName());
+                }
+
+                if (getWorldNameBySetting(wge, "DEATH_CREATE_HOME")) {
+                    RelluEssentials.getInstance().deathCreateHome.add(we.getName());
+                }
+
+                if (getWorldNameBySetting(wge, "SCOREBOARD_SHOW")) {
+                    RelluEssentials.getInstance().scoreboardShow.add(we.getName());
+                }
+
+                consoleSendMessage(PLUGIN_NAME_CONSOLE,languageHelper.get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(), we.getName(), wge.getSettings().size()));
             }
         }
 
@@ -72,9 +102,15 @@ public class DatabaseManager implements IEnable{
         }
     }
 
-    public void afterWorldLoaded(){
-        
+    private static boolean getWorldNameBySetting(@NonNull WorldGroupEntry wge, String setting) {
+        return wge.getSettings().stream()
+                .filter(s -> setting.equals(s.getSettingEntry().getName()))
+                .findFirst()
+                .map(WorldGroupSettingEntry::isValue)
+                .orElse(false);
+    }
 
+    public void afterWorldLoaded(){
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -83,16 +119,9 @@ public class DatabaseManager implements IEnable{
                 RelluEssentials.getInstance().getPlayerAPI().reloadPlayerHomes();
             }
         }.runTaskLater(RelluEssentials.getInstance(), 1L);
-
-
-       
     }
 
     public DatabaseHelper getDatabaseHelper() {
         return dBH;
-    }
-
-    public PluginInformationEntry getPluginInformation() {
-        return pie;
     }
 }

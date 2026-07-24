@@ -1,0 +1,248 @@
+package de.relluem94.minecraft.server.spigot.essentials.helpers;
+
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatchHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+
+public class PatchHelper implements IPatchHelper {
+
+    private final DatabaseHelper databaseHelper;
+    private final PlayerAPI playerAPI;
+    private final Consumer<PluginInformationEntry> onPatchingFinished;
+    private final ConfigHelper configHelper;
+
+    public PatchHelper(DatabaseHelper databaseHelper, PlayerAPI playerAPI,
+                       Consumer<PluginInformationEntry> onPatchingFinished, ConfigHelper configHelper) {
+        this.databaseHelper = databaseHelper;
+        this.playerAPI = playerAPI;
+        this.onPatchingFinished = onPatchingFinished;
+        this.configHelper = configHelper;
+    }
+
+    private void finishPatching() {
+        List<PlayerEntry> players = databaseHelper.getPlayers();
+        players.forEach(p -> playerAPI.putPlayerEntry(UUID.fromString(p.getUuid()), p));
+
+        PluginInformationEntry pluginInformation = databaseHelper.getPluginInformation();
+        onPatchingFinished.accept(pluginInformation);
+    }
+
+
+    private void patch1() {
+        String v = "patches/v1/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScriptNoSchema(v + "createSchema.sql");
+        databaseHelper.executeScript(v + "createGroup.sql");
+        databaseHelper.executeScript(v + "createPlayer.sql");
+        databaseHelper.executeScript(v + "createLocationType.sql");
+        databaseHelper.executeScript(v + "createLocation.sql");
+        databaseHelper.executeScript(v + "createBlockHistory.sql");
+        databaseHelper.executeScript(v + "createPluginInformation.sql");
+        databaseHelper.executeScript(v + "insertGroups.sql");
+        databaseHelper.executeScript(v + "insertPlayers.sql");
+        databaseHelper.executeScript(v + "insertLocationTypes.sql");
+        databaseHelper.executeScript(v + "insertPluginInformation.sql");
+
+        if (configHelper.isConfigFound()) {
+            List<PlayerEntry> pe = configHelper.getPlayers();
+            pe.forEach(databaseHelper::insertPlayer);
+
+            for (PlayerEntry p : pe) {
+                PlayerEntry pu = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(UUID.fromString(p.getUuid()));
+                pu.setAfk(p.isAfk());
+                pu.setFlying(p.isFlying());
+                pu.setCustomName(p.getCustomName());
+                pu.setUpdatedBy(1);
+                databaseHelper.updatePlayer(pu);
+
+                List<LocationEntry> lel = configHelper.getHomes(pu);
+                lel.forEach(databaseHelper::insertLocation);
+            }
+        }
+    }
+
+    private static final String INSERT_NEW_DB_VERSION = "insertNewDBVersion.sql";
+    private static final String UPDATE_OLD_PLUGIN_INFORMATION = "updateOldPluginInformation.sql";
+
+    private void patch2() {
+        String v = "patches/v2/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScript(v + "dropBlockHistory.sql");
+        databaseHelper.executeScript(v + "createBlockHistory.sql");
+        databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
+        databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
+    private void patch3() {
+        String v = "patches/v3/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScript(v + "dropPlayerConstraint.sql");
+        databaseHelper.executeScript(v + "updateAdminGroup.sql"); // changed id of Admin
+        databaseHelper.executeScript(v + "updateModGroup.sql"); // changed id of Mod
+        databaseHelper.executeScript(v + "updateVipGroup.sql"); // changed id of Vip
+        databaseHelper.executeScript(v + "updateAdminGroupPlayer.sql"); // changed id of Admin
+        databaseHelper.executeScript(v + "updateModGroupPlayer.sql"); // changed id of Mod
+        databaseHelper.executeScript(v + "updateVipGroupPlayer.sql"); // changed id of Vip
+        databaseHelper.executeScript(v + "addPlayerConstraint.sql");
+        databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
+        databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
+    private void patch4() {
+        String v = "patches/v4/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScript(v + "addBankTier.sql");
+        databaseHelper.executeScript(v + "addBankAccount.sql");
+        databaseHelper.executeScript(v + "addBagType.sql");
+        databaseHelper.executeScript(v + "addBag.sql");
+        databaseHelper.executeScript(v + "addBankTransaction.sql");
+        databaseHelper.executeScript(v + "addPermission.sql");
+        databaseHelper.executeScript(v + "addPermissionGroup.sql");
+        databaseHelper.executeScript(v + "addPermissionPlayer.sql");
+        databaseHelper.executeScript(v + "addProtections.sql");
+        databaseHelper.executeScript(v + "addSkills.sql");
+        databaseHelper.executeScript(v + "addSkillsPlayer.sql");
+        databaseHelper.executeScript(v + "addNPC.sql");
+        databaseHelper.executeScript(v + "addProtectionLocks.sql");
+        databaseHelper.executeScript(v + "updatePlayer.sql");
+        databaseHelper.executeScript(v + "insertProtectionLocks.sql");
+        databaseHelper.executeScript(v + "insertNPC.sql");
+        databaseHelper.executeScript(v + "insertSkills.sql");
+        databaseHelper.executeScript(v + "insertBankTier.sql");
+        databaseHelper.executeScript(v + "insertBagType.sql");
+        databaseHelper.executeScript(v + "insertLocationTypes.sql");
+        databaseHelper.executeScript(v + "alterPlayer.sql");
+        databaseHelper.executeScript(v + "alterBankAccount.sql");
+        databaseHelper.executeScript(v + "alterBankTier.sql");
+        databaseHelper.executeScript(v + "alterBankTransaction.sql");
+        databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
+        databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
+    private void patch5() {
+        String v = "patches/v5/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScript(v + "addSetting.sql");
+        databaseHelper.executeScript(v + "addPluginSetting.sql");
+        databaseHelper.executeScript(v + "addSettingPlayer.sql");
+        databaseHelper.executeScript(v + "addWorldGroup.sql");
+        databaseHelper.executeScript(v + "addWorld.sql");
+        databaseHelper.executeScript(v + "addWorldGroupInventory.sql");
+        databaseHelper.executeScript(v + "addWorldGroupSetting.sql");
+        databaseHelper.executeScript(v + "addCrops.sql");
+        databaseHelper.executeScript(v + "addDrops.sql");
+        databaseHelper.executeScript(v + "addPlayerPartner.sql");
+        databaseHelper.executeScript(v + "insertSkills.sql");
+        databaseHelper.executeScript(v + "insertSettings.sql");
+        databaseHelper.executeScript(v + "insertWorldGroup.sql");
+        databaseHelper.executeScript(v + "insertWorlds.sql");
+        databaseHelper.executeScript(v + "insertWorldGroupSetting.sql");
+        databaseHelper.executeScript(v + "insertBagType.sql");
+        databaseHelper.executeScript(v + "insertCrops.sql");
+        databaseHelper.executeScript(v + "insertDrops.sql");
+        databaseHelper.executeScript(v + "addPlayerName.sql");
+        databaseHelper.executeScript(v + "changePlayerCustomName.sql");
+        databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
+        databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
+    private void patch6() {
+        String v = "patches/v6/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScript(v + "updateNPCStick.sql");
+        databaseHelper.executeScript(v + "updateNPCRedSand.sql");
+        databaseHelper.executeScript(v + "updateNPCBambooBlock.sql");
+        databaseHelper.executeScript(v + "updateNPCBamboo.sql");
+        databaseHelper.executeScript(v + "alterBagType.sql");
+        databaseHelper.executeScript(v + "alterBag.sql");
+        databaseHelper.executeScript(v + "alterLumberjackBag.sql");
+        databaseHelper.executeScript(v + "insertNetherBagType.sql");
+        databaseHelper.executeScript(v + "alterLumberjackNPC.sql");
+        databaseHelper.executeScript(v + "alterFarmingBag.sql");
+        databaseHelper.executeScript(v + "alterMiningBag.sql");
+        databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
+        databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
+    private void patch7() {
+        String v = "patches/v7/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScript(v + "alterFarmingBag.sql");
+        databaseHelper.executeScript(v + "alterFarmingBagType.sql");
+        databaseHelper.executeScript(v + "alterMiningBagType.sql");
+        databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
+        databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
+    private void patch8() {
+        String v = "patches/v8/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScript(v + "insertProtectionLocks.sql");
+        databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
+        databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
+    private void patch9() {
+        String v = "patches/v9/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScript(v + "updateProtections.sql");
+        databaseHelper.executeScript(v + "fixProtections.sql");
+        databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
+        databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
+    private void patch10() {
+        String v = "patches/v10/";
+        consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
+        databaseHelper.executeScript(v + "RE-266_fixDeletedLocationsFromProtections.sql");
+        databaseHelper.executeScript(v + "alterMonsterBag.sql");
+        databaseHelper.executeScript(v + "insertProtectionLocks.sql");
+        databaseHelper.executeScript(v + "insertAnimalBagType.sql");
+        databaseHelper.executeScript(v + "insertSettings.sql");
+        databaseHelper.executeScript(v + "insertWorldGroupSettingsCloudsailor.sql");
+        databaseHelper.executeScript(v + "insertWorldGroupSettingsCoinsLose.sql");
+        databaseHelper.executeScript(v + "insertWorldGroupSettingsDeathPoint.sql");
+        databaseHelper.executeScript(v + "insertWorldGroupSettingsScoreBoardShow.sql");
+        databaseHelper.executeScript(v + "updateFischerNPCTurtleScute.sql");
+        databaseHelper.executeScript(v + "updateFloristNPCShortGrass.sql");
+        databaseHelper.executeScript(v + "updateWorldGroupSettings_newColumn.sql");
+        databaseHelper.executeScript(v + "updateWorldGroupSettings_moveValues.sql");
+        databaseHelper.executeScript(v + "updateWorldGroupSettings_removeColumnAndRename.sql");
+        databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
+        databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    }
+
+    public void applyPatch(int version) {
+        List<Runnable> allPatches = List.of(
+                this::patch1,
+                this::patch2,
+                this::patch3,
+                this::patch4,
+                this::patch5,
+                this::patch6,
+                this::patch7,
+                this::patch8,
+                this::patch9,
+                this::patch10
+        );
+
+        int startIndex = Math.max(version, 0);
+
+        if (startIndex >= allPatches.size()) {
+            return;
+        }
+
+        allPatches.subList(startIndex, allPatches.size()).forEach(Runnable::run);
+        finishPatching();
+    }
+}

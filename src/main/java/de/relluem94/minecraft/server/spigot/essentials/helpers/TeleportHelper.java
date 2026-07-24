@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Back;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 public class TeleportHelper {
 
@@ -25,7 +26,7 @@ public class TeleportHelper {
 
         Location spawn = w.getSpawnLocation();
 
-        addBackPointAndTeleport(PLUGIN_COMMAND_SPAWN, p, Bukkit.getWorld(name), silent, spawn);
+        addBackPointAndTeleport(languageHelper.getWithPrefix(MessageKey.COMMAND_SPAWN), p, Bukkit.getWorld(name), silent, spawn);
     }
 
     public static void teleportBed(Player p){
@@ -34,7 +35,7 @@ public class TeleportHelper {
 
     public static void teleportBed(@NotNull Player p, boolean silent){
         if (p.getRespawnLocation() == null) {
-            p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO_BED, p.getWorld().getName()));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_NO_BED, p.getWorld().getName()));
         }
 
         Location spawn = p.getRespawnLocation();
@@ -44,13 +45,13 @@ public class TeleportHelper {
             return;
         }
 
-        addBackPointAndTeleport(PLUGIN_COMMAND_HOME, p, w, silent, spawn);
+        addBackPointAndTeleport(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME), p, w, silent, spawn);
     }
 
 
     public static void teleportHome(@NotNull Player p, LocationEntry locationEntry){
         if (p.getRespawnLocation() == null) {
-            p.sendMessage(String.format(PLUGIN_COMMAND_HOME_NO_BED, p.getWorld().getName()));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_NO_BED, p.getWorld().getName()));
         }
 
         Location home = locationEntry.getLocation();
@@ -61,7 +62,7 @@ public class TeleportHelper {
         }
 
         addBackPointAndTeleport("", p, w, true, home);
-        p.sendMessage(String.format(PLUGIN_COMMAND_HOME_TP, locationEntry.getLocationName()));
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_TP, locationEntry.getLocationName()));
     }
 
     public static void teleportBack(Player p, @NotNull Location location){
@@ -71,7 +72,7 @@ public class TeleportHelper {
         }
 
         addBackPointAndTeleport("", p, w, true, location, false);
-        p.sendMessage(PLUGIN_COMMAND_BACK);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_BACK));
     }
 
     public static void teleportWarp(Player p, @NotNull Location location){
@@ -81,16 +82,14 @@ public class TeleportHelper {
         }
 
         addBackPointAndTeleport("", p, w, true, location, true);
-        p.sendMessage(PLUGIN_COMMAND_WARP);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP));
     }
-
-
 
     private static @Nullable World getWorld(Player p, boolean silent, @NotNull Location location, String worldName) {
         World w = location.getWorld();
         if (w == null) {
             if(!silent){
-                p.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
             }
 
             return null;
@@ -102,7 +101,7 @@ public class TeleportHelper {
         World w = Bukkit.getWorld(worldName);
         if (w == null) {
             if(!silent){
-                p.sendMessage(String.format(PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
             }
 
             return null;

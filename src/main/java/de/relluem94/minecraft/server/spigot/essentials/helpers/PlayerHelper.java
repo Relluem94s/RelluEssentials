@@ -1,12 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
-
-import java.util.Objects;
-import java.util.Properties;
-import java.util.UUID;
-
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.items.GrapplingHook;
+import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.rellulib.utils.NetworkUtils;
 import lombok.NonNull;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -17,27 +24,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.items.GrapplingHook;
-import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
-import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.rellulib.utils.NetworkUtils;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.UUID;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 /**
  *
  * @author rellu
  */
 public class PlayerHelper {
-
     private PlayerHelper() {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
@@ -74,7 +73,14 @@ public class PlayerHelper {
         }
 
         if (!join) {
-            Bukkit.broadcastMessage(PLUGIN_NAME_PREFIX + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_COMMAND + String.format(getText(p.getLocale(), !isAFK ? "PLUGIN_COMMAND_AFK_ACTIVATED" : "PLUGIN_COMMAND_AFK_DEACTIVATED"), p.getCustomName() + "§f", !isAFK ? "§c" : "§a"));
+            Bukkit.broadcastMessage(
+                    languageHelper.getWithPrefix(
+                            !isAFK ? MessageKey.COMMAND_AFK_ACTIVATED : MessageKey.COMMAND_AFK_DEACTIVATED,
+                            p.getLocale(),
+                            p.getCustomName() + "§f",
+                            !isAFK ? "§c" : "§a"
+                    )
+            );
             isAFK = !isAFK; // Invert for single invertion ^_^
         }
 
@@ -130,7 +136,6 @@ public class PlayerHelper {
     public static void setGroup(Player p, GroupEntry g) {
         p.setCustomName(g.getPrefix() + getCustomName(p));
         p.setPlayerListName(p.getCustomName());
-        p.setScoreboard(ScoreBoardManager.board);
     }
 
     public static void updateGroup(OfflinePlayer p, GroupEntry g) {
@@ -183,7 +188,12 @@ public class PlayerHelper {
         }
 
         if(updatedPlayers != 0){
-            ChatHelper.sendMessageInChannel(String.format(Constants.PLUGIN_PLAYERS_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedPlayers), Constants.PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+            sendMessageInChannel(
+                    languageHelper.get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers),
+                    PLUGIN_NAME_CHAT_CONSOLE,
+                    BetterChatFormat.ADMIN_CHANNEL,
+                    Groups.getGroup("admin")
+            );
         }
     }
 
@@ -195,7 +205,12 @@ public class PlayerHelper {
         }
 
         if(updatedPlayers != 0){
-            ChatHelper.sendMessageInChannel(String.format(Constants.PLUGIN_PLAYERS_INVENTORY_SAVED, BetterChatFormat.ADMIN_CHANNEL, updatedPlayers), Constants.PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, Groups.getGroup("admin"));
+            sendMessageInChannel(
+                    languageHelper.get(MessageKey.PLUGIN_PLAYERS_INVENTORY_SAVED, updatedPlayers),
+                    PLUGIN_NAME_CHAT_CONSOLE,
+                    BetterChatFormat.ADMIN_CHANNEL,
+                    Groups.getGroup("admin")
+            );
         }
     }
 

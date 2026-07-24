@@ -1,14 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static java.lang.Math.round;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_WHERE_STRING;
-import org.bukkit.Location;
-
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+
 /**
+ * Utility class providing helper methods for string manipulation, Minecraft color code conversion, location formatting, and human-readable number scaling.
  *
  * @author rellu
  */
@@ -21,7 +22,7 @@ public class StringHelper {
     /**
      *
      * @param message String
-     * @return String replaces & with § to trigger the ChatColor codes
+     * @return String replaces &amp; with &#167; to trigger the ChatColor codes
      */
     public static String replaceColor(String message) {
         return message.replace("&", "§");
@@ -33,11 +34,7 @@ public class StringHelper {
      * @return String with Location
      */
     public static @NotNull String locationToString(@NotNull Location l) {
-        World world = l.getWorld();
-        if(world == null){
-            return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), "null");
-        }
-        return String.format(PLUGIN_COMMAND_WHERE_STRING, round(l.getX()), round(l.getY()), round(l.getZ()), world.getName());
+        return locationToString(l, false);
     }
 
     /**
@@ -52,10 +49,10 @@ public class StringHelper {
         }
 
         World world = l.getWorld();
-        if(world == null){
-            return String.format(PLUGIN_COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), "null");
+        if (world == null) {
+            return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), "null");
         }
-        return String.format(PLUGIN_COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), world.getName());
+        return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(), world.getName());
     }
 
     public static @NotNull String firstCharToUpper(@NotNull String s){

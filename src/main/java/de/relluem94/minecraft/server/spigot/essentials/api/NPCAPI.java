@@ -1,24 +1,25 @@
 package de.relluem94.minecraft.server.spigot.essentials.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC.Type;
+import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
@@ -45,9 +46,21 @@ public class NPCAPI {
                             int sellPricePerItem = ItemPrice.from(itemStack.getType()).getSellPrice();
 
                             ItemMeta itemMeta =  itemStack.getItemMeta();
-                            Objects.requireNonNull(itemMeta).getPersistentDataContainer().set(itemSellPrice, PersistentDataType.INTEGER, sellPricePerItem);
-                            Objects.requireNonNull(itemMeta).getPersistentDataContainer().set(itemBuyPrice, PersistentDataType.INTEGER, buyPricePerItem);
-                            itemMeta.setLore(List.of(String.format(PLUGIN_ITEM_BUY_PRICE_MESSAGE, buyPricePerItem, buyPricePerItem*64), String.format(PLUGIN_ITEM_SELL_PRICE_MESSAGE, sellPricePerItem, sellPricePerItem*64)));
+                            Objects.requireNonNull(itemMeta).getPersistentDataContainer().set(itemSellPrice(), PersistentDataType.INTEGER, sellPricePerItem);
+                            Objects.requireNonNull(itemMeta).getPersistentDataContainer().set(itemBuyPrice(), PersistentDataType.INTEGER, buyPricePerItem);
+
+                            itemMeta.setLore(List.of(
+                                    languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+                                            PLUGIN_NAME_MONEY,
+                                            String.valueOf(buyPricePerItem),
+                                            PLUGIN_NAME_MONEY,
+                                            String.valueOf(buyPricePerItem * 64)),
+                                    languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+                                            PLUGIN_NAME_MONEY,
+                                            String.valueOf(sellPricePerItem),
+                                            PLUGIN_NAME_MONEY,
+                                            String.valueOf(sellPricePerItem * 64))
+                            ));
 
                             itemStack.setItemMeta(itemMeta);
 

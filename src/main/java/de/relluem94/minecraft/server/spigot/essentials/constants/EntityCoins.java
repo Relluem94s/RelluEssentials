@@ -160,6 +160,11 @@ public enum EntityCoins {
     COPPER_GOLEM(0),
     MANNEQUIN(0),
     FISHING_BOBBER(0),
+    CAMEL_HUSK(0),
+    NAUTILUS(0),
+    PARCHED(0),
+    ZOMBIE_NAUTILUS(0),
+    SULFUR_CUBE(0),
     LIGHTNING_BOLT(0);
 
     private final int coins;

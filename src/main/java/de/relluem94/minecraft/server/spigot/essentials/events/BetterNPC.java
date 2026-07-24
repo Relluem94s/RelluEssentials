@@ -1,7 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import java.util.List;
-
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
+import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -22,31 +32,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
-import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
+import java.util.List;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
@@ -75,7 +68,7 @@ public class BetterNPC implements Listener {
                     if(RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().get(i).equals(e.getItem())){
                         NPCHelper nh = new NPCHelper(location, RelluEssentials.getInstance().getNpcAPI().getNPC(i));
                         nh.spawn();
-                        e.getPlayer().sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
+                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
                     }
                 }
             }
@@ -110,10 +103,10 @@ public class BetterNPC implements Listener {
                                     bae.setPlayerId(pe.getId());
                 
                                     RelluEssentials.getInstance().getDatabaseHelper().insertBankAccount(bae);
-                                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT);
+                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT));
                                 }
                                 else{
-                                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS, bte.getCost()));
+                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS, PLUGIN_NAME_MONEY, PLUGIN_NAME_MONEY, bte.getCost()));
                                 }
                             }
                             e.setCancelled(true);
@@ -157,18 +150,18 @@ public class BetterNPC implements Listener {
                         RelluEssentials.getInstance().getDatabaseHelper().insertBag(bt.getId(), pe.getId());
                         RelluEssentials.getInstance().getPlayerAPI().putPlayerBagEntry(pe.getId(), RelluEssentials.getInstance().getDatabaseHelper().getBag(bt.getId(), pe.getId()));
                         
-                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bt.getDisplayName()));
                     }
                     else{
-                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BAGS_NO_COINS);
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_COINS, PLUGIN_NAME_MONEY));
                     }
                 }
                 else{
-                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT, bt.getDisplayName()));
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT, bt.getDisplayName()));
                 }
             }
             else{
-                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND));
             }
         }
         else{
@@ -184,15 +177,15 @@ public class BetterNPC implements Listener {
             Integer buyPricePerItem;
             Integer sellPricePerItem;
 
-            if(itemMeta.getPersistentDataContainer().has(itemSellPrice, PersistentDataType.INTEGER)){
-                sellPricePerItem = itemMeta.getPersistentDataContainer().get(itemSellPrice, PersistentDataType.INTEGER);
+            if(itemMeta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER)){
+                sellPricePerItem = itemMeta.getPersistentDataContainer().get(itemSellPrice(), PersistentDataType.INTEGER);
             }
             else{
                 sellPricePerItem = ItemPrice.from(is.getType()).getSellPrice();
             }
 
-            if(itemMeta.getPersistentDataContainer().has(itemBuyPrice, PersistentDataType.INTEGER)){
-                buyPricePerItem = itemMeta.getPersistentDataContainer().get(itemBuyPrice, PersistentDataType.INTEGER);
+            if(itemMeta.getPersistentDataContainer().has(itemBuyPrice(), PersistentDataType.INTEGER)){
+                buyPricePerItem = itemMeta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER);
             }
             else{
                 buyPricePerItem = ItemPrice.from(is.getType()).getBuyPrice();
@@ -221,19 +214,19 @@ public class BetterNPC implements Listener {
                             pe.setUpdatedBy(pe.getId());
                             pe.setHasToBeUpdated(true);
     
-                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
+                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY, itemDisplayname, StringHelper.formatDouble(coins), PLUGIN_NAME_MONEY, StringHelper.formatDouble(pe.getPurse()), PLUGIN_NAME_MONEY));
                             p.playSound(p, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
                         }
                         else{
-                            p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL, itemDisplayname, StringHelper.formatDouble(coins)));
+                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL, itemDisplayname, StringHelper.formatDouble(coins)));
                         }
                     }
                     else{
-                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS, itemDisplayname, StringHelper.formatDouble(coins), PLUGIN_NAME_MONEY, StringHelper.formatDouble(pe.getPurse()), PLUGIN_NAME_MONEY));
                     }
                 }
                 else{
-                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
                 }
             }
             else if(inv.getType().equals(InventoryType.PLAYER)){
@@ -253,8 +246,6 @@ public class BetterNPC implements Listener {
                             }
                         }
                         coins = sellPricePerItem * (double) amountOfItem;
-                        
-
                     }
                     else{
                         coins = sellPricePerItem * (double) amountOfItem;
@@ -272,24 +263,33 @@ public class BetterNPC implements Listener {
                     pe.setUpdatedBy(pe.getId());
                     pe.setHasToBeUpdated(true);
 
-                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_SELL, itemDisplayname, StringHelper.formatDouble(coins), StringHelper.formatDouble(pe.getPurse())));
+                    p.sendMessage(
+                            languageHelper.getWithPrefix(
+                                    MessageKey.PLUGIN_EVENT_NPC_SELL,
+                                    itemDisplayname,
+                                    StringHelper.formatDouble(coins),
+                                    PLUGIN_NAME_MONEY,
+                                    StringHelper.formatDouble(pe.getPurse()),
+                                    PLUGIN_NAME_MONEY
+                            )
+                    );
                     p.playSound(p, Sound.ENTITY_WANDERING_TRADER_NO, SoundCategory.MASTER, 1f, 1f);
                 }
                 else {
                     if(!is.getItemMeta().getEnchants().isEmpty()){
-                        p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_ENCHANTED);
+                        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED));
                     }
                     else{
                         if(damageable.hasDamage()){
-                            p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_USED_ITEM);
+                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_USED_ITEM));
                         }
                         else{
                             if(sellPricePerItem == 0){
-                                p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_NO_PRICE);
+                                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
                             }
                             else{
                                 if(is.getItemMeta().hasDisplayName()){
-                                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_SELL_RENAMED);
+                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
                                 }
                             }
                         }
@@ -309,11 +309,11 @@ public class BetterNPC implements Listener {
                 BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getId());
                 if(BankerHelper.npc_gui_deposit.equalsName(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getDepositGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getDepositGUI(pe.getPurse()));
                 }
                 else if(BankerHelper.npc_gui_balance_total.equalsName(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TOTAL,StringHelper.formatDouble(bae.getValue())));
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL, StringHelper.formatDouble(bae.getValue()), PLUGIN_NAME_MONEY));
                 }
                 else if(BankerHelper.npc_gui_balance.equalsName(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
@@ -321,7 +321,7 @@ public class BetterNPC implements Listener {
                 }
                 else if(e.getCurrentItem().getType().equals(BankerHelper.npc_gui_withdraw.getCustomItem().getType())){
                     InventoryHelper.closeInventory(p);
-                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getWithdrawGUI());
+                    InventoryHelper.openInventory(p, RelluEssentials.getBanker().getWithdrawGUI(bae.getValue()));
                 }
                 else if(e.getCurrentItem().getType().equals(BankerHelper.UPGRADE_MATERIAL)){
                     BankerHelper.upgradeAccount(e.getCurrentItem(), p, pe, bae);
@@ -352,10 +352,19 @@ public class BetterNPC implements Listener {
                 }
                 else if(BankerHelper.npc_gui_balance_transactions.equalsExact(e.getCurrentItem())){
                     InventoryHelper.closeInventory(p);
-                    p.sendMessage(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
                     List<BankTransactionEntry> bankTransactionEntryList = RelluEssentials.getInstance().getDatabaseHelper().getTransactionsToBankFromPlayer(bae.getId());
                     for(BankTransactionEntry bte: bankTransactionEntryList){
-                        p.sendMessage(String.format(EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST, bte.getValue() > 1 ? EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE : EventConstants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE, StringHelper.formatDouble(bte.getValue()), bte.getCreated()));
+                        p.sendMessage(
+                                languageHelper.getWithPrefix(
+                                        MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST,
+                                        bte.getValue() > 1 ? PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE : PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE,
+                                        PLUGIN_COLOR_MONEY,
+                                        StringHelper.formatDouble(bte.getValue()),
+                                        PLUGIN_NAME_MONEY,
+                                        bte.getCreated()
+                                )
+                        );
                     }
                 }
                 else if(BankerHelper.npc_gui_upgrade.equalsExact(e.getCurrentItem())){
@@ -373,7 +382,7 @@ public class BetterNPC implements Listener {
             }
             else if(
                 e.getView().getTitle().equals(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE+"§dNPCs") ||
-                e.getView().getTitle().equals(Constants.PLUGIN_COMMAND_CUSTOMHEADS_TITLE)
+                e.getView().getTitle().equals(languageHelper.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE))
             ){
                 if(!e.getCurrentItem().equals(CustomItems.npc_gui_disabled.getCustomItem())){
                     p.getInventory().addItem(e.getCurrentItem().clone());

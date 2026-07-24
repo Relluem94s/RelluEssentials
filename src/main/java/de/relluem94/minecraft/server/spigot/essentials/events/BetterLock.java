@@ -1,67 +1,30 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW_ADMIN_OVERWRITE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_FLAGS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_MATERIAL;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN_DATE_FORMAT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_NAME;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_UUID;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_RIGHTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_ADD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD_FAILED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE_FAILED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_FLAGS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants.PLUGIN_EVENT_PROTECT_RIGHTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Nameable;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.block.*;
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
-import org.bukkit.block.data.type.Chest;
+import org.bukkit.block.data.type.*;
 import org.bukkit.block.data.type.Chest.Type;
-import org.bukkit.block.data.type.Door;
-import org.bukkit.block.data.type.Gate;
-import org.bukkit.block.data.type.Sign;
-import org.bukkit.block.data.type.TrapDoor;
-import org.bukkit.block.data.type.WallHangingSign;
-import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
@@ -77,22 +40,33 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 /**
+ * Handles all block protection related events in the plugin.
+ *
+ * <p>This listener manages the lifecycle of block protections, including:
+ * <ul>
+ *   <li>Placing and removing protections on lockable blocks</li>
+ *   <li>Preventing unauthorized access to protected blocks</li>
+ *   <li>Managing protection flags (e.g., auto-close, allow hopper, allow redstone)</li>
+ *   <li>Managing access rights for protected blocks</li>
+ *   <li>Protecting blocks from environmental interactions such as pistons, explosions, water flow and redstone</li>
+ *   <li>Handling auto-sell hoppers for item conversion</li>
+ * </ul>
+ *
+ * <p>Protections are stored persistently via the database and cached in memory
+ * through the {@code ProtectionAPI}. Each protection can hold a set of flags
+ * and a list of player IDs that are granted access rights.
+ *
+ * @see de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper
+ * @see de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry
  *
  * @author rellu
  */
@@ -192,18 +166,19 @@ public class BetterLock implements Listener {
                     ItemStack coin = CustomItems.coins.getCustomItem();
                     ItemMeta im = coin.getItemMeta();
                     Objects.requireNonNull(im).setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
-                    im.getPersistentDataContainer().set(itemCoins, PersistentDataType.INTEGER, sellPriceItem);
+                    im.getPersistentDataContainer().set(itemCoins(), PersistentDataType.INTEGER, sellPriceItem);
 
                     coin.setItemMeta(im);
 
                     inventory.addItem(coin);
 
+                    final ItemStack toRemove = is.clone();
                     new BukkitRunnable() {
-                    @Override
+                        @Override
                         public void run() {
-                            inventory.remove(is);
+                            inventory.removeItem(toRemove);
                         }
-                    }.runTaskLater(RelluEssentials.getInstance(),  1L);
+                    }.runTaskLater(RelluEssentials.getInstance(), 1L);
                     return false;
                 }
                 else{
@@ -221,13 +196,13 @@ public class BetterLock implements Listener {
             ProtectionEntry bpe = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
             if (bpe != null) {
                 if(bpe.getLocationEntry().getPlayerId() != pe.getId()){
-                    p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                     return true;
                 }
                 else{            
                     RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
                     RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(b.getLocation());
-                    p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
                     return false;
                 }
             }
@@ -238,11 +213,11 @@ public class BetterLock implements Listener {
             if(bpe != null && bpe.getLocationEntry() != null && bpe.getLocationEntry().getPlayerId() == pe.getId()){
                 RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
                 RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(b.getLocation());
-                p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
                 return false;
             }
             else{
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                 return true;
             }
             
@@ -253,11 +228,11 @@ public class BetterLock implements Listener {
             if(bpe != null && bpe.getLocationEntry() != null && bpe.getLocationEntry().getPlayerId() == pe.getId()){
                 RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
                 RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(b.getLocation());
-                p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
                 return false;
             }
             else{
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                 return true;
             }
         }
@@ -267,11 +242,11 @@ public class BetterLock implements Listener {
             if(bpe != null && bpe.getLocationEntry() != null && bpe.getLocationEntry().getPlayerId() == pe.getId()){
                 RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
                 RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(b.getLocation());
-                p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
                 return false;
             }
             else{
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                 return true;
             }
         }
@@ -281,11 +256,11 @@ public class BetterLock implements Listener {
             if(bpe != null && bpe.getLocationEntry() != null && bpe.getLocationEntry().getPlayerId() == pe.getId()){
                 RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
                 RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(b.getLocation());
-                p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
                 return false;
             }
             else{
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                 return true;
             }
         }
@@ -295,12 +270,14 @@ public class BetterLock implements Listener {
             if(bpe != null && bpe.getLocationEntry() != null && bpe.getLocationEntry().getPlayerId() == pe.getId()){
                 RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
                 RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(b.getLocation());
-                p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_REMOVE);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
                 return false;
             }
             else{
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
-                return true;
+                if (bpe != null && bpe.getLocationEntry() != null) {
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                    return true;
+                }
             }
         }
         return false;
@@ -341,8 +318,8 @@ public class BetterLock implements Listener {
                         if(cd2.getFacing().equals(cd.getFacing())){
                             if(ProtectionHelper.hasPermission(b2, p)){
                                 hasRights = false;
-                                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
-                                p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY);
+                                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY));
                             }
                         }
                     }
@@ -350,8 +327,8 @@ public class BetterLock implements Listener {
                         if(cd3.getFacing().equals(cd.getFacing())){
                             if(ProtectionHelper.hasPermission(b3, p)){
                                 hasRights = false;
-                                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
-                                p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY);
+                                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY));
                             }
                         }
                     }
@@ -366,7 +343,7 @@ public class BetterLock implements Listener {
                 l.setLocationType(lt);
                 l.setPlayerId(pe.getId());
 
-                p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_ADD);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD));
 
                 RelluEssentials.getInstance().getDatabaseHelper().insertLocation(l);
 
@@ -407,8 +384,9 @@ public class BetterLock implements Listener {
 
                 JSONObject flags = new JSONObject();
                 if(b.getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
-                    String[] flag = {ProtectionFlags.ALLOW_REDSTONE.name()};
-                    flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
+                    JSONArray flagArray = new JSONArray();
+                    flagArray.put(ProtectionFlags.ALLOW_REDSTONE.name());
+                    flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flagArray);
                 }
                 bpe.setFlags(flags);
 
@@ -430,22 +408,21 @@ public class BetterLock implements Listener {
         Block attachedBlock = b.getRelative(face);
         BlockData bd = attachedBlock.getBlockData();
 
-        if(bd instanceof WallHangingSign){
-            WallHangingSign sign = (WallHangingSign) attachedBlock.getBlockData();
-            return attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
-        }
-        else if(bd instanceof WallSign){
-            WallSign sign = (WallSign) attachedBlock.getBlockData();
-            return attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
-        }
-        else if(bd instanceof Sign){
-            return attachedBlock.getRelative(BlockFace.DOWN).equals(b);
-        }
-        else if(bd instanceof Door){
-            return attachedBlock.getRelative(BlockFace.DOWN).equals(b);
-        }
-        else{
-            return false;
+        switch (bd) {
+            case WallHangingSign _ -> {
+                WallHangingSign sign = (WallHangingSign) attachedBlock.getBlockData();
+                return attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
+            }
+            case WallSign _ -> {
+                WallSign sign = (WallSign) attachedBlock.getBlockData();
+                return attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
+            }
+            case Sign _, Door _ -> {
+                return attachedBlock.getRelative(BlockFace.DOWN).equals(b);
+            }
+            default -> {
+                return false;
+            }
         }
 
         
@@ -493,13 +470,13 @@ public class BetterLock implements Listener {
                 Location loc = pre.getLocationEntry().getLocation();
 
                 p.sendMessage("");
-                p.sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_INFO);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO));
                 p.sendMessage("");
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID, pre.getId()));
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED, pre.getCreated()));
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED, pre.getUpdated()));
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION, loc.getX(), loc.getY(), loc.getZ(), Objects.requireNonNull(loc.getWorld()).getName()));
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID, pre.getLocationEntry().getPlayerId()));
+                p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID, pre.getId()));
+                p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED, pre.getCreated()));
+                p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED, pre.getUpdated()));
+                p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION, loc.getX(), loc.getY(), loc.getZ(), Objects.requireNonNull(loc.getWorld()).getName()));
+                p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID, pre.getLocationEntry().getPlayerId()));
 
                 
                 for(Map.Entry<UUID, PlayerEntry> entry : RelluEssentials.getInstance().getPlayerAPI().getPlayerEntryMap().entrySet()) {
@@ -510,15 +487,15 @@ public class BetterLock implements Listener {
                         SimpleDateFormat df = new SimpleDateFormat(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN_DATE_FORMAT);
                         cal.setTimeInMillis(op.getLastPlayed());
 
-                        p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_UUID, entry.getValue().getUuid()));
-                        p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_NAME, op.getName()));
-                        p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN, df.format(cal.getTime())));
+                        p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_UUID, entry.getValue().getUuid()));
+                        p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_NAME, op.getName()));
+                        p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN, df.format(cal.getTime())));
                     }
                 }
 
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_MATERIAL, pre.getMaterialName()));
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_FLAGS, pre.getFlags().toString()));
-                p.sendMessage(String.format(PLUGIN_EVENT_PROTECTED_BLOCK_INFO_RIGHTS, pre.getRights().toString()));
+                p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_MATERIAL, pre.getMaterialName()));
+                p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_FLAGS, pre.getFlags().toString()));
+                p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_RIGHTS, pre.getRights().toString()));
                 p.sendMessage("");
                 p.sendMessage("");
 
@@ -533,7 +510,7 @@ public class BetterLock implements Listener {
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
             ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                 boolean update = false;
                 if(pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)){
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
@@ -554,10 +531,10 @@ public class BetterLock implements Listener {
                     RelluEssentials.getInstance().getDatabaseHelper().updateProtectionFlag(pre);
                     RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(l);
                     RelluEssentials.getInstance().getProtectionAPI().putProtectionEntry(l, pre);
-                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE);
+                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE));
                 }
                 else{
-                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE_FAILED);
+                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE_FAILED));
                 }
                
                 pe.setPlayerState(PlayerState.DEFAULT);
@@ -566,7 +543,7 @@ public class BetterLock implements Listener {
                 e.setCancelled(true);
             }
             else{
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
             }
@@ -576,7 +553,7 @@ public class BetterLock implements Listener {
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
             ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                 boolean update = false;
                 if(pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)){
                     JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
@@ -597,12 +574,15 @@ public class BetterLock implements Listener {
                 else{
                     JSONObject flags = new JSONObject();
                     if(Objects.requireNonNull(b).getType().equals(Material.LEVER) || b.getType().equals(Material.IRON_DOOR)){
-                        String[] flag = {ProtectionFlags.ALLOW_REDSTONE.name(),ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name()};
-                        flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
+                        JSONArray flagArray = new JSONArray();
+                        flagArray.put(ProtectionFlags.ALLOW_REDSTONE.name());
+                        flagArray.put(ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name());
+                        flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flagArray);
                     }
                     else{
-                        String[] flag = {ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name()};
-                        flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flag);
+                        JSONArray flagArray = new JSONArray();
+                        flagArray.put(ProtectionFlags.valueOf(((String)pe.getPlayerStateParameter()).toUpperCase()).name());
+                        flags.put(PLUGIN_EVENT_PROTECT_FLAGS, flagArray);
                     }
                     update = true;
                     pre.setFlags(flags);  
@@ -612,10 +592,10 @@ public class BetterLock implements Listener {
                     RelluEssentials.getInstance().getDatabaseHelper().updateProtectionFlag(pre);
                     RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(l);
                     RelluEssentials.getInstance().getProtectionAPI().putProtectionEntry(l, pre);
-                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD);
+                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD));
                 }
                 else{
-                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD_FAILED);
+                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD_FAILED));
                 }                
                 
                 pe.setPlayerState(PlayerState.DEFAULT);
@@ -623,7 +603,7 @@ public class BetterLock implements Listener {
                 e.setCancelled(true);
             }
             else{
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
             }
@@ -633,7 +613,7 @@ public class BetterLock implements Listener {
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
             ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                 
                 UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
                 int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(uuid).getId();
@@ -645,7 +625,7 @@ public class BetterLock implements Listener {
                 e.setCancelled(true);
             }
             else{
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
             }
@@ -655,7 +635,7 @@ public class BetterLock implements Listener {
             Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
             ProtectionEntry pre = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(l);
             if(pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())){
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                 
                 UUID uuid = UUID.fromString((String)pe.getPlayerStateParameter());
                 int id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(uuid).getId();
@@ -667,7 +647,7 @@ public class BetterLock implements Listener {
                 e.setCancelled(true);
             }
             else{
-                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                 pe.setPlayerState(PlayerState.DEFAULT);
                 pe.setPlayerStateParameter(null);
             }
@@ -688,7 +668,7 @@ public class BetterLock implements Listener {
                 rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, list);
                 pre.setRights(rights);
                 if(!silent){
-                    p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD));
                 }
                 
 
@@ -698,7 +678,7 @@ public class BetterLock implements Listener {
             }
             else{
                 if(!silent){
-                    p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED));
                 }
             }                 
         }
@@ -723,12 +703,12 @@ public class BetterLock implements Listener {
                 RelluEssentials.getInstance().getProtectionAPI().putProtectionEntry(l, pre);
                 
                 if(!silent){
-                    p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE));
                 }
             }
             else{
                 if(!silent){
-                    p.sendMessage(PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED);
+                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED));
                 }
             }
         }
@@ -760,84 +740,86 @@ public class BetterLock implements Listener {
                 ) {  
                     if (ProtectionHelper.hasRights(protection, pe.getId())) {
                         if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)){
-                            e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                            e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                         }
                         else{
                             if (Permission.isAuthorized(e.getPlayer(), Groups.getGroup("mod").getId())) {
                                 e.setCancelled(false); 
-                                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW_ADMIN_OVERWRITE);
+                                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
                             }
                             else{
                                 e.setCancelled(true); 
-                                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                             }
                             
                         }
                     }
                     else{
-                        // TODO If Notify protection self on
-                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                        // If Notify protection self on
+                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
 
                         Openable openable = (Openable) b.getBlockData();
 
-                        if(openable instanceof Door){
-                            Door door = (Door) b.getBlockData();
-                            Block b2 = ProtectionHelper.getOtherPart(door, b);
-                            if(b2 != null){
-                                if(b2.getBlockData() instanceof Door door2){
-                                    if(door2.getHinge() != door.getHinge()){
-                                        if (door2.isOpen()) {
-                                            door2.setOpen(false);
-                                        }
-                                        else{
-                                            door2.setOpen(true);
-    
-                                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
-                                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
-                                                door.setOpen(false);
+                        switch (openable) {
+                            case Door _ -> {
+                                Door door = (Door) b.getBlockData();
+                                Block b2 = ProtectionHelper.getOtherPart(door, b);
+                                if (b2 != null) {
+                                    if (b2.getBlockData() instanceof Door door2) {
+                                        if (door2.getHinge() != door.getHinge()) {
+                                            if (door2.isOpen()) {
                                                 door2.setOpen(false);
+                                            } else {
+                                                door2.setOpen(true);
 
-                                                b.setBlockData(door);
-                                                b2.setBlockData(door2);
-                                                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                           }, 50);
+                                                if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                                                    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                                        door.setOpen(false);
+                                                        door2.setOpen(false);
+
+                                                        b.setBlockData(door);
+                                                        b2.setBlockData(door2);
+                                                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+                                                    }, 50);
+                                                }
                                             }
+                                            b2.setBlockData(door2);
                                         }
-                                        b2.setBlockData(door2);
+                                    }
+                                } else {
+                                    if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                                        Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                            door.setOpen(false);
+
+                                            b.setBlockData(door);
+                                            e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+                                        }, 50);
                                     }
                                 }
                             }
-                            else{
-                                if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
+                            case TrapDoor _ -> {
+                                TrapDoor door = (TrapDoor) b.getBlockData();
+                                if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
                                     Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
                                         door.setOpen(false);
 
                                         b.setBlockData(door);
-                                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
+                                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
                                     }, 50);
                                 }
-                            }                        
-                        }
-                        else if(openable instanceof TrapDoor){
-                            TrapDoor door = (TrapDoor) b.getBlockData();
-                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
-                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
-                                    door.setOpen(false);
-
-                                    b.setBlockData(door);
-                                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                }, 50);
                             }
-                        }
-                        else if(openable instanceof Gate){
-                            Gate door = (Gate) b.getBlockData();
-                            if(ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)){
-                                Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
-                                    door.setOpen(false);
+                            case Gate _ -> {
+                                Gate door = (Gate) b.getBlockData();
+                                if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                                    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                                        door.setOpen(false);
 
-                                    b.setBlockData(door);
-                                    e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_AUTOCLOSE);
-                                }, 50);
+                                        b.setBlockData(door);
+                                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+                                    }, 50);
+                                }
+                            }
+                            default -> {
                             }
                         }
                         // ELSE Other Openable Objects (Future Implementations)
@@ -850,22 +832,22 @@ public class BetterLock implements Listener {
                 if (protection != null && pe != null && pe.getPlayerState().equals(PlayerState.DEFAULT)) { 
                     if (ProtectionHelper.hasRights(protection, pe.getId())) {
                         if(ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)){
-                            e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                            e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                         }
                         else{
                             if (Permission.isAuthorized(e.getPlayer(), Groups.getGroup("mod").getId())) {
                                 e.setCancelled(false); 
-                                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW_ADMIN_OVERWRITE);
+                                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
                             }
                             else{
                                 e.setCancelled(true); 
-                                e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_DISALLOW);
+                                e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
                             }
                         }
                     }
                     else{
                         // If Notify protection self on
-                        e.getPlayer().sendMessage(PLUGIN_EVENT_PROTECTED_BLOCK_ALLOW);
+                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -20,13 +21,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.getText;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 @CommandName("fly")
 public class Fly implements CommandConstruct {
-
     @Override
     public CommandsEnum[] getCommands() {
         return new CommandsEnum[0];
@@ -36,14 +35,14 @@ public class Fly implements CommandConstruct {
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
 
         if (!isPlayer(sender)){
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
@@ -55,16 +54,20 @@ public class Fly implements CommandConstruct {
         Player target = Bukkit.getPlayer(args[0]);
 
         if(target == null){
-            p.sendMessage(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
         
         if (Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(String.format(PLUGIN_COMMAND_FLYMODE, target.getCustomName(), !target.getAllowFlight() ? PLUGIN_COMMAND_FLYMODE_ACTIVATED : PLUGIN_COMMAND_FLYMODE_DEACTIVATED));
+            p.sendMessage(languageHelper.getWithPrefix(
+                    MessageKey.COMMAND_FLYMODE,
+                    target.getCustomName(),
+                    !target.getAllowFlight() ? languageHelper.get(MessageKey.COMMAND_FLYMODE_ACTIVATED) : languageHelper.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
+            ));
             flyMode(target);
         }
         else {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
 
         }
         return true;
@@ -76,18 +79,11 @@ public class Fly implements CommandConstruct {
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
         p.setAllowFlight(pe.isFlying());
-        p.sendMessage(
-            PLUGIN_FORMS_COMMAND_PREFIX + 
-            String.format(
-                getText(p.getLocale(), "PLUGIN_COMMAND_FLYMODE"), 
-                p.getCustomName() + PLUGIN_COLOR_COMMAND, 
-                PLUGIN_COLOR_COMMAND_ARG + 
-                (pe.isFlying() ? 
-                    getText(p.getLocale(), "PLUGIN_COMMAND_FLYMODE_ACTIVATED") : 
-                    getText(p.getLocale(), "PLUGIN_COMMAND_FLYMODE_DEACTIVATED")
-                ) + PLUGIN_COLOR_COMMAND
-            )
-        );
+        p.sendMessage(languageHelper.getWithPrefix(
+                MessageKey.COMMAND_FLYMODE,
+                p.getCustomName(),
+                p.getAllowFlight() ? languageHelper.get(MessageKey.COMMAND_FLYMODE_ACTIVATED) : languageHelper.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
+        ));
     }
 
     @Override

@@ -122,9 +122,6 @@ commands:
     world:
         description: shows worlds, world management and tp
         usage: /world
-    rollback:
-        description: rollbacks changes in the world by the player x
-        usage: /rollback
     ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj:            
         description: not a command
         usage: /ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj
@@ -177,3 +174,6 @@ commands:
     playerweather:
       description: Changes the Weather just for you
       usage: /playerweather
+    list:
+      description: Shows all Players and ther rank
+      usage: /list

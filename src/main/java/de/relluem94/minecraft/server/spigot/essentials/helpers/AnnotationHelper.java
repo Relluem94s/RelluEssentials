@@ -4,6 +4,11 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ *  Utility class for resolving annotation metadata from command classes at runtime.
+ *
+ * @author rellu
+ */
 public class AnnotationHelper {
     @SuppressWarnings("unchecked")
     public static <T extends CommandConstruct> @Nullable String getCommandName(@NotNull Class<T> clazz) {

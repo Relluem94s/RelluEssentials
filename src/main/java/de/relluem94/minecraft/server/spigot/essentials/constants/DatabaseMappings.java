@@ -22,6 +22,7 @@ public interface DatabaseMappings {
     String FIELD_BANK_ACCOUNT_FK = "bank_account_fk";
     String FIELD_MATERIAL = "material";
     String FIELD_PREFIX = "prefix";
+    String FIELD_LOCATION_FK = "location_fk";
     String FIELD_LOCATION_NAME = "location_name";
     String FIELD_WORLD = "world";
     String FIELD_POS_X = "x";
@@ -29,6 +30,7 @@ public interface DatabaseMappings {
     String FIELD_POS_Z = "z";
     String FIELD_YAW = "yaw";
     String FIELD_PITCH = "pitch";
+    String FIELD_LOCATION_TYPE = "location_type";
     String FIELD_LOCATION_TYPE_FK = "location_type_fk";
     String FIELD_PROFESSION = "profession";
     String FIELD_TYPE = "type";
@@ -53,4 +55,10 @@ public interface DatabaseMappings {
     String FIELD_TOTAL_EXPERIENCE = "totalExperience";
     String FIELD_FOOD = "food";
     String FIELD_INVENTORY = "inventory";
+    String FIELD_PLANT = "plant";
+    String FIELD_SEED = "seed";
+    String FIELD_MIN_INT = "min_int";
+    String FIELD_MAX_INT = "max_int";
+    String FIELD_SETTING_FK = "setting_fk";
+    String FIELD_WORLD_GORUP_FK = "world_group_fk";
 }

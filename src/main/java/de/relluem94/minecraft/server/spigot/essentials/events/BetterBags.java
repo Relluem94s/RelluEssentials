@@ -1,8 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import java.util.*;
-
+import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -24,37 +32,28 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.rellulib.stores.DoubleStore;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.*;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 public class BetterBags implements Listener {
-    
+
+    private final Set<Block> processingBlocks = new HashSet<>();
+
     @EventHandler
     public void onBlockBreak(@NotNull BlockBreakEvent e){
         Player p = e.getPlayer();
         Block b = e.getBlock();
         Material m = b.getType();
-        
+
         if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.delicate)){
             if(m.equals(Material.PUMPKIN_STEM) || m.equals(Material.MELON_STEM) || m.equals(Material.ATTACHED_PUMPKIN_STEM) || m.equals(Material.ATTACHED_MELON_STEM)){
                 e.setCancelled(true);
-            } 
-            
+            }
+
             if(e.getBlock().getBlockData() instanceof Ageable age){
                 if(age.getAge() != age.getMaximumAge() && (!m.equals(Material.SUGAR_CANE))){
                     e.setCancelled(true);
@@ -85,20 +84,37 @@ public class BetterBags implements Listener {
             }
 
             if(isSugarCaneOrIsBamboo(b)){
+                if(processingBlocks.contains(b)){
+                    return;
+                }
+
+                Block originalBlock = b;
                 while(isSugarCaneOrIsBamboo(b.getRelative(BlockFace.UP))){
+                    Block blockAbove = b.getRelative(BlockFace.UP);
+
+                    processingBlocks.add(blockAbove);
+                    BlockBreakEvent fakeBreakEvent = new BlockBreakEvent(blockAbove, p);
+                    Bukkit.getPluginManager().callEvent(fakeBreakEvent);
+                    processingBlocks.remove(blockAbove);
+
                     dropCount++;
                     b.setType(Material.AIR);
-                    b = b.getRelative(BlockFace.UP);
+                    b = blockAbove;
                 }
 
                 if(isSugarCaneOrIsBamboo(b)){
+                    processingBlocks.add(b);
+                    BlockBreakEvent fakeBreakEvent = new BlockBreakEvent(b, p);
+                    Bukkit.getPluginManager().callEvent(fakeBreakEvent);
+                    processingBlocks.remove(b);
+
                     b.setType(Material.AIR);
                     dropCount++;
                 }
 
-                if(!m.equals(Material.AIR)){
-                    Item item = e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), new ItemStack(m, dropCount));
-
+                if(!m.equals(Material.AIR) && dropCount > 0){
+                    e.setCancelled(true);
+                    Item item = originalBlock.getWorld().dropItem(originalBlock.getLocation(), new ItemStack(m, dropCount));
                     EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item, dropCount);
                     Bukkit.getPluginManager().callEvent(entityPickupItemEvent);
                 }
@@ -108,6 +124,10 @@ public class BetterBags implements Listener {
 
     private boolean isChorusPlant(@NotNull Block block){
         return block.getType().equals(Material.CHORUS_PLANT);
+    }
+
+    private boolean isSugarCaneOrIsBamboo(@NotNull Block b){
+        return b.getType().equals(Material.SUGAR_CANE) || b.getType().equals(Material.BAMBOO);
     }
 
     private @NotNull Set<Block> getChorusBlocks(Block b, int count, BlockFace prevBlockFace){
@@ -134,24 +154,19 @@ public class BetterBags implements Listener {
         return blocks;
     }
 
-    private boolean isSugarCaneOrIsBamboo(@NotNull Block b){
-        return b.getType().equals(Material.SUGAR_CANE) || b.getType().equals(Material.BAMBOO);
-    }
-
     private final Random random = new Random();
-
     @EventHandler
     public void onBlockDrop(@NotNull BlockDropItemEvent e) {
         Player p = e.getPlayer();
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
+            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
         for(Item i : e.getItems()){
             if(RelluEssentials.getInstance().dropMap.containsKey(i.getItemStack().getType())){
-                if(i.getItemStack().getAmount() == 1){ 
+                if(i.getItemStack().getAmount() == 1){
                     DoubleStore<Integer, Integer> ds = RelluEssentials.getInstance().dropMap.get(i.getItemStack().getType());
                     i.getItemStack().setAmount(random.nextInt(ds.getSecondValue()) + ds.getValue());
                 }
-            }            
+            }
         }
 
         if(EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.autosmelt)){
@@ -179,17 +194,16 @@ public class BetterBags implements Listener {
                                     cocoa.setBlockData(c);
                                     break;
                                 }
-                            }                            
-                        }
-                        else{
-                            c.setFacing(c.getFacing().getOppositeFace());
-                            cocoa.setBlockData(c);
-                        }
-                    }
-                    int oldAmount =  e.getItems().get(i).getItemStack().getAmount();
-                    e.getItems().get(i).getItemStack().setAmount(oldAmount -1);
-                }
+                            }
+                        } else {
+                c.setFacing(c.getFacing().getOppositeFace());
+                cocoa.setBlockData(c);
             }
+        }
+                    int oldAmount = e.getItems().get(i).getItemStack().getAmount();
+                    e.getItems().get(i).getItemStack().setAmount(oldAmount - 1);
+    }
+}
         }
 
         if(BagHelper.hasBags(pe.getId())){
@@ -230,7 +244,7 @@ public class BetterBags implements Listener {
                 ItemStack is = e.getCurrentItem();
 
                 int slot = BagHelper.getSlotByItemStack(be, is);
-                if(slot != -1 &&  e.getClickedInventory() != null){
+                if(slot != -1 && e.getClickedInventory() != null){
                     int value = be.getSlotValue(slot);
                     boolean isRightClick = e.isRightClick();
                     boolean isBagInventory = e.getClickedInventory().getType().equals(InventoryType.CHEST);
@@ -238,7 +252,7 @@ public class BetterBags implements Listener {
                     if(!isBagInventory){
                         if(isRightClick){
                             for(ItemStack fis : p.getInventory().getContents()){
-                                if(fis != null &&  ItemHelper.getCleanItemStack(fis).equals(ItemHelper.getCleanItemStack(is))){
+                                if(fis != null && ItemHelper.getCleanItemStack(fis).equals(ItemHelper.getCleanItemStack(is))){
                                     value = be.getSlotValue(slot);
                                     be.setSlotValue(slot, value + fis.getAmount());
                                     be.setHasToBeUpdated(true);
@@ -284,7 +298,7 @@ public class BetterBags implements Listener {
                                 if(p.getInventory().firstEmpty() != -1){
                                     if(value >= is.getMaxStackSize()){
                                         cleanIS.setAmount(is.getMaxStackSize());
-                                        be.setSlotValue(slot, value-is.getMaxStackSize());
+                                        be.setSlotValue(slot, value - is.getMaxStackSize());
                                     }
                                     else{
                                         cleanIS.setAmount(value);
@@ -298,7 +312,7 @@ public class BetterBags implements Listener {
                     }
 
                     p.openInventory(Objects.requireNonNull(BagHelper.getBag(be.getBagTypeId(), pe)));
-                }                
+                }
                 e.setCancelled(true);
             }
             else if (e.getView().getTitle().equals(BagHelper.MAIN_GUI)) {
@@ -313,7 +327,6 @@ public class BetterBags implements Listener {
         }
     }
 
-
     @EventHandler
     public void onItemCollect(@NotNull EntityPickupItemEvent e) {
         if(e.getEntity() instanceof Player p){
@@ -324,15 +337,15 @@ public class BetterBags implements Listener {
             if(CustomItems.coins.almostEquals(is)){
                 ItemMeta im = is.getItemMeta();
 
-                if(im != null && im.getPersistentDataContainer().has(itemCoins, PersistentDataType.INTEGER)){
-                    Integer itemCoins = im.getPersistentDataContainer().get(NamespacedKeyConstants.itemCoins, PersistentDataType.INTEGER);
+                if(im != null && im.getPersistentDataContainer().has(itemCoins(), PersistentDataType.INTEGER)){
+                    Integer itemCoins = im.getPersistentDataContainer().get(NamespacedKeyConstants.itemCoins(), PersistentDataType.INTEGER);
 
                     if(itemCoins == null){
                         itemCoins = 0;
                     }
 
                     int coins = itemCoins * is.getAmount();
-                    ChatHelper.sendMessageInActionBar(p, String.format(Constants.PLUGIN_COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
+                    ChatHelper.sendMessageInActionBar(p, languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
                     pe.setPurse(pe.getPurse() + coins);
 
                     p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);
@@ -345,7 +358,10 @@ public class BetterBags implements Listener {
                 }
             }
 
-            if(BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(), p, pe)){
+            String worldName = p.getWorld().getName();
+            boolean collectBagEnabled = RelluEssentials.getInstance().collectBagWorlds.contains(worldName);
+
+            if(collectBagEnabled && BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(), p, pe)){
                 p.getInventory().remove(is);
                 e.setCancelled(true);
                 e.getItem().remove();

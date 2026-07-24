@@ -1,13 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.bukkit.WeatherType;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -18,9 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 @CommandName("playerweather")
 public class PlayerWeather implements CommandConstruct {
@@ -33,24 +32,24 @@ public class PlayerWeather implements CommandConstruct {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (!isPlayer(commandSender)) {
-            commandSender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) commandSender;
 
         if (!Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-            sendMessage(p, PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
         if (strings.length == 0) {
-            p.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
             return true;
         }
 
         if(strings.length > 1){
-            p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
             return true;
         }
 
@@ -59,7 +58,7 @@ public class PlayerWeather implements CommandConstruct {
             return true;
         }
 
-        p.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         return true;
     }
 

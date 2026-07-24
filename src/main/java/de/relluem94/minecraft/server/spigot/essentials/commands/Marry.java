@@ -1,22 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_ACCEPT_NO_REQUEST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_DIVORCED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_INFO;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_MARRIED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_RECEIVE_REQUEST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_REQUEST_IS_MARRIED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_SELF_MARRIAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_MARRY_SEND_REQUEST;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import java.util.*;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import lombok.Getter;
 import lombok.NonNull;
@@ -67,18 +56,18 @@ public class Marry implements CommandConstruct {
 
     private void addMarryEntry(Player player, Player target){
         if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player).getPartner() != null || RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target).getPartner() != null){
-            player.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_IS_MARRIED);
+            player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED));
             return;
         }
 
-        player.sendMessage(String.format(PLUGIN_COMMAND_MARRY_SEND_REQUEST, target.getCustomName()));
-        target.sendMessage(String.format(PLUGIN_COMMAND_MARRY_RECEIVE_REQUEST, player.getCustomName()));
+        player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST, target.getCustomName()));
+        target.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST, player.getCustomName()));
 
         marryAcceptList.put(target, player);
         Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
             if(hasMarryEntry(target)){
-                player.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED);
-                target.sendMessage(PLUGIN_COMMAND_MARRY_REQUEST_EXPIRED);
+                player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
+                target.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
                 removeMarryEntry(target);
             }
         }, 20*60*2L);
@@ -94,8 +83,8 @@ public class Marry implements CommandConstruct {
 
 
     public void marry(@NotNull Player player, @NotNull Player target){
-        target.sendMessage(String.format(PLUGIN_COMMAND_MARRY_MARRIED, player.getCustomName()));
-        player.sendMessage(String.format(PLUGIN_COMMAND_MARRY_MARRIED, target.getCustomName()));
+        target.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, player.getCustomName()));
+        player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, target.getCustomName()));
 
         PlayerEntry firstPlayer = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target);
         PlayerEntry secondPlayer = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player);
@@ -139,11 +128,11 @@ public class Marry implements CommandConstruct {
         if(firstPlayer != null && secondOfflinePlayer.getName() != null){
             Player secondPlayer = Bukkit.getPlayer(secondOfflinePlayer.getName());
             if(secondOfflinePlayer.isOnline() && secondPlayer != null){
-                firstPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, secondPlayer.getDisplayName()));
-                secondPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, firstPlayer.getCustomName()));
+                firstPlayer.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, secondPlayer.getDisplayName()));
+                secondPlayer.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, firstPlayer.getCustomName()));
             }
             else{
-                firstPlayer.sendMessage(String.format(PLUGIN_COMMAND_MARRY_DIVORCED, secondOfflinePlayer.getName()));
+                firstPlayer.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, secondOfflinePlayer.getName()));
             }
 
             ppe.setDeletedBy(pe.getId());
@@ -170,7 +159,6 @@ public class Marry implements CommandConstruct {
 
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-
         Player p = null;
         if (isPlayer(sender)) {
             p = (Player) sender;
@@ -181,12 +169,16 @@ public class Marry implements CommandConstruct {
         }
 
         if (!Permission.isAuthorized(p, Groups.getGroup("vip").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
         if (args.length == 0) {
-            p.sendMessage(PLUGIN_COMMAND_MARRY_INFO);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_INFO,
+                    command.getName(),
+                    command.getName(), Commands.ACCEPT.getName(),
+                    command.getName(), Commands.DIVORCE.getName()
+            ));
             return true;
         }
         
@@ -198,7 +190,7 @@ public class Marry implements CommandConstruct {
                     return true;
                 }
 
-                p.sendMessage(PLUGIN_COMMAND_MARRY_ACCEPT_NO_REQUEST);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_ACCEPT_NO_REQUEST));
                 return true;
             }
 
@@ -209,18 +201,18 @@ public class Marry implements CommandConstruct {
                     return true;
                 }
 
-                p.sendMessage(PLUGIN_COMMAND_MARRY_DIVORCE_NOT_MARRIED);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCE_NOT_MARRIED));
                 return true;
             }
 
             Player target = Bukkit.getPlayer(args[0]);
             if (target == null) {
-                p.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
                 return true;
             }
 
             if(target.getName().equalsIgnoreCase(p.getName())){
-                p.sendMessage(PLUGIN_COMMAND_MARRY_SELF_MARRIAGE);
+                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_SELF_MARRIAGE));
                 return true;
             }
 
@@ -229,7 +221,7 @@ public class Marry implements CommandConstruct {
             return true;
         }
 
-        p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
         return true;
     }
 

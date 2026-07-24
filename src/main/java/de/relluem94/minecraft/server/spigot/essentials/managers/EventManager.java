@@ -1,11 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_EVENTS_REGISTERED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_REGISTER_EVENTS;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.events.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -17,7 +16,7 @@ public class EventManager implements IEnable{
     @Override
     public void enable() {
         PluginManager pm = Bukkit.getServer().getPluginManager();
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_REGISTER_EVENTS);
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
 
         int eventCount = 0;
         pm.registerEvents(new BetterChatFormat(), RelluEssentials.getInstance());           eventCount++;
@@ -45,6 +44,8 @@ public class EventManager implements IEnable{
         pm.registerEvents(new CustomEnchantment(), RelluEssentials.getInstance());          eventCount++;
         pm.registerEvents(new GrapplingHockEvent(), RelluEssentials.getInstance());         eventCount++;
         pm.registerEvents(new PositionAxeListener(), RelluEssentials.getInstance());        eventCount++;
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + String.format(PLUGIN_MANAGER_EVENTS_REGISTERED, eventCount));
+        pm.registerEvents(new PreventCoinManipulation(), RelluEssentials.getInstance());    eventCount++;
+        pm.registerEvents(new IntegrationListener(), RelluEssentials.getInstance());        eventCount++;
+        consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED, eventCount));
     }
 }

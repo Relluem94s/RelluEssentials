@@ -1,5 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Lightable;
@@ -8,10 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EventConstants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 
 public class BetterLights implements Listener {
@@ -25,7 +26,7 @@ public class BetterLights implements Listener {
         if(pe.getPlayerState().equals(PlayerState.LIGHT_TOGGLE) && b != null && b.getType().equals(Material.REDSTONE_LAMP) && b.getBlockData() instanceof Lightable lightable){
             lightable.setLit(!lightable.isLit());
             b.setBlockData(lightable);
-            e.getPlayer().sendMessage(EventConstants.PLUGIN_EVENT_LIGHTS_TOOGLE);
+            e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_LIGHTS_TOGGLE));
             pe.setPlayerState(PlayerState.DEFAULT);
             new BukkitRunnable() {
                 @Override

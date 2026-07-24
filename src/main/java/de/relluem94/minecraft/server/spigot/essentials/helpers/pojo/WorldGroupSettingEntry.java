@@ -16,8 +16,9 @@ public class WorldGroupSettingEntry {
     private int createdBy;
     private String updated;
     private int updatedBy;
-    private String deleted;
-    private int deletedBy;
-    private String name;
+    private int settingEntryFk;
+    private SettingEntry settingEntry;
+    private int worldGroupEntryFk;
     private WorldGroupEntry worldGroupEntry;
+    private boolean value;
 }

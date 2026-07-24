@@ -1,9 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -15,7 +16,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
@@ -36,19 +36,19 @@ public class Sudo implements CommandConstruct {
     @Override
     public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
         if (!Permission.isAuthorized(sender, Groups.getGroup("admin").getId())) {
-            sender.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return true;
         }
 
         if (!isPlayer(sender)){
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
             return true;
         }
 
         Player p = (Player) sender;
 
         if(args.length == 0){
-            p.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
             return true;
         }
 
@@ -58,7 +58,7 @@ public class Sudo implements CommandConstruct {
         }
 
         if (args.length != 1) {
-            sender.sendMessage(PLUGIN_COMMAND_WRONG_SUB_COMMAND);
+            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
             return true;
         }
 
@@ -71,12 +71,12 @@ public class Sudo implements CommandConstruct {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
 
         if (target == null) {
-            p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
             return true;
         }
 
         if(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(target.getId()) == null){
-            p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
+            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
             return true;
         }
 
@@ -93,7 +93,7 @@ public class Sudo implements CommandConstruct {
             p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
         }
         WorldHelper.loadWorldGroupInventory(p);
-        p.sendMessage(String.format(Constants.PLUGIN_COMMAND_SUDO_ACTIVATED, tpe.getGroup().getPrefix() + target.getName()));
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SUDO_ACTIVATED, tpe.getGroup().getPrefix() + target.getName()));
 
         return true;
     }
@@ -118,7 +118,7 @@ public class Sudo implements CommandConstruct {
         }
         WorldHelper.loadWorldGroupInventory(p);
         SudoManager.sudoers.remove(p.getUniqueId());
-        p.sendMessage(Constants.PLUGIN_COMMAND_SUDO_DEACTIVATED);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SUDO_DEACTIVATED));
     }
 
     @Override
@@ -148,7 +148,6 @@ public class Sudo implements CommandConstruct {
             tabList.addAll(TabCompleterHelper.getOnlinePlayers());
             return tabList;
         }
-
 
         return tabList;
     }
