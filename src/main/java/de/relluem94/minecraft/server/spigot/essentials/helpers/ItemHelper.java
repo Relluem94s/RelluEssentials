@@ -29,6 +29,7 @@ import java.util.*;
  */
 public class ItemHelper implements IItemHelper {
 
+    @Getter
     private final ItemStack is;
 
     @Getter
@@ -163,24 +164,6 @@ public class ItemHelper implements IItemHelper {
         init();
         addItemRarity();
         return postInit(is);
-    }
-
-    /**
-     *
-     * @return ItemStack of ItemHelper
-     */
-    @SuppressWarnings("unused")
-    protected ItemStack getItemStack() {
-        return is;
-    }
-
-    /**
-     *
-     * @return ItemType of ItemHelper
-     */
-    @SuppressWarnings("unused")
-    public Type getItemType() {
-        return itemType;
     }
 
     /**
