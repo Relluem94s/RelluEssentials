@@ -1,10 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import de.relluem94.minecraft.server.spigot.essentials.SubCommandRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.commands.admin.*;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import lombok.Getter;
@@ -19,20 +22,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.AdminToolsGUI.adminToolsGUI;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.CleanUpChat.cleanChat;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.CleanUpLocations.cleanUpLocations;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.CleanUpProtections.cleanUpProtections;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.FakeAFK.fakeAFK;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.LightToggle.lightToggle;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.NPCGUI.npcGUI;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.Ping.ping;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.PluginInfo.pluginInfo;
-import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.Top.top;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 @CommandName("admin")
 public class Admin implements CommandConstruct {
+    private final SubCommandRegistry<SubCommand> subCommandRegistry;
+
+    public Admin() {
+        this.subCommandRegistry = new SubCommandRegistry<>(List.of(
+                new AdminToolsGUICommand(),
+                new CleanUpChatCommand(),
+                new CleanUpLocationsCommand(),
+                new CleanUpProtectionsCommand(),
+                new FakeAFKCommand(),
+                new LightToggleCommand(),
+                new NPCGUICommand(),
+                new PingCommand(),
+                new PluginInfoCommand(),
+                new TopCommand()
+        ));
+    }
 
     @Override
     public CommandsEnum[] getCommands() {
@@ -98,65 +107,15 @@ public class Admin implements CommandConstruct {
         if (args.length == 0) {
             p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_INFO));
             return true;
-        } else if (args.length == 1) {
-            if (Commands.NPC.getName().equalsIgnoreCase(args[0])) {
-                if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-                    return true;
-                }
-                npcGUI(sender);
-                return true;
-            } else if (Commands.INFO.getName().equalsIgnoreCase(args[0])) {
-                pluginInfo(p);
-                return true;
-            } else if (Commands.ADMIN_TOOLS.getName().equalsIgnoreCase(args[0])) {
-                if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-                    return true;
-                }
-                adminToolsGUI(sender);
-                return true;
-            } else if (Commands.PING.getName().equalsIgnoreCase(args[0])) {
-                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_PING, p.getPing()));
-                return true;
-            } else if (Commands.CHAT.getName().equalsIgnoreCase(args[0])) {
-                cleanChat(p);
-                return true;
-            } else if (Commands.LIGHT.getName().equalsIgnoreCase(args[0])) {
-                lightToggle(p);
-                return true;
-            } else if (Commands.CLEAN_PROTECTIONS.getName().equalsIgnoreCase(args[0])) {
-                if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-                    return true;
-                }
-                cleanUpProtections(p);
-                return true;
-            } else if (Commands.CLEAN_LOCATIONS.getName().equalsIgnoreCase(args[0])) {
-                if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-                    return true;
-                }
-                cleanUpLocations(p);
-                return true;
-            } else if (Commands.AFK.getName().equalsIgnoreCase(args[0])) {
-                fakeAFK(p);
-                return true;
-            } else if (Commands.TOP.getName().equalsIgnoreCase(args[0])) {
-                top(p);
-                return true;
-            } else {
-                p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
-                return true;
-            }
-        } else if (args.length == 2) {
-            if (Commands.PING.getName().equalsIgnoreCase(args[0])) {
-                ping(args, p);
-            }
-            return true;
-        } else {
+        }
+
+        SubCommand subCommand = subCommandRegistry.find(args);
+        if (subCommand == null) {
             p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
             return true;
         }
+
+        subCommand.execute(p, args);
+        return true;
     }
 }

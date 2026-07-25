@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
+package de.relluem94.minecraft.server.spigot.essentials.commands.admin.shared;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
@@ -15,7 +15,13 @@ import java.util.List;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
-public class CleanUpProtections {
+public class AdminCommandHelper {
+
+    public static void cleanUpLocations(@NonNull Player p) {
+        int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupLocations();
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END, deleted));
+    }
+
     public static void cleanUpProtections(@NonNull Player p) {
         HashMap<Location, ProtectionEntry> protectionEntryList = new HashMap<>(
                 RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList()
