@@ -145,7 +145,7 @@ public class RelluEssentials extends JavaPlugin {
             new CommandWrapper(new Worlds()),
 
             // THIS IS A DEV COMMAND
-            new CommandWrapper(new TestCommand())
+            new CommandWrapper(new DevCommand())
     );
 
     public static synchronized RelluEssentials getInstance() {
