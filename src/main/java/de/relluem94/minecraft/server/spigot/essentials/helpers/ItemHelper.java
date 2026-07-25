@@ -23,6 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.*;
+
 /**
  * A utility class for creating and managing custom Minecraft ItemStack objects with extended metadata support.
  * @author rellu
@@ -412,7 +414,7 @@ public class ItemHelper implements IItemHelper {
             if (Objects.requireNonNull(meta).hasDisplayName()) {
                 name = meta.getDisplayName();
             } else {
-                name = "ERROR_404_NAME_NOT_FOUND_EXCEPTION";
+                name = PLUGIN_EXCEPTION_ITEMHELPER_NAME_NOT_FOUND;
             }
         }
 
@@ -455,7 +457,7 @@ public class ItemHelper implements IItemHelper {
             dataOutput.close();
             return Base64.getEncoder().encodeToString(outputStream.toByteArray());
         } catch (Exception e) {
-            throw new IllegalStateException("Unable to save item stack.", e);
+            throw new IllegalStateException(PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_SAVE_ITEMSTACK, e);
         }
     }
 
@@ -468,9 +470,9 @@ public class ItemHelper implements IItemHelper {
                 return (ItemStack) dataInput.readObject();
             }
         } catch (ClassNotFoundException e) {
-            throw new IOException("Unable to decode class type.", e);
+            throw new IOException(PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_DECODE_CLASS_TYPE, e);
         } catch (IllegalArgumentException e) {
-            throw new IOException("Invalid Base64 data: " + e.getMessage(), e);
+            throw new IOException(String.format(PLUGIN_EXCEPTION_ITEMHELPER_INVALID_BASE64_DATA, e.getMessage()), e);
         }
     }
 
