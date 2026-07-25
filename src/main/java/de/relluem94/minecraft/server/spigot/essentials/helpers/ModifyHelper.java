@@ -158,7 +158,6 @@ public class ModifyHelper {
         entry.getLocation().getBlock().setBlockData(entry.getData());
     }
 
-
     public static void addUndoHistory(Player p, List<ModifyHistoryEntry> history) {
         List<List<ModifyHistoryEntry>> playerUndoList = RelluEssentials.getInstance().undo.getOrDefault(p, new ArrayList<>());
         playerUndoList.add(history);
@@ -186,5 +185,4 @@ public class ModifyHelper {
             }
         }
     }
-
 }
