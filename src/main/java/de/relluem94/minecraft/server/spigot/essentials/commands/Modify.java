@@ -35,7 +35,7 @@ public class Modify implements CommandConstruct {
     public static final int MAX_RADIUS = 128;
     public static final int MAX_ITERATIONS = 1048576;
 
-    private final SubCommandRegistry subCommandRegistry;
+    private final SubCommandRegistry<SubCommand> subCommandRegistry;
 
     @Override
     public CommandsEnum[] getCommands() {
@@ -72,7 +72,7 @@ public class Modify implements CommandConstruct {
         SelectionResolver selectionResolver = new SelectionResolver();
         UndoHistoryManager undoHistoryManager = new UndoHistoryManager();
 
-        this.subCommandRegistry = new SubCommandRegistry(List.of(
+        this.subCommandRegistry = new SubCommandRegistry<>(List.of(
                 new CopyCommand(false, BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
                 new CopyCommand(true, BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
                 new CylinderCommand(BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
