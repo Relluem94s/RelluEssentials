@@ -29,7 +29,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 @CommandName("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")
 public class DevCommand implements CommandConstruct {
 
-    private final SubCommandRegistry subCommandRegistry;
+    private final SubCommandRegistry<SubCommand> subCommandRegistry;
 
     public DevCommand() {
         UndoHistoryManager undoHistoryManager = new UndoHistoryManager();
