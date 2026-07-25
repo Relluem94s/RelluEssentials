@@ -1,11 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc;
 
-import java.util.List;
-
-import org.bukkit.Material;
-import org.bukkit.entity.Villager.Profession;
-import org.bukkit.inventory.Inventory;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
@@ -13,6 +7,13 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.interfaces.INPC;
+import org.bukkit.Material;
+import org.bukkit.entity.Villager.Profession;
+import org.bukkit.inventory.Inventory;
+
+import java.util.List;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_NPC_UNIMPLEMENTED_METHOD;
 
 public class NPC implements INPC {
 
@@ -68,6 +69,6 @@ public class NPC implements INPC {
 
     @Override
     public Inventory getMainGUI() {
-        throw new UnsupportedOperationException("Unimplemented method 'getMainGUI'");
+        throw new UnsupportedOperationException(PLUGIN_EXCEPTION_NPC_UNIMPLEMENTED_METHOD);
     }
 }

@@ -1,18 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_CLICK;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_NAME;
-
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCustomInputException;
 import lombok.Getter;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.HangingSign;
 import org.bukkit.block.data.type.Sign;
 import org.bukkit.block.data.type.WallHangingSign;
 import org.bukkit.block.data.type.WallSign;
-
-import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCustomInputException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_CLICK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT;
 
 /**
  *
@@ -41,7 +41,7 @@ public class SignHelper {
         this.line1 = signActionType.getDisplayName();
         this.line2 = "";
         if (signActionType.isCustomInput()) {
-            throw new SignMissingCustomInputException("");
+            throw new SignMissingCustomInputException(PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT);
         }
     }
 
@@ -85,9 +85,9 @@ public class SignHelper {
         private final String displayName;
         private final boolean customInput;
 
-        ActionType(int id, String displayName, boolean test) {
+        ActionType(int id, String displayName, boolean customInput) {
             this.id = id;
-            this.customInput = test;
+            this.customInput = customInput;
             this.displayName = displayName;
         }
 
