@@ -1,15 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.events.*;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.DamgeNPC;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.InteractNPC;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.InventoryClickNPC;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.PlaceNPC;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 public class EventManager implements IEnable{
     
@@ -29,7 +32,10 @@ public class EventManager implements IEnable{
         pm.registerEvents(new BlockPlace(), RelluEssentials.getInstance());                 eventCount++;
         pm.registerEvents(new BetterMobs(), RelluEssentials.getInstance());                 eventCount++;
         pm.registerEvents(new BetterSoil(), RelluEssentials.getInstance());                 eventCount++;
-        pm.registerEvents(new BetterNPC(), RelluEssentials.getInstance());                  eventCount++;
+        pm.registerEvents(new DamgeNPC(), RelluEssentials.getInstance());                   eventCount++;
+        pm.registerEvents(new InteractNPC(), RelluEssentials.getInstance());                eventCount++;
+        pm.registerEvents(new InventoryClickNPC(), RelluEssentials.getInstance());          eventCount++;
+        pm.registerEvents(new PlaceNPC(), RelluEssentials.getInstance());                   eventCount++;
         pm.registerEvents(new BetterSafety(), RelluEssentials.getInstance());               eventCount++;
         pm.registerEvents(new BetterLock(), RelluEssentials.getInstance());                 eventCount++;
         pm.registerEvents(new SkullInfo(), RelluEssentials.getInstance());                  eventCount++;

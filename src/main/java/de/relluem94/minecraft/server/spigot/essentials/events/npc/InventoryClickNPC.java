@@ -1,39 +1,33 @@
-package de.relluem94.minecraft.server.spigot.essentials.events;
+package de.relluem94.minecraft.server.spigot.essentials.events.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.*;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
-import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import org.bukkit.Location;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
@@ -45,82 +39,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Namespac
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 
 
-public class BetterNPC implements Listener {
-
-    @EventHandler
-    public void onNPCPlacement(@NotNull PlayerInteractEvent e) {
-        if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
-            if((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && (e.getItem() != null && new WorldSelector().equalsName(e.getItem()))){
-                Worlds.openWorldMenu(e.getPlayer());
-                e.setCancelled(true);
-            }
-            else if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) && (e.getItem() != null && RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().contains(e.getItem()))){
-                e.setCancelled(true);
-
-                if(e.getClickedBlock() == null){
-                    return;
-                }
-
-                Location location = e.getClickedBlock().getLocation().add(0, 1, 0);
-                location.setYaw(e.getPlayer().getLocation().getYaw());
-
-                for(int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().size(); i++){
-                    if(RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().get(i).equals(e.getItem())){
-                        NPCHelper nh = new NPCHelper(location, RelluEssentials.getInstance().getNpcAPI().getNPC(i));
-                        nh.spawn();
-                        e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SPAWN, nh.getCustomName()));
-                    }
-                }
-            }
-        }
-    }
-
-
-    @EventHandler
-    public void onPlayerInteractEntity (PlayerInteractEntityEvent e) {
-        Player p = e.getPlayer();
-        if(e.getRightClicked() instanceof Villager){
-            if(e.getRightClicked().getCustomName() != null) {
-                String customName = e.getRightClicked().getCustomName();
-                for(int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCNameList().size(); i++){
-                    if(RelluEssentials.getInstance().getNpcAPI().getNPCNameList().get(i).equals(customName)){
-                        if(customName.equals(RelluEssentials.getBanker().getName())){
-                            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                            BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(pe.getId());
-                            if(bae != null){
-                                InventoryHelper.openInventory(p, RelluEssentials.getBanker().getMainGUI());
-                            }
-                            else{
-                                BankTierEntry bte = RelluEssentials.getInstance().getDatabaseHelper().getBankTier(1);
-                                if(pe.getPurse() > bte.getCost()){
-                                    pe.setPurse(pe.getPurse() - bte.getCost());
-                                    pe.setUpdatedBy(pe.getId());
-                                    pe.setHasToBeUpdated(true);
-            
-                                    bae = new BankAccountEntry();
-                                    bae.setValue(0);
-                                    bae.setTier(bte);
-                                    bae.setPlayerId(pe.getId());
-                
-                                    RelluEssentials.getInstance().getDatabaseHelper().insertBankAccount(bae);
-                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT));
-                                }
-                                else{
-                                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS, PLUGIN_NAME_MONEY, PLUGIN_NAME_MONEY, bte.getCost()));
-                                }
-                            }
-                            e.setCancelled(true);
-                        }
-                        else{
-                            InventoryHelper.openInventory(p, RelluEssentials.getInstance().getNpcAPI().getNPC(i).getMainGUI());
-                            e.setCancelled(true);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+public class InventoryClickNPC implements Listener {
 
     private void trade(ItemStack is, Inventory inv, Player p, PlayerEntry pe, int slot, boolean isRightClicked){
         if(CustomItems.npc_gui_close.equalsExact(is)){
@@ -403,30 +322,6 @@ public class BetterNPC implements Listener {
                 }
                 e.setCancelled(true);
             }
-        }
-    }
-
-    @EventHandler
-    public void onNPCDamage(@NotNull EntityDamageByEntityEvent e){
-        if(!(e.getEntity() instanceof Villager)){
-            return;
-        }
-
-        if(e.getEntity().getCustomName() == null){
-            return;
-        }
-
-        if(!RelluEssentials.getInstance().getNpcAPI().getNPCNameList().contains(e.getEntity().getCustomName())){
-            return;
-        }
-
-        if(!(e.getDamager() instanceof Player p)){
-            e.setCancelled(true);
-            return;
-        }
-
-        if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-            e.setCancelled(true);
         }
     }
 }
