@@ -236,6 +236,60 @@ class WallCommandTest {
     }
 
     @Test
+    void execute_withBlockOnMinZWall_addsToHistory() {
+        Selection selection = buildSelection(0, 64, 0, 4, 66, 4);
+        when(selectionResolver.resolve(player)).thenReturn(selection);
+
+        Block minZWallBlock = buildBlock(Material.AIR, 2, 65, 0);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+             MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
+             MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
+
+            modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
+                java.util.function.Consumer<Block> consumer = invocation.getArgument(1);
+                consumer.accept(minZWallBlock);
+                return null;
+            });
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            wallCommand.execute(player, new String[]{"wall", "STONE"});
+
+            ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
+            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            assert historyCaptor.getValue().size() == 1;
+        }
+    }
+
+    @Test
+    void execute_withBlockOnMaxZWall_addsToHistory() {
+        Selection selection = buildSelection(0, 64, 0, 4, 66, 4);
+        when(selectionResolver.resolve(player)).thenReturn(selection);
+
+        Block maxZWallBlock = buildBlock(Material.AIR, 2, 65, 4);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+             MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
+             MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
+
+            modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
+                java.util.function.Consumer<Block> consumer = invocation.getArgument(1);
+                consumer.accept(maxZWallBlock);
+                return null;
+            });
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            wallCommand.execute(player, new String[]{"wall", "STONE"});
+
+            ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
+            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            assert historyCaptor.getValue().size() == 1;
+        }
+    }
+
+    @Test
     void matches_withCorrectArgs_returnsTrue() {
         assert wallCommand.matches(new String[]{"wall", "STONE"});
     }
