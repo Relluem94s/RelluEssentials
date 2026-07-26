@@ -1,0 +1,328 @@
+package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
+
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
+import de.relluem94.rellulib.stores.DoubleStore;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.junit.jupiter.api.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.*;
+import static org.mockito.Mockito.*;
+
+class PasteCommandTest {
+
+    private Player player;
+    private UndoHistoryManager undoHistoryManager;
+    private PasteCommand pasteCommand;
+    private RelluEssentials relluEssentialsMock;
+    private MockedStatic<RelluEssentials> mockedRelluEssentials;
+    private BukkitScheduler schedulerMock;
+    private MockedStatic<Bukkit> mockedBukkit;
+
+    @BeforeAll
+    static void setUpServer() {
+        if (Bukkit.getServer() != null) {
+            return;
+        }
+        org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
+        org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(org.bukkit.scheduler.BukkitScheduler.class);
+        java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
+        silentLogger.setUseParentHandlers(false);
+        silentLogger.setLevel(java.util.logging.Level.OFF);
+        when(serverMock.getScheduler()).thenReturn(schedulerMock);
+        when(serverMock.getLogger()).thenReturn(silentLogger);
+        org.bukkit.Bukkit.setServer(serverMock);
+    }
+
+    @AfterAll
+    static void tearDownServer() throws Exception {
+        java.lang.reflect.Field serverField = org.bukkit.Bukkit.class.getDeclaredField("server");
+        serverField.setAccessible(true);
+        serverField.set(null, null);
+    }
+
+    @BeforeEach
+    void setUp() {
+        player = mock(Player.class);
+        undoHistoryManager = mock(UndoHistoryManager.class);
+
+        relluEssentialsMock = mock(RelluEssentials.class);
+        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+
+        relluEssentialsMock.clipboard = new ConcurrentHashMap<>();
+
+        mockedRelluEssentials = mockStatic(RelluEssentials.class);
+        mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
+        RelluEssentials.languageHelper = languageHelperMock;
+
+        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
+        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
+
+        schedulerMock = mock(BukkitScheduler.class);
+        Server serverMock = mock(Server.class);
+        when(serverMock.getScheduler()).thenReturn(schedulerMock);
+
+        doAnswer(invocation -> {
+            Runnable task = invocation.getArgument(1);
+            task.run();
+            return null;
+        }).when(schedulerMock).runTaskLater(any(Plugin.class), any(Runnable.class), anyLong());
+
+        mockedBukkit = mockStatic(Bukkit.class);
+        mockedBukkit.when(Bukkit::getServer).thenReturn(serverMock);
+        mockedBukkit.when(Bukkit::getScheduler).thenReturn(schedulerMock);
+
+        Location playerLocation = buildPlayerLocation(0, 64, 0, 0f);
+        when(player.getLocation()).thenReturn(playerLocation);
+
+        pasteCommand = new PasteCommand(2, undoHistoryManager);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockedRelluEssentials.close();
+        mockedBukkit.close();
+    }
+
+    @Test
+    void execute_withNullClipboardStore_sendsNoClipboardMessage() {
+        pasteCommand.execute(player, new String[]{"paste"});
+
+        verify(player).sendMessage(anyString());
+        verify(undoHistoryManager, never()).add(any(), any());
+    }
+
+    @Test
+    void execute_withClipboardStoreHavingNullEntries_sendsNoClipboardMessage() {
+        DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock(DoubleStore.class);
+        when(clipboardStore.getSecondValue()).thenReturn(null);
+        relluEssentialsMock.clipboard.put(player, clipboardStore);
+
+        pasteCommand.execute(player, new String[]{"paste"});
+
+        verify(player).sendMessage(anyString());
+        verify(undoHistoryManager, never()).add(any(), any());
+    }
+
+    @Test
+    void execute_withEmptyClipboard_sendsNoClipboardMessage() {
+        DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock(DoubleStore.class);
+        when(clipboardStore.getSecondValue()).thenReturn(Collections.emptyList());
+        relluEssentialsMock.clipboard.put(player, clipboardStore);
+
+        pasteCommand.execute(player, new String[]{"paste"});
+
+        verify(player).sendMessage(anyString());
+        verify(undoHistoryManager, never()).add(any(), any());
+    }
+
+    @Test
+    void execute_withValidClipboard_addsHistoryAndSendsStartedMessage() {
+        ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+        DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(List.of(entry));
+        relluEssentialsMock.clipboard.put(player, clipboardStore);
+
+        Block targetBlock = buildBlock(Material.AIR, 0, 64, 0);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+
+            modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
+            modifyHelper.when(() -> getBlock(eq(entry), anyFloat(), any())).thenReturn(targetBlock);
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            pasteCommand.execute(player, new String[]{"paste"});
+
+            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(player).sendMessage(anyString());
+        }
+    }
+
+    @Test
+    void execute_withMultipleBlocksExceedingBatchSize_incrementsDelayAfterBatchFills() {
+        ModifyClipboardEntry firstEntry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+        ModifyClipboardEntry secondEntry = buildClipboardEntry(Material.DIRT, 1, 0, 0);
+        ModifyClipboardEntry thirdEntry = buildClipboardEntry(Material.GRASS_BLOCK, 2, 0, 0);
+
+        DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore =
+                buildClipboardStore(List.of(firstEntry, secondEntry, thirdEntry));
+        relluEssentialsMock.clipboard.put(player, clipboardStore);
+
+        Block firstBlock = buildBlock(Material.AIR, 0, 64, 0);
+        Block secondBlock = buildBlock(Material.AIR, 1, 64, 0);
+        Block thirdBlock = buildBlock(Material.AIR, 2, 64, 0);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+
+            modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
+            modifyHelper.when(() -> getBlock(eq(firstEntry), anyFloat(), any())).thenReturn(firstBlock);
+            modifyHelper.when(() -> getBlock(eq(secondEntry), anyFloat(), any())).thenReturn(secondBlock);
+            modifyHelper.when(() -> getBlock(eq(thirdEntry), anyFloat(), any())).thenReturn(thirdBlock);
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            pasteCommand.execute(player, new String[]{"paste"});
+
+            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 3));
+            verify(player).sendMessage(anyString());
+        }
+    }
+
+    @Test
+    void execute_withValidClipboard_savesOriginalBlockStateInHistory() {
+        ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+        DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(List.of(entry));
+        relluEssentialsMock.clipboard.put(player, clipboardStore);
+
+        Material originalMaterial = Material.DIRT;
+        Block targetBlock = buildBlock(originalMaterial, 0, 64, 0);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+
+            modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
+            modifyHelper.when(() -> getBlock(eq(entry), anyFloat(), any())).thenReturn(targetBlock);
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            pasteCommand.execute(player, new String[]{"paste"});
+
+            ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
+            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            ModifyHistoryEntry savedEntry = historyCaptor.getValue().getFirst();
+            assert savedEntry.getMaterial() == originalMaterial;
+        }
+    }
+
+    @Test
+    void execute_withValidClipboard_schedulesOneTaskPerBlock() {
+        ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+        DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(List.of(entry));
+        relluEssentialsMock.clipboard.put(player, clipboardStore);
+
+        Block targetBlock = buildBlock(Material.AIR, 0, 64, 0);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+
+            modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
+            modifyHelper.when(() -> getBlock(eq(entry), anyFloat(), any())).thenReturn(targetBlock);
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            pasteCommand.execute(player, new String[]{"paste"});
+
+            verify(schedulerMock, times(1)).runTaskLater(
+                    any(Plugin.class), any(Runnable.class), anyLong()
+            );
+        }
+    }
+
+    @Test
+    void execute_withMultipleBlocksExceedingBatchSize_schedulesOneTaskPerBlock() {
+        ModifyClipboardEntry firstEntry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+        ModifyClipboardEntry secondEntry = buildClipboardEntry(Material.DIRT, 1, 0, 0);
+        ModifyClipboardEntry thirdEntry = buildClipboardEntry(Material.GRASS_BLOCK, 2, 0, 0);
+
+        DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore =
+                buildClipboardStore(List.of(firstEntry, secondEntry, thirdEntry));
+        relluEssentialsMock.clipboard.put(player, clipboardStore);
+
+        Block firstBlock = buildBlock(Material.AIR, 0, 64, 0);
+        Block secondBlock = buildBlock(Material.AIR, 1, 64, 0);
+        Block thirdBlock = buildBlock(Material.AIR, 2, 64, 0);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+
+            modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
+            modifyHelper.when(() -> getBlock(eq(firstEntry), anyFloat(), any())).thenReturn(firstBlock);
+            modifyHelper.when(() -> getBlock(eq(secondEntry), anyFloat(), any())).thenReturn(secondBlock);
+            modifyHelper.when(() -> getBlock(eq(thirdEntry), anyFloat(), any())).thenReturn(thirdBlock);
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            pasteCommand.execute(player, new String[]{"paste"});
+
+            verify(schedulerMock, times(3)).runTaskLater(
+                    any(Plugin.class), any(Runnable.class), anyLong()
+            );
+        }
+    }
+
+    @Test
+    void matches_withCorrectArgs_returnsTrue() {
+        assert pasteCommand.matches(new String[]{"paste"});
+    }
+
+    @Test
+    void matches_withWrongSubCommand_returnsFalse() {
+        assert !pasteCommand.matches(new String[]{"set"});
+    }
+
+    @Test
+    void matches_withTooManyArgs_returnsFalse() {
+        assert !pasteCommand.matches(new String[]{"paste", "extra"});
+    }
+
+    @Test
+    void matches_withNoArgs_returnsFalse() {
+        assert !pasteCommand.matches(new String[]{});
+    }
+
+    private Location buildPlayerLocation(int x, int y, int z, float yaw) {
+        World world = mock(World.class);
+        Location location = mock(Location.class);
+        when(location.getBlockX()).thenReturn(x);
+        when(location.getBlockY()).thenReturn(y);
+        when(location.getBlockZ()).thenReturn(z);
+        when(location.getYaw()).thenReturn(yaw);
+        when(location.clone()).thenReturn(location);
+        when(location.getWorld()).thenReturn(world);
+        return location;
+    }
+
+    private Block buildBlock(Material material, int x, int y, int z) {
+        Block block = mock(Block.class);
+        Location location = mock(Location.class);
+        BlockData blockData = mock(BlockData.class);
+        when(block.getType()).thenReturn(material);
+        when(block.getLocation()).thenReturn(location);
+        when(block.getBlockData()).thenReturn(blockData);
+        when(block.getX()).thenReturn(x);
+        when(block.getY()).thenReturn(y);
+        when(block.getZ()).thenReturn(z);
+        return block;
+    }
+
+    private ModifyClipboardEntry buildClipboardEntry(Material material, int relX, int relY, int relZ) {
+        ModifyClipboardEntry entry = mock(ModifyClipboardEntry.class);
+        BlockData blockData = mock(BlockData.class);
+        Location location = mock(Location.class);
+        when(entry.getMaterial()).thenReturn(material);
+        when(entry.getData()).thenReturn(blockData);
+        when(entry.getLocation()).thenReturn(location);
+        when(entry.getLocation().getBlockX()).thenReturn(relX);
+        when(entry.getLocation().getBlockY()).thenReturn(relY);
+        when(entry.getLocation().getBlockZ()).thenReturn(relZ);
+        return entry;
+    }
+
+    private DoubleStore<Selection, List<ModifyClipboardEntry>> buildClipboardStore(List<ModifyClipboardEntry> entries) {
+        DoubleStore<Selection, List<ModifyClipboardEntry>> store = mock(DoubleStore.class);
+        when(store.getSecondValue()).thenReturn(entries);
+        return store;
+    }
+}

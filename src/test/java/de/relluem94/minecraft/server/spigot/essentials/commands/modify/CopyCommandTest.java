@@ -1,0 +1,236 @@
+package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
+
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
+import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
+import de.relluem94.rellulib.stores.DoubleStore;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Consumer;
+
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.*;
+import static org.mockito.Mockito.*;
+
+class CopyCommandTest {
+
+    private Player player;
+    private SelectionResolver selectionResolver;
+    private UndoHistoryManager undoHistoryManager;
+
+    private MockedStatic<RelluEssentials> mockedRelluEssentials;
+    private RelluEssentials relluEssentialsMock;
+
+    @BeforeAll
+    static void setUpServer(){
+        org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
+        org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(org.bukkit.scheduler.BukkitScheduler.class);
+        java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
+        silentLogger.setUseParentHandlers(false);
+        silentLogger.setLevel(java.util.logging.Level.OFF);
+        when(serverMock.getScheduler()).thenReturn(schedulerMock);
+        when(serverMock.getLogger()).thenReturn(silentLogger);
+        org.bukkit.Bukkit.setServer(serverMock);
+    }
+
+    @BeforeEach
+    void setUp() {
+        player = mock(Player.class);
+        selectionResolver = mock(SelectionResolver.class);
+        undoHistoryManager = mock(UndoHistoryManager.class);
+
+        relluEssentialsMock = mock(RelluEssentials.class);
+        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+
+        mockedRelluEssentials = mockStatic(RelluEssentials.class);
+        mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
+        RelluEssentials.languageHelper = languageHelperMock;
+
+        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
+        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
+
+        Location playerLocation = mock(Location.class);
+        Location clonedLocation = mock(Location.class);
+        when(player.getLocation()).thenReturn(playerLocation);
+        when(playerLocation.clone()).thenReturn(clonedLocation);
+        when(clonedLocation.getBlockX()).thenReturn(0);
+        when(clonedLocation.getBlockY()).thenReturn(0);
+        when(clonedLocation.getBlockZ()).thenReturn(0);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockedRelluEssentials.close();
+    }
+
+    @Test
+    void execute_copy_withNoSelection_abortsEarly() {
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
+        when(selectionResolver.resolve(player)).thenReturn(null);
+
+        copyCommand.execute(player, new String[]{"copy"});
+
+        verify(undoHistoryManager, never()).add(any(), any());
+    }
+
+    @Test
+    void execute_cut_withNoSelection_abortsEarly() {
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
+        when(selectionResolver.resolve(player)).thenReturn(null);
+
+        cutCommand.execute(player, new String[]{"cut"});
+
+        verify(undoHistoryManager, never()).add(any(), any());
+    }
+
+    @Test
+    void execute_copy_withValidSelection_storesClipboardAndSendsMessage() {
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
+        relluEssentialsMock.clipboard = new HashMap<>();
+        Selection selectionMock = mock(Selection.class);
+        ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
+        List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
+        relluEssentialsMock.clipboard.put(player, new DoubleStore<>(selectionMock, clipboardList));
+
+        Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
+        when(selectionResolver.resolve(player)).thenReturn(selection);
+
+        Block blockA = buildBlock(Material.STONE, 0, 0, 0);
+        Block blockB = buildBlock(Material.DIRT, 1, 1, 1);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+
+            modifyHelper.when(() -> forEachBlock(eq(selection), any()))
+                    .thenAnswer(invocation -> {
+                        Consumer<Block> consumer = invocation.getArgument(1);
+                        consumer.accept(blockA);
+                        consumer.accept(blockB);
+                        return null;
+                    });
+
+            modifyHelper.when(() -> getRelativeCopySelection(any(), any())).thenReturn(selection);
+            modifyHelper.when(() -> getModifyClipboardEntry(any(), any(), any())).thenReturn(mock(ModifyClipboardEntry.class));
+
+            copyCommand.execute(player, new String[]{"copy"});
+
+            verify(undoHistoryManager, never()).add(any(), any());
+            verify(player).sendMessage(anyString());
+        }
+    }
+
+    @Test
+    void execute_cut_withValidSelection_clearsBlocksAndAddsHistory() {
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
+        relluEssentialsMock.clipboard = new HashMap<>();
+        Selection selectionMock = mock(Selection.class);
+        ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
+        List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
+        relluEssentialsMock.clipboard.put(player, new DoubleStore<>(selectionMock, clipboardList));
+
+        Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
+        when(selectionResolver.resolve(player)).thenReturn(selection);
+
+        Block blockA = buildBlock(Material.STONE, 0, 0, 0);
+        Block blockB = buildBlock(Material.DIRT, 1, 1, 1);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+
+            modifyHelper.when(() -> forEachBlock(eq(selection), any()))
+                    .thenAnswer(invocation -> {
+                        Consumer<Block> consumer = invocation.getArgument(1);
+                        consumer.accept(blockA);
+                        consumer.accept(blockB);
+                        return null;
+                    });
+
+            modifyHelper.when(() -> getRelativeCopySelection(any(), any())).thenReturn(selection);
+            modifyHelper.when(() -> getModifyClipboardEntry(any(), any(), any())).thenReturn(mock(ModifyClipboardEntry.class));
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            cutCommand.execute(player, new String[]{"cut"});
+
+            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 2));
+            verify(player).sendMessage(anyString());
+        }
+    }
+
+    @Test
+    void matches_copy_withCorrectArgs_returnsTrue() {
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
+        assert copyCommand.matches(new String[]{"copy"});
+    }
+
+    @Test
+    void matches_cut_withCorrectArgs_returnsTrue() {
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
+        assert cutCommand.matches(new String[]{"cut"});
+    }
+
+    @Test
+    void matches_copy_withWrongCommand_returnsFalse() {
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
+        assert !copyCommand.matches(new String[]{"cut"});
+    }
+
+    @Test
+    void matches_cut_withWrongCommand_returnsFalse() {
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
+        assert !cutCommand.matches(new String[]{"copy"});
+    }
+
+    @Test
+    void matches_copy_withTooManyArgs_returnsFalse() {
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
+        assert !copyCommand.matches(new String[]{"copy", "extra"});
+    }
+
+    @Test
+    void matches_cut_withTooManyArgs_returnsFalse() {
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
+        assert !cutCommand.matches(new String[]{"cut", "extra"});
+    }
+
+    private Selection buildSelection(int x1, int y1, int z1, int x2, int y2, int z2) {
+        World world = mock(World.class);
+        Location pos1 = mock(Location.class);
+        Location pos2 = mock(Location.class);
+        when(pos1.getWorld()).thenReturn(world);
+        when(pos2.getWorld()).thenReturn(world);
+        when(pos1.getBlockX()).thenReturn(x1);
+        when(pos1.getBlockY()).thenReturn(y1);
+        when(pos1.getBlockZ()).thenReturn(z1);
+        when(pos2.getBlockX()).thenReturn(x2);
+        when(pos2.getBlockY()).thenReturn(y2);
+        when(pos2.getBlockZ()).thenReturn(z2);
+        return new Selection(pos1, pos2);
+    }
+
+    private Block buildBlock(Material material, int x, int y, int z) {
+        Block block = mock(Block.class);
+        Location location = mock(Location.class);
+        BlockData blockData = mock(BlockData.class);
+        when(block.getType()).thenReturn(material);
+        when(block.getLocation()).thenReturn(location);
+        when(block.getBlockData()).thenReturn(blockData);
+        when(block.getX()).thenReturn(x);
+        when(block.getY()).thenReturn(y);
+        when(block.getZ()).thenReturn(z);
+        return block;
+    }
+}

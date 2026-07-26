@@ -6,7 +6,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatch
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,9 +66,6 @@ class DatabaseHelperTest {
     @Mock
     private World world;
 
-    @Mock
-    private Server server;
-
     private DatabaseHelper databaseHelper;
 
     @BeforeEach
@@ -94,16 +90,24 @@ class DatabaseHelperTest {
 
 
 
-    private void stubBukkitServer() throws NoSuchFieldException, IllegalAccessException {
-        Field serverField = Bukkit.class.getDeclaredField("server");
-        serverField.setAccessible(true);
-        serverField.set(null, null);
-
-        when(server.getLogger()).thenReturn(Logger.getLogger("test"));
-        when(server.getWorld(anyString())).thenReturn(world);
-        Bukkit.setServer(server);
+    private void stubBukkitServer() {
+        if(Bukkit.getServer() != null){
+            return;
+        }
+        org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
+        java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
+        silentLogger.setUseParentHandlers(false);
+        silentLogger.setLevel(java.util.logging.Level.OFF);
+        when(serverMock.getLogger()).thenReturn(silentLogger);
+        org.bukkit.Bukkit.setServer(serverMock);
+        when(serverMock.getWorld(anyString())).thenReturn(world);
     }
 
+    private void tearDownBukkitServer() throws IllegalAccessException, NoSuchFieldException {
+        java.lang.reflect.Field serverField = org.bukkit.Bukkit.class.getDeclaredField("server");
+        serverField.setAccessible(true);
+        serverField.set(null, null);
+    }
 
     private void stubConnectionWithResultSet() throws SQLException, FileNotFoundException {
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
@@ -823,6 +827,7 @@ class DatabaseHelperTest {
         databaseHelper.insertLocation(locationEntry);
 
         verify(preparedStatement).execute();
+        tearDownBukkitServer();
     }
 
     @Test
@@ -987,6 +992,7 @@ class DatabaseHelperTest {
 
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
+        tearDownBukkitServer();
     }
 
     @Test
