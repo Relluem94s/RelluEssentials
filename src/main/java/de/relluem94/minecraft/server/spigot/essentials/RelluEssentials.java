@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.npc.DamgeNPC;
 import de.relluem94.minecraft.server.spigot.essentials.events.npc.InteractNPC;
 import de.relluem94.minecraft.server.spigot.essentials.events.npc.InventoryClickNPC;
 import de.relluem94.minecraft.server.spigot.essentials.events.npc.PlaceNPC;
+import de.relluem94.minecraft.server.spigot.essentials.events.protect.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
@@ -186,6 +187,13 @@ public class RelluEssentials extends JavaPlugin {
                     new EventWrapper(new InventoryClickNPC()),
                     new EventWrapper(new PlaceNPC()),
                     new EventWrapper(new BetterSafety()),
+                    new EventWrapper(new BlockPistonProtect()),
+                    new EventWrapper(new EntityBreakDoorProtect()),
+                    new EventWrapper(new InventoryMoveItemProtect()),
+                    new EventWrapper(new EntityExplodeProtect()),
+                    new EventWrapper(new BlockRedstoneProtect()),
+                    new EventWrapper(new BlockModifyProtect()),
+                    new EventWrapper(new PlayerInteractProtect()),
                     new EventWrapper(new BetterLock()),
                     new EventWrapper(new SkullInfo()),
                     new EventWrapper(new NoDeathMessage()),
