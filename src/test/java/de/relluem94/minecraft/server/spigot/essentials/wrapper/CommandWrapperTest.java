@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.wrapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,6 +29,9 @@ class CommandWrapperTest {
 
     private CommandWrapper commandWrapper;
     private CommandWrapper commandWrapperNoSubCommands;
+
+    @Mock
+    private CommandConstruct commandConstructWithRegistry;
 
     @BeforeEach
     void setUp() {
@@ -114,5 +119,12 @@ class CommandWrapperTest {
         initialisedField.setAccessible(true);
 
         assertFalse((boolean) initialisedField.get(wrapper));
+    }
+
+    @Test
+    void hasSubCommandsReturnsTrueWhenSubCommandRegistryIsPresent() {
+        when(commandConstructWithRegistry.getSubCommandRegistry()).thenReturn(Optional.of(mock(/* SubCommandRegistry class */)));
+        CommandWrapper wrapper = new CommandWrapper(commandConstructWithRegistry);
+        assertTrue(wrapper.hasSubCommands());
     }
 }
