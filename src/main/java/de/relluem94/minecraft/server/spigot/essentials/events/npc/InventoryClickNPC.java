@@ -1,0 +1,140 @@
+package de.relluem94.minecraft.server.spigot.essentials.events.npc;
+
+import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import lombok.NonNull;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
+
+public class InventoryClickNPC implements Listener {
+
+    private final NPCTradeHandler tradeHandler = new NPCTradeHandler();
+
+    private final Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
+            BankerHelper.npc_gui_deposit_5_percent,  (p, bae) -> BankerHelper.deposit(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p), p, bae, 5f),
+            BankerHelper.npc_gui_deposit_20_percent, (p, bae) -> BankerHelper.deposit(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p), p, bae, 20f),
+            BankerHelper.npc_gui_deposit_50_percent, (p, bae) -> BankerHelper.deposit(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p), p, bae, 50f),
+            BankerHelper.npc_gui_deposit_all,        (p, bae) -> BankerHelper.deposit(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p), p, bae, 100f),
+            BankerHelper.npc_gui_withdraw_5_percent, (p, bae) -> BankerHelper.withdraw(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p), p, bae, 5f),
+            BankerHelper.npc_gui_withdraw_20_percent,(p, bae) -> BankerHelper.withdraw(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p), p, bae, 20f),
+            BankerHelper.npc_gui_withdraw_50_percent,(p, bae) -> BankerHelper.withdraw(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p), p, bae, 50f),
+            BankerHelper.npc_gui_withdraw_all,       (p, bae) -> BankerHelper.withdraw(RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p), p, bae, 100f)
+    );
+
+    @EventHandler
+    public void onInventoryClickItem(@NonNull InventoryClickEvent e) {
+        if (!(e.getWhoClicked() instanceof Player player) || e.getCurrentItem() == null) return;
+
+        PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player);
+        String title = e.getView().getTitle();
+
+        if (title.equals(RelluEssentials.getBanker().getTitle())) {
+            handleBankerInventory(e, player, playerEntry);
+        } else if (RelluEssentials.getInstance().getNpcAPI().getNPCTraderTitleList().contains(title)) {
+            tradeHandler.handle(e.getCurrentItem(), e.getClickedInventory(), player, playerEntry, e.getSlot(), e.isRightClick());
+            e.setCancelled(true);
+        } else if (isNpcOrCustomHeadsInventory(title)) {
+            handleNpcOrCustomHeadsInventory(e, player);
+        } else if (title.equals(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds")) {
+            handleWorldsInventory(e, player);
+        }
+    }
+
+    private void handleBankerInventory(InventoryClickEvent e, Player player, PlayerEntry playerEntry) {
+        e.setCancelled(true);
+        ItemStack clickedItem = e.getCurrentItem();
+        BankAccountEntry bankAccount = RelluEssentials.getInstance().getDatabaseHelper().getPlayerBankAccount(playerEntry.getId());
+
+        if(clickedItem == null){
+            return;
+        }
+
+        if (BankerHelper.npc_gui_deposit.equalsName(clickedItem)) {
+            InventoryHelper.closeInventory(player);
+            InventoryHelper.openInventory(player, RelluEssentials.getBanker().getDepositGUI(playerEntry.getPurse()));
+        } else if (BankerHelper.npc_gui_balance_total.equalsName(clickedItem)) {
+            InventoryHelper.closeInventory(player);
+            player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL, StringHelper.formatDouble(bankAccount.getValue()), PLUGIN_NAME_MONEY));
+        } else if (BankerHelper.npc_gui_balance.equalsName(clickedItem)) {
+            InventoryHelper.closeInventory(player);
+            InventoryHelper.openInventory(player, RelluEssentials.getBanker().getBalanceGUI());
+        } else if (BankerHelper.npc_gui_withdraw.getCustomItem().getType().equals(clickedItem.getType())) {
+            InventoryHelper.closeInventory(player);
+            InventoryHelper.openInventory(player, RelluEssentials.getBanker().getWithdrawGUI(bankAccount.getValue()));
+        } else if (BankerHelper.UPGRADE_MATERIAL.equals(clickedItem.getType())) {
+            BankerHelper.upgradeAccount(clickedItem, player, playerEntry, bankAccount);
+        } else if (BankerHelper.npc_gui_balance_transactions.equalsExact(clickedItem)) {
+            handleTransactionHistory(player, bankAccount);
+        } else if (BankerHelper.npc_gui_upgrade.equalsExact(clickedItem)) {
+            InventoryHelper.closeInventory(player);
+            InventoryHelper.openInventory(player, RelluEssentials.getBanker().getUpgradeGUI());
+        } else if (CustomItems.npc_gui_close.equalsExact(clickedItem)) {
+            InventoryHelper.closeInventory(player);
+        } else {
+            bankerDepositActions.entrySet().stream()
+                    .filter(entry -> entry.getKey().equalsExact(clickedItem))
+                    .findFirst()
+                    .ifPresent(entry -> entry.getValue().accept(player, bankAccount));
+        }
+    }
+
+    private void handleTransactionHistory(Player player, BankAccountEntry bankAccount) {
+        InventoryHelper.closeInventory(player);
+        player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
+        List<BankTransactionEntry> transactions = RelluEssentials.getInstance().getDatabaseHelper().getTransactionsToBankFromPlayer(bankAccount.getId());
+        transactions.forEach(transaction -> player.sendMessage(
+                languageHelper.getWithPrefix(
+                        MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST,
+                        transaction.getValue() > 1 ? PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE : PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE,
+                        PLUGIN_COLOR_MONEY,
+                        StringHelper.formatDouble(transaction.getValue()),
+                        PLUGIN_NAME_MONEY,
+                        transaction.getCreated()
+                )
+        ));
+    }
+
+    private boolean isNpcOrCustomHeadsInventory(@NonNull String title) {
+        return title.equals(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs")
+                || title.equals(languageHelper.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE));
+    }
+
+    private void handleNpcOrCustomHeadsInventory(InventoryClickEvent e, Player player) {
+        e.setCancelled(true);
+        if(e.getCurrentItem() == null){
+            return;
+        }
+
+        if (!CustomItems.npc_gui_disabled.getCustomItem().equals(e.getCurrentItem())) {
+            player.getInventory().addItem(e.getCurrentItem().clone());
+        }
+    }
+
+    private void handleWorldsInventory(InventoryClickEvent e, Player player) {
+        e.setCancelled(true);
+        if (e.getCurrentItem() == null) return;
+        if (CustomItems.npc_gui_disabled.getCustomItem().equals(e.getCurrentItem())) return;
+        if (e.getCurrentItem().getItemMeta() == null) return;
+        teleportWorld(player, e.getCurrentItem().getItemMeta().getDisplayName());
+    }
+}
