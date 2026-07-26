@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import org.bukkit.command.CommandSender;
@@ -11,14 +12,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 public class Permission {
     private static PlayerAPI injectedPlayerAPI = null;
 
-    private Permission() {
+    Permission() {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
     }
 
     public static void injectPlayerAPI(PlayerAPI playerAPI) {
         injectedPlayerAPI = playerAPI;
     }
-
+    @Generated
     private static PlayerAPI resolvePlayerAPI() {
         if (injectedPlayerAPI != null) {
             return injectedPlayerAPI;
