@@ -123,6 +123,23 @@ class UndoCommandTest {
     }
 
     @Test
+    void execute_withHistoryEntries_callsUndoWithCorrectEntry() {
+        ModifyHistoryEntry entry = buildHistoryEntry();
+        List<ModifyHistoryEntry> history = List.of(entry);
+        when(undoHistoryManager.popLastHistory(player)).thenReturn(history);
+
+        doAnswer(invocation -> {
+            Runnable task = invocation.getArgument(1);
+            task.run();
+            return 0;
+        }).when(schedulerMock).scheduleSyncDelayedTask(any(Plugin.class), any(Runnable.class), anyLong());
+
+        undoCommand.execute(player, new String[]{"undo"});
+
+        mockedModifyHelper.verify(() -> ModifyHelper.undo(entry), times(1));
+    }
+
+    @Test
     void matches_withCorrectArgs_returnsTrue() {
         assert undoCommand.matches(new String[]{"undo"});
     }
