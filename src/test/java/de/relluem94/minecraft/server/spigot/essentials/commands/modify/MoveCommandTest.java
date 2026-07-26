@@ -5,13 +5,12 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.Se
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
 import org.junit.jupiter.api.*;
 import org.mockito.MockedStatic;
@@ -29,8 +28,10 @@ class MoveCommandTest {
     private SelectionResolver selectionResolver;
     private UndoHistoryManager undoHistoryManager;
     private MoveCommand moveCommand;
+    private BukkitScheduler schedulerMock;
 
     private MockedStatic<RelluEssentials> mockedRelluEssentials;
+    private MockedStatic<Bukkit> mockedBukkit;
 
     @BeforeAll
     static void setUpServer() {
@@ -70,12 +71,27 @@ class MoveCommandTest {
         when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
         when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
 
+        schedulerMock = mock(BukkitScheduler.class);
+        Server serverMock = mock(Server.class);
+        when(serverMock.getScheduler()).thenReturn(schedulerMock);
+
+        doAnswer(invocation -> {
+            Runnable task = invocation.getArgument(1);
+            task.run();
+            return null;
+        }).when(schedulerMock).runTaskLater(any(Plugin.class), any(Runnable.class), anyLong());
+
+        mockedBukkit = mockStatic(Bukkit.class);
+        mockedBukkit.when(Bukkit::getServer).thenReturn(serverMock);
+        mockedBukkit.when(Bukkit::getScheduler).thenReturn(schedulerMock);
+
         moveCommand = new MoveCommand(2, selectionResolver, undoHistoryManager);
     }
 
     @AfterEach
     void tearDown() {
         mockedRelluEssentials.close();
+        mockedBukkit.close();
     }
 
     @Test
@@ -175,6 +191,84 @@ class MoveCommandTest {
             verify(player).sendMessage((String) null);
         }
     }
+
+    @Test
+    void execute_withValidOffsetAndSelection_schedulesOneTaskPerBlock() {
+        Selection selection = buildSelection(0, 0, 0, 2, 2, 2);
+        when(selectionResolver.resolve(player)).thenReturn(selection);
+
+        Block sourceBlock = buildBlock(Material.STONE, 1, 1, 1);
+        Block targetBlock = buildBlock(Material.AIR, 2, 1, 1);
+
+        wireTargetBlock(sourceBlock, targetBlock, new Vector(1, 0, 0));
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+             MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper> playerHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
+
+            playerHelper.when(() -> getPlayerDirection(player)).thenReturn(new Vector(1, 0, 0));
+
+            modifyHelper.when(() -> forEachBlock(eq(selection), any()))
+                    .thenAnswer(invocation -> {
+                        Consumer<Block> consumer = invocation.getArgument(1);
+                        consumer.accept(sourceBlock);
+                        return null;
+                    });
+
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            moveCommand.execute(player, new String[]{"move", "1"});
+
+            verify(schedulerMock, times(1)).runTaskLater(
+                    any(Plugin.class), any(Runnable.class), anyLong()
+            );
+        }
+    }
+
+    @Test
+    void execute_withMultipleBlocksExceedingBlocksPerTick_schedulesOneTaskPerBlock() {
+        Selection selection = buildSelection(0, 0, 0, 4, 4, 4);
+        when(selectionResolver.resolve(player)).thenReturn(selection);
+
+        Block firstBlock = buildBlock(Material.STONE, 1, 1, 1);
+        Block secondBlock = buildBlock(Material.STONE, 2, 1, 1);
+        Block thirdBlock = buildBlock(Material.STONE, 3, 1, 1);
+
+        Block firstTarget = buildBlock(Material.AIR, 2, 1, 1);
+        Block secondTarget = buildBlock(Material.AIR, 3, 1, 1);
+        Block thirdTarget = buildBlock(Material.AIR, 4, 1, 1);
+
+        wireTargetBlock(firstBlock, firstTarget, new Vector(1, 0, 0));
+        wireTargetBlock(secondBlock, secondTarget, new Vector(1, 0, 0));
+        wireTargetBlock(thirdBlock, thirdTarget, new Vector(1, 0, 0));
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+             MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper> playerHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
+
+            playerHelper.when(() -> getPlayerDirection(player)).thenReturn(new Vector(1, 0, 0));
+
+            modifyHelper.when(() -> forEachBlock(eq(selection), any()))
+                    .thenAnswer(invocation -> {
+                        Consumer<Block> consumer = invocation.getArgument(1);
+                        consumer.accept(firstBlock);
+                        consumer.accept(secondBlock);
+                        consumer.accept(thirdBlock);
+                        return null;
+                    });
+
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            moveCommand.execute(player, new String[]{"move", "1"});
+
+            verify(schedulerMock, times(3)).runTaskLater(
+                    any(Plugin.class), any(Runnable.class), anyLong()
+            );
+        }
+    }
+
 
     @Test
     void matches_withCorrectArgs_returnsTrue() {

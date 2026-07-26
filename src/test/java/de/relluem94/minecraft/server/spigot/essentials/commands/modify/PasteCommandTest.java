@@ -7,13 +7,12 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
@@ -32,6 +31,8 @@ class PasteCommandTest {
     private PasteCommand pasteCommand;
     private RelluEssentials relluEssentialsMock;
     private MockedStatic<RelluEssentials> mockedRelluEssentials;
+    private BukkitScheduler schedulerMock;
+    private MockedStatic<Bukkit> mockedBukkit;
 
     @BeforeAll
     static void setUpServer() {
@@ -72,6 +73,20 @@ class PasteCommandTest {
         when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
         when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
 
+        schedulerMock = mock(BukkitScheduler.class);
+        Server serverMock = mock(Server.class);
+        when(serverMock.getScheduler()).thenReturn(schedulerMock);
+
+        doAnswer(invocation -> {
+            Runnable task = invocation.getArgument(1);
+            task.run();
+            return null;
+        }).when(schedulerMock).runTaskLater(any(Plugin.class), any(Runnable.class), anyLong());
+
+        mockedBukkit = mockStatic(Bukkit.class);
+        mockedBukkit.when(Bukkit::getServer).thenReturn(serverMock);
+        mockedBukkit.when(Bukkit::getScheduler).thenReturn(schedulerMock);
+
         Location playerLocation = buildPlayerLocation(0, 64, 0, 0f);
         when(player.getLocation()).thenReturn(playerLocation);
 
@@ -81,6 +96,7 @@ class PasteCommandTest {
     @AfterEach
     void tearDown() {
         mockedRelluEssentials.close();
+        mockedBukkit.close();
     }
 
     @Test
@@ -189,6 +205,60 @@ class PasteCommandTest {
             verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
             ModifyHistoryEntry savedEntry = historyCaptor.getValue().getFirst();
             assert savedEntry.getMaterial() == originalMaterial;
+        }
+    }
+
+    @Test
+    void execute_withValidClipboard_schedulesOneTaskPerBlock() {
+        ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+        DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(List.of(entry));
+        relluEssentialsMock.clipboard.put(player, clipboardStore);
+
+        Block targetBlock = buildBlock(Material.AIR, 0, 64, 0);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+
+            modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
+            modifyHelper.when(() -> getBlock(eq(entry), anyFloat(), any())).thenReturn(targetBlock);
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            pasteCommand.execute(player, new String[]{"paste"});
+
+            verify(schedulerMock, times(1)).runTaskLater(
+                    any(Plugin.class), any(Runnable.class), anyLong()
+            );
+        }
+    }
+
+    @Test
+    void execute_withMultipleBlocksExceedingBatchSize_schedulesOneTaskPerBlock() {
+        ModifyClipboardEntry firstEntry = buildClipboardEntry(Material.STONE, 0, 0, 0);
+        ModifyClipboardEntry secondEntry = buildClipboardEntry(Material.DIRT, 1, 0, 0);
+        ModifyClipboardEntry thirdEntry = buildClipboardEntry(Material.GRASS_BLOCK, 2, 0, 0);
+
+        DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore =
+                buildClipboardStore(List.of(firstEntry, secondEntry, thirdEntry));
+        relluEssentialsMock.clipboard.put(player, clipboardStore);
+
+        Block firstBlock = buildBlock(Material.AIR, 0, 64, 0);
+        Block secondBlock = buildBlock(Material.AIR, 1, 64, 0);
+        Block thirdBlock = buildBlock(Material.AIR, 2, 64, 0);
+
+        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+
+            modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
+            modifyHelper.when(() -> getBlock(eq(firstEntry), anyFloat(), any())).thenReturn(firstBlock);
+            modifyHelper.when(() -> getBlock(eq(secondEntry), anyFloat(), any())).thenReturn(secondBlock);
+            modifyHelper.when(() -> getBlock(eq(thirdEntry), anyFloat(), any())).thenReturn(thirdBlock);
+            modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+
+            pasteCommand.execute(player, new String[]{"paste"});
+
+            verify(schedulerMock, times(3)).runTaskLater(
+                    any(Plugin.class), any(Runnable.class), anyLong()
+            );
         }
     }
 
