@@ -5,7 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMapping
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
-import org.jspecify.annotations.NonNull;
+import lombok.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

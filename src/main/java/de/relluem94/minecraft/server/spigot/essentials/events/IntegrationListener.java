@@ -2,11 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.api.RelluEssentialsAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.RelluEssentialsIntegration;
+import lombok.NonNull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.PluginDisableEvent;
-import org.jspecify.annotations.NonNull;
+import org.bukkit.event.server.PluginEnableEvent;
 
 public class IntegrationListener implements Listener {
 

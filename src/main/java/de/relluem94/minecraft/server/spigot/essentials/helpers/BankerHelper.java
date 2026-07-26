@@ -8,13 +8,13 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import lombok.NonNull;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

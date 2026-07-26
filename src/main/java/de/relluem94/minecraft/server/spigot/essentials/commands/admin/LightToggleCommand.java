@@ -6,8 +6,8 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jspecify.annotations.NonNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 

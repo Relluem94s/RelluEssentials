@@ -4,10 +4,10 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.rellulib.stores.DoubleStore;
+import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jspecify.annotations.NonNull;
 
 public class RotateTestCommand implements SubCommand {
 

@@ -5,8 +5,8 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jspecify.annotations.NonNull;
 
 public class ToggleDamageInfoCommand implements SubCommand {
 

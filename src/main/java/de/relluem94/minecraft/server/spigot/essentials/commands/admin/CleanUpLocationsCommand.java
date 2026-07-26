@@ -5,8 +5,8 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import lombok.NonNull;
 import org.bukkit.entity.Player;
-import org.jspecify.annotations.NonNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.commands.admin.shared.AdminCommandHelper.cleanUpLocations;
