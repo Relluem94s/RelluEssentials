@@ -3,13 +3,13 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.MobHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jspecify.annotations.NonNull;
 
 public class CustomMobCommand implements SubCommand {
 

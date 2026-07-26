@@ -4,8 +4,8 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
-import lombok.NonNull;
 import org.bukkit.Material;
+import org.jspecify.annotations.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

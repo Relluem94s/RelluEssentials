@@ -6,7 +6,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -3,8 +3,8 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import lombok.NonNull;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NonNull;
 
 public class AddAutosmeltCommand implements SubCommand {
 
