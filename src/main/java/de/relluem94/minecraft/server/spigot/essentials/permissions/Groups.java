@@ -7,6 +7,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 /**
  * Utility class for managing permission groups.
  *
@@ -20,8 +22,21 @@ import org.jetbrains.annotations.Nullable;
  */
 public class Groups {
 
+    private static List<GroupEntry> injectedGroupEntries = null;
+
     private Groups() {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
+
+    public static void injectGroupEntries(List<GroupEntry> groupEntries) {
+        injectedGroupEntries = groupEntries;
+    }
+
+    private static List<GroupEntry> resolveGroupEntries() {
+        if (injectedGroupEntries != null) {
+            return injectedGroupEntries;
+        }
+        return RelluEssentials.getInstance().getGroupEntryList();
     }
 
     /**
@@ -31,17 +46,13 @@ public class Groups {
      * @return GroupEntry
      */
     public static @NotNull GroupEntry getGroup(String name) {
-        for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
-            if (ge.getName().equalsIgnoreCase(name)) {
-                return ge;
-            }
-        }
-        if(groupExists("user")){
-            return getGroup("user");
-        }
-        else{
-            return new GroupEntry(1, "user", "§8");
-        }
+        return resolveGroupEntries().stream()
+                .filter(ge -> ge.getName().equalsIgnoreCase(name))
+                .findFirst()
+                .orElseGet(() -> resolveGroupEntries().stream()
+                        .filter(ge -> ge.getName().equalsIgnoreCase("user"))
+                        .findFirst()
+                        .orElse(new GroupEntry(1, "user", "§8")));
     }
 
     /**
@@ -51,12 +62,8 @@ public class Groups {
      * @return {@code true} if the group exists, {@code false} otherwise
      */
     public static boolean groupExists(String name) {
-        for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
-            if (ge.getName().equalsIgnoreCase(name)) {
-                return true;
-            }
-        }
-        return false;
+        return resolveGroupEntries().stream()
+                .anyMatch(ge -> ge.getName().equalsIgnoreCase(name));
     }
 
     /**
@@ -67,12 +74,10 @@ public class Groups {
      * @return GroupEntry
      */
     public static @Nullable GroupEntry getGroup(int id) {
-        for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
-            if (ge.getId() == id) {
-                return ge;
-            }
-        }
-        return null;
+        return resolveGroupEntries().stream()
+                .filter(ge -> ge.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -85,7 +90,7 @@ public class Groups {
     public static boolean addGroup(@NotNull GroupEntry groupEntry) {
         if (!groupExists(groupEntry.getName())) {
             RelluEssentials.getInstance().getDatabaseHelper().insertGroup(groupEntry);
-            RelluEssentials.getInstance().groupEntryList.addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
+            RelluEssentials.getInstance().getGroupEntryList().addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
             return true;
         } else {
             return false;
