@@ -21,6 +21,4 @@ public class BlockProcessor {
             counter = 0;
         }
     }
-
-    public long getCurrentDelay() { return currentDelay; }
 }
