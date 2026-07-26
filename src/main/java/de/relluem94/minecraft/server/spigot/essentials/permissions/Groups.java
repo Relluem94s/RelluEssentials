@@ -1,12 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 
 /**
@@ -23,9 +23,43 @@ import java.util.List;
 public class Groups {
 
     private static List<GroupEntry> injectedGroupEntries = null;
+    private static GroupRepository injectedGroupRepository = null;
 
-    private Groups() {
+    Groups() {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
+
+    public static void injectGroupRepository(GroupRepository repository) {
+        injectedGroupRepository = repository;
+    }
+
+    @Generated
+    private static GroupRepository resolveGroupRepository() {
+        if (injectedGroupRepository != null) {
+            return injectedGroupRepository;
+        }
+
+        @Generated
+        class LocalGroupRepository implements GroupRepository {
+            private final RelluEssentials instance = RelluEssentials.getInstance();
+
+            @Override
+            public void insertGroup(GroupEntry groupEntry) {
+                instance.getDatabaseHelper().insertGroup(groupEntry);
+            }
+
+            @Override
+            public List<GroupEntry> getGroups() {
+                return instance.getDatabaseHelper().getGroups();
+            }
+
+            @Override
+            public void addAllGroups(List<GroupEntry> groups) {
+                instance.getGroupEntryList().addAll(groups);
+            }
+        }
+
+        return new LocalGroupRepository();
     }
 
     public static void injectGroupEntries(List<GroupEntry> groupEntries) {
@@ -89,8 +123,9 @@ public class Groups {
     @SuppressWarnings("unused")
     public static boolean addGroup(@NotNull GroupEntry groupEntry) {
         if (!groupExists(groupEntry.getName())) {
-            RelluEssentials.getInstance().getDatabaseHelper().insertGroup(groupEntry);
-            RelluEssentials.getInstance().getGroupEntryList().addAll(RelluEssentials.getInstance().getDatabaseHelper().getGroups());
+            GroupRepository repository = resolveGroupRepository();
+            repository.insertGroup(groupEntry);
+            repository.addAllGroups(repository.getGroups());
             return true;
         } else {
             return false;
