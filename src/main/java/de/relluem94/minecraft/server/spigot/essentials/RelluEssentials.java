@@ -76,7 +76,7 @@ public class RelluEssentials extends JavaPlugin {
 
     public static final Map<Player, Player> reply = new HashMap<>();
     public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
-    public final Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
+    public Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
     public final Map<Player, DoubleStore<Location, Location>> position = new HashMap<>();
     public final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
     public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);

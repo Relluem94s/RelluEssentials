@@ -93,9 +93,12 @@ public class FillCommand implements SubCommand {
             }
 
             for (int[] dir : directions) {
-                Location neighborLocation = new Location(block.getWorld(), block.getX() + dir[0], block.getY() + dir[1], block.getZ() + dir[2]);
+                int neighborX = block.getX() + dir[0];
+                int neighborY = block.getY() + dir[1];
+                int neighborZ = block.getZ() + dir[2];
+                Location neighborLocation = new Location(block.getWorld(), neighborX, neighborY, neighborZ);
                 if (visited.contains(neighborLocation)) continue;
-                Block neighbor = neighborLocation.getBlock();
+                Block neighbor = block.getWorld().getBlockAt(neighborX, neighborY, neighborZ);
                 if (!neighbor.isEmpty()) continue;
                 queue.add(neighbor);
                 visited.add(neighborLocation);
