@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.events.BetterLock;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
@@ -25,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.addRight;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.removeRight;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 @CommandName("marry")
@@ -102,11 +103,11 @@ public class Marry implements CommandConstruct {
 
         for(ProtectionEntry pre : protectionEntryList){ 
             if(pre.getCreatedBy() == firstPlayer.getId()){
-                BetterLock.addRight(target, pre, secondPlayer.getId(), true);
+                addRight(target, pre, secondPlayer.getId(), true);
             }
 
             if(pre.getCreatedBy() == secondPlayer.getId()){
-                BetterLock.addRight(player, pre, firstPlayer.getId(), true);
+                addRight(player, pre, firstPlayer.getId(), true);
             }
             
         }
@@ -143,11 +144,11 @@ public class Marry implements CommandConstruct {
 
             for(ProtectionEntry pre : protectionEntryList){
                 if(pre.getCreatedBy() == pe.getId()){
-                    BetterLock.removeRight(firstPlayer, pre, secondPlayerEntry.getId(), true);
+                    removeRight(firstPlayer, pre, secondPlayerEntry.getId(), true);
                 }
     
                 if(pre.getCreatedBy() == secondPlayerEntry.getId()){
-                    BetterLock.removeRight(pre, pe.getId());
+                    removeRight(pre, pe.getId());
                 }
                 
             }
