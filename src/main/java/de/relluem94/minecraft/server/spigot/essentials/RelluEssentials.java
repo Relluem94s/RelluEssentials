@@ -5,6 +5,15 @@ import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.api.*;
 import de.relluem94.minecraft.server.spigot.essentials.commands.*;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.events.*;
+import de.relluem94.minecraft.server.spigot.essentials.events.bag.BlockBreakBags;
+import de.relluem94.minecraft.server.spigot.essentials.events.bag.BlockDropItemBags;
+import de.relluem94.minecraft.server.spigot.essentials.events.bag.EntityPickupItemBags;
+import de.relluem94.minecraft.server.spigot.essentials.events.bag.InventoryClickBags;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.DamgeNPC;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.InteractNPC;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.InventoryClickNPC;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.PlaceNPC;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
@@ -12,6 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
 import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
+import de.relluem94.minecraft.server.spigot.essentials.wrapper.EventWrapper;
 import de.relluem94.rellulib.stores.DoubleStore;
 import lombok.Getter;
 import lombok.Setter;
@@ -86,67 +96,115 @@ public class RelluEssentials extends JavaPlugin {
     public final List<GroupEntry> groupEntryList = new ArrayList<>();
     @Getter
     public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
-    @Getter
-    public static final List<CommandWrapper> commandWrapperList = List.of(
-            new CommandWrapper(new Admin()),
-            new CommandWrapper(new AFK()),
-            new CommandWrapper(new Back()),
-            new CommandWrapper(new Bags()),
-            new CommandWrapper(new Broadcast()),
-            new CommandWrapper(new Cookies()),
-            new CommandWrapper(new CraftingBench()),
-            new CommandWrapper(new CustomHead()),
-            new CommandWrapper(new Day()),
-            new CommandWrapper(new Enderchest()),
-            new CommandWrapper(new Exit()),
-            new CommandWrapper(new Fly()),
-            new CommandWrapper(new GameModeAdventure()),
-            new CommandWrapper(new GameModeCreative()),
-            new CommandWrapper(new GameModeSpectator()),
-            new CommandWrapper(new GameModeSurvival()),
-            new CommandWrapper(new GameRules()),
-            new CommandWrapper(new God()),
-            new CommandWrapper(new Head()),
-            new CommandWrapper(new Heal()),
-            new CommandWrapper(new Home()),
-            new CommandWrapper(new Inventory()),
-            new CommandWrapper(new Marry()),
-            new CommandWrapper(new Message()),
-            new CommandWrapper(new Modify()),
-            new CommandWrapper(new More()),
-            new CommandWrapper(new Nick()),
-            new CommandWrapper(new Night()),
-            new CommandWrapper(new PermissionsGroup()),
-            new CommandWrapper(new PlayerInfo()),
-            new CommandWrapper(new PlayerList()),
-            new CommandWrapper(new PlayerWeather()),
-            new CommandWrapper(new Poke()),
-            new CommandWrapper(new Position()),
-            new CommandWrapper(new Print()),
-            new CommandWrapper(new Protect()),
-            new CommandWrapper(new Purse()),
-            new CommandWrapper(new Rain()),
-            new CommandWrapper(new Rename()),
-            new CommandWrapper(new Repair()),
-            new CommandWrapper(new Reply()),
-            new CommandWrapper(new Sign()),
-            new CommandWrapper(new Spawn()),
-            new CommandWrapper(new Speed()),
-            new CommandWrapper(new Storm()),
-            new CommandWrapper(new Sudo()),
-            new CommandWrapper(new Suicide()),
-            new CommandWrapper(new Sun()),
-            new CommandWrapper(new Team()),
-            new CommandWrapper(new Teleport()),
-            new CommandWrapper(new Title()),
-            new CommandWrapper(new Vanish()),
-            new CommandWrapper(new Warp()),
-            new CommandWrapper(new Where()),
-            new CommandWrapper(new Worlds()),
 
-            // THIS IS A DEV COMMAND
-            new CommandWrapper(new DevCommand())
-    );
+    private static List<CommandWrapper> commandWrapperList;
+    private static List<EventWrapper> eventWrapperList;
+
+    public static List<CommandWrapper> getCommandWrapperList() {
+        if (commandWrapperList == null) {
+            commandWrapperList = List.of(new CommandWrapper(new Admin()),
+                    new CommandWrapper(new AFK()),
+                    new CommandWrapper(new Back()),
+                    new CommandWrapper(new Bags()),
+                    new CommandWrapper(new Broadcast()),
+                    new CommandWrapper(new Cookies()),
+                    new CommandWrapper(new CraftingBench()),
+                    new CommandWrapper(new CustomHead()),
+                    new CommandWrapper(new Day()),
+                    new CommandWrapper(new Enderchest()),
+                    new CommandWrapper(new Exit()),
+                    new CommandWrapper(new Fly()),
+                    new CommandWrapper(new GameModeAdventure()),
+                    new CommandWrapper(new GameModeCreative()),
+                    new CommandWrapper(new GameModeSpectator()),
+                    new CommandWrapper(new GameModeSurvival()),
+                    new CommandWrapper(new GameRules()),
+                    new CommandWrapper(new God()),
+                    new CommandWrapper(new Head()),
+                    new CommandWrapper(new Heal()),
+                    new CommandWrapper(new Home()),
+                    new CommandWrapper(new Inventory()),
+                    new CommandWrapper(new Marry()),
+                    new CommandWrapper(new Message()),
+                    new CommandWrapper(new Modify()),
+                    new CommandWrapper(new More()),
+                    new CommandWrapper(new Nick()),
+                    new CommandWrapper(new Night()),
+                    new CommandWrapper(new PermissionsGroup()),
+                    new CommandWrapper(new PlayerInfo()),
+                    new CommandWrapper(new PlayerList()),
+                    new CommandWrapper(new PlayerWeather()),
+                    new CommandWrapper(new Poke()),
+                    new CommandWrapper(new Position()),
+                    new CommandWrapper(new Print()),
+                    new CommandWrapper(new Protect()),
+                    new CommandWrapper(new Purse()),
+                    new CommandWrapper(new Rain()),
+                    new CommandWrapper(new Rename()),
+                    new CommandWrapper(new Repair()),
+                    new CommandWrapper(new Reply()),
+                    new CommandWrapper(new Sign()),
+                    new CommandWrapper(new Spawn()),
+                    new CommandWrapper(new Speed()),
+                    new CommandWrapper(new Storm()),
+                    new CommandWrapper(new Sudo()),
+                    new CommandWrapper(new Suicide()),
+                    new CommandWrapper(new Sun()),
+                    new CommandWrapper(new Team()),
+                    new CommandWrapper(new Teleport()),
+                    new CommandWrapper(new Title()),
+                    new CommandWrapper(new Vanish()),
+                    new CommandWrapper(new Warp()),
+                    new CommandWrapper(new Where()),
+                    new CommandWrapper(new Worlds()),
+
+                    // THIS IS A DEV COMMAND
+                    new CommandWrapper(new DevCommand())
+            );
+        }
+        return commandWrapperList;
+    }
+
+    public static List<EventWrapper> getEventWrapperList() {
+        if (eventWrapperList == null) {
+            eventWrapperList = List.of(
+                    new EventWrapper(new BetterChatFormat()),
+                    new EventWrapper(new BetterWorlds()),
+                    new EventWrapper(new BetterPlayerJoin()),
+                    new EventWrapper(new BetterPlayerQuit()),
+                    new EventWrapper(new BetterBlockDrop()),
+                    new EventWrapper(new BetterLights()),
+                    new EventWrapper(new BlockBreakBags()),
+                    new EventWrapper(new BlockDropItemBags()),
+                    new EventWrapper(new InventoryClickBags()),
+                    new EventWrapper(new EntityPickupItemBags()),
+                    new EventWrapper(new BlockPlace()),
+                    new EventWrapper(new BetterMobs()),
+                    new EventWrapper(new BetterSoil()),
+                    new EventWrapper(new DamgeNPC()),
+                    new EventWrapper(new InteractNPC()),
+                    new EventWrapper(new InventoryClickNPC()),
+                    new EventWrapper(new PlaceNPC()),
+                    new EventWrapper(new BetterSafety()),
+                    new EventWrapper(new BetterLock()),
+                    new EventWrapper(new SkullInfo()),
+                    new EventWrapper(new NoDeathMessage()),
+                    new EventWrapper(new PlayerMove()),
+                    new EventWrapper(new MOTD()),
+                    new EventWrapper(new CloudSailor()),
+                    new EventWrapper(new SignActions()),
+                    new EventWrapper(new SignClick()),
+                    new EventWrapper(new SignEdit()),
+                    new EventWrapper(new ToolCrafting()),
+                    new EventWrapper(new CustomEnchantment()),
+                    new EventWrapper(new GrapplingHockEvent()),
+                    new EventWrapper(new PositionAxeListener()),
+                    new EventWrapper(new PreventCoinManipulation()),
+                    new EventWrapper(new IntegrationListener())
+            );
+        }
+        return eventWrapperList;
+    }
 
     public static synchronized RelluEssentials getInstance() {
         return instance;
