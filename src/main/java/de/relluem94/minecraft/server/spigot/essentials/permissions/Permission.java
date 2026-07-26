@@ -1,44 +1,54 @@
 package de.relluem94.minecraft.server.spigot.essentials.permissions;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.*;
 
 public class Permission {
+    private static PlayerAPI injectedPlayerAPI = null;
 
     private Permission() {
         throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+    }
+
+    public static void injectPlayerAPI(PlayerAPI playerAPI) {
+        injectedPlayerAPI = playerAPI;
+    }
+
+    private static PlayerAPI resolvePlayerAPI() {
+        if (injectedPlayerAPI != null) {
+            return injectedPlayerAPI;
+        }
+        return RelluEssentials.getInstance().getPlayerAPI();
     }
 
     /**
      * Checks if Player is Authorized Player has to be in a Group with id >=
      * group
      *
-     * @param p Player
-     * @param group long
+     * @param player Player
+     * @param groupId long
      * @return boolean
      */
-    public static boolean isAuthorized(Player p, long group) {
-        long id = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p).getGroup().getId();
-        return id >= group;
+    public static boolean isAuthorized(Player player, long groupId) {
+        long playerGroupId = resolvePlayerAPI().getPlayerEntry(player).getGroup().getId();
+        return playerGroupId >= groupId;
     }
 
     /**
      * Checks if CommandSender is Authorized
      *
      * @param sender CommandSender
-     * @param group long
+     * @param groupId long
      * @return boolean
      */
-    public static boolean isAuthorized(CommandSender sender, long group) {
+    public static boolean isAuthorized(CommandSender sender, long groupId) {
         if (isPlayer(sender)) {
-            return isAuthorized((Player) sender, group);
+            return isAuthorized((Player) sender, groupId);
         } else if (isCMDBlock(sender)) {
             return true;
         } else return isConsole(sender);
