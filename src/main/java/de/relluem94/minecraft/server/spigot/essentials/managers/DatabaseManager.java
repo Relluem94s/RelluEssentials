@@ -55,7 +55,7 @@ public class DatabaseManager implements IEnable{
         RelluEssentials.getInstance().setPlayerAPI(new PlayerAPI(dBH.getBags()));
         RelluEssentials.getInstance().setProtectionAPI(new ProtectionAPI(dBH.getProtectionLocks(), dBH.getProtections()));
         RelluEssentials.getInstance().setNpcAPI(new NPCAPI());
-        RelluEssentials.getInstance().getNpcAPI().init(dBH.getNPCs());
+        RelluEssentials.getInstance().getNpcAPI().init(dBH.getTraderNPCs());
         RelluEssentials.getInstance().setBagAPI(new BagAPI(dBH.getBagTypes()));
         RelluEssentials.getInstance().setBankAPI(new BankAPI(dBH.getBankTiers()));
         RelluEssentials.getInstance().setWarpAPI(new WarpAPI(dBH.getWarps()));

@@ -16,7 +16,7 @@ public class NPCService {
         this.loadedNPCs = new LinkedHashMap<>();
     }
 
-    public NPCOperationResult createNPC(String profileName, double x, double y, double z, String worldName) {
+    public NPCOperationResult createNPC(String profileName, double x, double y, double z, String worldName, int actorPlayerId) {
         NPCValidator.ValidationResult profileValidation = npcValidator.validateProfileName(profileName);
         if (!profileValidation.valid()) {
             return NPCOperationResult.failure(profileValidation.errorMessage());
@@ -31,13 +31,13 @@ public class NPCService {
         Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
         spawnedEntityUUID.ifPresent(npc::setEntityUUID);
 
-        npcRepository.save(npc);
+        npcRepository.save(npc, actorPlayerId);
         loadedNPCs.put(npc.getId(), npc);
 
         return NPCOperationResult.success(npc);
     }
 
-    public NPCOperationResult updateNPCProfile(UUID npcId, String newProfileName) {
+    public NPCOperationResult updateNPCProfile(UUID npcId, String newProfileName, int actorPlayerId) {
         NPC npc = loadedNPCs.get(npcId);
         if (npc == null) {
             return NPCOperationResult.failure("NPC with ID " + npcId + " not found.");
@@ -56,11 +56,11 @@ public class NPCService {
         Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
         spawnedEntityUUID.ifPresent(npc::setEntityUUID);
 
-        npcRepository.save(npc);
+        npcRepository.save(npc, actorPlayerId);
         return NPCOperationResult.success(npc);
     }
 
-    public NPCOperationResult updateNPCPosition(UUID npcId, double x, double y, double z) {
+    public NPCOperationResult updateNPCPosition(UUID npcId, double x, double y, double z, int actorPlayerId) {
         NPC npc = loadedNPCs.get(npcId);
         if (npc == null) {
             return NPCOperationResult.failure("NPC with ID " + npcId + " not found.");
@@ -82,11 +82,11 @@ public class NPCService {
         Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
         spawnedEntityUUID.ifPresent(npc::setEntityUUID);
 
-        npcRepository.save(npc);
+        npcRepository.save(npc, actorPlayerId);
         return NPCOperationResult.success(npc);
     }
 
-    public NPCOperationResult deleteNPC(UUID npcId) {
+    public NPCOperationResult deleteNPC(UUID npcId, int actorPlayerId) {
         NPC npc = loadedNPCs.get(npcId);
         if (npc == null) {
             return NPCOperationResult.failure("NPC with ID " + npcId + " not found.");
@@ -96,17 +96,17 @@ public class NPCService {
             npcSpawner.despawnMannequin(npc.getEntityUUID());
         }
 
-        npcRepository.delete(npcId);
+        npcRepository.delete(npcId, actorPlayerId);
         loadedNPCs.remove(npcId);
         return NPCOperationResult.success(null);
     }
 
-    public void loadAndRespawnAllNPCs() {
+    public void loadAndRespawnAllNPCs(int systemPlayerId) {
         List<NPC> persistedNPCs = npcRepository.loadAll();
         for (NPC npc : persistedNPCs) {
             Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
             spawnedEntityUUID.ifPresent(npc::setEntityUUID);
-            npcRepository.save(npc);
+            npcRepository.save(npc, systemPlayerId);
             loadedNPCs.put(npc.getId(), npc);
         }
     }

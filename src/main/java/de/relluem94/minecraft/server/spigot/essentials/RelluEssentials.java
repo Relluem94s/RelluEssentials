@@ -265,7 +265,7 @@ public class RelluEssentials extends JavaPlugin {
         new AutoSaveManager().enable();
         new BankManager().enable();
         new NPCManager().enable();
-        NPCRepository npcRepository = new NPCRepository(this);
+        NPCRepository npcRepository = new NPCRepository(databaseHelper);
         NPCSpawner npcSpawner = new NPCSpawner();
         NPCValidator npcValidator = new NPCValidator();
         this.npcService = new NPCService(npcRepository, npcSpawner, npcValidator);
@@ -277,7 +277,7 @@ public class RelluEssentials extends JavaPlugin {
 
         dm.afterWorldLoaded();
 
-        Bukkit.getScheduler().runTaskLater(this, () -> this.npcService.loadAndRespawnAllNPCs(), 20L);
+        Bukkit.getScheduler().runTaskLater(this, () -> this.npcService.loadAndRespawnAllNPCs(1), 20L);
 
     }
 

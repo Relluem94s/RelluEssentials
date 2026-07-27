@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class TraderNPCEntryTest {
+class TraderTraderNPCEntryTest {
 
-    private NPCEntry npcEntry;
+    private TraderNPCEntry traderNpcEntry;
 
     @Mock
     private Profession profession;
@@ -41,95 +41,95 @@ class TraderNPCEntryTest {
 
     @BeforeEach
     void setUp() {
-        npcEntry = new NPCEntry();
+        traderNpcEntry = new TraderNPCEntry();
     }
 
     @Test
     void shouldInitializeSlotNamesWithCorrectSize() {
-        assertNotNull(npcEntry.getSlotNames());
-        assertEquals(EXPECTED_SLOT_NAMES_SIZE, npcEntry.getSlotNames().length);
+        assertNotNull(traderNpcEntry.getSlotNames());
+        assertEquals(EXPECTED_SLOT_NAMES_SIZE, traderNpcEntry.getSlotNames().length);
     }
 
     @Test
     void shouldSetAndGetId() {
-        npcEntry.setId(42);
-        assertEquals(42, npcEntry.getId());
+        traderNpcEntry.setId(42);
+        assertEquals(42, traderNpcEntry.getId());
     }
 
     @Test
     void shouldSetAndGetName() {
-        npcEntry.setName("TestNPC");
-        assertEquals("TestNPC", npcEntry.getName());
+        traderNpcEntry.setName("TestNPC");
+        assertEquals("TestNPC", traderNpcEntry.getName());
     }
 
     @Test
     void shouldSetAndGetProfession() {
-        npcEntry.setProfession(profession);
-        assertEquals(profession, npcEntry.getProfession());
+        traderNpcEntry.setProfession(profession);
+        assertEquals(profession, traderNpcEntry.getProfession());
     }
 
     @Test
     void shouldSetAndGetType() {
-        npcEntry.setType(Type.TRADER);
-        assertEquals(Type.TRADER, npcEntry.getType());
+        traderNpcEntry.setType(Type.TRADER);
+        assertEquals(Type.TRADER, traderNpcEntry.getType());
     }
 
     @Test
     void shouldSetAndGetCreated() {
-        npcEntry.setCreated("2024-01-01");
-        assertEquals("2024-01-01", npcEntry.getCreated());
+        traderNpcEntry.setCreated("2024-01-01");
+        assertEquals("2024-01-01", traderNpcEntry.getCreated());
     }
 
     @Test
     void shouldSetAndGetCreatedBy() {
-        npcEntry.setCreatedBy(1);
-        assertEquals(1, npcEntry.getCreatedBy());
+        traderNpcEntry.setCreatedBy(1);
+        assertEquals(1, traderNpcEntry.getCreatedBy());
     }
 
     @Test
     void shouldSetAndGetUpdated() {
-        npcEntry.setUpdated("2024-01-02");
-        assertEquals("2024-01-02", npcEntry.getUpdated());
+        traderNpcEntry.setUpdated("2024-01-02");
+        assertEquals("2024-01-02", traderNpcEntry.getUpdated());
     }
 
     @Test
     void shouldSetAndGetUpdatedBy() {
-        npcEntry.setUpdatedBy(2);
-        assertEquals(2, npcEntry.getUpdatedBy());
+        traderNpcEntry.setUpdatedBy(2);
+        assertEquals(2, traderNpcEntry.getUpdatedBy());
     }
 
     @Test
     void shouldSetAndGetDeleted() {
-        npcEntry.setDeleted("2024-01-03");
-        assertEquals("2024-01-03", npcEntry.getDeleted());
+        traderNpcEntry.setDeleted("2024-01-03");
+        assertEquals("2024-01-03", traderNpcEntry.getDeleted());
     }
 
     @Test
     void shouldSetAndGetDeletedBy() {
-        npcEntry.setDeletedBy(3);
-        assertEquals(3, npcEntry.getDeletedBy());
+        traderNpcEntry.setDeletedBy(3);
+        assertEquals(3, traderNpcEntry.getDeletedBy());
     }
 
     @Test
     void shouldSetAndGetSlotName() {
-        npcEntry.setSlotName(0, "SlotZero");
-        assertEquals("SlotZero", npcEntry.getSlotName(0));
+        traderNpcEntry.setSlotName(0, "SlotZero");
+        assertEquals("SlotZero", traderNpcEntry.getSlotName(0));
     }
 
     @Test
     void shouldOverwriteExistingSlotName() {
-        npcEntry.setSlotName(0, "Initial");
-        npcEntry.setSlotName(0, "Updated");
-        assertEquals("Updated", npcEntry.getSlotName(0));
+        traderNpcEntry.setSlotName(0, "Initial");
+        traderNpcEntry.setSlotName(0, "Updated");
+        assertEquals("Updated", traderNpcEntry.getSlotName(0));
     }
 
     @Test
     void shouldReturnNullForUninitializedSlot() {
-        assertNull(npcEntry.getSlotName(0));
+        assertNull(traderNpcEntry.getSlotName(0));
     }
 
     @Test
     void shouldThrowExceptionForOutOfBoundsSlot() {
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> npcEntry.setSlotName(EXPECTED_SLOT_NAMES_SIZE, "OutOfBounds"));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> traderNpcEntry.setSlotName(EXPECTED_SLOT_NAMES_SIZE, "OutOfBounds"));
     }
 }

@@ -5,7 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC.Type;
 import org.bukkit.Material;
@@ -30,8 +30,8 @@ public class NPCAPI {
     private final List<String> npcTraderTitle = new ArrayList<>();
     private final List<TraderNPC> npcs = new ArrayList<>();
 
-    public void init(List<NPCEntry> npcEntryList){
-        for(NPCEntry ne : npcEntryList){
+    public void init(List<TraderNPCEntry> traderNpcEntryList){
+        for(TraderNPCEntry ne : traderNpcEntryList){
             new TraderNPC(ne){
                 @Override
                 public Inventory getMainGUI(){

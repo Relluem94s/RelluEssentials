@@ -5,7 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.interfaces.INPC;
 import org.bukkit.Material;
 import org.bukkit.entity.Villager.Profession;
@@ -22,8 +22,8 @@ public class TraderNPC implements INPC {
     private final Profession profession;
     private final Type type;
 
-    public TraderNPC(NPCEntry npcEntry){
-        this(npcEntry.getName(), npcEntry.getProfession(), npcEntry.getType());
+    public TraderNPC(TraderNPCEntry traderNpcEntry){
+        this(traderNpcEntry.getName(), traderNpcEntry.getProfession(), traderNpcEntry.getType());
     }
 
     public TraderNPC(String name, Profession profession, Type type){

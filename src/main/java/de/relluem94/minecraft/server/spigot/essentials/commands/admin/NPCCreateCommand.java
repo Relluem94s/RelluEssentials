@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPCOperationResult;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -47,9 +48,9 @@ public class NPCCreateCommand implements SubCommand {
             player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_COORDINATES));
             return;
         }
-
+        PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player.getUniqueId());
         String worldName = player.getWorld().getName();
-        NPCOperationResult result = RelluEssentials.getInstance().getNpcService().createNPC(profileName, x, y, z, worldName);
+        NPCOperationResult result = RelluEssentials.getInstance().getNpcService().createNPC(profileName, x, y, z, worldName, playerEntry.getId());
 
         if (!result.isSuccessful()) {
             player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_OPERATION_FAILED) + " " + result.getErrorMessage());

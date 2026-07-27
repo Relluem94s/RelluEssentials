@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPCOperationResult;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -64,7 +65,8 @@ public class NPCUpdateCommand implements SubCommand {
             return;
         }
         String newProfile = args[ARGS_PROFILE_VALUE_INDEX];
-        NPCOperationResult result = RelluEssentials.getInstance().getNpcService().updateNPCProfile(npcId, newProfile);
+        PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player.getUniqueId());
+        NPCOperationResult result = RelluEssentials.getInstance().getNpcService().updateNPCProfile(npcId, newProfile, playerEntry.getId());
         sendOperationFeedback(player, result, MessageKey.COMMAND_NPC_UPDATED, MessageKey.COMMAND_NPC_OPERATION_FAILED);
     }
 
@@ -84,7 +86,9 @@ public class NPCUpdateCommand implements SubCommand {
             player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_COORDINATES));
             return;
         }
-        NPCOperationResult result = RelluEssentials.getInstance().getNpcService().updateNPCPosition(npcId, x, y, z);
+
+        PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player.getUniqueId());
+        NPCOperationResult result = RelluEssentials.getInstance().getNpcService().updateNPCPosition(npcId, x, y, z, playerEntry.getId());
         sendOperationFeedback(player, result, MessageKey.COMMAND_NPC_UPDATED, MessageKey.COMMAND_NPC_OPERATION_FAILED);
     }
 

@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
 import org.bukkit.entity.Villager;
 import org.jspecify.annotations.NonNull;
@@ -21,14 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TraderNPCMapperTest {
+class TraderTraderNPCMapperTest {
 
     @Mock
     private ResultSet resultSet;
 
     private static Villager.@NonNull Profession createFakeProfession() {
         return (Villager.Profession) Proxy.newProxyInstance(
-                TraderNPCMapperTest.class.getClassLoader(),
+                TraderTraderNPCMapperTest.class.getClassLoader(),
                 new Class[]{Villager.Profession.class},
                 (_, _, _) -> null
         );
@@ -40,7 +40,7 @@ class TraderNPCMapperTest {
 
     @Test
     void constructorThrowsIllegalStateException() throws Exception {
-        Constructor<NPCMapper> constructor = NPCMapper.class.getDeclaredConstructor();
+        Constructor<TraderNPCMapper> constructor = TraderNPCMapper.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         InvocationTargetException thrown = assertThrows(InvocationTargetException.class, constructor::newInstance);
         assertInstanceOf(IllegalStateException.class, thrown.getCause());
@@ -63,7 +63,7 @@ class TraderNPCMapperTest {
             when(resultSet.getString(String.format(FIELD_SLOT_VAR_NAME, (i + 1)))).thenReturn("slot_" + i);
         }
 
-        NPCEntry result = NPCMapper.mapNPC(resultSet, PROFESSION_RESOLVER);
+        TraderNPCEntry result = TraderNPCMapper.mapNPC(resultSet, PROFESSION_RESOLVER);
 
         assertAll(
                 () -> assertEquals(1, result.getId()),
@@ -88,6 +88,6 @@ class TraderNPCMapperTest {
     void mapNPCPropagatesSQLException() throws SQLException {
         when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
 
-        assertThrows(SQLException.class, () -> NPCMapper.mapNPC(resultSet, PROFESSION_RESOLVER));
+        assertThrows(SQLException.class, () -> TraderNPCMapper.mapNPC(resultSet, PROFESSION_RESOLVER));
     }
 }

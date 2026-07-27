@@ -1,40 +1,61 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
-import org.bukkit.entity.Villager;
-import org.jspecify.annotations.NonNull;
+import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.Function;
+import java.util.UUID;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
 
 public class NPCMapper {
-    private NPCMapper() {
-        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+
+    private NPCMapper() {}
+
+    public static NPCEntry mapNPC(ResultSet rs) throws SQLException {
+        NPCEntry entry = new NPCEntry();
+        entry.setId(rs.getInt(FIELD_ID));
+        entry.setUuid(UUID.fromString(rs.getString(FIELD_UUID)));
+        entry.setProfileName(rs.getString(FIELD_PROFILE_NAME));
+        entry.setWorld(rs.getString(FIELD_WORLD));
+        entry.setX(rs.getDouble(FIELD_POS_X));
+        entry.setY(rs.getDouble(FIELD_POS_Y));
+        entry.setZ(rs.getDouble(FIELD_POS_Z));
+        entry.setCreatedBy(rs.getInt(FIELD_CREATEDBY));
+
+        String entityUuid = rs.getString(FIELD_ENTITY_UUID);
+        if (entityUuid != null) {
+            entry.setEntityUuid(UUID.fromString(entityUuid));
+        }
+
+        String updatedBy = rs.getString(FIELD_UPDATEDBY);
+        if (updatedBy != null) {
+            entry.setUpdatedBy(rs.getInt(FIELD_UPDATED));
+        }
+
+        return entry;
     }
 
-    public static @NonNull NPCEntry mapNPC(@NonNull ResultSet rs, @NonNull Function<String, Villager.Profession> professionResolver) throws SQLException {
-        NPCEntry npcEntry = new NPCEntry();
-
-        npcEntry.setId(rs.getInt(FIELD_ID));
-        npcEntry.setCreated(rs.getString(FIELD_CREATED));
-        npcEntry.setCreatedBy(rs.getInt(FIELD_CREATEDBY));
-        npcEntry.setUpdated(rs.getString(FIELD_UPDATED));
-        npcEntry.setUpdatedBy(rs.getInt(FIELD_UPDATEDBY));
-        npcEntry.setDeleted(rs.getString(FIELD_DELETED));
-        npcEntry.setDeletedBy(rs.getInt(FIELD_DELETEDBY));
-
-        npcEntry.setName(rs.getString(FIELD_NAME));
-        npcEntry.setProfession(professionResolver.apply(rs.getString(FIELD_PROFESSION).toLowerCase()));
-        npcEntry.setType(TraderNPC.Type.valueOf(rs.getString(FIELD_TYPE)));
-
-        for (int i = 0; i <= 27; i++) {
-            npcEntry.setSlotName(i, rs.getString(String.format(FIELD_SLOT_VAR_NAME, (i + 1))));
+    public static NPCEntry toEntry(NPC npc, int actorPlayerId) {
+        NPCEntry entry = new NPCEntry();
+        entry.setUuid(npc.getId());
+        entry.setProfileName(npc.getProfileName());
+        entry.setWorld(npc.getWorldName());
+        entry.setX(npc.getX());
+        entry.setY(npc.getY());
+        entry.setZ(npc.getZ());
+        entry.setCreatedBy(actorPlayerId);
+        entry.setUpdatedBy(actorPlayerId);
+        if (npc.getEntityUUID() != null) {
+            entry.setEntityUuid(npc.getEntityUUID());
         }
-        return npcEntry;
+        return entry;
+    }
+
+    public static NPC toDomain(NPCEntry entry) {
+        NPC npc = new NPC(entry.getUuid(), entry.getProfileName(), entry.getX(), entry.getY(), entry.getZ(), entry.getWorld());
+        npc.setEntityUUID(entry.getEntityUuid());
+        return npc;
     }
 }

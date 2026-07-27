@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPCOperationResult;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
@@ -40,8 +41,8 @@ public class NPCDeleteCommand implements SubCommand {
             player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
             return;
         }
-
-        NPCOperationResult result = RelluEssentials.getInstance().getNpcService().deleteNPC(npcId);
+        PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player.getUniqueId());
+        NPCOperationResult result = RelluEssentials.getInstance().getNpcService().deleteNPC(npcId, playerEntry.getId());
 
         if (!result.isSuccessful()) {
             player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_NOT_FOUND) + " " + result.getErrorMessage());
