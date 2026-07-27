@@ -284,6 +284,9 @@ public class RelluEssentials extends JavaPlugin {
     @Override
     public void onDisable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
+        if (npcService != null) {
+            npcService.despawnAllNPCs();
+        }
         new SudoManager().disable();
         new AutoSaveManager().disable();
         new WorldManager().disable();

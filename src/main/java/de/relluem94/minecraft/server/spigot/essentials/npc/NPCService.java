@@ -111,6 +111,15 @@ public class NPCService {
         }
     }
 
+    public void despawnAllNPCs() {
+        for (NPC npc : loadedNPCs.values()) {
+            if (npc.getEntityUUID() != null) {
+                npcSpawner.despawnMannequin(npc.getEntityUUID());
+            }
+        }
+        loadedNPCs.clear();
+    }
+
     public List<NPC> getNPCs() {
         return new ArrayList<>(loadedNPCs.values());
     }
