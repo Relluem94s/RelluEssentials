@@ -1,11 +1,11 @@
-package de.relluem94.minecraft.server.spigot.essentials.npc;
+package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.npc.interfaces.IBanker;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.interfaces.IBanker;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 
-public class Banker extends NPC implements IBanker {
+public class Banker extends TraderNPC implements IBanker {
    
     public Banker(){
         super("§dBanker", Profession.NONE, Type.BANKER);

@@ -1,10 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.npc.BagSalesman;
-import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
-import de.relluem94.minecraft.server.spigot.essentials.npc.Beekeeper;
-import de.relluem94.minecraft.server.spigot.essentials.npc.Enchanter;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BagSalesman;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.Banker;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.Beekeeper;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.Enchanter;
 
 public class NPCManager implements IEnable {
 

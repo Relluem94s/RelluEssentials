@@ -40,6 +40,7 @@ public interface DatabaseMappings {
     String FIELD_AFK = "afk";
     String FIELD_GROUP_FK = "group_fk";
     String FIELD_UUID = "uuid";
+    String FIELD_ENTITY_UUID = "entity_uuid";
     String FIELD_FIRST_PARTNER_FK = "first_partner_fk";
     String FIELD_SECOND_PARTNER_FK = "second_partner_fk";
     String FIELD_SHARE_PROTECTIONS = "shareProtections";
@@ -61,4 +62,5 @@ public interface DatabaseMappings {
     String FIELD_MAX_INT = "max_int";
     String FIELD_SETTING_FK = "setting_fk";
     String FIELD_WORLD_GORUP_FK = "world_group_fk";
+    String FIELD_PROFILE_NAME = "profile_name";
 }

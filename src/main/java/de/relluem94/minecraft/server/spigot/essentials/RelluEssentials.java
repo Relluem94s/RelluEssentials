@@ -20,12 +20,17 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
-import de.relluem94.minecraft.server.spigot.essentials.npc.Banker;
+import de.relluem94.minecraft.server.spigot.essentials.npc.NPCRepository;
+import de.relluem94.minecraft.server.spigot.essentials.npc.NPCService;
+import de.relluem94.minecraft.server.spigot.essentials.npc.NPCSpawner;
+import de.relluem94.minecraft.server.spigot.essentials.npc.NPCValidator;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.EventWrapper;
 import de.relluem94.rellulib.stores.DoubleStore;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -75,6 +80,9 @@ public class RelluEssentials extends JavaPlugin {
     @Setter
     @Getter
     private WarpAPI warpAPI;
+
+    @Getter
+    private NPCService npcService;
 
     public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
     public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
@@ -257,6 +265,10 @@ public class RelluEssentials extends JavaPlugin {
         new AutoSaveManager().enable();
         new BankManager().enable();
         new NPCManager().enable();
+        NPCRepository npcRepository = new NPCRepository(databaseHelper);
+        NPCSpawner npcSpawner = new NPCSpawner();
+        NPCValidator npcValidator = new NPCValidator();
+        this.npcService = new NPCService(npcRepository, npcSpawner, npcValidator);
         stopLoading();
         new WorldManager().enable();
         new GroupManager().enable();
@@ -264,11 +276,17 @@ public class RelluEssentials extends JavaPlugin {
         new ScoreBoardManager().enable();
 
         dm.afterWorldLoaded();
+
+        Bukkit.getScheduler().runTaskLater(this, () -> this.npcService.loadAndRespawnAllNPCs(1), 20L);
+
     }
 
     @Override
     public void onDisable() {
         consoleSendMessage(PLUGIN_NAME_CONSOLE, languageHelper.get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
+        if (npcService != null) {
+            npcService.despawnAllNPCs();
+        }
         new SudoManager().disable();
         new AutoSaveManager().disable();
         new WorldManager().disable();

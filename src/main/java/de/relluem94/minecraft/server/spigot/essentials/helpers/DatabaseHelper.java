@@ -220,8 +220,8 @@ public class DatabaseHelper {
         return queryList("getGroups.sql", _ -> {}, PlayerMapper::mapGroup);
     }
 
-    public List<NPCEntry> getNPCs() {
-        return queryList("getNPCs.sql", _ -> {}, rs -> NPCMapper.mapNPC(rs, key -> Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(key))));
+    public List<TraderNPCEntry> getTraderNPCs() {
+        return queryList("getNPCs.sql", _ -> {}, rs -> TraderNPCMapper.mapNPC(rs, key -> Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(key))));
     }
 
     public List<ProtectionLockEntry> getProtectionLocks() {
@@ -571,6 +571,47 @@ public class DatabaseHelper {
                 ps.setInt(i + 2, be.getSlotValue(i));
             }
             ps.setInt(BagHelper.BAG_SIZE + 2, be.getId());
+        });
+    }
+
+
+    public List<NPCEntry> getNPCs() {
+        return queryList("getCustomNPCs.sql", _ -> {}, NPCMapper::mapNPC);
+    }
+
+    public NPCEntry getNPC(UUID uuid) {
+        return querySingle("getCustomNPCByUuid.sql", ps -> ps.setString(1, uuid.toString()), NPCMapper::mapNPC);
+    }
+
+    public void insertNPC(NPCEntry npcEntry) {
+        executeUpdate("insertCustomNPC.sql", ps -> {
+            ps.setString(1, npcEntry.getUuid().toString());
+            ps.setString(2, npcEntry.getProfileName());
+            ps.setString(3, npcEntry.getWorld());
+            ps.setDouble(4, npcEntry.getX());
+            ps.setDouble(5, npcEntry.getY());
+            ps.setDouble(6, npcEntry.getZ());
+            ps.setInt(7, npcEntry.getCreatedBy());
+        });
+    }
+
+    public void updateNPC(NPCEntry npcEntry) {
+        executeUpdate("updateCustomNPC.sql", ps -> {
+            ps.setString(1, npcEntry.getEntityUuid() != null ? npcEntry.getEntityUuid().toString() : null);
+            ps.setString(2, npcEntry.getProfileName());
+            ps.setString(3, npcEntry.getWorld());
+            ps.setDouble(4, npcEntry.getX());
+            ps.setDouble(5, npcEntry.getY());
+            ps.setDouble(6, npcEntry.getZ());
+            ps.setInt(7, npcEntry.getUpdatedBy());
+            ps.setInt(8, npcEntry.getId());
+        });
+    }
+
+    public void deleteNPC(UUID npcUuid, int deletedByPlayerId) {
+        executeUpdate("deleteCustomNPC.sql", ps -> {
+            ps.setInt(1, deletedByPlayerId);
+            ps.setString(2, npcUuid.toString());
         });
     }
 

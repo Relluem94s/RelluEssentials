@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
 import org.bukkit.entity.Villager;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -21,14 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class NPCMapperTest {
+class TraderTraderNPCMapperTest {
 
     @Mock
     private ResultSet resultSet;
 
     private static Villager.@NonNull Profession createFakeProfession() {
         return (Villager.Profession) Proxy.newProxyInstance(
-                NPCMapperTest.class.getClassLoader(),
+                TraderTraderNPCMapperTest.class.getClassLoader(),
                 new Class[]{Villager.Profession.class},
                 (_, _, _) -> null
         );
@@ -40,7 +40,7 @@ class NPCMapperTest {
 
     @Test
     void constructorThrowsIllegalStateException() throws Exception {
-        Constructor<NPCMapper> constructor = NPCMapper.class.getDeclaredConstructor();
+        Constructor<TraderNPCMapper> constructor = TraderNPCMapper.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         InvocationTargetException thrown = assertThrows(InvocationTargetException.class, constructor::newInstance);
         assertInstanceOf(IllegalStateException.class, thrown.getCause());
@@ -63,7 +63,7 @@ class NPCMapperTest {
             when(resultSet.getString(String.format(FIELD_SLOT_VAR_NAME, (i + 1)))).thenReturn("slot_" + i);
         }
 
-        NPCEntry result = NPCMapper.mapNPC(resultSet, PROFESSION_RESOLVER);
+        TraderNPCEntry result = TraderNPCMapper.mapNPC(resultSet, PROFESSION_RESOLVER);
 
         assertAll(
                 () -> assertEquals(1, result.getId()),
@@ -75,7 +75,7 @@ class NPCMapperTest {
                 () -> assertEquals(4, result.getDeletedBy()),
                 () -> assertEquals("TestNPC", result.getName()),
                 () -> assertNotNull(result.getProfession()),
-                () -> assertEquals(NPC.Type.TRADER, result.getType())
+                () -> assertEquals(TraderNPC.Type.TRADER, result.getType())
         );
 
         for (int i = 0; i <= 27; i++) {
@@ -88,6 +88,6 @@ class NPCMapperTest {
     void mapNPCPropagatesSQLException() throws SQLException {
         when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
 
-        assertThrows(SQLException.class, () -> NPCMapper.mapNPC(resultSet, PROFESSION_RESOLVER));
+        assertThrows(SQLException.class, () -> TraderNPCMapper.mapNPC(resultSet, PROFESSION_RESOLVER));
     }
 }

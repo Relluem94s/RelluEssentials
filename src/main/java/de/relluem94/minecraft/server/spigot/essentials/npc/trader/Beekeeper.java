@@ -1,16 +1,15 @@
-package de.relluem94.minecraft.server.spigot.essentials.npc;
-
-import org.bukkit.Material;
-import org.bukkit.entity.Villager.Profession;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
+import org.bukkit.Material;
+import org.bukkit.entity.Villager.Profession;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
-public class Beekeeper extends NPC {
+public class Beekeeper extends TraderNPC {
 
     public Beekeeper(){
         super("§dBeekeeper", Profession.NONE, Type.TRADER);
