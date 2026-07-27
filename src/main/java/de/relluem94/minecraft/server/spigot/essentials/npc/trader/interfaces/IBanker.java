@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.npc.interfaces;
+package de.relluem94.minecraft.server.spigot.essentials.npc.trader.interfaces;
 
 import org.bukkit.inventory.Inventory;
 

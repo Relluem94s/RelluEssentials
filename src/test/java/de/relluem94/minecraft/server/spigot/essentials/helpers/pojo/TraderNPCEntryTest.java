@@ -3,7 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC.Type;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC.Type;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Villager.Profession;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class NPCEntryTest {
+class TraderNPCEntryTest {
 
     private NPCEntry npcEntry;
 

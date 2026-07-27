@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
 import org.bukkit.entity.Villager;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
@@ -21,14 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class NPCMapperTest {
+class TraderNPCMapperTest {
 
     @Mock
     private ResultSet resultSet;
 
     private static Villager.@NonNull Profession createFakeProfession() {
         return (Villager.Profession) Proxy.newProxyInstance(
-                NPCMapperTest.class.getClassLoader(),
+                TraderNPCMapperTest.class.getClassLoader(),
                 new Class[]{Villager.Profession.class},
                 (_, _, _) -> null
         );
@@ -75,7 +75,7 @@ class NPCMapperTest {
                 () -> assertEquals(4, result.getDeletedBy()),
                 () -> assertEquals("TestNPC", result.getName()),
                 () -> assertNotNull(result.getProfession()),
-                () -> assertEquals(NPC.Type.TRADER, result.getType())
+                () -> assertEquals(TraderNPC.Type.TRADER, result.getType())
         );
 
         for (int i = 0; i <= 27; i++) {

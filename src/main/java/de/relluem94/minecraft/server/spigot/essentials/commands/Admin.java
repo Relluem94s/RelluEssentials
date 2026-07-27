@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import de.relluem94.minecraft.server.spigot.essentials.SubCommandRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+
 import de.relluem94.minecraft.server.spigot.essentials.commands.admin.*;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
@@ -37,6 +38,9 @@ public class Admin implements CommandConstruct {
                 new FakeAFKCommand(),
                 new LightToggleCommand(),
                 new NPCGUICommand(),
+                new NPCCreateCommand(),
+                new NPCDeleteCommand(),
+                new NPCUpdateCommand(),
                 new PingCommand(),
                 new PluginInfoCommand(),
                 new TopCommand()
@@ -79,7 +83,7 @@ public class Admin implements CommandConstruct {
         CHAT("chat"),
         INFO("info"),
         LIGHT("light"),
-        NPC("npc"),
+        NPC("npc", "create", "update", "delete"),
         PING("ping"),
         TOP("top"),
         ADMIN_TOOLS("adminTools");

@@ -6,8 +6,8 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC.Type;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC.Type;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -28,11 +28,11 @@ public class NPCAPI {
     private final List<ItemStack> npcItemStack = new ArrayList<>();
     private final List<String> npcName = new ArrayList<>();
     private final List<String> npcTraderTitle = new ArrayList<>();
-    private final List<NPC> npcs = new ArrayList<>();
+    private final List<TraderNPC> npcs = new ArrayList<>();
 
     public void init(List<NPCEntry> npcEntryList){
         for(NPCEntry ne : npcEntryList){
-            new NPC(ne){
+            new TraderNPC(ne){
                 @Override
                 public Inventory getMainGUI(){
                     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(NPCHelper.INV_SIZE, getTitle()), CustomItems.npc_gui_disabled.getCustomItem());
@@ -79,21 +79,21 @@ public class NPCAPI {
      * Gives back a List of NPCs
      * @return List of NPC
      */
-    public List<NPC> getNPCs(){
+    public List<TraderNPC> getNPCs(){
         return npcs;
     }
 
     /**
      * Adds a NPC
-     * @param npc NPC
+     * @param traderNpc NPC
      */
-    public void addNPC(NPC npc){
-        npcs.add(npc);
-        npcItemStack.add(npc.getItemHelper().getCustomItem());
-        npcName.add(npc.getName());
+    public void addNPC(TraderNPC traderNpc){
+        npcs.add(traderNpc);
+        npcItemStack.add(traderNpc.getItemHelper().getCustomItem());
+        npcName.add(traderNpc.getName());
 
-        if(npc.getType().equals(Type.TRADER)){
-            npcTraderTitle.add(npc.getTitle());
+        if(traderNpc.getType().equals(Type.TRADER)){
+            npcTraderTitle.add(traderNpc.getTitle());
         }
     }
 
@@ -126,7 +126,7 @@ public class NPCAPI {
      * @param index int
      * @return NPC
      */
-    public NPC getNPC(int index) {
+    public TraderNPC getNPC(int index) {
         return npcs.get(index);
     }
 }

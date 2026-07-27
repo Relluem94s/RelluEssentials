@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -94,11 +94,11 @@ public class DevPlattformCommand implements SubCommand {
         BlockHelper redstone = new BlockHelper(Material.REDSTONE_BLOCK);
         BlockHelper air = new BlockHelper(Material.AIR);
 
-        List<NPC> npcs = RelluEssentials.getInstance().getNpcAPI().getNPCs();
+        List<TraderNPC> traderNpcs = RelluEssentials.getInstance().getNpcAPI().getNPCs();
 
         int npcIndex = 0;
         int cols = 5;
-        int npcCount = npcs.size();
+        int npcCount = traderNpcs.size();
         int totalBlocks = DEV_PLATTFORM_MATERIAL_LIST.size();
         int totalAmount = totalBlocks + npcCount;
         int rows = (totalAmount + cols) / cols;
@@ -160,7 +160,7 @@ public class DevPlattformCommand implements SubCommand {
                                     undoList.add(new ModifyHistoryEntry(b.getLocation(), b.getType(), b.getBlockData()));
                                     inner.addLocation(b.getLocation(), schedule);
 
-                                    NPCHelper nh = new NPCHelper(world.getBlockAt(bx, originY + 1, bz).getLocation(), npcs.get(npcIndex));
+                                    NPCHelper nh = new NPCHelper(world.getBlockAt(bx, originY + 1, bz).getLocation(), traderNpcs.get(npcIndex));
                                     new BukkitRunnable() {
                                         @Override
                                         public void run() {

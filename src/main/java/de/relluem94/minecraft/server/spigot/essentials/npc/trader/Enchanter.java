@@ -1,14 +1,13 @@
-package de.relluem94.minecraft.server.spigot.essentials.npc;
-
-import de.relluem94.minecraft.server.spigot.essentials.items.AutoSellHopper;
-import org.bukkit.entity.Villager.Profession;
-import org.bukkit.inventory.Inventory;
+package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.items.AutoSellHopper;
+import org.bukkit.entity.Villager.Profession;
+import org.bukkit.inventory.Inventory;
 
-public class Enchanter extends NPC {
+public class Enchanter extends TraderNPC {
 
     public Enchanter() {
         super("§dEnchanter", Profession.LIBRARIAN, Type.ENCHANTER);

@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
 import org.bukkit.entity.Villager;
 import org.jspecify.annotations.NonNull;
 
@@ -30,7 +30,7 @@ public class NPCMapper {
 
         npcEntry.setName(rs.getString(FIELD_NAME));
         npcEntry.setProfession(professionResolver.apply(rs.getString(FIELD_PROFESSION).toLowerCase()));
-        npcEntry.setType(NPC.Type.valueOf(rs.getString(FIELD_TYPE)));
+        npcEntry.setType(TraderNPC.Type.valueOf(rs.getString(FIELD_TYPE)));
 
         for (int i = 0; i <= 27; i++) {
             npcEntry.setSlotName(i, rs.getString(String.format(FIELD_SLOT_VAR_NAME, (i + 1))));

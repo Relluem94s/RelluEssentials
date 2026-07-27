@@ -1,9 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -13,7 +10,9 @@ import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.potion.PotionEffect;
 
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
 
 /**
  *
@@ -35,13 +34,13 @@ public class NPCHelper {
 
     public static final int INV_SIZE = 54;
 
-    public NPCHelper(Location location, NPC npc) {
+    public NPCHelper(Location location, TraderNPC traderNpc) {
         this.location = location;
         this.entityType = EntityType.VILLAGER;
-        this.profession = npc.getProfession();
+        this.profession = traderNpc.getProfession();
 
-        if (npc.getName() != null) {
-            this.customName = npc.getName();
+        if (traderNpc.getName() != null) {
+            this.customName = traderNpc.getName();
         } else {
             this.customName = entityType.name();
         }

@@ -1,11 +1,10 @@
-package de.relluem94.minecraft.server.spigot.essentials.npc;
+package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.interfaces.IChat;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
-import de.relluem94.minecraft.server.spigot.essentials.npc.interfaces.IChat;
-
-public class Welcomer extends NPC implements IChat {
+public class Welcomer extends TraderNPC implements IChat {
 
     public Welcomer() {
         super("Gustav", Profession.CARTOGRAPHER, Type.CHAT);

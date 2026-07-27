@@ -1,12 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC.Type;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Villager.Profession;
-
-import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC.Type;
 
 /**
  *
