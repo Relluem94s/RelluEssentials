@@ -10,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.trader.interfaces.INP
 import org.bukkit.Material;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class TraderNPC implements INPC {
     private final Profession profession;
     private final Type type;
 
-    public TraderNPC(TraderNPCEntry traderNpcEntry){
+    public TraderNPC(@NonNull TraderNPCEntry traderNpcEntry){
         this(traderNpcEntry.getName(), traderNpcEntry.getProfession(), traderNpcEntry.getType());
     }
 
