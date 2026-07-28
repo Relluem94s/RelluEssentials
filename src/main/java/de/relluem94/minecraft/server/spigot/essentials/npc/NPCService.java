@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+
 import java.util.*;
 
 public class NPCService {
@@ -27,7 +29,7 @@ public class NPCService {
             return NPCOperationResult.failure(coordinateValidation.errorMessage());
         }
 
-        NPC npc = new NPC(UUID.randomUUID(), profileName, x, y, z, worldName);
+        NPC npc = new NPC(-1, UUID.randomUUID(), profileName, x, y, z, worldName);
         Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
         spawnedEntityUUID.ifPresent(npc::setEntityUUID);
 
@@ -98,6 +100,7 @@ public class NPCService {
 
         npcRepository.delete(npcId, actorPlayerId);
         loadedNPCs.remove(npcId);
+        RelluEssentials.getInstance().getNpcDialogueTracker().removeNPC(npcId);
         return NPCOperationResult.success(null);
     }
 
@@ -120,11 +123,31 @@ public class NPCService {
         loadedNPCs.clear();
     }
 
+    public void reloadNPCDialogue(UUID npcId) {
+        NPC npc = loadedNPCs.get(npcId);
+        if (npc == null) {
+            return;
+        }
+
+        npcRepository.loadById(npcId).ifPresent(refreshedNPC -> {
+            npc.setDialogueLines(refreshedNPC.getDialogueLines());
+            loadedNPCs.put(npcId, npc);
+        });
+    }
+
     public List<NPC> getNPCs() {
         return new ArrayList<>(loadedNPCs.values());
     }
 
     public Optional<NPC> getNPCById(UUID npcId) {
         return Optional.ofNullable(loadedNPCs.get(npcId));
+    }
+
+    public Optional<NPC> getNearestNPC(double x, double y, double z, String worldName) {
+        return loadedNPCs.values().stream()
+                .filter(npc -> npc.getWorldName().equals(worldName))
+                .min(Comparator.comparingDouble(npc ->
+                        Math.pow(npc.getX() - x, 2) + Math.pow(npc.getY() - y, 2) + Math.pow(npc.getZ() - z, 2)
+                ));
     }
 }

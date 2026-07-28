@@ -63,4 +63,7 @@ public interface DatabaseMappings {
     String FIELD_SETTING_FK = "setting_fk";
     String FIELD_WORLD_GORUP_FK = "world_group_fk";
     String FIELD_PROFILE_NAME = "profile_name";
+    String FIELD_LIST_POSITION = "listPosition";
+    String FIELD_TEXT = "text";
+    String FIELD_CUSTOM_NPC_FK = "custom_npc_fk";
 }

@@ -219,6 +219,7 @@ public class PatchHelper implements IPatchHelper {
         databaseHelper.executeScript(v + "updateWorldGroupSettings_moveValues.sql");
         databaseHelper.executeScript(v + "updateWorldGroupSettings_removeColumnAndRename.sql");
         databaseHelper.executeScript(v + "createCustomNPC.sql");
+        databaseHelper.executeScript(v + "createCustomNPCDialogue.sql");
         databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
         databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
     }

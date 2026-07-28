@@ -5,6 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.NPCMapp
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class NPCRepository {
@@ -17,9 +18,18 @@ public class NPCRepository {
 
     public List<NPC> loadAll() {
         return databaseHelper.getNPCs().stream()
-                .map(NPCMapper::toDomain)
+                .map(entry -> NPCMapper.toDomain(entry, databaseHelper.getNPCDialogues(entry.getId())))
                 .toList();
     }
+
+    public Optional<NPC> loadById(UUID npcId) {
+        NPCEntry entry = databaseHelper.getNPC(npcId);
+        if (entry == null) {
+            return Optional.empty();
+        }
+        return Optional.of(NPCMapper.toDomain(entry, databaseHelper.getNPCDialogues(entry.getId())));
+    }
+
 
     public void save(NPC npc, int actorPlayerId) {
         NPCEntry existingEntry = databaseHelper.getNPC(npc.getId());
@@ -33,6 +43,7 @@ public class NPCRepository {
     }
 
     public void delete(UUID npcId, int deletedByPlayerId) {
+        databaseHelper.deleteNPCDialogueByNpcId(npcId, deletedByPlayerId);
         databaseHelper.deleteNPC(npcId, deletedByPlayerId);
     }
 }

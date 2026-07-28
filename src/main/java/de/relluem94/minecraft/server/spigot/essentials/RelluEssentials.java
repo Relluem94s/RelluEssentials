@@ -17,10 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
 import de.relluem94.minecraft.server.spigot.essentials.managers.*;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPCRepository;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPCService;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPCSpawner;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPCValidator;
+import de.relluem94.minecraft.server.spigot.essentials.npc.*;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.Banker;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.EventWrapper;
@@ -80,6 +77,8 @@ public class RelluEssentials extends JavaPlugin {
 
     @Getter
     private NPCService npcService;
+    @Getter
+    private NPCDialogueTracker npcDialogueTracker;
 
     public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
     public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
@@ -190,6 +189,7 @@ public class RelluEssentials extends JavaPlugin {
                     new EventWrapper(new DamgeNPC()),
                     new EventWrapper(new DamgeTraderNPC()),
                     new EventWrapper(new InteractNPC()),
+                    new EventWrapper(new InteractTraderNPC()),
                     new EventWrapper(new InventoryClickNPC()),
                     new EventWrapper(new PlaceNPC()),
                     new EventWrapper(new BetterSafety()),
@@ -267,6 +267,7 @@ public class RelluEssentials extends JavaPlugin {
         NPCSpawner npcSpawner = new NPCSpawner();
         NPCValidator npcValidator = new NPCValidator();
         this.npcService = new NPCService(npcRepository, npcSpawner, npcValidator);
+        this.npcDialogueTracker = new NPCDialogueTracker();
         stopLoading();
         new WorldManager().enable();
         new GroupManager().enable();
