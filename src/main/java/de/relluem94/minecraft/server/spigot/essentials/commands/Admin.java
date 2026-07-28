@@ -87,20 +87,27 @@ public class Admin implements CommandConstruct {
             if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "dialogue".equalsIgnoreCase(strings[1])) {
                 tabList.addAll(List.of("add", "update", "delete"));
             }
+            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "create".equalsIgnoreCase(strings[1])) {
+                tabList.add("<profileName>");
+            }
+            if (Commands.NPC.getName().equalsIgnoreCase(strings[0])
+                    && ("update".equalsIgnoreCase(strings[1]) || "delete".equalsIgnoreCase(strings[1]))) {
+                Player player = (Player) commandSender;
+                RelluEssentials.getInstance().getNpcService()
+                        .getNearestNPC(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getWorld().getName())
+                        .ifPresentOrElse(
+                                npc -> tabList.add(String.valueOf(npc.getId())),
+                                () -> tabList.add("<NPC ID>")
+                        );
+            }
             return tabList;
         }
         if (strings.length == 4) {
             if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
                 if ("create".equalsIgnoreCase(strings[1])) {
-                    tabList.add("<profileName>");
-                } else {
-                    Player player = (Player) commandSender;
-                    RelluEssentials.getInstance().getNpcService()
-                            .getNearestNPC(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getWorld().getName())
-                            .ifPresentOrElse(
-                                    npc -> tabList.add(String.valueOf(npc.getId())),
-                                    () -> tabList.add("<NPC UUID>")
-                            );
+                    tabList.add(resolvePlayerCoordinate(commandSender, "x"));
+                } else if ("update".equalsIgnoreCase(strings[1])) {
+                    tabList.addAll(List.of("profile", "position"));
                 }
             }
             return tabList;
@@ -131,8 +138,15 @@ public class Admin implements CommandConstruct {
                     });
                 }
             }
+            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "update".equalsIgnoreCase(strings[1])) {
+                if ("profile".equalsIgnoreCase(strings[3])) {
+                    tabList.add("<profileName>");
+                } else if ("position".equalsIgnoreCase(strings[3])) {
+                    tabList.add(resolvePlayerCoordinate(commandSender, "x"));
+                }
+            }
             if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "create".equalsIgnoreCase(strings[1])) {
-                tabList.add("<x>");
+                tabList.add(resolvePlayerCoordinate(commandSender, "y"));
             }
             return tabList;
         }
@@ -142,17 +156,34 @@ public class Admin implements CommandConstruct {
                 tabList.add("<text...>");
             }
             if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "create".equalsIgnoreCase(strings[1])) {
-                tabList.add("<y>");
+                tabList.add(resolvePlayerCoordinate(commandSender, "z"));
+            }
+            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "update".equalsIgnoreCase(strings[1])
+                    && "position".equalsIgnoreCase(strings[3])) {
+                tabList.add(resolvePlayerCoordinate(commandSender, "y"));
             }
             return tabList;
         }
         if (strings.length == 7) {
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "create".equalsIgnoreCase(strings[1])) {
-                tabList.add("<z>");
+            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "update".equalsIgnoreCase(strings[1])
+                    && "position".equalsIgnoreCase(strings[3])) {
+                tabList.add(resolvePlayerCoordinate(commandSender, "z"));
             }
-            return tabList;
         }
         return tabList;
+    }
+
+    private @NonNull String resolvePlayerCoordinate(CommandSender commandSender, String axis) {
+        if (!isPlayer(commandSender)) {
+            return "<" + axis + ">";
+        }
+        Player player = (Player) commandSender;
+        return switch (axis) {
+            case "x" -> String.valueOf((int) player.getLocation().getX());
+            case "y" -> String.valueOf((int) player.getLocation().getY());
+            case "z" -> String.valueOf((int) player.getLocation().getZ());
+            default -> "<" + axis + ">";
+        };
     }
 
     private Optional<NPC> resolveNpcFromArg(String npcIdArg) {
@@ -164,7 +195,7 @@ public class Admin implements CommandConstruct {
         }
     }
 
-    private List<Integer> findGapsAndNextPosition(List<Integer> usedPositions) {
+    private @NonNull List<Integer> findGapsAndNextPosition(@NonNull List<Integer> usedPositions) {
         if (usedPositions.isEmpty()) {
             return List.of(1);
         }

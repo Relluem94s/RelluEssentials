@@ -1,11 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
@@ -37,6 +39,35 @@ public class NPCSpawner {
 
         return findNewlySpawnedMannequin(world, spawnLocation).map(this::applyMannequinAttributes);
     }
+
+    public void spawnMannequinAsync(@NonNull NPC npc, java.util.function.Consumer<Optional<UUID>> callback) {
+        World world = Bukkit.getWorld(npc.getWorldName());
+        if (world == null) {
+            callback.accept(Optional.empty());
+            return;
+        }
+
+        Location spawnLocation = new Location(world, npc.getX(), npc.getY(), npc.getZ());
+        String summonCommand = commandBuilder.buildSummonCommand(npc.getX(), npc.getY(), npc.getZ(), npc.getProfileName());
+
+        Optional<? extends Player> playerInWorld = world.getPlayers().stream().findFirst();
+        if (playerInWorld.isEmpty()) {
+            callback.accept(Optional.empty());
+            return;
+        }
+
+        Bukkit.dispatchCommand(playerInWorld.get(), summonCommand);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Optional<UUID> result = findNewlySpawnedMannequin(world, spawnLocation)
+                        .map(NPCSpawner.this::applyMannequinAttributes);
+                callback.accept(result);
+            }
+        }.runTaskLater(RelluEssentials.getInstance(), 2L);
+    }
+
 
     public void despawnMannequin(UUID entityUUID) {
         Entity entity = Bukkit.getEntity(entityUUID);

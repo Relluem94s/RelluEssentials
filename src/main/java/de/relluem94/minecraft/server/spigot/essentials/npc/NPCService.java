@@ -30,11 +30,13 @@ public class NPCService {
         }
 
         NPC npc = new NPC(-1, UUID.randomUUID(), profileName, x, y, z, worldName);
-        Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
-        spawnedEntityUUID.ifPresent(npc::setEntityUUID);
-
         npcRepository.save(npc, actorPlayerId);
         loadedNPCs.put(npc.getId(), npc);
+
+        npcSpawner.spawnMannequinAsync(npc, spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
+            npc.setEntityUUID(uuid);
+            npcRepository.save(npc, actorPlayerId);
+        }));
 
         return NPCOperationResult.success(npc);
     }
@@ -55,10 +57,12 @@ public class NPCService {
         }
 
         npc.setProfileName(newProfileName);
-        Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
-        spawnedEntityUUID.ifPresent(npc::setEntityUUID);
-
         npcRepository.save(npc, actorPlayerId);
+
+        npcSpawner.spawnMannequinAsync(npc, spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
+            npc.setEntityUUID(uuid);
+            npcRepository.save(npc, actorPlayerId);
+        }));
         return NPCOperationResult.success(npc);
     }
 
@@ -81,10 +85,12 @@ public class NPCService {
         npc.setY(y);
         npc.setZ(z);
 
-        Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
-        spawnedEntityUUID.ifPresent(npc::setEntityUUID);
-
         npcRepository.save(npc, actorPlayerId);
+
+        npcSpawner.spawnMannequinAsync(npc, spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
+            npc.setEntityUUID(uuid);
+            npcRepository.save(npc, actorPlayerId);
+        }));
         return NPCOperationResult.success(npc);
     }
 
