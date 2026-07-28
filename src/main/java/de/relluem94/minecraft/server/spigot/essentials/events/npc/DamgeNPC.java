@@ -1,39 +1,28 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.Mannequin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.jetbrains.annotations.NotNull;
-
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.jspecify.annotations.NonNull;
 
 public class DamgeNPC implements Listener {
 
     @EventHandler
-    public void onNPCDamage(@NotNull EntityDamageByEntityEvent e){
-        if(!(e.getEntity() instanceof Villager)){
+    public void onEntityDamage(@NonNull EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Mannequin)) {
             return;
         }
 
-        if(e.getEntity().getCustomName() == null){
-            return;
-        }
+        boolean isTrackedNPC = RelluEssentials.getInstance()
+                .getNpcService()
+                .getNPCs()
+                .stream()
+                .anyMatch(npc -> event.getEntity().getUniqueId().equals(npc.getEntityUUID()));
 
-        if(!RelluEssentials.getInstance().getNpcAPI().getNPCNameList().contains(e.getEntity().getCustomName())){
-            return;
-        }
-
-        if(!(e.getDamager() instanceof Player p)){
-            e.setCancelled(true);
-            return;
-        }
-
-        if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-            e.setCancelled(true);
+        if (isTrackedNPC) {
+            event.setCancelled(true);
         }
     }
 }
