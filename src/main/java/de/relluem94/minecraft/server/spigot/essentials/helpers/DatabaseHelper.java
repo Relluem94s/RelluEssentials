@@ -615,6 +615,38 @@ public class DatabaseHelper {
         });
     }
 
+    public void insertNPCDialogue(NPCDialogueEntry entry) {
+        executeUpdate("insertCustomNPCDialogue.sql", ps -> {
+            ps.setInt(1, entry.getCreatedBy());
+            ps.setInt(2, entry.getListPosition());
+            ps.setString(3, entry.getText());
+            ps.setInt(4, entry.getNpcFk());
+        });
+    }
+
+    public void updateNPCDialogue(NPCDialogueEntry entry) {
+        executeUpdate("updateCustomNPCDialogue.sql", ps -> {
+            ps.setInt(1, entry.getUpdatedBy());
+            ps.setInt(2, entry.getListPosition());
+            ps.setString(3, entry.getText());
+            ps.setInt(4, entry.getId());
+        });
+    }
+
+    public void deleteNPCDialogueById(int dialogueId, int deletedByPlayerId) {
+        executeUpdate("deleteCustomNPCDialogueById.sql", ps -> {
+            ps.setInt(1, deletedByPlayerId);
+            ps.setInt(2, dialogueId);
+        });
+    }
+
+    public void deleteNPCDialogueByNpcId(int npcId, int deletedByPlayerId) {
+        executeUpdate("deleteCustomNPCDialogueByNpcId.sql", ps -> {
+            ps.setInt(1, deletedByPlayerId);
+            ps.setInt(2, npcId);
+        });
+    }
+
     public int cleanupLocations() {
         return executeUpdateWithCount("cleanupLocations.sql");
     }
