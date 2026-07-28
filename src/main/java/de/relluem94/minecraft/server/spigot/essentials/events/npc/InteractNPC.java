@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPCDialogueTracker;
 import org.bukkit.entity.Mannequin;
@@ -66,7 +67,7 @@ public class InteractNPC implements Listener {
         }
 
         NPC npc = matchedNPC.get();
-        List<String> dialogueLines = npc.getDialogueLines();
+        List<NPCDialogueEntry> dialogueLines = npc.getDialogueLines();
 
         if (dialogueLines.isEmpty()) {
             return;
@@ -77,6 +78,6 @@ public class InteractNPC implements Listener {
                 player.getUniqueId(),
                 dialogueLines.size()
         );
-        player.sendMessage("§e" + npc.getProfileName() + PLUGIN_FORMS_MSG_SPACER_IN + dialogueLines.get(lineIndex));
+        player.sendMessage("§e" + npc.getProfileName() + PLUGIN_FORMS_MSG_SPACER_IN + dialogueLines.get(lineIndex).getText());
     }
 }

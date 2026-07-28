@@ -148,6 +148,17 @@ public class DatabaseHelper {
         }
     }
 
+    private int executeUpdateWithCount(String sqlFile, StatementConfigurer configurer) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + sqlFile))) {
+            configurer.configure(ps);
+            return ps.executeUpdate();
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            return 0;
+        }
+    }
+
     private void executeUpdateNoSchema(String sqlFile) {
         try (Connection connection = dataSourceNoSchema.getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlResourceLoader.load("sqls/" + sqlFile))) {
@@ -574,6 +585,9 @@ public class DatabaseHelper {
         });
     }
 
+    public List<NPCDialogueEntry> getNPCDialogues(int npcId) {
+        return queryList("getCustomNPCDialoguesByNpcId.sql", ps -> ps.setInt(1, npcId), NPCDialogueMapper::mapNPCDialogue);
+    }
 
     public List<NPCEntry> getNPCs() {
         return queryList("getCustomNPCs.sql", _ -> {}, NPCMapper::mapNPC);
@@ -624,26 +638,28 @@ public class DatabaseHelper {
         });
     }
 
-    public void updateNPCDialogue(NPCDialogueEntry entry) {
-        executeUpdate("updateCustomNPCDialogue.sql", ps -> {
+    public boolean updateNPCDialogue(NPCDialogueEntry entry, UUID uuid) {
+        int affectedRows = executeUpdateWithCount("updateCustomNPCDialogue.sql", ps -> {
             ps.setInt(1, entry.getUpdatedBy());
-            ps.setInt(2, entry.getListPosition());
-            ps.setString(3, entry.getText());
-            ps.setInt(4, entry.getId());
+            ps.setString(2, entry.getText());
+            ps.setString(3, uuid.toString());
+            ps.setInt(4, entry.getListPosition());
         });
+        return affectedRows > 0;
     }
 
-    public void deleteNPCDialogueById(int dialogueId, int deletedByPlayerId) {
+    public void deleteNPCDialogueById(UUID npcUuid, int listPosition, int deletedByPlayerId) {
         executeUpdate("deleteCustomNPCDialogueById.sql", ps -> {
             ps.setInt(1, deletedByPlayerId);
-            ps.setInt(2, dialogueId);
+            ps.setString(2, npcUuid.toString());
+            ps.setInt(3, listPosition);
         });
     }
 
-    public void deleteNPCDialogueByNpcId(int npcId, int deletedByPlayerId) {
+    public void deleteNPCDialogueByNpcId(UUID npcUuid, int deletedByPlayerId) {
         executeUpdate("deleteCustomNPCDialogueByNpcId.sql", ps -> {
             ps.setInt(1, deletedByPlayerId);
-            ps.setInt(2, npcId);
+            ps.setString(2, npcUuid.toString());
         });
     }
 

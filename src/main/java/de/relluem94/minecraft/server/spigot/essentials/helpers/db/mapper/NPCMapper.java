@@ -1,10 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
@@ -54,8 +56,14 @@ public class NPCMapper {
     }
 
     public static NPC toDomain(NPCEntry entry) {
-        NPC npc = new NPC(entry.getUuid(), entry.getProfileName(), entry.getX(), entry.getY(), entry.getZ(), entry.getWorld());
+        NPC npc = new NPC(entry.getId(), entry.getUuid(), entry.getProfileName(), entry.getX(), entry.getY(), entry.getZ(), entry.getWorld());
         npc.setEntityUUID(entry.getEntityUuid());
+        return npc;
+    }
+
+    public static NPC toDomain(NPCEntry entry, List<NPCDialogueEntry> dialogueLines) {
+        NPC npc = toDomain(entry);
+        npc.setDialogueLines(dialogueLines);
         return npc;
     }
 }
