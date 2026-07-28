@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
@@ -35,5 +36,8 @@ public class BetterPlayerQuit implements Listener {
         Bukkit.broadcastMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
         teleportWorld(p, Constants.PLUGIN_WORLD_LOBBY, true);
         ScoreBoardManager.removePlayer(e.getPlayer().getUniqueId());
+        RelluEssentials.getInstance()
+                .getNpcDialogueTracker()
+                .resetPlayerProgress(e.getPlayer().getUniqueId());
     }
 }

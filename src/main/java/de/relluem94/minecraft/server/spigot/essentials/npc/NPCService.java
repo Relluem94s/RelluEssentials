@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+
 import java.util.*;
 
 public class NPCService {
@@ -98,6 +100,7 @@ public class NPCService {
 
         npcRepository.delete(npcId, actorPlayerId);
         loadedNPCs.remove(npcId);
+        RelluEssentials.getInstance().getNpcDialogueTracker().removeNPC(npcId);
         return NPCOperationResult.success(null);
     }
 

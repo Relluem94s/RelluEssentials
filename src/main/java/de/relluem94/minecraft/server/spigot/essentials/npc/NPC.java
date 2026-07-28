@@ -4,6 +4,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -17,6 +19,7 @@ public class NPC {
     private String worldName;
     private UUID entityUUID;
     private ItemHelper itemHelper;
+    private List<String> dialogueLines;
 
     public NPC(UUID id, String profileName, double x, double y, double z, String worldName) {
         this.id = id;
@@ -25,5 +28,6 @@ public class NPC {
         this.y = y;
         this.z = z;
         this.worldName = worldName;
+        this.dialogueLines = new ArrayList<>();
     }
 }
