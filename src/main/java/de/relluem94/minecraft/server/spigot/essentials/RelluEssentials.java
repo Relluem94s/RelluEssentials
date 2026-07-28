@@ -10,10 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.bag.BlockBreakBags
 import de.relluem94.minecraft.server.spigot.essentials.events.bag.BlockDropItemBags;
 import de.relluem94.minecraft.server.spigot.essentials.events.bag.EntityPickupItemBags;
 import de.relluem94.minecraft.server.spigot.essentials.events.bag.InventoryClickBags;
-import de.relluem94.minecraft.server.spigot.essentials.events.npc.DamgeNPC;
-import de.relluem94.minecraft.server.spigot.essentials.events.npc.InteractNPC;
-import de.relluem94.minecraft.server.spigot.essentials.events.npc.InventoryClickNPC;
-import de.relluem94.minecraft.server.spigot.essentials.events.npc.PlaceNPC;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.*;
 import de.relluem94.minecraft.server.spigot.essentials.events.protect.*;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
@@ -191,6 +188,7 @@ public class RelluEssentials extends JavaPlugin {
                     new EventWrapper(new BetterMobs()),
                     new EventWrapper(new BetterSoil()),
                     new EventWrapper(new DamgeNPC()),
+                    new EventWrapper(new DamgeTraderNPC()),
                     new EventWrapper(new InteractNPC()),
                     new EventWrapper(new InventoryClickNPC()),
                     new EventWrapper(new PlaceNPC()),
