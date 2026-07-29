@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
+import org.json.JSONObject;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ public class NPCMapper {
         entry.setId(rs.getInt(FIELD_ID));
         entry.setUuid(UUID.fromString(rs.getString(FIELD_UUID)));
         entry.setProfileName(rs.getString(FIELD_PROFILE_NAME));
+        entry.setInventory(rs.getString(FIELD_INVENTORY) == null ? null:new JSONObject(rs.getString(FIELD_INVENTORY)));
         entry.setWorld(rs.getString(FIELD_WORLD));
         entry.setX(rs.getDouble(FIELD_POS_X));
         entry.setY(rs.getDouble(FIELD_POS_Y));
@@ -43,6 +45,7 @@ public class NPCMapper {
         NPCEntry entry = new NPCEntry();
         entry.setUuid(npc.getId());
         entry.setProfileName(npc.getProfileName());
+        entry.setInventory(npc.getInventory());
         entry.setWorld(npc.getWorldName());
         entry.setX(npc.getX());
         entry.setY(npc.getY());
@@ -58,6 +61,7 @@ public class NPCMapper {
     public static NPC toDomain(NPCEntry entry) {
         NPC npc = new NPC(entry.getId(), entry.getUuid(), entry.getProfileName(), entry.getX(), entry.getY(), entry.getZ(), entry.getWorld());
         npc.setEntityUUID(entry.getEntityUuid());
+        npc.setInventory(entry.getInventory());
         return npc;
     }
 

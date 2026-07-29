@@ -1,6 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCEquipmentInventoryHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.Inventory;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 
@@ -94,6 +99,11 @@ public class NPCService {
         return NPCOperationResult.success(npc);
     }
 
+    public void saveNPCInventory(@NonNull NPC npc, Inventory inventory) {
+        npc.setInventory(InventoryHelper.saveInventoryToJSON(inventory));
+        npcRepository.save(npc, -1);
+    }
+
     public NPCOperationResult deleteNPC(UUID npcId, int actorPlayerId) {
         NPC npc = loadedNPCs.get(npcId);
         if (npc == null) {
@@ -114,11 +124,24 @@ public class NPCService {
         List<NPC> persistedNPCs = npcRepository.loadAll();
         for (NPC npc : persistedNPCs) {
             Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
-            spawnedEntityUUID.ifPresent(npc::setEntityUUID);
+            spawnedEntityUUID.ifPresent(uuid -> {
+                npc.setEntityUUID(uuid);
+                restoreNPCEquipment(npc);
+            });
             npcRepository.save(npc, systemPlayerId);
             loadedNPCs.put(npc.getId(), npc);
         }
     }
+
+    private void restoreNPCEquipment(@NonNull NPC npc) {
+        if (npc.getInventory() == null || npc.getEntityUUID() == null) {
+            return;
+        }
+        Inventory equipmentInventory = Bukkit.createInventory(null, 54);
+        InventoryHelper.loadInventoryFromJSON(equipmentInventory, npc.getInventory());
+        NPCEquipmentInventoryHelper.applyInventoryEquipmentToEntity(equipmentInventory, npc.getEntityUUID());
+    }
+
 
     public void despawnAllNPCs() {
         for (NPC npc : loadedNPCs.values()) {

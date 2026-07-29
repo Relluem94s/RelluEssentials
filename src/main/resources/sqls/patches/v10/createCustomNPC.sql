@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `rellu_essentials`.`custom_npc` (
   `entity_uuid` VARCHAR(94) NULL,
   `profile_name` VARCHAR(94) NOT NULL,
   `world` VARCHAR(45) NOT NULL,
+  `inventory` json NULL,
   `x` DOUBLE NOT NULL,
   `y` DOUBLE NOT NULL,
   `z` DOUBLE NOT NULL,
