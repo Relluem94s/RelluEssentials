@@ -35,10 +35,12 @@ public class NPCRepository {
         NPCEntry existingEntry = databaseHelper.getNPC(npc.getId());
         NPCEntry entry = NPCMapper.toEntry(npc, actorPlayerId);
         if (existingEntry == null) {
-            databaseHelper.insertNPC(entry);
+            int generatedId = databaseHelper.insertNPC(entry);
+            npc.setDbid(generatedId);
         } else {
             entry.setId(existingEntry.getId());
             databaseHelper.updateNPC(entry);
+            npc.setDbid(existingEntry.getId());
         }
     }
 

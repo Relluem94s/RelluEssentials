@@ -61,7 +61,6 @@ public class Admin implements CommandConstruct {
         return Commands.values();
     }
 
-
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         List<String> tabList = new ArrayList<>();
@@ -71,6 +70,7 @@ public class Admin implements CommandConstruct {
         if (!isPlayer(commandSender)) {
             return tabList;
         }
+        Player player = (Player) commandSender;
         if (strings.length == 1) {
             tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
             return tabList;
@@ -85,41 +85,46 @@ public class Admin implements CommandConstruct {
             return tabList;
         }
         if (strings.length == 3) {
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "dialogue".equalsIgnoreCase(strings[1])) {
-                tabList.addAll(List.of("add", "update", "delete"));
-            }
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "create".equalsIgnoreCase(strings[1])) {
-                tabList.add("<profileName>");
-            }
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0])
-                    && ("update".equalsIgnoreCase(strings[1]) || "equip".equalsIgnoreCase(strings[1]) || "delete".equalsIgnoreCase(strings[1]))) {
-                Player player = (Player) commandSender;
-                RelluEssentials.getInstance().getNpcService()
-                        .getNearestNPC(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getWorld().getName())
-                        .ifPresentOrElse(
-                                npc -> tabList.add(String.valueOf(npc.getId())),
-                                () -> tabList.add("<NPC ID>")
-                        );
+            if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
+                if ("create".equalsIgnoreCase(strings[1])) {
+                    tabList.add("<profileName>");
+                } else if ("dialogue".equalsIgnoreCase(strings[1])) {
+                    tabList.addAll(List.of("add", "update", "delete"));
+                } else if ("update".equalsIgnoreCase(strings[1]) || "equip".equalsIgnoreCase(strings[1]) || "delete".equalsIgnoreCase(strings[1])) {
+                    resolveNearestNpcId(player).ifPresentOrElse(
+                            tabList::add,
+                            () -> tabList.add("<NPC-ID>")
+                    );
+                }
             }
             return tabList;
         }
         if (strings.length == 4) {
             if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
                 if ("create".equalsIgnoreCase(strings[1])) {
-                    tabList.add(resolvePlayerCoordinate(commandSender, "x"));
+                    tabList.add(resolvePlayerCoordinate(player, "x"));
                 } else if ("update".equalsIgnoreCase(strings[1])) {
                     tabList.addAll(List.of("profile", "position"));
+                } else if ("dialogue".equalsIgnoreCase(strings[1])) {
+                    resolveNearestNpcId(player).ifPresentOrElse(
+                            tabList::add,
+                            () -> tabList.add("<NPC-ID>")
+                    );
                 }
             }
             return tabList;
         }
         if (strings.length == 5) {
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "dialogue".equalsIgnoreCase(strings[1])) {
-                String dialogueAction = strings[2];
-                boolean isAddAction = "add".equalsIgnoreCase(dialogueAction);
-                boolean isUpdateOrDeleteAction = "update".equalsIgnoreCase(dialogueAction) || "delete".equalsIgnoreCase(dialogueAction);
-
-                if (isAddAction || isUpdateOrDeleteAction) {
+            if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
+                if ("create".equalsIgnoreCase(strings[1])) {
+                    tabList.add(resolvePlayerCoordinate(player, "y"));
+                } else if ("update".equalsIgnoreCase(strings[1])) {
+                    if ("profile".equalsIgnoreCase(strings[3])) {
+                        tabList.add("<profileName>");
+                    } else if ("position".equalsIgnoreCase(strings[3])) {
+                        tabList.add(resolvePlayerCoordinate(player, "x"));
+                    }
+                } else if ("dialogue".equalsIgnoreCase(strings[1])) {
                     resolveNpcFromArg(strings[3]).ifPresent(npc -> {
                         List<NPCDialogueEntry> dialogueEntries = RelluEssentials.getInstance().getDatabaseHelper().getNPCDialogues(npc.getDbid());
                         List<Integer> usedPositions = dialogueEntries.stream()
@@ -127,7 +132,7 @@ public class Admin implements CommandConstruct {
                                 .sorted()
                                 .toList();
 
-                        if (isAddAction) {
+                        if ("add".equalsIgnoreCase(strings[2])) {
                             tabList.addAll(findGapsAndNextPosition(usedPositions).stream()
                                     .map(String::valueOf)
                                     .toList());
@@ -139,52 +144,59 @@ public class Admin implements CommandConstruct {
                     });
                 }
             }
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "update".equalsIgnoreCase(strings[1])) {
-                if ("profile".equalsIgnoreCase(strings[3])) {
-                    tabList.add("<profileName>");
-                } else if ("position".equalsIgnoreCase(strings[3])) {
-                    tabList.add(resolvePlayerCoordinate(commandSender, "x"));
-                }
-            }
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "create".equalsIgnoreCase(strings[1])) {
-                tabList.add(resolvePlayerCoordinate(commandSender, "y"));
-            }
             return tabList;
         }
         if (strings.length == 6) {
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "dialogue".equalsIgnoreCase(strings[1])
-                    && ("add".equalsIgnoreCase(strings[2]) || "update".equalsIgnoreCase(strings[2]))) {
-                tabList.add("<text...>");
-            }
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "create".equalsIgnoreCase(strings[1])) {
-                tabList.add(resolvePlayerCoordinate(commandSender, "z"));
-            }
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "update".equalsIgnoreCase(strings[1])
-                    && "position".equalsIgnoreCase(strings[3])) {
-                tabList.add(resolvePlayerCoordinate(commandSender, "y"));
+            if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
+                if ("create".equalsIgnoreCase(strings[1])) {
+                    tabList.add(resolvePlayerCoordinate(player, "z"));
+                } else if ("update".equalsIgnoreCase(strings[1]) && "position".equalsIgnoreCase(strings[3])) {
+                    tabList.add(resolvePlayerCoordinate(player, "y"));
+                } else if ("dialogue".equalsIgnoreCase(strings[1])) {
+                    if ("add".equalsIgnoreCase(strings[2])) {
+                        tabList.add("<text...>");
+                    } else if ("update".equalsIgnoreCase(strings[2])) {
+                        resolveCurrentDialogueText(strings[3], strings[4]).ifPresentOrElse(
+                                tabList::add,
+                                () -> tabList.add("<text...>")
+                        );
+                    }
+                }
             }
             return tabList;
         }
         if (strings.length == 7) {
-            if (Commands.NPC.getName().equalsIgnoreCase(strings[0]) && "update".equalsIgnoreCase(strings[1])
+            if (Commands.NPC.getName().equalsIgnoreCase(strings[0])
+                    && "update".equalsIgnoreCase(strings[1])
                     && "position".equalsIgnoreCase(strings[3])) {
-                tabList.add(resolvePlayerCoordinate(commandSender, "z"));
+                tabList.add(resolvePlayerCoordinate(player, "z"));
             }
         }
+
         return tabList;
     }
 
-    private @NonNull String resolvePlayerCoordinate(CommandSender commandSender, String axis) {
-        if (!isPlayer(commandSender)) {
-            return "<" + axis + ">";
+    private Optional<String> resolveNearestNpcId(Player player) {
+        return RelluEssentials.getInstance().getNpcService()
+                .getNearestNPC(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getWorld().getName())
+                .map(npc -> String.valueOf(npc.getId()));
+    }
+
+    private Optional<String> resolveCurrentDialogueText(String npcIdArg, String listPositionArg) {
+        try {
+            UUID npcId = UUID.fromString(npcIdArg);
+            int listPosition = Integer.parseInt(listPositionArg);
+            return RelluEssentials.getInstance().getNpcService().getNPCById(npcId)
+                    .flatMap(npc -> RelluEssentials.getInstance().getDatabaseHelper()
+                            .getNPCDialogues(npc.getDbid())
+                            .stream()
+                            .filter(entry -> entry.getListPosition() == listPosition)
+                            .map(NPCDialogueEntry::getText)
+                            .map(text -> text.replace('§', '&'))
+                            .findFirst());
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
         }
-        Player player = (Player) commandSender;
-        return switch (axis) {
-            case "x" -> String.valueOf((int) player.getLocation().getX());
-            case "y" -> String.valueOf((int) player.getLocation().getY());
-            case "z" -> String.valueOf((int) player.getLocation().getZ());
-            default -> "<" + axis + ">";
-        };
     }
 
     private Optional<NPC> resolveNpcFromArg(String npcIdArg) {
@@ -194,6 +206,15 @@ public class Admin implements CommandConstruct {
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
+    }
+
+    private @NonNull String resolvePlayerCoordinate(Player player, String axis) {
+        return switch (axis) {
+            case "x" -> String.valueOf((int) player.getLocation().getX());
+            case "y" -> String.valueOf((int) player.getLocation().getY());
+            case "z" -> String.valueOf((int) player.getLocation().getZ());
+            default -> "<" + axis + ">";
+        };
     }
 
     private @NonNull List<Integer> findGapsAndNextPosition(@NonNull List<Integer> usedPositions) {
