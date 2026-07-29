@@ -46,6 +46,7 @@ public class Admin implements CommandConstruct {
                 new NPCCreateCommand(),
                 new NPCDeleteCommand(),
                 new NPCUpdateCommand(),
+                new NPCEquipCommand(),
                 new NPCDialogueAddCommand(),
                 new NPCDialogueUpdateCommand(),
                 new NPCDialogueDeleteCommand(),
@@ -79,7 +80,7 @@ public class Admin implements CommandConstruct {
                 tabList.addAll(TabCompleterHelper.getOnlinePlayers());
             }
             if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
-                tabList.addAll(List.of("create", "update", "delete", "dialogue"));
+                tabList.addAll(List.of("create", "update", "delete", "dialogue", "equip"));
             }
             return tabList;
         }
@@ -91,7 +92,7 @@ public class Admin implements CommandConstruct {
                 tabList.add("<profileName>");
             }
             if (Commands.NPC.getName().equalsIgnoreCase(strings[0])
-                    && ("update".equalsIgnoreCase(strings[1]) || "delete".equalsIgnoreCase(strings[1]))) {
+                    && ("update".equalsIgnoreCase(strings[1]) || "equip".equalsIgnoreCase(strings[1]) || "delete".equalsIgnoreCase(strings[1]))) {
                 Player player = (Player) commandSender;
                 RelluEssentials.getInstance().getNpcService()
                         .getNearestNPC(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(), player.getWorld().getName())

@@ -1,24 +1,22 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.CustomInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static de.relluem94.minecraft.server.spigot.essentials.CustomItems.CUSTOM_ITEMS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_DUMMY;
 
 /**
  *
@@ -138,22 +136,23 @@ public class InventoryHelper {
 
 
     public static void createInventory(String json, @NotNull Player p){
-        p.getInventory().clear();
+        loadInventoryFromJSON(p.getInventory(), new JSONObject(json));
+    }
+
+    public static void loadInventoryFromJSON(Inventory inventory, JSONObject inventoryJSON) {
+        inventory.clear();
 
         try {
-            JSONObject invJson = new JSONObject(json);
-            for (int i=p.getInventory().getSize(); i >= 0; i--) {
-                JSONObject slot = invJson.getJSONObject(i+"");
-                                
+            for (int i = inventory.getSize() - 1; i >= 0; i--) {
+                JSONObject slot = inventoryJSON.getJSONObject(i+"");
+
                 if (slot.has(SLOT_NAME_ITEM_STACK)) {
                     int slotID = slot.getInt(SLOT_NAME_ID);
                     ItemStack stack = ItemHelper.itemFrom64(slot.getString(SLOT_NAME_ITEM_STACK));
-                    
-                    if(stack != null){
-                        p.getInventory().setItem(slotID, stack);
-                    }
 
-                  
+                    if(stack != null){
+                        inventory.setItem(slotID, stack);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -162,10 +161,13 @@ public class InventoryHelper {
     }
 
     public static @NotNull JSONObject saveInventoryToJSON(@NotNull Player p){
-        PlayerInventory inventory = p.getInventory();
+        return saveInventoryToJSON(p.getInventory());
+    }
+
+    public static @NotNull JSONObject saveInventoryToJSON(@NotNull Inventory inventory){
         JSONObject inv = new JSONObject();
 
-        for (int i=inventory.getSize(); i >= 0; i--) {
+        for (int i = inventory.getSize() - 1; i >= 0; i--) {
             ItemStack stack = inventory.getItem(i);
             JSONObject slot = new JSONObject();
             slot.put(SLOT_NAME_ID ,Integer.valueOf(i));
@@ -201,5 +203,4 @@ public class InventoryHelper {
     public static boolean isCustomItemInMainHand(@NotNull Player player, @NotNull ItemHelper customItem) {
         return player.getInventory().getItemInMainHand().equals(customItem.getCustomItem());
     }
-
 }

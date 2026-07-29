@@ -115,6 +115,7 @@ public enum MessageKey {
     COMMAND_NPC_DIALOGUE_UPDATED("command.npc.dialogue.updated"),
     COMMAND_NPC_DIALOGUE_DELETED("command.npc.dialogue.deleted"),
     COMMAND_NPC_DIALOGUE_NOT_FOUND("command.npc_dialogue.not_found"),
+    COMMAND_NPC_EQUIP_USAGE("command.npc_equip_usage"),
     COMMAND_POSITION_INFO_1("command.position.info_1"),
     COMMAND_POSITION_INFO_2("command.position.info_2"),
     COMMAND_POSITION_INFO_3("command.position.info_3"),

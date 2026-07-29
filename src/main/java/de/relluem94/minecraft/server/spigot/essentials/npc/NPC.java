@@ -4,6 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCDialogueEntry;
 import lombok.Getter;
 import lombok.Setter;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class NPC {
     private int dbid;
     private final UUID id;
     private String profileName;
+    private JSONObject inventory;
     private double x;
     private double y;
     private double z;
@@ -32,5 +34,10 @@ public class NPC {
         this.z = z;
         this.worldName = worldName;
         this.dialogueLines = new ArrayList<>();
+    }
+
+    public NPC(int dbid, UUID id, String profileName, JSONObject inventory, double x, double y, double z, String worldName) {
+        this(dbid, id, profileName, x,y,z,worldName);
+        this.inventory = inventory;
     }
 }

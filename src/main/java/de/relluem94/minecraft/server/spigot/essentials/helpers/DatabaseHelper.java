@@ -601,11 +601,12 @@ public class DatabaseHelper {
         executeUpdate("insertCustomNPC.sql", ps -> {
             ps.setString(1, npcEntry.getUuid().toString());
             ps.setString(2, npcEntry.getProfileName());
-            ps.setString(3, npcEntry.getWorld());
-            ps.setDouble(4, npcEntry.getX());
-            ps.setDouble(5, npcEntry.getY());
-            ps.setDouble(6, npcEntry.getZ());
-            ps.setInt(7, npcEntry.getCreatedBy());
+            ps.setString(3, npcEntry.getInventory() != null ? npcEntry.getInventory().toString() : null);
+            ps.setString(4, npcEntry.getWorld());
+            ps.setDouble(5, npcEntry.getX());
+            ps.setDouble(6, npcEntry.getY());
+            ps.setDouble(7, npcEntry.getZ());
+            ps.setInt(8, npcEntry.getCreatedBy());
         });
     }
 
@@ -613,12 +614,13 @@ public class DatabaseHelper {
         executeUpdate("updateCustomNPC.sql", ps -> {
             ps.setString(1, npcEntry.getEntityUuid() != null ? npcEntry.getEntityUuid().toString() : null);
             ps.setString(2, npcEntry.getProfileName());
-            ps.setString(3, npcEntry.getWorld());
-            ps.setDouble(4, npcEntry.getX());
-            ps.setDouble(5, npcEntry.getY());
-            ps.setDouble(6, npcEntry.getZ());
-            ps.setInt(7, npcEntry.getUpdatedBy());
-            ps.setInt(8, npcEntry.getId());
+            ps.setString(3, npcEntry.getInventory() != null ? npcEntry.getInventory().toString() : null);
+            ps.setString(4, npcEntry.getWorld());
+            ps.setDouble(5, npcEntry.getX());
+            ps.setDouble(6, npcEntry.getY());
+            ps.setDouble(7, npcEntry.getZ());
+            ps.setInt(8, npcEntry.getUpdatedBy());
+            ps.setInt(9, npcEntry.getId());
         });
     }
 

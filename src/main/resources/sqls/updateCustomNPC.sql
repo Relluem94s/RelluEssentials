@@ -6,6 +6,7 @@
 UPDATE custom_npc
 SET entity_uuid  = ?,
     profile_name = ?,
+    inventory    = ?,
     world        = ?,
     x            = ?,
     y            = ?,
