@@ -168,6 +168,25 @@ public class DatabaseHelper {
         }
     }
 
+    private int executeInsertWithGeneratedKey(String sqlFile, StatementConfigurer configurer) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement ps = connection.prepareStatement(
+                     sqlResourceLoader.load("sqls/" + sqlFile),
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
+            configurer.configure(ps);
+            ps.executeUpdate();
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+            }
+        } catch (SQLException | FileNotFoundException ex) {
+            Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        return -1;
+    }
+
+
     void executeScript(String script) {
         executeUpdate(script, _ -> {});
     }
@@ -597,8 +616,8 @@ public class DatabaseHelper {
         return querySingle("getCustomNPCByUuid.sql", ps -> ps.setString(1, uuid.toString()), NPCMapper::mapNPC);
     }
 
-    public void insertNPC(NPCEntry npcEntry) {
-        executeUpdate("insertCustomNPC.sql", ps -> {
+    public int insertNPC(NPCEntry npcEntry) {
+        return executeInsertWithGeneratedKey("insertCustomNPC.sql", ps -> {
             ps.setString(1, npcEntry.getUuid().toString());
             ps.setString(2, npcEntry.getProfileName());
             ps.setString(3, npcEntry.getInventory() != null ? npcEntry.getInventory().toString() : null);
