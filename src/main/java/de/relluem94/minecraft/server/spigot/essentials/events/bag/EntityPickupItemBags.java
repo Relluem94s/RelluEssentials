@@ -26,7 +26,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 public class EntityPickupItemBags implements Listener {
-    private ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
+    private final ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
     @EventHandler
     public void onItemCollect(@NotNull EntityPickupItemEvent e) {
         if (e.getEntity() instanceof Player p) {

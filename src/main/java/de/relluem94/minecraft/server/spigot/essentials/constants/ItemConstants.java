@@ -43,8 +43,6 @@ public interface ItemConstants {
     String PLUGIN_ITEM_GRAPPLINGHOCK = "§cGrappling Hook";
     String PLUGIN_ITEM_WORLDSELECTOR = "§eWorld Selector";
 
-    String PLUGIN_ITEM_INGREDIENT = "§4§l§oThis is a crafting ingredient";
-
     String PLUGIN_ITEM_CLOUDBOOTS = "§bCloud Boots";
     String PLUGIN_ITEM_CLOUDBOOTS_LORE1 = "§bGrants gliding abillity if worn.";
     String PLUGIN_ITEM_CLOUDBOOTS_LORE2 = "§bAlso reduces Fall Damage by 100%";
