@@ -236,19 +236,7 @@ public class ItemHelper implements IItemHelper {
             return false;
         }
 
-        if (item.getType() != compare.getType()) {
-            return false;
-        }
-
-        if (item.hasItemMeta() != compare.hasItemMeta()) {
-            return false;
-        }
-
-        if (item.getItemMeta() == null) {
-            return false;
-        }
-
-        return item.hasItemMeta() && item.getItemMeta().equals(compare.getItemMeta());
+        return item.isSimilar(compare);
     }
 
     /**
@@ -269,8 +257,14 @@ public class ItemHelper implements IItemHelper {
         if (item.hasItemMeta() != compare.hasItemMeta()) {
             return false;
         }
+        ItemMeta itemMeta = item.getItemMeta();
+        ItemMeta compareMeta = compare.getItemMeta();
 
-        return Objects.requireNonNull(item.getItemMeta()).getDisplayName().equals(Objects.requireNonNull(compare.getItemMeta()).getDisplayName());
+        if (itemMeta == null || compareMeta == null) {
+            return false;
+        }
+
+        return itemMeta.getDisplayName().equals(compareMeta.getDisplayName());
     }
 
     /**
