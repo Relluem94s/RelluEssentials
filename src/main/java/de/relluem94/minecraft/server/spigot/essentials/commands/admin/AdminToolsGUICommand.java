@@ -1,18 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.CustomInventory;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.registry.InventoryRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.RegistryKey;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.PLUGIN_INVENTORY_ADMIN_TOOLS;
 
 public class AdminToolsGUICommand implements SubCommand {
 
@@ -22,10 +21,8 @@ public class AdminToolsGUICommand implements SubCommand {
             player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
             return;
         }
-        org.bukkit.inventory.Inventory inv = InventoryHelper.getCustomItemInventory(
-                new CustomInventory(ItemHelper.Type.ADMIN_TOOL, 9,
-                        Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dAdmin Tools"));
-        InventoryHelper.openInventory(player, inv);
+        InventoryRegistry.find(RegistryKey.of(PLUGIN_INVENTORY_ADMIN_TOOLS))
+                .ifPresent(registeredInventory -> registeredInventory.openFor(player));
     }
 
     @Override

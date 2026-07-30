@@ -256,6 +256,7 @@ public class RelluEssentials extends JavaPlugin {
 
         dm.enable();
         databaseHelper = dm.getDatabaseHelper();
+        new CustomItemManager(this).enable();
 
         new EventManager().enable();
         new SkillManager().enable();

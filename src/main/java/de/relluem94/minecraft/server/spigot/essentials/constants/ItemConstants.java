@@ -20,6 +20,15 @@ public interface ItemConstants {
 
 
     String PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS = "cloud_boots";
+    String PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET = "magic_water_bucket";
+    String PLUGIN_ITEM_NAMESPACE_COINS = "coins";
+    String PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR = "cloud_sailor";
+    String PLUGIN_ITEM_NAMESPACE_POSITION_AXE = "position_axe";
+    String PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED = "npc_gui_disabled";
+    String PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE = "npc_gui_close";
+
+    String PLUGIN_ITEM_NPC_GUI_DISABLED_NAME = "   ";
+    String PLUGIN_ITEM_NPC_GUI_CLOSE_NAME = "Close";
 
     String PLUGIN_ITEM_RELLU_HELMET = "§6Rellu's Helmet";
     String PLUGIN_ITEM_RELLU_CHESTPLATE = "§3Rellu's Chestplate";
@@ -33,8 +42,6 @@ public interface ItemConstants {
     String PLUGIN_ITEM_AUTOSELLHOPER = PLUGIN_COLOR_MONEY + "\uD835\uDE3C\uD835\uDE6A\uD835\uDE69\uD835\uDE64 \uD835\uDE4E\uD835\uDE5A\uD835\uDE61\uD835\uDE61 \uD835\uDE43\uD835\uDE64\uD835\uDE65\uD835\uDE65\uD835\uDE5A\uD835\uDE67";
     String PLUGIN_ITEM_GRAPPLINGHOCK = "§cGrappling Hook";
     String PLUGIN_ITEM_WORLDSELECTOR = "§eWorld Selector";
-
-    String PLUGIN_ITEM_INGREDIENT = "§4§l§oThis is a crafting ingredient";
 
     String PLUGIN_ITEM_CLOUDBOOTS = "§bCloud Boots";
     String PLUGIN_ITEM_CLOUDBOOTS_LORE1 = "§bGrants gliding abillity if worn.";

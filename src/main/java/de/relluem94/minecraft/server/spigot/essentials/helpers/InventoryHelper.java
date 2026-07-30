@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.relluem94.minecraft.server.spigot.essentials.CustomItems.CUSTOM_ITEMS;
-
 /**
  *
  * @author rellu
@@ -177,25 +175,17 @@ public class InventoryHelper {
         return inv;
     }
 
-    @ApiStatus.Internal
     public static @NotNull Inventory getCustomItemInventory(@NotNull CustomInventory ci) {
-        return getCustomItemInventory(CUSTOM_ITEMS, ci.getTitleGUI(), ci.getSize(), ci.getType());
+        return getCustomItemInventory(ci, null);
     }
 
-    @SuppressWarnings("unused")
-    public static @NotNull Inventory getCustomItemInventory(List<ItemHelper> customItems, @NotNull CustomInventory ci) {
-        return getCustomItemInventory(customItems, ci.getTitleGUI(), ci.getSize(), ci.getType());
-    }
-
-    public static @NotNull Inventory getCustomItemInventory(@NotNull List<ItemHelper> customItems, String guiTitle, int guiSize, ItemHelper.Type itemType) {
-        Inventory inv = Bukkit.createInventory(null, guiSize, guiTitle);
-        for (ItemHelper itemHelper : customItems) {
-            if(!itemType.equals(itemHelper.getItemType())){
-                continue;
+    public static @NotNull Inventory getCustomItemInventory(@NotNull CustomInventory ci, ItemHelper.Type itemType) {
+        Inventory inv = Bukkit.createInventory(null, ci.getSize(), ci.getTitleGUI());
+        for (ItemHelper itemHelper : ci.getCustomItems()) {
+            if (itemType == null || itemType.equals(itemHelper.getItemType())) {
+                inv.addItem(itemHelper.getCustomItem());
             }
-            inv.addItem(itemHelper.getCustomItem());
         }
-
         return inv;
     }
 

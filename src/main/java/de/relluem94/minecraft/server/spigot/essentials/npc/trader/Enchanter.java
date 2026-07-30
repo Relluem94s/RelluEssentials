@@ -4,8 +4,12 @@ import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.items.AutoSellHopper;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.RegistryKey;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET;
 
 public class Enchanter extends TraderNPC {
 
@@ -24,10 +28,11 @@ public class Enchanter extends TraderNPC {
             slot++;
         }
 
-        inv.setItem(slot,CustomItems.magic_water_bucket.getCustomItem());
+        int finalSlot = slot;
+        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET))
+                .ifPresent(item -> inv.setItem(finalSlot, item.getCustomItem()));
         slot++;
         inv.setItem(slot, new AutoSellHopper().getCustomItem());
-
         
         return inv;
     }    

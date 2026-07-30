@@ -21,4 +21,6 @@ public class ExceptionConstants {
     public static final String PLUGIN_EXCEPTION_ITEMHELPER_INVALID_BASE64_DATA = "Invalid Base64 data: %s";
     public static final String PLUGIN_EXCEPTION_ITEMHELPER_NAME_NOT_FOUND = "ERROR_404_NAME_NOT_FOUND_EXCEPTION";
     public static final String PLUGIN_EXCEPTION_NPC_UNIMPLEMENTED_METHOD = "Unimplemented method 'getMainGUI'";
+    public static final String PLUGIN_EXCEPTION_INVENTORY_REGISTRY = "Inventory already registered: %s";
+    public static final String PLUGIN_EXCEPTION_ITEM_REGISTRY = "Item already registered: %s";
 }

@@ -1,17 +1,21 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.RegistryKey;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
 
 public class GiveCloudSailorCommand implements SubCommand {
 
     @Override
     public void execute(Player player, String[] args) {
-        player.getInventory().addItem(CustomItems.cloudSailor.getCustomItem());
-        player.getInventory().addItem(CustomItems.cloudBoots.getCustomItem());
+        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).ifPresent(item -> player.getInventory().addItem(item.getCustomItem()));
+        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).ifPresent(item -> player.getInventory().addItem(item.getCustomItem()));
     }
 
     @Override
