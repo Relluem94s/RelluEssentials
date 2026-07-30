@@ -2,12 +2,12 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

@@ -1,9 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.api;
 
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
 
 public class BankAPI {
     
