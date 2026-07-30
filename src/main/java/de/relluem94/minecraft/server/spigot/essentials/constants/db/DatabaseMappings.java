@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.constants;
+package de.relluem94.minecraft.server.spigot.essentials.constants.db;
 
 public interface DatabaseMappings {
     String FIELD_ID = "id";

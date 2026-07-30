@@ -1,9 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.SqlResourceLoader;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatchHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

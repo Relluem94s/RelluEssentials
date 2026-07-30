@@ -8,13 +8,13 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.ClasspathSqlResourceLoader;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatchHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
 
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseConstants.PLUGIN_DATABASE_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseConstants.PLUGIN_DATABASE_NAME;
 
 public class DatabaseHelperFactory {
     private DatabaseHelperFactory() {

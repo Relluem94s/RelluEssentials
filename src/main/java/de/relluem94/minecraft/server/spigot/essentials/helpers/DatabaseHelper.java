@@ -1,11 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings;
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.SqlResourceLoader;
+import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
+import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.*;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatchHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.*;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
