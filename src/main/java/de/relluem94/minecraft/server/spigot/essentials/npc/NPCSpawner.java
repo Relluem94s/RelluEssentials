@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public class NPCSpawner {
@@ -21,7 +22,7 @@ public class NPCSpawner {
         this.commandBuilder = new NPCMannequinCommandBuilder();
     }
 
-    public Optional<UUID> spawnMannequin(@NonNull NPC npc) {
+    public Optional<UUID> spawnMannequin(@NonNull NPC npc, Set<UUID> alreadyManagedUUIDs) {
         World world = Bukkit.getWorld(npc.getWorldName());
         if (world == null) {
             return Optional.empty();
@@ -37,10 +38,11 @@ public class NPCSpawner {
 
         Bukkit.dispatchCommand(playerInWorld.get(), summonCommand);
 
-        return findNewlySpawnedMannequin(world, spawnLocation).map(this::applyMannequinAttributes);
+        return findNewlySpawnedUnmanagedMannequin(world, spawnLocation, alreadyManagedUUIDs)
+                .map(this::applyMannequinAttributes);
     }
 
-    public void spawnMannequinAsync(@NonNull NPC npc, java.util.function.Consumer<Optional<UUID>> callback) {
+    public void spawnMannequinAsync(@NonNull NPC npc, Set<UUID> alreadyManagedUUIDs, java.util.function.Consumer<Optional<UUID>> callback) {
         World world = Bukkit.getWorld(npc.getWorldName());
         if (world == null) {
             callback.accept(Optional.empty());
@@ -61,7 +63,7 @@ public class NPCSpawner {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Optional<UUID> result = findNewlySpawnedMannequin(world, spawnLocation)
+                Optional<UUID> result = findNewlySpawnedUnmanagedMannequin(world, spawnLocation, alreadyManagedUUIDs)
                         .map(NPCSpawner.this::applyMannequinAttributes);
                 callback.accept(result);
             }
@@ -76,6 +78,20 @@ public class NPCSpawner {
         }
     }
 
+    public void despawnAllMannequinsInAllWorlds(Set<String> managedProfileNames) {
+        Bukkit.getWorlds().forEach(world ->
+                world.getEntities().stream()
+                        .filter(entity -> entity.getType().name().equalsIgnoreCase("MANNEQUIN"))
+                        .filter(entity -> isManagedByPlugin(entity, managedProfileNames))
+                        .forEach(Entity::remove)
+        );
+    }
+
+    private boolean isManagedByPlugin(Entity entity, Set<String> managedProfileNames) {
+        return managedProfileNames.contains(entity.getName());
+    }
+
+
     private UUID applyMannequinAttributes(UUID entityUUID) {
         Entity entity = Bukkit.getEntity(entityUUID);
 
@@ -86,9 +102,10 @@ public class NPCSpawner {
         return entityUUID;
     }
 
-    private @NonNull Optional<UUID> findNewlySpawnedMannequin(@NonNull World world, Location spawnLocation) {
+    private @NonNull Optional<UUID> findNewlySpawnedUnmanagedMannequin(@NonNull World world, Location spawnLocation, Set<UUID> alreadyManagedUUIDs) {
         return world.getEntities().stream()
                 .filter(entity -> entity.getType().name().equalsIgnoreCase("MANNEQUIN"))
+                .filter(entity -> !alreadyManagedUUIDs.contains(entity.getUniqueId()))
                 .filter(entity -> isWithinSpawnRadius(entity.getLocation(), spawnLocation))
                 .map(Entity::getUniqueId)
                 .findFirst();

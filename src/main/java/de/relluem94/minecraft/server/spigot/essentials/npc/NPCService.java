@@ -38,7 +38,8 @@ public class NPCService {
         npcRepository.save(npc, actorPlayerId);
         loadedNPCs.put(npc.getId(), npc);
 
-        npcSpawner.spawnMannequinAsync(npc, spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
+        Set<UUID> managedUUIDs = getCurrentlyManagedEntityUUIDs();
+        npcSpawner.spawnMannequinAsync(npc, managedUUIDs, spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
             npc.setEntityUUID(uuid);
             npcRepository.save(npc, actorPlayerId);
         }));
@@ -64,7 +65,7 @@ public class NPCService {
         npc.setProfileName(newProfileName);
         npcRepository.save(npc, actorPlayerId);
 
-        npcSpawner.spawnMannequinAsync(npc, spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
+        npcSpawner.spawnMannequinAsync(npc, getCurrentlyManagedEntityUUIDs(), spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
             npc.setEntityUUID(uuid);
             npcRepository.save(npc, actorPlayerId);
         }));
@@ -92,7 +93,7 @@ public class NPCService {
 
         npcRepository.save(npc, actorPlayerId);
 
-        npcSpawner.spawnMannequinAsync(npc, spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
+        npcSpawner.spawnMannequinAsync(npc, getCurrentlyManagedEntityUUIDs(), spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
             npc.setEntityUUID(uuid);
             npcRepository.save(npc, actorPlayerId);
         }));
@@ -122,8 +123,12 @@ public class NPCService {
 
     public void loadAndRespawnAllNPCs(int systemPlayerId) {
         List<NPC> persistedNPCs = npcRepository.loadAll();
+        Set<String> knownProfileNames = persistedNPCs.stream()
+                .map(NPC::getProfileName)
+                .collect(java.util.stream.Collectors.toSet());
+        npcSpawner.despawnAllMannequinsInAllWorlds(knownProfileNames);
         for (NPC npc : persistedNPCs) {
-            Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc);
+            Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc, getCurrentlyManagedEntityUUIDs());
             spawnedEntityUUID.ifPresent(uuid -> {
                 npc.setEntityUUID(uuid);
                 restoreNPCEquipment(npc);
@@ -178,5 +183,12 @@ public class NPCService {
                 .min(Comparator.comparingDouble(npc ->
                         Math.pow(npc.getX() - x, 2) + Math.pow(npc.getY() - y, 2) + Math.pow(npc.getZ() - z, 2)
                 ));
+    }
+
+    private Set<UUID> getCurrentlyManagedEntityUUIDs() {
+        return loadedNPCs.values().stream()
+                .map(NPC::getEntityUUID)
+                .filter(Objects::nonNull)
+                .collect(java.util.stream.Collectors.toSet());
     }
 }
