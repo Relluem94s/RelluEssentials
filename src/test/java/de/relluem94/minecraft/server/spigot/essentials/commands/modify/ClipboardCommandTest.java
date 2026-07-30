@@ -2,8 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.AfterEach;

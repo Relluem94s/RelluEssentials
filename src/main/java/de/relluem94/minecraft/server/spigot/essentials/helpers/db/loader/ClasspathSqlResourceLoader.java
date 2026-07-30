@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
 
 import java.io.*;
 import java.util.Objects;
