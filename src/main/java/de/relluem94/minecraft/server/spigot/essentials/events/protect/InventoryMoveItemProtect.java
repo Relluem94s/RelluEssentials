@@ -1,13 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.protect;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.RegistryKey;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Nameable;
@@ -29,9 +31,11 @@ import java.util.Collections;
 import java.util.Objects;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 public class InventoryMoveItemProtect implements Listener {
+
     @EventHandler(ignoreCancelled = true)
     public void onMoveItem(@NotNull InventoryMoveItemEvent e) {
         if (handleMoveItemEvent(e.getSource(), e.getItem(), true) || handleMoveItemEvent(e.getDestination(), e.getItem(), false)){
@@ -114,13 +118,14 @@ public class InventoryMoveItemProtect implements Listener {
                     }
                 }
 
-                if(CustomItems.coins.almostEquals(is) || sellPriceItem == 0){
+                ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
+
+                if(coinItem.almostEquals(is) || sellPriceItem == 0){
                     return false;
                 }
 
-
                 if(!isSource && (inventory.firstEmpty() != -1 && size < 4)){
-                    ItemStack coin = CustomItems.coins.getCustomItem();
+                    ItemStack coin = coinItem.getCustomItem();
                     ItemMeta im = coin.getItemMeta();
                     Objects.requireNonNull(im).setLore(Collections.singletonList(String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(sellPriceItem))));
                     im.getPersistentDataContainer().set(itemCoins(), PersistentDataType.INTEGER, sellPriceItem);
