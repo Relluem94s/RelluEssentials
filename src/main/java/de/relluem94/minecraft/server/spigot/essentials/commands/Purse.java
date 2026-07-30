@@ -106,6 +106,7 @@ public class Purse implements CommandConstruct {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) return List.of();
+        if (strings.length != 1) return List.of();
 
         return Bukkit.getOnlinePlayers().stream()
                 .map(Player::getName)
