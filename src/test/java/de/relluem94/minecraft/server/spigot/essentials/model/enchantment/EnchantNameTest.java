@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.enchantment;
+package de.relluem94.minecraft.server.spigot.essentials.model.enchantment;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
