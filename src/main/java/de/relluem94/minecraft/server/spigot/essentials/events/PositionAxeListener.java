@@ -2,9 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.RegistryKey;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,14 +14,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_POSITION_AXE;
 
 public class PositionAxeListener implements Listener {
 
-    public static final String PLUGIN_ITEM_POSITION_AXE = "§6Position Axe";
+    private final ItemHelper positionAxeItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow();
 
     @EventHandler
     public void onPlayerInteract(@NotNull PlayerInteractEvent event) {
@@ -30,12 +32,7 @@ public class PositionAxeListener implements Listener {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        if (item.getType() != Material.COPPER_AXE) {
-            return;
-        }
-
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null || !meta.hasDisplayName() || !meta.getDisplayName().equals(PLUGIN_ITEM_POSITION_AXE)) {
+        if (!positionAxeItem.almostEquals(item)) {
             return;
         }
 
