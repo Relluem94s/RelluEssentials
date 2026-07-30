@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IItemHelper;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

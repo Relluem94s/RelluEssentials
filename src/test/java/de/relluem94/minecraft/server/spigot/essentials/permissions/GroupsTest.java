@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.permissions;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

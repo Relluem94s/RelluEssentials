@@ -1,7 +1,7 @@
-package de.relluem94.minecraft.server.spigot.essentials.npc;
+package de.relluem94.minecraft.server.spigot.essentials.model;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCDialogueEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NPCDialogueEntry;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONObject;

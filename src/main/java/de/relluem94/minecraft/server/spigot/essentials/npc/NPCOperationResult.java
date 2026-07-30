@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc;
 
+import de.relluem94.minecraft.server.spigot.essentials.model.NPC;
 import lombok.Getter;
 
 @Getter

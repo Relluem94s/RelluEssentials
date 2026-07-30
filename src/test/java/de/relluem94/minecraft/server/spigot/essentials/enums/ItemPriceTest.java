@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.constants;
+package de.relluem94.minecraft.server.spigot.essentials.enums;
 
 import org.bukkit.Material;
 import org.junit.jupiter.api.Test;

@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.npc;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCEquipmentInventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.jspecify.annotations.NonNull;

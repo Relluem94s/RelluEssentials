@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
+package de.relluem94.minecraft.server.spigot.essentials.model.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import org.bukkit.block.data.BlockData;
  */
 @Getter
 @AllArgsConstructor
-public class ModifyHistoryEntry {
+public class ModifyClipboardEntry {
     private Location location;
     private Material material;
     private BlockData data;

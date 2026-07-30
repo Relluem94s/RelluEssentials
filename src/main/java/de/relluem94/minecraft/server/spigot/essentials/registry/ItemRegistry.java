@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.registry;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

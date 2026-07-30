@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCDialogueEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.model.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NPCDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NPCDialogueTracker;
 import org.bukkit.entity.Mannequin;
 import org.bukkit.entity.Player;

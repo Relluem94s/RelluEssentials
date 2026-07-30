@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces;
+package de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers;
 
 import org.bukkit.inventory.ItemStack;
 

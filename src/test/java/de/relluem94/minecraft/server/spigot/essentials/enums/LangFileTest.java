@@ -1,6 +1,5 @@
-package de.relluem94.minecraft.server.spigot.essentials;
+package de.relluem94.minecraft.server.spigot.essentials.enums;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
