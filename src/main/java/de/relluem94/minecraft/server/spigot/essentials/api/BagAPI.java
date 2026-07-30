@@ -1,10 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.api;
 
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
-import lombok.Getter;
 
 @Getter
 public class BagAPI {

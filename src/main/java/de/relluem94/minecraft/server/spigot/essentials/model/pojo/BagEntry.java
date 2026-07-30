@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
+package de.relluem94.minecraft.server.spigot.essentials.model.pojo;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import lombok.Getter;
