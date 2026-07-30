@@ -1,12 +1,14 @@
-package de.relluem94.minecraft.server.spigot.essentials.registry;
+package de.relluem94.minecraft.server.spigot.essentials.model;
 
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NonNull;
 
 public record RegistryKey(String namespace, String key) {
     private static Plugin registeredPlugin;
 
-    static void initializeInternalPlugin(@NonNull Plugin plugin) {
+    @ApiStatus.Internal
+    public static void initializeInternalPlugin(@NonNull Plugin plugin) {
         registeredPlugin = plugin;
     }
 

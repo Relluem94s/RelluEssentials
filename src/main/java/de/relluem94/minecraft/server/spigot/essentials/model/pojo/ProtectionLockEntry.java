@@ -1,8 +1,8 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
+package de.relluem94.minecraft.server.spigot.essentials.model.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONObject;
+import org.bukkit.Material;
 
 /**
  *
@@ -10,7 +10,7 @@ import org.json.JSONObject;
  */
 @Setter
 @Getter
-public class ProtectionEntry {
+public class ProtectionLockEntry {
     private int id;
     private String created;
     private int createdBy;
@@ -18,8 +18,5 @@ public class ProtectionEntry {
     private int updatedBy;
     private String deleted;
     private int deletedBy;
-    private LocationEntry locationEntry;
-    private String materialName;
-    private JSONObject flags;
-    private JSONObject rights;
+    private Material value;
 }

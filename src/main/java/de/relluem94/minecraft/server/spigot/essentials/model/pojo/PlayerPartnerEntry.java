@@ -1,8 +1,7 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
+package de.relluem94.minecraft.server.spigot.essentials.model.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Material;
 
 /**
  *
@@ -10,7 +9,7 @@ import org.bukkit.Material;
  */
 @Setter
 @Getter
-public class ProtectionLockEntry {
+public class PlayerPartnerEntry {
     private int id;
     private String created;
     private int createdBy;
@@ -18,5 +17,7 @@ public class ProtectionLockEntry {
     private int updatedBy;
     private String deleted;
     private int deletedBy;
-    private Material value;
+    private boolean shareProtections;
+    private int firstPartnerId;
+    private int secondPartnerId;
 }

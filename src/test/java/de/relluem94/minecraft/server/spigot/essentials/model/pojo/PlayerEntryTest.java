@@ -1,6 +1,6 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
+package de.relluem94.minecraft.server.spigot.essentials.model.pojo;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

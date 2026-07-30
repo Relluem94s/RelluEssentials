@@ -1,7 +1,8 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
+package de.relluem94.minecraft.server.spigot.essentials.model.pojo;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.json.JSONObject;
 
 /**
  *
@@ -9,7 +10,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class PlayerPartnerEntry {
+public class ProtectionEntry {
     private int id;
     private String created;
     private int createdBy;
@@ -17,7 +18,8 @@ public class PlayerPartnerEntry {
     private int updatedBy;
     private String deleted;
     private int deletedBy;
-    private boolean shareProtections;
-    private int firstPartnerId;
-    private int secondPartnerId;
+    private LocationEntry locationEntry;
+    private String materialName;
+    private JSONObject flags;
+    private JSONObject rights;
 }

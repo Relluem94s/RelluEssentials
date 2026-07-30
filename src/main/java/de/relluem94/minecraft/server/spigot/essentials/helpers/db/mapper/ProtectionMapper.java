@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLockEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionLockEntry;
 import org.bukkit.Material;
 import org.json.JSONObject;
 import org.jspecify.annotations.NonNull;
@@ -10,7 +10,7 @@ import org.jspecify.annotations.NonNull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
 
 public class ProtectionMapper {
     private ProtectionMapper() {

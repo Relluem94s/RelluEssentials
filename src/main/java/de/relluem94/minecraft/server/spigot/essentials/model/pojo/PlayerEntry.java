@@ -1,11 +1,11 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.pojo;
+package de.relluem94.minecraft.server.spigot.essentials.model.pojo;
+
+import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  *

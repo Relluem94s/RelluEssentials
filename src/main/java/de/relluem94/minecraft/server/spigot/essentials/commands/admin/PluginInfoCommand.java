@@ -4,7 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.RelluEssentialsAPI;
 import de.relluem94.minecraft.server.spigot.essentials.api.RelluEssentialsIntegration;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;

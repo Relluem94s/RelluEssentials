@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.permissions;
 
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
