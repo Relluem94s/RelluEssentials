@@ -20,6 +20,15 @@ public interface ItemConstants {
 
 
     String PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS = "cloud_boots";
+    String PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET = "magic_water_bucket";
+    String PLUGIN_ITEM_NAMESPACE_COINS = "coins";
+    String PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR = "cloud_sailor";
+    String PLUGIN_ITEM_NAMESPACE_POSITION_AXE = "position_axe";
+    String PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED = "npc_gui_disabled";
+    String PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE = "npc_gui_close";
+
+    String PLUGIN_ITEM_NPC_GUI_DISABLED_NAME = "   ";
+    String PLUGIN_ITEM_NPC_GUI_CLOSE_NAME = "Close";
 
     String PLUGIN_ITEM_RELLU_HELMET = "§6Rellu's Helmet";
     String PLUGIN_ITEM_RELLU_CHESTPLATE = "§3Rellu's Chestplate";
