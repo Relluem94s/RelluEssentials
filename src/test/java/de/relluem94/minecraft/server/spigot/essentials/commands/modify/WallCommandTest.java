@@ -6,8 +6,8 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.Se
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
