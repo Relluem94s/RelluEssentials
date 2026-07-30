@@ -1,7 +1,8 @@
-package de.relluem94.minecraft.server.spigot.essentials.enchantment;
+package de.relluem94.minecraft.server.spigot.essentials;
 
 import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.enchantment.CustomEnchantment;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;

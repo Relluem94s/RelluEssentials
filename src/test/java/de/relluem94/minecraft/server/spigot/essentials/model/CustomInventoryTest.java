@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.objects;
+package de.relluem94.minecraft.server.spigot.essentials.model;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import org.junit.jupiter.api.AfterEach;

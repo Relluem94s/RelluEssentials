@@ -1,20 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.enchantments.EnchantmentTarget;
-
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantLevel;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantName;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AttributeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
+import de.relluem94.minecraft.server.spigot.essentials.model.enchantment.EnchantLevel;
+import de.relluem94.minecraft.server.spigot.essentials.model.enchantment.EnchantName;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier.Operation;
+import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.EquipmentSlotGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomEnchants {
 
