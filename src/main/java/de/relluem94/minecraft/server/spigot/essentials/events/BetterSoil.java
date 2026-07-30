@@ -1,8 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import java.util.List;
-
+import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.RegistryKey;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -14,18 +18,17 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.player.PlayerHarvestBlockEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NonNull;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import java.util.List;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET;
 
 /* Better Call Soil */
 public class BetterSoil implements Listener {
 
     @EventHandler
-    public void onChange(PlayerInteractEvent e) {
+    public void onChange(@NonNull PlayerInteractEvent e) {
         Block b = e.getClickedBlock();
 
         if(b == null){
@@ -39,7 +42,10 @@ public class BetterSoil implements Listener {
             }
         }
         else{
-            if(CustomItems.magic_water_bucket.almostEquals(e.getPlayer().getInventory().getItemInMainHand())){
+            ItemStack itemInHand = e.getPlayer().getInventory().getItemInMainHand();
+            RegistryKey magicWaterBucketKey = RegistryKey.of(PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET);
+
+            if(ItemRegistry.identifyFromItemStack(itemInHand).filter(magicWaterBucketKey::equals).isPresent()){
                 e.setCancelled(true);
                 b = e.getClickedBlock().getRelative(e.getBlockFace());
                 if(b.getType().equals(Material.AIR)){
@@ -50,7 +56,7 @@ public class BetterSoil implements Listener {
     }
 
     @EventHandler
-    public void onChange(EntityInteractEvent e) {
+    public void onChange(@NonNull EntityInteractEvent e) {
         Block b = e.getBlock();
         if (b.getType().equals(Material.FARMLAND)) {
             e.setCancelled(true);
@@ -58,7 +64,7 @@ public class BetterSoil implements Listener {
     }
 
     @EventHandler
-    public void onHarvest(PlayerHarvestBlockEvent e){
+    public void onHarvest(@NonNull PlayerHarvestBlockEvent e){
         Player p = e.getPlayer();
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p.getUniqueId());
         
