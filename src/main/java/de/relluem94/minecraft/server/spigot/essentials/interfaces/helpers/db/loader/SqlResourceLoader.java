@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader;
+package de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader;
 
 import java.io.FileNotFoundException;
 

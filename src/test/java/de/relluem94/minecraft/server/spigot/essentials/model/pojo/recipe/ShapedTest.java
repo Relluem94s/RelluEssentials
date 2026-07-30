@@ -1,5 +1,6 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.recipe;
+package de.relluem94.minecraft.server.spigot.essentials.model.pojo.recipe;
 
+import de.relluem94.minecraft.server.spigot.essentials.model.recipe.Shaped;
 import org.bukkit.Material;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

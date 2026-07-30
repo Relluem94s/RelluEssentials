@@ -4,7 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

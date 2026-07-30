@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.objects;
+package de.relluem94.minecraft.server.spigot.essentials.model;
 
 import lombok.Getter;
 import lombok.Setter;

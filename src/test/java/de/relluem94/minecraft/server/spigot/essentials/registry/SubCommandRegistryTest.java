@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials;
+package de.relluem94.minecraft.server.spigot.essentials.registry;
 
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import org.bukkit.entity.Player;
