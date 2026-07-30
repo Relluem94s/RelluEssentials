@@ -2,7 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.registry;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.CustomInventory;
+import de.relluem94.minecraft.server.spigot.essentials.model.CustomInventory;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.entity.Player;

@@ -423,12 +423,12 @@
             <plugin>
                 <groupId>de.relluem94.maven.plugin</groupId>
                 <artifactId>entity-check-plugin</artifactId>
-                <version>1.2.2-SNAPSHOT</version>
+                <version>1.2.3-SNAPSHOT</version>
             </plugin>
             <plugin>
                 <groupId>de.relluem94.maven.plugin</groupId>
                 <artifactId>item-check-plugin</artifactId>
-                <version>1.0.2-SNAPSHOT</version>
+                <version>1.0.3-SNAPSHOT</version>
             </plugin>
         </plugins>
     </build>

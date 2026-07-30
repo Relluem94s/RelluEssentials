@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
 

@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 

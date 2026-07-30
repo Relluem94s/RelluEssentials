@@ -1,11 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCDialogueEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NPCDialogueEntry;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
 
 public class NPCDialogueMapper {
 

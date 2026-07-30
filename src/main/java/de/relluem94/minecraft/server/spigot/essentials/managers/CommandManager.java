@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import org.bukkit.command.PluginCommandYamlParser;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;

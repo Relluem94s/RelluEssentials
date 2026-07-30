@@ -1,16 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import de.relluem94.minecraft.server.spigot.essentials.SubCommandRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.*;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.command.Command;

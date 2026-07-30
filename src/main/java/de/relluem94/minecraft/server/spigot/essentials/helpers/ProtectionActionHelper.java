@@ -1,12 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ProtectionFlags;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

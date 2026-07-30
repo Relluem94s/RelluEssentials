@@ -2,7 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.NPCMapper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.NPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.NPC;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NPCEntry;
 
 import java.util.List;
 import java.util.Optional;

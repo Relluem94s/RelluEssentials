@@ -1,12 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_WORLD_NOT_FOUND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_WORLD_NOT_LOADED;
-
-import java.io.File;
-import java.util.List;
-import java.util.Objects;
-
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupInventoryEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -15,16 +16,14 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotFoundException;
-import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupInventoryEntry;
 import org.jetbrains.annotations.Nullable;
+
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_WORLD_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_WORLD_NOT_LOADED;
 
 /**
  *

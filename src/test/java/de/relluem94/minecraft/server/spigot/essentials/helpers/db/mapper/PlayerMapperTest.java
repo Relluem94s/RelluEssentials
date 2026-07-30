@@ -1,9 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;

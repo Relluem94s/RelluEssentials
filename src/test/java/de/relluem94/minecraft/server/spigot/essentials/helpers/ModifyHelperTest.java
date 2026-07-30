@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
 import org.bukkit.Material;

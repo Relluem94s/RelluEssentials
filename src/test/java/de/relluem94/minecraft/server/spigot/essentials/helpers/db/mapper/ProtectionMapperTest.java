@@ -1,14 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLockEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionLockEntry;
 import org.bukkit.Material;
 import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

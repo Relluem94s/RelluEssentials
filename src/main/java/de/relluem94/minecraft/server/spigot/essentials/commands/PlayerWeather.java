@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 @CommandName("playerweather")
 public class PlayerWeather implements CommandConstruct {

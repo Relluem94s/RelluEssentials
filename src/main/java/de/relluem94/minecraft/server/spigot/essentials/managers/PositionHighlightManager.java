@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
 import org.bukkit.Particle;

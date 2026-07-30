@@ -1,16 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTransactionEntry;
 import org.jspecify.annotations.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
 
 public class BankMapper {
     private BankMapper() {

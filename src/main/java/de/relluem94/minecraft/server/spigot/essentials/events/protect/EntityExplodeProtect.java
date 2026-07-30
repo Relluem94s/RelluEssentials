@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.protect;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

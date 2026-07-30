@@ -1,19 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

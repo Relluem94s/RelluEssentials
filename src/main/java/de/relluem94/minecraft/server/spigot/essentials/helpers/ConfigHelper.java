@@ -1,17 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import java.io.File;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,6 +13,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 /**
  * Helper class for configuration migration.

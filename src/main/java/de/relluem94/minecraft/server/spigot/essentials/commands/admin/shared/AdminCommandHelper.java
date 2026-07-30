@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin.shared;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

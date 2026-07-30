@@ -1,22 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.api;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import lombok.Getter;
-import org.bukkit.entity.Player;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerPartnerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
+import lombok.Getter;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 public class PlayerAPI {
 

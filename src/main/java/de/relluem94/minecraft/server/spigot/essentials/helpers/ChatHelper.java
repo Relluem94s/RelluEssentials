@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
 import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import net.md_5.bungee.api.ChatMessageType;

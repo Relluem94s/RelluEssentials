@@ -2,11 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.*;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.*;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.*;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;

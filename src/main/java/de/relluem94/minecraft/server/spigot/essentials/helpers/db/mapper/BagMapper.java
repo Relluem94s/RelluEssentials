@@ -1,16 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings;
+import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import org.jspecify.annotations.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
 
 public class BagMapper {
     private BagMapper() {

@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.api;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

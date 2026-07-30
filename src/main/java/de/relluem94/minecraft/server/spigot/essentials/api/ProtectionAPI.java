@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.api;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionLockEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionLockEntry;
 import org.bukkit.Location;
 import org.bukkit.Material;
 

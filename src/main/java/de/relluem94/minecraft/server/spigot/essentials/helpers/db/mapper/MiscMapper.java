@@ -1,16 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.DropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.CropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.DropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
 import org.bukkit.Material;
 import org.jspecify.annotations.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
 
 public class MiscMapper {
     private MiscMapper() {

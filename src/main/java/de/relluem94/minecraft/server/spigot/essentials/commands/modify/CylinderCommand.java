@@ -4,11 +4,11 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
+import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 

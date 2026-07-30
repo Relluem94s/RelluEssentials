@@ -2,13 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.RegistryKey;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;

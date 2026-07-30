@@ -1,23 +1,22 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 public class WorldManager implements IEnable, IDisable {
 

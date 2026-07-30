@@ -1,11 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.api;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ItemPrice;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNPC.Type;
 import org.bukkit.Material;

@@ -1,12 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
+import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.CustomEnchantment;
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
+import de.relluem94.minecraft.server.spigot.essentials.model.enchantment.CustomEnchantment;
+import de.relluem94.minecraft.server.spigot.essentials.model.enchantment.EnchantLevel;
+import de.relluem94.minecraft.server.spigot.essentials.model.enchantment.EnchantName;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -15,15 +15,13 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.google.common.collect.Multimap;
-
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantLevel;
-import de.relluem94.minecraft.server.spigot.essentials.enchantment.EnchantName;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 
 /**

@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
 import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import org.bukkit.Location;

@@ -1,11 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.RecipeHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.recipe.Shaped;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.model.recipe.Shaped;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.RegistryKey;
 import org.bukkit.Bukkit;
 import org.jspecify.annotations.NonNull;
 

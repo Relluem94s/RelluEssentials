@@ -1,14 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
+import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import org.bukkit.Bukkit;
-
-import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import org.bukkit.entity.Player;
 
 public class SudoManager implements IDisable {
 

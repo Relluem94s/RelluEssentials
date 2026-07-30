@@ -1,11 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupInventoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.WorldGroupSettingEntry;
+import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupInventoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupSettingEntry;
 import org.json.JSONObject;
 import org.jspecify.annotations.NonNull;
 
@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
 
 public class WorldMapper {
     private WorldMapper() {

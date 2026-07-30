@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTierEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.BankTransactionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTransactionEntry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.DatabaseMappings.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 

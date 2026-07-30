@@ -3,10 +3,10 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.interfaces.IPatchHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
 
 import java.util.List;
 import java.util.UUID;

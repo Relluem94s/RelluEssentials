@@ -1,11 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.interfaces.IBanker;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.npc.IBanker;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 

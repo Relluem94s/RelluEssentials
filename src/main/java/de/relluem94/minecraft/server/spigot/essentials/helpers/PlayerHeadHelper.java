@@ -1,21 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import java.net.URL;
-
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
-import java.util.Base64;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
+
+import java.net.URL;
+import java.util.Base64;
 
 public class PlayerHeadHelper {
 

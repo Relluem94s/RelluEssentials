@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.api;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import lombok.Getter;
 import java.util.ArrayList;
 import java.util.List;

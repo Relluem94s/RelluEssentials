@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.items;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
+import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 

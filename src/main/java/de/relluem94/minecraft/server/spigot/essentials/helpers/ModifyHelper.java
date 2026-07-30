@@ -2,10 +2,10 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.objects.Selection;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyClipboardEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
 import org.bukkit.Material;
