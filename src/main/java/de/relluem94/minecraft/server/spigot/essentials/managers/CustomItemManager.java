@@ -78,8 +78,23 @@ public class CustomItemManager implements IEnable{
                 new ItemHelper(Material.HOPPER, 1, PLUGIN_ITEM_AUTOSELLHOPER,
                         ItemHelper.Type.TOOL, ItemHelper.Rarity.LEGENDARY));
 
-      
-      
+        ItemHelper relluBootsItem = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_RELLU_BOOTS,
+                ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
+            @Override
+            public void init() {
+                LeatherArmorMeta relluBootsMeta = (LeatherArmorMeta) getItemMeta();
+                relluBootsMeta.setColor(Color.fromRGB(227, 59, 46));
+                relluBootsMeta.addEnchant(Enchantment.THORNS, 94, true);
+                relluBootsMeta.addEnchant(Enchantment.LOOTING, 94, true);
+                relluBootsMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+                relluBootsMeta.setUnbreakable(true);
+                setItemMeta(relluBootsMeta);
+            }
+        };
+
+        ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS, relluBootsItem);
+
+
 
         InventoryRegistry.create(
                 plugin,
