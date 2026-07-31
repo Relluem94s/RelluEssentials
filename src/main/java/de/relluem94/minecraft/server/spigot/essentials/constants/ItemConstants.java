@@ -19,6 +19,7 @@ public interface ItemConstants {
 
 
 
+    String PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK = "grappling_hook";
     String PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS = "cloud_boots";
     String PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET = "magic_water_bucket";
     String PLUGIN_ITEM_NAMESPACE_COINS = "coins";

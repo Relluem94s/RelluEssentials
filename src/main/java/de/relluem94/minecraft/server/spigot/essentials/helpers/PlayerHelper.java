@@ -5,7 +5,6 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
-import de.relluem94.minecraft.server.spigot.essentials.items.GrapplingHook;
 import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
@@ -32,6 +31,7 @@ import java.util.UUID;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 /**
@@ -273,7 +273,7 @@ public class PlayerHelper {
     }
 
     public static void setLobbyItems(@NotNull Player p){
-        GrapplingHook gh = new GrapplingHook();
+        ItemHelper grapplingHookItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK)).orElseThrow();
         WorldSelector ws = new WorldSelector();
         ItemHelper cloudSailorItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
 
@@ -282,7 +282,7 @@ public class PlayerHelper {
                 continue;
             }
 
-            if(i.isSimilar(gh.getCustomItem())){
+            if(i.isSimilar(grapplingHookItem.getCustomItem())){
                 p.getInventory().remove(i);
             }
 
@@ -298,7 +298,7 @@ public class PlayerHelper {
         p.getInventory().setArmorContents(new ItemStack[]{null, null, null, null});
         p.getInventory().setItemInOffHand(null);
 
-        p.getInventory().setItem(0, gh.getCustomItem());
+        p.getInventory().setItem(0, grapplingHookItem.getCustomItem());
         p.getInventory().setItem(1, cloudSailorItem.getCustomItem());
         p.getInventory().setItem(4, ws.getCustomItem());
     }
