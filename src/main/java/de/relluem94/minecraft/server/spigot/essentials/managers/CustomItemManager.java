@@ -6,8 +6,11 @@ import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.Banner;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.Plugin;
 
@@ -142,6 +145,25 @@ public class CustomItemManager implements IEnable{
 
         ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS, relluLeggingsItem);
 
+        ItemHelper relluShieldItem = new ItemHelper(Material.SHIELD, 1, PLUGIN_ITEM_RELLU_SHIELD,
+                ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
+            @Override
+            public void init() {
+                BlockStateMeta blockStateMeta = (BlockStateMeta) getItemMeta();
+                Banner banner = (Banner) blockStateMeta.getBlockState();
+                banner.setBaseColor(DyeColor.PURPLE);
+                banner.update();
+                blockStateMeta.setBlockState(banner);
+                blockStateMeta.addEnchant(Enchantment.SHARPNESS, 94, true);
+                blockStateMeta.addEnchant(Enchantment.THORNS, 94, true);
+                blockStateMeta.addEnchant(Enchantment.LOOTING, 94, true);
+                blockStateMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+                blockStateMeta.setUnbreakable(true);
+                setItemMeta(blockStateMeta);
+            }
+        };
+
+        ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD, relluShieldItem);
 
 
 
