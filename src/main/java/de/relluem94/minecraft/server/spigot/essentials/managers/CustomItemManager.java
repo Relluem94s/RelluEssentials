@@ -126,6 +126,22 @@ public class CustomItemManager implements IEnable{
 
         ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_HELMET, relluHelmetItem);
 
+        ItemHelper relluLeggingsItem = new ItemHelper(Material.LEATHER_LEGGINGS, 1, PLUGIN_ITEM_RELLU_LEGGINGS,
+                ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
+            @Override
+            public void init() {
+                LeatherArmorMeta relluLeggingsMeta = (LeatherArmorMeta) getItemMeta();
+                relluLeggingsMeta.setColor(Color.fromRGB(152, 216, 1));
+                relluLeggingsMeta.addEnchant(Enchantment.THORNS, 94, true);
+                relluLeggingsMeta.addEnchant(Enchantment.LOOTING, 94, true);
+                relluLeggingsMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+                relluLeggingsMeta.setUnbreakable(true);
+                setItemMeta(relluLeggingsMeta);
+            }
+        };
+
+        ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS, relluLeggingsItem);
+
 
 
 
