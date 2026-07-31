@@ -189,6 +189,28 @@ public class CustomItemManager implements IEnable{
 
         ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE, relluPickaxeItem);
 
+        ItemHelper relluSwordItem = new ItemHelper(Material.NETHERITE_SWORD, 1, PLUGIN_ITEM_RELLU_SWORD,
+                ItemHelper.Type.WEAPON, ItemHelper.Rarity.LEGENDARY) {
+            @Override
+            public void init() {
+                ItemMeta relluSwordMeta = getItemMeta();
+                relluSwordMeta.addEnchant(Enchantment.SHARPNESS, 94, true);
+                relluSwordMeta.addEnchant(Enchantment.SWEEPING_EDGE, 94, true);
+                relluSwordMeta.addEnchant(Enchantment.LOOTING, 94, true);
+                relluSwordMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+                relluSwordMeta.setUnbreakable(true);
+                setItemMeta(relluSwordMeta);
+            }
+
+            @Override
+            public ItemStack postInit(ItemStack is) {
+                CustomEnchants.telekinesis.addTo(is);
+                CustomEnchants.thunderstrike.addTo(is);
+                return is;
+            }
+        };
+
+        ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SWORD, relluSwordItem);
 
 
 

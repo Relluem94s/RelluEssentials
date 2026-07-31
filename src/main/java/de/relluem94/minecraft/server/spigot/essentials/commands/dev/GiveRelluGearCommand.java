@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.items.RelluSword;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import org.bukkit.entity.Player;
@@ -19,7 +18,7 @@ public class GiveRelluGearCommand implements SubCommand {
         player.getInventory().addItem(ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS)).orElseThrow().getCustomItem());
         player.getInventory().addItem(ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS)).orElseThrow().getCustomItem());
         player.getInventory().addItem(ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD)).orElseThrow().getCustomItem());
-        player.getInventory().addItem(new RelluSword().getCustomItem());
+        player.getInventory().addItem(ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_SWORD)).orElseThrow().getCustomItem());
     }
 
     @Override
