@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
+import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
@@ -10,7 +11,9 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Banner;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.Plugin;
 
@@ -164,6 +167,29 @@ public class CustomItemManager implements IEnable{
         };
 
         ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD, relluShieldItem);
+
+        ItemHelper relluPickaxeItem = new ItemHelper(Material.NETHERITE_PICKAXE, 1, PLUGIN_ITEM_RELLU_PICKAXE,
+                ItemHelper.Type.TOOL, ItemHelper.Rarity.LEGENDARY) {
+            @Override
+            public void init() {
+                getItemMeta().addEnchant(Enchantment.LOOTING, 94, true);
+                ItemMeta relluPickaxeMeta = getItemMeta();
+                relluPickaxeMeta.addEnchant(Enchantment.LOOTING, 94, true);
+                relluPickaxeMeta.addEnchant(Enchantment.EFFICIENCY, 94, true);
+                relluPickaxeMeta.setUnbreakable(true);
+                setItemMeta(relluPickaxeMeta);
+            }
+
+            @Override
+            public ItemStack postInit(ItemStack is) {
+                CustomEnchants.telekinesis.addTo(is);
+                return is;
+            }
+        };
+
+        ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE, relluPickaxeItem);
+
+
 
 
 
