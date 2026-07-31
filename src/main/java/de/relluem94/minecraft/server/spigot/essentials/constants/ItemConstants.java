@@ -17,6 +17,7 @@ public interface ItemConstants {
 
     String PLUGIN_ITEM_DUMMY = ChatColor.AQUA + "This is a Dummy Item";
 
+    String PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE = "rellu_chestplate";
     String PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS = "rellu_boots";
     String PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK = "grappling_hook";
     String PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER = "autosell_hopper";
