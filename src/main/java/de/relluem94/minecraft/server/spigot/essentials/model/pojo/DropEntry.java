@@ -7,8 +7,9 @@ import org.bukkit.Material;
 @Setter
 @Getter
 public class DropEntry {
-    private int id;
-    private Material material;
-    private int min;
-    private int max;
+
+  private int id;
+  private Material material;
+  private int min;
+  private int max;
 }

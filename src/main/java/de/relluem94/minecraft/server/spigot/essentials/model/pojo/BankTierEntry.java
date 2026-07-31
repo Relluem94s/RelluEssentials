@@ -10,9 +10,10 @@ import lombok.Setter;
 @Setter
 @Getter
 public class BankTierEntry {
-    private int id;
-    private String name;
-    private long limit;
-    private double interest;
-    private long cost;
+
+  private int id;
+  private String name;
+  private long limit;
+  private double interest;
+  private long cost;
 }

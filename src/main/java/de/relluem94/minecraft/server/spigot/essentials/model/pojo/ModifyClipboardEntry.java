@@ -13,7 +13,8 @@ import org.bukkit.block.data.BlockData;
 @Getter
 @AllArgsConstructor
 public class ModifyClipboardEntry {
-    private Location location;
-    private Material material;
-    private BlockData data;
+
+  private Location location;
+  private Material material;
+  private BlockData data;
 }

@@ -10,18 +10,18 @@ import org.jspecify.annotations.NonNull;
 
 public class ToggleDamageInfoCommand implements SubCommand {
 
-    @Override
-    public void execute(Player player, String[] args) {
-        PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(player);
-        if (playerEntry.getPlayerState().equals(PlayerState.DEFAULT)) {
-            playerEntry.setPlayerState(PlayerState.DAMAGE_INFO);
-        } else {
-            playerEntry.setPlayerState(PlayerState.DEFAULT);
-        }
+  @Override
+  public void execute(Player player, String[] args) {
+    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(player);
+    if (playerEntry.getPlayerState().equals(PlayerState.DEFAULT)) {
+      playerEntry.setPlayerState(PlayerState.DAMAGE_INFO);
+    } else {
+      playerEntry.setPlayerState(PlayerState.DEFAULT);
     }
+  }
 
-    @Override
-    public boolean matches(String @NonNull [] args) {
-        return args.length == 1 && DevCommand.Commands.DAMAGE_INFO.getName().equalsIgnoreCase(args[0]);
-    }
+  @Override
+  public boolean matches(String @NonNull [] args) {
+    return args.length == 1 && DevCommand.Commands.DAMAGE_INFO.getName().equalsIgnoreCase(args[0]);
+  }
 }

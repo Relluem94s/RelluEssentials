@@ -1,10 +1,23 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
+import java.util.function.Consumer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,14 +25,12 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-
-import java.util.function.Consumer;
-
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
-import static org.mockito.Mockito.*;
 
 class CylinderCommandTest {
 
@@ -31,9 +42,9 @@ class CylinderCommandTest {
     private MockedStatic<RelluEssentials> mockedRelluEssentials;
 
     @BeforeAll
-    static void setUpServer(){
+    static void setUpServer() throws Exception {
         if(Bukkit.getServer() != null){
-            return;
+            tearDownServer();
         }
         org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
         org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(org.bukkit.scheduler.BukkitScheduler.class);

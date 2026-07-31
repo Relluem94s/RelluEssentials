@@ -1,90 +1,96 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin.shared;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 public class AdminCommandHelper {
 
-    public static void cleanUpLocations(@NonNull Player p) {
-        int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupLocations();
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END, deleted));
-    }
+  public static void cleanUpLocations(@NonNull Player p) {
+    int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupLocations();
+    p.sendMessage(
+        languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END, deleted));
+  }
 
-    public static void cleanUpProtections(@NonNull Player p) {
-        HashMap<Location, ProtectionEntry> protectionEntryList = new HashMap<>(
-                RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList()
-        );
+  public static void cleanUpProtections(@NonNull Player p) {
+    HashMap<Location, ProtectionEntry> protectionEntryList = new HashMap<>(
+        RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntryList()
+    );
 
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
-                protectionEntryList.size()));
+    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
+        protectionEntryList.size()));
 
-        List<Location> locations = new ArrayList<>(protectionEntryList.keySet());
-        int[] index = {0};
-        HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
-        int total = locations.size();
+    List<Location> locations = new ArrayList<>(protectionEntryList.keySet());
+    int[] index = {0};
+    HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
+    int total = locations.size();
 
-        Bukkit.getScheduler().runTaskTimer(
-                RelluEssentials.getInstance(),
-                task -> {
-                    int batchSize = 5;
-                    int processed = 0;
+    Bukkit.getScheduler().runTaskTimer(
+        RelluEssentials.getInstance(),
+        task -> {
+          int batchSize = 5;
+          int processed = 0;
 
-                    while (index[0] < locations.size() && processed < batchSize) {
-                        Location l = locations.get(index[0]);
-                        ProtectionEntry pe = protectionEntryList.get(l);
+          while (index[0] < locations.size() && processed < batchSize) {
+            Location l = locations.get(index[0]);
+            ProtectionEntry pe = protectionEntryList.get(l);
 
-                        if (!l.getChunk().isLoaded()) {
-                            l.getChunk().load();
-                        }
+            if (!l.getChunk().isLoaded()) {
+              l.getChunk().load();
+            }
 
-                        if (!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))) {
-                            removeMap.put(l, pe);
-                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS,
-                                    pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
-                            RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(pe);
-                        }
+            if (!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))) {
+              removeMap.put(l, pe);
+              p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS,
+                  pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
+              RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(pe);
+            }
 
-                        index[0]++;
-                        processed++;
-                    }
+            index[0]++;
+            processed++;
+          }
 
-                    int percent = (int) Math.round((index[0] / (double) total) * 100);
-                    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE,
-                            index[0], total, percent));
+          int percent = (int) Math.round((index[0] / (double) total) * 100);
+          p.sendMessage(
+              languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE,
+                  index[0], total, percent));
 
-                    if (index[0] >= locations.size()) {
-                        task.cancel();
+          if (index[0] >= locations.size()) {
+            task.cancel();
 
-                        if (removeMap.isEmpty()) {
-                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE));
-                        } else {
-                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP,
-                                    removeMap.size()));
-                            for (Location l : removeMap.keySet()) {
-                                RelluEssentials.getInstance().getProtectionAPI().removeProtectionEntry(l);
-                            }
-                            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
-                                    RelluEssentials.getInstance().getProtectionAPI().getProtectionEntryList().size()));
-                        }
-                    }
-                },
-                0L,
-                300L
-        );
+            if (removeMap.isEmpty()) {
+              p.sendMessage(
+                  languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE));
+            } else {
+              p.sendMessage(languageHelper.getWithPrefix(
+                  MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP,
+                  removeMap.size()));
+              for (Location l : removeMap.keySet()) {
+                RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(l);
+              }
+              p.sendMessage(
+                  languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
+                      RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntryList()
+                          .size()));
+            }
+          }
+        },
+        0L,
+        300L
+    );
 
-        int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupProtections();
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END, deleted));
-    }
+    int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupProtections();
+    p.sendMessage(
+        languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END, deleted));
+  }
 }

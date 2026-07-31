@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -9,7 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
+import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,84 +21,85 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.jspecify.annotations.NonNull;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 public class BetterPlayerJoin implements Listener {
 
-    private void addPlayer(@NonNull Player p) {
-        PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
-        if (pe == null) {
-            pe = new PlayerEntry();
-            pe.setCreatedBy(1);
-            pe.setName(p.getName());
-            pe.setCustomName(p.getDisplayName());
-            pe.setGroup(Groups.getGroup("user"));
-            pe.setUuid(p.getUniqueId().toString());
-            RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
+  private void addPlayer(@NonNull Player p) {
+    PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper()
+        .getPlayer(p.getUniqueId().toString());
+    if (pe == null) {
+      pe = new PlayerEntry();
+      pe.setCreatedBy(1);
+      pe.setName(p.getName());
+      pe.setCustomName(p.getDisplayName());
+      pe.setGroup(GroupRegistry.getGroup("user"));
+      pe.setUuid(p.getUniqueId().toString());
+      RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
 
-            pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
-            p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
-        }
-        else{
-            if(pe.getName() == null){
-                pe.setName(p.getName());
-                RelluEssentials.getInstance().getDatabaseHelper().updatePlayer(pe);
-                pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
-            }
-        }
-
-        RelluEssentials.getInstance().getPlayerAPI().putPlayerEntry(p.getUniqueId(), pe);
+      pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
+      p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
+    } else {
+      if (pe.getName() == null) {
+        pe.setName(p.getName());
+        RelluEssentials.getInstance().getDatabaseHelper().updatePlayer(pe);
+        pe = RelluEssentials.getInstance().getDatabaseHelper()
+            .getPlayer(p.getUniqueId().toString());
+      }
     }
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        if(RelluEssentials.getInstance().isUnitTest()){
-            return;
-        }
+    RelluEssentials.getInstance().getPlayerRegistry().putPlayerEntry(p.getUniqueId(), pe);
+  }
 
-        e.setJoinMessage(null);
-        Player p = e.getPlayer();
-        addPlayer(p);
-
-        PluginInformationEntry pie = RelluEssentials.getInstance().getPluginInformation();
-        p.setPlayerListHeader(pie.getTabHeader());
-        p.setPlayerListFooter(pie.getTabFooter());
-
-        PlayerHelper.setFlying(p);
-        PlayerHelper.setAFK(p, true);
-        Bukkit.broadcastMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
-       
-        WorldHelper.loadWorldGroupInventory(p);
-
-        BankerHelper.doInterest(e.getPlayer());
-
-         if(WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)){
-            PlayerHelper.setLobbyItems(p);
-        }
-
-        Bukkit.getScheduler().runTaskLater(
-                RelluEssentials.getInstance(),
-                () -> ScoreBoardManager.applyToPlayer(e.getPlayer()),
-                10L
-        );
+  @EventHandler
+  public void onJoin(PlayerJoinEvent e) {
+    if (RelluEssentials.getInstance().isUnitTest()) {
+      return;
     }
 
-    @EventHandler
-    public void login(PlayerLoginEvent e){
-        int maxPlayers = Bukkit.getServer().getMaxPlayers();
-        int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
+    e.setJoinMessage(null);
+    Player p = e.getPlayer();
+    addPlayer(p);
 
-        if(onlinePlayers >= maxPlayers){
-                e.disallow(PlayerLoginEvent.Result.KICK_FULL, languageHelper.get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN));
-        }
+    PluginInformationEntry pie = RelluEssentials.getInstance().getPluginInformation();
+    p.setPlayerListHeader(pie.getTabHeader());
+    p.setPlayerListFooter(pie.getTabFooter());
+
+    PlayerHelper.setFlying(p);
+    PlayerHelper.setAFK(p, true);
+    Bukkit.broadcastMessage(
+        languageHelper.get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
+
+    WorldHelper.loadWorldGroupInventory(p);
+
+    BankerHelper.doInterest(e.getPlayer());
+
+    if (WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)) {
+      PlayerHelper.setLobbyItems(p);
     }
 
-    @EventHandler
-    public void checkInterest(AsyncPlayerPreLoginEvent e){
-        if(RelluEssentials.getInstance().isUnitTest()){
-            return;
-        }
+    Bukkit.getScheduler().runTaskLater(
+        RelluEssentials.getInstance(),
+        () -> ScoreBoardManager.applyToPlayer(e.getPlayer()),
+        10L
+    );
+  }
 
-        BankerHelper.checkInterest(e.getUniqueId(), false);
+  @EventHandler
+  public void login(PlayerLoginEvent e) {
+    int maxPlayers = Bukkit.getServer().getMaxPlayers();
+    int onlinePlayers = Bukkit.getServer().getOnlinePlayers().size();
+
+    if (onlinePlayers >= maxPlayers) {
+      e.disallow(PlayerLoginEvent.Result.KICK_FULL,
+          languageHelper.get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN));
     }
+  }
+
+  @EventHandler
+  public void checkInterest(AsyncPlayerPreLoginEvent e) {
+    if (RelluEssentials.getInstance().isUnitTest()) {
+      return;
+    }
+
+    BankerHelper.checkInterest(e.getUniqueId(), false);
+  }
 }

@@ -9,22 +9,23 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.EnchantmentTarget;
 
 public class CustomEnchantment {
-    @Getter
-    private final NamespacedKey key;
-    @Getter
-    protected String lore;
-    @Getter
-    protected ItemHelper.Rarity rarity;
-    protected EnchantmentTarget target;
-    protected EnchantLevel level;
-    protected EnchantName enchantName;
-    @Getter
-    protected Multimap<Attribute, AttributeModifier> attributes;
-    @SuppressWarnings("unused")
-    protected double multiply;
-    protected int actualLevel;
 
-    public CustomEnchantment(NamespacedKey key){
-        this.key = key;
-    }
+  @Getter
+  private final NamespacedKey key;
+  @Getter
+  protected String lore;
+  @Getter
+  protected ItemHelper.Rarity rarity;
+  protected EnchantmentTarget target;
+  protected EnchantLevel level;
+  protected EnchantName enchantName;
+  @Getter
+  protected Multimap<Attribute, AttributeModifier> attributes;
+  @SuppressWarnings("unused")
+  protected double multiply;
+  protected int actualLevel;
+
+  public CustomEnchantment(NamespacedKey key) {
+    this.key = key;
+  }
 }

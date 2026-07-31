@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class LocationTypeEntry {
-    private int id;
-    private String type;
+
+  private int id;
+  private String type;
 }

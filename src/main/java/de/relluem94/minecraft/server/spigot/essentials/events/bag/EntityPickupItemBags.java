@@ -1,5 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.bag;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -21,56 +25,61 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
-
 public class EntityPickupItemBags implements Listener {
-    private final ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
-    @EventHandler
-    public void onItemCollect(@NotNull EntityPickupItemEvent e) {
-        if (e.getEntity() instanceof Player p) {
 
-            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
+  private final ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
+      .orElseThrow();
 
-            ItemStack is = e.getItem().getItemStack();
-            if (coinItem.almostEquals(is)) {
-                ItemMeta im = is.getItemMeta();
+  @EventHandler
+  public void onItemCollect(@NotNull EntityPickupItemEvent e) {
+    if (e.getEntity() instanceof Player p) {
 
-                if (im != null && im.getPersistentDataContainer().has(itemCoins(), PersistentDataType.INTEGER)) {
-                    Integer itemCoins = im.getPersistentDataContainer().get(NamespacedKeyConstants.itemCoins(), PersistentDataType.INTEGER);
+      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
 
-                    if (itemCoins == null) {
-                        itemCoins = 0;
-                    }
+      ItemStack is = e.getItem().getItemStack();
+      if (coinItem.almostEquals(is)) {
+        ItemMeta im = is.getItemMeta();
 
-                    int coins = itemCoins * is.getAmount();
-                    ChatHelper.sendMessageInActionBar(p, languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN, StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
-                    pe.setPurse(pe.getPurse() + coins);
+        if (im != null && im.getPersistentDataContainer()
+            .has(itemCoins(), PersistentDataType.INTEGER)) {
+          Integer itemCoins = im.getPersistentDataContainer()
+              .get(NamespacedKeyConstants.itemCoins(), PersistentDataType.INTEGER);
 
-                    p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);
+          if (itemCoins == null) {
+            itemCoins = 0;
+          }
 
-                    pe.setUpdatedBy(pe.getId());
-                    pe.setHasToBeUpdated(true);
+          int coins = itemCoins * is.getAmount();
+          ChatHelper.sendMessageInActionBar(p,
+              languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN,
+                  StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
+          pe.setPurse(pe.getPurse() + coins);
 
-                    e.getItem().getItemStack().setAmount(0);
-                    e.setCancelled(true);
-                }
-            }
+          p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);
 
-            String worldName = p.getWorld().getName();
-            boolean collectBagEnabled = RelluEssentials.getInstance().collectBagWorlds.contains(worldName);
+          pe.setUpdatedBy(pe.getId());
+          pe.setHasToBeUpdated(true);
 
-            if (collectBagEnabled && BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(), p, pe)) {
-                p.getInventory().remove(is);
-                e.setCancelled(true);
-                e.getItem().remove();
-            } else {
-                p.getInventory().addItem(is);
-                e.setCancelled(true);
-                e.getItem().remove();
-                p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5f, 1f);
-            }
+          e.getItem().getItemStack().setAmount(0);
+          e.setCancelled(true);
         }
+      }
+
+      String worldName = p.getWorld().getName();
+      boolean collectBagEnabled = RelluEssentials.getInstance().collectBagWorlds.contains(
+          worldName);
+
+      if (collectBagEnabled && BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(),
+          p, pe)) {
+        p.getInventory().remove(is);
+        e.setCancelled(true);
+        e.getItem().remove();
+      } else {
+        p.getInventory().addItem(is);
+        e.setCancelled(true);
+        e.getItem().remove();
+        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5f, 1f);
+      }
     }
+  }
 }

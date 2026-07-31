@@ -1,13 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import java.util.HashMap;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
 
 
 /**
@@ -16,30 +15,33 @@ import java.util.HashMap;
  */
 public class BlockHelper {
 
-    @Setter
-    private Material type;
-    private final HashMap<Location, Long> locations = new HashMap<>();
-    public BlockHelper(Material type) {
-        this.type = type;
-    }
+  private final HashMap<Location, Long> locations = new HashMap<>();
+  @Setter
+  private Material type;
 
-    public void addLocation(Location location, Long delay) {
-        locations.put(location, delay);
-    }
+  public BlockHelper(Material type) {
+    this.type = type;
+  }
 
-    public void putAll(@NotNull BlockHelper setBlockHelper){
-        locations.putAll(setBlockHelper.locations);
-    }
+  public static boolean checkBlockAt(@NotNull Location location, Material mat) {
+    return location.getBlock().getType() == mat;
+  }
 
-    public void setBlocks(long addDelay) {
-        locations.forEach((location, delay) -> Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(RelluEssentials.getInstance(), () -> location.getBlock().setType(type), Math.abs(delay + addDelay)));
-    }
+  public void addLocation(Location location, Long delay) {
+    locations.put(location, delay);
+  }
 
-    public void setBlocks() {
-        setBlocks(0);
-    }
+  public void putAll(@NotNull BlockHelper setBlockHelper) {
+    locations.putAll(setBlockHelper.locations);
+  }
 
-    public static boolean checkBlockAt(@NotNull Location location, Material mat) {
-        return location.getBlock().getType() == mat;
-    }
+  public void setBlocks(long addDelay) {
+    locations.forEach((location, delay) -> Bukkit.getServer().getScheduler()
+        .scheduleSyncDelayedTask(RelluEssentials.getInstance(),
+            () -> location.getBlock().setType(type), Math.abs(delay + addDelay)));
+  }
+
+  public void setBlocks() {
+    setBlocks(0);
+  }
 }

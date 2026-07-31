@@ -8,13 +8,13 @@ import org.jspecify.annotations.NonNull;
 
 public class AddTelekinesisCommand implements SubCommand {
 
-    @Override
-    public void execute(Player player, String[] args) {
-        CustomEnchants.telekinesis.addTo(player.getInventory().getItemInMainHand());
-    }
+  @Override
+  public void execute(Player player, String[] args) {
+    CustomEnchants.telekinesis.addTo(player.getInventory().getItemInMainHand());
+  }
 
-    @Override
-    public boolean matches(String @NonNull [] args) {
-        return args.length == 1 && DevCommand.Commands.TELE.getName().equalsIgnoreCase(args[0]);
-    }
+  @Override
+  public boolean matches(String @NonNull [] args) {
+    return args.length == 1 && DevCommand.Commands.TELE.getName().equalsIgnoreCase(args[0]);
+  }
 }

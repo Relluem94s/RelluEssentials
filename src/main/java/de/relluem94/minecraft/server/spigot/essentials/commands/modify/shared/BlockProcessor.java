@@ -5,20 +5,21 @@ import org.bukkit.block.Block;
 import org.jspecify.annotations.NonNull;
 
 public class BlockProcessor {
-    private final int blocksPerTick;
-    private long currentDelay = 0;
-    private int counter = 0;
 
-    public BlockProcessor(int blocksPerTick) {
-        this.blocksPerTick = blocksPerTick;
-    }
+  private final int blocksPerTick;
+  private long currentDelay = 0;
+  private int counter = 0;
 
-    public void process(@NonNull Block block, @NonNull BlockHelper blockHelper) {
-        blockHelper.addLocation(block.getLocation(), currentDelay);
-        counter++;
-        if (counter >= blocksPerTick) {
-            currentDelay++;
-            counter = 0;
-        }
+  public BlockProcessor(int blocksPerTick) {
+    this.blocksPerTick = blocksPerTick;
+  }
+
+  public void process(@NonNull Block block, @NonNull BlockHelper blockHelper) {
+    blockHelper.addLocation(block.getLocation(), currentDelay);
+    counter++;
+    if (counter >= blocksPerTick) {
+      currentDelay++;
+      counter = 0;
     }
+  }
 }

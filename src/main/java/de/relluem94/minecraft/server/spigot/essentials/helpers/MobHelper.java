@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
-
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,69 +18,71 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MobHelper {
 
-    private LivingEntity livingEntity;
-    private final Location location;
-    private final EntityType entityType;
-    private final Collection<PotionEffect> potionEffects = new HashSet<>();
-    private final String customName;
-    private final boolean isCustomNameVisible;
-    @Setter
-    private boolean isInvisible;
-    @Setter
-    private boolean canPickupItems = true;
-    @Setter
-    private double health = 0;
+  private final Location location;
+  private final EntityType entityType;
+  private final Collection<PotionEffect> potionEffects = new HashSet<>();
+  private final String customName;
+  private final boolean isCustomNameVisible;
+  private LivingEntity livingEntity;
+  @Setter
+  private boolean isInvisible;
+  @Setter
+  private boolean canPickupItems = true;
+  @Setter
+  private double health = 0;
 
-    public MobHelper(Location location, @NotNull EntityType entityType, String customName, boolean isCustomNameVisible) {
-        this.location = location;
-        this.entityType = entityType;
-        this.customName = Objects.requireNonNullElseGet(customName, entityType::name);
+  public MobHelper(Location location, @NotNull EntityType entityType, String customName,
+      boolean isCustomNameVisible) {
+    this.location = location;
+    this.entityType = entityType;
+    this.customName = Objects.requireNonNullElseGet(customName, entityType::name);
 
-        this.isCustomNameVisible = isCustomNameVisible;
+    this.isCustomNameVisible = isCustomNameVisible;
+  }
+
+  public void addPotionEffect(PotionEffect potionEffect) {
+    potionEffects.add(potionEffect);
+  }
+
+  @SuppressWarnings("unused")
+  public void addPotionEffect(Collection<PotionEffect> potionEffects) {
+    this.potionEffects.addAll(potionEffects);
+  }
+
+  public void spawn(ItemStack mainHand, ItemStack offHand, ItemStack helmet, ItemStack chest,
+      ItemStack leggings, ItemStack boots) {
+    spawn();
+
+    if (livingEntity.getEquipment() != null) {
+      livingEntity.getEquipment().setItemInMainHand(mainHand);
+      livingEntity.getEquipment().setItemInOffHand(offHand);
+
+      livingEntity.getEquipment().setBoots(boots);
+      livingEntity.getEquipment().setLeggings(leggings);
+      livingEntity.getEquipment().setChestplate(chest);
+      livingEntity.getEquipment().setHelmet(helmet);
+    }
+  }
+
+  public void spawn() {
+    World world = location.getWorld();
+
+    if (world == null) {
+      return;
     }
 
-    public void addPotionEffect(PotionEffect potionEffect) {
-        potionEffects.add(potionEffect);
+    livingEntity = (LivingEntity) world.spawnEntity(location, entityType);
+    livingEntity.setCustomName(customName);
+    livingEntity.setCustomNameVisible(isCustomNameVisible);
+
+    if (health == 0 || health > livingEntity.getHealth()) {
+      health = livingEntity.getHealth();
     }
 
-    @SuppressWarnings("unused")
-    public void addPotionEffect(Collection<PotionEffect> potionEffects) {
-        this.potionEffects.addAll(potionEffects);
-    }
+    livingEntity.setHealth(health);
+    livingEntity.addPotionEffects(potionEffects);
+    livingEntity.setInvisible(isInvisible);
+    livingEntity.setCanPickupItems(canPickupItems);
 
-    public void spawn(ItemStack mainHand, ItemStack offHand, ItemStack helmet, ItemStack chest, ItemStack leggings, ItemStack boots) {
-        spawn();
-
-        if (livingEntity.getEquipment() != null) {
-            livingEntity.getEquipment().setItemInMainHand(mainHand);
-            livingEntity.getEquipment().setItemInOffHand(offHand);
-
-            livingEntity.getEquipment().setBoots(boots);
-            livingEntity.getEquipment().setLeggings(leggings);
-            livingEntity.getEquipment().setChestplate(chest);
-            livingEntity.getEquipment().setHelmet(helmet);
-        }
-    }
-
-    public void spawn() {
-        World world = location.getWorld();
-
-        if(world == null){
-            return;
-        }
-
-        livingEntity = (LivingEntity) world.spawnEntity(location, entityType);
-        livingEntity.setCustomName(customName);
-        livingEntity.setCustomNameVisible(isCustomNameVisible);
-
-        if (health == 0 || health > livingEntity.getHealth()) {
-            health = livingEntity.getHealth();
-        }
-
-        livingEntity.setHealth(health);
-        livingEntity.addPotionEffects(potionEffects);
-        livingEntity.setInvisible(isInvisible);
-        livingEntity.setCanPickupItems(canPickupItems);
-
-    }
+  }
 }

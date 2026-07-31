@@ -8,10 +8,10 @@ import org.bukkit.event.server.ServerListPingEvent;
 
 public class MOTD implements Listener {
 
-    @EventHandler
-    public void onPing(ServerListPingEvent e) {
-        PluginInformationEntry pie = RelluEssentials.getInstance().getPluginInformation();
-        e.setMotd(pie.getMotdMessage());
-        e.setMaxPlayers(pie.getMotdPlayers());
-    }
+  @EventHandler
+  public void onPing(ServerListPingEvent e) {
+    PluginInformationEntry pie = RelluEssentials.getInstance().getPluginInformation();
+    e.setMotd(pie.getMotdMessage());
+    e.setMaxPlayers(pie.getMotdPlayers());
+  }
 }

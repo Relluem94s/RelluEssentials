@@ -10,15 +10,17 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityExplodeProtect implements Listener {
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onEntityExplode(@NotNull EntityExplodeEvent event) {
-        for (Block block : event.blockList()) {
-            ProtectionEntry protection = RelluEssentials.getInstance().getProtectionAPI().getProtectionEntry(block.getLocation());
-            if (protection != null) {
-                RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(protection);
-                continue;
-            }
-            event.setCancelled(true);
-        }
+
+  @EventHandler(priority = EventPriority.LOWEST)
+  public void onEntityExplode(@NotNull EntityExplodeEvent event) {
+    for (Block block : event.blockList()) {
+      ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
+          .getProtectionEntry(block.getLocation());
+      if (protection != null) {
+        RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(protection);
+        continue;
+      }
+      event.setCancelled(true);
     }
+  }
 }

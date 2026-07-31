@@ -1,14 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.constants.db;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+
 /**
  *
  * @author rellu
  */
-public interface DatabaseConstants {
+public class DatabaseConstants {
+  private DatabaseConstants() {
+    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  }
 
-
-    //==============================================================================//
-    //                           DATABASE   STUFF                                   //
-    //==============================================================================//
-    String PLUGIN_DATABASE_NAME = "rellu_essentials";
+  public static final String PLUGIN_DATABASE_NAME = "rellu_essentials";
 }

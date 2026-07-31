@@ -10,16 +10,17 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PluginInformationEntry {
-    private int id;
-    private String created;
-    private int createdBy;
-    private String updated;
-    private int updatedBy;
-    private String deleted;
-    private int deletedBy;
-    private String tabHeader;
-    private String tabFooter;
-    private String motdMessage;
-    private int motdPlayers;
-    private int dbVersion;
+
+  private int id;
+  private String created;
+  private int createdBy;
+  private String updated;
+  private int updatedBy;
+  private String deleted;
+  private int deletedBy;
+  private String tabHeader;
+  private String tabFooter;
+  private String motdMessage;
+  private int motdPlayers;
+  private int dbVersion;
 }

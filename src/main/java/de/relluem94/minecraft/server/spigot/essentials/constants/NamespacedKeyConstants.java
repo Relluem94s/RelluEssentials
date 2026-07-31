@@ -5,19 +5,19 @@ import org.bukkit.NamespacedKey;
 
 public final class NamespacedKeyConstants {
 
-    public static NamespacedKey itemCoins() {
-        return new NamespacedKey(RelluEssentials.getInstance(), "coins");
-    }
+  private NamespacedKeyConstants() {
+    throw new IllegalStateException();
+  }
 
-    public static NamespacedKey itemSellPrice() {
-        return new NamespacedKey(RelluEssentials.getInstance(), "itemSellPrice");
-    }
+  public static NamespacedKey itemCoins() {
+    return new NamespacedKey(RelluEssentials.getInstance(), "coins");
+  }
 
-    public static NamespacedKey itemBuyPrice() {
-        return new NamespacedKey(RelluEssentials.getInstance(), "itemBuyPrice");
-    }
+  public static NamespacedKey itemSellPrice() {
+    return new NamespacedKey(RelluEssentials.getInstance(), "itemSellPrice");
+  }
 
-    private NamespacedKeyConstants() {
-        throw new IllegalStateException();
-    }
+  public static NamespacedKey itemBuyPrice() {
+    return new NamespacedKey(RelluEssentials.getInstance(), "itemBuyPrice");
+  }
 }

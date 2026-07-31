@@ -13,18 +13,19 @@ import org.jspecify.annotations.NonNull;
 
 public class BetterWorlds implements Listener {
 
-    @EventHandler
-    public void onWorldChange(@NonNull PlayerChangedWorldEvent e){
-        Player p = e.getPlayer();
-        
-        WorldHelper.saveWorldGroupInventory(p, e.getFrom(), true);
-        WorldHelper.loadWorldGroupInventory(p);
+  @EventHandler
+  public void onWorldChange(@NonNull PlayerChangedWorldEvent e) {
+    Player p = e.getPlayer();
 
-        String newWorld = p.getWorld().getName();
-        ScoreBoardManager.setScoreboardVisible(p, RelluEssentials.getInstance().scoreboardShow.contains(newWorld));
+    WorldHelper.saveWorldGroupInventory(p, e.getFrom(), true);
+    WorldHelper.loadWorldGroupInventory(p);
 
-        if(WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)){
-            PlayerHelper.setLobbyItems(p);
-        }
+    String newWorld = p.getWorld().getName();
+    ScoreBoardManager.setScoreboardVisible(p,
+        RelluEssentials.getInstance().scoreboardShow.contains(newWorld));
+
+    if (WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)) {
+      PlayerHelper.setLobbyItems(p);
     }
+  }
 }

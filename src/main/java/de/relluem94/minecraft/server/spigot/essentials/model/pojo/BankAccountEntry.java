@@ -10,14 +10,15 @@ import lombok.Setter;
 @Setter
 @Getter
 public class BankAccountEntry {
-    private int id;
-    private String created;
-    private int createdBy;
-    private String updated;
-    private int updatedBy;
-    private String deleted;
-    private int deletedBy;
-    private int playerId;
-    private double value;
-    private BankTierEntry tier;
+
+  private int id;
+  private String created;
+  private int createdBy;
+  private String updated;
+  private int updatedBy;
+  private String deleted;
+  private int deletedBy;
+  private int playerId;
+  private double value;
+  private BankTierEntry tier;
 }

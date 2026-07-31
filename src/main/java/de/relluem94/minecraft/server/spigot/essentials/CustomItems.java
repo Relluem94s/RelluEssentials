@@ -12,10 +12,12 @@ import org.bukkit.Material;
  */
 public class CustomItems {
 
-    private CustomItems() {
-        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
-    }
+  public static final ItemHelper npc_gui_disabled = new ItemHelper(
+      Material.BLACK_STAINED_GLASS_PANE, 1, "   ", Type.NPC_GUI, Rarity.NONE);
+  public static final ItemHelper npc_gui_close = new ItemHelper(Material.BARRIER, 1, "Close",
+      Type.NPC_GUI, Rarity.NONE);
 
-    public static final ItemHelper npc_gui_disabled = new ItemHelper(Material.BLACK_STAINED_GLASS_PANE, 1, "   ", Type.NPC_GUI, Rarity.NONE);
-    public static final ItemHelper npc_gui_close = new ItemHelper(Material.BARRIER, 1, "Close", Type.NPC_GUI, Rarity.NONE);
+  private CustomItems() {
+    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  }
 }

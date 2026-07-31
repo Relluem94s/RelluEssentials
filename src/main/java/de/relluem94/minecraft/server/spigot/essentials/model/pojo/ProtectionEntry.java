@@ -11,15 +11,16 @@ import org.json.JSONObject;
 @Setter
 @Getter
 public class ProtectionEntry {
-    private int id;
-    private String created;
-    private int createdBy;
-    private String updated;
-    private int updatedBy;
-    private String deleted;
-    private int deletedBy;
-    private LocationEntry locationEntry;
-    private String materialName;
-    private JSONObject flags;
-    private JSONObject rights;
+
+  private int id;
+  private String created;
+  private int createdBy;
+  private String updated;
+  private int updatedBy;
+  private String deleted;
+  private int deletedBy;
+  private LocationEntry locationEntry;
+  private String materialName;
+  private JSONObject flags;
+  private JSONObject rights;
 }
