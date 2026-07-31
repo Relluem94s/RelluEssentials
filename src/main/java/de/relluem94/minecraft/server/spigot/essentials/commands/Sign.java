@@ -1,16 +1,21 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.command.Command;
@@ -19,89 +24,86 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
-
 
 @CommandName("sign")
 public class Sign implements CommandConstruct {
 
-    @Override
-    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!isPlayer(sender)) {
-            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
-            return true;
-        }
-
-        Player p = (Player) sender;
-
-        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-            return true;
-        }
-
-        if (args.length == 0) {
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_INFO, AnnotationHelper.getCommandName(this.getClass()), Commands.COPY.getName(), Commands.EDIT.getName()));
-        }
-
-        if (args.length > 1) {
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
-            return true;
-        }
-
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-
-        if(args[0].equalsIgnoreCase(Commands.EDIT.getName())){
-            pe.setPlayerState(PlayerState.SIGN_EDIT);
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_EDIT));
-        }
-        else if(args[0].equalsIgnoreCase(Commands.COPY.getName())){
-            pe.setPlayerState(PlayerState.SIGN_COPY);
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_COPY));
-        }
-
-        return true;
+  @Override
+  public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
+      @NonNull String label, String[] args) {
+    if (!isPlayer(sender)) {
+      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      return true;
     }
 
-    @Override
-    public CommandsEnum[] getCommands() {
-        return Commands.values();
+    Player p = (Player) sender;
+
+    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      return true;
     }
 
-    @Getter
-    public enum Commands implements CommandsEnum {
-
-        EDIT("edit"),
-        COPY("copy");
-
-        private final String name;
-        private final String[] subCommands;
-
-        Commands(String name, String... subCommands) {
-            this.name = name;
-            this.subCommands = subCommands;
-        }
+    if (args.length == 0) {
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_INFO,
+          AnnotationHelper.getCommandName(this.getClass()), Commands.COPY.getName(),
+          Commands.EDIT.getName()));
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        List<String> tabList = new ArrayList<>();
-
-        if (!Permission.isAuthorized(commandSender, Groups.getGroup("user").getId())) {
-            return tabList;
-        }
-
-        if (!isPlayer(commandSender)) {
-            return tabList;
-        }
-
-        if(strings.length == 1){
-            tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
-        }
-
-        return tabList;
+    if (args.length > 1) {
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      return true;
     }
+
+    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+
+    if (args[0].equalsIgnoreCase(Commands.EDIT.getName())) {
+      pe.setPlayerState(PlayerState.SIGN_EDIT);
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_EDIT));
+    } else if (args[0].equalsIgnoreCase(Commands.COPY.getName())) {
+      pe.setPlayerState(PlayerState.SIGN_COPY);
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_COPY));
+    }
+
+    return true;
+  }
+
+  @Override
+  public CommandsEnum[] getCommands() {
+    return Commands.values();
+  }
+
+  @Override
+  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
+      @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    List<String> tabList = new ArrayList<>();
+
+    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("user").getId())) {
+      return tabList;
+    }
+
+    if (!isPlayer(commandSender)) {
+      return tabList;
+    }
+
+    if (strings.length == 1) {
+      tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
+    }
+
+    return tabList;
+  }
+
+  @Getter
+  public enum Commands implements CommandsEnum {
+
+    EDIT("edit"),
+    COPY("copy");
+
+    private final String name;
+    private final String[] subCommands;
+
+    Commands(String name, String... subCommands) {
+      this.name = name;
+      this.subCommands = subCommands;
+    }
+  }
 }

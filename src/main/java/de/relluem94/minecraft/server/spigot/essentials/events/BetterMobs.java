@@ -1,5 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
+
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.EntityCoins;
@@ -9,6 +13,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -22,103 +28,99 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
-
 public class BetterMobs implements Listener {
 
-    @EventHandler
-    public void onSpawn(@NotNull CreatureSpawnEvent e) {
-        EntityType et = e.getEntity().getType();
-        if (et == EntityType.PHANTOM) {
-            e.setCancelled(true);
-        }
+  @EventHandler
+  public void onSpawn(@NotNull CreatureSpawnEvent e) {
+    EntityType et = e.getEntity().getType();
+    if (et == EntityType.PHANTOM) {
+      e.setCancelled(true);
     }
-    
-    @EventHandler
-    public void onKill(@NonNull PlayerDeathEvent e) {
-        String worldName = e.getEntity().getWorld().getName();
-        boolean deathLoseCoinsActive = RelluEssentials.getInstance().deathLoseCoins.contains(worldName);
-        if(deathLoseCoinsActive){
-            Player p = e.getEntity();
-            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            
-            double purse = pe.getPurse();
-            double losses = purse / 2;
-            if(purse - losses >= 1){
-                pe.setPurse(purse - losses);
-                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS, StringHelper.formatDouble(losses), PLUGIN_NAME_MONEY));
-            }
-            else{
-                pe.setPurse(0);
-            }
+  }
 
-            pe.setUpdatedBy(pe.getId());
-            pe.setHasToBeUpdated(true);
-        }
+  @EventHandler
+  public void onKill(@NonNull PlayerDeathEvent e) {
+    String worldName = e.getEntity().getWorld().getName();
+    boolean deathLoseCoinsActive = RelluEssentials.getInstance().deathLoseCoins.contains(worldName);
+    if (deathLoseCoinsActive) {
+      Player p = e.getEntity();
+      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+
+      double purse = pe.getPurse();
+      double losses = purse / 2;
+      if (purse - losses >= 1) {
+        pe.setPurse(purse - losses);
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS,
+            StringHelper.formatDouble(losses), PLUGIN_NAME_MONEY));
+      } else {
+        pe.setPurse(0);
+      }
+
+      pe.setUpdatedBy(pe.getId());
+      pe.setHasToBeUpdated(true);
     }
+  }
 
-    @EventHandler
-    public void onDeath(@NotNull EntityDeathEvent e) {
-        if(e.getEntity().getKiller() != null){
-            EntityCoins entityCoins = EntityCoins.from(e.getEntity().getType());
-            int coinsPerDeath = entityCoins.getCoins();
+  @EventHandler
+  public void onDeath(@NotNull EntityDeathEvent e) {
+    if (e.getEntity().getKiller() != null) {
+      EntityCoins entityCoins = EntityCoins.from(e.getEntity().getType());
+      int coinsPerDeath = entityCoins.getCoins();
 
-            if(coinsPerDeath > 0){
-                Player p = e.getEntity().getKiller();
-                PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-                pe.setPurse(pe.getPurse() + coinsPerDeath);
-                pe.setUpdatedBy(pe.getId());
-                pe.setHasToBeUpdated(true);
-                ChatHelper.sendMessageInActionBar(
-                        p,
-                        languageHelper.getWithPrefix(
-                                MessageKey.COMMAND_PURSE_GAIN,
-                                StringHelper.formatInt(coinsPerDeath),
-                                PLUGIN_NAME_MONEY,
-                                StringHelper.formatDouble(pe.getPurse()),
-                                PLUGIN_NAME_MONEY
-                        )
-                );
+      if (coinsPerDeath > 0) {
+        Player p = e.getEntity().getKiller();
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+        pe.setPurse(pe.getPurse() + coinsPerDeath);
+        pe.setUpdatedBy(pe.getId());
+        pe.setHasToBeUpdated(true);
+        ChatHelper.sendMessageInActionBar(
+            p,
+            languageHelper.getWithPrefix(
+                MessageKey.COMMAND_PURSE_GAIN,
+                StringHelper.formatInt(coinsPerDeath),
+                PLUGIN_NAME_MONEY,
+                StringHelper.formatDouble(pe.getPurse()),
+                PLUGIN_NAME_MONEY
+            )
+        );
 
-                if(BagHelper.hasBags(pe.getId())){
-                    List<ItemStack> li = new ArrayList<>(e.getDrops());
-                    e.getDrops().removeAll(BagHelper.collectItemStacks(li, p, pe));
-                }
-
-
-                if(p.getInventory().getItemInMainHand().hasItemMeta() &&  hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)){
-                    List<ItemStack> lis = new ArrayList<>();
-                    for(ItemStack is: e.getDrops()){
-                        if(p.getInventory().firstEmpty() != -1){
-                            p.getInventory().addItem(is);
-                            lis.add(is);
-                        }
-                    }
-                    e.getDrops().removeAll(lis);
-                }                
-            }
+        if (BagHelper.hasBags(pe.getId())) {
+          List<ItemStack> li = new ArrayList<>(e.getDrops());
+          e.getDrops().removeAll(BagHelper.collectItemStacks(li, p, pe));
         }
-    }
 
-    @EventHandler
-    public void onHit(@NotNull EntityDamageByEntityEvent e) {
-        if (e.getEntity() instanceof Monster m && e.getDamager() instanceof Player p) {
-            PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-            if(pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)){
-                p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(), m.getLastDamage(), m.getHealth()));
+        if (p.getInventory().getItemInMainHand().hasItemMeta() && hasEnchant(
+            p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)) {
+          List<ItemStack> lis = new ArrayList<>();
+          for (ItemStack is : e.getDrops()) {
+            if (p.getInventory().firstEmpty() != -1) {
+              p.getInventory().addItem(is);
+              lis.add(is);
             }
-            if(p.getInventory().getItemInMainHand().hasItemMeta() &&  hasEnchant(p.getInventory().getItemInMainHand(), CustomEnchants.thunderstrike)){
-                if(m.getLocation().getWorld() == null){
-                    return;
-                }
-                m.getLocation().getWorld().strikeLightningEffect(m.getLocation());
-            }
+          }
+          e.getDrops().removeAll(lis);
         }
+      }
     }
+  }
+
+  @EventHandler
+  public void onHit(@NotNull EntityDamageByEntityEvent e) {
+    if (e.getEntity() instanceof Monster m && e.getDamager() instanceof Player p) {
+      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+      if (pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)) {
+        p.sendMessage(
+            languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(),
+                m.getLastDamage(), m.getHealth()));
+      }
+      if (p.getInventory().getItemInMainHand().hasItemMeta() && hasEnchant(
+          p.getInventory().getItemInMainHand(), CustomEnchants.thunderstrike)) {
+        if (m.getLocation().getWorld() == null) {
+          return;
+        }
+        m.getLocation().getWorld().strikeLightningEffect(m.getLocation());
+      }
+    }
+  }
 
 }

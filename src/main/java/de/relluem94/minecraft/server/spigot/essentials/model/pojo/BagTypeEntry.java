@@ -12,21 +12,22 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BagTypeEntry {
-    private int id;
-    private String displayName;
-    private String name;
-    private int cost;
-    private String[] slotNames;
 
-    public BagTypeEntry(){
-        slotNames = new String[BagHelper.BAG_SIZE];
-    }
+  private int id;
+  private String displayName;
+  private String name;
+  private int cost;
+  private String[] slotNames;
 
-    public String getSlotName(int slot) {
-        return slotNames[slot];
-    }
+  public BagTypeEntry() {
+    slotNames = new String[BagHelper.BAG_SIZE];
+  }
 
-    public void setSlotName(int slot, String name){
-        slotNames[slot] = name;
-    }
+  public String getSlotName(int slot) {
+    return slotNames[slot];
+  }
+
+  public void setSlotName(int slot, String name) {
+    slotNames[slot] = name;
+  }
 }

@@ -11,12 +11,13 @@ import org.bukkit.Material;
 @Setter
 @Getter
 public class ProtectionLockEntry {
-    private int id;
-    private String created;
-    private int createdBy;
-    private String updated;
-    private int updatedBy;
-    private String deleted;
-    private int deletedBy;
-    private Material value;
+
+  private int id;
+  private String created;
+  private int createdBy;
+  private String updated;
+  private int updatedBy;
+  private String deleted;
+  private int deletedBy;
+  private Material value;
 }

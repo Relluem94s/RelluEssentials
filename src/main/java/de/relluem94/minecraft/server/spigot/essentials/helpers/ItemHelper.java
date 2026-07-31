@@ -1,6 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_ITEMHELPER_INVALID_BASE64_DATA;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_ITEMHELPER_NAME_NOT_FOUND;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_DECODE_CLASS_TYPE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_SAVE_ITEMSTACK;
+
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IItemHelper;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,456 +31,469 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.*;
-
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.*;
-
 /**
- * A utility class for creating and managing custom Minecraft ItemStack objects with extended metadata support.
+ * A utility class for creating and managing custom Minecraft ItemStack objects with extended
+ * metadata support.
+ *
  * @author rellu
  */
 public class ItemHelper implements IItemHelper {
 
-    @Getter
-    private final ItemStack is;
+  @Getter
+  private final ItemStack is;
 
-    @Getter
-    private final Material material;
+  @Getter
+  private final Material material;
 
-    @Getter
-    private final int amount;
+  @Getter
+  private final int amount;
 
-    @Getter
+  @Getter
+  private final String displayName;
+  @Getter
+  private final Type itemType;
+  @Getter
+  private final Rarity rarity;
+
+  @Getter
+  private List<String> lore;
+
+  /**
+   *
+   * @param material    Bukkit Material
+   * @param amount      Integer
+   * @param displayName String
+   * @param itemType    ItemType
+   * @param itemRarity  ItemRarity
+   */
+  public ItemHelper(Material material, int amount, String displayName, Type itemType,
+      Rarity itemRarity) {
+    this.amount = amount;
+    this.material = material;
+    this.displayName = displayName;
+    this.itemType = itemType;
+    this.rarity = itemRarity;
+
+    is = new ItemStack(this.material, this.amount);
+
+    ItemMeta im = is.getItemMeta();
+    if (im == null) {
+      return;
+    }
+
+    im.setDisplayName(this.displayName);
+    is.setItemMeta(im);
+  }
+
+  /**
+   *
+   * @param material    Bukkit Material
+   * @param amount      Integer
+   * @param displayName String
+   * @param itemType    ItemType
+   * @param itemRarity  ItemRarity
+   * @param lore        List String
+   */
+  public ItemHelper(Material material, int amount, String displayName, Type itemType,
+      Rarity itemRarity, List<String> lore) {
+    this.amount = amount;
+    this.material = material;
+    this.displayName = displayName;
+    this.lore = lore;
+    this.itemType = itemType;
+    this.rarity = itemRarity;
+
+    is = new ItemStack(this.material, this.amount);
+
+    ItemMeta im = is.getItemMeta();
+    if (im == null) {
+      return;
+    }
+
+    im.setDisplayName(this.displayName);
+    im.setLore(this.lore);
+    is.setItemMeta(im);
+  }
+
+  /**
+   *
+   * @param is          ItemStack
+   * @param displayName String
+   * @param itemType    ItemType
+   * @param itemRarity  ItemRarity
+   */
+  public ItemHelper(ItemStack is, String displayName, Type itemType, Rarity itemRarity) {
+    this.amount = is.getAmount();
+    this.material = is.getType();
+    this.displayName = displayName;
+    this.itemType = itemType;
+    this.rarity = itemRarity;
+
+    this.is = is;
+
+    ItemMeta im = is.getItemMeta();
+    if (im == null) {
+      return;
+    }
+
+    im.setDisplayName(this.displayName);
+    is.setItemMeta(im);
+  }
+
+  /**
+   *
+   * @param is          ItemStack
+   * @param displayName String
+   * @param itemType    ItemType
+   * @param itemRarity  ItemRarity
+   * @param lore        List String
+   */
+  public ItemHelper(@NonNull ItemStack is, String displayName, Type itemType, Rarity itemRarity,
+      List<String> lore) {
+    this.amount = is.getAmount();
+    this.material = is.getType();
+    this.displayName = displayName;
+    this.lore = lore;
+    this.itemType = itemType;
+    this.rarity = itemRarity;
+
+    this.is = is;
+
+    ItemMeta im = is.getItemMeta();
+    if (im == null) {
+      return;
+    }
+
+    im.setDisplayName(this.displayName);
+    im.setLore(this.lore);
+    is.setItemMeta(im);
+  }
+
+  @SuppressWarnings("unused")
+  public static @Nullable Object getData(@NonNull ItemStack is, NamespacedKey key) {
+    ItemMeta itemMeta = is.getItemMeta();
+      if (itemMeta == null) {
+          return null;
+      }
+    return itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+  }
+
+  @SuppressWarnings("unused")
+  public static boolean hasData(@NonNull ItemStack is, NamespacedKey key) {
+    ItemMeta itemMeta = is.getItemMeta();
+      if (itemMeta == null) {
+          return false;
+      }
+    return itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING);
+  }
+
+  public static List<String> remove(List<String> locLore) {
+    locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
+    locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
+    locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
+    locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
+    locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
+    return locLore;
+  }
+
+  @SuppressWarnings("unused")
+  public static ItemStack setDisplayName(ItemStack is, String displayName) {
+    ItemMeta im = is.getItemMeta();
+
+    Objects.requireNonNull(im).setDisplayName(displayName);
+
+    is.setItemMeta(im);
+    return is;
+  }
+
+  @Contract("_ -> new")
+  public static @NotNull ItemStack getCleanItemStack(@NotNull ItemStack is) {
+    return new ItemStack(is.getType(), 1);
+  }
+
+  @Contract("_ -> new")
+  @SuppressWarnings("unused")
+  public static @NotNull ItemStack getCleanItemStackWithAmount(@NotNull ItemStack is) {
+    return new ItemStack(is.getType(), is.getAmount());
+  }
+
+  @Contract("_, _ -> param1")
+  public static @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item,
+      EnchantmentHelper enchantment) {
+    if (item.getItemMeta() instanceof EnchantmentStorageMeta meta) {
+      meta.getPersistentDataContainer()
+          .set(enchantment.getKey(), PersistentDataType.INTEGER, enchantment.getStartLevel());
+      item.setItemMeta(meta);
+    }
+
+    return item;
+  }
+
+  public static String getItemName(@NotNull ItemStack is) {
+    String name = "";
+    if (is.hasItemMeta()) {
+      ItemMeta meta = is.getItemMeta();
+      if (Objects.requireNonNull(meta).hasDisplayName()) {
+        name = meta.getDisplayName();
+      } else {
+        name = PLUGIN_EXCEPTION_ITEMHELPER_NAME_NOT_FOUND;
+      }
+    }
+
+    return name;
+  }
+
+  public static ItemStack getSmeltedItemStack(ItemStack is) {
+    ItemStack result = null;
+    Iterator<Recipe> iterator = Bukkit.recipeIterator();
+    while (iterator.hasNext()) {
+      Recipe recipe = iterator.next();
+      if (!(recipe instanceof FurnaceRecipe)) {
+        continue;
+      }
+      if (((FurnaceRecipe) recipe).getInput().getType() != is.getType()) {
+        continue;
+      }
+
+      if (recipe.getResult().getType() != is.getType()) {
+        result = recipe.getResult();
+        break;
+      }
+
+    }
+
+    if (result != null) {
+      result.setAmount(is.getAmount());
+
+    }
+    return result;
+  }
+
+  public static String itemTo64(ItemStack stack) throws IllegalStateException {
+    try {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+      dataOutput.writeObject(stack);
+      dataOutput.close();
+      return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+    } catch (Exception e) {
+      throw new IllegalStateException(PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_SAVE_ITEMSTACK, e);
+    }
+  }
+
+  public static ItemStack itemFrom64(@NonNull String data) throws IOException {
+    try {
+      String cleaned = data.replaceAll("\\s+", "");
+
+      ByteArrayInputStream inputStream = new ByteArrayInputStream(
+          Base64.getDecoder().decode(cleaned));
+      try (BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
+        return (ItemStack) dataInput.readObject();
+      }
+    } catch (ClassNotFoundException e) {
+      throw new IOException(PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_DECODE_CLASS_TYPE, e);
+    } catch (IllegalArgumentException e) {
+      throw new IOException(
+          String.format(PLUGIN_EXCEPTION_ITEMHELPER_INVALID_BASE64_DATA, e.getMessage()), e);
+    }
+  }
+
+  /**
+   *
+   * @return ItemStack of ItemHelper
+   */
+  public ItemStack getCustomItem() {
+    init();
+    addItemRarity();
+    return postInit(is);
+  }
+
+  /**
+   *
+   * @return ItemMeta of ItemStack
+   */
+  public ItemMeta getItemMeta() {
+    return is.getItemMeta();
+  }
+
+  /**
+   *
+   * @param itemMeta ItemMeta sets ItemMeta of ItemStack
+   */
+  public void setItemMeta(ItemMeta itemMeta) {
+    is.setItemMeta(itemMeta);
+  }
+
+  public void setData(NamespacedKey key, String value) {
+    ItemMeta itemMeta = is.getItemMeta();
+      if (itemMeta == null) {
+          return;
+      }
+    itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, value);
+    is.setItemMeta(itemMeta);
+  }
+
+  public String getData(NamespacedKey key) {
+    ItemMeta itemMeta = is.getItemMeta();
+      if (itemMeta == null) {
+          return null;
+      }
+    return itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+  }
+
+  public boolean hasData(NamespacedKey key) {
+    ItemMeta itemMeta = is.getItemMeta();
+      if (itemMeta == null) {
+          return false;
+      }
+    return itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING);
+  }
+
+  @SuppressWarnings("unused")
+  public void removeData(NamespacedKey key) {
+    ItemMeta itemMeta = is.getItemMeta();
+      if (itemMeta == null) {
+          return;
+      }
+    itemMeta.getPersistentDataContainer().remove(key);
+    is.setItemMeta(itemMeta);
+  }
+
+  /**
+   *
+   * @param compare ItemStack
+   * @return boolean
+   */
+  public boolean equalsExact(ItemStack compare) {
+    ItemStack item = this.getCustomItem();
+    if (item == null || compare == null) {
+      return false;
+    }
+
+    return item.isSimilar(compare);
+  }
+
+  /**
+   *
+   * @param compare ItemStack
+   * @return boolean
+   */
+  public boolean equalsName(ItemStack compare) {
+    ItemStack item = this.getCustomItem();
+    if (item == null || compare == null) {
+      return false;
+    }
+
+    if (item.getType() != compare.getType()) {
+      return false;
+    }
+
+    if (item.hasItemMeta() != compare.hasItemMeta()) {
+      return false;
+    }
+    ItemMeta itemMeta = item.getItemMeta();
+    ItemMeta compareMeta = compare.getItemMeta();
+
+    if (itemMeta == null || compareMeta == null) {
+      return false;
+    }
+
+    return itemMeta.getDisplayName().equals(compareMeta.getDisplayName());
+  }
+
+  /**
+   *
+   * @param compare ItemStack
+   * @return boolean
+   */
+  public boolean almostEquals(ItemStack compare) {
+    ItemStack item = this.getCustomItem();
+    if (item == null || compare == null) {
+      return false;
+    }
+
+    if (item.getType() != compare.getType()) {
+      return false;
+    }
+
+    return item.hasItemMeta() == compare.hasItemMeta();
+  }
+
+  @Override
+  public void init() {
+    // has to be overwritten
+  }
+
+  @Override
+  public ItemStack postInit(ItemStack is) {
+    // has to be overwritten
+    return is;
+  }
+
+  private void addItemRarity() {
+    ItemMeta im;
+    if (is.hasItemMeta() && is.getItemMeta() != null) {
+      im = is.getItemMeta();
+      List<String> locLore;
+      if (im.getLore() != null) {
+        locLore = im.getLore();
+      } else {
+        locLore = new ArrayList<>();
+      }
+
+      locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
+      locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
+      locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
+      locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
+      locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
+
+      if (rarity.level != -1) {
+        locLore.add(rarity.getPrefix() + rarity.getDisplayName());
+      }
+
+      im.setLore(locLore);
+      is.setItemMeta(im);
+    }
+  }
+
+
+  @Getter
+  public enum Rarity {
+    NONE("", "", -1),
+    COMMON("Common", "§f§l", 0),
+    UNCOMMON("Uncommon", "§a§l", 1),
+    RARE("Rare", "§9§l", 2),
+    EPIC("Epic", "§5§l", 3),
+    LEGENDARY("Legendary", "§6§l", 4);
+
+
     private final String displayName;
-    @Getter
-    private final Type itemType;
-    @Getter
-    private final Rarity rarity;
+    private final String prefix;
+    private final int level;
 
-    @Getter
-    private List<String> lore;
-
-    /**
-     *
-     * @param material    Bukkit Material
-     * @param amount      Integer
-     * @param displayName String
-     * @param itemType    ItemType
-     * @param itemRarity  ItemRarity
-     */
-    public ItemHelper(Material material, int amount, String displayName, Type itemType, Rarity itemRarity) {
-        this.amount = amount;
-        this.material = material;
-        this.displayName = displayName;
-        this.itemType = itemType;
-        this.rarity = itemRarity;
-
-        is = new ItemStack(this.material, this.amount);
-
-        ItemMeta im = is.getItemMeta();
-        if (im == null) {
-            return;
-        }
-
-        im.setDisplayName(this.displayName);
-        is.setItemMeta(im);
+    Rarity(String displayName, String prefix, int level) {
+      this.displayName = displayName;
+      this.prefix = prefix;
+      this.level = level;
     }
 
-    /**
-     *
-     * @param material    Bukkit Material
-     * @param amount      Integer
-     * @param displayName String
-     * @param itemType    ItemType
-     * @param itemRarity  ItemRarity
-     * @param lore        List String
-     */
-    public ItemHelper(Material material, int amount, String displayName, Type itemType, Rarity itemRarity, List<String> lore) {
-        this.amount = amount;
-        this.material = material;
-        this.displayName = displayName;
-        this.lore = lore;
-        this.itemType = itemType;
-        this.rarity = itemRarity;
+  }
 
-        is = new ItemStack(this.material, this.amount);
-
-        ItemMeta im = is.getItemMeta();
-        if (im == null) {
-            return;
-        }
-
-        im.setDisplayName(this.displayName);
-        im.setLore(this.lore);
-        is.setItemMeta(im);
-    }
-
-    /**
-     *
-     * @param is          ItemStack
-     * @param displayName String
-     * @param itemType    ItemType
-     * @param itemRarity  ItemRarity
-     */
-    public ItemHelper(ItemStack is, String displayName, Type itemType, Rarity itemRarity) {
-        this.amount = is.getAmount();
-        this.material = is.getType();
-        this.displayName = displayName;
-        this.itemType = itemType;
-        this.rarity = itemRarity;
-
-        this.is = is;
-
-        ItemMeta im = is.getItemMeta();
-        if (im == null) {
-            return;
-        }
-
-        im.setDisplayName(this.displayName);
-        is.setItemMeta(im);
-    }
-
-    /**
-     *
-     * @param is          ItemStack
-     * @param displayName String
-     * @param itemType    ItemType
-     * @param itemRarity  ItemRarity
-     * @param lore        List String
-     */
-    public ItemHelper(@NonNull ItemStack is, String displayName, Type itemType, Rarity itemRarity, List<String> lore) {
-        this.amount = is.getAmount();
-        this.material = is.getType();
-        this.displayName = displayName;
-        this.lore = lore;
-        this.itemType = itemType;
-        this.rarity = itemRarity;
-
-        this.is = is;
-
-        ItemMeta im = is.getItemMeta();
-        if (im == null) {
-            return;
-        }
-
-        im.setDisplayName(this.displayName);
-        im.setLore(this.lore);
-        is.setItemMeta(im);
-    }
-
-    /**
-     *
-     * @return ItemStack of ItemHelper
-     */
-    public ItemStack getCustomItem() {
-        init();
-        addItemRarity();
-        return postInit(is);
-    }
-
-    /**
-     *
-     * @return ItemMeta of ItemStack
-     */
-    public ItemMeta getItemMeta() {
-        return is.getItemMeta();
-    }
-
-    /**
-     *
-     * @param itemMeta ItemMeta sets ItemMeta of ItemStack
-     */
-    public void setItemMeta(ItemMeta itemMeta) {
-        is.setItemMeta(itemMeta);
-    }
-
-    public void setData(NamespacedKey key, String value) {
-        ItemMeta itemMeta = is.getItemMeta();
-        if (itemMeta == null) return;
-        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, value);
-        is.setItemMeta(itemMeta);
-    }
-
-    public String getData(NamespacedKey key) {
-        ItemMeta itemMeta = is.getItemMeta();
-        if (itemMeta == null) return null;
-        return itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
-    }
-
-    public boolean hasData(NamespacedKey key) {
-        ItemMeta itemMeta = is.getItemMeta();
-        if (itemMeta == null) return false;
-        return itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING);
-    }
-
-    @SuppressWarnings("unused")
-    public void removeData(NamespacedKey key) {
-        ItemMeta itemMeta = is.getItemMeta();
-        if (itemMeta == null) return;
-        itemMeta.getPersistentDataContainer().remove(key);
-        is.setItemMeta(itemMeta);
-    }
-
-    @SuppressWarnings("unused")
-    public static @Nullable Object getData(@NonNull ItemStack is, NamespacedKey key) {
-        ItemMeta itemMeta = is.getItemMeta();
-        if (itemMeta == null) return null;
-        return itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
-    }
-
-    @SuppressWarnings("unused")
-    public static boolean hasData(@NonNull ItemStack is, NamespacedKey key) {
-        ItemMeta itemMeta = is.getItemMeta();
-        if (itemMeta == null) return false;
-        return itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING);
-    }
-
-    /**
-     *
-     * @param compare ItemStack
-     * @return boolean
-     */
-    public boolean equalsExact(ItemStack compare) {
-        ItemStack item = this.getCustomItem();
-        if (item == null || compare == null) {
-            return false;
-        }
-
-        return item.isSimilar(compare);
-    }
-
-    /**
-     *
-     * @param compare ItemStack
-     * @return boolean
-     */
-    public boolean equalsName(ItemStack compare) {
-        ItemStack item = this.getCustomItem();
-        if (item == null || compare == null) {
-            return false;
-        }
-
-        if (item.getType() != compare.getType()) {
-            return false;
-        }
-
-        if (item.hasItemMeta() != compare.hasItemMeta()) {
-            return false;
-        }
-        ItemMeta itemMeta = item.getItemMeta();
-        ItemMeta compareMeta = compare.getItemMeta();
-
-        if (itemMeta == null || compareMeta == null) {
-            return false;
-        }
-
-        return itemMeta.getDisplayName().equals(compareMeta.getDisplayName());
-    }
-
-    /**
-     *
-     * @param compare ItemStack
-     * @return boolean
-     */
-    public boolean almostEquals(ItemStack compare) {
-        ItemStack item = this.getCustomItem();
-        if (item == null || compare == null) {
-            return false;
-        }
-
-        if (item.getType() != compare.getType()) {
-            return false;
-        }
-
-        return item.hasItemMeta() == compare.hasItemMeta();
-    }
-
-    @Override
-    public void init() {
-        // has to be overwritten
-    }
-
-    @Override
-    public ItemStack postInit(ItemStack is) {
-        // has to be overwritten
-        return is;
-    }
-
-    private void addItemRarity() {
-        ItemMeta im;
-        if (is.hasItemMeta() && is.getItemMeta() != null) {
-            im = is.getItemMeta();
-            List<String> locLore;
-            if (im.getLore() != null) {
-                locLore = im.getLore();
-            } else {
-                locLore = new ArrayList<>();
-            }
-
-            locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
-            locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
-            locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
-            locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
-            locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
-
-            if (rarity.level != -1) {
-                locLore.add(rarity.getPrefix() + rarity.getDisplayName());
-            }
-
-            im.setLore(locLore);
-            is.setItemMeta(im);
-        }
-    }
-
-    public static List<String> remove(List<String> locLore) {
-        locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
-        locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
-        locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
-        locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
-        locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
-        return locLore;
-    }
-
-    @Getter
-    public enum Rarity {
-        NONE("", "", -1),
-        COMMON("Common", "§f§l", 0),
-        UNCOMMON("Uncommon", "§a§l", 1),
-        RARE("Rare", "§9§l", 2),
-        EPIC("Epic", "§5§l", 3),
-        LEGENDARY("Legendary", "§6§l", 4);
-
-
-        private final String displayName;
-        private final String prefix;
-        private final int level;
-
-        Rarity(String displayName, String prefix, int level) {
-            this.displayName = displayName;
-            this.prefix = prefix;
-            this.level = level;
-        }
-
-    }
-
-    public enum Type {
-        TOOL,
-        INGREDIENT,
-        GADGET,
-        ARMOR,
-        WEAPON,
-        HUB,
-        DECORATION,
-        BUILDING,
-        NPC,
-        NPC_GUI,
-        ENCHANTMENT,
-        MONEY,
-        ADMIN_TOOL,
-        NONE
-    }
-
-    @SuppressWarnings("unused")
-    public static ItemStack setDisplayName(ItemStack is, String displayName) {
-        ItemMeta im = is.getItemMeta();
-
-        Objects.requireNonNull(im).setDisplayName(displayName);
-
-        is.setItemMeta(im);
-        return is;
-    }
-
-    @Contract("_ -> new")
-    public static @NotNull ItemStack getCleanItemStack(@NotNull ItemStack is) {
-        return new ItemStack(is.getType(), 1);
-    }
-
-    @Contract("_ -> new")
-    @SuppressWarnings("unused")
-    public static @NotNull ItemStack getCleanItemStackWithAmount(@NotNull ItemStack is) {
-        return new ItemStack(is.getType(), is.getAmount());
-    }
-
-    @Contract("_, _ -> param1")
-    public static @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item, EnchantmentHelper enchantment) {
-        if (item.getItemMeta() instanceof EnchantmentStorageMeta meta) {
-            meta.getPersistentDataContainer().set(enchantment.getKey(), PersistentDataType.INTEGER, enchantment.getStartLevel());
-            item.setItemMeta(meta);
-        }
-
-        return item;
-    }
-
-    public static String getItemName(@NotNull ItemStack is) {
-        String name = "";
-        if (is.hasItemMeta()) {
-            ItemMeta meta = is.getItemMeta();
-            if (Objects.requireNonNull(meta).hasDisplayName()) {
-                name = meta.getDisplayName();
-            } else {
-                name = PLUGIN_EXCEPTION_ITEMHELPER_NAME_NOT_FOUND;
-            }
-        }
-
-        return name;
-    }
-
-
-    public static ItemStack getSmeltedItemStack(ItemStack is) {
-        ItemStack result = null;
-        Iterator<Recipe> iterator = Bukkit.recipeIterator();
-        while (iterator.hasNext()) {
-            Recipe recipe = iterator.next();
-            if (!(recipe instanceof FurnaceRecipe)) {
-                continue;
-            }
-            if (((FurnaceRecipe) recipe).getInput().getType() != is.getType()) {
-                continue;
-            }
-
-            if (recipe.getResult().getType() != is.getType()) {
-                result = recipe.getResult();
-                break;
-            }
-
-        }
-
-        if (result != null) {
-            result.setAmount(is.getAmount());
-
-        }
-        return result;
-    }
-
-
-    public static String itemTo64(ItemStack stack) throws IllegalStateException {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
-            dataOutput.writeObject(stack);
-            dataOutput.close();
-            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
-        } catch (Exception e) {
-            throw new IllegalStateException(PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_SAVE_ITEMSTACK, e);
-        }
-    }
-
-    public static ItemStack itemFrom64(@NonNull String data) throws IOException {
-        try {
-            String cleaned = data.replaceAll("\\s+", "");
-
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(cleaned));
-            try (BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)) {
-                return (ItemStack) dataInput.readObject();
-            }
-        } catch (ClassNotFoundException e) {
-            throw new IOException(PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_DECODE_CLASS_TYPE, e);
-        } catch (IllegalArgumentException e) {
-            throw new IOException(String.format(PLUGIN_EXCEPTION_ITEMHELPER_INVALID_BASE64_DATA, e.getMessage()), e);
-        }
-    }
+  public enum Type {
+    TOOL,
+    INGREDIENT,
+    GADGET,
+    ARMOR,
+    WEAPON,
+    HUB,
+    DECORATION,
+    BUILDING,
+    NPC,
+    NPC_GUI,
+    ENCHANTMENT,
+    MONEY,
+    ADMIN_TOOL,
+    NONE
+  }
 
 }

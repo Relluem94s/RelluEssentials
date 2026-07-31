@@ -1,29 +1,34 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
+import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.util.function.Consumer;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class DatabaseHelperFactoryTest {
 
     @Mock
-    private PlayerAPI playerAPI;
+    private PlayerRegistry playerRegistry;
 
     @Mock
     private RelluEssentials pluginInstance;
@@ -42,7 +47,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForProduction(
-                    null, -1, null, null, playerAPI
+                    null, -1, null, null, playerRegistry
             );
 
             assertNotNull(databaseHelper);
@@ -55,7 +60,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForTest(
-                    null, -1, playerAPI
+                    null, -1, playerRegistry
             );
 
             assertNotNull(databaseHelper);
@@ -69,7 +74,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForProduction(
-                    "localhost", 3306, "root", "", playerAPI
+                    "localhost", 3306, "root", "", playerRegistry
             );
 
             assertAll(
@@ -85,7 +90,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForTest(
-                    "localhost", 3306, playerAPI
+                    "localhost", 3306, playerRegistry
             );
 
             assertAll(

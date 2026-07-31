@@ -10,14 +10,15 @@ import lombok.Setter;
 @Setter
 @Getter
 public class PlayerPartnerEntry {
-    private int id;
-    private String created;
-    private int createdBy;
-    private String updated;
-    private int updatedBy;
-    private String deleted;
-    private int deletedBy;
-    private boolean shareProtections;
-    private int firstPartnerId;
-    private int secondPartnerId;
+
+  private int id;
+  private String created;
+  private int createdBy;
+  private String updated;
+  private int updatedBy;
+  private String deleted;
+  private int deletedBy;
+  private boolean shareProtections;
+  private int firstPartnerId;
+  private int secondPartnerId;
 }

@@ -6,19 +6,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 public class EventWrapper {
-    private final Listener listener;
-    private boolean initialised = false;
 
-    public EventWrapper(@NotNull Listener listener) {
-        this.listener = listener;
+  private final Listener listener;
+  private boolean initialised = false;
+
+  public EventWrapper(@NotNull Listener listener) {
+    this.listener = listener;
+  }
+
+  public void init(JavaPlugin javaPlugin) {
+    if (initialised) {
+      return;
     }
 
-    public void init(JavaPlugin javaPlugin) {
-        if (initialised) {
-            return;
-        }
-
-        Bukkit.getServer().getPluginManager().registerEvents(listener, javaPlugin);
-        initialised = true;
-    }
+    Bukkit.getServer().getPluginManager().registerEvents(listener, javaPlugin);
+    initialised = true;
+  }
 }

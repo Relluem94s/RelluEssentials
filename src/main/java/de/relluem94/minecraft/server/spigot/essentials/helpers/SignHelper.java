@@ -1,5 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_CLICK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT;
+
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.SignMissingCustomInputException;
 import lombok.Getter;
 import org.bukkit.block.Block;
@@ -10,10 +14,6 @@ import org.bukkit.block.data.type.WallSign;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_CLICK;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_NAME;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT;
-
 /**
  *
  * @author rellu
@@ -21,85 +21,87 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Exceptio
 @Getter
 public class SignHelper {
 
-    private final String line1;
-    private final String line2;
-    
-    private final ActionType signActionType;
+  private final String line1;
+  private final String line2;
 
-    public SignHelper(@NotNull ActionType signActionType, String customInput) {
-        this.signActionType = signActionType;
-        this.line1 = signActionType.getDisplayName();
-        if (signActionType.isCustomInput()) {
-            this.line2 = customInput;
-        } else {
-            this.line2 = "";
-        }
+  private final ActionType signActionType;
+
+  public SignHelper(@NotNull ActionType signActionType, String customInput) {
+    this.signActionType = signActionType;
+    this.line1 = signActionType.getDisplayName();
+    if (signActionType.isCustomInput()) {
+      this.line2 = customInput;
+    } else {
+      this.line2 = "";
+    }
+  }
+
+  public SignHelper(@NotNull ActionType signActionType) throws SignMissingCustomInputException {
+    this.signActionType = signActionType;
+    this.line1 = signActionType.getDisplayName();
+    this.line2 = "";
+    if (signActionType.isCustomInput()) {
+      throw new SignMissingCustomInputException(
+          PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT);
+    }
+  }
+
+  public static boolean isSign(@NotNull SignHelper sh, String line0, String line1, String line3) {
+    return sh.getLine0().equals(line0) && sh.getLine1().equals(line1) && sh.getLine3()
+        .equals(line3);
+  }
+
+  public static boolean isSign(@NotNull SignHelper sh, String line1) {
+    return sh.getSignActionType().getShorthand().equals(line1) || sh.getSignActionType().getName()
+        .equalsIgnoreCase(line1);
+  }
+
+  public static boolean isBlockASign(@NotNull Block b) {
+    return b.getBlockData() instanceof WallSign ||
+        b.getBlockData() instanceof Sign ||
+        b.getBlockData() instanceof WallHangingSign ||
+        b.getBlockData() instanceof HangingSign
+        ;
+  }
+
+  @SuppressWarnings("SameReturnValue")
+  public String getLine0() {
+    return PLUGIN_SIGN_NAME;
+  }
+
+  @SuppressWarnings("SameReturnValue")
+  public String getLine3() {
+    return PLUGIN_SIGN_CLICK;
+  }
+
+  @Getter
+  public enum ActionType {
+    COMMAND(1, "Command", true),
+    TELEPORT(2, "Teleport", true),
+    SPAWN(3, "Spawn", false),
+    UP(4, "Up", false),
+    DOWN(5, "Down", false),
+    HOME(6, "Home", true);
+
+    private final int id;
+    private final String displayName;
+    private final boolean customInput;
+
+    ActionType(int id, String displayName, boolean customInput) {
+      this.id = id;
+      this.customInput = customInput;
+      this.displayName = displayName;
     }
 
-    public SignHelper(@NotNull ActionType signActionType) throws SignMissingCustomInputException {
-        this.signActionType = signActionType;
-        this.line1 = signActionType.getDisplayName();
-        this.line2 = "";
-        if (signActionType.isCustomInput()) {
-            throw new SignMissingCustomInputException(PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT);
-        }
+
+    @Contract(pure = true)
+    public @NotNull String getShorthand() {
+      return "[" + id + "]";
     }
 
-    @SuppressWarnings("SameReturnValue")
-    public String getLine0() {
-        return PLUGIN_SIGN_NAME;
+    @Contract(pure = true)
+    public @NotNull String getName() {
+      return "[" + this.name() + "]";
     }
-
-    @SuppressWarnings("SameReturnValue")
-    public String getLine3() {
-        return PLUGIN_SIGN_CLICK;
-    }
-
-    public static boolean isSign(@NotNull SignHelper sh, String line0, String line1, String line3) {
-        return sh.getLine0().equals(line0) && sh.getLine1().equals(line1) && sh.getLine3().equals(line3);
-    }
-
-    public static boolean isSign(@NotNull SignHelper sh, String line1) {
-        return sh.getSignActionType().getShorthand().equals(line1) || sh.getSignActionType().getName().equalsIgnoreCase(line1);
-    }
-
-    public static boolean isBlockASign(@NotNull Block b){
-        return (
-            b.getBlockData() instanceof WallSign ||
-            b.getBlockData() instanceof Sign ||
-            b.getBlockData() instanceof WallHangingSign ||
-            b.getBlockData() instanceof HangingSign 
-        );
-    }
-
-    @Getter
-    public enum ActionType {
-        COMMAND(1, "Command", true),
-        TELEPORT(2, "Teleport", true),
-        SPAWN(3, "Spawn", false),
-        UP(4, "Up", false),
-        DOWN(5, "Down", false),
-        HOME(6, "Home", true);
-
-        private final int id;
-        private final String displayName;
-        private final boolean customInput;
-
-        ActionType(int id, String displayName, boolean customInput) {
-            this.id = id;
-            this.customInput = customInput;
-            this.displayName = displayName;
-        }
-
-
-        @Contract(pure = true)
-        public @NotNull String getShorthand() {
-            return "[" + id + "]";
-        }
-
-        @Contract(pure = true)
-        public @NotNull String getName() {
-            return "[" + this.name() + "]";
-        }
-    }
+  }
 }

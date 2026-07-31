@@ -9,163 +9,167 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
-import org.bukkit.*;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.WeatherType;
+import org.bukkit.World;
+import org.bukkit.WorldType;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *
  * @author Relluem94
  */
 public class TabCompleterHelper {
-    private TabCompleterHelper() {
-        throw new IllegalStateException(
-                Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+
+  private TabCompleterHelper() {
+    throw new IllegalStateException(
+        Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  }
+
+  public static @NotNull List<String> getOnlinePlayers() {
+    List<String> playerList = new ArrayList<>();
+    for (Player p : Bukkit.getOnlinePlayers()) {
+      playerList.add(p.getName());
     }
 
-    public static @NotNull List<String> getOnlinePlayers(){
-        List<String> playerList = new ArrayList<>();
-        for(Player p : Bukkit.getOnlinePlayers()){
-            playerList.add(p.getName());
+    return playerList;
+  }
+
+  public static @NotNull List<String> getProtectionFlags() {
+    List<String> protectionFlagList = new ArrayList<>();
+    for (ProtectionFlags protectionFlag : ProtectionFlags.values()) {
+      protectionFlagList.add(protectionFlag.toString());
+    }
+
+    return protectionFlagList;
+  }
+
+  public static @NotNull List<String> getCommands(CommandsEnum @NotNull [] commandsEnums) {
+    List<String> commands = new ArrayList<>();
+    for (CommandsEnum command : commandsEnums) {
+      commands.add(command.getName());
+    }
+
+    return commands;
+  }
+
+  public static @NotNull List<String> getBags(Player p) {
+    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+
+    Collection<BagEntry> bags = BagHelper.getBags(pe.getId());
+    List<String> bagsList = new ArrayList<>();
+    for (BagEntry bag : bags) {
+      bagsList.add(bag.getBagType().getName().toLowerCase());
+    }
+
+    return bagsList;
+  }
+
+  public static @NotNull List<String> getWorlds() {
+    List<String> worldNames = new ArrayList<>();
+
+    for (World world : Bukkit.getWorlds()) {
+      worldNames.add(world.getName());
+    }
+
+    return worldNames;
+  }
+
+  public static @NotNull List<String> getHomes(Player p) {
+    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    List<String> homes = new ArrayList<>();
+
+    for (LocationEntry le : pe.getHomes()) {
+      homes.add(le.getLocationName());
+    }
+
+    for (LocationEntry le : pe.getDeaths()) {
+      homes.add(le.getLocationName());
+    }
+
+    return homes;
+  }
+
+  public static @NotNull List<String> getGroups() {
+    List<String> groups = new ArrayList<>();
+
+    for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
+      groups.add(ge.getName());
+    }
+
+    return groups;
+  }
+
+  public static List<String> getPluginCommands() {
+    return RelluEssentials.getCommandWrapperList().stream()
+        .map(CommandWrapper::getCommandName)
+        .collect(Collectors.toList());
+  }
+
+  public static @NotNull List<String> getWarps(World world) {
+    List<String> warps = new ArrayList<>();
+
+    for (LocationEntry le : RelluEssentials.getInstance().getWarpRegistry().getWarps(world)) {
+      warps.add(le.getLocationName());
+    }
+
+    return warps;
+  }
+
+  public static @NotNull List<String> getWorldTypes() {
+    List<String> worldTypes = new ArrayList<>();
+
+    for (WorldType worldType : WorldType.values()) {
+      worldTypes.add(worldType.getName());
+    }
+
+    return worldTypes;
+  }
+
+  public static @NotNull List<String> getWorldEnvironmentTypes() {
+    List<String> worldTypes = new ArrayList<>();
+
+    for (World.Environment worldEnvironmentType : World.Environment.values()) {
+      worldTypes.add(worldEnvironmentType.name());
+    }
+
+    return worldTypes;
+  }
+
+  public static @NotNull List<String> getMaterials(@Nullable String filter) {
+    List<String> materials = new ArrayList<>();
+
+    for (Material material : Material.values()) {
+      if (material.name().startsWith("LEGACY")) {
+        continue;
+      }
+
+      String materialName = material.name();
+
+      if (material.isBlock() && material.isSolid()) {
+        if (filter == null || materialName.toLowerCase().contains(filter.toLowerCase())) {
+          materials.add(materialName);
         }
-
-        return playerList;
+      }
     }
 
-    public static @NotNull List<String> getProtectionFlags(){
-        List<String> protectionFlagList = new ArrayList<>();
-        for(ProtectionFlags protectionFlag : ProtectionFlags.values()){
-            protectionFlagList.add(protectionFlag.toString());
-        }
+    return materials;
+  }
 
-        return protectionFlagList;
+  public static @NotNull List<String> getWeatherTypes() {
+    List<String> weatherTypes = new ArrayList<>();
+
+    for (WeatherType weatherType : WeatherType.values()) {
+      weatherTypes.add(weatherType.name());
     }
 
-    public static @NotNull List<String> getCommands(CommandsEnum @NotNull [] commandsEnums){
-        List<String> commands = new ArrayList<>();
-        for(CommandsEnum command : commandsEnums){
-            commands.add(command.getName());
-        }
-
-        return commands;
-    }
-
-    public static @NotNull List<String> getBags(Player p){
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-
-        Collection<BagEntry> bags = BagHelper.getBags(pe.getId());
-        List<String> bagsList = new ArrayList<>();
-        for(BagEntry bag : bags){
-            bagsList.add(bag.getBagType().getName().toLowerCase());
-        }
-
-        return bagsList;
-    }
-
-    public static @NotNull List<String> getWorlds(){
-        List<String> worldNames = new ArrayList<>();
-
-        for(World world : Bukkit.getWorlds()){
-            worldNames.add(world.getName());
-        }
-
-        return worldNames;
-    }
-
-    public static @NotNull List<String> getHomes(Player p) {
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerAPI().getPlayerEntry(p);
-        List<String> homes = new ArrayList<>();
-
-        for(LocationEntry le : pe.getHomes()){
-            homes.add(le.getLocationName());
-        }
-
-        for(LocationEntry le : pe.getDeaths()){
-            homes.add(le.getLocationName());
-        }
-
-        return homes;
-    }
-
-    public static @NotNull List<String> getGroups() {
-        List<String> groups = new ArrayList<>();
-
-        for(GroupEntry ge : RelluEssentials.getInstance().groupEntryList){
-            groups.add(ge.getName());
-        }
-
-        return groups;
-    }
-
-    public static List<String> getPluginCommands() {
-        return RelluEssentials.getInstance().getCommandWrapperList().stream()
-                .map(CommandWrapper::getCommandName)
-                .collect(Collectors.toList());
-    }
-
-    public static @NotNull List<String> getWarps(World world){
-        List<String> warps = new ArrayList<>();
-
-        for(LocationEntry le : RelluEssentials.getInstance().getWarpAPI().getWarps(world)){
-            warps.add(le.getLocationName());
-        }
-
-        return warps;
-    }
-
-    public static @NotNull List<String> getWorldTypes(){
-        List<String> worldTypes = new ArrayList<>();
-
-        for(WorldType worldType : WorldType.values()){
-            worldTypes.add(worldType.getName());
-        }
-
-        return worldTypes;
-    }
-
-    public static @NotNull List<String> getWorldEnvironmentTypes(){
-        List<String> worldTypes = new ArrayList<>();
-
-        for(World.Environment worldEnvironmentType : World.Environment.values()){
-            worldTypes.add(worldEnvironmentType.name());
-        }
-
-        return worldTypes;
-    }
-
-    public static @NotNull List<String> getMaterials(@Nullable String filter){
-        List<String> materials = new ArrayList<>();
-
-        for(Material material : Material.values()){
-            if(material.name().startsWith("LEGACY")){
-                continue;
-            }
-
-            String materialName = material.name();
-
-            if (material.isBlock() && material.isSolid()) {
-                if (filter == null || materialName.toLowerCase().contains(filter.toLowerCase())) {
-                    materials.add(materialName);
-                }
-            }
-        }
-
-        return materials;
-    }
-
-    public static @NotNull List<String> getWeatherTypes(){
-        List<String> weatherTypes = new ArrayList<>();
-
-        for(WeatherType weatherType : WeatherType.values()){
-            weatherTypes.add(weatherType.name());
-        }
-
-        return weatherTypes;
-    }
+    return weatherTypes;
+  }
 }

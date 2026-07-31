@@ -1,13 +1,26 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
-import de.relluem94.minecraft.server.spigot.essentials.api.WarpAPI;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.WarpRegistry;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
@@ -20,15 +33,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class TabCompleterHelperTest {
 
@@ -36,10 +40,10 @@ class TabCompleterHelperTest {
     private RelluEssentials relluEssentials;
 
     @Mock
-    private PlayerAPI playerAPI;
+    private PlayerRegistry playerRegistry;
 
     @Mock
-    private WarpAPI warpAPI;
+    private WarpRegistry warpRegistry;
 
     @Mock
     private Player player;
@@ -166,8 +170,8 @@ class TabCompleterHelperTest {
         playerEntry.setHomes(new ArrayList<>());
         playerEntry.setDeaths(new ArrayList<>());
 
-        when(relluEssentials.getPlayerAPI()).thenReturn(playerAPI);
-        when(playerAPI.getPlayerEntry(player)).thenReturn(playerEntry);
+        when(relluEssentials.getPlayerRegistry()).thenReturn(playerRegistry);
+        when(playerRegistry.getPlayerEntry(player)).thenReturn(playerEntry);
 
         List<String> result = TabCompleterHelper.getHomes(player);
 
@@ -186,8 +190,8 @@ class TabCompleterHelperTest {
         playerEntry.setHomes(List.of(homeEntry));
         playerEntry.setDeaths(List.of(deathEntry));
 
-        when(relluEssentials.getPlayerAPI()).thenReturn(playerAPI);
-        when(playerAPI.getPlayerEntry(player)).thenReturn(playerEntry);
+        when(relluEssentials.getPlayerRegistry()).thenReturn(playerRegistry);
+        when(playerRegistry.getPlayerEntry(player)).thenReturn(playerEntry);
 
         List<String> result = TabCompleterHelper.getHomes(player);
 
@@ -228,8 +232,8 @@ class TabCompleterHelperTest {
 
     @Test
     void getWarpsReturnsEmptyListWhenNoWarpsExistForWorld() {
-        when(relluEssentials.getWarpAPI()).thenReturn(warpAPI);
-        when(warpAPI.getWarps(world)).thenReturn(new ArrayList<>());
+        when(relluEssentials.getWarpRegistry()).thenReturn(warpRegistry);
+        when(warpRegistry.getWarps(world)).thenReturn(new ArrayList<>());
 
         List<String> result = TabCompleterHelper.getWarps(world);
 
@@ -241,8 +245,8 @@ class TabCompleterHelperTest {
         LocationEntry warpEntry = new LocationEntry();
         warpEntry.setLocationName("spawn");
 
-        when(relluEssentials.getWarpAPI()).thenReturn(warpAPI);
-        when(warpAPI.getWarps(world)).thenReturn(List.of(warpEntry));
+        when(relluEssentials.getWarpRegistry()).thenReturn(warpRegistry);
+        when(warpRegistry.getWarps(world)).thenReturn(List.of(warpEntry));
 
         List<String> result = TabCompleterHelper.getWarps(world);
 

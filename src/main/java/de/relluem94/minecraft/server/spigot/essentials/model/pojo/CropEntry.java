@@ -7,7 +7,8 @@ import org.bukkit.Material;
 @Setter
 @Getter
 public class CropEntry {
-    private int id;
-    private Material plant;
-    private Material seed;
+
+  private int id;
+  private Material plant;
+  private Material seed;
 }

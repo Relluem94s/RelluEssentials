@@ -3,5 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.lo
 import java.io.FileNotFoundException;
 
 public interface SqlResourceLoader {
-    String load(String fileName) throws FileNotFoundException;
+
+  String load(String fileName) throws FileNotFoundException;
 }

@@ -1,12 +1,23 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_NEGATIVE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_POSITIVE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
+
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
+import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -17,101 +28,93 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_NEGATIVE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_POSITIVE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.*;
-
 @CommandName("gamerules")
 public class GameRules implements CommandConstruct {
 
-    @Override
-    public CommandsEnum[] getCommands() {
-        return new CommandsEnum[0];
-    }
+  @Override
+  public CommandsEnum[] getCommands() {
+    return new CommandsEnum[0];
+  }
 
-    @Override
-    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
+  @Override
+  public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
+      @NonNull String label, String[] args) {
 
-        if (isCMDBlock(sender) || isConsole(sender)) {
-            if (args.length < 1) {
-                sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
-                return true;   
-            }
-
-            showGameRulesForWorld(sender, args[0]);
-            
-            return true;
-        }
-
-
-        if (!isPlayer(sender)) {
-            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
-            return true;
-        }
-
-        Player p = (Player) sender;
-
-        if (!Permission.isAuthorized(p, Groups.getGroup("admin").getId())) {
-            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-            return true;   
-        }
-
-        if(args.length == 0){
-            showGameRule(sender, p.getWorld());
-            return true;
-        }
-
-        if (args.length > 1) {
-            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
-            return true;   
-        }
-
-        showGameRulesForWorld(sender, args[0]);
+    if (isCMDBlock(sender) || isConsole(sender)) {
+      if (args.length < 1) {
+        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
         return true;
+      }
+
+      showGameRulesForWorld(sender, args[0]);
+
+      return true;
     }
 
-    private void showGameRule(CommandSender sender, @NotNull World world) {
-        String[] gameRules = world.getGameRules();
-        sendMessage(sender, languageHelper.getWithPrefix(MessageKey.COMMAND_GAMERULES, world.getName()));
-        for (String gameRule : gameRules) {
-            Object value = world.getGameRuleValue(Objects.requireNonNull(GameRule.getByName(gameRule)));
-            String color;
-            if (value instanceof Boolean) {
-                color = ((boolean)value ? PLUGIN_COLOR_POSITIVE : PLUGIN_COLOR_NEGATIVE);
-            } else {
-                color = "§7";
-            }
-
-            sendMessage(sender, "        §d" + gameRule + "§f = " + color + value);
-        }
+    if (!isPlayer(sender)) {
+      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      return true;
     }
 
-    private void showGameRulesForWorld(CommandSender sender, String name){
-        World world = Bukkit.getWorld(name);
-        if (world == null) {
-            sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, name));
-            return;
-        }
+    Player p = (Player) sender;
 
-        showGameRule(sender, world);
+    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("admin").getId())) {
+      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      return true;
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) {
-            return new ArrayList<>();
-        }
-
-        if(strings.length > 1){
-            return new ArrayList<>();
-        }
-
-        return TabCompleterHelper.getWorlds();
+    if (args.length == 0) {
+      showGameRule(sender, p.getWorld());
+      return true;
     }
+
+    if (args.length > 1) {
+      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      return true;
+    }
+
+    showGameRulesForWorld(sender, args[0]);
+    return true;
+  }
+
+  private void showGameRule(CommandSender sender, @NotNull World world) {
+    String[] gameRules = world.getGameRules();
+    sendMessage(sender,
+        languageHelper.getWithPrefix(MessageKey.COMMAND_GAMERULES, world.getName()));
+    for (String gameRule : gameRules) {
+      Object value = world.getGameRuleValue(Objects.requireNonNull(GameRule.getByName(gameRule)));
+      String color;
+      if (value instanceof Boolean) {
+        color = (boolean) value ? PLUGIN_COLOR_POSITIVE : PLUGIN_COLOR_NEGATIVE;
+      } else {
+        color = "§7";
+      }
+
+      sendMessage(sender, "        §d" + gameRule + "§f = " + color + value);
+    }
+  }
+
+  private void showGameRulesForWorld(CommandSender sender, String name) {
+    World world = Bukkit.getWorld(name);
+    if (world == null) {
+      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, name));
+      return;
+    }
+
+    showGameRule(sender, world);
+  }
+
+  @Override
+  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
+      @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+      return new ArrayList<>();
+    }
+
+    if (strings.length > 1) {
+      return new ArrayList<>();
+    }
+
+    return TabCompleterHelper.getWorlds();
+  }
 }

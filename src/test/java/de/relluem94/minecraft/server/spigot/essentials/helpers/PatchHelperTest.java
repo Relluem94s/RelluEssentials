@@ -1,8 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.api.PlayerAPI;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,19 +24,13 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class PatchHelperTest {
 
     @Mock
     private DatabaseHelper databaseHelper;
     @Mock
-    private PlayerAPI playerAPIMock;
+    private PlayerRegistry playerRegistry;
     @Mock
     private ConfigHelper configHelperMock;
 
@@ -37,7 +41,7 @@ class PatchHelperTest {
     @BeforeEach
     void setUp() {
         chatHelperMock = mockStatic(ChatHelper.class);
-        patchHelper = new PatchHelper(databaseHelper, playerAPIMock, _ -> {}, configHelperMock);
+        patchHelper = new PatchHelper(databaseHelper, playerRegistry, _ -> {}, configHelperMock);
     }
 
     @AfterEach
