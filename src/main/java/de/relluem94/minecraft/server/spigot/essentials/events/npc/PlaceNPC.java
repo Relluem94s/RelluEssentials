@@ -1,10 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NPCHelper;
-import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,11 +19,7 @@ public class PlaceNPC implements Listener {
     @EventHandler
     public void onNPCPlacement(@NotNull PlayerInteractEvent e) {
         if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
-            if((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) && (e.getItem() != null && new WorldSelector().equalsName(e.getItem()))){
-                Worlds.openWorldMenu(e.getPlayer());
-                e.setCancelled(true);
-            }
-            else if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) && (e.getItem() != null && RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().contains(e.getItem()))){
+            if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK) && (e.getItem() != null && RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().contains(e.getItem()))){
                 e.setCancelled(true);
 
                 if(e.getClickedBlock() == null){

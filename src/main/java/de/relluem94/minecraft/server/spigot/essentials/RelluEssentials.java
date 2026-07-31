@@ -200,6 +200,7 @@ public class RelluEssentials extends JavaPlugin {
                     new EventWrapper(new BlockRedstoneProtect()),
                     new EventWrapper(new BlockModifyProtect()),
                     new EventWrapper(new PlayerInteractProtect()),
+                    new EventWrapper(new OpenWorldSelectorEvent()),
                     new EventWrapper(new BetterLock()),
                     new EventWrapper(new SkullInfo()),
                     new EventWrapper(new NoDeathMessage()),

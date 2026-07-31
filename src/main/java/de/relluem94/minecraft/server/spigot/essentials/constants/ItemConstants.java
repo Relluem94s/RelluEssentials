@@ -33,6 +33,7 @@ public interface ItemConstants {
     String PLUGIN_ITEM_NAMESPACE_POSITION_AXE = "position_axe";
     String PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED = "npc_gui_disabled";
     String PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE = "npc_gui_close";
+    String PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR = "world_selector";
 
     String PLUGIN_ITEM_NPC_GUI_DISABLED_NAME = "   ";
     String PLUGIN_ITEM_NPC_GUI_CLOSE_NAME = "Close";
@@ -44,7 +45,6 @@ public interface ItemConstants {
     String PLUGIN_ITEM_RELLU_SWORD = "§eRellu's Sword";
     String PLUGIN_ITEM_RELLU_SHIELD = "§5Rellu's Shield";
     String PLUGIN_ITEM_RELLU_PICKAXE = "§eRellu's Pickaxe";
-
 
     String PLUGIN_ITEM_AUTOSELLHOPER = PLUGIN_COLOR_MONEY + "\uD835\uDE3C\uD835\uDE6A\uD835\uDE69\uD835\uDE64 \uD835\uDE4E\uD835\uDE5A\uD835\uDE61\uD835\uDE61 \uD835\uDE43\uD835\uDE64\uD835\uDE65\uD835\uDE65\uD835\uDE5A\uD835\uDE67";
     String PLUGIN_ITEM_GRAPPLINGHOCK = "§cGrappling Hook";

@@ -2,7 +2,9 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
@@ -212,6 +214,9 @@ public class CustomItemManager implements IEnable{
 
         ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SWORD, relluSwordItem);
 
+        ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR,
+                new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE), PLUGIN_ITEM_WORLDSELECTOR,
+                        ItemHelper.Type.GADGET, ItemHelper.Rarity.RARE));
 
 
 

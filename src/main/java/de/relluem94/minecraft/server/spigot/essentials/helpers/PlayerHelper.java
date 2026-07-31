@@ -5,7 +5,6 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
-import de.relluem94.minecraft.server.spigot.essentials.items.WorldSelector;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
@@ -30,8 +29,7 @@ import java.util.UUID;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.*;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 /**
@@ -274,7 +272,7 @@ public class PlayerHelper {
 
     public static void setLobbyItems(@NotNull Player p){
         ItemHelper grapplingHookItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK)).orElseThrow();
-        WorldSelector ws = new WorldSelector();
+        ItemHelper worldSelectorItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR)).orElseThrow();
         ItemHelper cloudSailorItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
 
         for(ItemStack i : p.getInventory().getContents()){
@@ -282,17 +280,9 @@ public class PlayerHelper {
                 continue;
             }
 
-            if(i.isSimilar(grapplingHookItem.getCustomItem())){
-                p.getInventory().remove(i);
-            }
-
-            if(i.isSimilar(cloudSailorItem.getCustomItem())){
-                p.getInventory().remove(i);
-            }
-
-            if(i.getType().equals(ws.getCustomItem().getType()) && i.hasItemMeta() && i.getItemMeta() != null && i.getItemMeta().getDisplayName().equals(ws.getDisplayName())){
-                p.getInventory().remove(i);
-            }
+            if (i.isSimilar(grapplingHookItem.getCustomItem())) p.getInventory().remove(i);
+            if (i.isSimilar(cloudSailorItem.getCustomItem())) p.getInventory().remove(i);
+            if (i.isSimilar(worldSelectorItem.getCustomItem())) p.getInventory().remove(i);
         }
     
         p.getInventory().setArmorContents(new ItemStack[]{null, null, null, null});
@@ -300,7 +290,7 @@ public class PlayerHelper {
 
         p.getInventory().setItem(0, grapplingHookItem.getCustomItem());
         p.getInventory().setItem(1, cloudSailorItem.getCustomItem());
-        p.getInventory().setItem(4, ws.getCustomItem());
+        p.getInventory().setItem(4, worldSelectorItem.getCustomItem());
     }
 
     public static @NotNull Location getLookingLocation(@NotNull Player player, double range) {
