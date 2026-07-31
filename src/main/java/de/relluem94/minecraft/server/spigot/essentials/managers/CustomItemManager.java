@@ -70,10 +70,16 @@ public class CustomItemManager implements IEnable{
                 new ItemHelper(Material.BARRIER, 1, PLUGIN_ITEM_NPC_GUI_CLOSE_NAME,
                         ItemHelper.Type.NPC_GUI, ItemHelper.Rarity.NONE));
 
+        ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK,
+                new ItemHelper(Material.FISHING_ROD, 1, PLUGIN_ITEM_GRAPPLINGHOCK,
+                        ItemHelper.Type.GADGET, ItemHelper.Rarity.UNCOMMON));
+      
         ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER,
                 new ItemHelper(Material.HOPPER, 1, PLUGIN_ITEM_AUTOSELLHOPER,
                         ItemHelper.Type.TOOL, ItemHelper.Rarity.LEGENDARY));
 
+      
+      
 
         InventoryRegistry.create(
                 plugin,
