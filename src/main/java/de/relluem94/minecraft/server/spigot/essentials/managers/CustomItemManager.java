@@ -59,6 +59,7 @@ public class CustomItemManager implements IEnable{
                 setItemMeta(cloudBootsMeta);
             }
         };
+
         ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS, cloudBootsItem);
 
         ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED,
@@ -72,6 +73,13 @@ public class CustomItemManager implements IEnable{
         ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK,
                 new ItemHelper(Material.FISHING_ROD, 1, PLUGIN_ITEM_GRAPPLINGHOCK,
                         ItemHelper.Type.GADGET, ItemHelper.Rarity.UNCOMMON));
+      
+        ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER,
+                new ItemHelper(Material.HOPPER, 1, PLUGIN_ITEM_AUTOSELLHOPER,
+                        ItemHelper.Type.TOOL, ItemHelper.Rarity.LEGENDARY));
+
+      
+      
 
         InventoryRegistry.create(
                 plugin,
