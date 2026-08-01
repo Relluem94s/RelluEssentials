@@ -304,5 +304,9 @@ public class ItemManager implements Enable {
     int itemCount = ItemRegistry.getAll().size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
+
+    int inventoryCount = InventoryRegistry.getAllByNamespace(plugin.getName()).size();
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        languageHelper.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
   }
 }
