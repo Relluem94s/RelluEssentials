@@ -42,6 +42,17 @@ public class EnchantmentManager implements Enable {
    */
   @Override
   public void enable() {
+    EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS,
+        new EnchantmentHelper(
+            new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS,
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS_DISPLAYNAME),
+            EnchantmentTarget.WEAPON,
+            new EnchantLevel(1, 1),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS_LORE,
+            Rarity.EPIC,
+            AttributeHelper.addAttribute()
+        ));
+
     EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,
         new EnchantmentHelper(
             new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,

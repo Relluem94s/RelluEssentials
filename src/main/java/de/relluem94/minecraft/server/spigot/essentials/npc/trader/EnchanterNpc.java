@@ -39,7 +39,8 @@ public class EnchanterNpc extends TraderNpc {
             EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS,
             EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT,
             EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS
         )
         .map(key -> EnchantmentRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), key)))
         .filter(Optional::isPresent)
@@ -75,11 +76,11 @@ public class EnchanterNpc extends TraderNpc {
       slot++;
     }
 
-    int finalSlot = slot;
+    int finalSlot = InventoryHelper.getNextSlot(slot);
     ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET))
         .ifPresent(item -> inv.setItem(finalSlot, item.getCustomItem()));
     slot++;
-    int autoSellSlot = slot;
+    int autoSellSlot = InventoryHelper.getNextSlot(slot);
     ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER))
         .ifPresent(item -> inv.setItem(autoSellSlot, item.getCustomItem()));
 

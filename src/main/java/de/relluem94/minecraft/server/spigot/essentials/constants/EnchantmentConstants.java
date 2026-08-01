@@ -47,4 +47,10 @@ public class EnchantmentConstants {
       PLUGIN_ENCHANTMENT_COLOR_WEAPON + "Thunderstrike";
   public static final String  PLUGIN_ENCHANTMENT_THUNDERSTRIKE_LORE =
       PLUGIN_ENCHANTMENT_LORE_COLOR + "Hits Target with a Thunderstrike";
+
+  public static final String PLUGIN_ENCHANTMENT_SCAVENGERS = "scavengers";
+  public static final String PLUGIN_ENCHANTMENT_SCAVENGERS_UUID = "6e4cb9cf-69fb-4a2a-8a9e-787882bdc92d";
+  public static final String PLUGIN_ENCHANTMENT_SCAVENGERS_DISPLAYNAME = PLUGIN_ENCHANTMENT_COLOR + "Scavengers";
+  public static final String PLUGIN_ENCHANTMENT_SCAVENGERS_LORE =
+      PLUGIN_ENCHANTMENT_LORE_COLOR + "Mobs drop more coins";
 }
