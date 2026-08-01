@@ -24,9 +24,9 @@ public class InteractTraderNpc implements Listener {
     if (e.getRightClicked() instanceof Villager) {
       if (e.getRightClicked().getCustomName() != null) {
         String customName = e.getRightClicked().getCustomName();
-        for (int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCNameList().size();
+        for (int i = 0; i < RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList().size();
             i++) {
-          if (RelluEssentials.getInstance().getNpcAPI().getNPCNameList().get(i)
+          if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList().get(i)
               .equals(customName)) {
             if (customName.equals(RelluEssentials.getBanker().getName())) {
               PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
@@ -59,7 +59,7 @@ public class InteractTraderNpc implements Listener {
               e.setCancelled(true);
             } else {
               InventoryHelper.openInventory(p,
-                  RelluEssentials.getInstance().getNpcAPI().getNPC(i).getMainGUI());
+                  RelluEssentials.getInstance().getTraderNpcRegistry().getNPC(i).getMainGUI());
               e.setCancelled(true);
             }
           }

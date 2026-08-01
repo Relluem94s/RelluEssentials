@@ -29,8 +29,8 @@ public class NpcGuiCommand implements SubCommand {
         CustomItems.npc_gui_disabled.getCustomItem()
     );
 
-    for (int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCs().size(); i++) {
-      inv.setItem(i, RelluEssentials.getInstance().getNpcAPI().getNPCs().get(i).getItemHelper()
+    for (int i = 0; i < RelluEssentials.getInstance().getTraderNpcRegistry().getNPCs().size(); i++) {
+      inv.setItem(i, RelluEssentials.getInstance().getTraderNpcRegistry().getNPCs().get(i).getItemHelper()
           .getCustomItem());
     }
 

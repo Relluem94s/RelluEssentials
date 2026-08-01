@@ -20,7 +20,7 @@ public class PlaceNpc implements Listener {
   public void onNPCPlacement(@NotNull PlayerInteractEvent e) {
     if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
       if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK)
-          && e.getItem() != null && RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList()
+          && e.getItem() != null && RelluEssentials.getInstance().getTraderNpcRegistry().getNPCItemStackList()
           .contains(e.getItem())) {
         e.setCancelled(true);
 
@@ -31,12 +31,12 @@ public class PlaceNpc implements Listener {
         Location location = e.getClickedBlock().getLocation().add(0, 1, 0);
         location.setYaw(e.getPlayer().getLocation().getYaw());
 
-        for (int i = 0; i < RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().size();
+        for (int i = 0; i < RelluEssentials.getInstance().getTraderNpcRegistry().getNPCItemStackList().size();
             i++) {
-          if (RelluEssentials.getInstance().getNpcAPI().getNPCItemStackList().get(i)
+          if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCItemStackList().get(i)
               .equals(e.getItem())) {
             NpcHelper nh = new NpcHelper(location,
-                RelluEssentials.getInstance().getNpcAPI().getNPC(i));
+                RelluEssentials.getInstance().getTraderNpcRegistry().getNPC(i));
             nh.spawn();
             e.getPlayer().sendMessage(
                 languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SPAWN,
