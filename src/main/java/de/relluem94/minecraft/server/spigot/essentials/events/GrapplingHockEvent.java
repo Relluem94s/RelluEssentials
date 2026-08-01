@@ -6,6 +6,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelpe
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
@@ -14,20 +16,36 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import org.jspecify.annotations.NonNull;
 
+/**
+ * Handles grappling hook mechanics for players in the lobby world.
+ */
 public class GrapplingHockEvent implements Listener {
 
   protected static final List<Player> COOL_DOWN = new ArrayList<>();
 
+  /**
+   * Launches the player toward the hook's location when the hook hits the ground or is reeled in.
+   * Applies a cooldown to prevent spamming.
+   */
   @EventHandler
-  public void grapple(PlayerFishEvent e) {
+  public void grapple(@NonNull PlayerFishEvent e) {
     if (!isInWorld(e.getPlayer(), PLUGIN_WORLD_LOBBY)) {
       return;
     }
 
-    // TODO Check auf item
+    RegistryKey grapplingHookKey = RegistryKey.of(RelluEssentials.getInstance(), "grappling_hook");
+    ItemStack itemInMainHand = e.getPlayer().getInventory().getItemInMainHand();
+
+    if (ItemRegistry.identifyFromItemStack(itemInMainHand)
+        .filter(grapplingHookKey::equals)
+        .isEmpty()) {
+      return;
+    }
 
     if (e.getState().equals(State.IN_GROUND) || e.getState().equals(State.REEL_IN)) {
       if (!COOL_DOWN.contains(e.getPlayer())) {
@@ -53,7 +71,6 @@ public class GrapplingHockEvent implements Listener {
         e.getPlayer()
             .sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
       }
-
     }
   }
 }

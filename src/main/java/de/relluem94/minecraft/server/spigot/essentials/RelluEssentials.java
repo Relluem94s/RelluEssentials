@@ -218,7 +218,7 @@ public class RelluEssentials extends JavaPlugin {
   private ProtectionRegistry protectionRegistry;
   @Setter
   @Getter
-  private TraderNpcRegistry npcAPI;
+  private TraderNpcRegistry traderNpcRegistry;
   @Setter
   @Getter
   private BagRegistry bagRegistry;
@@ -397,6 +397,8 @@ public class RelluEssentials extends JavaPlugin {
     dm.enable();
     databaseHelper = dm.getDatabaseHelper();
     new CustomItemManager(this).enable();
+    this.playerRegistry = new PlayerRegistry(databaseHelper.getBags());
+    this.playerService = new PlayerService(playerRegistry);
 
     new EventManager().enable();
     new SkillManager().enable();

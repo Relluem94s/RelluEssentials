@@ -22,7 +22,7 @@ public class DamgeTraderNpc implements Listener {
       return;
     }
 
-    if (!RelluEssentials.getInstance().getNpcAPI().getNPCNameList()
+    if (!RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList()
         .contains(e.getEntity().getCustomName())) {
       return;
     }

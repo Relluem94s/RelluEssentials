@@ -62,7 +62,7 @@ public class InventoryClickNpc implements Listener {
 
     if (title.equals(RelluEssentials.getBanker().getTitle())) {
       handleBankerInventory(e, player, playerEntry);
-    } else if (RelluEssentials.getInstance().getNpcAPI().getNPCTraderTitleList().contains(title)) {
+    } else if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCTraderTitleList().contains(title)) {
       tradeHandler.handle(e.getCurrentItem(), e.getClickedInventory(), player, playerEntry,
           e.getSlot(), e.isRightClick());
       e.setCancelled(true);

@@ -33,7 +33,7 @@ public class TraderNpc implements Trader {
     this.npcSpawnItem = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, getName(),
         de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type.NPC,
         Rarity.LEGENDARY, List.of(ItemConstants.PLUGIN_ITEM_NPC_LORE1));
-    RelluEssentials.getInstance().getNpcAPI().addNPC(this);
+    RelluEssentials.getInstance().getTraderNpcRegistry().addNPC(this);
   }
 
   @Override
