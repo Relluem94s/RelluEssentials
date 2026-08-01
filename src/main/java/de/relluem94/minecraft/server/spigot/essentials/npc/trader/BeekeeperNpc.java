@@ -1,9 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
+
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import org.bukkit.Material;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
@@ -15,10 +20,20 @@ public class BeekeeperNpc extends TraderNpc {
     super("§dBeekeeper", Profession.NONE, Type.TRADER);
   }
 
+  private ItemHelper resolveDisabledItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow();
+  }
+
+  private ItemHelper resolveCloseItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+        .orElseThrow();
+  }
+
   @Override
   public Inventory getMainGUI() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, getTitle()),
-        CustomItems.npc_gui_disabled.getCustomItem());
+        resolveDisabledItem().getCustomItem());
 
     inv.setItem(10, new ItemStack(Material.BEEHIVE, 1));
     inv.setItem(11, new ItemStack(Material.HONEYCOMB_BLOCK, 1));
@@ -43,7 +58,7 @@ public class BeekeeperNpc extends TraderNpc {
     inv.setItem(42, PlayerHeadHelper.getCustomSkull(CustomHeads.LIGHT_BLUE_CANDLE));
     inv.setItem(43, PlayerHeadHelper.getCustomSkull(CustomHeads.LIGHT_GRAY_CANDLE));
 
-    inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
+    inv.setItem(53, resolveCloseItem().getCustomItem());
 
     return inv;
   }

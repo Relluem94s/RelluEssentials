@@ -5,9 +5,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -15,9 +16,11 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -29,6 +32,14 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class InventoryClickNpc implements Listener {
+
+  private ItemHelper resolveDisabledItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
+  }
+
+  private ItemHelper resolveCloseItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
+  }
 
   private final NpcTradeHandler tradeHandler = new NpcTradeHandler();
 
@@ -53,16 +64,18 @@ public class InventoryClickNpc implements Listener {
 
   @EventHandler
   public void onInventoryClickItem(@NonNull InventoryClickEvent e) {
-      if (!(e.getWhoClicked() instanceof Player player) || e.getCurrentItem() == null) {
-          return;
-      }
+    if (!(e.getWhoClicked() instanceof Player player) || e.getCurrentItem() == null) {
+      return;
+    }
 
-    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(player);
+    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(player);
     String title = e.getView().getTitle();
 
     if (title.equals(RelluEssentials.getBanker().getTitle())) {
       handleBankerInventory(e, player, playerEntry);
-    } else if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCTraderTitleList().contains(title)) {
+    } else if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCTraderTitleList()
+        .contains(title)) {
       tradeHandler.handle(e.getCurrentItem(), e.getClickedInventory(), player, playerEntry,
           e.getSlot(), e.isRightClick());
       e.setCancelled(true);
@@ -108,7 +121,7 @@ public class InventoryClickNpc implements Listener {
     } else if (BankerHelper.npc_gui_upgrade.equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player, RelluEssentials.getBanker().getUpgradeGUI());
-    } else if (CustomItems.npc_gui_close.equalsExact(clickedItem)) {
+    } else if (resolveCloseItem().equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {
       bankerDepositActions.entrySet().stream()
@@ -149,22 +162,22 @@ public class InventoryClickNpc implements Listener {
       return;
     }
 
-    if (!CustomItems.npc_gui_disabled.getCustomItem().equals(e.getCurrentItem())) {
+    if (!resolveDisabledItem().getCustomItem().equals(e.getCurrentItem())) {
       player.getInventory().addItem(e.getCurrentItem().clone());
     }
   }
 
   private void handleWorldsInventory(InventoryClickEvent e, Player player) {
     e.setCancelled(true);
-      if (e.getCurrentItem() == null) {
-          return;
-      }
-      if (CustomItems.npc_gui_disabled.getCustomItem().equals(e.getCurrentItem())) {
-          return;
-      }
-      if (e.getCurrentItem().getItemMeta() == null) {
-          return;
-      }
+    if (e.getCurrentItem() == null) {
+      return;
+    }
+    if (!resolveDisabledItem().getCustomItem().equals(e.getCurrentItem())) {
+      return;
+    }
+    if (e.getCurrentItem().getItemMeta() == null) {
+      return;
+    }
     teleportWorld(player, e.getCurrentItem().getItemMeta().getDisplayName());
   }
 }

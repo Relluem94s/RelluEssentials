@@ -2,14 +2,17 @@ package de.relluem94.minecraft.server.spigot.essentials.registry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNpc.Type;
@@ -22,12 +25,23 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+
 public class TraderNpcRegistry {
 
   private final List<ItemStack> npcItemStack = new ArrayList<>();
   private final List<String> npcName = new ArrayList<>();
   private final List<String> npcTraderTitle = new ArrayList<>();
   private final List<TraderNpc> npcs = new ArrayList<>();
+
+  private ItemHelper resolveDisabledItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow();
+  }
+
+  private ItemHelper resolveCloseItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+        .orElseThrow();
+  }
 
   public void init(List<TraderNPCEntry> traderNpcEntryList) {
     for (TraderNPCEntry ne : traderNpcEntryList) {
@@ -36,7 +50,7 @@ public class TraderNpcRegistry {
         public Inventory getMainGUI() {
           Inventory inv = InventoryHelper.fillInventory(
               InventoryHelper.createInventory(NpcHelper.INV_SIZE, getTitle()),
-              CustomItems.npc_gui_disabled.getCustomItem());
+              resolveDisabledItem().getCustomItem());
           int slot = 0;
           for (int i = 0; i < ne.getSlotNames().length; i++) {
             slot = InventoryHelper.getNextSlot(slot);
@@ -71,7 +85,7 @@ public class TraderNpcRegistry {
             }
             slot++;
           }
-          inv.setItem(53, CustomItems.npc_gui_close.getCustomItem());
+          inv.setItem(53, resolveCloseItem().getCustomItem());
           return inv;
         }
       };

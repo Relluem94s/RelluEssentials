@@ -2,11 +2,12 @@ package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
@@ -45,6 +46,11 @@ public class EnchanterNpc extends TraderNpc {
         .toList();
   }
 
+  private ItemHelper resolveDisabledItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow();
+  }
+
 
   /**
    * Builds and returns the main GUI inventory for the Enchanter NPC.
@@ -56,8 +62,8 @@ public class EnchanterNpc extends TraderNpc {
    */
   @Override
   public Inventory getMainGUI() {
-    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, getTitle()),
-        CustomItems.npc_gui_disabled.getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(
+        InventoryHelper.createInventory(54, getTitle()), resolveDisabledItem().getCustomItem());
 
     List<EnchantmentHelper> enchantments = resolveRegisteredEnchantments();
 
