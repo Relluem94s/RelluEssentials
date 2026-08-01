@@ -34,7 +34,8 @@ public class CustomEnchantment implements Listener {
             EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS,
             EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT,
             EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS
         )
         .map(key -> EnchantmentRegistry.find(RegistryKey.of(key)))
         .filter(Optional::isPresent)

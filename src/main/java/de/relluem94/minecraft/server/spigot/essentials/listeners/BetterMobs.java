@@ -36,6 +36,7 @@ public class BetterMobs implements Listener {
 
   private final EnchantmentHelper telekinesis;
   private final EnchantmentHelper thunderstrike;
+  private final EnchantmentHelper scavengers;
 
   public BetterMobs() {
     this.telekinesis = EnchantmentRegistry.find(
@@ -43,6 +44,9 @@ public class BetterMobs implements Listener {
         .orElse(null);
     this.thunderstrike = EnchantmentRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
+        .orElse(null);
+    this.scavengers = EnchantmentRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS))
         .orElse(null);
   }
 
@@ -86,14 +90,21 @@ public class BetterMobs implements Listener {
       if (coinsPerDeath > 0) {
         Player p = e.getEntity().getKiller();
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
-        pe.setPurse(pe.getPurse() + coinsPerDeath);
+
+        boolean hasScavengers = p.getInventory().getItemInMainHand().hasItemMeta()
+            && scavengers != null
+            && hasEnchant(p.getInventory().getItemInMainHand(), scavengers);
+
+        int totalCoins = hasScavengers ? coinsPerDeath + (coinsPerDeath / 2) : coinsPerDeath;
+
+        pe.setPurse(pe.getPurse() + totalCoins);
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
         ChatHelper.sendMessageInActionBar(
             p,
             languageHelper.getWithPrefix(
                 MessageKey.COMMAND_PURSE_GAIN,
-                StringHelper.formatInt(coinsPerDeath),
+                StringHelper.formatInt(totalCoins),
                 PLUGIN_NAME_MONEY,
                 StringHelper.formatDouble(pe.getPurse()),
                 PLUGIN_NAME_MONEY
