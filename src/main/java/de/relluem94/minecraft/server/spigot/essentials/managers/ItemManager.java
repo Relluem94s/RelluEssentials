@@ -69,7 +69,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Registers and initializes all custom items and admin tool inventories for the plugin.
  */
-public class CustomItemManager implements Enable {
+public class ItemManager implements Enable {
 
   private final Plugin plugin;
 
@@ -78,7 +78,7 @@ public class CustomItemManager implements Enable {
    *
    * @param plugin the plugin instance used for item registration and registry initialization
    */
-  public CustomItemManager(Plugin plugin) {
+  public ItemManager(Plugin plugin) {
     this.plugin = plugin;
   }
 
