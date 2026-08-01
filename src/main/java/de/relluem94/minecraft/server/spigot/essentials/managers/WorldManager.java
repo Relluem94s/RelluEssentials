@@ -41,11 +41,11 @@ public class WorldManager implements Enable, Disable {
           continue;
         }
 
-        for (World w : Bukkit.getWorlds()) {
-          if (we != null && !w.getName().equals(we.getName())) {
-            WorldHelper.loadWorld(we.getName());
-            setStandardGameRules(we.getName());
-          }
+        if (!WorldHelper.worldExists(we.getName())) {
+          createWorld(we);
+        } else if (Bukkit.getWorld(we.getName()) == null) {
+          WorldHelper.loadWorld(we.getName());
+          setStandardGameRules(we.getName());
         }
       }
     }

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcEquipmentInventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
@@ -13,11 +12,10 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.inventory.Inventory;
 import org.jspecify.annotations.NonNull;
 
@@ -35,6 +33,12 @@ public class NpcService {
     this.loadedNPCs = new LinkedHashMap<>();
   }
 
+  public boolean isTrackedNpcEntity(UUID entityUUID) {
+    return loadedNPCs.values().stream()
+        .anyMatch(npc -> entityUUID.equals(npc.getEntityUUID()));
+  }
+
+
   public NpcOperationResult createNPC(String profileName, double x, double y, double z,
       String worldName, int actorPlayerId) {
     NpcValidator.ValidationResult profileValidation = npcValidator.validateProfileName(profileName);
@@ -51,12 +55,10 @@ public class NpcService {
     npcRepository.save(npc, actorPlayerId);
     loadedNPCs.put(npc.getId(), npc);
 
-    Set<UUID> managedUUIDs = getCurrentlyManagedEntityUUIDs();
-    npcSpawner.spawnMannequinAsync(npc, managedUUIDs,
-        spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
-          npc.setEntityUUID(uuid);
-          npcRepository.save(npc, actorPlayerId);
-        }));
+    npcSpawner.spawnMannequin(npc).ifPresent(uuid -> {
+      npc.setEntityUUID(uuid);
+      npcRepository.save(npc, actorPlayerId);
+    });
 
     return NpcOperationResult.success(npc);
   }
@@ -80,11 +82,12 @@ public class NpcService {
     npc.setProfileName(newProfileName);
     npcRepository.save(npc, actorPlayerId);
 
-    npcSpawner.spawnMannequinAsync(npc, getCurrentlyManagedEntityUUIDs(),
-        spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
-          npc.setEntityUUID(uuid);
-          npcRepository.save(npc, actorPlayerId);
-        }));
+    npcSpawner.spawnMannequin(npc).ifPresent(uuid -> {
+      npc.setEntityUUID(uuid);
+      restoreNPCEquipment(npc);
+      npcRepository.save(npc, actorPlayerId);
+    });
+
     return NpcOperationResult.success(npc);
   }
 
@@ -107,14 +110,14 @@ public class NpcService {
     npc.setX(x);
     npc.setY(y);
     npc.setZ(z);
-
     npcRepository.save(npc, actorPlayerId);
 
-    npcSpawner.spawnMannequinAsync(npc, getCurrentlyManagedEntityUUIDs(),
-        spawnedEntityUUID -> spawnedEntityUUID.ifPresent(uuid -> {
-          npc.setEntityUUID(uuid);
-          npcRepository.save(npc, actorPlayerId);
-        }));
+    npcSpawner.spawnMannequin(npc).ifPresent(uuid -> {
+      npc.setEntityUUID(uuid);
+      restoreNPCEquipment(npc);
+      npcRepository.save(npc, actorPlayerId);
+    });
+
     return NpcOperationResult.success(npc);
   }
 
@@ -135,26 +138,8 @@ public class NpcService {
 
     npcRepository.delete(npcId, actorPlayerId);
     loadedNPCs.remove(npcId);
-    RelluEssentials.getInstance().getNpcDialogueTracker().removeNPC(npcId);
-    return NpcOperationResult.success(null);
-  }
 
-  public void loadAndRespawnAllNPCs(int systemPlayerId) {
-    List<Npc> persistedNPCs = npcRepository.loadAll();
-    Set<String> knownProfileNames = persistedNPCs.stream()
-        .map(Npc::getProfileName)
-        .collect(java.util.stream.Collectors.toSet());
-    npcSpawner.despawnAllMannequinsInAllWorlds(knownProfileNames);
-    for (Npc npc : persistedNPCs) {
-      Optional<UUID> spawnedEntityUUID = npcSpawner.spawnMannequin(npc,
-          getCurrentlyManagedEntityUUIDs());
-      spawnedEntityUUID.ifPresent(uuid -> {
-        npc.setEntityUUID(uuid);
-        restoreNPCEquipment(npc);
-      });
-      npcRepository.save(npc, systemPlayerId);
-      loadedNPCs.put(npc.getId(), npc);
-    }
+    return NpcOperationResult.success(npc);
   }
 
   private void restoreNPCEquipment(@NonNull Npc npc) {
@@ -205,10 +190,38 @@ public class NpcService {
         ));
   }
 
-  private Set<UUID> getCurrentlyManagedEntityUUIDs() {
-    return loadedNPCs.values().stream()
-        .map(Npc::getEntityUUID)
-        .filter(Objects::nonNull)
-        .collect(java.util.stream.Collectors.toSet());
+  public void spawnNpc(Npc npc) {
+    npcSpawner.spawnMannequin(npc).ifPresent(uuid -> {
+      npc.setEntityUUID(uuid);
+      restoreNPCEquipment(npc);
+      loadedNPCs.putIfAbsent(npc.getId(), npc);
+    });
+  }
+
+  public void despawnNpc(UUID npcId) {
+    Npc npc = loadedNPCs.get(npcId);
+    if (npc != null && npc.getEntityUUID() != null) {
+      npcSpawner.despawnMannequin(npc.getEntityUUID());
+      npc.setEntityUUID(null);
+    }
+  }
+
+  public List<Npc> getAllNpcs() {
+    return new ArrayList<>(loadedNPCs.values());
+  }
+
+  public void loadAndSpawnNpcsInLoadedChunks() {
+    npcRepository.loadAll().forEach(npc -> {
+      loadedNPCs.put(npc.getId(), npc);
+      World world = Bukkit.getWorld(npc.getWorldName());
+      if (world == null) {
+        return;
+      }
+      int chunkX = ((int) npc.getX()) >> 4;
+      int chunkZ = ((int) npc.getZ()) >> 4;
+      if (world.isChunkLoaded(chunkX, chunkZ)) {
+        spawnNpc(npc);
+      }
+    });
   }
 }
