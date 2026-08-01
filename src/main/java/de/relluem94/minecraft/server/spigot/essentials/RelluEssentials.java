@@ -115,11 +115,11 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.BankManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CleanUpManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ConfigManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.CustomItemManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EnchantmentManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EventManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.GroupManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.ItemManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.NpcManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.PositionHighlightManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.RecipeManager;
@@ -435,7 +435,7 @@ public class RelluEssentials extends JavaPlugin {
     dm.enable();
     databaseHelper = dm.getDatabaseHelper();
     new EnchantmentManager(this).enable();
-    new CustomItemManager(this).enable();
+    new ItemManager(this).enable();
     this.playerRegistry = new PlayerRegistry(databaseHelper.getBags());
     this.playerService = new PlayerService(playerRegistry);
 
