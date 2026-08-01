@@ -4,6 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.bukkit.plugin.Plugin;
@@ -40,6 +41,10 @@ public class EnchantmentRegistry {
    */
   public static @NonNull Optional<EnchantmentHelper> find(RegistryKey key) {
     return Optional.ofNullable(registry.get(key));
+  }
+
+  public static @NonNull List<EnchantmentHelper> findAll() {
+    return List.copyOf(registry.values());
   }
 
   public static int count() {

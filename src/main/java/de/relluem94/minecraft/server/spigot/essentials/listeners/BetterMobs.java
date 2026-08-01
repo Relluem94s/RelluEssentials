@@ -37,6 +37,7 @@ public class BetterMobs implements Listener {
   private final EnchantmentHelper telekinesis;
   private final EnchantmentHelper thunderstrike;
   private final EnchantmentHelper scavengers;
+  private final EnchantmentHelper lifesteal;
 
   public BetterMobs() {
     this.telekinesis = EnchantmentRegistry.find(
@@ -47,6 +48,9 @@ public class BetterMobs implements Listener {
         .orElse(null);
     this.scavengers = EnchantmentRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS))
+        .orElse(null);
+    this.lifesteal = EnchantmentRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL))
         .orElse(null);
   }
 
@@ -147,6 +151,18 @@ public class BetterMobs implements Listener {
           return;
         }
         m.getLocation().getWorld().strikeLightningEffect(m.getLocation());
+      }
+
+      if (p.getInventory().getItemInMainHand().hasItemMeta() && lifesteal != null
+          && hasEnchant(p.getInventory().getItemInMainHand(), lifesteal)) {
+        double playerHealth = p.getHealth();
+        double maxHealth = p.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH).getValue();
+        boolean playerIsDamaged = playerHealth < maxHealth;
+        if (playerIsDamaged) {
+          double healAmount = e.getDamage() / 4;
+          double healedHealth = Math.min(playerHealth + healAmount, maxHealth);
+          p.setHealth(healedHealth);
+        }
       }
     }
   }

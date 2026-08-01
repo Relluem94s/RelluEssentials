@@ -53,6 +53,18 @@ public class EnchantmentManager implements Enable {
             AttributeHelper.addAttribute()
         ));
 
+
+    EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL,
+        new EnchantmentHelper(
+            new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL,
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL_DISPLAYNAME),
+            EnchantmentTarget.WEAPON,
+            new EnchantLevel(1, 1),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL_LORE,
+            Rarity.RARE,
+            AttributeHelper.addAttribute()
+        ));
+
     EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,
         new EnchantmentHelper(
             new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,

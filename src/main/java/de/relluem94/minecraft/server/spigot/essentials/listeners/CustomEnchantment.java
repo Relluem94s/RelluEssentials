@@ -2,22 +2,20 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.jetbrains.annotations.Unmodifiable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Listener that handles the application of custom enchantments via the anvil UI. Intercepts
@@ -28,19 +26,8 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
  */
 public class CustomEnchantment implements Listener {
 
-  private List<EnchantmentHelper> resolveRegisteredEnchantments() {
-    return Stream.of(
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS
-        )
-        .map(key -> EnchantmentRegistry.find(RegistryKey.of(key)))
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .toList();
+  private @NonNull @Unmodifiable List<EnchantmentHelper> resolveRegisteredEnchantments() {
+    return EnchantmentRegistry.findAll();
   }
 
   /**
