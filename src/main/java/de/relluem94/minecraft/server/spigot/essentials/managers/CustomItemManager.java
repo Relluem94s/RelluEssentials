@@ -65,10 +65,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Registers and initializes all custom items and admin tool inventories for the plugin.
+ */
 public class CustomItemManager implements Enable {
 
   private final Plugin plugin;
 
+  /**
+   * Creates a new CustomItemManager instance.
+   *
+   * @param plugin the plugin instance used for item registration and registry initialization
+   */
   public CustomItemManager(Plugin plugin) {
     this.plugin = plugin;
   }
@@ -272,12 +280,11 @@ public class CustomItemManager implements Enable {
             9,
             ItemHelper.Type.NONE
         ).withFixedItem(
-            ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow())
+            ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_POSITION_AXE))
+                .orElseThrow())
         .withFixedItem(
             ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET))
                 .orElseThrow())
-        .withFixedItem(
-            ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow())
         .withFixedItem(ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR))
             .orElseThrow())
         .withFixedItem(ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
