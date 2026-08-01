@@ -164,7 +164,7 @@ public class NpcTradeHandler {
     return ItemPrice.from(item.getType()).getSellPrice();
   }
 
-  private void handleBuy(ItemStack item, Player player, PlayerEntry playerEntry, int buyPrice,
+  private void handleBuy(ItemStack guiItem, Player player, PlayerEntry playerEntry, int buyPrice,
       String itemDisplayName, int amount) {
     if (buyPrice <= 0) {
       player.sendMessage(
@@ -189,7 +189,16 @@ public class NpcTradeHandler {
       return;
     }
 
-    player.getInventory().addItem(new ItemStack(item.getType(), amount));
+    ItemStack purchasedItem = ItemRegistry.findByItemStack(guiItem)
+        .map(ItemHelper::getCustomItem)
+        .map(ItemStack::clone)
+        .orElseGet(() -> guiItem.clone());
+    purchasedItem.setAmount(amount);
+
+    int resolvedSellPrice = resolveSellPrice(guiItem, guiItem.getItemMeta());
+    writeSellPriceToItem(resolvedSellPrice, purchasedItem);
+
+    player.getInventory().addItem(purchasedItem);
     playerEntry.setPurse(playerEntry.getPurse() - totalCost);
     playerEntry.setUpdatedBy(playerEntry.getId());
     playerEntry.setHasToBeUpdated(true);
@@ -200,32 +209,47 @@ public class NpcTradeHandler {
     player.playSound(player, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
   }
 
+  private void writeSellPriceToItem(int sellPrice, @NonNull ItemStack targetItem) {
+    ItemMeta targetMeta = targetItem.getItemMeta();
+    if (targetMeta == null) {
+      return;
+    }
+    targetMeta.getPersistentDataContainer().set(itemSellPrice(), PersistentDataType.INTEGER, sellPrice);
+    targetItem.setItemMeta(targetMeta);
+  }
+
   private void handleSell(@NonNull ItemStack item, Player player, PlayerEntry playerEntry,
       int sellPrice, String itemDisplayName, int slot, boolean isRightClick) {
-    Damageable damageable = (Damageable) item.getItemMeta();
     ItemMeta meta = item.getItemMeta();
 
-    if (meta == null) {
-      return;
-    }
+    boolean isRegisteredItem = ItemRegistry.findByItemStack(item).isPresent();
 
-    if (!meta.getEnchants().isEmpty()) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED));
-      return;
-    }
+    if (!isRegisteredItem) {
 
-    if (damageable != null && damageable.hasDamage()) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_USED_ITEM));
-      return;
+      if (meta == null) {
+        return;
+      }
+
+      if (!meta.getEnchants().isEmpty()) {
+        player.sendMessage(
+            languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED));
+        return;
+      }
+
+      if (meta instanceof Damageable damageable && damageable.hasDamage()) {
+        player.sendMessage(
+            languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_USED_ITEM));
+        return;
+      }
+
+      if (meta.hasDisplayName() && !(meta instanceof SkullMeta)) {
+        player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
+        return;
+      }
     }
 
     if (sellPrice == 0) {
       player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
-      return;
-    }
-
-    if (meta.hasDisplayName() && !(meta instanceof SkullMeta)) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
       return;
     }
 
