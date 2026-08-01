@@ -486,6 +486,10 @@
                                     <artifact>de.relluem94:relluessentials</artifact>
                                     <includes>
                                         <include>de/relluem94/**</include>
+                                        <include>plugin.yml</include>
+                                        <include>*.yml</include>
+                                        <include>lang/**</include>
+                                        <include>sqls/**</include>
                                     </includes>
                                 </filter>
                             </filters>
