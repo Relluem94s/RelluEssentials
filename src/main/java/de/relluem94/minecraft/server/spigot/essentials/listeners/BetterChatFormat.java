@@ -1,0 +1,48 @@
+package de.relluem94.minecraft.server.spigot.essentials.listeners;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SPACER_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
+
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.rellulib.utils.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+
+public class BetterChatFormat implements Listener {
+
+  public static final String VIP_CHANNEL = "#v ";
+  public static final String MOD_CHANNEL = "#m ";
+  public static final String ADMIN_CHANNEL = "#a ";
+
+  @EventHandler
+  public void onChat(AsyncPlayerChatEvent e) {
+    e.setCancelled(true);
+    Player p = e.getPlayer();
+    if (PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("vip").getId())) {
+      e.setMessage(StringUtils.replaceSymbols(e.getMessage()));
+
+      if (e.getMessage().startsWith(VIP_CHANNEL)) {
+        sendMessageInChannel(e.getMessage(), p, VIP_CHANNEL, GroupRegistry.getGroup("vip"));
+      } else if (e.getMessage().startsWith(MOD_CHANNEL) && PermissionHelper.isAuthorized(p,
+          GroupRegistry.getGroup("mod").getId())) {
+        sendMessageInChannel(e.getMessage(), p, MOD_CHANNEL, GroupRegistry.getGroup("mod"));
+      } else if (e.getMessage().startsWith(ADMIN_CHANNEL) && PermissionHelper.isAuthorized(p,
+          GroupRegistry.getGroup("admin").getId())) {
+        sendMessageInChannel(e.getMessage(), p, ADMIN_CHANNEL, GroupRegistry.getGroup("admin"));
+      } else {
+        Bukkit.broadcastMessage(
+            p.getCustomName() + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + replaceColor(
+                e.getMessage()));
+      }
+    } else {
+      Bukkit.broadcastMessage(
+          p.getCustomName() + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + e.getMessage());
+    }
+  }
+}
