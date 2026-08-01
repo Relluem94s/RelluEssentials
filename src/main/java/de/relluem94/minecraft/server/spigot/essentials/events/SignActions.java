@@ -1,10 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper.isSign;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_CLICK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_NAME;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomSigns;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.SignAction;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.SignRegistry;
+import java.util.Optional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
@@ -13,41 +16,28 @@ import org.jetbrains.annotations.NotNull;
 public class SignActions implements Listener {
 
   @EventHandler
-  public void onChangeSignCreateActionSign(@NotNull SignChangeEvent e) {
-    if (PermissionHelper.isAuthorized(e.getPlayer(), GroupRegistry.getGroup("mod").getId())) {
-      if (e.getLine(1) != null) {
-        if (isSign(CustomSigns.spawn, e.getLine(1))) {
-          e.setLine(0, CustomSigns.spawn.getLine0());
-          e.setLine(1, CustomSigns.spawn.getLine1());
-          e.setLine(2, CustomSigns.spawn.getLine2());
-          e.setLine(3, CustomSigns.spawn.getLine3());
-        } else if (isSign(CustomSigns.teleport, e.getLine(1))) {
-          e.setLine(0, CustomSigns.teleport.getLine0());
-          e.setLine(1, CustomSigns.teleport.getLine1());
+  public void onChangeSignCreateActionSign(@NotNull SignChangeEvent event) {
+    if (!PermissionHelper.isAuthorized(event.getPlayer(), GroupRegistry.getGroup("mod").getId())) {
+      return;
+    }
 
-          e.setLine(3, CustomSigns.teleport.getLine3());
-        } else if (isSign(CustomSigns.home, e.getLine(1))) {
-          e.setLine(0, CustomSigns.home.getLine0());
-          e.setLine(1, CustomSigns.home.getLine1());
+    String lineOne = event.getLine(1);
+    if (lineOne == null) {
+      return;
+    }
 
-          e.setLine(3, CustomSigns.home.getLine3());
-        } else if (isSign(CustomSigns.up, e.getLine(1))) {
-          e.setLine(0, CustomSigns.up.getLine0());
-          e.setLine(1, CustomSigns.up.getLine1());
-          e.setLine(2, CustomSigns.up.getLine2());
-          e.setLine(3, CustomSigns.up.getLine3());
-        } else if (isSign(CustomSigns.down, e.getLine(1))) {
-          e.setLine(0, CustomSigns.down.getLine0());
-          e.setLine(1, CustomSigns.down.getLine1());
-          e.setLine(2, CustomSigns.down.getLine2());
-          e.setLine(3, CustomSigns.down.getLine3());
-        } else if (isSign(CustomSigns.command, e.getLine(1))) {
-          e.setLine(0, CustomSigns.command.getLine0());
-          e.setLine(1, CustomSigns.command.getLine1());
+    Optional<SignAction> foundAction = SignRegistry.findByLine(lineOne);
+    if (foundAction.isEmpty()) {
+      return;
+    }
 
-          e.setLine(3, CustomSigns.command.getLine3());
-        }
-      }
+    SignAction signAction = foundAction.get();
+    event.setLine(0, PLUGIN_SIGN_NAME);
+    event.setLine(1, signAction.getDisplayName());
+    event.setLine(3, PLUGIN_SIGN_CLICK);
+
+    if (!signAction.requiresCustomInput()) {
+      event.setLine(2, "");
     }
   }
 }
