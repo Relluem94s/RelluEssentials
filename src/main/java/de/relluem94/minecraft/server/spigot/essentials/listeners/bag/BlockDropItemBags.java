@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegis
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,9 +27,20 @@ import org.jetbrains.annotations.NotNull;
 public class BlockDropItemBags implements Listener {
 
   private final Random random = new Random();
+  private final EnchantmentHelper autosmelt;
+  private final EnchantmentHelper replenishment;
+  private final EnchantmentHelper telekinesis;
 
-  private Optional<EnchantmentHelper> resolveEnchantment(String key) {
-    return EnchantmentRegistry.find(RegistryKey.of(key));
+  public BlockDropItemBags() {
+    this.autosmelt = EnchantmentRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT))
+        .orElse(null);
+    this.replenishment = EnchantmentRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT))
+        .orElse(null);
+    this.telekinesis = EnchantmentRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+        .orElse(null);
   }
 
   @EventHandler
@@ -48,7 +58,7 @@ public class BlockDropItemBags implements Listener {
       }
     }
 
-    resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT).ifPresent(autosmelt -> {
+    if (autosmelt != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), autosmelt)) {
       if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), autosmelt)) {
         for (int i = 0; i < e.getItems().size(); i++) {
           ItemStack is = e.getItems().get(i).getItemStack().clone();
@@ -57,9 +67,9 @@ public class BlockDropItemBags implements Listener {
           }
         }
       }
-    });
+    }
 
-    resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT).ifPresent(replenishment -> {
+    if (replenishment != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), replenishment)) {
       if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), replenishment)) {
         for (int i = 0; i < e.getItems().size(); i++) {
           if (e.getItems().get(i) != null && RelluEssentials.getInstance().crops.containsKey(
@@ -89,14 +99,14 @@ public class BlockDropItemBags implements Listener {
           }
         }
       }
-    });
+    }
 
     if (BagHelper.hasBags(pe.getId())) {
       List<Item> lis = BagHelper.collectItems(e.getItems(), e.getPlayer(), pe);
       e.getItems().removeAll(lis);
     }
 
-    resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS).ifPresent(telekinesis -> {
+    if (telekinesis != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), telekinesis)) {
       if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), telekinesis)) {
         List<Item> lis = new ArrayList<>();
         for (Item i : e.getItems()) {
@@ -107,6 +117,6 @@ public class BlockDropItemBags implements Listener {
         }
         e.getItems().removeAll(lis);
       }
-    });
+    }
   }
 }

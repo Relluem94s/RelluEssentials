@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class EntityPickupItemBags implements Listener {
 
-  private final ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
+  private final ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
       .orElseThrow();
 
   @EventHandler

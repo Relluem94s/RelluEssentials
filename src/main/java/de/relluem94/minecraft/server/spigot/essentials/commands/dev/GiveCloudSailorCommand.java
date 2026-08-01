@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
@@ -14,9 +15,9 @@ public class GiveCloudSailorCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR))
+    ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR))
         .ifPresent(item -> player.getInventory().addItem(item.getCustomItem()));
-    ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
+    ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
         .ifPresent(item -> player.getInventory().addItem(item.getCustomItem()));
   }
 

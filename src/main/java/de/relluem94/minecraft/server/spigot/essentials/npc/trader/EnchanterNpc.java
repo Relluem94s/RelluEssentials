@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
@@ -40,14 +41,14 @@ public class EnchanterNpc extends TraderNpc {
             EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE,
             EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE
         )
-        .map(key -> EnchantmentRegistry.find(RegistryKey.of(key)))
+        .map(key -> EnchantmentRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), key)))
         .filter(Optional::isPresent)
         .map(Optional::get)
         .toList();
   }
 
   private ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+    return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
   }
 

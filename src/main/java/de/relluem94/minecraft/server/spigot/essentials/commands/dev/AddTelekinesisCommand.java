@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
@@ -16,7 +17,7 @@ public class AddTelekinesisCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    EnchantmentRegistry.find(RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+    EnchantmentRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
         .ifPresent(enchant -> enchant.addTo(player.getInventory().getItemInMainHand()));
   }
 

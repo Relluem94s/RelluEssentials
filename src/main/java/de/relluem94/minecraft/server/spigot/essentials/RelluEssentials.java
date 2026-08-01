@@ -77,6 +77,7 @@ import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterSoil;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterWorlds;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.BlockPlace;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.CloudSailor;
+import de.relluem94.minecraft.server.spigot.essentials.listeners.CreateSignActions;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.GrapplingHockEvent;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.IntegrationListener;
@@ -86,9 +87,14 @@ import de.relluem94.minecraft.server.spigot.essentials.listeners.OpenWorldSelect
 import de.relluem94.minecraft.server.spigot.essentials.listeners.PlayerMove;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.PositionAxeListener;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.PreventCoinManipulation;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignActions;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignClick;
+import de.relluem94.minecraft.server.spigot.essentials.listeners.SignCommandAction;
+import de.relluem94.minecraft.server.spigot.essentials.listeners.SignDownAction;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.SignEdit;
+import de.relluem94.minecraft.server.spigot.essentials.listeners.SignHomeAction;
+import de.relluem94.minecraft.server.spigot.essentials.listeners.SignInteractListener;
+import de.relluem94.minecraft.server.spigot.essentials.listeners.SignSpawnAction;
+import de.relluem94.minecraft.server.spigot.essentials.listeners.SignTeleportAction;
+import de.relluem94.minecraft.server.spigot.essentials.listeners.SignUpAction;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.SkullInfo;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.ToolCrafting;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.bag.BlockBreakBags;
@@ -385,15 +391,21 @@ public class RelluEssentials extends JavaPlugin {
           new EventWrapper(new PlayerMove()),
           new EventWrapper(new MOTD()),
           new EventWrapper(new CloudSailor()),
-          new EventWrapper(new SignActions()),
-          new EventWrapper(new SignClick()),
+          new EventWrapper(new CreateSignActions()),
           new EventWrapper(new SignEdit()),
           new EventWrapper(new ToolCrafting()),
           new EventWrapper(new CustomEnchantment()),
           new EventWrapper(new GrapplingHockEvent()),
           new EventWrapper(new PositionAxeListener()),
           new EventWrapper(new PreventCoinManipulation()),
-          new EventWrapper(new IntegrationListener())
+          new EventWrapper(new IntegrationListener()),
+          new EventWrapper(new SignInteractListener(RelluEssentials.getInstance())),
+          new EventWrapper(new SignUpAction()),
+          new EventWrapper(new SignDownAction()),
+          new EventWrapper(new SignSpawnAction()),
+          new EventWrapper(new SignHomeAction()),
+          new EventWrapper(new SignTeleportAction()),
+          new EventWrapper(new SignCommandAction())
       );
     }
     return eventWrapperList;
@@ -426,6 +438,9 @@ public class RelluEssentials extends JavaPlugin {
     startLoading();
     new ConfigManager().enable();
     new CommandManager().enable();
+    new EnchantmentManager(this).enable();
+    new ItemManager(this).enable();
+    new SignManager(this).enable();
     DatabaseManager dm = new DatabaseManager(
         getConfig().getString("database.host"),
         getConfig().getString("database.user"),
@@ -435,9 +450,6 @@ public class RelluEssentials extends JavaPlugin {
 
     dm.enable();
     databaseHelper = dm.getDatabaseHelper();
-    new EnchantmentManager(this).enable();
-    new ItemManager(this).enable();
-    new SignManager(this).enable();
     this.playerRegistry = new PlayerRegistry(databaseHelper.getBags());
     this.playerService = new PlayerService(playerRegistry);
 

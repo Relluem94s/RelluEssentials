@@ -6,6 +6,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.RecipeHelper;
@@ -32,8 +33,8 @@ public class RecipeManager implements Enable {
 
   private @NonNull RecipeHelper buildCloudBootsRecipe() {
     ItemHelper cloudSailorItem = ItemRegistry.find(
-        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
-    ItemHelper cloudBootsItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
+        RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
+    ItemHelper cloudBootsItem = ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
         .orElseThrow();
 
     return new RecipeHelper(

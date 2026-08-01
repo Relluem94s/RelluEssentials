@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.PLUGIN_INVENTORY_ADMIN_TOOLS;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
@@ -21,7 +22,7 @@ public class AdminToolsGuiCommand implements SubCommand {
       player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
-    InventoryRegistry.find(RegistryKey.of(PLUGIN_INVENTORY_ADMIN_TOOLS))
+    InventoryRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_INVENTORY_ADMIN_TOOLS))
         .ifPresent(registeredInventory -> registeredInventory.openFor(player));
   }
 

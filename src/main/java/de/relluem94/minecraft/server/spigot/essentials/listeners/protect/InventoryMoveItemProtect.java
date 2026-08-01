@@ -32,6 +32,13 @@ import org.jetbrains.annotations.NotNull;
  * Handles item movement between inventories and enforces hopper protection and auto-sell logic.
  */
 public class InventoryMoveItemProtect implements Listener {
+  private static ItemHelper coinItem = null;
+
+  public InventoryMoveItemProtect() {
+    InventoryMoveItemProtect.coinItem = ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
+        .orElseThrow();
+  }
 
   private static boolean sellItem(Inventory inventory, ItemStack is, boolean isSource,
       @NotNull Location location) {
@@ -53,9 +60,6 @@ public class InventoryMoveItemProtect implements Listener {
             size++;
           }
         }
-
-        ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
-            .orElseThrow();
 
         if (coinItem.almostEquals(is) || sellPriceItem == 0) {
           return false;

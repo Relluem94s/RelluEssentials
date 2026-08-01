@@ -502,7 +502,7 @@ public class DatabaseHelper {
         return null;
       }
       return LocationMapper.mapLocation(rs);
-    }).stream().filter(Objects::nonNull).toList();
+    }).stream().filter(Objects::nonNull).collect(java.util.stream.Collectors.toCollection(ArrayList::new));
   }
 
   public PlayerEntry getPlayer(String uuid) {

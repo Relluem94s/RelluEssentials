@@ -29,6 +29,14 @@ public record RegistryKey(String namespace, String key) {
     return new RegistryKey(namespace.toLowerCase(), key.toLowerCase());
   }
 
+  public static RegistryKey fromString(@NonNull String fullKey) {
+    String[] parts = fullKey.split(":", 2);
+    if (parts.length != 2) {
+      throw new IllegalArgumentException("Invalid RegistryKey format: '" + fullKey + "'");
+    }
+    return new RegistryKey(parts[0].toLowerCase(), parts[1].toLowerCase());
+  }
+
   @Override
   public @NonNull String toString() {
     return namespace + ":" + key;
