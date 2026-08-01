@@ -49,7 +49,7 @@ public class SignRegistry {
               || action.getNameBracket().equalsIgnoreCase(normalizedLine)
               || action.getDisplayName().equalsIgnoreCase(normalizedLine);
         })
-        .map(entry -> Map.entry(RegistryKey.of(entry.getKey()), entry.getValue()))
+        .map(entry -> Map.entry(RegistryKey.fromString(entry.getKey()), entry.getValue()))
         .findFirst();
   }
 

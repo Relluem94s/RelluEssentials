@@ -7,6 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
@@ -32,14 +33,13 @@ public class TraderNpcRegistry {
   private final List<String> npcName = new ArrayList<>();
   private final List<String> npcTraderTitle = new ArrayList<>();
   private final List<TraderNpc> npcs = new ArrayList<>();
+  private final ItemHelper disabledItem;
+  private final ItemHelper closeItem;
 
-  private ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+  public TraderNpcRegistry() {
+    this.disabledItem = ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
-  }
-
-  private ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+    this.closeItem = ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
   }
 
@@ -50,7 +50,7 @@ public class TraderNpcRegistry {
         public Inventory getMainGUI() {
           Inventory inv = InventoryHelper.fillInventory(
               InventoryHelper.createInventory(NpcHelper.INV_SIZE, getTitle()),
-              resolveDisabledItem().getCustomItem());
+              disabledItem.getCustomItem());
           int slot = 0;
           for (int i = 0; i < ne.getSlotNames().length; i++) {
             slot = InventoryHelper.getNextSlot(slot);
@@ -85,7 +85,7 @@ public class TraderNpcRegistry {
             }
             slot++;
           }
-          inv.setItem(53, resolveCloseItem().getCustomItem());
+          inv.setItem(53, closeItem.getCustomItem());
           return inv;
         }
       };

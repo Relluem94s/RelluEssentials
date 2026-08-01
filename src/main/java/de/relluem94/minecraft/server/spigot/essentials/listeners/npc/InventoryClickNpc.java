@@ -34,11 +34,11 @@ import org.bukkit.inventory.ItemStack;
 public class InventoryClickNpc implements Listener {
 
   private ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
+    return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
   }
 
   private ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
+    return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
   }
 
   private final NpcTradeHandler tradeHandler = new NpcTradeHandler();

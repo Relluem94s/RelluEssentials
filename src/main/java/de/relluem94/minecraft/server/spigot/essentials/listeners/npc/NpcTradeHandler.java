@@ -34,24 +34,26 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class NpcTradeHandler {
 
-  private ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow();
-  }
+  private final ItemHelper disabledItem;
+  private final ItemHelper closeItem;
 
-  private ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+  public NpcTradeHandler() {
+    this.disabledItem = ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow();
+    this.closeItem = ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
   }
 
   public void handle(ItemStack clickedItem, Inventory clickedInventory, Player player,
       PlayerEntry playerEntry, int slot, boolean isRightClick) {
-    if (resolveCloseItem().equalsExact(clickedItem)) {
+    if (closeItem.equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
       return;
     }
 
-    if (resolveDisabledItem().equalsExact(clickedItem)) {
+    if (disabledItem.equalsExact(clickedItem)) {
       player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1f, 1f);
       return;
     }

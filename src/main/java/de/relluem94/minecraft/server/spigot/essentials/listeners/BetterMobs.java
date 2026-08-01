@@ -33,8 +33,17 @@ import org.jspecify.annotations.NonNull;
 
 public class BetterMobs implements Listener {
 
-  private EnchantmentHelper resolveEnchantment(String enchantmentKey) {
-    return EnchantmentRegistry.find(RegistryKey.of(enchantmentKey)).orElseThrow();
+
+  private final EnchantmentHelper telekinesis;
+  private final EnchantmentHelper thunderstrike;
+
+  public BetterMobs() {
+    this.telekinesis = EnchantmentRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+        .orElse(null);
+    this.thunderstrike = EnchantmentRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
+        .orElse(null);
   }
 
   @EventHandler
@@ -96,9 +105,8 @@ public class BetterMobs implements Listener {
           e.getDrops().removeAll(BagHelper.collectItemStacks(li, p, pe));
         }
 
-        if (p.getInventory().getItemInMainHand().hasItemMeta() && hasEnchant(
-            p.getInventory().getItemInMainHand(),
-            resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))) {
+        if (p.getInventory().getItemInMainHand().hasItemMeta() && telekinesis != null
+            && hasEnchant(p.getInventory().getItemInMainHand(), telekinesis)) {
           List<ItemStack> lis = new ArrayList<>();
           for (ItemStack is : e.getDrops()) {
             if (p.getInventory().firstEmpty() != -1) {
@@ -121,9 +129,9 @@ public class BetterMobs implements Listener {
             languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(),
                 m.getLastDamage(), m.getHealth()));
       }
-      if (p.getInventory().getItemInMainHand().hasItemMeta() && hasEnchant(
-          p.getInventory().getItemInMainHand(),
-          resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))) {
+
+      if (p.getInventory().getItemInMainHand().hasItemMeta() && thunderstrike != null
+          && hasEnchant(p.getInventory().getItemInMainHand(), thunderstrike)) {
         if (m.getLocation().getWorld() == null) {
           return;
         }

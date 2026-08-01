@@ -13,7 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class SignActions implements Listener {
+public class CreateSignActions implements Listener {
 
   @EventHandler
   public void onChangeSignCreateActionSign(@NotNull SignChangeEvent event) {

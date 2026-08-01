@@ -27,7 +27,7 @@ public class NpcGuiCommand implements SubCommand {
     }
 
     ItemHelper disabledItem = ItemRegistry.find(
-            RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
 
     org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(

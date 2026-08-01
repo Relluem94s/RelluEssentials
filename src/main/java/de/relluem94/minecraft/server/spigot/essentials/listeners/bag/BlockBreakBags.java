@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
@@ -8,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,8 +26,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Listener that handles custom block-breaking behavior for the
- * {@code Delicate} and {@code Telekinesis} enchantments.
+ * Listener that handles custom block-breaking behavior for the {@code Delicate} and
+ * {@code Telekinesis} enchantments.
  *
  * <p><b>Delicate</b> – prevents breaking immature crops, stems, torches and
  * lily pads so that only fully-grown plants can be harvested.</p>
@@ -39,10 +39,23 @@ import org.jetbrains.annotations.NotNull;
 public class BlockBreakBags implements Listener {
 
   private final Set<Block> processingBlocks = new HashSet<>();
+  private final EnchantmentHelper delicate;
+  private final EnchantmentHelper telekinesis;
+
+  public BlockBreakBags() {
+    this.delicate = EnchantmentRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE))
+        .orElse(null);
+    this.telekinesis = EnchantmentRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+        .orElse(null);
+  }
 
   /**
-   * Intercepts every {@link BlockBreakEvent} and applies enchantment-specific
-   * logic before the vanilla break is processed.
+   * Intercepts every {@link BlockBreakEvent} and applies enchantment-specific logic before the
+   * vanilla break is processed.
    *
    * <p>When the player holds a tool enchanted with <b>Delicate</b>, breaking
    * immature crops, unattached stems, torches or lily pads is canceled.</p>
@@ -65,13 +78,8 @@ public class BlockBreakBags implements Listener {
     Block b = e.getBlock();
     Material m = b.getType();
 
-    Optional<EnchantmentHelper> delicate = EnchantmentRegistry.find(
-        RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE));
-    Optional<EnchantmentHelper> telekinesis = EnchantmentRegistry.find(
-        RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS));
-
-    if (delicate.isPresent() && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
-        delicate.get())) {
+    if (delicate != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
+        delicate)) {
       if (m.equals(Material.PUMPKIN_STEM) || m.equals(Material.MELON_STEM) || m.equals(
           Material.ATTACHED_PUMPKIN_STEM) || m.equals(Material.ATTACHED_MELON_STEM)) {
         e.setCancelled(true);
@@ -88,9 +96,9 @@ public class BlockBreakBags implements Listener {
       }
     }
 
-    if (telekinesis.isPresent() && EnchantmentHelper.hasEnchant(
+    if (telekinesis != null && EnchantmentHelper.hasEnchant(
         p.getInventory().getItemInMainHand(),
-        telekinesis.get())) {
+        telekinesis)) {
       int dropCount = 0;
 
       if (isChorusPlant(b) && b.getRelative(BlockFace.DOWN).getType().equals(Material.END_STONE)) {

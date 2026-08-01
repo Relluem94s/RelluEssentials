@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper.getCustomSkull;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -49,7 +50,7 @@ public class CustomHead implements CommandConstruct {
 
     org.bukkit.inventory.Inventory inv = InventoryHelper.createInventory(54,
         languageHelper.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE));
-    InventoryHelper.fillInventory(inv, ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow().getCustomItem());
+    InventoryHelper.fillInventory(inv, ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow().getCustomItem());
 
     inv.setItem(10, getCustomSkull(CustomHeads.BOOK1));
     inv.setItem(11, getCustomSkull(CustomHeads.BOOKS1));

@@ -7,6 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHe
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
@@ -50,7 +51,7 @@ public class Worlds implements CommandConstruct {
     org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
         InventoryHelper.createInventory(18,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds"),
-        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
             .orElseThrow()
             .getCustomItem()
     );
