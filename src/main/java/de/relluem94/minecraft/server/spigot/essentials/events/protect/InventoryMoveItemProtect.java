@@ -2,19 +2,16 @@ package de.relluem94.minecraft.server.spigot.essentials.events.protect;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.CoinHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
-import java.util.Collections;
 import java.util.Objects;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,11 +25,12 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Handles item movement between inventories and enforces hopper protection and auto-sell logic.
+ */
 public class InventoryMoveItemProtect implements Listener {
 
   private static boolean sellItem(Inventory inventory, ItemStack is, boolean isSource,
@@ -64,17 +62,7 @@ public class InventoryMoveItemProtect implements Listener {
         }
 
         if (!isSource && (inventory.firstEmpty() != -1 && size < 4)) {
-          ItemStack coin = coinItem.getCustomItem();
-          ItemMeta im = coin.getItemMeta();
-          Objects.requireNonNull(im).setLore(Collections.singletonList(
-              String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE,
-                  StringHelper.formatInt(sellPriceItem))));
-          im.getPersistentDataContainer()
-              .set(itemCoins(), PersistentDataType.INTEGER, sellPriceItem);
-
-          coin.setItemMeta(im);
-
-          inventory.addItem(coin);
+          inventory.addItem(CoinHelper.buildCoinItem(sellPriceItem));
 
           final ItemStack toRemove = is.clone();
           new BukkitRunnable() {
@@ -92,6 +80,9 @@ public class InventoryMoveItemProtect implements Listener {
     return false;
   }
 
+  /**
+   * Cancels item movement if hopper protection is active or processes auto-sell hopper logic.
+   */
   @EventHandler(ignoreCancelled = true)
   public void onMoveItem(@NotNull InventoryMoveItemEvent e) {
     if (handleMoveItemEvent(e.getSource(), e.getItem(), true) || handleMoveItemEvent(
@@ -156,6 +147,4 @@ public class InventoryMoveItemProtect implements Listener {
       return false;
     }
   }
-
-
 }
