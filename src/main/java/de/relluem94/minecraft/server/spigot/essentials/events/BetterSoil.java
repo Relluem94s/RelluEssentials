@@ -2,12 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.List;
 import org.bukkit.Material;
@@ -65,17 +66,21 @@ public class BetterSoil implements Listener {
   @EventHandler
   public void onHarvest(@NonNull PlayerHarvestBlockEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(p.getUniqueId());
 
     List<ItemStack> lis = BagHelper.collectItemStacks(e.getItemsHarvested(), e.getPlayer(), pe);
     e.getItemsHarvested().removeAll(lis);
 
-    if (EnchantmentHelper.hasEnchant(e.getPlayer().getInventory().getItemInMainHand(),
-        CustomEnchants.telekinesis)) {
-      for (ItemStack is : e.getItemsHarvested()) {
-        p.getInventory().addItem(is);
-      }
-      e.getItemsHarvested().clear();
-    }
+    EnchantmentRegistry.find(RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+        .filter(telekinesis -> EnchantmentHelper.hasEnchant(
+            e.getPlayer().getInventory().getItemInMainHand(), telekinesis))
+        .ifPresent(_ -> {
+          for (ItemStack is : e.getItemsHarvested()) {
+            p.getInventory().addItem(is);
+          }
+          e.getItemsHarvested().clear();
+        });
   }
 }
+

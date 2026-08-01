@@ -1,14 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.bag;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,6 +29,10 @@ public class BlockDropItemBags implements Listener {
 
   private final Random random = new Random();
 
+  private Optional<EnchantmentHelper> resolveEnchantment(String key) {
+    return EnchantmentRegistry.find(RegistryKey.of(key));
+  }
+
   @EventHandler
   public void onBlockDrop(@NotNull BlockDropItemEvent e) {
     Player p = e.getPlayer();
@@ -41,62 +48,65 @@ public class BlockDropItemBags implements Listener {
       }
     }
 
-    if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
-        CustomEnchants.autosmelt)) {
-      for (int i = 0; i < e.getItems().size(); i++) {
-        ItemStack is = e.getItems().get(i).getItemStack().clone();
-        if (e.getItems().get(i) != null && ItemHelper.getSmeltedItemStack(is) != null) {
-          e.getItems().get(i).getItemStack().setType(ItemHelper.getSmeltedItemStack(is).getType());
-        }
-      }
-    }
-
-    if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
-        CustomEnchants.replenishment)) {
-      for (int i = 0; i < e.getItems().size(); i++) {
-        if (e.getItems().get(i) != null && RelluEssentials.getInstance().crops.containsKey(
-            e.getItems().get(i).getItemStack().getType())) {
-          e.getBlock().setType(RelluEssentials.getInstance().crops.get(
-              e.getItems().get(i).getItemStack().getType()));
-
-          if (e.getBlock().getBlockData() instanceof Cocoa c) {
-            Block cocoa = e.getBlock();
-            Block wood = cocoa.getRelative(c.getFacing().getOppositeFace());
-            if (!wood.getType().equals(Material.JUNGLE_LOG)) {
-              for (BlockFace f : BlockFace.values()) {
-                wood = e.getBlock().getRelative(f);
-                if (wood.getType().equals(Material.JUNGLE_LOG)) {
-                  c.setFacing(f);
-                  cocoa.setBlockData(c);
-                  break;
-                }
-              }
-            } else {
-              c.setFacing(c.getFacing().getOppositeFace());
-              cocoa.setBlockData(c);
-            }
+    resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT).ifPresent(autosmelt -> {
+      if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), autosmelt)) {
+        for (int i = 0; i < e.getItems().size(); i++) {
+          ItemStack is = e.getItems().get(i).getItemStack().clone();
+          if (e.getItems().get(i) != null && ItemHelper.getSmeltedItemStack(is) != null) {
+            e.getItems().get(i).getItemStack().setType(ItemHelper.getSmeltedItemStack(is).getType());
           }
-          int oldAmount = e.getItems().get(i).getItemStack().getAmount();
-          e.getItems().get(i).getItemStack().setAmount(oldAmount - 1);
         }
       }
-    }
+    });
+
+    resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT).ifPresent(replenishment -> {
+      if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), replenishment)) {
+        for (int i = 0; i < e.getItems().size(); i++) {
+          if (e.getItems().get(i) != null && RelluEssentials.getInstance().crops.containsKey(
+              e.getItems().get(i).getItemStack().getType())) {
+            e.getBlock().setType(RelluEssentials.getInstance().crops.get(
+                e.getItems().get(i).getItemStack().getType()));
+
+            if (e.getBlock().getBlockData() instanceof Cocoa c) {
+              Block cocoa = e.getBlock();
+              Block wood = cocoa.getRelative(c.getFacing().getOppositeFace());
+              if (!wood.getType().equals(Material.JUNGLE_LOG)) {
+                for (BlockFace f : BlockFace.values()) {
+                  wood = e.getBlock().getRelative(f);
+                  if (wood.getType().equals(Material.JUNGLE_LOG)) {
+                    c.setFacing(f);
+                    cocoa.setBlockData(c);
+                    break;
+                  }
+                }
+              } else {
+                c.setFacing(c.getFacing().getOppositeFace());
+                cocoa.setBlockData(c);
+              }
+            }
+            int oldAmount = e.getItems().get(i).getItemStack().getAmount();
+            e.getItems().get(i).getItemStack().setAmount(oldAmount - 1);
+          }
+        }
+      }
+    });
 
     if (BagHelper.hasBags(pe.getId())) {
       List<Item> lis = BagHelper.collectItems(e.getItems(), e.getPlayer(), pe);
       e.getItems().removeAll(lis);
     }
 
-    if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
-        CustomEnchants.telekinesis)) {
-      List<Item> lis = new ArrayList<>();
-      for (Item i : e.getItems()) {
-        if (p.getInventory().firstEmpty() != -1) {
-          p.getInventory().addItem(i.getItemStack());
-          lis.add(i);
+    resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS).ifPresent(telekinesis -> {
+      if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), telekinesis)) {
+        List<Item> lis = new ArrayList<>();
+        for (Item i : e.getItems()) {
+          if (p.getInventory().firstEmpty() != -1) {
+            p.getInventory().addItem(i.getItemStack());
+            lis.add(i);
+          }
         }
+        e.getItems().removeAll(lis);
       }
-      e.getItems().removeAll(lis);
-    }
+    });
   }
 }

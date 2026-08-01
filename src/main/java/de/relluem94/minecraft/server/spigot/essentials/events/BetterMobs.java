@@ -4,15 +4,18 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.la
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.entity.EntityType;
@@ -29,6 +32,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 public class BetterMobs implements Listener {
+
+  private EnchantmentHelper resolveEnchantment(String enchantmentKey) {
+    return EnchantmentRegistry.find(RegistryKey.of(enchantmentKey)).orElseThrow();
+  }
 
   @EventHandler
   public void onSpawn(@NotNull CreatureSpawnEvent e) {
@@ -90,7 +97,8 @@ public class BetterMobs implements Listener {
         }
 
         if (p.getInventory().getItemInMainHand().hasItemMeta() && hasEnchant(
-            p.getInventory().getItemInMainHand(), CustomEnchants.telekinesis)) {
+            p.getInventory().getItemInMainHand(),
+            resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))) {
           List<ItemStack> lis = new ArrayList<>();
           for (ItemStack is : e.getDrops()) {
             if (p.getInventory().firstEmpty() != -1) {
@@ -114,7 +122,8 @@ public class BetterMobs implements Listener {
                 m.getLastDamage(), m.getHealth()));
       }
       if (p.getInventory().getItemInMainHand().hasItemMeta() && hasEnchant(
-          p.getInventory().getItemInMainHand(), CustomEnchants.thunderstrike)) {
+          p.getInventory().getItemInMainHand(),
+          resolveEnchantment(EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))) {
         if (m.getLocation().getWorld() == null) {
           return;
         }

@@ -116,6 +116,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ConfigManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CustomItemManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.EnchantmentManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EventManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.GroupManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.NpcManager;
@@ -172,6 +173,10 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
+/**
+ * Main plugin class for RelluEssentials. Extends {@link JavaPlugin} to integrate with the Spigot
+ * plugin lifecycle.
+ */
 public class RelluEssentials extends JavaPlugin {
 
   public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
@@ -198,7 +203,8 @@ public class RelluEssentials extends JavaPlugin {
   public final List<GroupEntry> groupEntryList = new ArrayList<>();
   @Getter
   public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
-  public Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
+  public Map<Player,
+      DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
   private long start;
   @Getter
   private DatabaseHelper databaseHelper;
@@ -233,16 +239,37 @@ public class RelluEssentials extends JavaPlugin {
   @Getter
   private NpcDialogueTracker npcDialogueTracker;
 
+  /**
+   * Default constructor for the RelluEssentials plugin. Used by the Spigot server to instantiate
+   * the plugin.
+   */
   public RelluEssentials() {
     super();
   }
 
+  /**
+   * Constructor for unit testing purposes. Allows injecting a custom loader, description, data
+   * folder, and file without requiring a running Spigot server.
+   *
+   * @param loader      the plugin loader used to load this plugin
+   * @param description the plugin description file containing metadata
+   * @param dataFolder  the folder where the plugin stores its data
+   * @param file        the plugin jar file
+   */
   protected RelluEssentials(JavaPluginLoader loader, PluginDescriptionFile description,
       File dataFolder, File file) {
     super(loader, description, dataFolder, file);
     isUnitTest = true;
   }
 
+  /**
+   * Returns the list of all registered {@link CommandWrapper} instances.
+   *
+   * <p>The list is lazily initialized on first access and contains a wrapper
+   * for every command provided by this plugin.
+   *
+   * @return an unmodifiable {@link List} of {@link CommandWrapper} instances
+   */
   public static List<CommandWrapper> getCommandWrapperList() {
     if (commandWrapperList == null) {
       commandWrapperList = List.of(
@@ -309,6 +336,15 @@ public class RelluEssentials extends JavaPlugin {
     return commandWrapperList;
   }
 
+  /**
+   * Returns the list of all registered {@link EventWrapper} instances.
+   *
+   * <p>The list is lazily initialized on first access and contains all event
+   * wrappers that encapsulate the plugin's feature listeners.
+   * </p>
+   *
+   * @return an unmodifiable {@link List} of {@link EventWrapper} instances
+   */
   public static List<EventWrapper> getEventWrapperList() {
     if (eventWrapperList == null) {
       eventWrapperList = List.of(
@@ -396,6 +432,7 @@ public class RelluEssentials extends JavaPlugin {
 
     dm.enable();
     databaseHelper = dm.getDatabaseHelper();
+    new EnchantmentManager(this).enable();
     new CustomItemManager(this).enable();
     this.playerRegistry = new PlayerRegistry(databaseHelper.getBags());
     this.playerService = new PlayerService(playerRegistry);

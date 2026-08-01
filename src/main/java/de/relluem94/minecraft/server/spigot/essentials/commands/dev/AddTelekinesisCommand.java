@@ -1,16 +1,23 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Sub-command that adds the Telekinesis enchantment to the item
+ * currently held in the player's main hand.
+ */
 public class AddTelekinesisCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    CustomEnchants.telekinesis.addTo(player.getInventory().getItemInMainHand());
+    EnchantmentRegistry.find(RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+        .ifPresent(enchant -> enchant.addTo(player.getInventory().getItemInMainHand()));
   }
 
   @Override

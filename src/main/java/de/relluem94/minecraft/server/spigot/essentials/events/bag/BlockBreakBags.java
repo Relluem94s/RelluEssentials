@@ -1,11 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.events.bag;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -22,18 +25,53 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Listener that handles custom block-breaking behavior for the
+ * {@code Delicate} and {@code Telekinesis} enchantments.
+ *
+ * <p><b>Delicate</b> – prevents breaking immature crops, stems, torches and
+ * lily pads so that only fully-grown plants can be harvested.</p>
+ *
+ * <p><b>Telekinesis</b> – causes drops from chorus plants, sugar cane and
+ * bamboo to be sent directly to the player's inventory by firing a synthetic
+ * {@link EntityPickupItemEvent} immediately after the block is removed.</p>
+ */
 public class BlockBreakBags implements Listener {
 
   private final Set<Block> processingBlocks = new HashSet<>();
 
+  /**
+   * Intercepts every {@link BlockBreakEvent} and applies enchantment-specific
+   * logic before the vanilla break is processed.
+   *
+   * <p>When the player holds a tool enchanted with <b>Delicate</b>, breaking
+   * immature crops, unattached stems, torches or lily pads is canceled.</p>
+   *
+   * <p>When the player holds a tool enchanted with <b>Telekinesis</b>:</p>
+   * <ul>
+   *   <li>Breaking the base of a chorus-plant structure removes the entire
+   *       connected plant (up to 50 blocks) and spawns a single item stack
+   *       that is immediately picked up by the player.</li>
+   *   <li>Breaking the base of a sugar-cane or bamboo column removes every
+   *       block above it and spawns a single item stack that is immediately
+   *       picked up by the player.</li>
+   * </ul>
+   *
+   * @param e the block-break event fired by Bukkit
+   */
   @EventHandler
   public void onBlockBreak(@NotNull BlockBreakEvent e) {
     Player p = e.getPlayer();
     Block b = e.getBlock();
     Material m = b.getType();
 
-    if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
-        CustomEnchants.delicate)) {
+    Optional<EnchantmentHelper> delicate = EnchantmentRegistry.find(
+        RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE));
+    Optional<EnchantmentHelper> telekinesis = EnchantmentRegistry.find(
+        RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS));
+
+    if (delicate.isPresent() && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
+        delicate.get())) {
       if (m.equals(Material.PUMPKIN_STEM) || m.equals(Material.MELON_STEM) || m.equals(
           Material.ATTACHED_PUMPKIN_STEM) || m.equals(Material.ATTACHED_MELON_STEM)) {
         e.setCancelled(true);
@@ -50,8 +88,9 @@ public class BlockBreakBags implements Listener {
       }
     }
 
-    if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
-        CustomEnchants.telekinesis)) {
+    if (telekinesis.isPresent() && EnchantmentHelper.hasEnchant(
+        p.getInventory().getItemInMainHand(),
+        telekinesis.get())) {
       int dropCount = 0;
 
       if (isChorusPlant(b) && b.getRelative(BlockFace.DOWN).getType().equals(Material.END_STONE)) {
