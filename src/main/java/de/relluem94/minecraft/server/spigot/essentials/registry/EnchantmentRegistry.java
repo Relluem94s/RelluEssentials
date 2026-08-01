@@ -41,4 +41,8 @@ public class EnchantmentRegistry {
   public static @NonNull Optional<EnchantmentHelper> find(RegistryKey key) {
     return Optional.ofNullable(registry.get(key));
   }
+
+  public static int count() {
+    return registry.size();
+  }
 }

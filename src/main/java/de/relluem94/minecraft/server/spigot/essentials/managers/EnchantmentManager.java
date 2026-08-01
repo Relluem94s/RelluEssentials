@@ -1,6 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
+
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AttributeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
@@ -15,8 +20,8 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Manages the registration of all custom enchantments for the plugin.
- * Implements {@link Enable} to hook into the plugin lifecycle.
+ * Manages the registration of all custom enchantments for the plugin. Implements {@link Enable} to
+ * hook into the plugin lifecycle.
  */
 public class EnchantmentManager implements Enable {
 
@@ -32,9 +37,8 @@ public class EnchantmentManager implements Enable {
   }
 
   /**
-   * Registers all custom enchantments into the {@link EnchantmentRegistry}.
-   * This includes enchantments such as Autosmelt, Telekinesis, Replenishment,
-   * Delicate and Thunderstrike.
+   * Registers all custom enchantments into the {@link EnchantmentRegistry}. This includes
+   * enchantments such as Autosmelt, Telekinesis, Replenishment, Delicate and Thunderstrike.
    */
   @Override
   public void enable() {
@@ -98,5 +102,9 @@ public class EnchantmentManager implements Enable {
                 50
             )
         ));
+
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        languageHelper.get(MessageKey.PLUGIN_MANAGER_ENCHANTMENTS_REGISTERED,
+            EnchantmentRegistry.count()));
   }
 }
