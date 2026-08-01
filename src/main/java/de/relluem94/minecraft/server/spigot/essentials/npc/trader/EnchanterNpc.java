@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
@@ -13,10 +12,10 @@ import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.Unmodifiable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents the Enchanter NPC trader, which provides a GUI for purchasing
@@ -33,26 +32,14 @@ public class EnchanterNpc extends TraderNpc {
     super("§dEnchanter", Profession.LIBRARIAN, Type.ENCHANTER);
   }
 
-  private List<EnchantmentHelper> resolveRegisteredEnchantments() {
-    return Stream.of(
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
-            EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS
-        )
-        .map(key -> EnchantmentRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), key)))
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .toList();
+  private @NonNull @Unmodifiable List<EnchantmentHelper> resolveRegisteredEnchantments() {
+    return EnchantmentRegistry.findAll();
   }
 
-  private ItemHelper resolveDisabledItem() {
+  private @NonNull ItemHelper resolveDisabledItem() {
     return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
   }
-
 
   /**
    * Builds and returns the main GUI inventory for the Enchanter NPC.
@@ -76,11 +63,10 @@ public class EnchanterNpc extends TraderNpc {
       slot++;
     }
 
-    int finalSlot = InventoryHelper.getNextSlot(slot);
+    int magicWaterSlot = InventoryHelper.getNextSlot(slot);
     ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET))
-        .ifPresent(item -> inv.setItem(finalSlot, item.getCustomItem()));
-    slot++;
-    int autoSellSlot = InventoryHelper.getNextSlot(slot);
+        .ifPresent(item -> inv.setItem(magicWaterSlot, item.getCustomItem()));
+    int autoSellSlot = InventoryHelper.getNextSlot(magicWaterSlot + 1);
     ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER))
         .ifPresent(item -> inv.setItem(autoSellSlot, item.getCustomItem()));
 
