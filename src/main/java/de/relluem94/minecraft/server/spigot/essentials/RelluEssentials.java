@@ -124,6 +124,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.NpcManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.PositionHighlightManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.RecipeManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.SignManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
@@ -436,6 +437,7 @@ public class RelluEssentials extends JavaPlugin {
     databaseHelper = dm.getDatabaseHelper();
     new EnchantmentManager(this).enable();
     new ItemManager(this).enable();
+    new SignManager(this).enable();
     this.playerRegistry = new PlayerRegistry(databaseHelper.getBags());
     this.playerService = new PlayerService(playerRegistry);
 
