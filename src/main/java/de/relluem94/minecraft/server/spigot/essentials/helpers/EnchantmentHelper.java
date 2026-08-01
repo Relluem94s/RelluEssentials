@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import com.google.common.collect.Multimap;
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.model.enchantment.CustomEnchantment;
@@ -22,18 +21,33 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-
 /**
+ * Helper class for managing custom enchantments on {@link ItemStack}s. Provides functionality to
+ * add, remove and inspect custom enchantments, as well as creating enchanted books.
  *
  * @author rellu
  */
 public class EnchantmentHelper extends CustomEnchantment {
 
-
+  /**
+   * Creates an {@link EnchantmentHelper} with only a {@link NamespacedKey}.
+   *
+   * @param id the unique key identifying this enchantment
+   */
   public EnchantmentHelper(NamespacedKey id) {
     super(id);
   }
 
+  /**
+   * Creates a fully configured {@link EnchantmentHelper}.
+   *
+   * @param enchantName the name of the enchantment
+   * @param target      the item target this enchantment applies to
+   * @param level       the level configuration of this enchantment
+   * @param lore        the lore text displayed on items with this enchantment
+   * @param rarity      the rarity of this enchantment
+   * @param attributes  the attribute modifiers applied by this enchantment
+   */
   public EnchantmentHelper(EnchantName enchantName, EnchantmentTarget target, EnchantLevel level,
       String lore, Rarity rarity, Multimap<Attribute, AttributeModifier> attributes) {
     super(new NamespacedKey(RelluEssentials.getInstance(), enchantName.name()));
@@ -44,10 +58,15 @@ public class EnchantmentHelper extends CustomEnchantment {
     this.lore = lore;
     this.attributes = attributes;
     this.actualLevel = level.startLevel();
-
-    CustomEnchants.customEnchantments.add(this);
   }
 
+  /**
+   * Checks whether the given {@link ItemStack} has the specified {@link CustomEnchantment}.
+   *
+   * @param is the item to check
+   * @param e  the enchantment to look for
+   * @return {@code true} if the item has the enchantment, {@code false} otherwise
+   */
   public static boolean hasEnchant(ItemStack is, CustomEnchantment e) {
     if (is == null) {
       return false;
@@ -63,33 +82,68 @@ public class EnchantmentHelper extends CustomEnchantment {
     return persistentDataContainer.has(e.getKey());
   }
 
+  /**
+   * Returns the attribute multiplier for this enchantment.
+   *
+   * @return the multiplier value
+   */
   @SuppressWarnings("unused")
   public double getMultiplier() {
     return multiply;
   }
 
+  /**
+   * Returns the internal name of this enchantment.
+   *
+   * @return the enchantment name as a string
+   */
   @NonNull
   public String getName() {
     return enchantName.name();
   }
 
+  /**
+   * Returns the display name of this enchantment shown to players.
+   *
+   * @return the formatted display name
+   */
   public String getDisplayName() {
     return enchantName.displayName();
   }
 
+  /**
+   * Returns the maximum level this enchantment can reach.
+   *
+   * @return the maximum enchantment level
+   */
   public int getMaxLevel() {
     return level.maxLevel();
   }
 
+  /**
+   * Returns the starting level of this enchantment.
+   *
+   * @return the starting enchantment level
+   */
   public int getStartLevel() {
     return level.startLevel();
   }
 
+  /**
+   * Returns the {@link EnchantmentTarget} defining which items this enchantment can be applied to.
+   *
+   * @return the enchantment target
+   */
   @NonNull
   public EnchantmentTarget getItemTarget() {
     return target;
   }
 
+  /**
+   * Creates and returns an enchanted book {@link ItemHelper} containing this enchantment.
+   *
+   * @return an {@link ItemHelper} representing the enchanted book
+   */
   public ItemHelper getBook() {
     return new ItemHelper(
         ItemHelper.addBookEnchantment(
@@ -101,6 +155,12 @@ public class EnchantmentHelper extends CustomEnchantment {
     );
   }
 
+  /**
+   * Applies this enchantment to the given {@link ItemStack} by adding attribute modifiers, updating
+   * the item lore and storing the enchantment level in the persistent data container.
+   *
+   * @param i the item to apply the enchantment to
+   */
   public void addTo(ItemStack i) {
     ItemMeta im = i.getItemMeta();
 
@@ -141,6 +201,13 @@ public class EnchantmentHelper extends CustomEnchantment {
     i.setItemMeta(im);
   }
 
+  /**
+   * Removes this enchantment from the given {@link ItemStack} by stripping attribute modifiers,
+   * cleaning up the item lore and deleting the enchantment entry from the persistent data
+   * container.
+   *
+   * @param i the item to remove the enchantment from
+   */
   public void removeFrom(ItemStack i) {
     ItemMeta im = i.getItemMeta();
 

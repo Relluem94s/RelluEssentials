@@ -44,13 +44,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_RELLU_SWORD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_WORLDSELECTOR;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomEnchants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.List;
@@ -238,7 +239,9 @@ public class CustomItemManager implements Enable {
 
       @Override
       public ItemStack postInit(ItemStack is) {
-        CustomEnchants.telekinesis.addTo(is);
+        EnchantmentRegistry.find(
+                RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+            .ifPresent(enchant -> enchant.addTo(is));
         return is;
       }
     };
@@ -260,8 +263,12 @@ public class CustomItemManager implements Enable {
 
       @Override
       public ItemStack postInit(ItemStack is) {
-        CustomEnchants.telekinesis.addTo(is);
-        CustomEnchants.thunderstrike.addTo(is);
+        EnchantmentRegistry.find(
+                RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+            .ifPresent(enchant -> enchant.addTo(is));
+        EnchantmentRegistry.find(
+                RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
+            .ifPresent(enchant -> enchant.addTo(is));
         return is;
       }
     };

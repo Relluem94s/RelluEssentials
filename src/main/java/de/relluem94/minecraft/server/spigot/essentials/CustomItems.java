@@ -7,9 +7,18 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import org.bukkit.Material;
 
 /**
+ * Provides predefined {@link ItemHelper} instances used for NPC GUI interactions.
+ *
+ * <p>This utility class contains static item definitions that serve as building blocks
+ * for NPC-based graphical user interfaces, such as filler panes and close buttons.</p>
+ *
+ * <p>This class is marked as {@link Deprecated} and should not be used in new implementations.
+ * Use a more modern item registry approach instead.</p>
  *
  * @author rellu
+ * @deprecated Use a dedicated item registry or configuration-driven approach instead.
  */
+@Deprecated
 public class CustomItems {
 
   public static final ItemHelper npc_gui_disabled = new ItemHelper(
