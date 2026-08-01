@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 
@@ -45,6 +48,19 @@ public class EnchantmentRegistry {
 
   public static @NonNull List<EnchantmentHelper> findAll() {
     return List.copyOf(registry.values());
+  }
+
+  public static @NonNull Optional<EnchantmentHelper> findByBookItemStack(@NonNull ItemStack itemStack) {
+    if (!(itemStack.getItemMeta() instanceof EnchantmentStorageMeta meta)) {
+      return Optional.empty();
+    }
+
+    return registry.values().stream()
+        .filter(enchantment -> meta.getPersistentDataContainer()
+            .has(enchantment.getKey(), PersistentDataType.INTEGER))
+        .filter(enchantment -> meta.getStoredEnchants().keySet().stream()
+            .noneMatch(storedEnchant -> storedEnchant.getKey().equals(enchantment.getKey())))
+        .findFirst();
   }
 
   public static int count() {

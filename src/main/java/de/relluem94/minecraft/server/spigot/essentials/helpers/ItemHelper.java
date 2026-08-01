@@ -159,6 +159,11 @@ public class ItemHelper implements IItemHelper {
     is.setItemMeta(im);
   }
 
+  public ItemHelper(@NotNull ItemStack itemStack, String displayName, Type type, Rarity rarity, int cost) {
+    this(itemStack, displayName, type, rarity, new ArrayList<>());
+    this.cost = cost;
+  }
+
   public void applyCostToItemStack(@NonNull NamespacedKey pluginNamespacedKey) {
     if (cost == null) {
       return;

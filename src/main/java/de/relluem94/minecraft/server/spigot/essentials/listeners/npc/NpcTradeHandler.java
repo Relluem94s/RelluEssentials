@@ -18,7 +18,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import java.util.Optional;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -139,7 +141,7 @@ public class NpcTradeHandler {
       return;
     }
 
-    String itemDisplayName = clickedItem.getType().name().toLowerCase().replace('_', ' ');
+    String itemDisplayName = resolveItemDisplayName(clickedItem);
     int amount = clickedItem.getAmount();
 
     if (clickedInventory.getType().equals(InventoryType.CHEST)) {
@@ -150,6 +152,28 @@ public class NpcTradeHandler {
     }
   }
 
+  private String resolveItemDisplayName(@NonNull ItemStack item) {
+    Optional<String> enchantmentName = EnchantmentRegistry.findByBookItemStack(item)
+        .map(enchantment -> enchantment.getBook().getCustomItem().getItemMeta())
+        .filter(meta -> meta != null && meta.hasDisplayName())
+        .map(ItemMeta::getDisplayName);
+
+    if (enchantmentName.isPresent()) {
+      return enchantmentName.get();
+    }
+
+    Optional<String> registeredItemName = ItemRegistry.findByItemStack(item)
+        .map(itemHelper -> itemHelper.getCustomItem().getItemMeta())
+        .filter(meta -> meta != null && meta.hasDisplayName())
+        .map(ItemMeta::getDisplayName);
+
+    if (registeredItemName.isPresent()) {
+      return registeredItemName.get();
+    }
+
+    return item.getType().name().toLowerCase().replace('_', ' ');
+  }
+
   private Integer resolveBuyPrice(ItemStack item, @NonNull ItemMeta meta) {
     if (meta.getPersistentDataContainer().has(itemBuyPrice(), PersistentDataType.INTEGER)) {
       return meta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER);
@@ -157,10 +181,24 @@ public class NpcTradeHandler {
     return ItemPrice.from(item.getType()).getBuyPrice();
   }
 
+
   private Integer resolveSellPrice(ItemStack item, @NonNull ItemMeta meta) {
     if (meta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER)) {
       return meta.getPersistentDataContainer().get(itemSellPrice(), PersistentDataType.INTEGER);
     }
+
+    Optional<Integer> enchantmentSellPrice = EnchantmentRegistry.findByBookItemStack(item)
+        .map(enchantment -> enchantment.getBook().getCost());
+    if (enchantmentSellPrice.isPresent()) {
+      return enchantmentSellPrice.get();
+    }
+
+    Optional<Integer> registeredItemSellPrice = ItemRegistry.findByItemStack(item)
+        .map(itemHelper -> itemHelper.getCost());
+    if (registeredItemSellPrice.isPresent()) {
+      return registeredItemSellPrice.get();
+    }
+
     return ItemPrice.from(item.getType()).getSellPrice();
   }
 
@@ -189,11 +227,7 @@ public class NpcTradeHandler {
       return;
     }
 
-    ItemStack purchasedItem = ItemRegistry.findByItemStack(guiItem)
-        .map(ItemHelper::getCustomItem)
-        .map(ItemStack::clone)
-        .orElseGet(() -> guiItem.clone());
-    purchasedItem.setAmount(amount);
+    ItemStack purchasedItem = resolveCleanPurchasedItem(guiItem, amount);
 
     int resolvedSellPrice = resolveSellPrice(guiItem, guiItem.getItemMeta());
     writeSellPriceToItem(resolvedSellPrice, purchasedItem);
@@ -209,6 +243,18 @@ public class NpcTradeHandler {
     player.playSound(player, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
   }
 
+  private ItemStack resolveCleanPurchasedItem(ItemStack guiItem, int amount) {
+    ItemStack purchasedItem = EnchantmentRegistry.findByBookItemStack(guiItem)
+        .map(enchantment -> enchantment.getBook().getCustomItem().clone())
+        .orElseGet(() -> ItemRegistry.findByItemStack(guiItem)
+            .map(itemHelper -> itemHelper.getCustomItem().clone())
+            .orElseGet(guiItem::clone));
+
+    purchasedItem.setAmount(amount);
+    return purchasedItem;
+  }
+
+
   private void writeSellPriceToItem(int sellPrice, @NonNull ItemStack targetItem) {
     ItemMeta targetMeta = targetItem.getItemMeta();
     if (targetMeta == null) {
@@ -222,7 +268,9 @@ public class NpcTradeHandler {
       int sellPrice, String itemDisplayName, int slot, boolean isRightClick) {
     ItemMeta meta = item.getItemMeta();
 
-    boolean isRegisteredItem = ItemRegistry.findByItemStack(item).isPresent();
+    boolean isRegisteredItem = ItemRegistry.findByItemStack(item).isPresent()
+        || EnchantmentRegistry.findByBookItemStack(item).isPresent();
+
 
     if (!isRegisteredItem) {
 

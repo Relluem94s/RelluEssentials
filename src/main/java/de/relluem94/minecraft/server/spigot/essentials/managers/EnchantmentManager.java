@@ -50,7 +50,8 @@ public class EnchantmentManager implements Enable {
             new EnchantLevel(1, 1),
             EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS_LORE,
             Rarity.EPIC,
-            AttributeHelper.addAttribute()
+            AttributeHelper.addAttribute(),
+            50000
         ));
 
 
@@ -62,7 +63,8 @@ public class EnchantmentManager implements Enable {
             new EnchantLevel(1, 1),
             EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL_LORE,
             Rarity.RARE,
-            AttributeHelper.addAttribute()
+            AttributeHelper.addAttribute(),
+            25000
         ));
 
     EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,
@@ -73,7 +75,8 @@ public class EnchantmentManager implements Enable {
             new EnchantLevel(1, 1),
             EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_LORE,
             Rarity.LEGENDARY,
-            AttributeHelper.addAttribute()
+            AttributeHelper.addAttribute(),
+            250000
         ));
 
     EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS,
@@ -84,7 +87,8 @@ public class EnchantmentManager implements Enable {
             new EnchantLevel(1, 1),
             EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS_LORE,
             Rarity.LEGENDARY,
-            AttributeHelper.addAttribute()
+            AttributeHelper.addAttribute(),
+            250000
         ));
 
     EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT,
@@ -95,7 +99,8 @@ public class EnchantmentManager implements Enable {
             new EnchantLevel(1, 1),
             EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT_LORE,
             Rarity.LEGENDARY,
-            AttributeHelper.addAttribute()
+            AttributeHelper.addAttribute(),
+            250000
         ));
 
     EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE,
@@ -106,7 +111,8 @@ public class EnchantmentManager implements Enable {
             new EnchantLevel(1, 1),
             EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE_LORE,
             Rarity.LEGENDARY,
-            AttributeHelper.addAttribute()
+            AttributeHelper.addAttribute(),
+            250000
         ));
 
     EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
@@ -123,7 +129,8 @@ public class EnchantmentManager implements Enable {
                 EquipmentSlotGroup.HAND,
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
                 50
-            )
+            ),
+            1500000
         ));
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,

@@ -76,7 +76,9 @@ public class EnchanterNpc extends TraderNpc {
     int slot = 0;
     for (EnchantmentHelper enchant : enchantments) {
       slot = InventoryHelper.getNextSlot(slot);
-      inv.setItem(slot, enchant.getBook().getCustomItem());
+      ItemStack book = enchant.getBook().getCustomItem().clone();
+      applyAdditionalLoreToItemStack(book, buildCostDataFromCost(enchant.getCost()));
+      inv.setItem(slot, book);
       slot++;
     }
 
@@ -124,18 +126,22 @@ public class EnchanterNpc extends TraderNpc {
 
   private ItemCostData buildCostData(@NonNull ItemStack itemStack) {
     return ItemHelper.resolveCostFromItemStack(itemStack, itemCost())
-        .map(cost -> new ItemCostData(cost, List.of(
-            languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
-                PLUGIN_NAME_MONEY,
-                String.valueOf(cost),
-                PLUGIN_NAME_MONEY,
-                String.valueOf(cost*64)),
-            languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
-                PLUGIN_NAME_MONEY,
-                String.valueOf(cost),
-                PLUGIN_NAME_MONEY,
-                String.valueOf(cost*64))
-        )))
+        .map(this::buildCostDataFromCost)
         .orElse(new ItemCostData(0, List.of()));
+  }
+
+  private ItemCostData buildCostDataFromCost(int cost) {
+    return new ItemCostData(cost, List.of(
+        languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+            PLUGIN_NAME_MONEY,
+            String.valueOf(cost),
+            PLUGIN_NAME_MONEY,
+            String.valueOf(cost * 64)),
+        languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+            PLUGIN_NAME_MONEY,
+            String.valueOf(cost),
+            PLUGIN_NAME_MONEY,
+            String.valueOf(cost * 64))
+    ));
   }
 }
