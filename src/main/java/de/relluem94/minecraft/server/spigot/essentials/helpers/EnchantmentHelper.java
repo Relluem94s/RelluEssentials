@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -49,7 +50,7 @@ public class EnchantmentHelper extends CustomEnchantment {
    * @param attributes  the attribute modifiers applied by this enchantment
    */
   public EnchantmentHelper(EnchantName enchantName, EnchantmentTarget target, EnchantLevel level,
-      String lore, Rarity rarity, Multimap<Attribute, AttributeModifier> attributes) {
+      String lore, Rarity rarity, Multimap<Attribute, AttributeModifier> attributes, int cost) {
     super(new NamespacedKey(RelluEssentials.getInstance(), enchantName.name()));
     this.enchantName = enchantName;
     this.rarity = rarity;
@@ -58,6 +59,7 @@ public class EnchantmentHelper extends CustomEnchantment {
     this.lore = lore;
     this.attributes = attributes;
     this.actualLevel = level.startLevel();
+    this.cost = cost;
   }
 
   /**
@@ -139,6 +141,9 @@ public class EnchantmentHelper extends CustomEnchantment {
     return target;
   }
 
+  @Getter
+  private int cost;
+
   /**
    * Creates and returns an enchanted book {@link ItemHelper} containing this enchantment.
    *
@@ -151,7 +156,8 @@ public class EnchantmentHelper extends CustomEnchantment {
         ),
         enchantName.displayName(),
         ItemHelper.Type.ENCHANTMENT,
-        getRarity()
+        getRarity(),
+        cost
     );
   }
 
