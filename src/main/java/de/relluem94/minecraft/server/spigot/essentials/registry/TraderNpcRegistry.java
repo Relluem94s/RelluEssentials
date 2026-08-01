@@ -45,7 +45,7 @@ public class TraderNpcRegistry {
 
   public void init(List<TraderNPCEntry> traderNpcEntryList) {
     for (TraderNPCEntry ne : traderNpcEntryList) {
-      new TraderNpc(ne) {
+      TraderNpc traderNpc = new TraderNpc(ne) {
         @Override
         public Inventory getMainGUI() {
           Inventory inv = InventoryHelper.fillInventory(
@@ -89,6 +89,7 @@ public class TraderNpcRegistry {
           return inv;
         }
       };
+      addNPC(traderNpc);
     }
   }
 
@@ -111,7 +112,7 @@ public class TraderNpcRegistry {
     npcItemStack.add(traderNpc.getItemHelper().getCustomItem());
     npcName.add(traderNpc.getName());
 
-    if (traderNpc.getType().equals(Type.TRADER)) {
+    if (traderNpc.getType().equals(Type.TRADER) || traderNpc.getType().equals(Type.ENCHANTER)) {
       npcTraderTitle.add(traderNpc.getTitle());
     }
   }

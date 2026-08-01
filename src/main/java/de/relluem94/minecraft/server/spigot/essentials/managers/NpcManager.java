@@ -16,5 +16,4 @@ public class NpcManager implements Enable {
     new BeekeeperNpc();
     new EnchanterNpc();
   }
-
 }

@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.registry;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_ITEM_REGISTRY;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import java.util.Collection;
@@ -50,6 +51,7 @@ public class ItemRegistry {
       throw new IllegalArgumentException(String.format(PLUGIN_EXCEPTION_ITEM_REGISTRY, key));
     }
     item.setData(persistentDataKey, key.toString());
+    item.applyCostToItemStack(NamespacedKeyConstants.itemCost());
     registeredItems.put(key.toString(), item);
   }
 

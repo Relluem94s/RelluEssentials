@@ -98,7 +98,7 @@ public class ItemManager implements Enable {
     ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET,
         new ItemHelper(Material.WATER_BUCKET, 1, PLUGIN_ITEM_MAGIC_WATER_BUCKET,
             ItemHelper.Type.GADGET, ItemHelper.Rarity.EPIC,
-            List.of(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE)));
+            List.of(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE), 5000));
 
     ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_COINS,
         new ItemHelper(Material.GOLD_NUGGET, 1, PLUGIN_ITEM_COINS,
@@ -108,7 +108,7 @@ public class ItemManager implements Enable {
     ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR,
         new ItemHelper(Material.FEATHER, 1, PLUGIN_ITEM_CLOUDSAILOR,
             ItemHelper.Type.GADGET, ItemHelper.Rarity.EPIC,
-            List.of(PLUGIN_ITEM_CLOUDSAILOR_LORE1, PLUGIN_ITEM_CLOUDSAILOR_LORE2)));
+            List.of(PLUGIN_ITEM_CLOUDSAILOR_LORE1, PLUGIN_ITEM_CLOUDSAILOR_LORE2), 10000));
 
     ItemHelper cloudBootsItem = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_CLOUDBOOTS,
         ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY,
@@ -139,7 +139,7 @@ public class ItemManager implements Enable {
 
     ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER,
         new ItemHelper(Material.HOPPER, 1, PLUGIN_ITEM_AUTOSELLHOPER,
-            ItemHelper.Type.TOOL, ItemHelper.Rarity.LEGENDARY));
+            ItemHelper.Type.TOOL, ItemHelper.Rarity.LEGENDARY, 50000));
 
     ItemHelper relluBootsItem = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_RELLU_BOOTS,
         ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {

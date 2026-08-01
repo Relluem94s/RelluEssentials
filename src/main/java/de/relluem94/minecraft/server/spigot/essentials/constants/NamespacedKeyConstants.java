@@ -20,4 +20,8 @@ public final class NamespacedKeyConstants {
   public static NamespacedKey itemBuyPrice() {
     return new NamespacedKey(RelluEssentials.getInstance(), "itemBuyPrice");
   }
+
+  public static NamespacedKey itemCost() {
+    return new NamespacedKey(RelluEssentials.getInstance(), "item_cost");
+  }
 }

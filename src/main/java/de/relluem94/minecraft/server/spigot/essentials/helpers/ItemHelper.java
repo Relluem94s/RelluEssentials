@@ -14,6 +14,7 @@ import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -39,6 +40,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class ItemHelper implements IItemHelper {
 
+  private static final String COST_KEY_NAME = "item_cost";
+
   @Getter
   private final ItemStack is;
 
@@ -58,6 +61,9 @@ public class ItemHelper implements IItemHelper {
   @Getter
   private List<String> lore;
 
+  @Getter
+  private Integer cost;
+
   /**
    *
    * @param material    Bukkit Material
@@ -68,21 +74,13 @@ public class ItemHelper implements IItemHelper {
    */
   public ItemHelper(Material material, int amount, String displayName, Type itemType,
       Rarity itemRarity) {
-    this.amount = amount;
-    this.material = material;
-    this.displayName = displayName;
-    this.itemType = itemType;
-    this.rarity = itemRarity;
+    this(material, amount, displayName, itemType, itemRarity, new ArrayList<>());
+  }
 
-    is = new ItemStack(this.material, this.amount);
-
-    ItemMeta im = is.getItemMeta();
-    if (im == null) {
-      return;
-    }
-
-    im.setDisplayName(this.displayName);
-    is.setItemMeta(im);
+  public ItemHelper(Material material, int amount, String displayName, Type itemType,
+      Rarity itemRarity, int cost) {
+    this(material, amount, displayName, itemType, itemRarity, new ArrayList<>());
+    this.cost = cost;
   }
 
   /**
@@ -123,21 +121,13 @@ public class ItemHelper implements IItemHelper {
    * @param itemRarity  ItemRarity
    */
   public ItemHelper(ItemStack is, String displayName, Type itemType, Rarity itemRarity) {
-    this.amount = is.getAmount();
-    this.material = is.getType();
-    this.displayName = displayName;
-    this.itemType = itemType;
-    this.rarity = itemRarity;
+    this(is, displayName, itemType, itemRarity, new ArrayList<>());
+  }
 
-    this.is = is;
-
-    ItemMeta im = is.getItemMeta();
-    if (im == null) {
-      return;
-    }
-
-    im.setDisplayName(this.displayName);
-    is.setItemMeta(im);
+  public ItemHelper(Material material, int amount, String displayName, Type itemType,
+      Rarity itemRarity, List<String> lore, int cost) {
+    this(material, amount, displayName, itemType, itemRarity, lore);
+    this.cost = cost;
   }
 
   /**
@@ -168,6 +158,29 @@ public class ItemHelper implements IItemHelper {
     im.setLore(this.lore);
     is.setItemMeta(im);
   }
+
+  public void applyCostToItemStack(@NonNull NamespacedKey pluginNamespacedKey) {
+    if (cost == null) {
+      return;
+    }
+    ItemMeta itemMeta = is.getItemMeta();
+    if (itemMeta == null) {
+      return;
+    }
+    itemMeta.getPersistentDataContainer().set(pluginNamespacedKey, PersistentDataType.INTEGER, cost);
+    is.setItemMeta(itemMeta);
+  }
+
+  public static Optional<Integer> resolveCostFromItemStack(@NonNull ItemStack itemStack, @NonNull NamespacedKey pluginNamespacedKey) {
+    ItemMeta meta = itemStack.getItemMeta();
+    if (meta == null) {
+      return Optional.empty();
+    }
+    return Optional.ofNullable(
+        meta.getPersistentDataContainer().get(pluginNamespacedKey, PersistentDataType.INTEGER)
+    );
+  }
+
 
   @SuppressWarnings("unused")
   public static @Nullable Object getData(@NonNull ItemStack is, NamespacedKey key) {
