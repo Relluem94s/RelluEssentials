@@ -3,121 +3,79 @@ package de.relluem94.minecraft.server.spigot.essentials.npc;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Mannequin;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.profile.PlayerProfile;
 import org.jspecify.annotations.NonNull;
 
 public class NpcSpawner {
 
-  private final NpcMannequinCommandBuilder commandBuilder;
+  private final NamespacedKey npcIdKey;
 
   public NpcSpawner() {
-    this.commandBuilder = new NpcMannequinCommandBuilder();
+    this.npcIdKey = new NamespacedKey(RelluEssentials.getInstance(), "npc_id");
   }
 
-  public Optional<UUID> spawnMannequin(@NonNull Npc npc, Set<UUID> alreadyManagedUUIDs) {
+  public Optional<UUID> spawnMannequin(@NonNull Npc npc) {
     World world = Bukkit.getWorld(npc.getWorldName());
     if (world == null) {
       return Optional.empty();
     }
 
     Location spawnLocation = new Location(world, npc.getX(), npc.getY(), npc.getZ());
-    String summonCommand = commandBuilder.buildSummonCommand(npc.getX(), npc.getY(), npc.getZ(),
-        npc.getProfileName());
 
-    Optional<? extends Player> playerInWorld = world.getPlayers().stream().findFirst();
-    if (playerInWorld.isEmpty()) {
-      return Optional.empty();
+    Optional<UUID> existingMannequin = findExistingMannequinByNpcId(world, npc.getId().toString());
+    if (existingMannequin.isPresent()) {
+      return existingMannequin.map(this::applyMannequinAttributes);
     }
 
-    Bukkit.dispatchCommand(playerInWorld.get(), summonCommand);
-
-    return findNewlySpawnedUnmanagedMannequin(world, spawnLocation, alreadyManagedUUIDs)
-        .map(this::applyMannequinAttributes);
+    return spawnAndTagMannequin(world, spawnLocation, npc);
   }
 
-  public void spawnMannequinAsync(@NonNull Npc npc, Set<UUID> alreadyManagedUUIDs,
-      java.util.function.Consumer<Optional<UUID>> callback) {
-    World world = Bukkit.getWorld(npc.getWorldName());
-    if (world == null) {
-      callback.accept(Optional.empty());
-      return;
+  private Optional<UUID> spawnAndTagMannequin(@NonNull World world, @NonNull Location spawnLocation, @NonNull Npc npc) {
+    Entity spawnedEntity = world.spawnEntity(spawnLocation, EntityType.MANNEQUIN);
+
+    if (spawnedEntity instanceof Mannequin mannequin) {
+      PlayerProfile profile = Bukkit.createPlayerProfile(npc.getProfileName());
+      mannequin.setPlayerProfile(profile);
+      mannequin.getPersistentDataContainer().set(npcIdKey, PersistentDataType.STRING, npc.getId().toString());
+      NpcMannequinAttributeApplier.applyAttributes(mannequin);
+      return Optional.of(mannequin.getUniqueId());
     }
 
-    Location spawnLocation = new Location(world, npc.getX(), npc.getY(), npc.getZ());
-    String summonCommand = commandBuilder.buildSummonCommand(npc.getX(), npc.getY(), npc.getZ(),
-        npc.getProfileName());
-
-    Optional<? extends Player> playerInWorld = world.getPlayers().stream().findFirst();
-    if (playerInWorld.isEmpty()) {
-      callback.accept(Optional.empty());
-      return;
-    }
-
-    Bukkit.dispatchCommand(playerInWorld.get(), summonCommand);
-
-    new BukkitRunnable() {
-      @Override
-      public void run() {
-        Optional<UUID> result = findNewlySpawnedUnmanagedMannequin(world, spawnLocation,
-            alreadyManagedUUIDs)
-            .map(NpcSpawner.this::applyMannequinAttributes);
-        callback.accept(result);
-      }
-    }.runTaskLater(RelluEssentials.getInstance(), 2L);
+    return Optional.empty();
   }
 
+  private UUID applyMannequinAttributes(UUID entityUUID) {
+    Entity entity = Bukkit.getEntity(entityUUID);
+    if (entity instanceof Mannequin mannequin) {
+      NpcMannequinAttributeApplier.applyAttributes(mannequin);
+    }
+    return entityUUID;
+  }
+
+  private Optional<UUID> findExistingMannequinByNpcId(@NonNull World world, @NonNull String npcId) {
+    return world.getEntities().stream()
+        .filter(entity -> entity.getType().name().equalsIgnoreCase("MANNEQUIN"))
+        .filter(entity -> {
+          String storedId = entity.getPersistentDataContainer().get(npcIdKey, PersistentDataType.STRING);
+          return npcId.equals(storedId);
+        })
+        .map(Entity::getUniqueId)
+        .findFirst();
+  }
 
   public void despawnMannequin(UUID entityUUID) {
     Entity entity = Bukkit.getEntity(entityUUID);
     if (entity != null) {
       entity.remove();
     }
-  }
-
-  public void despawnAllMannequinsInAllWorlds(Set<String> managedProfileNames) {
-    Bukkit.getWorlds().forEach(world ->
-        world.getEntities().stream()
-            .filter(entity -> entity.getType().name().equalsIgnoreCase("MANNEQUIN"))
-            .filter(entity -> isManagedByPlugin(entity, managedProfileNames))
-            .forEach(Entity::remove)
-    );
-  }
-
-  private boolean isManagedByPlugin(Entity entity, Set<String> managedProfileNames) {
-    return managedProfileNames.contains(entity.getName());
-  }
-
-
-  private UUID applyMannequinAttributes(UUID entityUUID) {
-    Entity entity = Bukkit.getEntity(entityUUID);
-
-    if (entity instanceof LivingEntity livingEntity) {
-      livingEntity.setCanPickupItems(false);
-      livingEntity.setCollidable(false);
-    }
-    return entityUUID;
-  }
-
-  private @NonNull Optional<UUID> findNewlySpawnedUnmanagedMannequin(@NonNull World world,
-      Location spawnLocation, Set<UUID> alreadyManagedUUIDs) {
-    return world.getEntities().stream()
-        .filter(entity -> entity.getType().name().equalsIgnoreCase("MANNEQUIN"))
-        .filter(entity -> !alreadyManagedUUIDs.contains(entity.getUniqueId()))
-        .filter(entity -> isWithinSpawnRadius(entity.getLocation(), spawnLocation))
-        .map(Entity::getUniqueId)
-        .findFirst();
-  }
-
-  private boolean isWithinSpawnRadius(@NonNull Location entityLocation, Location targetLocation) {
-    double spawnRadiusTolerance = 0.5;
-    return entityLocation.distanceSquared(targetLocation) <= spawnRadiusTolerance;
   }
 }

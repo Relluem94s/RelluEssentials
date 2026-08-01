@@ -98,6 +98,7 @@ import de.relluem94.minecraft.server.spigot.essentials.events.npc.DamgeTraderNpc
 import de.relluem94.minecraft.server.spigot.essentials.events.npc.InteractNpc;
 import de.relluem94.minecraft.server.spigot.essentials.events.npc.InteractTraderNpc;
 import de.relluem94.minecraft.server.spigot.essentials.events.npc.InventoryClickNpc;
+import de.relluem94.minecraft.server.spigot.essentials.events.npc.NpcChunkLoadListener;
 import de.relluem94.minecraft.server.spigot.essentials.events.npc.PlaceNpc;
 import de.relluem94.minecraft.server.spigot.essentials.events.protect.BetterLock;
 import de.relluem94.minecraft.server.spigot.essentials.events.protect.BlockModifyProtect;
@@ -164,7 +165,6 @@ import java.util.Set;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -172,6 +172,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Main plugin class for RelluEssentials. Extends {@link JavaPlugin} to integrate with the Spigot
@@ -361,6 +362,7 @@ public class RelluEssentials extends JavaPlugin {
           new EventWrapper(new BlockPlace()),
           new EventWrapper(new BetterMobs()),
           new EventWrapper(new BetterSoil()),
+          new EventWrapper(new NpcChunkLoadListener()),
           new EventWrapper(new DamgeNpc()),
           new EventWrapper(new DamgeTraderNpc()),
           new EventWrapper(new InteractNpc()),
@@ -455,9 +457,12 @@ public class RelluEssentials extends JavaPlugin {
     new ScoreBoardManager().enable();
 
     dm.afterWorldLoaded();
-
-    Bukkit.getScheduler().runTaskLater(this, () -> this.npcService.loadAndRespawnAllNPCs(1), 20L);
-
+    new BukkitRunnable() {
+      @Override
+      public void run() {
+        RelluEssentials.getInstance().getNpcService().loadAndSpawnNpcsInLoadedChunks();
+      }
+    }.runTaskLater(RelluEssentials.getInstance(), 20L);
   }
 
   @Override

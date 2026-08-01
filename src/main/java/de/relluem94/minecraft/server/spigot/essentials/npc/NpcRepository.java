@@ -4,7 +4,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.NpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcEntry;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
