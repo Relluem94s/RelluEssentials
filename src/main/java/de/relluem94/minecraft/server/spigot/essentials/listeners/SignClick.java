@@ -48,7 +48,7 @@ public class SignClick implements Listener {
     }
 
     Block clickedBlock = e.getClickedBlock();
-    if (clickedBlock == null || !SignHelper.isBlockASign(clickedBlock)) {
+    if (clickedBlock == null || !SignHelper.isBlockSign(clickedBlock)) {
       return;
     }
 
@@ -100,7 +100,7 @@ public class SignClick implements Listener {
 
     for (int y = signLocation.getBlockY(); y <= maxHeight; y++) {
       Block candidateBlock = signLocation.add(0, 1, 0).getBlock();
-      if (!SignHelper.isBlockASign(candidateBlock)) {
+      if (!SignHelper.isBlockSign(candidateBlock)) {
         continue;
       }
 
@@ -135,7 +135,7 @@ public class SignClick implements Listener {
 
     for (int y = signLocation.getBlockY(); y >= minHeight; y--) {
       Block candidateBlock = signLocation.add(0, -1, 0).getBlock();
-      if (!SignHelper.isBlockASign(candidateBlock)) {
+      if (!SignHelper.isBlockSign(candidateBlock)) {
         continue;
       }
 

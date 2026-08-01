@@ -28,7 +28,7 @@ public class SignEdit implements Listener {
         .equals(EquipmentSlot.HAND) && !e.getPlayer().isSneaking() && (
         e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK)) {
       Block b = e.getClickedBlock();
-      if (b != null && SignHelper.isBlockASign(b)) {
+      if (b != null && SignHelper.isBlockSign(b)) {
         Sign sign = (Sign) e.getClickedBlock().getState();
         if (pe.getPlayerState().equals(PlayerState.SIGN_EDIT)) {
           e.getPlayer().openSign(sign);
