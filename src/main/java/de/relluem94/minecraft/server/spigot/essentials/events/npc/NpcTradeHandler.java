@@ -2,19 +2,23 @@ package de.relluem94.minecraft.server.spigot.essentials.events.npc;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -30,14 +34,24 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class NpcTradeHandler {
 
+  private ItemHelper resolveDisabledItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow();
+  }
+
+  private ItemHelper resolveCloseItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+        .orElseThrow();
+  }
+
   public void handle(ItemStack clickedItem, Inventory clickedInventory, Player player,
       PlayerEntry playerEntry, int slot, boolean isRightClick) {
-    if (CustomItems.npc_gui_close.equalsExact(clickedItem)) {
+    if (resolveCloseItem().equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
       return;
     }
 
-    if (CustomItems.npc_gui_disabled.equalsExact(clickedItem)) {
+    if (resolveDisabledItem().equalsExact(clickedItem)) {
       player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1f, 1f);
       return;
     }
@@ -112,16 +126,16 @@ public class NpcTradeHandler {
   private void handleItemTrade(@NonNull ItemStack clickedItem, Inventory clickedInventory,
       Player player, PlayerEntry playerEntry, int slot, boolean isRightClick) {
     ItemMeta itemMeta = clickedItem.getItemMeta();
-      if (itemMeta == null) {
-          return;
-      }
+    if (itemMeta == null) {
+      return;
+    }
 
     Integer buyPrice = resolveBuyPrice(clickedItem, itemMeta);
     Integer sellPrice = resolveSellPrice(clickedItem, itemMeta);
 
-      if (buyPrice == null || sellPrice == null) {
-          return;
-      }
+    if (buyPrice == null || sellPrice == null) {
+      return;
+    }
 
     String itemDisplayName = clickedItem.getType().name().toLowerCase().replace('_', ' ');
     int amount = clickedItem.getAmount();
@@ -223,9 +237,9 @@ public class NpcTradeHandler {
       amount = item.getAmount();
       totalEarnings = sellPrice * (double) amount;
       ItemStack slotItem = player.getInventory().getItem(slot);
-        if (slotItem == null) {
-            return;
-        }
+      if (slotItem == null) {
+        return;
+      }
       slotItem.setAmount(0);
     }
 

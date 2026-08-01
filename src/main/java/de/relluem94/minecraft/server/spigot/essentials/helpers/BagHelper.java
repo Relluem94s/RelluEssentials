@@ -4,19 +4,21 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.la
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_COMMAND_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_INTERNAL_UTILITY_CLASS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.events.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,6 +47,12 @@ public class BagHelper {
     throw new IllegalStateException(PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
+  private static ItemStack resolveDisabledItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow()
+        .getCustomItem();
+  }
+
   public static @Nullable Inventory getBag(int type, @NotNull PlayerEntry pe) {
     BagEntry be = getBag(pe.getId(), type);
 
@@ -54,7 +62,7 @@ public class BagHelper {
 
     Inventory inv = InventoryHelper.createInventory(54,
         PLUGIN_FORMS_COMMAND_PREFIX + be.getBagType().getDisplayName());
-    InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
+    InventoryHelper.fillInventory(inv, resolveDisabledItem());
 
     inv.setItem(10, getItemStack(be, 0));
     inv.setItem(11, getItemStack(be, 1));
@@ -93,8 +101,10 @@ public class BagHelper {
 
   public static Inventory getBags(boolean npc, String title) {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title),
-        CustomItems.npc_gui_disabled.getCustomItem());
-    ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance().getBagRegistry()
+        resolveDisabledItem());
+
+    ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
+        .getBagRegistry()
         .getBagTypeEntryList().listIterator();
 
     int slot = 0;
@@ -110,8 +120,9 @@ public class BagHelper {
   public static Inventory getBags(PlayerEntry pe) {
     String MAIN_GUI = languageHelper.get(MessageKey.PLUGIN_BAG_GUI_TITLE);
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI),
-        CustomItems.npc_gui_disabled.getCustomItem());
-    ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance().getBagRegistry()
+        resolveDisabledItem());
+    ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
+        .getBagRegistry()
         .getBagTypeEntryList().listIterator();
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
@@ -153,7 +164,7 @@ public class BagHelper {
     String name = bte.getSlotName(slot);
 
     if (name == null) {
-      return CustomItems.npc_gui_disabled.getCustomItem();
+      return resolveDisabledItem();
     }
 
     Material mat = Material.matchMaterial(name);
@@ -170,7 +181,7 @@ public class BagHelper {
     int value = be.getSlotValue(slot);
 
     if (name == null) {
-      return CustomItems.npc_gui_disabled.getCustomItem();
+      return resolveDisabledItem();
     }
 
     Material mat = Material.matchMaterial(name);
@@ -180,7 +191,7 @@ public class BagHelper {
     }
 
     if (Material.AIR.equals(mat)) {
-      return CustomItems.npc_gui_disabled.getCustomItem();
+      return resolveDisabledItem();
     }
 
     ItemStack is = new ItemStack(mat, 1);
@@ -236,7 +247,8 @@ public class BagHelper {
   }
 
   public static boolean hasBags(int playerFK) {
-    return RelluEssentials.getInstance().getPlayerRegistry().getPlayerBagMap().containsKey(playerFK);
+    return RelluEssentials.getInstance().getPlayerRegistry().getPlayerBagMap()
+        .containsKey(playerFK);
   }
 
 
@@ -367,7 +379,8 @@ public class BagHelper {
 
   public static void saveBags() {
     int updatedBags = 0;
-    for (BagEntry be : RelluEssentials.getInstance().getPlayerRegistry().getPlayerBagMap().values()) {
+    for (BagEntry be : RelluEssentials.getInstance().getPlayerRegistry().getPlayerBagMap()
+        .values()) {
       if (be == null) {
         continue;
       }

@@ -1,12 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
@@ -20,7 +20,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +50,9 @@ public class Worlds implements CommandConstruct {
     org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
         InventoryHelper.createInventory(18,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds"),
-        CustomItems.npc_gui_disabled.getCustomItem()
+        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+            .orElseThrow()
+            .getCustomItem()
     );
 
     for (int i = 0; i < Bukkit.getWorlds().size(); i++) {

@@ -2,13 +2,16 @@ package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.npc.BankerGui;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.List;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
@@ -19,24 +22,35 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     super("§dBanker", Profession.NONE, Type.BANKER);
   }
 
+  private ItemHelper resolveDisabledItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow();
+  }
+
+  private ItemHelper resolveCloseItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+        .orElseThrow();
+  }
+
   @Override
   public Inventory getMainGUI() {
-    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
-        CustomItems.npc_gui_disabled.getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(
+        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
 
     inv.setItem(10, BankerHelper.npc_gui_deposit.getCustomItem());
     inv.setItem(12, BankerHelper.npc_gui_withdraw.getCustomItem());
     inv.setItem(14, BankerHelper.npc_gui_balance.getCustomItem());
     inv.setItem(16, BankerHelper.npc_gui_upgrade.getCustomItem());
-    inv.setItem(26, CustomItems.npc_gui_close.getCustomItem());
+    inv.setItem(26, resolveCloseItem().getCustomItem());
 
     return inv;
   }
 
   @Override
   public Inventory getDepositGUI(double total) {
-    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
-        CustomItems.npc_gui_disabled.getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(
+        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
+
     long amount5 = Math.round(total * 0.05);
     long amount20 = Math.round(total * 0.20);
     long amount50 = Math.round(total * 0.50);
@@ -56,15 +70,15 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     inv.setItem(16, BankerHelper.addLoreLine(BankerHelper.npc_gui_deposit_all.getCustomItem(),
         languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amountAll,
             PLUGIN_NAME_MONEY)));
-    inv.setItem(26, CustomItems.npc_gui_close.getCustomItem());
+    inv.setItem(26, resolveCloseItem().getCustomItem());
 
     return inv;
   }
 
   @Override
   public Inventory getWithdrawGUI(double total) {
-    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
-        CustomItems.npc_gui_disabled.getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(
+        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
 
     long amount5 = Math.round(total * 0.05);
     long amount20 = Math.round(total * 0.20);
@@ -86,27 +100,27 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     inv.setItem(16, BankerHelper.addLoreLine(BankerHelper.npc_gui_withdraw_all.getCustomItem(),
         languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amountAll,
             PLUGIN_NAME_MONEY)));
-    inv.setItem(26, CustomItems.npc_gui_close.getCustomItem());
+    inv.setItem(26, resolveCloseItem().getCustomItem());
 
     return inv;
   }
 
   @Override
   public Inventory getBalanceGUI() {
-    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
-        CustomItems.npc_gui_disabled.getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(
+        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
 
     inv.setItem(10, BankerHelper.npc_gui_balance_total.getCustomItem());
     inv.setItem(12, BankerHelper.npc_gui_balance_transactions.getCustomItem());
-    inv.setItem(26, CustomItems.npc_gui_close.getCustomItem());
+    inv.setItem(26, resolveCloseItem().getCustomItem());
 
     return inv;
   }
 
   @Override
   public Inventory getUpgradeGUI() {
-    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
-        CustomItems.npc_gui_disabled.getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(
+        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
 
     int slot = 0;
     List<ItemHelper> bankTiersItems = BankerHelper.getBankTiers();
@@ -121,7 +135,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
       slot++;
     }
 
-    inv.setItem(26, CustomItems.npc_gui_close.getCustomItem());
+    inv.setItem(26, resolveCloseItem().getCustomItem());
 
     return inv;
   }

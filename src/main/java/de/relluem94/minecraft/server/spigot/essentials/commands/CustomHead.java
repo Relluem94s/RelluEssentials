@@ -1,10 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper.getCustomSkull;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -12,7 +12,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -47,7 +49,7 @@ public class CustomHead implements CommandConstruct {
 
     org.bukkit.inventory.Inventory inv = InventoryHelper.createInventory(54,
         languageHelper.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE));
-    InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
+    InventoryHelper.fillInventory(inv, ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow().getCustomItem());
 
     inv.setItem(10, getCustomSkull(CustomHeads.BOOK1));
     inv.setItem(11, getCustomSkull(CustomHeads.BOOKS1));
