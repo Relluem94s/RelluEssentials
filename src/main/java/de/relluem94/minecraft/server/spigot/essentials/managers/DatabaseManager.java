@@ -140,10 +140,9 @@ public class DatabaseManager implements Enable {
 
     RelluEssentials.getInstance().groupEntryList.addAll(databaseHelper.getGroups());
 
-    for (int i = 0; i < RelluEssentials.getInstance().getBagRegistry().getBagTypeEntryList().size();
-        i++) {
+    for (int i = 0; i < RelluEssentials.getInstance().getBagRegistry().getAllEntries().size(); i++) {
       ItemStack[] isa = BagHelper.getItemStacks(
-          RelluEssentials.getInstance().getBagRegistry().getBagTypeEntryList().get(i));
+          RelluEssentials.getInstance().getBagRegistry().getAllEntries().get(i));
       Collections.addAll(RelluEssentials.getInstance().bagBlocks2collect, isa);
     }
   }

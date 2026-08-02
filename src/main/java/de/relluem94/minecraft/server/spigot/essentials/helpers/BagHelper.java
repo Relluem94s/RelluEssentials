@@ -105,7 +105,7 @@ public class BagHelper {
 
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
         .getBagRegistry()
-        .getBagTypeEntryList().listIterator();
+        .getAllEntries().listIterator();
 
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
@@ -123,7 +123,7 @@ public class BagHelper {
         resolveDisabledItem());
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
         .getBagRegistry()
-        .getBagTypeEntryList().listIterator();
+        .getAllEntries().listIterator();
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
       slot = InventoryHelper.getNextSlot(slot);
@@ -266,13 +266,13 @@ public class BagHelper {
   }
 
   public static @Nullable BagTypeEntry getBagTypeByName(String name) {
-    for (BagTypeEntry bte : RelluEssentials.getInstance().getBagRegistry().getBagTypeEntryList()) {
-      if (name.contains(bte.getDisplayName()) || name.contains(bte.getName().toLowerCase())
-          || bte.getDisplayName().contains(name) || bte.getName().toLowerCase().contains(name)) {
-        return bte;
-      }
-    }
-    return null;
+    return RelluEssentials.getInstance().getBagRegistry().getAllEntries().stream()
+        .filter(bte -> name.contains(bte.getDisplayName())
+            || name.contains(bte.getName().toLowerCase())
+            || bte.getDisplayName().contains(name)
+            || bte.getName().toLowerCase().contains(name))
+        .findFirst()
+        .orElse(null);
   }
 
   public static Collection<BagEntry> getBags(int playerFK) {
@@ -285,13 +285,9 @@ public class BagHelper {
     return cbe;
   }
 
+
   public static @Nullable BagTypeEntry getBagTypeById(int id) {
-    for (BagTypeEntry bte : RelluEssentials.getInstance().getBagRegistry().getBagTypeEntryList()) {
-      if (bte.getId() == id) {
-        return bte;
-      }
-    }
-    return null;
+    return RelluEssentials.getInstance().getBagRegistry().findById(id).orElse(null);
   }
 
 
