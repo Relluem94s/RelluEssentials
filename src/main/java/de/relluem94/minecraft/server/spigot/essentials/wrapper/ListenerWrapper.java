@@ -6,12 +6,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-public class EventWrapper {
+public class ListenerWrapper {
 
   private final ListenerConstruct construct;
   private boolean initialised = false;
 
-  public EventWrapper(@NotNull ListenerConstruct listenerConstruct) {
+  public ListenerWrapper(@NotNull ListenerConstruct listenerConstruct) {
     this.construct = listenerConstruct;
   }
 

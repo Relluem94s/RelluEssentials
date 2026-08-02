@@ -58,7 +58,7 @@ import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.EntityB
 import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.EntityExplodeProtect;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.InventoryMoveItemProtect;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.PlayerInteractProtect;
-import de.relluem94.minecraft.server.spigot.essentials.wrapper.EventWrapper;
+import de.relluem94.minecraft.server.spigot.essentials.wrapper.ListenerWrapper;
 import java.util.List;
 
 public class EventManager implements Enable {
@@ -68,67 +68,67 @@ public class EventManager implements Enable {
     ServiceContext serviceContext = new ServiceContext(plugin);
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
-    eventWrapperList
-        .forEach(eventWrapper -> eventWrapper.init(plugin, serviceContext));
+    listenerWrapperList
+        .forEach(listenerWrapper -> listenerWrapper.init(plugin, serviceContext));
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED,
-            eventWrapperList.size()));
+            listenerWrapperList.size()));
 
 
   }
 
 
-  private final List<EventWrapper> eventWrapperList = List.of(
-      new EventWrapper(new BetterChatFormat()),
-      new EventWrapper(new BetterWorlds()),
-      new EventWrapper(new BetterPlayerJoin()),
-      new EventWrapper(new BetterPlayerQuit()),
-      new EventWrapper(new BetterBlockDrop()),
-      new EventWrapper(new BetterLights()),
-      new EventWrapper(new BlockBreakBags()),
-      new EventWrapper(new BlockDropItemBags()),
-      new EventWrapper(new InventoryClickBags()),
-      new EventWrapper(new EntityPickupItemBags()),
-      new EventWrapper(new BlockPlace()),
-      new EventWrapper(new BetterMobs()),
-      new EventWrapper(new BetterSoil()),
-      new EventWrapper(new NpcChunkLoadListener()),
-      new EventWrapper(new DamgeNpc()),
-      new EventWrapper(new DamgeTraderNpc()),
-      new EventWrapper(new InteractNpc()),
-      new EventWrapper(new InteractTraderNpc()),
-      new EventWrapper(new InventoryClickNpc()),
-      new EventWrapper(new PlaceNpc()),
-      new EventWrapper(new BetterSafety()),
-      new EventWrapper(new BlockPistonProtect()),
-      new EventWrapper(new EntityBreakDoorProtect()),
-      new EventWrapper(new InventoryMoveItemProtect()),
-      new EventWrapper(new EntityExplodeProtect()),
-      new EventWrapper(new BlockRedstoneProtect()),
-      new EventWrapper(new BlockModifyProtect()),
-      new EventWrapper(new PlayerInteractProtect()),
-      new EventWrapper(new OpenWorldSelectorEvent()),
-      new EventWrapper(new BetterLock()),
-      new EventWrapper(new SkullInfo()),
-      new EventWrapper(new NoDeathMessage()),
-      new EventWrapper(new PlayerMove()),
-      new EventWrapper(new MOTD()),
-      new EventWrapper(new CloudSailor()),
-      new EventWrapper(new CreateSignActions()),
-      new EventWrapper(new SignEdit()),
-      new EventWrapper(new ToolCrafting()),
-      new EventWrapper(new CustomEnchantment()),
-      new EventWrapper(new GrapplingHockEvent()),
-      new EventWrapper(new PositionAxeListener()),
-      new EventWrapper(new PreventCoinManipulation()),
-      new EventWrapper(new IntegrationListener()),
-      new EventWrapper(new SignInteractListener(RelluEssentials.getInstance())),
-      new EventWrapper(new SignUpAction()),
-      new EventWrapper(new SignDownAction()),
-      new EventWrapper(new SignSpawnAction()),
-      new EventWrapper(new SignHomeAction()),
-      new EventWrapper(new SignTeleportAction()),
-      new EventWrapper(new SignCommandAction())
+  private final List<ListenerWrapper> listenerWrapperList = List.of(
+      new ListenerWrapper(new BetterChatFormat()),
+      new ListenerWrapper(new BetterWorlds()),
+      new ListenerWrapper(new BetterPlayerJoin()),
+      new ListenerWrapper(new BetterPlayerQuit()),
+      new ListenerWrapper(new BetterBlockDrop()),
+      new ListenerWrapper(new BetterLights()),
+      new ListenerWrapper(new BlockBreakBags()),
+      new ListenerWrapper(new BlockDropItemBags()),
+      new ListenerWrapper(new InventoryClickBags()),
+      new ListenerWrapper(new EntityPickupItemBags()),
+      new ListenerWrapper(new BlockPlace()),
+      new ListenerWrapper(new BetterMobs()),
+      new ListenerWrapper(new BetterSoil()),
+      new ListenerWrapper(new NpcChunkLoadListener()),
+      new ListenerWrapper(new DamgeNpc()),
+      new ListenerWrapper(new DamgeTraderNpc()),
+      new ListenerWrapper(new InteractNpc()),
+      new ListenerWrapper(new InteractTraderNpc()),
+      new ListenerWrapper(new InventoryClickNpc()),
+      new ListenerWrapper(new PlaceNpc()),
+      new ListenerWrapper(new BetterSafety()),
+      new ListenerWrapper(new BlockPistonProtect()),
+      new ListenerWrapper(new EntityBreakDoorProtect()),
+      new ListenerWrapper(new InventoryMoveItemProtect()),
+      new ListenerWrapper(new EntityExplodeProtect()),
+      new ListenerWrapper(new BlockRedstoneProtect()),
+      new ListenerWrapper(new BlockModifyProtect()),
+      new ListenerWrapper(new PlayerInteractProtect()),
+      new ListenerWrapper(new OpenWorldSelectorEvent()),
+      new ListenerWrapper(new BetterLock()),
+      new ListenerWrapper(new SkullInfo()),
+      new ListenerWrapper(new NoDeathMessage()),
+      new ListenerWrapper(new PlayerMove()),
+      new ListenerWrapper(new MOTD()),
+      new ListenerWrapper(new CloudSailor()),
+      new ListenerWrapper(new CreateSignActions()),
+      new ListenerWrapper(new SignEdit()),
+      new ListenerWrapper(new ToolCrafting()),
+      new ListenerWrapper(new CustomEnchantment()),
+      new ListenerWrapper(new GrapplingHockEvent()),
+      new ListenerWrapper(new PositionAxeListener()),
+      new ListenerWrapper(new PreventCoinManipulation()),
+      new ListenerWrapper(new IntegrationListener()),
+      new ListenerWrapper(new SignInteractListener(RelluEssentials.getInstance())),
+      new ListenerWrapper(new SignUpAction()),
+      new ListenerWrapper(new SignDownAction()),
+      new ListenerWrapper(new SignSpawnAction()),
+      new ListenerWrapper(new SignHomeAction()),
+      new ListenerWrapper(new SignTeleportAction()),
+      new ListenerWrapper(new SignCommandAction())
       );
 
 }

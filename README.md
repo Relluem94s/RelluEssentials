@@ -121,7 +121,7 @@ What does the plugin include?
     * Salvage (Salvage Tools and Armor and get back resources and enchantments) [needs some love]
 
 
-## Events
+## Listener
 * Better Chat Format (Player >> Message)
     * Color Codes for VIP and higher
     * Chat Channels Vip, Mod, Admin | #v, #m, #a
