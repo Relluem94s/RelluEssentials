@@ -22,16 +22,16 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.admin.NpcUpdateC
 import de.relluem94.minecraft.server.spigot.essentials.commands.admin.PingCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.admin.PluginInfoCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.admin.TopCommand;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcDialogueEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +46,13 @@ import org.jetbrains.annotations.Nullable;
 
 @CommandName("admin")
 public class Admin implements CommandConstruct {
+
+  private GroupService groupService;
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+  }
 
   private final SubCommandRegistry<SubCommand> subCommandRegistry;
 
@@ -80,7 +87,7 @@ public class Admin implements CommandConstruct {
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
     if (!isPlayer(commandSender)) {
@@ -260,7 +267,7 @@ public class Admin implements CommandConstruct {
       return true;
     }
     Player p = (Player) sender;
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(p, "mod")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }

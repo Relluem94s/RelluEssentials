@@ -5,17 +5,18 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.rellulib.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,14 @@ import org.jetbrains.annotations.Nullable;
 
 @CommandName("sudo")
 public class Sudo implements CommandConstruct {
+
+  private GroupService groupService;
+  private CommandManager commandManager;
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+  }
 
   public static void exitSudo(@NotNull Player p) {
     PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
@@ -52,7 +61,7 @@ public class Sudo implements CommandConstruct {
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
-    if (!PermissionHelper.isAuthorized(sender, GroupRegistry.getGroup("admin").getId())) {
+    if (!groupService.isSenderAuthorized(sender, "admin")) {
       sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -133,7 +142,7 @@ public class Sudo implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("admin").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "admin")) {
       return tabList;
     }
 
@@ -142,7 +151,7 @@ public class Sudo implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getPluginCommands());
+      tabList.addAll(TabCompleterHelper.getPluginCommands(commandManager.getCommandWrapperList()));
       tabList.addAll(TabCompleterHelper.getOnlinePlayers());
       return tabList;
     }

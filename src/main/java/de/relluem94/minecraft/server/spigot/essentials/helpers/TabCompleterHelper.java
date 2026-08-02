@@ -97,18 +97,18 @@ public class TabCompleterHelper {
     return homes;
   }
 
-  public static @NotNull List<String> getGroups() {
+  public static @NotNull List<String> getGroups(List<GroupEntry> groupEntryList) {
     List<String> groups = new ArrayList<>();
 
-    for (GroupEntry ge : RelluEssentials.getInstance().groupEntryList) {
+    for (GroupEntry ge : groupEntryList) {
       groups.add(ge.getName());
     }
 
     return groups;
   }
 
-  public static List<String> getPluginCommands() {
-    return RelluEssentials.getCommandWrapperList().stream()
+  public static List<String> getPluginCommands(List<CommandWrapper> commandList) {
+    return commandList.stream()
         .map(CommandWrapper::getCommandName)
         .collect(Collectors.toList());
   }

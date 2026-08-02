@@ -7,17 +7,19 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -30,20 +32,29 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("setGroup")
 public class PermissionsGroup implements CommandConstruct {
 
-  private static @Nullable GroupEntry checkGroupExists(String groupName, Player p) {
-    GroupEntry g = GroupRegistry.getGroup(groupName);
+  private GroupService groupService;
+  private GroupRegistry groupRegistry;
 
-    if (!GroupRegistry.groupExists(groupName)) {
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+    this.groupRegistry = context.getGroupRegistry();
+  }
+
+  private static @Nullable GroupEntry checkGroupExists(GroupService groupService, GroupRegistry groupRegistry, String groupName, Player p) {
+    Optional<GroupEntry> groupEntry = groupRegistry.findByName(groupName);
+    if (!groupEntry.isPresent()) {
       p.sendMessage(
           languageHelper.getWithPrefix(MessageKey.COMMAND_SETGROUP_GROUP_NOT_FOUND, groupName));
       return null;
     }
 
-    if (!PermissionHelper.isAuthorized(p, Objects.requireNonNull(GroupRegistry.getGroup("mod")).getId())) {
+    if (!groupService.isSenderAuthorized(p, "mod")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return null;
     }
-    return g;
+    return groupEntry.get();
   }
 
   private static void setGroupForTarget(@NotNull CommandSender s, @NotNull GroupEntry g,
@@ -90,11 +101,11 @@ public class PermissionsGroup implements CommandConstruct {
 
     if (isPlayer(sender)) {
       Player p = (Player) sender;
-      GroupEntry g = checkGroupExists(args[1], p);
+      GroupEntry g = checkGroupExists(groupService, groupRegistry, args[1], p);
       setGroupForTarget(p, Objects.requireNonNull(g), target);
       return true;
     } else if (isCMDBlock(sender) || isConsole(sender)) {
-      GroupEntry g = GroupRegistry.getGroup(args[1]);
+      GroupEntry g = groupService.resolveGroupWithFallback(args[1]);
       setGroupForTarget(sender, Objects.requireNonNull(g), target);
       return true;
     }
@@ -109,7 +120,7 @@ public class PermissionsGroup implements CommandConstruct {
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
     }
 
@@ -121,6 +132,6 @@ public class PermissionsGroup implements CommandConstruct {
       return TabCompleterHelper.getOnlinePlayers();
     }
 
-    return TabCompleterHelper.getGroups();
+    return TabCompleterHelper.getGroups(groupRegistry.getAll());
   }
 }

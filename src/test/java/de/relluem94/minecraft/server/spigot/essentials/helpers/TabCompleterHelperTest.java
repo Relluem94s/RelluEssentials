@@ -36,177 +36,174 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class TabCompleterHelperTest {
 
-    @Mock
-    private RelluEssentials relluEssentials;
+  @Mock
+  private RelluEssentials relluEssentials;
 
-    @Mock
-    private PlayerRegistry playerRegistry;
+  @Mock
+  private PlayerRegistry playerRegistry;
 
-    @Mock
-    private WarpRepository warpRepository;
+  @Mock
+  private WarpRepository warpRepository;
 
-    @Mock
-    private Player player;
+  @Mock
+  private Player player;
 
-    @Mock
-    private World world;
+  @Mock
+  private World world;
 
-    @BeforeEach
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
-        Field instanceField = RelluEssentials.class.getDeclaredField("instance");
-        instanceField.setAccessible(true);
-        instanceField.set(null, relluEssentials);
+  @BeforeEach
+  void setUp() throws NoSuchFieldException, IllegalAccessException {
+    Field instanceField = RelluEssentials.class.getDeclaredField("instance");
+    instanceField.setAccessible(true);
+    instanceField.set(null, relluEssentials);
 
-        Field groupListField = RelluEssentials.class.getDeclaredField("groupEntryList");
-        groupListField.setAccessible(true);
-        groupListField.set(relluEssentials, new ArrayList<>());
+    Field groupListField = RelluEssentials.class.getDeclaredField("groupEntryList");
+    groupListField.setAccessible(true);
+    groupListField.set(relluEssentials, new ArrayList<>());
+  }
+
+  @Test
+  void constructorThrowsIllegalStateException() throws NoSuchMethodException {
+    Constructor<TabCompleterHelper> constructor = TabCompleterHelper.class.getDeclaredConstructor();
+    constructor.setAccessible(true);
+
+    InvocationTargetException thrownException = assertThrows(
+        InvocationTargetException.class,
+        constructor::newInstance
+    );
+
+    assertInstanceOf(IllegalStateException.class, thrownException.getCause());
+  }
+
+  @Test
+  void getOnlinePlayersReturnsEmptyListWhenNoPlayersOnline() {
+    try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(new ArrayList<>());
+
+      List<String> result = TabCompleterHelper.getOnlinePlayers();
+
+      assertTrue(result.isEmpty());
     }
+  }
 
-    @Test
-    void constructorThrowsIllegalStateException() throws NoSuchMethodException {
-        Constructor<TabCompleterHelper> constructor = TabCompleterHelper.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
+  @Test
+  void getOnlinePlayersReturnsPlayerNames() {
+    Player firstPlayer = mock(Player.class);
+    Player secondPlayer = mock(Player.class);
+    when(firstPlayer.getName()).thenReturn("PlayerOne");
+    when(secondPlayer.getName()).thenReturn("PlayerTwo");
 
-        InvocationTargetException thrownException = assertThrows(
-                InvocationTargetException.class,
-                constructor::newInstance
-        );
+    try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(List.of(firstPlayer, secondPlayer));
 
-        assertInstanceOf(IllegalStateException.class, thrownException.getCause());
+      List<String> result = TabCompleterHelper.getOnlinePlayers();
+
+      assertEquals(2, result.size());
+      assertTrue(result.contains("PlayerOne"));
+      assertTrue(result.contains("PlayerTwo"));
     }
+  }
 
-    @Test
-    void getOnlinePlayersReturnsEmptyListWhenNoPlayersOnline() {
-        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
-            bukkit.when(Bukkit::getOnlinePlayers).thenReturn(new ArrayList<>());
+  @Test
+  void getProtectionFlagsReturnsAllFlags() {
+    List<String> result = TabCompleterHelper.getProtectionFlags();
 
-            List<String> result = TabCompleterHelper.getOnlinePlayers();
-
-            assertTrue(result.isEmpty());
-        }
+    assertEquals(ProtectionFlags.values().length, result.size());
+    for (ProtectionFlags flag : ProtectionFlags.values()) {
+      assertTrue(result.contains(flag.toString()));
     }
+  }
 
-    @Test
-    void getOnlinePlayersReturnsPlayerNames() {
-        Player firstPlayer = mock(Player.class);
-        Player secondPlayer = mock(Player.class);
-        when(firstPlayer.getName()).thenReturn("PlayerOne");
-        when(secondPlayer.getName()).thenReturn("PlayerTwo");
+  @Test
+  void getCommandsReturnsEmptyListWhenNoCommandsGiven() {
+    List<String> result = TabCompleterHelper.getCommands(new CommandsEnum[]{});
 
-        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
-            bukkit.when(Bukkit::getOnlinePlayers).thenReturn(List.of(firstPlayer, secondPlayer));
+    assertTrue(result.isEmpty());
+  }
 
-            List<String> result = TabCompleterHelper.getOnlinePlayers();
+  @Test
+  void getCommandsReturnsCommandNames() {
+    CommandsEnum firstCommand = mock(CommandsEnum.class);
+    CommandsEnum secondCommand = mock(CommandsEnum.class);
+    when(firstCommand.getName()).thenReturn("fly");
+    when(secondCommand.getName()).thenReturn("home");
 
-            assertEquals(2, result.size());
-            assertTrue(result.contains("PlayerOne"));
-            assertTrue(result.contains("PlayerTwo"));
-        }
+    List<String> result = TabCompleterHelper.getCommands(
+        new CommandsEnum[]{firstCommand, secondCommand});
+
+    assertEquals(2, result.size());
+    assertTrue(result.contains("fly"));
+    assertTrue(result.contains("home"));
+  }
+
+  @Test
+  void getWorldsReturnsEmptyListWhenNoWorldsExist() {
+    try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+      bukkit.when(Bukkit::getWorlds).thenReturn(new ArrayList<>());
+
+      List<String> result = TabCompleterHelper.getWorlds();
+
+      assertTrue(result.isEmpty());
     }
+  }
 
-    @Test
-    void getProtectionFlagsReturnsAllFlags() {
-        List<String> result = TabCompleterHelper.getProtectionFlags();
+  @Test
+  void getWorldsReturnsWorldNames() {
+    World firstWorld = mock(World.class);
+    World secondWorld = mock(World.class);
+    when(firstWorld.getName()).thenReturn("world");
+    when(secondWorld.getName()).thenReturn("world_nether");
 
-        assertEquals(ProtectionFlags.values().length, result.size());
-        for (ProtectionFlags flag : ProtectionFlags.values()) {
-            assertTrue(result.contains(flag.toString()));
-        }
+    try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+      bukkit.when(Bukkit::getWorlds).thenReturn(List.of(firstWorld, secondWorld));
+
+      List<String> result = TabCompleterHelper.getWorlds();
+
+      assertEquals(2, result.size());
+      assertTrue(result.contains("world"));
+      assertTrue(result.contains("world_nether"));
     }
+  }
 
-    @Test
-    void getCommandsReturnsEmptyListWhenNoCommandsGiven() {
-        List<String> result = TabCompleterHelper.getCommands(new CommandsEnum[]{});
+  @Test
+  void getHomesReturnsEmptyListWhenPlayerHasNoHomesOrDeaths() {
+    PlayerEntry playerEntry = new PlayerEntry();
+    playerEntry.setHomes(new ArrayList<>());
+    playerEntry.setDeaths(new ArrayList<>());
 
-        assertTrue(result.isEmpty());
-    }
+    when(relluEssentials.getPlayerRegistry()).thenReturn(playerRegistry);
+    when(playerRegistry.getPlayerEntry(player)).thenReturn(playerEntry);
 
-    @Test
-    void getCommandsReturnsCommandNames() {
-        CommandsEnum firstCommand = mock(CommandsEnum.class);
-        CommandsEnum secondCommand = mock(CommandsEnum.class);
-        when(firstCommand.getName()).thenReturn("fly");
-        when(secondCommand.getName()).thenReturn("home");
+    List<String> result = TabCompleterHelper.getHomes(player);
 
-        List<String> result = TabCompleterHelper.getCommands(new CommandsEnum[]{firstCommand, secondCommand});
+    assertTrue(result.isEmpty());
+  }
 
-        assertEquals(2, result.size());
-        assertTrue(result.contains("fly"));
-        assertTrue(result.contains("home"));
-    }
+  @Test
+  void getHomesReturnsHomeAndDeathLocationNames() {
+    LocationEntry homeEntry = new LocationEntry();
+    homeEntry.setLocationName("myHome");
 
-    @Test
-    void getWorldsReturnsEmptyListWhenNoWorldsExist() {
-        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
-            bukkit.when(Bukkit::getWorlds).thenReturn(new ArrayList<>());
+    LocationEntry deathEntry = new LocationEntry();
+    deathEntry.setLocationName("death_1");
 
-            List<String> result = TabCompleterHelper.getWorlds();
+    PlayerEntry playerEntry = new PlayerEntry();
+    playerEntry.setHomes(List.of(homeEntry));
+    playerEntry.setDeaths(List.of(deathEntry));
 
-            assertTrue(result.isEmpty());
-        }
-    }
+    when(relluEssentials.getPlayerRegistry()).thenReturn(playerRegistry);
+    when(playerRegistry.getPlayerEntry(player)).thenReturn(playerEntry);
 
-    @Test
-    void getWorldsReturnsWorldNames() {
-        World firstWorld = mock(World.class);
-        World secondWorld = mock(World.class);
-        when(firstWorld.getName()).thenReturn("world");
-        when(secondWorld.getName()).thenReturn("world_nether");
+    List<String> result = TabCompleterHelper.getHomes(player);
 
-        try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
-            bukkit.when(Bukkit::getWorlds).thenReturn(List.of(firstWorld, secondWorld));
-
-            List<String> result = TabCompleterHelper.getWorlds();
-
-            assertEquals(2, result.size());
-            assertTrue(result.contains("world"));
-            assertTrue(result.contains("world_nether"));
-        }
-    }
-
-    @Test
-    void getHomesReturnsEmptyListWhenPlayerHasNoHomesOrDeaths() {
-        PlayerEntry playerEntry = new PlayerEntry();
-        playerEntry.setHomes(new ArrayList<>());
-        playerEntry.setDeaths(new ArrayList<>());
-
-        when(relluEssentials.getPlayerRegistry()).thenReturn(playerRegistry);
-        when(playerRegistry.getPlayerEntry(player)).thenReturn(playerEntry);
-
-        List<String> result = TabCompleterHelper.getHomes(player);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void getHomesReturnsHomeAndDeathLocationNames() {
-        LocationEntry homeEntry = new LocationEntry();
-        homeEntry.setLocationName("myHome");
-
-        LocationEntry deathEntry = new LocationEntry();
-        deathEntry.setLocationName("death_1");
-
-        PlayerEntry playerEntry = new PlayerEntry();
-        playerEntry.setHomes(List.of(homeEntry));
-        playerEntry.setDeaths(List.of(deathEntry));
-
-        when(relluEssentials.getPlayerRegistry()).thenReturn(playerRegistry);
-        when(playerRegistry.getPlayerEntry(player)).thenReturn(playerEntry);
-
-        List<String> result = TabCompleterHelper.getHomes(player);
-
-        assertEquals(2, result.size());
-        assertTrue(result.contains("myHome"));
-        assertTrue(result.contains("death_1"));
-    }
+    assertEquals(2, result.size());
+    assertTrue(result.contains("myHome"));
+    assertTrue(result.contains("death_1"));
+  }
 
     @Test
     void getGroupsReturnsEmptyListWhenNoGroupsExist() throws NoSuchFieldException, IllegalAccessException {
-        Field groupListField = RelluEssentials.class.getDeclaredField("groupEntryList");
-        groupListField.setAccessible(true);
-        groupListField.set(relluEssentials, new ArrayList<>());
-
-        List<String> result = TabCompleterHelper.getGroups();
+        List<String> result = TabCompleterHelper.getGroups(List.of());
 
         assertTrue(result.isEmpty());
     }
@@ -219,11 +216,7 @@ class TabCompleterHelperTest {
         GroupEntry userGroup = new GroupEntry();
         userGroup.setName("user");
 
-        Field groupListField = RelluEssentials.class.getDeclaredField("groupEntryList");
-        groupListField.setAccessible(true);
-        groupListField.set(relluEssentials, List.of(adminGroup, userGroup));
-
-        List<String> result = TabCompleterHelper.getGroups();
+        List<String> result = TabCompleterHelper.getGroups(List.of(adminGroup, userGroup));
 
         assertEquals(2, result.size());
         assertTrue(result.contains("admin"));
@@ -235,52 +228,52 @@ class TabCompleterHelperTest {
         when(relluEssentials.getWarpRepository()).thenReturn(warpRepository);
         when(warpRepository.findByWorld(world)).thenReturn(new ArrayList<>());
 
-        List<String> result = TabCompleterHelper.getWarps(world);
+    List<String> result = TabCompleterHelper.getWarps(world);
 
-        assertTrue(result.isEmpty());
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void getWarpsReturnsWarpNames() {
+    LocationEntry warpEntry = new LocationEntry();
+    warpEntry.setLocationName("spawn");
+
+    when(relluEssentials.getWarpRepository()).thenReturn(warpRepository);
+    when(warpRepository.findByWorld(world)).thenReturn(List.of(warpEntry));
+
+    List<String> result = TabCompleterHelper.getWarps(world);
+
+    assertEquals(1, result.size());
+    assertTrue(result.contains("spawn"));
+  }
+
+  @Test
+  void getWorldTypesReturnsAllWorldTypes() {
+    List<String> result = TabCompleterHelper.getWorldTypes();
+
+    assertEquals(WorldType.values().length, result.size());
+    for (WorldType worldType : WorldType.values()) {
+      assertTrue(result.contains(worldType.getName()));
     }
+  }
 
-    @Test
-    void getWarpsReturnsWarpNames() {
-        LocationEntry warpEntry = new LocationEntry();
-        warpEntry.setLocationName("spawn");
+  @Test
+  void getWorldEnvironmentTypesReturnsAllEnvironments() {
+    List<String> result = TabCompleterHelper.getWorldEnvironmentTypes();
 
-        when(relluEssentials.getWarpRepository()).thenReturn(warpRepository);
-        when(warpRepository.findByWorld(world)).thenReturn(List.of(warpEntry));
-
-        List<String> result = TabCompleterHelper.getWarps(world);
-
-        assertEquals(1, result.size());
-        assertTrue(result.contains("spawn"));
+    assertEquals(World.Environment.values().length, result.size());
+    for (World.Environment environment : World.Environment.values()) {
+      assertTrue(result.contains(environment.name()));
     }
+  }
 
-    @Test
-    void getWorldTypesReturnsAllWorldTypes() {
-        List<String> result = TabCompleterHelper.getWorldTypes();
+  @Test
+  void getWeatherTypesReturnsAllWeatherTypes() {
+    List<String> result = TabCompleterHelper.getWeatherTypes();
 
-        assertEquals(WorldType.values().length, result.size());
-        for (WorldType worldType : WorldType.values()) {
-            assertTrue(result.contains(worldType.getName()));
-        }
+    assertEquals(WeatherType.values().length, result.size());
+    for (WeatherType weatherType : WeatherType.values()) {
+      assertTrue(result.contains(weatherType.name()));
     }
-
-    @Test
-    void getWorldEnvironmentTypesReturnsAllEnvironments() {
-        List<String> result = TabCompleterHelper.getWorldEnvironmentTypes();
-
-        assertEquals(World.Environment.values().length, result.size());
-        for (World.Environment environment : World.Environment.values()) {
-            assertTrue(result.contains(environment.name()));
-        }
-    }
-
-    @Test
-    void getWeatherTypesReturnsAllWeatherTypes() {
-        List<String> result = TabCompleterHelper.getWeatherTypes();
-
-        assertEquals(WeatherType.values().length, result.size());
-        for (WeatherType weatherType : WeatherType.values()) {
-            assertTrue(result.contains(weatherType.name()));
-        }
-    }
+  }
 }
