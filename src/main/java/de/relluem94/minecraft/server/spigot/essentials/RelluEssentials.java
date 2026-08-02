@@ -241,6 +241,8 @@ public class RelluEssentials extends JavaPlugin {
     configManager = new ConfigManager();
     configManager.enable(this);
 
+    enchantmentManager = new EnchantmentManager();
+    enchantmentManager.enable(this);
     itemManager = new ItemManager();
     itemManager.enable(this);
 
@@ -273,8 +275,6 @@ public class RelluEssentials extends JavaPlugin {
     commandManager = new CommandManager();
     serviceContext.setCommandManager(commandManager);
     commandManager.enable(this);
-    enchantmentManager = new EnchantmentManager();
-    enchantmentManager.enable(this);
     signManager = new SignManager();
     signManager.enable(this);
     listenerManager = new ListenerManager();

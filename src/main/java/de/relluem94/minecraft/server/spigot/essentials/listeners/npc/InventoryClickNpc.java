@@ -182,7 +182,7 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (e.getCurrentItem() == null) {
       return;
     }
-    if (!resolveDisabledItem().getCustomItem().equals(e.getCurrentItem())) {
+    if (resolveDisabledItem().getCustomItem().equals(e.getCurrentItem())) {
       return;
     }
     if (e.getCurrentItem().getItemMeta() == null) {
