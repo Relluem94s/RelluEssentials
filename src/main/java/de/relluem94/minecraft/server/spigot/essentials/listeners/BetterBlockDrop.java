@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import java.util.Objects;
 import org.bukkit.Bukkit;
@@ -15,6 +16,11 @@ public class BetterBlockDrop implements ListenerConstruct {
       Material.COAL_ORE, Material.IRON_ORE, Material.COPPER_ORE, Material.DEEPSLATE_COAL_ORE,
       Material.DEEPSLATE_COPPER_ORE, Material.GOLD_ORE, Material.EMERALD_ORE,
       Material.NETHER_GOLD_ORE, Material.NETHER_QUARTZ_ORE};
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   public void runLater(Runnable r, long d) {
     Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), r, d);
