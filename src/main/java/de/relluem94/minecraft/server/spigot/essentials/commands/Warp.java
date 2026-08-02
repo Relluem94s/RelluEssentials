@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.command.Command;
@@ -24,102 +25,6 @@ import org.jetbrains.annotations.NotNull;
 
 @CommandName("warp")
 public class Warp implements CommandConstruct {
-
-  @Override
-  public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
-      @NonNull String label, String[] args) {
-
-    if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
-      return true;
-    }
-
-    Player p = (Player) sender;
-
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("user").getId())) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-      return true;
-    }
-
-    if (args.length == 0) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO));
-      for (LocationEntry le : RelluEssentials.getInstance().getWarpRegistry().getWarps(p.getWorld())) {
-        p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_LIST, le.getLocationName()));
-      }
-      return true;
-    } else if (args.length == 1) {
-      warp(args[0], p);
-      return true;
-    } else if (args.length == 2) {
-      if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("admin").getId())) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-        return true;
-      }
-
-      if (args[0].equalsIgnoreCase(Commands.ADD.getName())) {
-        addWarp(args[1], p);
-        return true;
-      } else if (args[0].equalsIgnoreCase(Commands.REMOVE.getName())) {
-        removeWarp(args[1], p);
-        return true;
-      } else {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private void addWarp(String name, Player p) {
-    LocationEntry le = RelluEssentials.getInstance().getWarpRegistry().getWarp(name);
-    if (le == null) {
-      int typeId = 3;
-      le = new LocationEntry();
-      le.setLocation(p.getLocation());
-      le.setLocationName(name);
-      le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(typeId - 1));
-      le.setPlayerId(RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p).getId());
-      RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
-      if (RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId)
-          != null) {
-        le = RelluEssentials.getInstance().getDatabaseHelper().getLocation(p.getLocation(), typeId);
-      }
-
-      RelluEssentials.getInstance().getWarpRegistry().addWarp(le);
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ADD, name));
-    }
-  }
-
-  private void removeWarp(String name, Player p) {
-    LocationEntry le = RelluEssentials.getInstance().getWarpRegistry().getWarp(name);
-    if (le != null) {
-      RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
-      RelluEssentials.getInstance().getWarpRegistry().removeWarp(le);
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, name));
-    }
-  }
-
-  private void warp(String name, @NotNull Player p) {
-    LocationEntry le = RelluEssentials.getInstance().getWarpRegistry().getWarp(name, p.getWorld());
-
-    if (le == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_NO_WARP_FOUND));
-      return;
-    }
-
-    if (le.getLocation() == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED));
-      return;
-    }
-
-    if (le.getLocation().getWorld() == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED));
-      return;
-    }
-
-    teleportWarp(p, le.getLocation());
-  }
 
   @Override
   public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command,
@@ -144,7 +49,8 @@ public class Warp implements CommandConstruct {
         tabList.addAll(TabCompleterHelper.getWarps(p.getWorld()));
         break;
       case 2:
-        if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("admin").getId())) {
+        if (!PermissionHelper.isAuthorized(commandSender,
+            GroupRegistry.getGroup("admin").getId())) {
           return tabList;
         }
         if (Commands.ADD.getName().equalsIgnoreCase(strings[1])) {
@@ -177,5 +83,109 @@ public class Warp implements CommandConstruct {
       this.name = name;
       this.subCommands = subCommands;
     }
+  }
+
+  @Override
+  public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
+      @NonNull String label, String[] args) {
+
+    if (!isPlayer(sender)) {
+      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      return true;
+    }
+
+    Player p = (Player) sender;
+
+    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("user").getId())) {
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      return true;
+    }
+
+    if (args.length == 0) {
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO));
+      for (LocationEntry le : RelluEssentials.getInstance().getWarpRepository()
+          .findByWorld(p.getWorld())) {
+        p.sendMessage(
+            languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_LIST, le.getLocationName()));
+      }
+      return true;
+    } else if (args.length == 1) {
+      warp(args[0], p);
+      return true;
+    } else if (args.length == 2) {
+      if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("admin").getId())) {
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+        return true;
+      }
+
+      if (args[0].equalsIgnoreCase(Commands.ADD.getName())) {
+        addWarp(args[1], p);
+        return true;
+      } else if (args[0].equalsIgnoreCase(Commands.REMOVE.getName())) {
+        removeWarp(args[1], p);
+        return true;
+      } else {
+        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private void addWarp(String name, Player p) {
+    Optional<LocationEntry> existing = RelluEssentials.getInstance().getWarpRepository()
+        .findByName(name);
+    if (existing.isPresent()) {
+      return;
+    }
+
+    int typeId = 3;
+    LocationEntry le = new LocationEntry();
+    le.setLocation(p.getLocation());
+    le.setLocationName(name);
+    le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(typeId - 1));
+    le.setPlayerId(RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p).getId());
+    RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
+
+    LocationEntry persisted = RelluEssentials.getInstance().getDatabaseHelper()
+        .getLocation(p.getLocation(), typeId);
+    if (persisted != null) {
+      le = persisted;
+    }
+
+    RelluEssentials.getInstance().getWarpRepository().save(le);
+    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ADD, name));
+  }
+
+  private void removeWarp(String name, Player p) {
+    RelluEssentials.getInstance().getWarpRepository().findByName(name).ifPresent(le -> {
+      RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
+      RelluEssentials.getInstance().getWarpRepository().delete(le);
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, name));
+    });
+  }
+
+  private void warp(String name, @NotNull Player p) {
+    Optional<LocationEntry> result = RelluEssentials.getInstance().getWarpRepository()
+        .findByNameAndWorld(name, p.getWorld());
+
+    if (result.isEmpty()) {
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_NO_WARP_FOUND));
+      return;
+    }
+
+    LocationEntry le = result.get();
+
+    if (le.getLocation() == null) {
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED));
+      return;
+    }
+
+    if (le.getLocation().getWorld() == null) {
+      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED));
+      return;
+    }
+
+    teleportWarp(p, le.getLocation());
   }
 }
