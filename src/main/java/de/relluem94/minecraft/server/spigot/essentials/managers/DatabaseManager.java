@@ -84,6 +84,17 @@ public class DatabaseManager implements Enable {
     plugin.setPluginInformation(pie);
     databaseHelper.init();
 
+    PlayerRegistry playerRegistry = new PlayerRegistry(databaseHelper.getBags());
+    plugin.setPlayerRegistry(playerRegistry);
+
+    GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
+    GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
+    GroupService groupService = new GroupService(groupRegistry, groupRepository, playerRegistry);
+
+    plugin.setGroupRegistry(groupRegistry);
+    plugin.setGroupService(groupService);
+    databaseHelper.setGroupService(groupService);
+
     plugin.locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
 
     for (DropEntry de : databaseHelper.getDrops()) {
@@ -95,8 +106,6 @@ public class DatabaseManager implements Enable {
       plugin.crops.put(ce.getSeed(), ce.getPlant());
     }
 
-    PlayerRegistry playerRegistry = new PlayerRegistry(databaseHelper.getBags());
-    plugin.setPlayerRegistry(playerRegistry);
     plugin
         .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
             databaseHelper.getProtections()));
@@ -142,15 +151,6 @@ public class DatabaseManager implements Enable {
                 wge.getSettings().size()));
       }
     }
-
-
-    GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
-    GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
-    GroupService groupService = new GroupService(groupRegistry, groupRepository, playerRegistry);
-
-    plugin.setGroupRegistry(groupRegistry);
-    plugin.setGroupService(groupService);
-
 
     for (int i = 0; i < plugin.getBagTypeRegistry().getAll().size(); i++) {
       ItemStack[] isa = BagHelper.getItemStacks(

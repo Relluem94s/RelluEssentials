@@ -73,7 +73,7 @@ public class DatabaseHelper {
   private final DataSource dataSource;
   private final DataSource dataSourceNoSchema;
   private final SqlResourceLoader sqlResourceLoader;
-  private final GroupService groupService;
+  private GroupService groupService;
   @Setter
   private IPatchHelper patchHelper;
 
@@ -83,6 +83,10 @@ public class DatabaseHelper {
     this.dataSourceNoSchema = dataSourceNoSchema;
     this.sqlResourceLoader = sqlResourceLoader;
     this.groupService = serviceContext.getGroupService();
+  }
+
+  public void setGroupService(GroupService groupService) {
+    this.groupService = groupService;
   }
 
   public void init() {
