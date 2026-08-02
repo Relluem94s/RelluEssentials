@@ -7,12 +7,11 @@ import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -30,10 +29,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BetterLock implements ListenerConstruct {
 
+  private GroupService groupService;
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.groupService = context.getGroupService();
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
@@ -60,8 +60,7 @@ public class BetterLock implements ListenerConstruct {
               e.getPlayer().sendMessage(
                   languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
             } else {
-              if (PermissionHelper.isAuthorized(e.getPlayer(),
-                  GroupRegistry.getGroup("mod").getId())) {
+              if (groupService.isSenderAuthorized(e.getPlayer(), "mod")) {
                 e.setCancelled(false);
                 e.getPlayer().sendMessage(languageHelper.getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
@@ -160,8 +159,7 @@ public class BetterLock implements ListenerConstruct {
               e.getPlayer().sendMessage(
                   languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
             } else {
-              if (PermissionHelper.isAuthorized(e.getPlayer(),
-                  GroupRegistry.getGroup("mod").getId())) {
+              if (groupService.isSenderAuthorized(e.getPlayer(), "mod")) {
                 e.setCancelled(false);
                 e.getPlayer().sendMessage(languageHelper.getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
