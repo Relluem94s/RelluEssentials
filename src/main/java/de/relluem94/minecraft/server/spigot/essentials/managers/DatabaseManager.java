@@ -21,30 +21,49 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.WarpRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
 import java.util.Collections;
+import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Manages database access and initializes all registries and plugin data on startup.
+ */
 public class DatabaseManager implements Enable {
 
-  private final DatabaseHelper dBH;
-
+  @Getter
+  private final DatabaseHelper databaseHelper;
+  /**
+   * Creates a new DatabaseManager and establishes a database connection.
+   *
+   * @param host     the database host
+   * @param user     the database user
+   * @param password the database password
+   * @param port     the database port
+   *
+   * @throws RuntimeException if the database connection fails
+   */
   public DatabaseManager(String host, String user, String password, int port) {
     try {
-      dBH = DatabaseHelperFactory.createForProduction(host, port, user, password,
+      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password,
           RelluEssentials.getInstance().getPlayerRegistry());
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
+  /**
+   * Creates a new DatabaseManager with an existing DatabaseHelper instance.
+   *
+   * @param databaseHelper the pre-configured database helper to use
+   */
   @SuppressWarnings("unused")
   public DatabaseManager(DatabaseHelper databaseHelper) {
-    this.dBH = databaseHelper;
+    this.databaseHelper = databaseHelper;
   }
 
   private static boolean getWorldNameBySetting(@NonNull WorldGroupEntry wge, String setting) {
@@ -57,34 +76,36 @@ public class DatabaseManager implements Enable {
 
   @Override
   public void enable() {
-    PluginInformationEntry pie = dBH.getPluginInformation();
+    PluginInformationEntry pie = databaseHelper.getPluginInformation();
     RelluEssentials.getInstance().setPluginInformation(pie);
-    dBH.init();
+    databaseHelper.init();
 
-    RelluEssentials.getInstance().locationTypeEntryList.addAll(dBH.getLocationTypes());
+    RelluEssentials.getInstance().locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
 
-    for (DropEntry de : dBH.getDrops()) {
+    for (DropEntry de : databaseHelper.getDrops()) {
       RelluEssentials.getInstance().dropMap.put(de.getMaterial(),
           new DoubleStore<>(de.getMin(), de.getMax()));
     }
 
-    for (CropEntry ce : dBH.getCrops()) {
+    for (CropEntry ce : databaseHelper.getCrops()) {
       RelluEssentials.getInstance().crops.put(ce.getSeed(), ce.getPlant());
     }
 
-    RelluEssentials.getInstance().setPlayerRegistry(new PlayerRegistry(dBH.getBags()));
+    RelluEssentials.getInstance().setPlayerRegistry(new PlayerRegistry(databaseHelper.getBags()));
     RelluEssentials.getInstance()
-        .setProtectionRegistry(new ProtectionRegistry(dBH.getProtectionLocks(), dBH.getProtections()));
+        .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
+            databaseHelper.getProtections()));
     RelluEssentials.getInstance().setTraderNpcRegistry(new TraderNpcRegistry());
-    RelluEssentials.getInstance().getTraderNpcRegistry().init(dBH.getTraderNPCs());
-    RelluEssentials.getInstance().setBagRegistry(new BagRegistry(dBH.getBagTypes()));
-    RelluEssentials.getInstance().setBankTierRegistry(new BankTierRegistry(dBH.getBankTiers()));
-    RelluEssentials.getInstance().setWarpRegistry(new WarpRegistry(dBH.getWarps()));
+    RelluEssentials.getInstance().getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
+    RelluEssentials.getInstance().setBagRegistry(new BagRegistry(databaseHelper.getBagTypes()));
+    RelluEssentials.getInstance()
+        .setBankTierRegistry(new BankTierRegistry(databaseHelper.getBankTiers()));
+    RelluEssentials.getInstance().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
 
-    RelluEssentials.settingEntriesList.addAll(dBH.getAllSettings());
+    RelluEssentials.settingEntriesList.addAll(databaseHelper.getAllSettings());
 
-    for (WorldGroupEntry wge : dBH.getWorldGroups()) {
-      for (WorldEntry we : dBH.getWorldByGroup(wge)) {
+    for (WorldGroupEntry wge : databaseHelper.getWorldGroups()) {
+      for (WorldEntry we : databaseHelper.getWorldByGroup(wge)) {
         RelluEssentials.getInstance().worldsMap.put(wge, we);
 
         if (getWorldNameBySetting(wge, "COLLECT_BAG")) {
@@ -117,7 +138,7 @@ public class DatabaseManager implements Enable {
       }
     }
 
-    RelluEssentials.getInstance().groupEntryList.addAll(dBH.getGroups());
+    RelluEssentials.getInstance().groupEntryList.addAll(databaseHelper.getGroups());
 
     for (int i = 0; i < RelluEssentials.getInstance().getBagRegistry().getBagTypeEntryList().size();
         i++) {
@@ -127,19 +148,21 @@ public class DatabaseManager implements Enable {
     }
   }
 
+  /**
+   * Initializes registries and repositories after the world has been loaded. Runs with a 1-tick
+   * delay to ensure the world is fully available.
+   */
   public void afterWorldLoaded() {
     new BukkitRunnable() {
       @Override
       public void run() {
         RelluEssentials.getInstance()
-            .setProtectionRegistry(new ProtectionRegistry(dBH.getProtectionLocks(), dBH.getProtections()));
-        RelluEssentials.getInstance().setWarpRegistry(new WarpRegistry(dBH.getWarps()));
+            .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
+                databaseHelper.getProtections()));
+        RelluEssentials.getInstance()
+            .setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
         RelluEssentials.getInstance().getPlayerService().reloadPlayerHomes();
       }
     }.runTaskLater(RelluEssentials.getInstance(), 1L);
-  }
-
-  public DatabaseHelper getDatabaseHelper() {
-    return dBH;
   }
 }

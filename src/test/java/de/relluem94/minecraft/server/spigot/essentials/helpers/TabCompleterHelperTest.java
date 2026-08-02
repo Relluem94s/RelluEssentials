@@ -15,7 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.WarpRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -43,7 +43,7 @@ class TabCompleterHelperTest {
     private PlayerRegistry playerRegistry;
 
     @Mock
-    private WarpRegistry warpRegistry;
+    private WarpRepository warpRepository;
 
     @Mock
     private Player player;
@@ -232,8 +232,8 @@ class TabCompleterHelperTest {
 
     @Test
     void getWarpsReturnsEmptyListWhenNoWarpsExistForWorld() {
-        when(relluEssentials.getWarpRegistry()).thenReturn(warpRegistry);
-        when(warpRegistry.getWarps(world)).thenReturn(new ArrayList<>());
+        when(relluEssentials.getWarpRepository()).thenReturn(warpRepository);
+        when(warpRepository.findByWorld(world)).thenReturn(new ArrayList<>());
 
         List<String> result = TabCompleterHelper.getWarps(world);
 
@@ -245,8 +245,8 @@ class TabCompleterHelperTest {
         LocationEntry warpEntry = new LocationEntry();
         warpEntry.setLocationName("spawn");
 
-        when(relluEssentials.getWarpRegistry()).thenReturn(warpRegistry);
-        when(warpRegistry.getWarps(world)).thenReturn(List.of(warpEntry));
+        when(relluEssentials.getWarpRepository()).thenReturn(warpRepository);
+        when(warpRepository.findByWorld(world)).thenReturn(List.of(warpEntry));
 
         List<String> result = TabCompleterHelper.getWarps(world);
 

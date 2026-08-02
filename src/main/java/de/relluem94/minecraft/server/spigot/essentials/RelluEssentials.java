@@ -154,8 +154,8 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.WarpRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BuyBackRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
@@ -244,7 +244,7 @@ public class RelluEssentials extends JavaPlugin {
   private BankTierRegistry bankTierRegistry;
   @Setter
   @Getter
-  private WarpRegistry warpRegistry;
+  private WarpRepository warpRepository;
   @Getter
   private BuyBackService buyBackService;
   @Getter
