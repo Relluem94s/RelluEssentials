@@ -16,11 +16,12 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformat
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupSettingEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.BagRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repository.BagTypeRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
@@ -97,7 +98,7 @@ public class DatabaseManager implements Enable {
             databaseHelper.getProtections()));
     RelluEssentials.getInstance().setTraderNpcRegistry(new TraderNpcRegistry());
     RelluEssentials.getInstance().getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
-    RelluEssentials.getInstance().setBagRegistry(new BagRegistry(databaseHelper.getBagTypes()));
+    RelluEssentials.getInstance().setBagTypeRegistry(new BagTypeRegistry(new BagTypeRepository(databaseHelper.getBagTypes())));
     RelluEssentials.getInstance()
         .setBankTierRegistry(new BankTierRegistry(databaseHelper.getBankTiers()));
     RelluEssentials.getInstance().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
@@ -140,9 +141,9 @@ public class DatabaseManager implements Enable {
 
     RelluEssentials.getInstance().groupEntryList.addAll(databaseHelper.getGroups());
 
-    for (int i = 0; i < RelluEssentials.getInstance().getBagRegistry().getAllEntries().size(); i++) {
+    for (int i = 0; i < RelluEssentials.getInstance().getBagTypeRegistry().getAll().size(); i++) {
       ItemStack[] isa = BagHelper.getItemStacks(
-          RelluEssentials.getInstance().getBagRegistry().getAllEntries().get(i));
+          RelluEssentials.getInstance().getBagTypeRegistry().getAll().get(i));
       Collections.addAll(RelluEssentials.getInstance().bagBlocks2collect, isa);
     }
   }

@@ -149,7 +149,7 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.NpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NpcValidator;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
-import de.relluem94.minecraft.server.spigot.essentials.registry.BagRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
@@ -238,7 +238,7 @@ public class RelluEssentials extends JavaPlugin {
   private TraderNpcRegistry traderNpcRegistry;
   @Setter
   @Getter
-  private BagRegistry bagRegistry;
+  private BagTypeRegistry bagTypeRegistry;
   @Setter
   @Getter
   private BankTierRegistry bankTierRegistry;

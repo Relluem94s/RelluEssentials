@@ -104,8 +104,8 @@ public class BagHelper {
         resolveDisabledItem());
 
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
-        .getBagRegistry()
-        .getAllEntries().listIterator();
+        .getBagTypeRegistry()
+        .getAll().listIterator();
 
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
@@ -122,8 +122,8 @@ public class BagHelper {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI),
         resolveDisabledItem());
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
-        .getBagRegistry()
-        .getAllEntries().listIterator();
+        .getBagTypeRegistry()
+        .getAll().listIterator();
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
       slot = InventoryHelper.getNextSlot(slot);
@@ -266,7 +266,7 @@ public class BagHelper {
   }
 
   public static @Nullable BagTypeEntry getBagTypeByName(String name) {
-    return RelluEssentials.getInstance().getBagRegistry().getAllEntries().stream()
+    return RelluEssentials.getInstance().getBagTypeRegistry().getAll().stream()
         .filter(bte -> name.contains(bte.getDisplayName())
             || name.contains(bte.getName().toLowerCase())
             || bte.getDisplayName().contains(name)
@@ -287,7 +287,7 @@ public class BagHelper {
 
 
   public static @Nullable BagTypeEntry getBagTypeById(int id) {
-    return RelluEssentials.getInstance().getBagRegistry().findById(id).orElse(null);
+    return RelluEssentials.getInstance().getBagTypeRegistry().findById(id).orElse(null);
   }
 
 
