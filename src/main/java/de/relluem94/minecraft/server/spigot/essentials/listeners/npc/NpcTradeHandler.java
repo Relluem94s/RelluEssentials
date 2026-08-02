@@ -180,7 +180,7 @@ public class NpcTradeHandler {
   }
 
   private BagTypeEntry findMatchingBagType(String displayName) {
-    return RelluEssentials.getInstance().getBagRegistry().getBagTypeEntryList().stream()
+    return RelluEssentials.getInstance().getBagRegistry().getAllEntries().stream()
         .filter(entry -> entry.getDisplayName().equals(displayName))
         .findFirst()
         .orElse(null);
