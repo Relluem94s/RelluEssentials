@@ -53,8 +53,6 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
-import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
-import de.relluem94.minecraft.server.spigot.essentials.wrapper.EventWrapper;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.io.File;
 import java.util.ArrayList;
@@ -88,8 +86,6 @@ public class RelluEssentials extends JavaPlugin {
   public static LanguageHelper languageHelper;
   private static RelluEssentials instance;
   private static BankerNpc banker;
-  private static List<CommandWrapper> commandWrapperList;
-  private static List<EventWrapper> eventWrapperList;
   public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
   public final Set<String> collectBagWorlds = new HashSet<>();
   public final Set<String> useCloudsailorWorlds = new HashSet<>();
@@ -152,23 +148,39 @@ public class RelluEssentials extends JavaPlugin {
   @Getter
   private GroupService groupService;
 
+  @Getter
   private EventManager eventManager;
+  @Getter
   private SkillManager skillManager;
+  @Getter
   private RecipeManager recipeManager;
+  @Getter
   private AutoSaveManager autoSaveManager;
+  @Getter
   private BankManager bankManager;
+  @Getter
   private NpcManager npcManager;
+  @Getter
   private ConfigManager configManager;
   @Getter
   private CommandManager commandManager;
+  @Getter
   private ItemManager itemManager;
+  @Getter
   private EnchantmentManager enchantmentManager;
+  @Getter
   private WorldManager worldManager;
+  @Getter
   private GroupManager groupManager;
+  @Getter
   private PositionHighlightManager positionHighlightManager;
+  @Getter
   private ScoreBoardManager scoreBoardManager;
+  @Getter
   private SignManager signManager;
+  @Getter
   private DatabaseManager databaseManager;
+  @Getter
   private SudoManager sudoManager;
 
   /**
@@ -258,8 +270,8 @@ public class RelluEssentials extends JavaPlugin {
     NpcRepository npcRepository = new NpcRepository(databaseHelper);
     NpcSpawner npcSpawner = new NpcSpawner();
     NpcValidator npcValidator = new NpcValidator();
-    this.npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
-    this.npcDialogueTracker = new NpcDialogueTracker();
+    npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
+    npcDialogueTracker = new NpcDialogueTracker();
     stopLoading();
     worldManager = new WorldManager();
     worldManager.enable(this);

@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.interfaces;
 
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
 import java.util.Optional;
 import org.bukkit.command.CommandExecutor;
@@ -40,4 +41,7 @@ public interface CommandConstruct extends CommandExecutor, TabCompleter {
   default Optional<SubCommandRegistry<?>> getSubCommandRegistry() {
     return Optional.empty();
   }
+
+  void injectContext(ServiceContext context);
+
 }

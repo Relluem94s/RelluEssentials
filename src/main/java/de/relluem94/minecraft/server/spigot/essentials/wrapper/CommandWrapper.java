@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.wrapper;
 
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
@@ -30,7 +31,7 @@ public class CommandWrapper {
     return AnnotationHelper.getCommandName(this.construct.getClass());
   }
 
-  public void init(JavaPlugin javaPlugin) {
+  public void init(JavaPlugin javaPlugin, ServiceContext serviceContext) {
     if (initialised) {
       return;
     }
@@ -41,6 +42,7 @@ public class CommandWrapper {
       return;
     }
 
+    construct.injectContext(serviceContext);
     pluginCommand.setExecutor(construct);
     pluginCommand.setTabCompleter(construct);
     initialised = true;
