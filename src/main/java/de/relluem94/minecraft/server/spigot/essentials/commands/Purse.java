@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.CoinHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
@@ -14,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.List;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -24,12 +26,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Handles the /purse command for managing player coin purses.
- * Allows players to check their balance and withdraw coins as items.
- * Moderators can additionally check the balance of other players.
+ * Handles the /purse command for managing player coin purses. Allows players to check their balance
+ * and withdraw coins as items. Moderators can additionally check the balance of other players.
  */
 @CommandName("purse")
 public class Purse implements CommandConstruct {
+
+  private GroupService groupService;
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+  }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,

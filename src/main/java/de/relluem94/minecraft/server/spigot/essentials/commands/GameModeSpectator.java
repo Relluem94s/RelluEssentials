@@ -4,12 +4,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.la
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -23,6 +25,13 @@ import org.jetbrains.annotations.Nullable;
 
 @CommandName("3")
 public class GameModeSpectator implements CommandConstruct {
+
+  private GroupService groupService;
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+  }
 
   @Override
   public CommandsEnum[] getCommands() {

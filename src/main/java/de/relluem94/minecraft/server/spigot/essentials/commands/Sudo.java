@@ -35,11 +35,6 @@ public class Sudo implements CommandConstruct {
   private GroupService groupService;
   private CommandManager commandManager;
 
-  @Override
-  public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-  }
-
   public static void exitSudo(@NotNull Player p) {
     PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
     PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
@@ -56,6 +51,12 @@ public class Sudo implements CommandConstruct {
     WorldHelper.loadWorldGroupInventory(p);
     SudoManager.sudoers.remove(p.getUniqueId());
     p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SUDO_DEACTIVATED));
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+    this.commandManager = context.getCommandManager();
   }
 
   @Override
@@ -108,7 +109,8 @@ public class Sudo implements CommandConstruct {
       return true;
     }
 
-    PlayerEntry tpe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target.getId());
+    PlayerEntry tpe = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(target.getId());
     SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
     WorldHelper.saveWorldGroupInventory(p, true);
     pe.setId(tpe.getId());

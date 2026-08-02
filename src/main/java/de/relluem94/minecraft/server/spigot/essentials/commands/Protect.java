@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
@@ -17,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -28,6 +30,13 @@ import org.jetbrains.annotations.NotNull;
 
 @CommandName("protect")
 public class Protect implements CommandConstruct {
+
+  private GroupService groupService;
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+  }
 
   private @NotNull String getFlags() {
     ProtectionFlags[] flags = ProtectionFlags.values();
@@ -55,7 +64,8 @@ public class Protect implements CommandConstruct {
       return true;
     }
 
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(p.getUniqueId());
 
     if (args.length == 0) {
       p.sendMessage(

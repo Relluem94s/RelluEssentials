@@ -5,11 +5,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHe
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public class Back implements CommandConstruct {
 
   private static final Map<Player, Location> backPlayerLocation = new HashMap<>();
+  private GroupService groupService;
 
   public static void addBackPoint(Player p) {
     removeBackPoint(p);
@@ -34,6 +37,11 @@ public class Back implements CommandConstruct {
 
   public static void removeBackPoint(Player p) {
     backPlayerLocation.remove(p);
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
   }
 
   @Override

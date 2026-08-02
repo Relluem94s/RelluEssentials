@@ -17,6 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.modify.UndoComma
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.WallCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
@@ -26,6 +27,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,8 +45,8 @@ public class Modify implements CommandConstruct {
   public static final int BLOCKS_PER_TICK = 64;
   public static final int MAX_RADIUS = 128;
   public static final int MAX_ITERATIONS = 1048576;
-
   private final SubCommandRegistry<SubCommand> subCommandRegistry;
+  private GroupService groupService;
 
   public Modify() {
     SelectionResolver selectionResolver = new SelectionResolver();
@@ -65,6 +67,11 @@ public class Modify implements CommandConstruct {
         new UndoCommand(BLOCKS_PER_TICK, undoHistoryManager),
         new WallCommand(BLOCKS_PER_TICK, selectionResolver, undoHistoryManager)
     ));
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
   }
 
   @Override

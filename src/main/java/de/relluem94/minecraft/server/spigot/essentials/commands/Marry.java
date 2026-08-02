@@ -7,6 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
@@ -16,6 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,6 +37,12 @@ import org.jetbrains.annotations.Nullable;
 public class Marry implements CommandConstruct {
 
   private final HashMap<Player, Player> marryAcceptList = new HashMap<>();
+  private GroupService groupService;
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+  }
 
   @Override
   public CommandsEnum[] getCommands() {
@@ -42,7 +50,8 @@ public class Marry implements CommandConstruct {
   }
 
   private void addMarryEntry(Player player, Player target) {
-    if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(player).getPartner() != null
+    if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(player).getPartner()
+        != null
         || RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target).getPartner()
         != null) {
       player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED));
@@ -78,8 +87,10 @@ public class Marry implements CommandConstruct {
     player.sendMessage(
         languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, target.getCustomName()));
 
-    PlayerEntry firstPlayer = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target);
-    PlayerEntry secondPlayer = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(player);
+    PlayerEntry firstPlayer = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(target);
+    PlayerEntry secondPlayer = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(player);
 
     PlayerPartnerEntry playerPartnerEntry = new PlayerPartnerEntry();
     playerPartnerEntry.setCreatedBy(firstPlayer.getId());
@@ -104,9 +115,10 @@ public class Marry implements CommandConstruct {
   private void divorce(@NotNull PlayerEntry pe) {
     PlayerPartnerEntry ppe = pe.getPartner();
 
-    PlayerEntry secondPlayerEntry = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(
-        ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId()
-            : ppe.getFirstPartnerId());
+    PlayerEntry secondPlayerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(
+            ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId()
+                : ppe.getFirstPartnerId());
 
     Player firstPlayer = Bukkit.getPlayer(UUID.fromString(pe.getUuid()));
     OfflinePlayer secondOfflinePlayer = Bukkit.getOfflinePlayer(
@@ -186,7 +198,8 @@ public class Marry implements CommandConstruct {
 
       if (args[0].equalsIgnoreCase(Commands.DIVORCE.getName())) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
-        if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p).getPartner() != null) {
+        if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p).getPartner()
+            != null) {
           divorce(pe);
           return true;
         }
