@@ -79,62 +79,62 @@ public class DatabaseManager implements Enable {
   }
 
   @Override
-  public void enable() {
+  public void enable(RelluEssentials plugin) {
     PluginInformationEntry pie = databaseHelper.getPluginInformation();
-    RelluEssentials.getInstance().setPluginInformation(pie);
+    plugin.setPluginInformation(pie);
     databaseHelper.init();
 
-    RelluEssentials.getInstance().locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
+    plugin.locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
 
     for (DropEntry de : databaseHelper.getDrops()) {
-      RelluEssentials.getInstance().dropMap.put(de.getMaterial(),
+      plugin.dropMap.put(de.getMaterial(),
           new DoubleStore<>(de.getMin(), de.getMax()));
     }
 
     for (CropEntry ce : databaseHelper.getCrops()) {
-      RelluEssentials.getInstance().crops.put(ce.getSeed(), ce.getPlant());
+      plugin.crops.put(ce.getSeed(), ce.getPlant());
     }
 
     PlayerRegistry playerRegistry = new PlayerRegistry(databaseHelper.getBags());
-    RelluEssentials.getInstance().setPlayerRegistry(playerRegistry);
-    RelluEssentials.getInstance()
+    plugin.setPlayerRegistry(playerRegistry);
+    plugin
         .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
             databaseHelper.getProtections()));
-    RelluEssentials.getInstance().setTraderNpcRegistry(new TraderNpcRegistry());
-    RelluEssentials.getInstance().getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
-    RelluEssentials.getInstance().setBagTypeRegistry(new BagTypeRegistry(new BagTypeRepository(databaseHelper.getBagTypes())));
-    RelluEssentials.getInstance()
+    plugin.setTraderNpcRegistry(new TraderNpcRegistry());
+    plugin.getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
+    plugin.setBagTypeRegistry(new BagTypeRegistry(new BagTypeRepository(databaseHelper.getBagTypes())));
+    plugin
         .setBankTierRegistry(new BankTierRegistry(databaseHelper.getBankTiers()));
-    RelluEssentials.getInstance().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
+    plugin.setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
 
     RelluEssentials.settingEntriesList.addAll(databaseHelper.getAllSettings());
 
     for (WorldGroupEntry wge : databaseHelper.getWorldGroups()) {
       for (WorldEntry we : databaseHelper.getWorldByGroup(wge)) {
-        RelluEssentials.getInstance().worldsMap.put(wge, we);
+        plugin.worldsMap.put(wge, we);
 
         if (getWorldNameBySetting(wge, "COLLECT_BAG")) {
-          RelluEssentials.getInstance().collectBagWorlds.add(we.getName());
+          plugin.collectBagWorlds.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "USE_CLOUDSAILOR")) {
-          RelluEssentials.getInstance().useCloudsailorWorlds.add(we.getName());
+          plugin.useCloudsailorWorlds.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "DEATH_LOSE_COINS")) {
-          RelluEssentials.getInstance().deathLoseCoins.add(we.getName());
+          plugin.deathLoseCoins.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "ORE_RESPAWN")) {
-          RelluEssentials.getInstance().oreRespawn.add(we.getName());
+          plugin.oreRespawn.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "DEATH_CREATE_HOME")) {
-          RelluEssentials.getInstance().deathCreateHome.add(we.getName());
+          plugin.deathCreateHome.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "SCOREBOARD_SHOW")) {
-          RelluEssentials.getInstance().scoreboardShow.add(we.getName());
+          plugin.scoreboardShow.add(we.getName());
         }
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE,
@@ -148,14 +148,14 @@ public class DatabaseManager implements Enable {
     GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
     GroupService groupService = new GroupService(groupRegistry, groupRepository, playerRegistry);
 
-    RelluEssentials.getInstance().setGroupRegistry(groupRegistry);
-    RelluEssentials.getInstance().setGroupService(groupService);
+    plugin.setGroupRegistry(groupRegistry);
+    plugin.setGroupService(groupService);
 
 
-    for (int i = 0; i < RelluEssentials.getInstance().getBagTypeRegistry().getAll().size(); i++) {
+    for (int i = 0; i < plugin.getBagTypeRegistry().getAll().size(); i++) {
       ItemStack[] isa = BagHelper.getItemStacks(
-          RelluEssentials.getInstance().getBagTypeRegistry().getAll().get(i));
-      Collections.addAll(RelluEssentials.getInstance().bagBlocks2collect, isa);
+          plugin.getBagTypeRegistry().getAll().get(i));
+      Collections.addAll(plugin.bagBlocks2collect, isa);
     }
   }
 
@@ -163,17 +163,17 @@ public class DatabaseManager implements Enable {
    * Initializes registries and repositories after the world has been loaded. Runs with a 1-tick
    * delay to ensure the world is fully available.
    */
-  public void afterWorldLoaded() {
+  public void afterWorldLoaded(RelluEssentials plugin) {
     new BukkitRunnable() {
       @Override
       public void run() {
-        RelluEssentials.getInstance()
+        plugin
             .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
                 databaseHelper.getProtections()));
-        RelluEssentials.getInstance()
+        plugin
             .setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
-        RelluEssentials.getInstance().getPlayerService().reloadPlayerHomes();
+        plugin.getPlayerService().reloadPlayerHomes();
       }
-    }.runTaskLater(RelluEssentials.getInstance(), 1L);
+    }.runTaskLater(plugin, 1L);
   }
 }
