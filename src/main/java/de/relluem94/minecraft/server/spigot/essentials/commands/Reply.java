@@ -62,7 +62,7 @@ public class Reply implements CommandConstruct {
       return true;
     }
 
-    msg(sender, target, args, 0);
+    msg(groupService, sender, target, args, 0);
     return true;
   }
 

@@ -48,30 +48,27 @@ import org.jetbrains.annotations.Nullable;
 public class Admin implements CommandConstruct {
 
   private GroupService groupService;
+  private SubCommandRegistry<SubCommand> subCommandRegistry;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
-  }
 
-  private final SubCommandRegistry<SubCommand> subCommandRegistry;
-
-  public Admin() {
     this.subCommandRegistry = new SubCommandRegistry<>(List.of(
-        new AdminToolsGuiCommand(),
+        new AdminToolsGuiCommand(context),
         new CleanUpChatCommand(),
-        new CleanUpLocationsCommand(),
-        new CleanUpProtectionsCommand(),
+        new CleanUpLocationsCommand(context),
+        new CleanUpProtectionsCommand(context),
         new FakeAfkCommand(),
         new LightToggleCommand(),
-        new NpcGuiCommand(),
-        new NpcCreateCommand(),
-        new NpcDeleteCommand(),
-        new NpcUpdateCommand(),
-        new NpcEquipCommand(),
-        new NpcDialogueAddCommand(),
-        new NpcDialogueUpdateCommand(),
-        new NpcDialogueDeleteCommand(),
+        new NpcGuiCommand(context),
+        new NpcCreateCommand(context),
+        new NpcDeleteCommand(context),
+        new NpcUpdateCommand(context),
+        new NpcEquipCommand(context),
+        new NpcDialogueAddCommand(context),
+        new NpcDialogueUpdateCommand(context),
+        new NpcDialogueDeleteCommand(context),
         new PingCommand(),
         new PluginInfoCommand(),
         new TopCommand()

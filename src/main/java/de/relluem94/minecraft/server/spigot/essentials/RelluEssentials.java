@@ -261,8 +261,6 @@ public class RelluEssentials extends JavaPlugin {
     skillManager.enable(this);
     recipeManager = new RecipeManager();
     recipeManager.enable(this);
-    autoSaveManager =new AutoSaveManager();
-    autoSaveManager.enable(this);
     bankManager = new BankManager();
     bankManager.enable(this);
     npcManager = new NpcManager();
@@ -281,6 +279,8 @@ public class RelluEssentials extends JavaPlugin {
     positionHighlightManager.enable(this);
     scoreBoardManager = new ScoreBoardManager();
     scoreBoardManager.enable(this);
+    autoSaveManager =new AutoSaveManager();
+    autoSaveManager.enable(this);
 
     databaseManager.afterWorldLoaded(this);
     new BukkitRunnable() {

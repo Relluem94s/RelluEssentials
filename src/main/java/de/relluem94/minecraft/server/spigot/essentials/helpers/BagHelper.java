@@ -16,8 +16,8 @@ import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatForma
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -373,7 +373,7 @@ public class BagHelper {
     return false;
   }
 
-  public static void saveBags() {
+  public static void saveBags(GroupEntry adminGroup) {
     int updatedBags = 0;
     for (BagEntry be : RelluEssentials.getInstance().getPlayerRegistry().getPlayerBagMap()
         .values()) {
@@ -392,7 +392,7 @@ public class BagHelper {
           languageHelper.get(MessageKey.PLUGIN_BAGS_SAVED, updatedBags),
           PLUGIN_NAME_CHAT_CONSOLE,
           BetterChatFormat.ADMIN_CHANNEL,
-          GroupRegistry.getGroup("admin")
+          adminGroup
       );
     }
   }

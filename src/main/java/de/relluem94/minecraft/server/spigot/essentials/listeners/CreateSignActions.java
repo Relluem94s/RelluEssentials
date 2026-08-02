@@ -4,11 +4,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_NAME;
 
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.SignAction;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SignRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.Optional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.SignChangeEvent;
@@ -16,15 +15,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class CreateSignActions implements ListenerConstruct {
 
+  private GroupService groupService;
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.groupService = context.getGroupService();
   }
 
   @EventHandler
   public void onChangeSignCreateActionSign(@NotNull SignChangeEvent event) {
-    if (!PermissionHelper.isAuthorized(event.getPlayer(), GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(event.getPlayer(), "mod")) {
       return;
     }
 

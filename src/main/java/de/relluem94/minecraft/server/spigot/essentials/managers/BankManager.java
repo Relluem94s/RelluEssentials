@@ -22,10 +22,10 @@ public class BankManager implements Enable {
     if (plugin.isUnitTest()) {
       return;
     }
-    triggerNext();
+    triggerNext(plugin);
   }
 
-  private void triggerNext() {
+  private void triggerNext(RelluEssentials plugin) {
     Bukkit.getScheduler().runTaskLater(plugin, () -> {
       BankerHelper.doInterest();
       ChatHelper.consoleSendMessage(
@@ -33,7 +33,7 @@ public class BankManager implements Enable {
           languageHelper.get(MessageKey.PLUGIN_BANK_INTEREST_NEXT_RUN,
               String.valueOf(getSecondsUntilMidnight()))
       );
-      triggerNext();
+      triggerNext(plugin);
     }, 20 * getSecondsUntilMidnight());
   }
 

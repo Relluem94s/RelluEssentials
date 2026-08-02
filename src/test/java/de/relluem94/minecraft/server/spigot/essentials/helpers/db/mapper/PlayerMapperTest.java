@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
@@ -32,14 +31,17 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,52 +62,55 @@ class PlayerMapperTest {
     void mapPlayerReturnsFullyPopulatedPlayerEntry() throws SQLException {
         GroupEntry expectedGroup = new GroupEntry(1, "user", "§8");
 
-        try (MockedStatic<GroupRegistry> mockedGroups = mockStatic(GroupRegistry.class)) {
-            mockedGroups.when(() -> GroupRegistry.getGroup(1)).thenReturn(expectedGroup);
+        when(resultSet.getInt(FIELD_ID)).thenReturn(1);
+        when(resultSet.getString(FIELD_UUID)).thenReturn("uuid-1234");
+        when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-01-01");
+        when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(2);
+        when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-06-01");
+        when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(3);
+        when(resultSet.getString(FIELD_DELETED)).thenReturn("2024-12-01");
+        when(resultSet.getInt(FIELD_DELETEDBY)).thenReturn(4);
+        when(resultSet.getString(FIELD_NAME)).thenReturn("TestPlayer");
+        when(resultSet.getString(FIELD_CUSTOM_NAME)).thenReturn("CustomTestPlayer");
+        when(resultSet.getDouble(FIELD_PURSE)).thenReturn(999.99);
+        when(resultSet.getBoolean(FIELD_FLY)).thenReturn(true);
+        when(resultSet.getBoolean(FIELD_AFK)).thenReturn(false);
+        when(resultSet.getInt(FIELD_GROUP_FK)).thenReturn(1);
 
-            when(resultSet.getInt(FIELD_ID)).thenReturn(1);
-            when(resultSet.getString(FIELD_UUID)).thenReturn("uuid-1234");
-            when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-01-01");
-            when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(2);
-            when(resultSet.getString(FIELD_UPDATED)).thenReturn("2024-06-01");
-            when(resultSet.getInt(FIELD_UPDATEDBY)).thenReturn(3);
-            when(resultSet.getString(FIELD_DELETED)).thenReturn("2024-12-01");
-            when(resultSet.getInt(FIELD_DELETEDBY)).thenReturn(4);
-            when(resultSet.getString(FIELD_NAME)).thenReturn("TestPlayer");
-            when(resultSet.getString(FIELD_CUSTOM_NAME)).thenReturn("CustomTestPlayer");
-            when(resultSet.getDouble(FIELD_PURSE)).thenReturn(999.99);
-            when(resultSet.getBoolean(FIELD_FLY)).thenReturn(true);
-            when(resultSet.getBoolean(FIELD_AFK)).thenReturn(false);
-            when(resultSet.getInt(FIELD_GROUP_FK)).thenReturn(1);
+        GroupRepository groupRepository = new GroupRepository(List.of(expectedGroup));
+        GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
 
-            PlayerEntry result = PlayerMapper.mapPlayer(resultSet);
+        GroupService groupService = new GroupService(groupRegistry, groupRepository, new PlayerRegistry(List.of()));
+        PlayerEntry result = PlayerMapper.mapPlayer(resultSet, groupService);
 
-            assertAll(
-                    () -> assertEquals(1, result.getId()),
-                    () -> assertEquals("uuid-1234", result.getUuid()),
-                    () -> assertEquals("2024-01-01", result.getCreated()),
-                    () -> assertEquals(2, result.getCreatedBy()),
-                    () -> assertEquals("2024-06-01", result.getUpdated()),
-                    () -> assertEquals(3, result.getUpdatedBy()),
-                    () -> assertEquals("2024-12-01", result.getDeleted()),
-                    () -> assertEquals(4, result.getDeletedBy()),
-                    () -> assertEquals("TestPlayer", result.getName()),
-                    () -> assertEquals("CustomTestPlayer", result.getCustomName()),
-                    () -> assertEquals(999.99, result.getPurse()),
-                    () -> assertTrue(result.isFlying()),
-                    () -> assertFalse(result.isAfk()),
-                    () -> assertEquals(expectedGroup, result.getGroup()),
-                    () -> assertEquals(PlayerState.DEFAULT, result.getPlayerState())
-            );
-        }
+        assertAll(
+            () -> assertEquals(1, result.getId()),
+            () -> assertEquals("uuid-1234", result.getUuid()),
+            () -> assertEquals("2024-01-01", result.getCreated()),
+            () -> assertEquals(2, result.getCreatedBy()),
+            () -> assertEquals("2024-06-01", result.getUpdated()),
+            () -> assertEquals(3, result.getUpdatedBy()),
+            () -> assertEquals("2024-12-01", result.getDeleted()),
+            () -> assertEquals(4, result.getDeletedBy()),
+            () -> assertEquals("TestPlayer", result.getName()),
+            () -> assertEquals("CustomTestPlayer", result.getCustomName()),
+            () -> assertEquals(999.99, result.getPurse()),
+            () -> assertTrue(result.isFlying()),
+            () -> assertFalse(result.isAfk()),
+            () -> assertEquals(expectedGroup, result.getGroup()),
+            () -> assertEquals(PlayerState.DEFAULT, result.getPlayerState())
+        );
     }
 
     @Test
     void mapPlayerPropagatesSQLException() throws SQLException {
-        try (MockedStatic<GroupRegistry> _ = mockStatic(GroupRegistry.class)) {
-            when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
-            assertThrows(SQLException.class, () -> PlayerMapper.mapPlayer(resultSet));
-        }
+        GroupRepository groupRepository = new GroupRepository(List.of());
+        GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
+
+        GroupService groupService = new GroupService(groupRegistry, groupRepository, new PlayerRegistry(List.of()));
+
+        when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
+        assertThrows(SQLException.class, () -> PlayerMapper.mapPlayer(resultSet, groupService));
     }
 
     @Test

@@ -6,12 +6,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +40,7 @@ public class GameModeSurvival implements CommandConstruct {
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command,
       @NonNull String label, String[] args) {
-    if (!PermissionHelper.isAuthorized(sender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(sender, "mod")) {
       sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -70,7 +68,7 @@ public class GameModeSurvival implements CommandConstruct {
 
   private void gameMode(@NotNull Player p) {
     p.setGameMode(GameMode.SURVIVAL);
-    PlayerHelper.setFlying(p);
+    PlayerHelper.setFlying(p, groupService);
     p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(),
         languageHelper.get(MessageKey.COMMAND_GAMEMODE_SURVIVAL)));
   }

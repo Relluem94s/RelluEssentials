@@ -16,10 +16,9 @@ import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.rellulib.utils.NetworkUtils;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -49,8 +48,8 @@ public class PlayerHelper {
    *
    * @param p Player to set Flying
    */
-  public static void setFlying(Player p) {
-    if (PermissionHelper.isAuthorized(p, Objects.requireNonNull(GroupRegistry.getGroup("vip")).getId())) {
+  public static void setFlying(Player p, GroupService groupService) {
+    if (groupService.isSenderAuthorized(p, "vip")) {
       PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
       if (pe.isFlying()) {
         p.setAllowFlight(true);
@@ -171,18 +170,8 @@ public class PlayerHelper {
     return name;
   }
 
-  @SuppressWarnings("unused")
-  public static GroupEntry getGroup(Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
 
-    if (pe != null) {
-      return pe.getGroup();
-    } else {
-      return GroupRegistry.getGroup(1);
-    }
-  }
-
-  public static void savePlayers() {
+  public static void savePlayers(GroupEntry adminGroup) {
     int updatedPlayers = 0;
 
     for (PlayerEntry pe : RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntryMap()
@@ -195,12 +184,12 @@ public class PlayerHelper {
           languageHelper.get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers),
           PLUGIN_NAME_CHAT_CONSOLE,
           BetterChatFormat.ADMIN_CHANNEL,
-          GroupRegistry.getGroup("admin")
+          adminGroup
       );
     }
   }
 
-  public static void savePlayersInv() {
+  public static void savePlayersInv(GroupEntry adminGroup) {
     int updatedPlayers = 0;
 
     for (Player p : Bukkit.getOnlinePlayers()) {
@@ -212,7 +201,7 @@ public class PlayerHelper {
           languageHelper.get(MessageKey.PLUGIN_PLAYERS_INVENTORY_SAVED, updatedPlayers),
           PLUGIN_NAME_CHAT_CONSOLE,
           BetterChatFormat.ADMIN_CHANNEL,
-          GroupRegistry.getGroup("admin")
+          adminGroup
       );
     }
   }

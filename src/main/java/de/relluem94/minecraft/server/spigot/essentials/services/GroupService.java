@@ -37,6 +37,12 @@ public class GroupService {
         .orElse(new GroupEntry(1, "user", "§8"));
   }
 
+  public GroupEntry resolveGroupWithFallback(int id) {
+    return groupRegistry.findById(id)
+        .or(() -> groupRegistry.findByName("user"))
+        .orElse(new GroupEntry(1, "user", "§8"));
+  }
+
   public boolean isPlayerInGroupOrHigher(Player player, String groupName) {
     return groupRegistry.findByName(groupName)
         .map(requiredGroup -> {

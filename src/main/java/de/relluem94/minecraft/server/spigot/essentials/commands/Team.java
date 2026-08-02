@@ -12,7 +12,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,7 @@ public class Team implements CommandConstruct {
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
+    if (!groupService.isSenderAuthorized(p, "user")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -53,7 +52,7 @@ public class Team implements CommandConstruct {
     for (Map.Entry<UUID, PlayerEntry> e : RelluEssentials.getInstance().getPlayerRegistry()
         .getPlayerEntryMap().entrySet()) {
       PlayerEntry pe = e.getValue();
-      if (pe.getGroup().getId() >= GroupRegistry.getGroup("mod").getId()) {
+      if (groupService.isSenderAuthorized(sender, pe.getGroup().getName())) {
         p.sendMessage(pe.getGroup().getPrefix() + pe.getCustomName() + PLUGIN_COLOR_MESSAGE
             + PLUGIN_FORMS_SPACER_CHANNEL + pe.getGroup().getPrefix() + pe.getGroup().getName());
       }

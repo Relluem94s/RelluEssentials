@@ -7,12 +7,10 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +48,7 @@ public class Fly implements CommandConstruct {
 
     Player p = (Player) sender;
 
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("vip").getId())) {
+    if (!groupService.isSenderAuthorized(p, "vip")) {
       sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -67,7 +65,7 @@ public class Fly implements CommandConstruct {
       return true;
     }
 
-    if (PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+    if (groupService.isSenderAuthorized(sender, "mod")) {
       p.sendMessage(languageHelper.getWithPrefix(
           MessageKey.COMMAND_FLYMODE,
           target.getCustomName(),

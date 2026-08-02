@@ -4,12 +4,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.la
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.entity.Player;
@@ -24,9 +24,15 @@ public class NpcDialogueDeleteCommand implements SubCommand {
   private static final int ARGS_LIST_POSITION_INDEX = 4;
   private static final int REQUIRED_ARGS_LENGTH = 5;
 
+  private final GroupService groupService;
+
+  public NpcDialogueDeleteCommand(ServiceContext context) {
+    this.groupService = context.getGroupService();
+  }
+
   @Override
   public void execute(Player player, String[] args) {
-    if (!PermissionHelper.isAuthorized(player, GroupRegistry.getGroup("admin").getId())) {
+    if (!groupService.isSenderAuthorized(player, "admin")) {
       player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }

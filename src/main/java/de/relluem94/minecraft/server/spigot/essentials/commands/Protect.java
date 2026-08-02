@@ -10,14 +10,12 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +57,7 @@ public class Protect implements CommandConstruct {
 
     Player p = (Player) sender;
 
-    if (!PermissionHelper.isAuthorized(sender, GroupRegistry.getGroup("user").getId())) {
+    if (!groupService.isSenderAuthorized(sender, "user")) {
       sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -174,7 +172,7 @@ public class Protect implements CommandConstruct {
       @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("user").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "user")) {
       return tabList;
     }
 

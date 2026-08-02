@@ -7,11 +7,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,7 @@ public class Where implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (args.length > 0) {
-      if (!PermissionHelper.isAuthorized(sender, GroupRegistry.getGroup("mod").getId())) {
+      if (!groupService.isSenderAuthorized(sender, "mod")) {
         sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }
@@ -53,7 +51,7 @@ public class Where implements CommandConstruct {
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
+    if (!groupService.isSenderAuthorized(p, "user")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }

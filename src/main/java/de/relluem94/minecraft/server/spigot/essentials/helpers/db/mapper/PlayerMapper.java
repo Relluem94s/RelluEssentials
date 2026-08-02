@@ -24,7 +24,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jspecify.annotations.NonNull;
@@ -35,7 +35,7 @@ public class PlayerMapper {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
-  public static @NonNull PlayerEntry mapPlayer(@NonNull ResultSet rs) throws SQLException {
+  public static @NonNull PlayerEntry mapPlayer(@NonNull ResultSet rs, GroupService groupService) throws SQLException {
     PlayerEntry playerEntry = new PlayerEntry();
     playerEntry.setId(rs.getInt(FIELD_ID));
     playerEntry.setUuid(rs.getString(FIELD_UUID));
@@ -50,7 +50,7 @@ public class PlayerMapper {
     playerEntry.setPurse(rs.getDouble(FIELD_PURSE));
     playerEntry.setFlying(rs.getBoolean(FIELD_FLY));
     playerEntry.setAfk(rs.getBoolean(FIELD_AFK));
-    playerEntry.setGroup(GroupRegistry.getGroup(rs.getInt(FIELD_GROUP_FK)));
+    playerEntry.setGroup(groupService.resolveGroupWithFallback(rs.getInt(FIELD_GROUP_FK)));
     playerEntry.setPlayerState(PlayerState.DEFAULT);
     return playerEntry;
   }

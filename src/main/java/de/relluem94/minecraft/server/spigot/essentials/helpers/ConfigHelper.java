@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +66,7 @@ public class ConfigHelper {
 
       String groupName = Objects.requireNonNull(Objects.requireNonNull(player).getString("group"))
           .toLowerCase();
-      int groupFK = GroupRegistry.getGroup(groupName).getId();
+      int groupFK = RelluEssentials.getInstance().getGroupService().resolveGroupWithFallback(groupName).getId();
       boolean fly = player.getBoolean("fly");
       boolean afk = player.getBoolean("afk");
       String customname = player.getString("customname");
@@ -77,7 +76,7 @@ public class ConfigHelper {
               + " group id:" + groupFK + " group:" + groupName);
 
       PlayerEntry p = new PlayerEntry();
-      p.setGroup(GroupRegistry.getGroup(groupName));
+      p.setGroup(RelluEssentials.getInstance().getGroupService().resolveGroupWithFallback(groupName));
       p.setAfk(afk);
       p.setFlying(fly);
       p.setCreatedBy(1);

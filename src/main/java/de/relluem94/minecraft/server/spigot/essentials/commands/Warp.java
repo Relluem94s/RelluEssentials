@@ -8,12 +8,10 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +38,7 @@ public class Warp implements CommandConstruct {
       @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("user").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "user")) {
       return tabList;
     }
 
@@ -52,14 +50,13 @@ public class Warp implements CommandConstruct {
 
     switch (strings.length) {
       case 1:
-        if (PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("admin").getId())) {
+        if (groupService.isSenderAuthorized(p, "admin")) {
           tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
         }
         tabList.addAll(TabCompleterHelper.getWarps(p.getWorld()));
         break;
       case 2:
-        if (!PermissionHelper.isAuthorized(commandSender,
-            GroupRegistry.getGroup("admin").getId())) {
+        if (!groupService.isSenderAuthorized(p, "admin")) {
           return tabList;
         }
         if (Commands.ADD.getName().equalsIgnoreCase(strings[1])) {
@@ -90,7 +87,7 @@ public class Warp implements CommandConstruct {
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
+    if (!groupService.isSenderAuthorized(sender, "user")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }

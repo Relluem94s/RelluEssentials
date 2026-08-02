@@ -10,34 +10,50 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
+import java.util.Optional;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class AutoSaveManager implements Enable, Disable {
 
   public static final long AUTO_SAVE_MINUTES = 2;
-
+  private final int MAX_RETRIES = 4;
+  private int count = 0;
   @Override
   public void enable(RelluEssentials plugin) {
+    Optional<GroupEntry> adminGroup = plugin.getGroupRegistry().findByName("admin");
+
+    if(!adminGroup.isPresent() && count <= MAX_RETRIES){
+      count++;
+      new BukkitRunnable() {
+        @Override
+        public void run(){
+          enable(plugin);
+        }
+      }.runTaskLater(plugin, 100);
+    }
+
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE));
     new BukkitRunnable() {
       @Override
       public void run() {
-        BagHelper.saveBags();
+
+        BagHelper.saveBags(adminGroup.get());
       }
     }.runTaskTimer(plugin, 0L, 20 * 60 * AUTO_SAVE_MINUTES);
 
     new BukkitRunnable() {
       @Override
       public void run() {
-        PlayerHelper.savePlayers();
+        PlayerHelper.savePlayers(adminGroup.get());
       }
     }.runTaskTimer(plugin, 0L, 20 * 60 * AUTO_SAVE_MINUTES);
 
     new BukkitRunnable() {
       @Override
       public void run() {
-        PlayerHelper.savePlayersInv();
+        PlayerHelper.savePlayersInv(adminGroup.get());
       }
     }.runTaskTimer(plugin, 0L, 20 * 60 * AUTO_SAVE_MINUTES);
 
@@ -47,8 +63,13 @@ public class AutoSaveManager implements Enable, Disable {
 
   @Override
   public void disable(RelluEssentials plugin) {
-    BagHelper.saveBags();
-    PlayerHelper.savePlayers();
-    PlayerHelper.savePlayersInv();
+    Optional<GroupEntry> adminGroup = plugin.getGroupRegistry().findByName("admin");
+
+    if(!adminGroup.isPresent()){
+      return;
+    }
+    BagHelper.saveBags(adminGroup.get());
+    PlayerHelper.savePlayers(adminGroup.get());
+    PlayerHelper.savePlayersInv(adminGroup.get());
   }
 }

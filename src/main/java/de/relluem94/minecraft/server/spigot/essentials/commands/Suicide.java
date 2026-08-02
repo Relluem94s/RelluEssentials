@@ -59,7 +59,7 @@ public class Suicide implements CommandConstruct {
     }
 
     Player p = (Player) sender;
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
+    if (!groupService.isSenderAuthorized(p, "user")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }

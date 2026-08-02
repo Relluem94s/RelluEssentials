@@ -8,13 +8,11 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.rellulib.utils.TypeUtils;
 import java.util.ArrayList;
@@ -42,7 +40,7 @@ public class Bags implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("user").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "user")) {
       return tabList;
     }
 
@@ -65,15 +63,15 @@ public class Bags implements CommandConstruct {
   }
 
   @Override
-  public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
+  public boolean onCommand(@NonNull CommandSender commandSender, @NotNull Command command,
       @NonNull String label, String[] args) {
 
-    if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+    if (!isPlayer(commandSender)) {
+      commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
-    Player p = (Player) sender;
+    Player p = (Player) commandSender;
 
     if (!groupService.isSenderAuthorized(commandSender, "user")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));

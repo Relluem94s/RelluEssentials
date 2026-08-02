@@ -7,13 +7,11 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +49,7 @@ public class PlayerInfo implements CommandConstruct {
       return true;
     }
 
-    if (!PermissionHelper.isAuthorized(sender, GroupRegistry.getGroup("vip").getId())) {
+    if (!groupService.isSenderAuthorized(sender, "vip")) {
       sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -147,7 +145,7 @@ public class PlayerInfo implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("vip").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "vip")) {
       return tabList;
     }
 

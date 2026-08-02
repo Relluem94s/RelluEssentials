@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import com.mysql.cj.jdbc.MysqlDataSource;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PatchHelper;
@@ -28,7 +29,7 @@ public class DatabaseHelperFactory {
     ClasspathSqlResourceLoader sqlResourceLoader = new ClasspathSqlResourceLoader();
 
     DatabaseHelper databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema,
-        sqlResourceLoader);
+        sqlResourceLoader, new ServiceContext(RelluEssentials.getInstance()));
 
     IPatchHelper patchHelper = new PatchHelper(
         databaseHelper,
@@ -49,7 +50,7 @@ public class DatabaseHelperFactory {
     ClasspathSqlResourceLoader sqlResourceLoader = new ClasspathSqlResourceLoader();
 
     DatabaseHelper databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema,
-        sqlResourceLoader);
+        sqlResourceLoader, new ServiceContext(RelluEssentials.getInstance()));
 
     IPatchHelper patchHelper = new PatchHelper(
         databaseHelper,

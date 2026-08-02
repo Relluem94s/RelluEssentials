@@ -1,20 +1,37 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.*;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import javax.sql.DataSource;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupInventoryEntry;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -24,10 +41,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import javax.sql.DataSource;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -84,7 +107,7 @@ class DatabaseHelperTest {
         locationTypeEntryField.setAccessible(true);
         locationTypeEntryField.set(fakeInstance, new ArrayList<>());
 
-        databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema, sqlResourceLoader);
+        databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema, sqlResourceLoader, new ServiceContext(fakeInstance));
         databaseHelper.setPatchHelper(patchHelper);
     }
 

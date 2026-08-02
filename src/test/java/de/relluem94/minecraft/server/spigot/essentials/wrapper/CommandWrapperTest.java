@@ -1,8 +1,23 @@
 package de.relluem94.minecraft.server.spigot.essentials.wrapper;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
+import java.lang.reflect.Field;
+import java.util.Optional;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.jupiter.api.AfterEach;
@@ -11,12 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.lang.reflect.Field;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommandWrapperTest {
@@ -75,10 +84,10 @@ class CommandWrapperTest {
         Admin adminConstruct = new Admin();
         CommandWrapper wrapper = new CommandWrapper(adminConstruct);
         String commandName = wrapper.getCommandName();
-
+        ServiceContext serviceContext = new ServiceContext((RelluEssentials) javaPlugin);
         when(javaPlugin.getCommand(commandName)).thenReturn(pluginCommand);
 
-        wrapper.init(javaPlugin);
+        wrapper.init(javaPlugin, serviceContext);
 
         Field initialisedField = CommandWrapper.class.getDeclaredField("initialised");
         initialisedField.setAccessible(true);
@@ -96,10 +105,11 @@ class CommandWrapperTest {
         CommandWrapper wrapper = new CommandWrapper(adminConstruct);
         String commandName = wrapper.getCommandName();
 
+        ServiceContext serviceContext = new ServiceContext((RelluEssentials) javaPlugin);
         when(javaPlugin.getCommand(commandName)).thenReturn(pluginCommand);
 
-        wrapper.init(javaPlugin);
-        wrapper.init(javaPlugin);
+        wrapper.init(javaPlugin, serviceContext);
+        wrapper.init(javaPlugin, serviceContext);
 
         verify(pluginCommand, times(1)).setExecutor(adminConstruct);
         verify(pluginCommand, times(1)).setTabCompleter(adminConstruct);
@@ -111,9 +121,10 @@ class CommandWrapperTest {
         CommandWrapper wrapper = new CommandWrapper(adminConstruct);
         String commandName = wrapper.getCommandName();
 
+        ServiceContext serviceContext = new ServiceContext((RelluEssentials) javaPlugin);
         when(javaPlugin.getCommand(commandName)).thenReturn(null);
 
-        wrapper.init(javaPlugin);
+        wrapper.init(javaPlugin, serviceContext);
 
         Field initialisedField = CommandWrapper.class.getDeclaredField("initialised");
         initialisedField.setAccessible(true);

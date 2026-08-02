@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BagMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BankMapper;
@@ -42,6 +43,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupInventoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupSettingEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -71,14 +73,16 @@ public class DatabaseHelper {
   private final DataSource dataSource;
   private final DataSource dataSourceNoSchema;
   private final SqlResourceLoader sqlResourceLoader;
+  private final GroupService groupService;
   @Setter
   private IPatchHelper patchHelper;
 
   public DatabaseHelper(DataSource dataSource, DataSource dataSourceNoSchema,
-      SqlResourceLoader sqlResourceLoader) {
+      SqlResourceLoader sqlResourceLoader, ServiceContext serviceContext) {
     this.dataSource = dataSource;
     this.dataSourceNoSchema = dataSourceNoSchema;
     this.sqlResourceLoader = sqlResourceLoader;
+    this.groupService = serviceContext.getGroupService();
   }
 
   public void init() {
@@ -507,7 +511,7 @@ public class DatabaseHelper {
 
   public PlayerEntry getPlayer(String uuid) {
     return querySingle("getPlayer.sql", ps -> ps.setString(1, uuid), rs -> {
-      PlayerEntry p = PlayerMapper.mapPlayer(rs);
+      PlayerEntry p = PlayerMapper.mapPlayer(rs, groupService);
       p.setHomes(getLocations(p.getId(), 1));
       p.setDeaths(getLocations(p.getId(), 2));
       p.setPartner(getPlayerPartner(p.getId()));
@@ -600,7 +604,7 @@ public class DatabaseHelper {
   public List<PlayerEntry> getPlayers() {
     return queryList("getPlayers.sql", _ -> {
     }, rs -> {
-      PlayerEntry p = PlayerMapper.mapPlayer(rs);
+      PlayerEntry p = PlayerMapper.mapPlayer(rs, groupService);
       p.setHomes(getLocations(p.getId(), 1));
       p.setDeaths(getLocations(p.getId(), 2));
       p.setPartner(getPlayerPartner(p.getId()));

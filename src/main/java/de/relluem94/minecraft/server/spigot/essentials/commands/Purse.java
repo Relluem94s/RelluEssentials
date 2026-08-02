@@ -8,13 +8,11 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.CoinHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.List;
 import lombok.NonNull;
@@ -49,7 +47,7 @@ public class Purse implements CommandConstruct {
 
     Player p = (Player) sender;
 
-    if (!PermissionHelper.isAuthorized(sender, GroupRegistry.getGroup("user").getId())) {
+    if (!groupService.isSenderAuthorized(sender, "user")) {
       sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -64,7 +62,7 @@ public class Purse implements CommandConstruct {
 
     Player target = Bukkit.getPlayer(args[0]);
     if (target != null) {
-      if (PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+      if (groupService.isSenderAuthorized(sender, "mod")) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
             .getPlayerEntry(target.getUniqueId());
         p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL_OTHER,
