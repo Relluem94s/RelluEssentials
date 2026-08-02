@@ -31,6 +31,7 @@ public class BetterPlayerQuit implements Listener {
     }
 
     PlayerHelper.savePlayer(p);
+    RelluEssentials.getInstance().getBuyBackService().clearBuyBackHistory(p);
 
     Bukkit.broadcastMessage(
         languageHelper.get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));

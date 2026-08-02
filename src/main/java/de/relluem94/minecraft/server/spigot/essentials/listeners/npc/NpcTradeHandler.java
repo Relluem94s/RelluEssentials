@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BuyBackSlotResolver;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.List;
@@ -39,6 +40,7 @@ public class NpcTradeHandler {
 
   private final ItemHelper disabledItem;
   private final ItemHelper closeItem;
+  private final BuyBackSlotResolver buyBackSlotResolver;
 
   public NpcTradeHandler() {
     this.disabledItem = ItemRegistry.find(
@@ -47,11 +49,14 @@ public class NpcTradeHandler {
     this.closeItem = ItemRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
+
+    this.buyBackSlotResolver = new BuyBackSlotResolver(
+        RelluEssentials.getInstance().getBuyBackService(), this.disabledItem.getCustomItem());
   }
 
   public void handle(ItemStack clickedItem, Inventory clickedInventory, Player player,
       PlayerEntry playerEntry, int slot, boolean isRightClick) {
-    long start = System.currentTimeMillis();
+
     if (closeItem.equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
       return;
@@ -102,16 +107,19 @@ public class NpcTradeHandler {
       return;
     }
 
-    Integer buyPrice = itemMeta.getPersistentDataContainer().has(itemBuyPrice(), PersistentDataType.INTEGER)
-        ? itemMeta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER)
-        : null;
+    Integer buyPrice =
+        itemMeta.getPersistentDataContainer().has(itemBuyPrice(), PersistentDataType.INTEGER)
+            ? itemMeta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER)
+            : null;
 
-    Integer sellPrice = itemMeta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER)
-        ? itemMeta.getPersistentDataContainer().get(itemSellPrice(), PersistentDataType.INTEGER)
-        : null;
+    Integer sellPrice =
+        itemMeta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER)
+            ? itemMeta.getPersistentDataContainer().get(itemSellPrice(), PersistentDataType.INTEGER)
+            : null;
 
     if (buyPrice == null || sellPrice == null) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
+      player.sendMessage(
+          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
       return;
     }
 
@@ -123,7 +131,7 @@ public class NpcTradeHandler {
 
     if (clickedInventory.getType().equals(InventoryType.CHEST)) {
       handleBuy(clickedItem, player, playerEntry, buyPrice, itemDisplayName,
-          isRightClick ? 64 : amount);
+          isRightClick ? 64 : amount, slot);
     } else if (clickedInventory.getType().equals(InventoryType.PLAYER)) {
       handleSell(clickedItem, player, playerEntry, sellPrice, itemDisplayName, slot, isRightClick);
     }
@@ -207,7 +215,7 @@ public class NpcTradeHandler {
 
     if (clickedInventory.getType().equals(InventoryType.CHEST)) {
       handleBuy(clickedItem, player, playerEntry, buyPrice, itemDisplayName,
-          isRightClick ? 64 : amount);
+          isRightClick ? 64 : amount, slot);
     } else if (clickedInventory.getType().equals(InventoryType.PLAYER)) {
       handleSell(clickedItem, player, playerEntry, sellPrice, itemDisplayName, slot, isRightClick);
     }
@@ -244,6 +252,19 @@ public class NpcTradeHandler {
     if (meta.getPersistentDataContainer().has(itemBuyPrice(), PersistentDataType.INTEGER)) {
       return meta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER);
     }
+
+    Optional<Integer> enchantmentBuyPrice = EnchantmentRegistry.findByBookItemStack(item)
+        .map(enchantment -> enchantment.getBook().getCost());
+    if (enchantmentBuyPrice.isPresent()) {
+      return enchantmentBuyPrice.get();
+    }
+
+    Optional<Integer> registeredItemBuyPrice = ItemRegistry.findByItemStack(item)
+        .map(itemHelper -> itemHelper.getCost());
+    if (registeredItemBuyPrice.isPresent()) {
+      return registeredItemBuyPrice.get();
+    }
+
     return ItemPrice.from(item.getType()).getBuyPrice();
   }
 
@@ -269,7 +290,7 @@ public class NpcTradeHandler {
   }
 
   private void handleBuy(ItemStack guiItem, Player player, PlayerEntry playerEntry, int buyPrice,
-      String itemDisplayName, int amount) {
+      String itemDisplayName, int amount, int slot) {
     if (buyPrice <= 0) {
       player.sendMessage(
           languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
@@ -302,6 +323,12 @@ public class NpcTradeHandler {
     playerEntry.setPurse(playerEntry.getPurse() - totalCost);
     playerEntry.setUpdatedBy(playerEntry.getId());
     playerEntry.setHasToBeUpdated(true);
+
+    if (slot == 49 && RelluEssentials.getInstance().getBuyBackService().hasBuyBackItems(player)) {
+      RelluEssentials.getInstance().getBuyBackService().removeBuyBackItem(player);
+      player.getOpenInventory().getTopInventory().setItem(49, buyBackSlotResolver.resolveForPlayer(player));
+    }
+
     player.sendMessage(
         languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY, itemDisplayName,
             StringHelper.formatDouble(totalCost), PLUGIN_NAME_MONEY,
@@ -340,7 +367,8 @@ public class NpcTradeHandler {
     if (targetMeta == null) {
       return;
     }
-    targetMeta.getPersistentDataContainer().set(itemSellPrice(), PersistentDataType.INTEGER, sellPrice);
+    targetMeta.getPersistentDataContainer()
+        .set(itemSellPrice(), PersistentDataType.INTEGER, sellPrice);
     targetItem.setItemMeta(targetMeta);
   }
 
@@ -353,7 +381,6 @@ public class NpcTradeHandler {
 
 
     if (!isRegisteredItem) {
-
       if (meta == null) {
         return;
       }
@@ -387,6 +414,7 @@ public class NpcTradeHandler {
     if (isRightClick) {
       amount = removeAllMatchingItemsFromInventory(player, item);
       totalEarnings = sellPrice * (double) amount;
+      RelluEssentials.getInstance().getBuyBackService().recordSoldItems(player, item, amount);
     } else {
       amount = item.getAmount();
       totalEarnings = sellPrice * (double) amount;
@@ -394,8 +422,11 @@ public class NpcTradeHandler {
       if (slotItem == null) {
         return;
       }
+      RelluEssentials.getInstance().getBuyBackService().recordSoldItems(player, slotItem, amount);
       slotItem.setAmount(0);
     }
+
+    player.getOpenInventory().getTopInventory().setItem(49, buyBackSlotResolver.resolveForPlayer(player));
 
     playerEntry.setPurse(playerEntry.getPurse() + totalEarnings);
     playerEntry.setUpdatedBy(playerEntry.getId());

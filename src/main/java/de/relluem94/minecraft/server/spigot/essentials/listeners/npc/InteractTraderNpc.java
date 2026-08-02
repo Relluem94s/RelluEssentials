@@ -2,13 +2,17 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BuyBackSlotResolver;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -17,6 +21,14 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 
 public class InteractTraderNpc implements Listener {
+
+  private final BuyBackSlotResolver buyBackSlotResolver;
+
+  public InteractTraderNpc(){
+    this.buyBackSlotResolver = new BuyBackSlotResolver(RelluEssentials.getInstance().getBuyBackService(), ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow().getCustomItem());
+  }
 
   @EventHandler
   public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
@@ -58,8 +70,11 @@ public class InteractTraderNpc implements Listener {
               }
               e.setCancelled(true);
             } else {
-              InventoryHelper.openInventory(p,
-                  RelluEssentials.getInstance().getTraderNpcRegistry().getNPC(i).getMainGUI());
+              org.bukkit.inventory.Inventory gui =
+                  RelluEssentials.getInstance().getTraderNpcRegistry().getNPC(i).getMainGUI();
+
+              gui.setItem(49, buyBackSlotResolver.resolveForPlayer(p));
+              InventoryHelper.openInventory(p, gui);
               e.setCancelled(true);
             }
           }
