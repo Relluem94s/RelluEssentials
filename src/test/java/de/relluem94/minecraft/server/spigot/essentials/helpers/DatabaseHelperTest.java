@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
+import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
@@ -32,6 +33,13 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntr
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupInventoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -39,6 +47,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
@@ -99,13 +108,20 @@ class DatabaseHelperTest {
         instanceField.setAccessible(true);
         instanceField.set(null, fakeInstance);
 
-        Field groupListField = RelluEssentials.class.getDeclaredField("groupEntryList");
-        groupListField.setAccessible(true);
-        groupListField.set(fakeInstance, new ArrayList<>());
-
         Field locationTypeEntryField = RelluEssentials.class.getDeclaredField("locationTypeEntryList");
         locationTypeEntryField.setAccessible(true);
         locationTypeEntryField.set(fakeInstance, new ArrayList<>());
+
+        GroupRepository groupRepository = new GroupRepository(List.of());
+        GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
+        GroupService groupService = new GroupService(groupRegistry, groupRepository, new PlayerRegistry(List.of()));
+
+        when(fakeInstance.getGroupService()).thenReturn(groupService);
+        when(fakeInstance.getGroupRegistry()).thenReturn(groupRegistry);
+        when(fakeInstance.getPlayerService()).thenReturn(mock(PlayerService.class));
+        when(fakeInstance.getCommandManager()).thenReturn(mock(CommandManager.class));
+        when(fakeInstance.getBuyBackService()).thenReturn(mock(BuyBackService.class));
+        when(fakeInstance.getNpcService()).thenReturn(mock(NpcService.class));
 
         databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema, sqlResourceLoader, new ServiceContext(fakeInstance));
         databaseHelper.setPatchHelper(patchHelper);
@@ -937,7 +953,6 @@ class DatabaseHelperTest {
         when(resultSet.getBoolean("afk")).thenReturn(false);
         when(resultSet.getBoolean("fly")).thenReturn(false);
         when(resultSet.getInt("group_fk")).thenReturn(1);
-
         var result = databaseHelper.getPlayers();
 
         assertFalse(result.isEmpty());

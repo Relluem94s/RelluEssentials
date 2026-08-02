@@ -56,10 +56,6 @@ class TabCompleterHelperTest {
     Field instanceField = RelluEssentials.class.getDeclaredField("instance");
     instanceField.setAccessible(true);
     instanceField.set(null, relluEssentials);
-
-    Field groupListField = RelluEssentials.class.getDeclaredField("groupEntryList");
-    groupListField.setAccessible(true);
-    groupListField.set(relluEssentials, new ArrayList<>());
   }
 
   @Test

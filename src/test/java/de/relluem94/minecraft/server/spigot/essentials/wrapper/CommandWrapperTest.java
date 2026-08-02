@@ -19,7 +19,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import java.lang.reflect.Field;
 import java.util.Optional;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CommandWrapperTest {
 
     @Mock
-    private JavaPlugin javaPlugin;
+    private RelluEssentials javaPlugin;
 
     @Mock
     private PluginCommand pluginCommand;
@@ -84,7 +83,7 @@ class CommandWrapperTest {
         Admin adminConstruct = new Admin();
         CommandWrapper wrapper = new CommandWrapper(adminConstruct);
         String commandName = wrapper.getCommandName();
-        ServiceContext serviceContext = new ServiceContext((RelluEssentials) javaPlugin);
+        ServiceContext serviceContext = new ServiceContext(javaPlugin);
         when(javaPlugin.getCommand(commandName)).thenReturn(pluginCommand);
 
         wrapper.init(javaPlugin, serviceContext);
