@@ -7,19 +7,19 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import java.util.Objects;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class InventoryClickBags implements Listener {
+public class InventoryClickBags implements ListenerConstruct {
 
 
   @EventHandler

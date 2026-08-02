@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterBlockDrop;
@@ -64,13 +65,16 @@ public class EventManager implements Enable {
 
   @Override
   public void enable(RelluEssentials plugin) {
+    ServiceContext serviceContext = new ServiceContext(plugin);
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
     eventWrapperList
-        .forEach(eventWrapper -> eventWrapper.init(plugin));
+        .forEach(eventWrapper -> eventWrapper.init(plugin, serviceContext));
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED,
             eventWrapperList.size()));
+
+
   }
 
 

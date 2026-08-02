@@ -3,20 +3,26 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Lightable;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 
-public class BetterLights implements Listener {
+public class BetterLights implements ListenerConstruct {
 
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onChangeSignCreateActionSign(PlayerInteractEvent e) {

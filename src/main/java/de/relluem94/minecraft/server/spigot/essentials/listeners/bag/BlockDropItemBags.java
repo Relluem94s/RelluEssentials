@@ -5,6 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentCons
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
@@ -19,12 +20,11 @@ import org.bukkit.block.data.type.Cocoa;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockDropItemBags implements Listener {
+public class BlockDropItemBags implements ListenerConstruct {
 
   private final Random random = new Random();
   private final EnchantmentHelper autosmelt;

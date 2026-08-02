@@ -1,17 +1,23 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockPistonProtect implements Listener {
+public class BlockPistonProtect implements ListenerConstruct {
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onBlockPistonExtend(@NotNull BlockPistonExtendEvent e) {

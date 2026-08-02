@@ -3,18 +3,24 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
-public class BlockRedstoneProtect implements Listener {
+public class BlockRedstoneProtect implements ListenerConstruct {
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onBlockRedstoneChange(@NotNull BlockRedstoneEvent e) {

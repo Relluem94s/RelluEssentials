@@ -43,7 +43,7 @@ public class Spawn implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 
@@ -106,7 +106,7 @@ public class Spawn implements CommandConstruct {
 
     Player p = (Player) sender;
 
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("user").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "user")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }

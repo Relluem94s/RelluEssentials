@@ -1,24 +1,34 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-public class NpcChunkLoadListener implements Listener {
+public class NpcChunkLoadListener implements ListenerConstruct {
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
+
   @EventHandler
   public void onChunkLoad(ChunkLoadEvent event) {
     List<Npc> npcsInChunk = findNpcsInChunk(event.getChunk());
-    if (npcsInChunk.isEmpty()) return;
+    if (npcsInChunk.isEmpty()) {
+      return;
+    }
 
     Bukkit.getScheduler().runTaskLater(
         RelluEssentials.getInstance(),
-        () -> npcsInChunk.forEach(npc -> RelluEssentials.getInstance().getNpcService().spawnNpc(npc)),
+        () -> npcsInChunk.forEach(
+            npc -> RelluEssentials.getInstance().getNpcService().spawnNpc(npc)),
         5L
     );
   }

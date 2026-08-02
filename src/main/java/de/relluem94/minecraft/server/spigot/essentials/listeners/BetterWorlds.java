@@ -2,16 +2,22 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.jspecify.annotations.NonNull;
 
-public class BetterWorlds implements Listener {
+public class BetterWorlds implements ListenerConstruct {
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onWorldChange(@NonNull PlayerChangedWorldEvent e) {

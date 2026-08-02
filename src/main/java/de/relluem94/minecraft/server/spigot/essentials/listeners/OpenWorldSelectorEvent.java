@@ -3,21 +3,28 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
 
-public class OpenWorldSelectorEvent implements Listener {
+public class OpenWorldSelectorEvent implements ListenerConstruct {
+
 
   private final RegistryKey worldSelectorKey;
 
   public OpenWorldSelectorEvent() {
     this.worldSelectorKey = RegistryKey.of(PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR);
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
   }
 
   @EventHandler

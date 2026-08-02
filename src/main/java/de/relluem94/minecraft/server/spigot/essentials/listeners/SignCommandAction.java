@@ -1,18 +1,26 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.SignConstants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsSignInteractEvent;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.jspecify.annotations.NonNull;
 
-public class SignCommandAction implements Listener {
+public class SignCommandAction implements ListenerConstruct {
+
 
   private final RegistryKey signAction;
+
   public SignCommandAction() {
     this.signAction = RegistryKey.of(SignConstants.PLUGIN_SIGN_ACTION_COMMAND);
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
   }
 
   @EventHandler

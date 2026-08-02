@@ -3,11 +3,13 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
@@ -20,14 +22,19 @@ import org.bukkit.block.data.type.Gate;
 import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author rellu
  */
-public class BetterLock implements Listener {
+public class BetterLock implements ListenerConstruct {
+
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onInteract(@NotNull PlayerInteractEvent e) {
@@ -38,7 +45,8 @@ public class BetterLock implements Listener {
       if (ProtectionHelper.isOpenAble(b)) {
         ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
             .getProtectionEntry(l);
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(e.getPlayer());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+            .getPlayerEntry(e.getPlayer());
         if (protection != null && pe != null && !(
             pe.getPlayerState().equals(PlayerState.PROTECTION_INFO) || pe.getPlayerState()
                 .equals(PlayerState.PROTECTION_ADD) || pe.getPlayerState()
@@ -52,7 +60,8 @@ public class BetterLock implements Listener {
               e.getPlayer().sendMessage(
                   languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
             } else {
-              if (PermissionHelper.isAuthorized(e.getPlayer(), GroupRegistry.getGroup("mod").getId())) {
+              if (PermissionHelper.isAuthorized(e.getPlayer(),
+                  GroupRegistry.getGroup("mod").getId())) {
                 e.setCancelled(false);
                 e.getPlayer().sendMessage(languageHelper.getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
@@ -139,17 +148,20 @@ public class BetterLock implements Listener {
             // ELSE Other Openable Objects (Future Implementations)
           }
         }
-      } else if (RelluEssentials.getInstance().getProtectionRegistry().isProtectableMaterial(b.getType())) {
+      } else if (RelluEssentials.getInstance().getProtectionRegistry()
+          .isProtectableMaterial(b.getType())) {
         ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
             .getProtectionEntry(l);
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(e.getPlayer());
+        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+            .getPlayerEntry(e.getPlayer());
         if (protection != null && pe != null && pe.getPlayerState().equals(PlayerState.DEFAULT)) {
           if (ProtectionHelper.hasRights(protection, pe.getId())) {
             if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
               e.getPlayer().sendMessage(
                   languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
             } else {
-              if (PermissionHelper.isAuthorized(e.getPlayer(), GroupRegistry.getGroup("mod").getId())) {
+              if (PermissionHelper.isAuthorized(e.getPlayer(),
+                  GroupRegistry.getGroup("mod").getId())) {
                 e.setCancelled(false);
                 e.getPlayer().sendMessage(languageHelper.getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));

@@ -90,7 +90,7 @@ public class Warp implements CommandConstruct {
 
     Player p = (Player) sender;
 
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("user").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "user")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -107,7 +107,7 @@ public class Warp implements CommandConstruct {
       warp(args[0], p);
       return true;
     } else if (args.length == 2) {
-      if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("admin").getId())) {
+      if (!groupService.isSenderAuthorized(p, "admin")) {
         p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }

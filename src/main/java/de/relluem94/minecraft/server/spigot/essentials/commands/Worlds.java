@@ -15,7 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
@@ -23,7 +22,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.ArrayList;
@@ -84,15 +82,15 @@ public class Worlds implements CommandConstruct {
   }
 
   @Override
-  public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
+  public boolean onCommand(@NonNull CommandSender commandSender, @NotNull Command command,
       @NonNull String label, String[] args) {
-    if (isCMDBlock(sender) && args.length == 2 && !args[0].equalsIgnoreCase(Commands.LIST.getName())
+    if (isCMDBlock(commandSender) && args.length == 2 && !args[0].equalsIgnoreCase(Commands.LIST.getName())
         && args[1].equals("@p")) {
-      BlockCommandSender bcs = (BlockCommandSender) sender;
+      BlockCommandSender bcs = (BlockCommandSender) commandSender;
       CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
       Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
       if (p == null) {
-        sender.sendMessage(
+        commandSender.sendMessage(
             String.format(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER),
                 "No Player in Reach"));
         return true;
@@ -102,14 +100,14 @@ public class Worlds implements CommandConstruct {
       return true;
     }
 
-    if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+    if (!isPlayer(commandSender)) {
+      commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
-    Player p = (Player) sender;
+    Player p = (Player) commandSender;
 
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("user").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "user")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -132,7 +130,7 @@ public class Worlds implements CommandConstruct {
         return true;
       }
 
-      if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+      if (!groupService.isSenderAuthorized(p, "mod")) {
         p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }
@@ -142,7 +140,7 @@ public class Worlds implements CommandConstruct {
       return true;
     }
 
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("admin").getId())) {
+    if (!groupService.isSenderAuthorized(p, "admin")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -221,7 +219,7 @@ public class Worlds implements CommandConstruct {
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
     }
 

@@ -6,20 +6,26 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHe
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jspecify.annotations.NonNull;
 
 
-public class BetterPlayerQuit implements Listener {
+public class BetterPlayerQuit implements ListenerConstruct {
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onLeave(@NonNull PlayerQuitEvent e) {

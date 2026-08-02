@@ -6,7 +6,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.ArrayList;
@@ -21,7 +23,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -31,13 +32,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jspecify.annotations.NonNull;
 
-public class CloudSailor implements Listener {
+public class CloudSailor implements ListenerConstruct {
+
 
   private final Random random = new Random();
   private final ItemHelper cloudSailorItem = ItemRegistry.find(
       RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
   private final ItemHelper cloudBoots = ItemRegistry.find(
       RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow();
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void mobDeath(@NonNull EntityDeathEvent event) {

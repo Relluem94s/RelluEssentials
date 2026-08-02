@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
  * bamboo to be sent directly to the player's inventory by firing a synthetic
  * {@link EntityPickupItemEvent} immediately after the block is removed.</p>
  */
-public class BlockBreakBags implements Listener {
+public class BlockBreakBags implements ListenerConstruct {
 
   private final Set<Block> processingBlocks = new HashSet<>();
   private final EnchantmentHelper delicate;

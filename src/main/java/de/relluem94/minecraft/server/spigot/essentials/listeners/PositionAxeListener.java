@@ -4,25 +4,32 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.la
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_POSITION_AXE;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class PositionAxeListener implements Listener {
+public class PositionAxeListener implements ListenerConstruct {
+
 
   private final ItemHelper positionAxeItem = ItemRegistry.find(
       RegistryKey.of(PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow();
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onPlayerInteract(@NotNull PlayerInteractEvent event) {

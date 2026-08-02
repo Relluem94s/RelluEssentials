@@ -71,7 +71,7 @@ public class Enderchest implements CommandConstruct {
       return true;
     }
 
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(p, "mod")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
@@ -85,7 +85,7 @@ public class Enderchest implements CommandConstruct {
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
     }
 

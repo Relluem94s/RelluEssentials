@@ -331,7 +331,8 @@ public class NpcTradeHandler {
 
     if (slot == 49 && RelluEssentials.getInstance().getBuyBackService().hasBuyBackItems(player)) {
       RelluEssentials.getInstance().getBuyBackService().removeBuyBackItem(player);
-      player.getOpenInventory().getTopInventory().setItem(49, buyBackSlotResolver.resolveForPlayer(player));
+      player.getOpenInventory().getTopInventory()
+          .setItem(49, buyBackSlotResolver.resolveForPlayer(player));
     }
 
     player.sendMessage(
@@ -390,7 +391,6 @@ public class NpcTradeHandler {
     boolean isRegisteredItem = ItemRegistry.findByItemStack(item).isPresent()
         || EnchantmentRegistry.findByBookItemStack(item).isPresent();
 
-
     if (!isRegisteredItem) {
       if (meta == null) {
         return;
@@ -437,7 +437,8 @@ public class NpcTradeHandler {
       slotItem.setAmount(0);
     }
 
-    player.getOpenInventory().getTopInventory().setItem(49, buyBackSlotResolver.resolveForPlayer(player));
+    player.getOpenInventory().getTopInventory()
+        .setItem(49, buyBackSlotResolver.resolveForPlayer(player));
 
     playerEntry.setPurse(playerEntry.getPurse() + totalEarnings);
     playerEntry.setUpdatedBy(playerEntry.getId());

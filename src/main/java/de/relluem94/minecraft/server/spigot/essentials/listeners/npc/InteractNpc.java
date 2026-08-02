@@ -3,6 +3,8 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_MSG_SPACER_IN;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NpcDialogueTracker;
@@ -14,16 +16,21 @@ import java.util.UUID;
 import org.bukkit.entity.Mannequin;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jspecify.annotations.NonNull;
 
-public class InteractNpc implements Listener {
+public class InteractNpc implements ListenerConstruct {
 
   private static final long INTERACTION_COOLDOWN_MS = 750;
   private final Map<UUID, Long> lastInteractionTimestamp = new HashMap<>();
   private NpcDialogueTracker dialogueTracker;
+
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   public NpcDialogueTracker resovleDialogTracker() {
     if (dialogueTracker == null) {

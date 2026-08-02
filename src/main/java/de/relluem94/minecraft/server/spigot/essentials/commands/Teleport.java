@@ -144,7 +144,7 @@ public class Teleport implements CommandConstruct {
         return false;
       }
 
-      if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+      if (!groupService.isSenderAuthorized(p, "mod")) {
         addTeleportEntry(p, target);
         p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_SEND_REQUEST,
             target.getCustomName()));
@@ -175,7 +175,7 @@ public class Teleport implements CommandConstruct {
         return true;
       }
 
-      if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+      if (!groupService.isSenderAuthorized(p, "mod")) {
         addTeleportToEntry(p, target);
         return true;
       }
@@ -193,7 +193,7 @@ public class Teleport implements CommandConstruct {
   }
 
   private void teleportToLocation(Player p, String x, String y, String z) {
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(p, "mod")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }

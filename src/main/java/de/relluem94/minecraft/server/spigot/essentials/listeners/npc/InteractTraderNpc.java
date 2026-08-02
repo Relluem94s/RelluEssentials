@@ -5,8 +5,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
@@ -16,18 +18,24 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 
-public class InteractTraderNpc implements Listener {
+public class InteractTraderNpc implements ListenerConstruct {
 
   private final BuyBackSlotResolver buyBackSlotResolver;
 
-  public InteractTraderNpc(){
-    this.buyBackSlotResolver = new BuyBackSlotResolver(RelluEssentials.getInstance().getBuyBackService(), ItemRegistry.find(
+  public InteractTraderNpc() {
+    this.buyBackSlotResolver = new BuyBackSlotResolver(
+        RelluEssentials.getInstance().getBuyBackService(), ItemRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow().getCustomItem());
+  }
+
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
   }
 
   @EventHandler
@@ -36,7 +44,8 @@ public class InteractTraderNpc implements Listener {
     if (e.getRightClicked() instanceof Villager) {
       if (e.getRightClicked().getCustomName() != null) {
         String customName = e.getRightClicked().getCustomName();
-        for (int i = 0; i < RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList().size();
+        for (int i = 0;
+            i < RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList().size();
             i++) {
           if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList().get(i)
               .equals(customName)) {

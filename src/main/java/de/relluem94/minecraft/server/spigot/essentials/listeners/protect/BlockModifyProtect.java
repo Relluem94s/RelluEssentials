@@ -4,15 +4,22 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.Protection
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.removeProtectionFromBlock;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class BlockModifyProtect implements Listener {
+public class BlockModifyProtect implements ListenerConstruct {
+
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void placeBlocks(@NotNull BlockPlaceEvent e) {
@@ -29,8 +36,10 @@ public class BlockModifyProtect implements Listener {
   @EventHandler
   public void onBlockMove(@NotNull BlockFromToEvent e) {
     Block block = e.getToBlock();
-    if (RelluEssentials.getInstance().getProtectionRegistry().isProtectableMaterial(block.getType())) {
-      if (RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntry(block.getLocation())
+    if (RelluEssentials.getInstance().getProtectionRegistry()
+        .isProtectableMaterial(block.getType())) {
+      if (RelluEssentials.getInstance().getProtectionRegistry()
+          .getProtectionEntry(block.getLocation())
           != null) {
         e.setCancelled(true);
       }

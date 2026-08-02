@@ -9,13 +9,11 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ public class Position implements CommandConstruct {
   @Override
   public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
       @NotNull String s, @NotNull String[] strings) {
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       commandSender.sendMessage(
           languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
@@ -228,7 +226,7 @@ public class Position implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 

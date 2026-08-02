@@ -7,8 +7,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Namespac
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
@@ -23,7 +25,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -32,9 +33,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-public class NoDeathMessage implements Listener {
+public class NoDeathMessage implements ListenerConstruct {
+
 
   private final Random random = new Random();
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onDeath(@NotNull PlayerDeathEvent e) {
@@ -65,7 +72,8 @@ public class NoDeathMessage implements Listener {
       Location location = new Location(ploc.getWorld(), ploc.getBlockX(), ploc.getBlockY(),
           ploc.getBlockZ(), ploc.getYaw(), ploc.getPitch());
 
-      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
+      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+          .getPlayerEntry(p.getUniqueId());
       LocationEntry le = new LocationEntry();
       le.setLocation(location);
       le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(994)));
@@ -115,7 +123,8 @@ public class NoDeathMessage implements Listener {
   @EventHandler
   public void onRespawn(@NotNull PlayerRespawnEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(p.getUniqueId());
     if (pe != null) {
       p.setAllowFlight(pe.isFlying());
       p.setFlying(pe.isFlying());
@@ -125,7 +134,8 @@ public class NoDeathMessage implements Listener {
   @EventHandler
   public void onWorldChange(@NotNull PlayerChangedWorldEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(p.getUniqueId());
     if (pe != null) {
       p.setAllowFlight(pe.isFlying());
       p.setFlying(pe.isFlying());
@@ -135,7 +145,8 @@ public class NoDeathMessage implements Listener {
   @EventHandler
   public void onWorldChange(@NotNull PlayerTeleportEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(p.getUniqueId());
     if (pe != null) {
       p.setAllowFlight(pe.isFlying());
       p.setFlying(pe.isFlying());

@@ -11,11 +11,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHe
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTransactionEntry;
@@ -27,22 +29,13 @@ import java.util.function.BiConsumer;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryClickNpc implements Listener {
+public class InventoryClickNpc implements ListenerConstruct {
 
-  private ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
-  }
-
-  private ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
-  }
 
   private final NpcTradeHandler tradeHandler = new NpcTradeHandler();
-
   private final Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
       BankerHelper.npc_gui_deposit_5_percent, (p, bae) -> BankerHelper.deposit(
           RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 5f),
@@ -61,6 +54,23 @@ public class InventoryClickNpc implements Listener {
       BankerHelper.npc_gui_withdraw_all, (p, bae) -> BankerHelper.withdraw(
           RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 100f)
   );
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
+
+  private ItemHelper resolveDisabledItem() {
+    return ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow();
+  }
+
+  private ItemHelper resolveCloseItem() {
+    return ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+        .orElseThrow();
+  }
 
   @EventHandler
   public void onInventoryClickItem(@NonNull InventoryClickEvent e) {

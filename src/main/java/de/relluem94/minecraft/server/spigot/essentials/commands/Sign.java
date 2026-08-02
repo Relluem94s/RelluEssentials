@@ -47,7 +47,7 @@ public class Sign implements CommandConstruct {
 
     Player p = (Player) sender;
 
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(p, "mod")) {
       p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }

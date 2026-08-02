@@ -1,15 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
-public class BetterBlockDrop implements Listener {
+public class BetterBlockDrop implements ListenerConstruct {
 
   private final Material[] ores = {Material.DIAMOND_ORE, Material.LAPIS_ORE, Material.REDSTONE_ORE,
       Material.COAL_ORE, Material.IRON_ORE, Material.COPPER_ORE, Material.DEEPSLATE_COAL_ORE,

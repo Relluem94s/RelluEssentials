@@ -1,16 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class DamgeTraderNpc implements Listener {
+public class DamgeTraderNpc implements ListenerConstruct {
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onNPCDamage(@NotNull EntityDamageByEntityEvent e) {
@@ -32,7 +36,7 @@ public class DamgeTraderNpc implements Listener {
       return;
     }
 
-    if (!PermissionHelper.isAuthorized(p, GroupRegistry.getGroup("admin").getId())) {
+    if (!groupService.isSenderAuthorized(p, "admin")) {
       e.setCancelled(true);
     }
   }

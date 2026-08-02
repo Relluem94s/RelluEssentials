@@ -2,15 +2,16 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -24,7 +25,13 @@ import org.jspecify.annotations.NonNull;
  *
  * @author rellu
  */
-public class CustomEnchantment implements Listener {
+public class CustomEnchantment implements ListenerConstruct {
+
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   private @NonNull @Unmodifiable List<EnchantmentHelper> resolveRegisteredEnchantments() {
     return EnchantmentRegistry.findAll();

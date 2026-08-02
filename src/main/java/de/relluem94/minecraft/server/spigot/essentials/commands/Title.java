@@ -72,7 +72,7 @@ public class Title implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 

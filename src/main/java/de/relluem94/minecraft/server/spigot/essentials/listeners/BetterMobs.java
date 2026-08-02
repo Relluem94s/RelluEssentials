@@ -6,6 +6,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.Enchantmen
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
@@ -13,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
@@ -22,7 +24,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -31,27 +32,35 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-public class BetterMobs implements Listener {
+public class BetterMobs implements ListenerConstruct {
 
 
   private final EnchantmentHelper telekinesis;
   private final EnchantmentHelper thunderstrike;
   private final EnchantmentHelper scavengers;
   private final EnchantmentHelper lifesteal;
-
   public BetterMobs() {
     this.telekinesis = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+            RegistryKey.of(RelluEssentials.getInstance(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
         .orElse(null);
     this.thunderstrike = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
+            RegistryKey.of(RelluEssentials.getInstance(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
         .orElse(null);
     this.scavengers = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS))
+            RegistryKey.of(RelluEssentials.getInstance(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS))
         .orElse(null);
     this.lifesteal = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL))
+            RegistryKey.of(RelluEssentials.getInstance(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL))
         .orElse(null);
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
   }
 
   @EventHandler

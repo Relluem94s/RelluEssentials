@@ -1,10 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +16,12 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rellu
  */
-public class ToolCrafting implements Listener {
+public class ToolCrafting implements ListenerConstruct {
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   private final Material[] netherite = new Material[]{Material.NETHERITE_HOE,
       Material.NETHERITE_AXE, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL,

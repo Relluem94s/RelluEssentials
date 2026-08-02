@@ -75,7 +75,7 @@ public class GameModeCreative implements CommandConstruct {
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (!PermissionHelper.isAuthorized(commandSender, GroupRegistry.getGroup("mod").getId())) {
+    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
     }
 

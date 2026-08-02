@@ -9,10 +9,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.Protection
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.removeRight;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import java.text.SimpleDateFormat;
@@ -28,17 +30,22 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class PlayerInteractProtect implements Listener {
+public class PlayerInteractProtect implements ListenerConstruct {
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onPlayerProtectionChange(@NotNull PlayerInteractEvent e) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(e.getPlayer());
+    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+        .getPlayerEntry(e.getPlayer());
 
     if (pe.getPlayerState().equals(PlayerState.PROTECTION_ADD)) {
       protectBlock(e.getPlayer(), e.getClickedBlock());
@@ -53,7 +60,8 @@ public class PlayerInteractProtect implements Listener {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_INFO)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntry(l);
+      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry()
+          .getProtectionEntry(l);
       if (pre != null) {
         Player p = e.getPlayer();
         Location loc = pre.getLocationEntry().getLocation();
@@ -112,7 +120,8 @@ public class PlayerInteractProtect implements Listener {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_FLAG_REMOVE)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntry(l);
+      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry()
+          .getProtectionEntry(l);
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
@@ -157,7 +166,8 @@ public class PlayerInteractProtect implements Listener {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_FLAG_ADD)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntry(l);
+      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry()
+          .getProtectionEntry(l);
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
@@ -223,7 +233,8 @@ public class PlayerInteractProtect implements Listener {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_RIGHT_ADD)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntry(l);
+      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry()
+          .getProtectionEntry(l);
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
@@ -245,7 +256,8 @@ public class PlayerInteractProtect implements Listener {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_RIGHT_REMOVE)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntry(l);
+      ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry()
+          .getProtectionEntry(l);
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));

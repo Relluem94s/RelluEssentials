@@ -1,19 +1,27 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.SignConstants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsSignInteractEvent;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.jspecify.annotations.NonNull;
 
-public class SignTeleportAction implements Listener {
+public class SignTeleportAction implements ListenerConstruct {
+
 
   private final RegistryKey signAction;
+
   public SignTeleportAction() {
     this.signAction = RegistryKey.of(SignConstants.PLUGIN_SIGN_ACTION_TELEPORT);
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
   }
 
   @EventHandler

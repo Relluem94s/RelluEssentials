@@ -2,12 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -17,7 +18,13 @@ import org.bukkit.util.Vector;
  *
  * @author rellu
  */
-public class PlayerMove implements Listener {
+public class PlayerMove implements ListenerConstruct {
+
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onMove(PlayerMoveEvent e) {
@@ -43,7 +50,8 @@ public class PlayerMove implements Listener {
 
     if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId()) != null) {
       e.setCancelled(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId()).isAfk());
+          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId())
+              .isAfk());
     }
   }
 }

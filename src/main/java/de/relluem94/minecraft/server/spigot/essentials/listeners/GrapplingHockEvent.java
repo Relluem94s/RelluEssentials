@@ -5,7 +5,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.ArrayList;
@@ -13,7 +15,6 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.inventory.ItemStack;
@@ -24,9 +25,15 @@ import org.jspecify.annotations.NonNull;
 /**
  * Handles grappling hook mechanics for players in the lobby world.
  */
-public class GrapplingHockEvent implements Listener {
+public class GrapplingHockEvent implements ListenerConstruct {
+
 
   protected static final List<Player> COOL_DOWN = new ArrayList<>();
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   /**
    * Launches the player toward the hook's location when the hook hits the ground or is reeled in.

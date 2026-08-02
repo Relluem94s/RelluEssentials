@@ -1,6 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
+
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsSignInteractEvent;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.SignAction;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SignRegistry;
@@ -12,18 +15,23 @@ import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 
-public class SignInteractListener implements Listener {
+public class SignInteractListener implements ListenerConstruct {
 
   private final Plugin plugin;
 
+
   public SignInteractListener(Plugin plugin) {
     this.plugin = plugin;
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
   }
 
   @EventHandler(priority = EventPriority.HIGH)

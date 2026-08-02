@@ -2,19 +2,19 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SPACER_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.rellulib.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-public class BetterChatFormat implements Listener {
+public class BetterChatFormat implements ListenerConstruct {
 
   public static final String VIP_CHANNEL = "#v ";
   public static final String MOD_CHANNEL = "#m ";
@@ -44,5 +44,10 @@ public class BetterChatFormat implements Listener {
       Bukkit.broadcastMessage(
           p.getCustomName() + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + e.getMessage());
     }
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
   }
 }
