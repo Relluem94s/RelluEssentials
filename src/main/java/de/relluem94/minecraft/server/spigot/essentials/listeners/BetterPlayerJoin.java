@@ -13,7 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,9 +24,11 @@ import org.jspecify.annotations.NonNull;
 
 public class BetterPlayerJoin implements ListenerConstruct {
 
+  GroupService groupService;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.groupService = context.getGroupService();
   }
 
   private void addPlayer(@NonNull Player p) {
@@ -37,7 +39,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
       pe.setCreatedBy(1);
       pe.setName(p.getName());
       pe.setCustomName(p.getDisplayName());
-      pe.setGroup(GroupRegistry.getGroup("user"));
+      pe.setGroup(groupService.resolveGroupWithFallback("user"));
       pe.setUuid(p.getUniqueId().toString());
       RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
 
