@@ -1,0 +1,63 @@
+package de.relluem94.minecraft.server.spigot.essentials.services;
+
+import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repository.BuyBackRepository;
+import java.util.ArrayList;
+import java.util.List;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+public class BuyBackService {
+
+  private final BuyBackRepository buyBackRepository;
+
+  public BuyBackService(BuyBackRepository buyBackRepository) {
+    this.buyBackRepository = buyBackRepository;
+  }
+
+  public void recordSoldItems(Player player, ItemStack item, int totalAmount) {
+    ItemStack resolvedItem = resolveCanonicalItem(item);
+    List<ItemStack> stacks = splitIntoStacks(resolvedItem, totalAmount);
+    buyBackRepository.addItems(player, stacks);
+  }
+
+  public List<ItemStack> getBuyBackItems(Player player) {
+    return buyBackRepository.findByPlayer(player);
+  }
+
+  public boolean hasBuyBackItems(Player player) {
+    return !buyBackRepository.findByPlayer(player).isEmpty();
+  }
+
+  public void clearBuyBackHistory(Player player) {
+    buyBackRepository.deleteByPlayer(player);
+  }
+
+  public void removeBuyBackItem(Player player) {
+    buyBackRepository.removeLastEntry(player);
+  }
+
+
+  private ItemStack resolveCanonicalItem(ItemStack item) {
+    return EnchantmentRegistry.findByBookItemStack(item)
+        .map(enchantment -> enchantment.getBook().getCustomItem())
+        .orElseGet(() -> ItemRegistry.findByItemStack(item)
+            .map(itemHelper -> itemHelper.getCustomItem())
+            .orElse(item));
+  }
+
+  private List<ItemStack> splitIntoStacks(ItemStack item, int totalAmount) {
+    List<ItemStack> stacks = new ArrayList<>();
+    int maxStackSize = item.getType().getMaxStackSize();
+    int remaining = totalAmount;
+    while (remaining > 0) {
+      int stackSize = Math.min(remaining, maxStackSize);
+      ItemStack stack = new ItemStack(item);
+      stack.setAmount(stackSize);
+      stacks.add(stack);
+      remaining -= stackSize;
+    }
+    return stacks;
+  }
+}

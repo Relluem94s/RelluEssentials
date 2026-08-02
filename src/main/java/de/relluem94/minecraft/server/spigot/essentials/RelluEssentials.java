@@ -155,6 +155,8 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.WarpRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repository.BuyBackRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
@@ -207,6 +209,7 @@ public class RelluEssentials extends JavaPlugin {
   public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
   public final Map<Material, Material> crops = new EnumMap<>(Material.class);
   public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
+
   @Getter
   public final List<GroupEntry> groupEntryList = new ArrayList<>();
   @Getter
@@ -242,6 +245,8 @@ public class RelluEssentials extends JavaPlugin {
   @Setter
   @Getter
   private WarpRegistry warpRegistry;
+  @Getter
+  private BuyBackService buyBackService;
   @Getter
   private NpcService npcService;
   @Getter
@@ -452,6 +457,8 @@ public class RelluEssentials extends JavaPlugin {
     databaseHelper = dm.getDatabaseHelper();
     this.playerRegistry = new PlayerRegistry(databaseHelper.getBags());
     this.playerService = new PlayerService(playerRegistry);
+    BuyBackRepository buyBackRepository = new BuyBackRepository();
+    buyBackService = new BuyBackService(buyBackRepository);
 
     new EventManager().enable();
     new SkillManager().enable();
