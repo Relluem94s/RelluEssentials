@@ -71,6 +71,7 @@ public class TraderNpc implements Trader {
     BANKER,
     CHAT,
     ENCHANTER,
+    BEEKEEPER,
     OTHER
   }
 }

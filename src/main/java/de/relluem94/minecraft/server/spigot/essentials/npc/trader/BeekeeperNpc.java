@@ -1,24 +1,34 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 public class BeekeeperNpc extends TraderNpc {
 
   public BeekeeperNpc() {
-    super("§dBeekeeper", Profession.NONE, Type.TRADER);
+    super("§dBeekeeper", Profession.NONE, Type.BEEKEEPER);
   }
 
   private ItemHelper resolveDisabledItem() {
@@ -36,31 +46,87 @@ public class BeekeeperNpc extends TraderNpc {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, getTitle()),
         resolveDisabledItem().getCustomItem());
 
-    inv.setItem(10, new ItemStack(Material.BEEHIVE, 1));
-    inv.setItem(11, new ItemStack(Material.HONEYCOMB_BLOCK, 1));
-    inv.setItem(12, new ItemStack(Material.HONEY_BLOCK, 1));
-    inv.setItem(13, new ItemStack(Material.HONEYCOMB, 1));
-    inv.setItem(14, new ItemStack(Material.HONEY_BOTTLE, 1));
-    inv.setItem(15, new ItemStack(Material.CANDLE, 1));
+    inv.setItem(10, createTradableItem(Material.BEEHIVE));
+    inv.setItem(11, createTradableItem(Material.HONEYCOMB_BLOCK));
+    inv.setItem(12, createTradableItem(Material.HONEY_BLOCK));
+    inv.setItem(13, createTradableItem(Material.HONEYCOMB));
+    inv.setItem(14, createTradableItem(Material.HONEY_BOTTLE));
+    inv.setItem(15, createTradableItem(Material.CANDLE));
 
-    inv.setItem(28, PlayerHeadHelper.getCustomSkull(CustomHeads.WHITE_CANDLE));
-    inv.setItem(29, PlayerHeadHelper.getCustomSkull(CustomHeads.CYAN_CANDLE));
-    inv.setItem(30, PlayerHeadHelper.getCustomSkull(CustomHeads.RED_CANDLE));
-    inv.setItem(31, PlayerHeadHelper.getCustomSkull(CustomHeads.BLUE_CANDLE));
-    inv.setItem(32, PlayerHeadHelper.getCustomSkull(CustomHeads.GRAY_CANDLE));
-    inv.setItem(33, PlayerHeadHelper.getCustomSkull(CustomHeads.LIME_CANDLE));
-    inv.setItem(34, PlayerHeadHelper.getCustomSkull(CustomHeads.MAGENTA_CANDLE));
+    inv.setItem(28, createTradableCustomHead(CustomHeads.WHITE_CANDLE, 300, 300));
+    inv.setItem(29, createTradableCustomHead(CustomHeads.CYAN_CANDLE, 300, 300));
+    inv.setItem(30, createTradableCustomHead(CustomHeads.RED_CANDLE, 300, 300));
+    inv.setItem(31, createTradableCustomHead(CustomHeads.BLUE_CANDLE, 300, 300));
+    inv.setItem(32, createTradableCustomHead(CustomHeads.GRAY_CANDLE, 300, 300));
+    inv.setItem(33, createTradableCustomHead(CustomHeads.LIME_CANDLE, 300, 300));
+    inv.setItem(34, createTradableCustomHead(CustomHeads.MAGENTA_CANDLE, 300, 300));
 
-    inv.setItem(37, PlayerHeadHelper.getCustomSkull(CustomHeads.PINK_CANDLE));
-    inv.setItem(38, PlayerHeadHelper.getCustomSkull(CustomHeads.BLACK_CANDLE));
-    inv.setItem(39, PlayerHeadHelper.getCustomSkull(CustomHeads.GREEN_CANDLE));
-    inv.setItem(40, PlayerHeadHelper.getCustomSkull(CustomHeads.ORANGE_CANDLE));
-    inv.setItem(41, PlayerHeadHelper.getCustomSkull(CustomHeads.BROWN_CANDLE));
-    inv.setItem(42, PlayerHeadHelper.getCustomSkull(CustomHeads.LIGHT_BLUE_CANDLE));
-    inv.setItem(43, PlayerHeadHelper.getCustomSkull(CustomHeads.LIGHT_GRAY_CANDLE));
+    inv.setItem(37, createTradableCustomHead(CustomHeads.PINK_CANDLE, 300, 300));
+    inv.setItem(38, createTradableCustomHead(CustomHeads.BLACK_CANDLE, 300, 300));
+    inv.setItem(39, createTradableCustomHead(CustomHeads.GREEN_CANDLE, 300, 300));
+    inv.setItem(40, createTradableCustomHead(CustomHeads.ORANGE_CANDLE, 300, 300));
+    inv.setItem(41, createTradableCustomHead(CustomHeads.BROWN_CANDLE, 300, 300));
+    inv.setItem(42, createTradableCustomHead(CustomHeads.LIGHT_BLUE_CANDLE, 300, 300));
+    inv.setItem(43, createTradableCustomHead(CustomHeads.LIGHT_GRAY_CANDLE, 300, 300));
 
     inv.setItem(53, resolveCloseItem().getCustomItem());
 
     return inv;
+  }
+
+  private ItemStack createTradableCustomHead(CustomHeads head, int buyPrice, int sellPrice) {
+    ItemStack item = PlayerHeadHelper.getCustomSkull(head);
+    ItemMeta meta = item.getItemMeta();
+    if (meta == null) {
+      return item;
+    }
+
+    List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
+    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+        PLUGIN_NAME_MONEY,
+        String.valueOf(buyPrice),
+        PLUGIN_NAME_MONEY,
+        String.valueOf(buyPrice * 64)));
+    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+        PLUGIN_NAME_MONEY,
+        String.valueOf(sellPrice),
+        PLUGIN_NAME_MONEY,
+        String.valueOf(sellPrice * 64)));
+    meta.setLore(lore);
+
+    meta.getPersistentDataContainer().set(itemBuyPrice(), PersistentDataType.INTEGER, buyPrice);
+    meta.getPersistentDataContainer().set(itemSellPrice(), PersistentDataType.INTEGER, sellPrice);
+
+    item.setItemMeta(meta);
+    return item;
+  }
+
+
+  private ItemStack createTradableItem(Material material) {
+    ItemStack item = new ItemStack(material, 1);
+    ItemMeta meta = item.getItemMeta();
+    if (meta == null) {
+      return item;
+    }
+
+    ItemPrice price = ItemPrice.from(material);
+    int buyPrice = price.getBuyPrice();
+    int sellPrice = price.getSellPrice();
+
+    List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
+    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+        PLUGIN_NAME_MONEY,
+        String.valueOf(buyPrice),
+        PLUGIN_NAME_MONEY,
+        String.valueOf(buyPrice * 64)));
+    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+        PLUGIN_NAME_MONEY,
+        String.valueOf(sellPrice),
+        PLUGIN_NAME_MONEY,
+        String.valueOf(sellPrice * 64)));
+    meta.setLore(lore);
+
+    item.setItemMeta(meta);
+    return item;
   }
 }
