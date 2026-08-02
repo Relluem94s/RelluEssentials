@@ -7,62 +7,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Back;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Bags;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Broadcast;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Cookies;
-import de.relluem94.minecraft.server.spigot.essentials.commands.CraftingBench;
-import de.relluem94.minecraft.server.spigot.essentials.commands.CustomHead;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Day;
-import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Enderchest;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Exit;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Fly;
-import de.relluem94.minecraft.server.spigot.essentials.commands.GameModeAdventure;
-import de.relluem94.minecraft.server.spigot.essentials.commands.GameModeCreative;
-import de.relluem94.minecraft.server.spigot.essentials.commands.GameModeSpectator;
-import de.relluem94.minecraft.server.spigot.essentials.commands.GameModeSurvival;
-import de.relluem94.minecraft.server.spigot.essentials.commands.GameRules;
-import de.relluem94.minecraft.server.spigot.essentials.commands.God;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Head;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Heal;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Inventory;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Marry;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Message;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
-import de.relluem94.minecraft.server.spigot.essentials.commands.More;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Nick;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Night;
-import de.relluem94.minecraft.server.spigot.essentials.commands.PermissionsGroup;
-import de.relluem94.minecraft.server.spigot.essentials.commands.PlayerInfo;
-import de.relluem94.minecraft.server.spigot.essentials.commands.PlayerList;
-import de.relluem94.minecraft.server.spigot.essentials.commands.PlayerWeather;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Poke;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Position;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Print;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Protect;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Purse;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Rain;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Rename;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Repair;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Reply;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Sign;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Speed;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Storm;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Suicide;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Sun;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Team;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Teleport;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Title;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Warp;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Where;
-import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
@@ -208,6 +152,25 @@ public class RelluEssentials extends JavaPlugin {
   @Getter
   private GroupService groupService;
 
+  private EventManager eventManager;
+  private SkillManager skillManager;
+  private RecipeManager recipeManager;
+  private AutoSaveManager autoSaveManager;
+  private BankManager bankManager;
+  private NpcManager npcManager;
+  private ConfigManager configManager;
+  @Getter
+  private CommandManager commandManager;
+  private ItemManager itemManager;
+  private EnchantmentManager enchantmentManager;
+  private WorldManager worldManager;
+  private GroupManager groupManager;
+  private PositionHighlightManager positionHighlightManager;
+  private ScoreBoardManager scoreBoardManager;
+  private SignManager signManager;
+  private DatabaseManager databaseManager;
+  private SudoManager sudoManager;
+
   /**
    * Default constructor for the RelluEssentials plugin. Used by the Spigot server to instantiate
    * the plugin.
@@ -230,81 +193,6 @@ public class RelluEssentials extends JavaPlugin {
     super(loader, description, dataFolder, file);
     isUnitTest = true;
   }
-
-  /**
-   * Returns the list of all registered {@link CommandWrapper} instances.
-   *
-   * <p>The list is lazily initialized on first access and contains a wrapper
-   * for every command provided by this plugin.
-   *
-   * @return an unmodifiable {@link List} of {@link CommandWrapper} instances
-   */
-  public static List<CommandWrapper> getCommandWrapperList() {
-    if (commandWrapperList == null) {
-      commandWrapperList = List.of(
-          new CommandWrapper(new Admin()),
-          new CommandWrapper(new AFK()),
-          new CommandWrapper(new Back()),
-          new CommandWrapper(new Bags()),
-          new CommandWrapper(new Broadcast()),
-          new CommandWrapper(new Cookies()),
-          new CommandWrapper(new CraftingBench()),
-          new CommandWrapper(new CustomHead()),
-          new CommandWrapper(new Day()),
-          new CommandWrapper(new Enderchest()),
-          new CommandWrapper(new Exit()),
-          new CommandWrapper(new Fly()),
-          new CommandWrapper(new GameModeAdventure()),
-          new CommandWrapper(new GameModeCreative()),
-          new CommandWrapper(new GameModeSpectator()),
-          new CommandWrapper(new GameModeSurvival()),
-          new CommandWrapper(new GameRules()),
-          new CommandWrapper(new God()),
-          new CommandWrapper(new Head()),
-          new CommandWrapper(new Heal()),
-          new CommandWrapper(new Home()),
-          new CommandWrapper(new Inventory()),
-          new CommandWrapper(new Marry()),
-          new CommandWrapper(new Message()),
-          new CommandWrapper(new Modify()),
-          new CommandWrapper(new More()),
-          new CommandWrapper(new Nick()),
-          new CommandWrapper(new Night()),
-          new CommandWrapper(new PermissionsGroup()),
-          new CommandWrapper(new PlayerInfo()),
-          new CommandWrapper(new PlayerList()),
-          new CommandWrapper(new PlayerWeather()),
-          new CommandWrapper(new Poke()),
-          new CommandWrapper(new Position()),
-          new CommandWrapper(new Print()),
-          new CommandWrapper(new Protect()),
-          new CommandWrapper(new Purse()),
-          new CommandWrapper(new Rain()),
-          new CommandWrapper(new Rename()),
-          new CommandWrapper(new Repair()),
-          new CommandWrapper(new Reply()),
-          new CommandWrapper(new Sign()),
-          new CommandWrapper(new Spawn()),
-          new CommandWrapper(new Speed()),
-          new CommandWrapper(new Storm()),
-          new CommandWrapper(new Sudo()),
-          new CommandWrapper(new Suicide()),
-          new CommandWrapper(new Sun()),
-          new CommandWrapper(new Team()),
-          new CommandWrapper(new Teleport()),
-          new CommandWrapper(new Title()),
-          new CommandWrapper(new Vanish()),
-          new CommandWrapper(new Warp()),
-          new CommandWrapper(new Where()),
-          new CommandWrapper(new Worlds()),
-
-          // THIS IS A DEV COMMAND
-          new CommandWrapper(new DevCommand())
-      );
-    }
-    return commandWrapperList;
-  }
-
 
   public static synchronized RelluEssentials getInstance() {
     return instance;
@@ -331,47 +219,62 @@ public class RelluEssentials extends JavaPlugin {
     RelluEssentials.languageHelper.setDefaultLanguage(lang);
 
     startLoading();
-    new ConfigManager().enable(this);
-    new CommandManager().enable(this);
-    new EnchantmentManager().enable(this);
-    new ItemManager().enable(this);
-    new SignManager().enable(this);
-    DatabaseManager dm = new DatabaseManager(
+    configManager = new ConfigManager();
+    configManager.enable(this);
+    commandManager = new CommandManager();
+    commandManager.enable(this);
+    enchantmentManager = new EnchantmentManager();
+    enchantmentManager.enable(this);
+    itemManager = new ItemManager();
+    itemManager.enable(this);
+    signManager = new SignManager();
+    signManager.enable(this);
+    databaseManager = new DatabaseManager(
         getConfig().getString("database.host"),
         getConfig().getString("database.user"),
         getConfig().getString("database.password"),
         getConfig().getInt("database.port")
     );
+    databaseManager.enable(this);
 
-    dm.enable();
-    databaseHelper = dm.getDatabaseHelper();
+    databaseHelper = databaseManager.getDatabaseHelper();
     this.playerRegistry = new PlayerRegistry(databaseHelper.getBags());
     this.playerService = new PlayerService(playerRegistry);
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     buyBackService = new BuyBackService(buyBackRepository);
 
-    new EventManager().enable(this);
-    new SkillManager().enable(this);
-    new RecipeManager().enable(this);
-    new AutoSaveManager().enable(this);
-    new BankManager().enable(this);
-    new NpcManager().enable(this);
+    eventManager = new EventManager();
+    eventManager.enable(this);
+    skillManager = new SkillManager();
+    skillManager.enable(this);
+    recipeManager = new RecipeManager();
+    recipeManager.enable(this);
+    autoSaveManager =new AutoSaveManager();
+    autoSaveManager.enable(this);
+    bankManager = new BankManager();
+    bankManager.enable(this);
+    npcManager = new NpcManager();
+    npcManager.enable(this);
     NpcRepository npcRepository = new NpcRepository(databaseHelper);
     NpcSpawner npcSpawner = new NpcSpawner();
     NpcValidator npcValidator = new NpcValidator();
     this.npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
     this.npcDialogueTracker = new NpcDialogueTracker();
     stopLoading();
-    new WorldManager().enable(this);
-    new GroupManager().enable(this);
-    new PositionHighlightManager().enable(this);
-    new ScoreBoardManager().enable(this);
+    worldManager = new WorldManager();
+    worldManager.enable(this);
+    groupManager = new GroupManager();
+    groupManager.enable(this);
+    positionHighlightManager = new PositionHighlightManager();
+    positionHighlightManager.enable(this);
+    scoreBoardManager = new ScoreBoardManager();
+    scoreBoardManager.enable(this);
 
-    dm.afterWorldLoaded();
+    databaseManager.afterWorldLoaded(this);
     new BukkitRunnable() {
       @Override
       public void run() {
-       getNpcService().loadAndSpawnNpcsInLoadedChunks();
+        getNpcService().loadAndSpawnNpcsInLoadedChunks();
       }
     }.runTaskLater(this, 20L);
   }
@@ -383,10 +286,11 @@ public class RelluEssentials extends JavaPlugin {
     if (npcService != null) {
       npcService.despawnAllNPCs();
     }
-    new SudoManager().disable(this);
-    new AutoSaveManager().disable(this);
-    new WorldManager().disable(this);
-    new ConfigManager().disable(this);
+    sudoManager = new SudoManager();
+    sudoManager.disable(this);
+    autoSaveManager.disable(this);
+    worldManager.disable(this);
+    configManager.disable(this);
   }
 
   private void startLoading() {
