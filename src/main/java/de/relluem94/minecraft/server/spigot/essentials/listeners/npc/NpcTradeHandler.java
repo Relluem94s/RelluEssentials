@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
@@ -40,6 +41,7 @@ public class NpcTradeHandler {
 
   private final ItemHelper disabledItem;
   private final ItemHelper closeItem;
+  private final ItemHelper coinsItem;
   private final BuyBackSlotResolver buyBackSlotResolver;
 
   public NpcTradeHandler() {
@@ -48,6 +50,9 @@ public class NpcTradeHandler {
         .orElseThrow();
     this.closeItem = ItemRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+        .orElseThrow();
+    this.coinsItem = ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
         .orElseThrow();
 
     this.buyBackSlotResolver = new BuyBackSlotResolver(
@@ -375,6 +380,12 @@ public class NpcTradeHandler {
   private void handleSell(@NonNull ItemStack item, Player player, PlayerEntry playerEntry,
       int sellPrice, String itemDisplayName, int slot, boolean isRightClick) {
     ItemMeta meta = item.getItemMeta();
+
+    if (coinsItem.equalsName(item)) {
+      player.sendMessage(
+          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
+      return;
+    }
 
     boolean isRegisteredItem = ItemRegistry.findByItemStack(item).isPresent()
         || EnchantmentRegistry.findByBookItemStack(item).isPresent();
