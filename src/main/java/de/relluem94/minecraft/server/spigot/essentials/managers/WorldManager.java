@@ -24,14 +24,14 @@ public class WorldManager implements Enable, Disable {
   private final Random r = new Random();
 
   @Override
-  public void enable() {
-    if (RelluEssentials.getInstance().isUnitTest()) {
+  public void enable(RelluEssentials plugin) {
+    if (plugin.isUnitTest()) {
       return;
     }
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        PLUGIN_COLOR_COMMAND + "Worlds Size: " + RelluEssentials.getInstance().worldsMap.size());
-    for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+        PLUGIN_COLOR_COMMAND + "Worlds Size: " + plugin.worldsMap.size());
+    for (WorldGroupEntry wge : plugin.worldsMap.keySet()) {
       if (wge == null) {
         continue;
       }
@@ -52,16 +52,16 @@ public class WorldManager implements Enable, Disable {
   }
 
   @Override
-  public void disable() {
-    if (RelluEssentials.getInstance().isUnitTest()) {
+  public void disable(RelluEssentials plugin) {
+    if (plugin.isUnitTest()) {
       return;
     }
-    for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
+    for (WorldGroupEntry wge : plugin.worldsMap.keySet()) {
       if (wge == null) {
         continue;
       }
 
-      for (WorldEntry we : RelluEssentials.getInstance().worldsMap.get(wge)) {
+      for (WorldEntry we : plugin.worldsMap.get(wge)) {
         try {
           if (we == null) {
             return;

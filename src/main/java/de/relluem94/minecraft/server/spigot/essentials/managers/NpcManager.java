@@ -10,7 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.trader.EnchanterNpc;
 public class NpcManager implements Enable {
 
   @Override
-  public void enable() {
+  public void enable(RelluEssentials plugin) {
     new BagSalesmanNpc();
     RelluEssentials.setBanker(new BankerNpc());
     new BeekeeperNpc();

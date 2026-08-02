@@ -21,20 +21,20 @@ import org.jspecify.annotations.NonNull;
 public class RecipeManager implements Enable {
 
   @Override
-  public void enable() {
+  public void enable(RelluEssentials plugin) {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_RECIPE));
     int recipeCount = 0;
-    Bukkit.addRecipe(buildCloudBootsRecipe().getRecipe());
+    Bukkit.addRecipe(buildCloudBootsRecipe(plugin).getRecipe());
     recipeCount++;
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_RECIPE_REGISTERED, recipeCount));
   }
 
-  private @NonNull RecipeHelper buildCloudBootsRecipe() {
+  private @NonNull RecipeHelper buildCloudBootsRecipe(RelluEssentials plugin) {
     ItemHelper cloudSailorItem = ItemRegistry.find(
-        RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
-    ItemHelper cloudBootsItem = ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
+        RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
+    ItemHelper cloudBootsItem = ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
         .orElseThrow();
 
     return new RecipeHelper(

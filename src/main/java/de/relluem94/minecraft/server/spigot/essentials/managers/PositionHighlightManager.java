@@ -20,12 +20,12 @@ public class PositionHighlightManager implements Enable {
 
   @SuppressWarnings("ConstantConditions")
   @Override
-  public void enable() {
+  public void enable(RelluEssentials plugin) {
     new BukkitRunnable() {
       @Override
       public void run() {
         List<Player> toRemove = new ArrayList<>();
-        for (Map.Entry<Player, DoubleStore<Location, Location>> entry : RelluEssentials.getInstance().position.entrySet()) {
+        for (Map.Entry<Player, DoubleStore<Location, Location>> entry : plugin.position.entrySet()) {
           Player p = entry.getKey();
           if (!p.isOnline()) {
             toRemove.add(p);
@@ -64,10 +64,10 @@ public class PositionHighlightManager implements Enable {
           }
         }
         for (Player p : toRemove) {
-          RelluEssentials.getInstance().position.remove(p);
+          plugin.position.remove(p);
         }
       }
-    }.runTaskTimer(RelluEssentials.getInstance(), 0L, 20L);
+    }.runTaskTimer(plugin, 0L, 20L);
   }
 
   private void drawBoxEdges(Player p, World w, double x1, double y1, double z1, double x2,

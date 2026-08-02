@@ -122,11 +122,11 @@ public class ScoreBoardManager implements Enable {
   }
 
   @Override
-  public void enable() {
+  public void enable(RelluEssentials plugin) {
     Bukkit.getOnlinePlayers().forEach(ScoreBoardManager::applyToPlayer);
 
     Bukkit.getScheduler().runTaskTimer(
-        RelluEssentials.getInstance(),
+        plugin,
         ScoreBoardManager::updateAll,
         20L,
         20L

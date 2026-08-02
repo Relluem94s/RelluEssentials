@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.interfaces.managers;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+
 /**
  * Defines a contract for components that require an enable lifecycle method.
  *
@@ -13,9 +15,9 @@ package de.relluem94.minecraft.server.spigot.essentials.interfaces.managers;
  * public class EventManager implements IEnable {
  *
  *     @Override
- *     public void enable() {
+ *     public void enable(RelluEssentials plugin) {
  *         RelluEssentials.getEventWrapperList()
- *             .forEach(eventWrapper -> eventWrapper.init(RelluEssentials.getInstance()));
+ *             .forEach(eventWrapper -> eventWrapper.init(plugin));
  *     }
  * }
  * }</pre>
@@ -29,5 +31,5 @@ public interface Enable {
    * required for the implementing component to function correctly.
    * </p>
    */
-  void enable();
+  void enable(RelluEssentials plugin);
 }

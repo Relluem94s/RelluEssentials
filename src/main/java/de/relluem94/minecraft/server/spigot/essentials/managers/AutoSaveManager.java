@@ -17,7 +17,7 @@ public class AutoSaveManager implements Enable, Disable {
   public static final long AUTO_SAVE_MINUTES = 2;
 
   @Override
-  public void enable() {
+  public void enable(RelluEssentials plugin) {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE));
     new BukkitRunnable() {
@@ -25,28 +25,28 @@ public class AutoSaveManager implements Enable, Disable {
       public void run() {
         BagHelper.saveBags();
       }
-    }.runTaskTimer(RelluEssentials.getInstance(), 0L, 20 * 60 * AUTO_SAVE_MINUTES);
+    }.runTaskTimer(plugin, 0L, 20 * 60 * AUTO_SAVE_MINUTES);
 
     new BukkitRunnable() {
       @Override
       public void run() {
         PlayerHelper.savePlayers();
       }
-    }.runTaskTimer(RelluEssentials.getInstance(), 0L, 20 * 60 * AUTO_SAVE_MINUTES);
+    }.runTaskTimer(plugin, 0L, 20 * 60 * AUTO_SAVE_MINUTES);
 
     new BukkitRunnable() {
       @Override
       public void run() {
         PlayerHelper.savePlayersInv();
       }
-    }.runTaskTimer(RelluEssentials.getInstance(), 0L, 20 * 60 * AUTO_SAVE_MINUTES);
+    }.runTaskTimer(plugin, 0L, 20 * 60 * AUTO_SAVE_MINUTES);
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_AUTOSAVE_REGISTERED));
   }
 
   @Override
-  public void disable() {
+  public void disable(RelluEssentials plugin) {
     BagHelper.saveBags();
     PlayerHelper.savePlayers();
     PlayerHelper.savePlayersInv();

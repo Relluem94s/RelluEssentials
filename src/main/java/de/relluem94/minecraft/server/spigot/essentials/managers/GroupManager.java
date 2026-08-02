@@ -11,13 +11,13 @@ import org.bukkit.Bukkit;
 public class GroupManager implements Enable {
 
   @Override
-  public void enable() {
-    List<PlayerEntry> pel = RelluEssentials.getInstance().getDatabaseHelper().getPlayers();
-    pel.forEach(p -> RelluEssentials.getInstance().getPlayerRegistry()
+  public void enable(RelluEssentials plugin) {
+    List<PlayerEntry> pel = plugin.getDatabaseHelper().getPlayers();
+    pel.forEach(p -> plugin.getPlayerRegistry()
         .putPlayerEntry(UUID.fromString(p.getUuid()), p));
 
     Bukkit.getOnlinePlayers().forEach(p -> {
-      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+      PlayerEntry pe = plugin.getPlayerRegistry().getPlayerEntry(p);
       PlayerHelper.setGroup(p, pe.getGroup());
     });
   }

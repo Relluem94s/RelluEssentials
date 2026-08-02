@@ -18,15 +18,15 @@ import org.bukkit.Bukkit;
 public class BankManager implements Enable {
 
   @Override
-  public void enable() {
-    if (RelluEssentials.getInstance().isUnitTest()) {
+  public void enable(RelluEssentials plugin) {
+    if (plugin.isUnitTest()) {
       return;
     }
     triggerNext();
   }
 
   private void triggerNext() {
-    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+    Bukkit.getScheduler().runTaskLater(plugin, () -> {
       BankerHelper.doInterest();
       ChatHelper.consoleSendMessage(
           Constants.PLUGIN_NAME_CONSOLE,

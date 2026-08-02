@@ -18,11 +18,14 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntr
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupSettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BagTypeRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -92,7 +95,8 @@ public class DatabaseManager implements Enable {
       RelluEssentials.getInstance().crops.put(ce.getSeed(), ce.getPlant());
     }
 
-    RelluEssentials.getInstance().setPlayerRegistry(new PlayerRegistry(databaseHelper.getBags()));
+    PlayerRegistry playerRegistry = new PlayerRegistry(databaseHelper.getBags());
+    RelluEssentials.getInstance().setPlayerRegistry(playerRegistry);
     RelluEssentials.getInstance()
         .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
             databaseHelper.getProtections()));
@@ -139,7 +143,14 @@ public class DatabaseManager implements Enable {
       }
     }
 
-    RelluEssentials.getInstance().groupEntryList.addAll(databaseHelper.getGroups());
+
+    GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
+    GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
+    GroupService groupService = new GroupService(groupRegistry, groupRepository, playerRegistry);
+
+    RelluEssentials.getInstance().setGroupRegistry(groupRegistry);
+    RelluEssentials.getInstance().setGroupService(groupService);
+
 
     for (int i = 0; i < RelluEssentials.getInstance().getBagTypeRegistry().getAll().size(); i++) {
       ItemStack[] isa = BagHelper.getItemStacks(

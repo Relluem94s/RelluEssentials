@@ -12,15 +12,15 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enabl
 public class ConfigManager implements Enable, Disable {
 
   @Override
-  public void enable() {
+  public void enable(RelluEssentials plugin) {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_LOADING_CONFIGS));
 
-    if (RelluEssentials.getInstance().getDataFolder().exists()) {
+    if (plugin.getDataFolder().exists()) {
       return;
     }
 
-    if (!RelluEssentials.getInstance().getDataFolder().mkdir()) {
+    if (!plugin.getDataFolder().mkdir()) {
       consoleSendMessage(PLUGIN_NAME_CONSOLE,
           languageHelper.get(MessageKey.PLUGIN_FOLDER_MKDIR_ERROR));
     }
@@ -32,7 +32,7 @@ public class ConfigManager implements Enable, Disable {
   }
 
   @Override
-  public void disable() {
-    RelluEssentials.getInstance().saveConfig();
+  public void disable(RelluEssentials plugin) {
+    plugin.saveConfig();
   }
 }

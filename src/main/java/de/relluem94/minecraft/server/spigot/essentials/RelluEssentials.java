@@ -66,59 +66,8 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterBlockDrop;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterLights;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterMobs;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterPlayerJoin;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterPlayerQuit;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterSafety;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterSoil;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterWorlds;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BlockPlace;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.CloudSailor;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.CreateSignActions;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.CustomEnchantment;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.GrapplingHockEvent;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.IntegrationListener;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.MOTD;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.NoDeathMessage;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.OpenWorldSelectorEvent;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.PlayerMove;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.PositionAxeListener;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.PreventCoinManipulation;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignCommandAction;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignDownAction;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignEdit;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignHomeAction;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignInteractListener;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignSpawnAction;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignTeleportAction;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SignUpAction;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.SkullInfo;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.ToolCrafting;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.bag.BlockBreakBags;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.bag.BlockDropItemBags;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.bag.EntityPickupItemBags;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.bag.InventoryClickBags;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.npc.DamgeNpc;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.npc.DamgeTraderNpc;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.npc.InteractNpc;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.npc.InteractTraderNpc;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.npc.InventoryClickNpc;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.npc.NpcChunkLoadListener;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.npc.PlaceNpc;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.BetterLock;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.BlockModifyProtect;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.BlockPistonProtect;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.BlockRedstoneProtect;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.EntityBreakDoorProtect;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.EntityExplodeProtect;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.InventoryMoveItemProtect;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.PlayerInteractProtect;
 import de.relluem94.minecraft.server.spigot.essentials.managers.AutoSaveManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.BankManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.CleanUpManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ConfigManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
@@ -136,7 +85,6 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
@@ -151,12 +99,14 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.NpcValidator;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BuyBackRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
@@ -211,8 +161,6 @@ public class RelluEssentials extends JavaPlugin {
   public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
 
   @Getter
-  public final List<GroupEntry> groupEntryList = new ArrayList<>();
-  @Getter
   public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
   public Map<Player,
       DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
@@ -251,6 +199,14 @@ public class RelluEssentials extends JavaPlugin {
   private NpcService npcService;
   @Getter
   private NpcDialogueTracker npcDialogueTracker;
+
+  @Setter
+  @Getter
+  private GroupRegistry groupRegistry;
+
+  @Setter
+  @Getter
+  private GroupService groupService;
 
   /**
    * Default constructor for the RelluEssentials plugin. Used by the Spigot server to instantiate
@@ -349,72 +305,6 @@ public class RelluEssentials extends JavaPlugin {
     return commandWrapperList;
   }
 
-  /**
-   * Returns the list of all registered {@link EventWrapper} instances.
-   *
-   * <p>The list is lazily initialized on first access and contains all event
-   * wrappers that encapsulate the plugin's feature listeners.
-   * </p>
-   *
-   * @return an unmodifiable {@link List} of {@link EventWrapper} instances
-   */
-  public static List<EventWrapper> getEventWrapperList() {
-    if (eventWrapperList == null) {
-      eventWrapperList = List.of(
-          new EventWrapper(new BetterChatFormat()),
-          new EventWrapper(new BetterWorlds()),
-          new EventWrapper(new BetterPlayerJoin()),
-          new EventWrapper(new BetterPlayerQuit()),
-          new EventWrapper(new BetterBlockDrop()),
-          new EventWrapper(new BetterLights()),
-          new EventWrapper(new BlockBreakBags()),
-          new EventWrapper(new BlockDropItemBags()),
-          new EventWrapper(new InventoryClickBags()),
-          new EventWrapper(new EntityPickupItemBags()),
-          new EventWrapper(new BlockPlace()),
-          new EventWrapper(new BetterMobs()),
-          new EventWrapper(new BetterSoil()),
-          new EventWrapper(new NpcChunkLoadListener()),
-          new EventWrapper(new DamgeNpc()),
-          new EventWrapper(new DamgeTraderNpc()),
-          new EventWrapper(new InteractNpc()),
-          new EventWrapper(new InteractTraderNpc()),
-          new EventWrapper(new InventoryClickNpc()),
-          new EventWrapper(new PlaceNpc()),
-          new EventWrapper(new BetterSafety()),
-          new EventWrapper(new BlockPistonProtect()),
-          new EventWrapper(new EntityBreakDoorProtect()),
-          new EventWrapper(new InventoryMoveItemProtect()),
-          new EventWrapper(new EntityExplodeProtect()),
-          new EventWrapper(new BlockRedstoneProtect()),
-          new EventWrapper(new BlockModifyProtect()),
-          new EventWrapper(new PlayerInteractProtect()),
-          new EventWrapper(new OpenWorldSelectorEvent()),
-          new EventWrapper(new BetterLock()),
-          new EventWrapper(new SkullInfo()),
-          new EventWrapper(new NoDeathMessage()),
-          new EventWrapper(new PlayerMove()),
-          new EventWrapper(new MOTD()),
-          new EventWrapper(new CloudSailor()),
-          new EventWrapper(new CreateSignActions()),
-          new EventWrapper(new SignEdit()),
-          new EventWrapper(new ToolCrafting()),
-          new EventWrapper(new CustomEnchantment()),
-          new EventWrapper(new GrapplingHockEvent()),
-          new EventWrapper(new PositionAxeListener()),
-          new EventWrapper(new PreventCoinManipulation()),
-          new EventWrapper(new IntegrationListener()),
-          new EventWrapper(new SignInteractListener(RelluEssentials.getInstance())),
-          new EventWrapper(new SignUpAction()),
-          new EventWrapper(new SignDownAction()),
-          new EventWrapper(new SignSpawnAction()),
-          new EventWrapper(new SignHomeAction()),
-          new EventWrapper(new SignTeleportAction()),
-          new EventWrapper(new SignCommandAction())
-      );
-    }
-    return eventWrapperList;
-  }
 
   public static synchronized RelluEssentials getInstance() {
     return instance;
@@ -441,11 +331,11 @@ public class RelluEssentials extends JavaPlugin {
     RelluEssentials.languageHelper.setDefaultLanguage(lang);
 
     startLoading();
-    new ConfigManager().enable();
-    new CommandManager().enable();
-    new EnchantmentManager(this).enable();
-    new ItemManager(this).enable();
-    new SignManager(this).enable();
+    new ConfigManager().enable(this);
+    new CommandManager().enable(this);
+    new EnchantmentManager().enable(this);
+    new ItemManager().enable(this);
+    new SignManager().enable(this);
     DatabaseManager dm = new DatabaseManager(
         getConfig().getString("database.host"),
         getConfig().getString("database.user"),
@@ -460,30 +350,30 @@ public class RelluEssentials extends JavaPlugin {
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     buyBackService = new BuyBackService(buyBackRepository);
 
-    new EventManager().enable();
-    new SkillManager().enable();
-    new RecipeManager().enable();
-    new AutoSaveManager().enable();
-    new BankManager().enable();
-    new NpcManager().enable();
+    new EventManager().enable(this);
+    new SkillManager().enable(this);
+    new RecipeManager().enable(this);
+    new AutoSaveManager().enable(this);
+    new BankManager().enable(this);
+    new NpcManager().enable(this);
     NpcRepository npcRepository = new NpcRepository(databaseHelper);
     NpcSpawner npcSpawner = new NpcSpawner();
     NpcValidator npcValidator = new NpcValidator();
     this.npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
     this.npcDialogueTracker = new NpcDialogueTracker();
     stopLoading();
-    new WorldManager().enable();
-    new GroupManager().enable();
-    new PositionHighlightManager().enable();
-    new ScoreBoardManager().enable();
+    new WorldManager().enable(this);
+    new GroupManager().enable(this);
+    new PositionHighlightManager().enable(this);
+    new ScoreBoardManager().enable(this);
 
     dm.afterWorldLoaded();
     new BukkitRunnable() {
       @Override
       public void run() {
-        RelluEssentials.getInstance().getNpcService().loadAndSpawnNpcsInLoadedChunks();
+       getNpcService().loadAndSpawnNpcsInLoadedChunks();
       }
-    }.runTaskLater(RelluEssentials.getInstance(), 20L);
+    }.runTaskLater(this, 20L);
   }
 
   @Override
@@ -493,11 +383,10 @@ public class RelluEssentials extends JavaPlugin {
     if (npcService != null) {
       npcService.despawnAllNPCs();
     }
-    new SudoManager().disable();
-    new AutoSaveManager().disable();
-    new WorldManager().disable();
-    new CleanUpManager().disable();
-    new ConfigManager().disable();
+    new SudoManager().disable(this);
+    new AutoSaveManager().disable(this);
+    new WorldManager().disable(this);
+    new ConfigManager().disable(this);
   }
 
   private void startLoading() {
