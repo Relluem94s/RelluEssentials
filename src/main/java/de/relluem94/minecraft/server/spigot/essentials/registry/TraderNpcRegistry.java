@@ -37,9 +37,11 @@ public class TraderNpcRegistry {
   private final ItemHelper closeItem;
 
   public TraderNpcRegistry() {
-    this.disabledItem = ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+    this.disabledItem = ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
-    this.closeItem = ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+    this.closeItem = ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
   }
 
@@ -112,7 +114,8 @@ public class TraderNpcRegistry {
     npcItemStack.add(traderNpc.getItemHelper().getCustomItem());
     npcName.add(traderNpc.getName());
 
-    if (traderNpc.getType().equals(Type.TRADER) || traderNpc.getType().equals(Type.ENCHANTER)) {
+    if (traderNpc.getType().equals(Type.TRADER) || traderNpc.getType().equals(Type.ENCHANTER)
+        || traderNpc.getType().equals(Type.BEEKEEPER)) {
       npcTraderTitle.add(traderNpc.getTitle());
     }
   }

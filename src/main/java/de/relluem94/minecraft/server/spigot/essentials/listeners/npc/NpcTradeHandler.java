@@ -20,6 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -50,6 +51,7 @@ public class NpcTradeHandler {
 
   public void handle(ItemStack clickedItem, Inventory clickedInventory, Player player,
       PlayerEntry playerEntry, int slot, boolean isRightClick) {
+    long start = System.currentTimeMillis();
     if (closeItem.equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
       return;
@@ -65,7 +67,66 @@ public class NpcTradeHandler {
       return;
     }
 
+    if (isCustomHeadItem(clickedItem)) {
+      handleCustomHeadTrade(clickedItem, clickedInventory, player, playerEntry, slot, isRightClick);
+      return;
+    }
+
     handleItemTrade(clickedItem, clickedInventory, player, playerEntry, slot, isRightClick);
+  }
+
+
+  private boolean isCustomHeadItem(@NonNull ItemStack item) {
+    if (!Material.PLAYER_HEAD.equals(item.getType())) {
+      return false;
+    }
+    if (!(item.getItemMeta() instanceof SkullMeta skullMeta)) {
+      return false;
+    }
+    if (skullMeta.getOwnerProfile() == null) {
+      return false;
+    }
+    String ownerName = skullMeta.getOwnerProfile().getName();
+    if (ownerName == null) {
+      return false;
+    }
+    return java.util.Arrays.stream(CustomHeads.values())
+        .filter(ch -> !ch.equals(CustomHeads.BAG))
+        .anyMatch(ch -> ch.getName().equals(ownerName));
+  }
+
+  private void handleCustomHeadTrade(@NonNull ItemStack clickedItem, Inventory clickedInventory,
+      Player player, PlayerEntry playerEntry, int slot, boolean isRightClick) {
+    ItemMeta itemMeta = clickedItem.getItemMeta();
+    if (itemMeta == null) {
+      return;
+    }
+
+    Integer buyPrice = itemMeta.getPersistentDataContainer().has(itemBuyPrice(), PersistentDataType.INTEGER)
+        ? itemMeta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER)
+        : null;
+
+    Integer sellPrice = itemMeta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER)
+        ? itemMeta.getPersistentDataContainer().get(itemSellPrice(), PersistentDataType.INTEGER)
+        : null;
+
+    if (buyPrice == null || sellPrice == null) {
+      player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
+      return;
+    }
+
+    String itemDisplayName = itemMeta.hasDisplayName()
+        ? itemMeta.getDisplayName()
+        : clickedItem.getType().name().toLowerCase().replace('_', ' ');
+
+    int amount = clickedItem.getAmount();
+
+    if (clickedInventory.getType().equals(InventoryType.CHEST)) {
+      handleBuy(clickedItem, player, playerEntry, buyPrice, itemDisplayName,
+          isRightClick ? 64 : amount);
+    } else if (clickedInventory.getType().equals(InventoryType.PLAYER)) {
+      handleSell(clickedItem, player, playerEntry, sellPrice, itemDisplayName, slot, isRightClick);
+    }
   }
 
   private boolean isBagItem(@NonNull ItemStack item) {
@@ -171,6 +232,11 @@ public class NpcTradeHandler {
       return registeredItemName.get();
     }
 
+    ItemMeta meta = item.getItemMeta();
+    if (meta != null && meta.hasDisplayName()) {
+      return meta.getDisplayName();
+    }
+
     return item.getType().name().toLowerCase().replace('_', ' ');
   }
 
@@ -250,10 +316,24 @@ public class NpcTradeHandler {
             .map(itemHelper -> itemHelper.getCustomItem().clone())
             .orElseGet(guiItem::clone));
 
+    removePriceLoreFromItem(purchasedItem);
     purchasedItem.setAmount(amount);
     return purchasedItem;
   }
 
+  private void removePriceLoreFromItem(@NonNull ItemStack item) {
+    ItemMeta meta = item.getItemMeta();
+    if (meta == null || meta.getLore() == null) {
+      return;
+    }
+
+    List<String> filteredLore = meta.getLore().stream()
+        .filter(line -> !line.contains(PLUGIN_NAME_MONEY))
+        .toList();
+
+    meta.setLore(filteredLore.isEmpty() ? null : filteredLore);
+    item.setItemMeta(meta);
+  }
 
   private void writeSellPriceToItem(int sellPrice, @NonNull ItemStack targetItem) {
     ItemMeta targetMeta = targetItem.getItemMeta();

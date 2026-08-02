@@ -3,8 +3,10 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +28,7 @@ public class PlayerHeadHelper {
   public static void createSkull(String name, org.bukkit.plugin.Plugin plugin,
       java.util.function.Consumer<org.bukkit.inventory.ItemStack> callback) {
     OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(name);
-    final org.bukkit.inventory.ItemStack is = PLAYER_HEAD.clone();
+    final org.bukkit.inventory.ItemStack is = new ItemStack(Material.PLAYER_HEAD, 1);
     if (player == null) {
       callback.accept(is);
       return;
@@ -63,27 +65,20 @@ public class PlayerHeadHelper {
     }
 
     try {
-      PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID(), ch.getName());
-      PlayerTextures textures = profile.getTextures();
-
-      String base64 = ch.getBase64();
-      String jsonString = new String(Base64.getDecoder().decode(base64));
+      String jsonString = new String(Base64.getDecoder().decode(ch.getBase64()));
       String skinUrl = extractSkinUrlFromBase64(jsonString);
 
       if (skinUrl != null) {
+        PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
+        PlayerTextures textures = profile.getTextures();
         textures.setSkin(new URL(skinUrl));
         profile.setTextures(textures);
         sm.setOwnerProfile(profile);
         sm.setDisplayName(ch.getName());
-      } else {
-        Bukkit.getLogger()
-            .warning("Couldn't a Skin URL for head '" + ch.getName() + "' extrahieren.");
+        ph.setItemMeta(sm);
       }
-
-      ph.setItemMeta(sm);
-    } catch (Exception e) {
-      Bukkit.getLogger()
-          .warning("Couldn't create the custom head '" + ch.getName() + "': " + e.getMessage());
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
     }
 
     return ph;
