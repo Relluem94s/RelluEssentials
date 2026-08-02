@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
@@ -41,7 +42,6 @@ public class BlockBreakBags implements ListenerConstruct {
   private final Set<Block> processingBlocks = new HashSet<>();
   private final EnchantmentHelper delicate;
   private final EnchantmentHelper telekinesis;
-
   public BlockBreakBags() {
     this.delicate = EnchantmentRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(),
@@ -51,6 +51,11 @@ public class BlockBreakBags implements ListenerConstruct {
             RegistryKey.of(RelluEssentials.getInstance(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
         .orElse(null);
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
   }
 
   /**

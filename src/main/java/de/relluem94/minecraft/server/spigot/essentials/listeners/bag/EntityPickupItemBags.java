@@ -6,6 +6,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Namespac
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
@@ -27,8 +28,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class EntityPickupItemBags implements ListenerConstruct {
 
-  private final ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
+  private final ItemHelper coinItem = ItemRegistry.find(
+          RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
       .orElseThrow();
+
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onItemCollect(@NotNull EntityPickupItemEvent e) {

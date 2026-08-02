@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.la
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
@@ -21,6 +22,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class InventoryClickBags implements ListenerConstruct {
 
+  @Override
+  public void injectContext(ServiceContext context) {
+
+  }
 
   @EventHandler
   public void onInventoryClickItem(@NotNull InventoryClickEvent e) {
