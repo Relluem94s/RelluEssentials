@@ -16,9 +16,9 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ConfigManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EnchantmentManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.EventManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.GroupManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ItemManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.ListenerManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.NpcManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.PositionHighlightManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.RecipeManager;
@@ -149,7 +149,7 @@ public class RelluEssentials extends JavaPlugin {
   private GroupService groupService;
 
   @Getter
-  private EventManager eventManager;
+  private ListenerManager listenerManager;
   @Getter
   private SkillManager skillManager;
   @Getter
@@ -255,8 +255,8 @@ public class RelluEssentials extends JavaPlugin {
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     buyBackService = new BuyBackService(buyBackRepository);
 
-    eventManager = new EventManager();
-    eventManager.enable(this);
+    listenerManager = new ListenerManager();
+    listenerManager.enable(this);
     skillManager = new SkillManager();
     skillManager.enable(this);
     recipeManager = new RecipeManager();

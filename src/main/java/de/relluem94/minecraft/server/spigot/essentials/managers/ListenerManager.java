@@ -61,7 +61,7 @@ import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.PlayerI
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.ListenerWrapper;
 import java.util.List;
 
-public class EventManager implements Enable {
+public class ListenerManager implements Enable {
 
   @Override
   public void enable(RelluEssentials plugin) {
