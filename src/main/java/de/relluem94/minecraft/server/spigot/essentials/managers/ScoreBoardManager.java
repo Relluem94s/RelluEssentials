@@ -20,6 +20,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -122,7 +123,7 @@ public class ScoreBoardManager implements Enable {
   }
 
   @Override
-  public void enable(RelluEssentials plugin) {
+  public void enable(Plugin plugin) {
     Bukkit.getOnlinePlayers().forEach(ScoreBoardManager::applyToPlayer);
 
     Bukkit.getScheduler().runTaskTimer(

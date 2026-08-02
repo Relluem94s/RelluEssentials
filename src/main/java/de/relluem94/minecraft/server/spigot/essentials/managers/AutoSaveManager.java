@@ -12,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disab
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import java.util.Optional;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class AutoSaveManager implements Enable, Disable {
@@ -20,8 +21,8 @@ public class AutoSaveManager implements Enable, Disable {
   private final int MAX_RETRIES = 4;
   private int count = 0;
   @Override
-  public void enable(RelluEssentials plugin) {
-    Optional<GroupEntry> adminGroup = plugin.getGroupRegistry().findByName("admin");
+  public void enable(Plugin plugin) {
+    Optional<GroupEntry> adminGroup = ((RelluEssentials)plugin).getGroupRegistry().findByName("admin");
 
     if(!adminGroup.isPresent() && count <= MAX_RETRIES){
       count++;
@@ -62,8 +63,8 @@ public class AutoSaveManager implements Enable, Disable {
   }
 
   @Override
-  public void disable(RelluEssentials plugin) {
-    Optional<GroupEntry> adminGroup = plugin.getGroupRegistry().findByName("admin");
+  public void disable(Plugin plugin) {
+    Optional<GroupEntry> adminGroup = ((RelluEssentials)plugin).getGroupRegistry().findByName("admin");
 
     if(!adminGroup.isPresent()){
       return;

@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterBlockDrop;
@@ -60,21 +59,20 @@ import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.Invento
 import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.PlayerInteractProtect;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.ListenerWrapper;
 import java.util.List;
+import org.bukkit.plugin.Plugin;
 
 public class ListenerManager implements Enable {
 
   @Override
-  public void enable(RelluEssentials plugin) {
-    ServiceContext serviceContext = new ServiceContext(plugin);
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
     listenerWrapperList
-        .forEach(listenerWrapper -> listenerWrapper.init(plugin, serviceContext));
+        .forEach(listenerWrapper -> listenerWrapper.init(relluEssentialsPlugin, relluEssentialsPlugin.getServiceContext()));
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED,
             listenerWrapperList.size()));
-
-
   }
 
 

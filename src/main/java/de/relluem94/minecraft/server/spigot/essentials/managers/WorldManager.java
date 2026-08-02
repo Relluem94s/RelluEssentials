@@ -18,20 +18,22 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldType;
+import org.bukkit.plugin.Plugin;
 
 public class WorldManager implements Enable, Disable {
 
   private final Random r = new Random();
 
   @Override
-  public void enable(RelluEssentials plugin) {
-    if (plugin.isUnitTest()) {
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    if (relluEssentialsPlugin.isUnitTest()) {
       return;
     }
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        PLUGIN_COLOR_COMMAND + "Worlds Size: " + plugin.worldsMap.size());
-    for (WorldGroupEntry wge : plugin.worldsMap.keySet()) {
+        PLUGIN_COLOR_COMMAND + "Worlds Size: " + relluEssentialsPlugin.worldsMap.size());
+    for (WorldGroupEntry wge : relluEssentialsPlugin.worldsMap.keySet()) {
       if (wge == null) {
         continue;
       }
@@ -52,16 +54,17 @@ public class WorldManager implements Enable, Disable {
   }
 
   @Override
-  public void disable(RelluEssentials plugin) {
-    if (plugin.isUnitTest()) {
+  public void disable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    if (relluEssentialsPlugin.isUnitTest()) {
       return;
     }
-    for (WorldGroupEntry wge : plugin.worldsMap.keySet()) {
+    for (WorldGroupEntry wge : relluEssentialsPlugin.worldsMap.keySet()) {
       if (wge == null) {
         continue;
       }
 
-      for (WorldEntry we : plugin.worldsMap.get(wge)) {
+      for (WorldEntry we : relluEssentialsPlugin.worldsMap.get(wge)) {
         try {
           if (we == null) {
             return;

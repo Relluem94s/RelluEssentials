@@ -13,16 +13,18 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 
 
 public class BankManager implements Enable {
 
   @Override
-  public void enable(RelluEssentials plugin) {
-    if (plugin.isUnitTest()) {
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    if (relluEssentialsPlugin.isUnitTest()) {
       return;
     }
-    triggerNext(plugin);
+    triggerNext(relluEssentialsPlugin);
   }
 
   private void triggerNext(RelluEssentials plugin) {

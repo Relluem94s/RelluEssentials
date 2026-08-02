@@ -8,11 +8,12 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import org.bukkit.plugin.Plugin;
 
 public class ConfigManager implements Enable, Disable {
 
   @Override
-  public void enable(RelluEssentials plugin) {
+  public void enable(Plugin plugin) {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_LOADING_CONFIGS));
 
@@ -32,7 +33,7 @@ public class ConfigManager implements Enable, Disable {
   }
 
   @Override
-  public void disable(RelluEssentials plugin) {
+  public void disable(Plugin plugin) {
     plugin.saveConfig();
   }
 }

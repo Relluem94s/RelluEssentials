@@ -61,24 +61,23 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Warp;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Where;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import java.util.List;
 import lombok.Getter;
 import org.bukkit.command.PluginCommandYamlParser;
+import org.bukkit.plugin.Plugin;
 
 public class CommandManager implements Enable {
 
   @Override
-  public void enable(RelluEssentials plugin) {
+  public void enable(Plugin plugin) {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_COMMANDS));
 
-    ServiceContext serviceContext = new ServiceContext(plugin);
-
-    getCommandWrapperList().forEach(wrapper -> wrapper.init(plugin, serviceContext));
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    getCommandWrapperList().forEach(wrapper -> wrapper.init(relluEssentialsPlugin, relluEssentialsPlugin.getServiceContext()));
 
     int commands = PluginCommandYamlParser.parse(plugin).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,

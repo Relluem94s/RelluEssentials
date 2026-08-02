@@ -6,11 +6,12 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BagSalesmanNpc
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BeekeeperNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.EnchanterNpc;
+import org.bukkit.plugin.Plugin;
 
 public class NpcManager implements Enable {
 
   @Override
-  public void enable(RelluEssentials plugin) {
+  public void enable(Plugin plugin) {
     new BagSalesmanNpc();
     RelluEssentials.setBanker(new BankerNpc());
     new BeekeeperNpc();

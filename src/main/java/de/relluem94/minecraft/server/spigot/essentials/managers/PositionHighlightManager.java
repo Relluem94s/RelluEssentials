@@ -14,18 +14,20 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class PositionHighlightManager implements Enable {
 
   @SuppressWarnings("ConstantConditions")
   @Override
-  public void enable(RelluEssentials plugin) {
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
     new BukkitRunnable() {
       @Override
       public void run() {
         List<Player> toRemove = new ArrayList<>();
-        for (Map.Entry<Player, DoubleStore<Location, Location>> entry : plugin.position.entrySet()) {
+        for (Map.Entry<Player, DoubleStore<Location, Location>> entry : relluEssentialsPlugin.position.entrySet()) {
           Player p = entry.getKey();
           if (!p.isOnline()) {
             toRemove.add(p);
@@ -64,10 +66,10 @@ public class PositionHighlightManager implements Enable {
           }
         }
         for (Player p : toRemove) {
-          plugin.position.remove(p);
+          relluEssentialsPlugin.position.remove(p);
         }
       }
-    }.runTaskTimer(plugin, 0L, 20L);
+    }.runTaskTimer(relluEssentialsPlugin, 0L, 20L);
   }
 
   private void drawBoxEdges(Player p, World w, double x1, double y1, double z1, double x2,

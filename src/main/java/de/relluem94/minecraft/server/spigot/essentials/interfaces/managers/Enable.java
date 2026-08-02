@@ -1,12 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.interfaces.managers;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Defines a contract for components that require an enable lifecycle method.
  *
  * <p>Implementing classes are expected to perform their initialization and registration logic within
- * the {@link #enable()} method. This interface is typically used by manager classes that need to be
+ * the {@link #enable(Plugin)} method. This interface is typically used by manager classes that need to be
  * activated during the plugin startup phase.
  * </p>
  *
@@ -31,5 +31,5 @@ public interface Enable {
    * required for the implementing component to function correctly.
    * </p>
    */
-  void enable(RelluEssentials plugin);
+  void enable(Plugin plugin);
 }

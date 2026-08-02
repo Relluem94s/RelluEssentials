@@ -18,12 +18,9 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntr
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupSettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BagTypeRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.rellulib.stores.DoubleStore;
@@ -31,6 +28,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
 
@@ -41,6 +39,7 @@ public class DatabaseManager implements Enable {
 
   @Getter
   private final DatabaseHelper databaseHelper;
+
   /**
    * Creates a new DatabaseManager and establishes a database connection.
    *
@@ -79,71 +78,62 @@ public class DatabaseManager implements Enable {
   }
 
   @Override
-  public void enable(RelluEssentials plugin) {
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+
     PluginInformationEntry pie = databaseHelper.getPluginInformation();
-    plugin.setPluginInformation(pie);
+    relluEssentialsPlugin.setPluginInformation(pie);
     databaseHelper.init();
 
-    PlayerRegistry playerRegistry = new PlayerRegistry(databaseHelper.getBags());
-    plugin.setPlayerRegistry(playerRegistry);
-
-    GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
-    GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
-    GroupService groupService = new GroupService(groupRegistry, groupRepository, playerRegistry);
-
-    plugin.setGroupRegistry(groupRegistry);
-    plugin.setGroupService(groupService);
-    databaseHelper.setGroupService(groupService);
-
-    plugin.locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
+    relluEssentialsPlugin.locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
 
     for (DropEntry de : databaseHelper.getDrops()) {
-      plugin.dropMap.put(de.getMaterial(),
+      relluEssentialsPlugin.dropMap.put(de.getMaterial(),
           new DoubleStore<>(de.getMin(), de.getMax()));
     }
 
     for (CropEntry ce : databaseHelper.getCrops()) {
-      plugin.crops.put(ce.getSeed(), ce.getPlant());
+      relluEssentialsPlugin.crops.put(ce.getSeed(), ce.getPlant());
     }
 
-    plugin
+    relluEssentialsPlugin
         .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
             databaseHelper.getProtections()));
-    plugin.setTraderNpcRegistry(new TraderNpcRegistry());
-    plugin.getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
-    plugin.setBagTypeRegistry(new BagTypeRegistry(new BagTypeRepository(databaseHelper.getBagTypes())));
-    plugin
+    relluEssentialsPlugin.setTraderNpcRegistry(new TraderNpcRegistry());
+    relluEssentialsPlugin.getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
+    relluEssentialsPlugin.setBagTypeRegistry(new BagTypeRegistry(new BagTypeRepository(databaseHelper.getBagTypes())));
+    relluEssentialsPlugin
         .setBankTierRegistry(new BankTierRegistry(databaseHelper.getBankTiers()));
-    plugin.setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
+    relluEssentialsPlugin.setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
 
     RelluEssentials.settingEntriesList.addAll(databaseHelper.getAllSettings());
 
     for (WorldGroupEntry wge : databaseHelper.getWorldGroups()) {
       for (WorldEntry we : databaseHelper.getWorldByGroup(wge)) {
-        plugin.worldsMap.put(wge, we);
+        relluEssentialsPlugin.worldsMap.put(wge, we);
 
         if (getWorldNameBySetting(wge, "COLLECT_BAG")) {
-          plugin.collectBagWorlds.add(we.getName());
+          relluEssentialsPlugin.collectBagWorlds.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "USE_CLOUDSAILOR")) {
-          plugin.useCloudsailorWorlds.add(we.getName());
+          relluEssentialsPlugin.useCloudsailorWorlds.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "DEATH_LOSE_COINS")) {
-          plugin.deathLoseCoins.add(we.getName());
+          relluEssentialsPlugin.deathLoseCoins.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "ORE_RESPAWN")) {
-          plugin.oreRespawn.add(we.getName());
+          relluEssentialsPlugin.oreRespawn.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "DEATH_CREATE_HOME")) {
-          plugin.deathCreateHome.add(we.getName());
+          relluEssentialsPlugin.deathCreateHome.add(we.getName());
         }
 
         if (getWorldNameBySetting(wge, "SCOREBOARD_SHOW")) {
-          plugin.scoreboardShow.add(we.getName());
+          relluEssentialsPlugin.scoreboardShow.add(we.getName());
         }
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE,
@@ -152,10 +142,10 @@ public class DatabaseManager implements Enable {
       }
     }
 
-    for (int i = 0; i < plugin.getBagTypeRegistry().getAll().size(); i++) {
+    for (int i = 0; i < relluEssentialsPlugin.getBagTypeRegistry().getAll().size(); i++) {
       ItemStack[] isa = BagHelper.getItemStacks(
-          plugin.getBagTypeRegistry().getAll().get(i));
-      Collections.addAll(plugin.bagBlocks2collect, isa);
+          relluEssentialsPlugin.getBagTypeRegistry().getAll().get(i));
+      Collections.addAll(relluEssentialsPlugin.bagBlocks2collect, isa);
     }
   }
 
@@ -175,5 +165,9 @@ public class DatabaseManager implements Enable {
         plugin.getPlayerService().reloadPlayerHomes();
       }
     }.runTaskLater(plugin, 1L);
+  }
+
+  public void setGroupService(GroupService groupService){
+    databaseHelper.setGroupService(groupService);
   }
 }

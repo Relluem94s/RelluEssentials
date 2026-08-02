@@ -8,16 +8,18 @@ import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 public class ServiceContext {
 
-  private final GroupService groupService;
-  private final PlayerService playerService;
-  private final CommandManager commandManager;
-  private final BuyBackService buyBackService;
-  private final NpcService npcService;
-  private final GroupRegistry groupRegistry;
+  private GroupService groupService;
+  private PlayerService playerService;
+  private CommandManager commandManager;
+  private BuyBackService buyBackService;
+  private NpcService npcService;
+  private GroupRegistry groupRegistry;
 
   public ServiceContext(RelluEssentials plugin) {
     this.groupService = plugin.getGroupService();

@@ -16,16 +16,18 @@ import de.relluem94.minecraft.server.spigot.essentials.model.recipe.Shaped;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.Map;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 
 public class RecipeManager implements Enable {
 
   @Override
-  public void enable(RelluEssentials plugin) {
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_RECIPE));
     int recipeCount = 0;
-    Bukkit.addRecipe(buildCloudBootsRecipe(plugin).getRecipe());
+    Bukkit.addRecipe(buildCloudBootsRecipe(relluEssentialsPlugin).getRecipe());
     recipeCount++;
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         languageHelper.get(MessageKey.PLUGIN_MANAGER_RECIPE_REGISTERED, recipeCount));

@@ -4,16 +4,16 @@ import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.la
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.model.SignAction;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SignRegistry;
+import org.bukkit.plugin.Plugin;
 
 public class SignManager implements Enable {
 
   @Override
-  public void enable(RelluEssentials plugin) {
+  public void enable(Plugin plugin) {
     SignRegistry.register(plugin, "spawn", new SignAction("Spawn", false));
     SignRegistry.register(plugin, "up", new SignAction("Up", false));
     SignRegistry.register(plugin, "down", new SignAction("Down", false));

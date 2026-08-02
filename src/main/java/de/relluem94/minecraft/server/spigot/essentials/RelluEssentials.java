@@ -7,6 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
@@ -48,6 +49,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BuyBackRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
@@ -104,6 +106,10 @@ public class RelluEssentials extends JavaPlugin {
   public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
   public Map<Player,
       DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
+
+  @Setter
+  @Getter
+  private ServiceContext serviceContext;
   private long start;
   @Getter
   private DatabaseHelper databaseHelper;
@@ -231,16 +237,13 @@ public class RelluEssentials extends JavaPlugin {
     RelluEssentials.languageHelper.setDefaultLanguage(lang);
 
     startLoading();
+    serviceContext = new ServiceContext(this);
     configManager = new ConfigManager();
     configManager.enable(this);
-    commandManager = new CommandManager();
-    commandManager.enable(this);
-    enchantmentManager = new EnchantmentManager();
-    enchantmentManager.enable(this);
+
     itemManager = new ItemManager();
     itemManager.enable(this);
-    signManager = new SignManager();
-    signManager.enable(this);
+
     databaseManager = new DatabaseManager(
         getConfig().getString("database.host"),
         getConfig().getString("database.user"),
@@ -248,13 +251,32 @@ public class RelluEssentials extends JavaPlugin {
         getConfig().getInt("database.port")
     );
     databaseManager.enable(this);
-
     databaseHelper = databaseManager.getDatabaseHelper();
+
+    GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
+    groupRegistry = new GroupRegistry(groupRepository);
+    groupService = new GroupService(groupRegistry, groupRepository);
+    databaseManager.setGroupService(getGroupService());
     this.playerRegistry = new PlayerRegistry(databaseHelper.getBags());
     this.playerService = new PlayerService(playerRegistry);
+    serviceContext.setPlayerService(getPlayerService());
+    groupService.setPlayerRegistry(playerRegistry);
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     buyBackService = new BuyBackService(buyBackRepository);
 
+
+
+    serviceContext.setGroupRegistry(getGroupRegistry());
+    serviceContext.setGroupService(getGroupService());
+    serviceContext.setNpcService(getNpcService());
+
+    commandManager = new CommandManager();
+    serviceContext.setCommandManager(commandManager);
+    commandManager.enable(this);
+    enchantmentManager = new EnchantmentManager();
+    enchantmentManager.enable(this);
+    signManager = new SignManager();
+    signManager.enable(this);
     listenerManager = new ListenerManager();
     listenerManager.enable(this);
     skillManager = new SkillManager();
@@ -281,7 +303,6 @@ public class RelluEssentials extends JavaPlugin {
     scoreBoardManager.enable(this);
     autoSaveManager =new AutoSaveManager();
     autoSaveManager.enable(this);
-
     databaseManager.afterWorldLoaded(this);
     new BukkitRunnable() {
       @Override

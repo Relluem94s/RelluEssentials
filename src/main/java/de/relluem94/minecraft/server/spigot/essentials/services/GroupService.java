@@ -5,6 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
+import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -13,14 +14,15 @@ public class GroupService {
 
   private final GroupRegistry groupRegistry;
   private final GroupRepository groupRepository;
-  private final PlayerRegistry playerRegistry;
+  @Setter
+  private PlayerRegistry playerRegistry;
 
 
-  public GroupService(GroupRegistry groupRegistry, GroupRepository groupRepository, PlayerRegistry playerRegistry) {
+  public GroupService(GroupRegistry groupRegistry, GroupRepository groupRepository) {
     this.groupRegistry = groupRegistry;
     this.groupRepository = groupRepository;
-    this.playerRegistry = playerRegistry;
   }
+
 
   public boolean addGroup(@NotNull GroupEntry groupEntry) {
     if (groupRegistry.containsByName(groupEntry.getName())) {
@@ -44,6 +46,9 @@ public class GroupService {
   }
 
   public boolean isPlayerInGroupOrHigher(Player player, String groupName) {
+    if (playerRegistry == null) {
+      return false;
+    }
     return groupRegistry.findByName(groupName)
         .map(requiredGroup -> {
           long playerGroupId = playerRegistry.getPlayerEntry(player).getGroup().getId();

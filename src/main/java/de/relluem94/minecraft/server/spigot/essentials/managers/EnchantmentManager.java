@@ -18,6 +18,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Manages the registration of all custom enchantments for the plugin. Implements {@link Enable} to
@@ -30,8 +31,9 @@ public class EnchantmentManager implements Enable {
    * enchantments such as Autosmelt, Telekinesis, Replenishment, Delicate and Thunderstrike.
    */
   @Override
-  public void enable(RelluEssentials plugin) {
-    EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS,
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    EnchantmentRegistry.register(relluEssentialsPlugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS,
         new EnchantmentHelper(
             new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS,
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS_DISPLAYNAME),
@@ -44,7 +46,7 @@ public class EnchantmentManager implements Enable {
         ));
 
 
-    EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL,
+    EnchantmentRegistry.register(relluEssentialsPlugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL,
         new EnchantmentHelper(
             new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL,
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL_DISPLAYNAME),
@@ -56,7 +58,7 @@ public class EnchantmentManager implements Enable {
             25000
         ));
 
-    EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,
+    EnchantmentRegistry.register(relluEssentialsPlugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,
         new EnchantmentHelper(
             new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT,
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT_DISPLAYNAME),
@@ -68,7 +70,7 @@ public class EnchantmentManager implements Enable {
             250000
         ));
 
-    EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS,
+    EnchantmentRegistry.register(relluEssentialsPlugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS,
         new EnchantmentHelper(
             new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS,
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS_DISPLAYNAME),
@@ -80,7 +82,7 @@ public class EnchantmentManager implements Enable {
             250000
         ));
 
-    EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT,
+    EnchantmentRegistry.register(relluEssentialsPlugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT,
         new EnchantmentHelper(
             new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT,
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT_DISPLAYNAME),
@@ -92,7 +94,7 @@ public class EnchantmentManager implements Enable {
             250000
         ));
 
-    EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE,
+    EnchantmentRegistry.register(relluEssentialsPlugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE,
         new EnchantmentHelper(
             new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE,
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE_DISPLAYNAME),
@@ -104,7 +106,7 @@ public class EnchantmentManager implements Enable {
             250000
         ));
 
-    EnchantmentRegistry.register(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
+    EnchantmentRegistry.register(relluEssentialsPlugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
         new EnchantmentHelper(
             new EnchantName(EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE,
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE_DISPLAYNAME),
