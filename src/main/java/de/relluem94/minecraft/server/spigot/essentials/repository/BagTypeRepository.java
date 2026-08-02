@@ -12,6 +12,11 @@ public class BagTypeRepository {
 
   private final List<BagTypeEntry> bagTypeEntries;
 
+  /**
+   * Creates a new {@link BagTypeRepository} with the given list of {@link BagTypeEntry} instances.
+   *
+   * @param bagTypeEntries the initial list of {@link BagTypeEntry} instances
+   */
   public BagTypeRepository(List<BagTypeEntry> bagTypeEntries) {
     this.bagTypeEntries = new ArrayList<>(bagTypeEntries);
   }
@@ -46,7 +51,8 @@ public class BagTypeRepository {
   public Optional<BagTypeEntry> findByName(String name) {
     return bagTypeEntries.stream()
         .filter(entry -> entry.getName().equals(name))
-        .findFirst();  }
+        .findFirst();
+  }
 
   /**
    * Saves a {@link BagTypeEntry} to the database.

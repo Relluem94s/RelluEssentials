@@ -12,6 +12,11 @@ public class BagTypeRegistry {
 
   private final BagTypeRepository bagTypeRepository;
 
+  /**
+   * Creates a new {@link BagTypeRegistry} backed by the given repository.
+   *
+   * @param bagTypeRepository the repository used to persist and retrieve entries
+   */
   public BagTypeRegistry(BagTypeRepository bagTypeRepository) {
     this.bagTypeRepository = bagTypeRepository;
   }
@@ -22,6 +27,7 @@ public class BagTypeRegistry {
    * @param bagTypeEntry the {@link BagTypeEntry} to register
    * @throws IllegalArgumentException if the entry is already registered
    */
+  @SuppressWarnings("unused")
   public void register(BagTypeEntry bagTypeEntry) {
     if (contains(bagTypeEntry)) {
       throw new IllegalArgumentException("BagTypeEntry is already registered: " + bagTypeEntry);
@@ -35,6 +41,7 @@ public class BagTypeRegistry {
    * @param bagTypeEntry the {@link BagTypeEntry} to unregister
    * @throws IllegalArgumentException if the entry is not registered
    */
+  @SuppressWarnings("unused")
   public void unregister(BagTypeEntry bagTypeEntry) {
     if (!contains(bagTypeEntry)) {
       throw new IllegalArgumentException("BagTypeEntry is not registered: " + bagTypeEntry);
@@ -61,10 +68,23 @@ public class BagTypeRegistry {
     return bagTypeRepository.findAll();
   }
 
+  /**
+   * Finds a {@link BagTypeEntry} by its unique id.
+   *
+   * @param id the unique id to search for
+   * @return an {@link Optional} containing the entry, or empty if not found
+   */
   public Optional<BagTypeEntry> findById(int id) {
     return bagTypeRepository.findById(id);
   }
 
+  /**
+   * Finds a {@link BagTypeEntry} by its name.
+   *
+   * @param name the name to search for
+   * @return an {@link Optional} containing the entry, or empty if not found
+   */
+  @SuppressWarnings("unused")
   public Optional<BagTypeEntry> findByName(String name) {
     return bagTypeRepository.findByName(name);
   }
