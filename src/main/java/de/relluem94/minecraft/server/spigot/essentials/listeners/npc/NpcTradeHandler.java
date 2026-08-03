@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
@@ -124,7 +124,7 @@ public class NpcTradeHandler {
 
     if (buyPrice == null || sellPrice == null) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
       return;
     }
 
@@ -159,19 +159,19 @@ public class NpcTradeHandler {
 
     if (bagType == null) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND));
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND));
       return;
     }
 
     if (BagHelper.hasBag(bagType.getId(), playerEntry)) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT,
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT,
               bagType.getDisplayName()));
       return;
     }
 
     if (playerEntry.getPurse() < bagType.getCost()) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_COINS,
+      player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_COINS,
           PLUGIN_NAME_MONEY));
       return;
     }
@@ -197,7 +197,7 @@ public class NpcTradeHandler {
         RelluEssentials.getInstance().getDatabaseHelper()
             .getBag(bagType.getId(), playerEntry.getId())
     );
-    player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT,
+    player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT,
         bagType.getDisplayName()));
   }
 
@@ -298,7 +298,7 @@ public class NpcTradeHandler {
       String itemDisplayName, int amount, int slot) {
     if (buyPrice <= 0) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
       return;
     }
 
@@ -306,7 +306,7 @@ public class NpcTradeHandler {
 
     if (playerEntry.getPurse() - totalCost < 0) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS,
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS,
               itemDisplayName, StringHelper.formatDouble(totalCost), PLUGIN_NAME_MONEY,
               StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
       return;
@@ -314,7 +314,7 @@ public class NpcTradeHandler {
 
     if (player.getInventory().firstEmpty() == -1) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL,
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL,
               itemDisplayName, StringHelper.formatDouble(totalCost)));
       return;
     }
@@ -336,7 +336,7 @@ public class NpcTradeHandler {
     }
 
     player.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY, itemDisplayName,
+        translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY, itemDisplayName,
             StringHelper.formatDouble(totalCost), PLUGIN_NAME_MONEY,
             StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
     player.playSound(player, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
@@ -384,7 +384,7 @@ public class NpcTradeHandler {
 
     if (coinsItem.equalsName(item)) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
       return;
     }
 
@@ -398,24 +398,24 @@ public class NpcTradeHandler {
 
       if (!meta.getEnchants().isEmpty()) {
         player.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED));
+            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED));
         return;
       }
 
       if (meta instanceof Damageable damageable && damageable.hasDamage()) {
         player.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_USED_ITEM));
+            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_USED_ITEM));
         return;
       }
 
       if (meta.hasDisplayName() && !(meta instanceof SkullMeta)) {
-        player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
+        player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
         return;
       }
     }
 
     if (sellPrice == 0) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
       return;
     }
 
@@ -444,7 +444,7 @@ public class NpcTradeHandler {
     playerEntry.setUpdatedBy(playerEntry.getId());
     playerEntry.setHasToBeUpdated(true);
     player.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL, itemDisplayName,
+        translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL, itemDisplayName,
             StringHelper.formatDouble(totalEarnings), PLUGIN_NAME_MONEY,
             StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
     player.playSound(player, Sound.ENTITY_WANDERING_TRADER_NO, SoundCategory.MASTER, 1f, 1f);

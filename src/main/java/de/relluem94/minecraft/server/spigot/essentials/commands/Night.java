@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -36,33 +36,33 @@ public class Night implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
       p.getWorld().setTime(18000L);
       p.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TIME_NIGHT, p.getWorld().getName()));
+          translationService.getWithPrefix(MessageKey.COMMAND_TIME_NIGHT, p.getWorld().getName()));
       return true;
     }
 
     World world = Bukkit.getWorld(args[0]);
 
     if (world == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, args[0]));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, args[0]));
       return true;
     }
 
     world.setTime(18000L);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TIME_NIGHT, world.getName()));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TIME_NIGHT, world.getName()));
     return true;
   }
 

@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
@@ -86,7 +86,7 @@ public class NoDeathMessage implements ListenerConstruct {
       Location leLocation = le.getLocation();
 
       TextComponent message = new TextComponent(
-          languageHelper.get(MessageKey.PLUGIN_EVENT_DEATH_TP));
+          translationService.get(MessageKey.PLUGIN_EVENT_DEATH_TP));
       message.setColor(ChatColor.AQUA);
       message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
           "/home " + Home.Commands.TP.getName() + " " + le.getLocationName()));
@@ -105,10 +105,10 @@ public class NoDeathMessage implements ListenerConstruct {
       }
 
       p.sendMessage(
-          languageHelper.getWithPrefix(
+          translationService.getWithPrefix(
               MessageKey.PLUGIN_EVENT_DEATH,
               locationName,
-              languageHelper.get(
+              translationService.get(
                   MessageKey.COMMAND_WHERE_STRING,
                   (int) leLocation.getX(),
                   (int) leLocation.getY(),

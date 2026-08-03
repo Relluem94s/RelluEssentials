@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -37,17 +37,17 @@ public class Nick implements CommandConstruct {
       @NonNull String label, String @NotNull [] args) {
 
     if (args.length < 2) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (args.length > 2) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
     if (!groupService.isSenderAuthorized(sender, "admin")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -55,7 +55,7 @@ public class Nick implements CommandConstruct {
 
     if (target == null) {
       sender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
@@ -67,7 +67,7 @@ public class Nick implements CommandConstruct {
     pe.setHasToBeUpdated(true);
     target.setCustomName(pe.getGroup().getPrefix() + args[1]);
     target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NICK,
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NICK,
         pe.getGroup().getPrefix() + target.getName()));
     return true;
   }

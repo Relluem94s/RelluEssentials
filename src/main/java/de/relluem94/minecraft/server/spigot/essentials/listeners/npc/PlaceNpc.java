@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
@@ -47,7 +47,7 @@ public class PlaceNpc implements ListenerConstruct {
                 RelluEssentials.getInstance().getTraderNpcRegistry().getNPC(i));
             nh.spawn();
             e.getPlayer().sendMessage(
-                languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SPAWN,
+                translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SPAWN,
                     nh.getCustomName()));
           }
         }
