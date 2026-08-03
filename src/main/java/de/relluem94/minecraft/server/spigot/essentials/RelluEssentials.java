@@ -31,7 +31,6 @@ import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.SettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldEntry;
@@ -49,6 +48,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegist
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BuyBackRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repository.UndoHistoryRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
@@ -56,6 +56,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.io.File;
 import java.util.ArrayList;
@@ -86,8 +87,6 @@ public class RelluEssentials extends JavaPlugin {
 
   public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
   public static final Map<Player, Player> reply = new HashMap<>();
-  //@Deprecated
- // public static LanguageHelper languageHelper;
   private static RelluEssentials instance;
   private static BankerNpc banker;
   public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
@@ -97,7 +96,6 @@ public class RelluEssentials extends JavaPlugin {
   public final Set<String> deathCreateHome = new HashSet<>();
   public final Set<String> oreRespawn = new HashSet<>();
   public final Set<String> scoreboardShow = new HashSet<>();
-  public final Map<Player, List<List<ModifyHistoryEntry>>> undo = new HashMap<>();
   public final Map<Player, DoubleStore<Location, Location>> position = new HashMap<>();
   public final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
   public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
@@ -147,14 +145,19 @@ public class RelluEssentials extends JavaPlugin {
   private NpcService npcService;
   @Getter
   private NpcDialogueTracker npcDialogueTracker;
-
   @Setter
   @Getter
   private GroupRegistry groupRegistry;
-
   @Setter
   @Getter
   private GroupService groupService;
+  @Getter
+  private SchedulerService schedulerService;
+  private UndoHistoryRepository undoHistoryRepository;
+  @Getter
+  private UndoHistoryService undoHistoryService;
+  @Getter
+  private TranslationService translationService;
 
   @Getter
   private ListenerManager listenerManager;
@@ -190,11 +193,6 @@ public class RelluEssentials extends JavaPlugin {
   private DatabaseManager databaseManager;
   @Getter
   private SudoManager sudoManager;
-  @Getter
-  private SchedulerService schedulerService;
-
-  @Getter
-  private TranslationService translationService;
 
 
   /**
@@ -238,18 +236,18 @@ public class RelluEssentials extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    start = Calendar.getInstance().getTimeInMillis();
     String lang = getConfig().getString("language", "en_US");
 
     translationService = new TranslationService(this);
     translationService.loadLanguages();
     translationService.setDefaultLanguage(lang);
 
-   // RelluEssentials.languageHelper = new LanguageHelper(this);
-   // RelluEssentials.languageHelper.loadLanguages();
-   // RelluEssentials.languageHelper.setDefaultLanguage(lang);
-
     startLoading();
     schedulerService = new SchedulerService(this);
+    undoHistoryRepository = new UndoHistoryRepository();
+    undoHistoryService = new UndoHistoryService(undoHistoryRepository);
+
     serviceContext = new ServiceContext(this);
     configManager = new ConfigManager();
     configManager.enable(this);
@@ -341,7 +339,6 @@ public class RelluEssentials extends JavaPlugin {
 
   private void startLoading() {
     setInstance(this);
-    start = Calendar.getInstance().getTimeInMillis();
     consoleSendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
