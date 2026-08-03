@@ -69,8 +69,8 @@ public class Modify implements CommandConstruct {
         new ClipboardCommand(),
         new MoveCommand(BLOCKS_PER_TICK, selectionService, undoHistoryService),
         new PasteCommand(BLOCKS_PER_TICK, undoHistoryService),
-        new PlantCommand(BLOCKS_PER_TICK, selectionService, undoHistoryService),
-        new ReplaceCommand(BLOCKS_PER_TICK, selectionService, undoHistoryService),
+        new PlantCommand(context, BLOCKS_PER_TICK),
+        new ReplaceCommand(context, BLOCKS_PER_TICK),
         new SetCommand(context, BLOCKS_PER_TICK),
         new UndoCommand(BLOCKS_PER_TICK, undoHistoryService),
         new WallCommand(BLOCKS_PER_TICK, selectionService, undoHistoryService)
