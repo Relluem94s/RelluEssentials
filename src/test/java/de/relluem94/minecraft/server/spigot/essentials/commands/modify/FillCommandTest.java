@@ -1,8 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,15 +22,17 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-
-import static org.mockito.Mockito.*;
 
 class FillCommandTest {
 
     private Player player;
-    private UndoHistoryManager undoHistoryManager;
+    private UndoHistoryService undoHistoryService;
 
     private MockedStatic<RelluEssentials> mockedRelluEssentials;
 
@@ -52,17 +66,17 @@ class FillCommandTest {
     @BeforeEach
     void setUp() {
         player = mock(Player.class);
-        undoHistoryManager = mock(UndoHistoryManager.class);
+        undoHistoryService = mock(UndoHistoryService.class);
 
         RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+        translationService translationServiceMock = mock(translationService.class);
 
         mockedRelluEssentials = mockStatic(RelluEssentials.class);
         mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-        RelluEssentials.languageHelper = languageHelperMock;
+        RelluEssentials.translationService = translationServiceMock;
 
-        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
     }
 
     @AfterEach
@@ -72,47 +86,52 @@ class FillCommandTest {
 
     @Test
     void execute_fill_withInvalidMaterial_sendsWrongMaterialMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         fillCommand.execute(player, new String[]{"fill", "NOT_A_REAL_MATERIAL_XYZ", "5"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_fill_withNonIntegerRadius_sendsInvalidMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         fillCommand.execute(player, new String[]{"fill", "STONE", "notANumber"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_fill_withZeroRadius_sendsInvalidMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         fillCommand.execute(player, new String[]{"fill", "STONE", "0"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_fill_withNegativeRadius_sendsInvalidMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         fillCommand.execute(player, new String[]{"fill", "STONE", "-3"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_fill_withRadiusExceedingMax_sendsRadiusTooHighMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         World world = mock(World.class);
         Block startBlock = buildSolidBlock(world, 0, 0, 0);
@@ -124,12 +143,13 @@ class FillCommandTest {
         fillCommand.execute(player, new String[]{"fill", "STONE", "99"});
 
         verify(player, atLeastOnce()).sendMessage(anyString());
-        verify(undoHistoryManager).add(eq(player), any());
+        verify(undoHistoryService).add(eq(player), any());
     }
 
     @Test
     void execute_fill_withNonEmptyStartBlock_addsEmptyHistory() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         World world = mock(World.class);
         Block startBlock = buildSolidBlock(world, 0, 0, 0);
@@ -140,12 +160,13 @@ class FillCommandTest {
 
         fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-        verify(undoHistoryManager).add(eq(player), argThat(java.util.List::isEmpty));
+        verify(undoHistoryService).add(eq(player), argThat(java.util.List::isEmpty));
     }
 
     @Test
     void execute_fill_withEmptyStartBlock_fillsAdjacentAirAndAddsHistory() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
@@ -165,14 +186,15 @@ class FillCommandTest {
 
             fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 1));
             verify(player).sendMessage((String) null);
         }
     }
 
     @Test
     void execute_fillr_withEmptyStartBlockAndEmptyBelow_spreadsBothDirections() {
-        FillCommand fillrCommand = new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillrCommand = new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
@@ -195,44 +217,50 @@ class FillCommandTest {
 
             fillrCommand.execute(player, new String[]{"fillr", "STONE", "5"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 2));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 2));
             verify(player).sendMessage((String) null);
         }
     }
 
     @Test
     void matches_fill_withCorrectArgs_returnsTrue() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
         assert fillCommand.matches(new String[]{"fill", "STONE", "5"});
     }
 
     @Test
     void matches_fillr_withCorrectArgs_returnsTrue() {
-        FillCommand fillrCommand = new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillrCommand = new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
         assert fillrCommand.matches(new String[]{"fillr", "STONE", "5"});
     }
 
     @Test
     void matches_fill_withWrongCommand_returnsFalse() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
         assert !fillCommand.matches(new String[]{"fillr", "STONE", "5"});
     }
 
     @Test
     void matches_fillr_withWrongCommand_returnsFalse() {
-        FillCommand fillrCommand = new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillrCommand = new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
         assert !fillrCommand.matches(new String[]{"fill", "STONE", "5"});
     }
 
     @Test
     void matches_fill_withTooFewArgs_returnsFalse() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
         assert !fillCommand.matches(new String[]{"fill", "STONE"});
     }
 
     @Test
     void matches_fill_withTooManyArgs_returnsFalse() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
         assert !fillCommand.matches(new String[]{"fill", "STONE", "5", "extra"});
     }
 
@@ -240,7 +268,8 @@ class FillCommandTest {
     @Test
     void execute_fill_whenMaxIterationsReached_stopsProcessingAndAddsPartialHistory() {
         int maxIterations = 2;
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, maxIterations, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, maxIterations,
+            undoHistoryService);
 
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
@@ -266,13 +295,14 @@ class FillCommandTest {
 
             fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() < 3));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() < 3));
         }
     }
 
     @Test
     void execute_fill_whenBlockExceedsRadius_skipsBlockAndDoesNotAddToHistory() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
@@ -296,14 +326,15 @@ class FillCommandTest {
 
             fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 1));
         }
     }
 
 
     @Test
     void execute_fill_whenNeighborAlreadyVisited_doesNotProcessNeighborTwice() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
@@ -329,14 +360,15 @@ class FillCommandTest {
 
             fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 4));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 4));
         }
     }
 
 
     @Test
     void execute_fill_whenNeighborExceedsRadius_skipsNeighborAndDoesNotAddToHistory() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
+        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS,
+            undoHistoryService);
 
         World world = mock(World.class);
 
@@ -377,7 +409,7 @@ class FillCommandTest {
 
             fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 1));
         }
     }
 

@@ -1,32 +1,50 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
-import org.bukkit.*;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import java.util.function.Consumer;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-
-import java.util.function.Consumer;
-
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
-import static org.mockito.Mockito.*;
 
 class MoveCommandTest {
 
     private Player player;
-    private SelectionResolver selectionResolver;
-    private UndoHistoryManager undoHistoryManager;
+    private SelectionService selectionService;
+    private UndoHistoryService undoHistoryService;
     private MoveCommand moveCommand;
     private BukkitScheduler schedulerMock;
 
@@ -58,18 +76,18 @@ class MoveCommandTest {
     @BeforeEach
     void setUp() {
         player = mock(Player.class);
-        selectionResolver = mock(SelectionResolver.class);
-        undoHistoryManager = mock(UndoHistoryManager.class);
+        selectionService = mock(SelectionService.class);
+        undoHistoryService = mock(UndoHistoryService.class);
 
         RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+        translationService translationServiceMock = mock(translationService.class);
 
         mockedRelluEssentials = mockStatic(RelluEssentials.class);
         mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-        RelluEssentials.languageHelper = languageHelperMock;
+        RelluEssentials.translationService = translationServiceMock;
 
-        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
 
         schedulerMock = mock(BukkitScheduler.class);
         Server serverMock = mock(Server.class);
@@ -85,7 +103,7 @@ class MoveCommandTest {
         mockedBukkit.when(Bukkit::getServer).thenReturn(serverMock);
         mockedBukkit.when(Bukkit::getScheduler).thenReturn(schedulerMock);
 
-        moveCommand = new MoveCommand(2, selectionResolver, undoHistoryManager);
+        moveCommand = new MoveCommand(2, selectionService, undoHistoryService);
     }
 
     @AfterEach
@@ -99,22 +117,22 @@ class MoveCommandTest {
         moveCommand.execute(player, new String[]{"move", "notANumber"});
 
         verify(player).sendMessage(anyString());
-        verify(selectionResolver, never()).resolve(any());
+        verify(selectionService, never()).resolve(any());
     }
 
     @Test
     void execute_withNoSelection_abortsEarly() {
-        when(selectionResolver.resolve(player)).thenReturn(null);
+        when(selectionService.resolve(player)).thenReturn(null);
 
         moveCommand.execute(player, new String[]{"move", "3"});
 
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_withValidOffsetAndSelection_movesBlocksAndSavesHistory() {
         Selection selection = buildSelection(0, 0, 0, 2, 2, 2);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block sourceBlock = buildBlock(Material.STONE, 1, 1, 1);
         Block targetBlock = buildBlock(Material.AIR, 2, 1, 1);
@@ -145,7 +163,7 @@ class MoveCommandTest {
 
             modifyHelper.verify(() -> checkAndRemoveProtection(sourceBlock));
             modifyHelper.verify(() -> checkAndRemoveProtection(targetBlock));
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 2));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 2));
             verify(player).sendMessage((String) null);
         }
     }
@@ -153,7 +171,7 @@ class MoveCommandTest {
     @Test
     void execute_withMultipleBlocksExceedingBlocksPerTick_incrementsDelay() {
         Selection selection = buildSelection(0, 0, 0, 4, 4, 4);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block firstBlock = buildBlock(Material.STONE, 1, 1, 1);
         Block secondBlock = buildBlock(Material.STONE, 2, 1, 1);
@@ -187,7 +205,7 @@ class MoveCommandTest {
 
             moveCommand.execute(player, new String[]{"move", "1"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 6));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 6));
             verify(player).sendMessage((String) null);
         }
     }
@@ -195,7 +213,7 @@ class MoveCommandTest {
     @Test
     void execute_withValidOffsetAndSelection_schedulesOneTaskPerBlock() {
         Selection selection = buildSelection(0, 0, 0, 2, 2, 2);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block sourceBlock = buildBlock(Material.STONE, 1, 1, 1);
         Block targetBlock = buildBlock(Material.AIR, 2, 1, 1);
@@ -229,7 +247,7 @@ class MoveCommandTest {
     @Test
     void execute_withMultipleBlocksExceedingBlocksPerTick_schedulesOneTaskPerBlock() {
         Selection selection = buildSelection(0, 0, 0, 4, 4, 4);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block firstBlock = buildBlock(Material.STONE, 1, 1, 1);
         Block secondBlock = buildBlock(Material.STONE, 2, 1, 1);

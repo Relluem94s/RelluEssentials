@@ -15,11 +15,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +41,8 @@ import org.mockito.MockedStatic;
 class CopyCommandTest {
 
     private Player player;
-    private SelectionResolver selectionResolver;
-    private UndoHistoryManager undoHistoryManager;
+    private SelectionService selectionService;
+    private UndoHistoryService undoHistoryService;
 
     private MockedStatic<RelluEssentials> mockedRelluEssentials;
     private RelluEssentials relluEssentialsMock;
@@ -72,18 +72,18 @@ class CopyCommandTest {
     @BeforeEach
     void setUp() {
         player = mock(Player.class);
-        selectionResolver = mock(SelectionResolver.class);
-        undoHistoryManager = mock(UndoHistoryManager.class);
+        selectionService = mock(SelectionService.class);
+        undoHistoryService = mock(UndoHistoryService.class);
 
         relluEssentialsMock = mock(RelluEssentials.class);
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+        translationService translationServiceMock = mock(translationService.class);
 
         mockedRelluEssentials = mockStatic(RelluEssentials.class);
         mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-        RelluEssentials.languageHelper = languageHelperMock;
+        RelluEssentials.translationService = translationServiceMock;
 
-        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
 
         Location playerLocation = mock(Location.class);
         Location clonedLocation = mock(Location.class);
@@ -101,27 +101,27 @@ class CopyCommandTest {
 
     @Test
     void execute_copy_withNoSelection_abortsEarly() {
-        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
-        when(selectionResolver.resolve(player)).thenReturn(null);
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionService, undoHistoryService);
+        when(selectionService.resolve(player)).thenReturn(null);
 
         copyCommand.execute(player, new String[]{"copy"});
 
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_cut_withNoSelection_abortsEarly() {
-        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
-        when(selectionResolver.resolve(player)).thenReturn(null);
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionService, undoHistoryService);
+        when(selectionService.resolve(player)).thenReturn(null);
 
         cutCommand.execute(player, new String[]{"cut"});
 
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_copy_withValidSelection_storesClipboardAndSendsMessage() {
-        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionService, undoHistoryService);
         relluEssentialsMock.clipboard = new HashMap<>();
         Selection selectionMock = mock(Selection.class);
         ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
@@ -129,7 +129,7 @@ class CopyCommandTest {
         relluEssentialsMock.clipboard.put(player, new DoubleStore<>(selectionMock, clipboardList));
 
         Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block blockA = buildBlock(Material.STONE, 0, 0, 0);
         Block blockB = buildBlock(Material.DIRT, 1, 1, 1);
@@ -150,14 +150,14 @@ class CopyCommandTest {
 
             copyCommand.execute(player, new String[]{"copy"});
 
-            verify(undoHistoryManager, never()).add(any(), any());
+            verify(undoHistoryService, never()).add(any(), any());
             verify(player).sendMessage(anyString());
         }
     }
 
     @Test
     void execute_cut_withValidSelection_clearsBlocksAndAddsHistory() {
-        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionService, undoHistoryService);
         relluEssentialsMock.clipboard = new HashMap<>();
         Selection selectionMock = mock(Selection.class);
         ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
@@ -165,7 +165,7 @@ class CopyCommandTest {
         relluEssentialsMock.clipboard.put(player, new DoubleStore<>(selectionMock, clipboardList));
 
         Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block blockA = buildBlock(Material.STONE, 0, 0, 0);
         Block blockB = buildBlock(Material.DIRT, 1, 1, 1);
@@ -187,44 +187,44 @@ class CopyCommandTest {
 
             cutCommand.execute(player, new String[]{"cut"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 2));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 2));
             verify(player).sendMessage(anyString());
         }
     }
 
     @Test
     void matches_copy_withCorrectArgs_returnsTrue() {
-        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionService, undoHistoryService);
         assert copyCommand.matches(new String[]{"copy"});
     }
 
     @Test
     void matches_cut_withCorrectArgs_returnsTrue() {
-        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionService, undoHistoryService);
         assert cutCommand.matches(new String[]{"cut"});
     }
 
     @Test
     void matches_copy_withWrongCommand_returnsFalse() {
-        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionService, undoHistoryService);
         assert !copyCommand.matches(new String[]{"cut"});
     }
 
     @Test
     void matches_cut_withWrongCommand_returnsFalse() {
-        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionService, undoHistoryService);
         assert !cutCommand.matches(new String[]{"copy"});
     }
 
     @Test
     void matches_copy_withTooManyArgs_returnsFalse() {
-        CopyCommand copyCommand = new CopyCommand(false, 2, selectionResolver, undoHistoryManager);
+        CopyCommand copyCommand = new CopyCommand(false, 2, selectionService, undoHistoryService);
         assert !copyCommand.matches(new String[]{"copy", "extra"});
     }
 
     @Test
     void matches_cut_withTooManyArgs_returnsFalse() {
-        CopyCommand cutCommand = new CopyCommand(true, 2, selectionResolver, undoHistoryManager);
+        CopyCommand cutCommand = new CopyCommand(true, 2, selectionService, undoHistoryService);
         assert !cutCommand.matches(new String[]{"cut", "extra"});
     }
 

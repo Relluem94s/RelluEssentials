@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboar
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -162,13 +161,6 @@ public class ModifyHelper {
   public static void undo(@NotNull ModifyHistoryEntry entry) {
     entry.getLocation().getBlock().setType(entry.getMaterial());
     entry.getLocation().getBlock().setBlockData(entry.getData());
-  }
-
-  public static void addUndoHistory(Player p, List<ModifyHistoryEntry> history) {
-    List<List<ModifyHistoryEntry>> playerUndoList = RelluEssentials.getInstance().undo.getOrDefault(
-        p, new ArrayList<>());
-    playerUndoList.add(history);
-    RelluEssentials.getInstance().undo.put(p, playerUndoList);
   }
 
   public static void checkAndRemoveProtection(Block block) {

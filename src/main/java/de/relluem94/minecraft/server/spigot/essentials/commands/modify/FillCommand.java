@@ -1,15 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isInt;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,39 +33,39 @@ public class FillCommand implements SubCommand {
   private final int blocksPerTick;
   private final int maxRadius;
   private final int maxIterations;
-  private final UndoHistoryManager undoHistoryManager;
+  private final UndoHistoryService undoHistoryService;
 
   public FillCommand(boolean recursive, int blocksPerTick, int maxRadius, int maxIterations,
-      UndoHistoryManager undoHistoryManager) {
+      UndoHistoryService undoHistoryService) {
     this.recursive = recursive;
     this.blocksPerTick = blocksPerTick;
     this.maxRadius = maxRadius;
     this.maxIterations = maxIterations;
-    this.undoHistoryManager = undoHistoryManager;
+    this.undoHistoryService = undoHistoryService;
   }
 
   @Override
   public void execute(Player player, String[] args) {
     Material material = Material.getMaterial(args[1].toUpperCase());
     if (material == null) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
       return;
     }
 
     if (!isInt(args[2])) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_INVALID));
       return;
     }
 
     int radius = Integer.parseInt(args[2]);
     if (radius <= 0) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_INVALID));
       return;
     }
 
     if (radius > maxRadius) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_RADIUS_TO_HIGH, maxRadius));
+          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_RADIUS_TO_HIGH, maxRadius));
     }
 
     BlockHelper blockHelper = new BlockHelper(material);
@@ -125,13 +125,13 @@ public class FillCommand implements SubCommand {
     }
 
     blockHelper.setBlocks(0);
-    undoHistoryManager.add(player, history);
+    undoHistoryService.add(player, history);
 
     player.sendMessage(
         recursive
-            ? languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_FILLR_STARTED, history.size(),
+            ? translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_FILLR_STARTED, history.size(),
             material.name(), radius)
-            : languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_STARTED, history.size(),
+            : translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_STARTED, history.size(),
                 material.name(), radius)
     );
   }

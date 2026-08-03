@@ -1,33 +1,54 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.normalizeYaw;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyFloat;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
-import org.bukkit.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedStatic;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.*;
-import static org.mockito.Mockito.*;
 
 class PasteCommandTest {
 
     private Player player;
-    private UndoHistoryManager undoHistoryManager;
+    private UndoHistoryService undoHistoryService;
     private PasteCommand pasteCommand;
     private RelluEssentials relluEssentialsMock;
     private MockedStatic<RelluEssentials> mockedRelluEssentials;
@@ -59,19 +80,19 @@ class PasteCommandTest {
     @BeforeEach
     void setUp() {
         player = mock(Player.class);
-        undoHistoryManager = mock(UndoHistoryManager.class);
+        undoHistoryService = mock(UndoHistoryService.class);
 
         relluEssentialsMock = mock(RelluEssentials.class);
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+        translationService translationServiceMock = mock(translationService.class);
 
         relluEssentialsMock.clipboard = new ConcurrentHashMap<>();
 
         mockedRelluEssentials = mockStatic(RelluEssentials.class);
         mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-        RelluEssentials.languageHelper = languageHelperMock;
+        RelluEssentials.translationService = translationServiceMock;
 
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
 
         schedulerMock = mock(BukkitScheduler.class);
         Server serverMock = mock(Server.class);
@@ -90,7 +111,7 @@ class PasteCommandTest {
         Location playerLocation = buildPlayerLocation(0, 64, 0, 0f);
         when(player.getLocation()).thenReturn(playerLocation);
 
-        pasteCommand = new PasteCommand(2, undoHistoryManager);
+        pasteCommand = new PasteCommand(2, undoHistoryService);
     }
 
     @AfterEach
@@ -104,7 +125,7 @@ class PasteCommandTest {
         pasteCommand.execute(player, new String[]{"paste"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
@@ -116,7 +137,7 @@ class PasteCommandTest {
         pasteCommand.execute(player, new String[]{"paste"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
@@ -128,7 +149,7 @@ class PasteCommandTest {
         pasteCommand.execute(player, new String[]{"paste"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
@@ -148,7 +169,7 @@ class PasteCommandTest {
 
             pasteCommand.execute(player, new String[]{"paste"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 1));
             verify(player).sendMessage(anyString());
         }
     }
@@ -178,7 +199,7 @@ class PasteCommandTest {
 
             pasteCommand.execute(player, new String[]{"paste"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 3));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 3));
             verify(player).sendMessage(anyString());
         }
     }
@@ -202,7 +223,7 @@ class PasteCommandTest {
             pasteCommand.execute(player, new String[]{"paste"});
 
             ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            verify(undoHistoryService).add(eq(player), historyCaptor.capture());
             ModifyHistoryEntry savedEntry = historyCaptor.getValue().getFirst();
             assert savedEntry.getMaterial() == originalMaterial;
         }

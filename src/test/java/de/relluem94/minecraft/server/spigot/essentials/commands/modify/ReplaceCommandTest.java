@@ -1,12 +1,27 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import java.util.List;
+import java.util.function.Consumer;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -19,41 +34,34 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 
-import java.util.List;
-import java.util.function.Consumer;
-
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
-import static org.mockito.Mockito.*;
-
 class ReplaceCommandTest {
 
     private Player player;
-    private SelectionResolver selectionResolver;
-    private UndoHistoryManager undoHistoryManager;
+    private SelectionService selectionService;
+    private UndoHistoryService undoHistoryService;
     private ReplaceCommand replaceCommand;
     private MockedStatic<de.relluem94.minecraft.server.spigot.essentials.RelluEssentials> mockedRelluEssentials;
 
     @BeforeEach
     void setUp() {
         player = mock(Player.class);
-        selectionResolver = mock(SelectionResolver.class);
-        undoHistoryManager = mock(UndoHistoryManager.class);
+        selectionService = mock(SelectionService.class);
+        undoHistoryService = mock(UndoHistoryService.class);
 
         de.relluem94.minecraft.server.spigot.essentials.RelluEssentials relluEssentialsMock =
                 mock(de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+        translationService translationServiceMock = mock(translationService.class);
 
         mockedRelluEssentials = mockStatic(de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
         mockedRelluEssentials.when(de.relluem94.minecraft.server.spigot.essentials.RelluEssentials::getInstance)
                 .thenReturn(relluEssentialsMock);
-        de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper = languageHelperMock;
+        de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService = translationServiceMock;
 
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any(), any(), any(), any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any(), any(), any())).thenReturn("msg");
 
-        replaceCommand = new ReplaceCommand(2, selectionResolver, undoHistoryManager);
+        replaceCommand = new ReplaceCommand(2, selectionService, undoHistoryService);
     }
 
     @AfterEach
@@ -66,7 +74,7 @@ class ReplaceCommandTest {
         replaceCommand.execute(player, new String[]{"replace", "INVALID_MATERIAL", "STONE"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
@@ -74,7 +82,7 @@ class ReplaceCommandTest {
         replaceCommand.execute(player, new String[]{"replace", "STONE", "INVALID_MATERIAL"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
@@ -82,22 +90,22 @@ class ReplaceCommandTest {
         replaceCommand.execute(player, new String[]{"replace", "INVALID_FROM", "INVALID_TO"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_withNullSelection_doesNotAddHistory() {
-        when(selectionResolver.resolve(player)).thenReturn(null);
+        when(selectionService.resolve(player)).thenReturn(null);
 
         replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_withValidMaterialsAndSelection_addsHistoryAndSendsStartedMessage() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block matchingBlock = buildBlock(Material.DIRT, 0, 64, 0);
 
@@ -115,7 +123,7 @@ class ReplaceCommandTest {
 
             replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 1));
             verify(player).sendMessage(anyString());
         }
     }
@@ -123,7 +131,7 @@ class ReplaceCommandTest {
     @Test
     void execute_withBlockAlreadyBeingToMaterial_skipsBlock() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block alreadyToMaterialBlock = buildBlock(Material.STONE, 0, 64, 0);
 
@@ -141,14 +149,14 @@ class ReplaceCommandTest {
 
             replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(List::isEmpty));
+            verify(undoHistoryService).add(eq(player), argThat(List::isEmpty));
         }
     }
 
     @Test
     void execute_withBlockNotMatchingFromMaterial_skipsBlock() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block nonMatchingBlock = buildBlock(Material.GRASS_BLOCK, 0, 64, 0);
 
@@ -166,14 +174,14 @@ class ReplaceCommandTest {
 
             replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(List::isEmpty));
+            verify(undoHistoryService).add(eq(player), argThat(List::isEmpty));
         }
     }
 
     @Test
     void execute_withMultipleBlocks_savesOriginalBlockStateInHistory() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Material originalMaterial = Material.DIRT;
         Block firstBlock = buildBlock(originalMaterial, 0, 64, 0);
@@ -195,7 +203,7 @@ class ReplaceCommandTest {
             replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
             ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            verify(undoHistoryService).add(eq(player), historyCaptor.capture());
             List<ModifyHistoryEntry> capturedHistory = historyCaptor.getValue();
             assert capturedHistory.size() == 2;
             assert capturedHistory.getFirst().getMaterial() == originalMaterial;
@@ -206,7 +214,7 @@ class ReplaceCommandTest {
     @Test
     void execute_withMixedBlocks_onlyReplacesMatchingFromMaterialBlocks() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block matchingBlock = buildBlock(Material.DIRT, 0, 64, 0);
         Block nonMatchingBlock = buildBlock(Material.GRASS_BLOCK, 1, 64, 0);
@@ -228,7 +236,7 @@ class ReplaceCommandTest {
 
             replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 1));
         }
     }
 

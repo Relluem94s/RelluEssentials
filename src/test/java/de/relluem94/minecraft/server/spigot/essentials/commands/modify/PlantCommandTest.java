@@ -1,12 +1,30 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.isPlantMaterial;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import java.util.List;
+import java.util.function.Consumer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -18,35 +36,29 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 
-import java.util.List;
-import java.util.function.Consumer;
-
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.*;
-import static org.mockito.Mockito.*;
-
 class PlantCommandTest {
 
     private Player player;
-    private SelectionResolver selectionResolver;
-    private UndoHistoryManager undoHistoryManager;
+    private SelectionService selectionService;
+    private UndoHistoryService undoHistoryService;
     private PlantCommand plantCommand;
     private MockedStatic<RelluEssentials> mockedRelluEssentials;
 
     @BeforeEach
     void setUp() {
         player = mock(Player.class);
-        selectionResolver = mock(SelectionResolver.class);
-        undoHistoryManager = mock(UndoHistoryManager.class);
+        selectionService = mock(SelectionService.class);
+        undoHistoryService = mock(UndoHistoryService.class);
 
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any(), any(), any())).thenReturn("msg");
+        translationService translationServiceMock = mock(translationService.class);
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any(), any())).thenReturn("msg");
 
         mockedRelluEssentials = mockStatic(RelluEssentials.class);
-        RelluEssentials.languageHelper = languageHelperMock;
+        RelluEssentials.translationService = translationServiceMock;
 
-        plantCommand = new PlantCommand(2, selectionResolver, undoHistoryManager);
+        plantCommand = new PlantCommand(2, selectionService, undoHistoryService);
     }
 
     @AfterEach
@@ -59,7 +71,7 @@ class PlantCommandTest {
         plantCommand.execute(player, new String[]{"plant", "INVALID_MATERIAL_XYZ"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
@@ -72,7 +84,7 @@ class PlantCommandTest {
             plantCommand.execute(player, new String[]{"plant", "STONE"});
 
             verify(player).sendMessage(anyString());
-            verify(undoHistoryManager, never()).add(any(), any());
+            verify(undoHistoryService, never()).add(any(), any());
         }
     }
 
@@ -85,11 +97,11 @@ class PlantCommandTest {
             modifyHelper.when(() -> forEachBlock(any(), any())).thenAnswer(_ -> null);
             modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
-            when(selectionResolver.resolve(player)).thenReturn(null);
+            when(selectionService.resolve(player)).thenReturn(null);
 
             plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
-            verify(undoHistoryManager, never()).add(any(), any());
+            verify(undoHistoryService, never()).add(any(), any());
             verify(player, never()).sendMessage(anyString());
         }
     }
@@ -97,7 +109,7 @@ class PlantCommandTest {
     @Test
     void execute_withValidPlantMaterialAndValidSelection_addsHistoryAndSendsStartedMessage() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block block = buildPlantableBlock(Material.AIR, Material.GRASS_BLOCK);
 
@@ -115,7 +127,7 @@ class PlantCommandTest {
 
             plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 1));
             verify(player).sendMessage(anyString());
         }
     }
@@ -123,7 +135,7 @@ class PlantCommandTest {
     @Test
     void execute_withBlockBelowNotSolid_skipsBlock() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block block = buildBlock(Material.AIR);
         Block below = mock(Block.class, RETURNS_DEEP_STUBS);
@@ -144,14 +156,14 @@ class PlantCommandTest {
 
             plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(List::isEmpty));
+            verify(undoHistoryService).add(eq(player), argThat(List::isEmpty));
         }
     }
 
     @Test
     void execute_withBlockNotEmpty_skipsBlock() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block block = buildBlock(Material.STONE);
         Block below = buildSolidBlock();
@@ -172,14 +184,14 @@ class PlantCommandTest {
 
             plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(List::isEmpty));
+            verify(undoHistoryService).add(eq(player), argThat(List::isEmpty));
         }
     }
 
     @Test
     void execute_withBlockAlreadyHasTargetMaterial_skipsBlock() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block block = buildBlock(Material.DANDELION);
         Block below = buildSolidBlock();
@@ -200,14 +212,14 @@ class PlantCommandTest {
 
             plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(List::isEmpty));
+            verify(undoHistoryService).add(eq(player), argThat(List::isEmpty));
         }
     }
 
     @Test
     void execute_withValidClipboard_savesOriginalBlockStateInHistory() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Material originalMaterial = Material.AIR;
         Block block = buildPlantableBlock(originalMaterial, Material.GRASS_BLOCK);
@@ -227,7 +239,7 @@ class PlantCommandTest {
             plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
             ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            verify(undoHistoryService).add(eq(player), historyCaptor.capture());
             ModifyHistoryEntry savedEntry = historyCaptor.getValue().getFirst();
             assert savedEntry.getMaterial() == originalMaterial;
         }
@@ -236,7 +248,7 @@ class PlantCommandTest {
     @Test
     void execute_withMultipleBlocksExceedingBatchSize_incrementsDelayAfterBatchFills() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block firstBlock = buildPlantableBlock(Material.AIR, Material.GRASS_BLOCK);
         Block secondBlock = buildPlantableBlock(Material.AIR, Material.GRASS_BLOCK);
@@ -258,7 +270,7 @@ class PlantCommandTest {
 
             plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 3));
+            verify(undoHistoryService).add(eq(player), argThat(list -> list.size() == 3));
 
             BlockHelper capturedBlockHelper = mockedBlockHelper.constructed().getFirst();
             verify(capturedBlockHelper, times(2)).addLocation(any(), eq(0L));
@@ -269,7 +281,7 @@ class PlantCommandTest {
     @Test
     void execute_withValidSelection_callsSetBlocksOnBlockHelper() {
         Selection selection = mock(Selection.class);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
                      mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);

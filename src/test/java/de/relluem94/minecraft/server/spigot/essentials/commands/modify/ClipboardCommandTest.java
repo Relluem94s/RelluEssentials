@@ -1,20 +1,25 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
+import java.util.HashMap;
+import java.util.List;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-
-import java.util.HashMap;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
 
 class ClipboardCommandTest {
 
@@ -29,13 +34,13 @@ class ClipboardCommandTest {
         player = mock(Player.class);
 
         relluEssentialsMock = mock(RelluEssentials.class);
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+        translationService translationServiceMock = mock(translationService.class);
 
         mockedRelluEssentials = mockStatic(RelluEssentials.class);
         mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-        RelluEssentials.languageHelper = languageHelperMock;
+        RelluEssentials.translationService = translationServiceMock;
 
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
 
         clipboardCommand = new ClipboardCommand();
     }

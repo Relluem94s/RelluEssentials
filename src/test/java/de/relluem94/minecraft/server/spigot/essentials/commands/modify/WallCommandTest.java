@@ -1,35 +1,46 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 
-import java.util.List;
-
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
-import static org.mockito.Mockito.*;
-
 class WallCommandTest {
 
     private Player player;
-    private SelectionResolver selectionResolver;
-    private UndoHistoryManager undoHistoryManager;
+    private SelectionService selectionService;
+    private UndoHistoryService undoHistoryService;
     private WallCommand wallCommand;
     private MockedStatic<RelluEssentials> mockedRelluEssentials;
     private MockedStatic<Bukkit> mockedBukkit;
@@ -57,23 +68,23 @@ class WallCommandTest {
     @BeforeEach
     void setUp() {
         player = mock(Player.class);
-        selectionResolver = mock(SelectionResolver.class);
-        undoHistoryManager = mock(UndoHistoryManager.class);
+        selectionService = mock(SelectionService.class);
+        undoHistoryService = mock(UndoHistoryService.class);
 
         RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+        translationService translationServiceMock = mock(translationService.class);
 
         mockedRelluEssentials = mockStatic(RelluEssentials.class);
         mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-        RelluEssentials.languageHelper = languageHelperMock;
+        RelluEssentials.translationService = translationServiceMock;
 
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any(), any(), any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any(), any())).thenReturn("msg");
 
         mockedBukkit = mockStatic(Bukkit.class);
 
-        wallCommand = new WallCommand(2, selectionResolver, undoHistoryManager);
+        wallCommand = new WallCommand(2, selectionService, undoHistoryService);
     }
 
     @AfterEach
@@ -87,23 +98,23 @@ class WallCommandTest {
         wallCommand.execute(player, new String[]{"wall", "NOT_A_MATERIAL"});
 
         verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
     }
 
     @Test
     void execute_withNullSelection_doesNothing() {
-        when(selectionResolver.resolve(player)).thenReturn(null);
+        when(selectionService.resolve(player)).thenReturn(null);
 
         wallCommand.execute(player, new String[]{"wall", "STONE"});
 
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(undoHistoryService, never()).add(any(), any());
         verify(player, never()).sendMessage(anyString());
     }
 
     @Test
     void execute_withValidMaterialAndSelection_onlyProcessesWallBlocks() {
         Selection selection = buildSelection(0, 64, 0, 2, 66, 2);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block wallBlock = buildBlock(Material.AIR, 0, 64, 0);
         Block innerBlock = buildBlock(Material.AIR, 1, 65, 1);
@@ -124,7 +135,7 @@ class WallCommandTest {
             wallCommand.execute(player, new String[]{"wall", "STONE"});
 
             ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            verify(undoHistoryService).add(eq(player), historyCaptor.capture());
             assert historyCaptor.getValue().size() == 1;
         }
     }
@@ -132,7 +143,7 @@ class WallCommandTest {
     @Test
     void execute_withValidMaterialAndSelection_savesOriginalBlockStateInHistory() {
         Selection selection = buildSelection(0, 64, 0, 2, 66, 2);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Material originalMaterial = Material.DIRT;
         Block wallBlock = buildBlock(originalMaterial, 0, 64, 0);
@@ -152,7 +163,7 @@ class WallCommandTest {
             wallCommand.execute(player, new String[]{"wall", "STONE"});
 
             ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            verify(undoHistoryService).add(eq(player), historyCaptor.capture());
             ModifyHistoryEntry savedEntry = historyCaptor.getValue().getFirst();
             assert savedEntry.getMaterial() == originalMaterial;
         }
@@ -161,7 +172,7 @@ class WallCommandTest {
     @Test
     void execute_withAllWallBlocks_addsAllToHistory() {
         Selection selection = buildSelection(0, 64, 0, 2, 66, 2);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block firstWallBlock = buildBlock(Material.AIR, 0, 64, 0);
         Block secondWallBlock = buildBlock(Material.AIR, 2, 65, 0);
@@ -184,7 +195,7 @@ class WallCommandTest {
             wallCommand.execute(player, new String[]{"wall", "STONE"});
 
             ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            verify(undoHistoryService).add(eq(player), historyCaptor.capture());
             assert historyCaptor.getValue().size() == 3;
         }
     }
@@ -192,7 +203,7 @@ class WallCommandTest {
     @Test
     void execute_withValidMaterialAndSelection_sendsStartedMessage() {
         Selection selection = buildSelection(0, 64, 0, 2, 66, 2);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
                      mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
@@ -211,7 +222,7 @@ class WallCommandTest {
     @Test
     void execute_withInnerBlockOnly_addsNothingToHistory() {
         Selection selection = buildSelection(0, 64, 0, 4, 66, 4);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block innerBlock = buildBlock(Material.AIR, 2, 65, 2);
 
@@ -230,7 +241,7 @@ class WallCommandTest {
             wallCommand.execute(player, new String[]{"wall", "STONE"});
 
             ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            verify(undoHistoryService).add(eq(player), historyCaptor.capture());
             assert historyCaptor.getValue().isEmpty();
         }
     }
@@ -238,7 +249,7 @@ class WallCommandTest {
     @Test
     void execute_withBlockOnMinZWall_addsToHistory() {
         Selection selection = buildSelection(0, 64, 0, 4, 66, 4);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block minZWallBlock = buildBlock(Material.AIR, 2, 65, 0);
 
@@ -257,7 +268,7 @@ class WallCommandTest {
             wallCommand.execute(player, new String[]{"wall", "STONE"});
 
             ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            verify(undoHistoryService).add(eq(player), historyCaptor.capture());
             assert historyCaptor.getValue().size() == 1;
         }
     }
@@ -265,7 +276,7 @@ class WallCommandTest {
     @Test
     void execute_withBlockOnMaxZWall_addsToHistory() {
         Selection selection = buildSelection(0, 64, 0, 4, 66, 4);
-        when(selectionResolver.resolve(player)).thenReturn(selection);
+        when(selectionService.resolve(player)).thenReturn(selection);
 
         Block maxZWallBlock = buildBlock(Material.AIR, 2, 65, 4);
 
@@ -284,7 +295,7 @@ class WallCommandTest {
             wallCommand.execute(player, new String[]{"wall", "STONE"});
 
             ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-            verify(undoHistoryManager).add(eq(player), historyCaptor.capture());
+            verify(undoHistoryService).add(eq(player), historyCaptor.capture());
             assert historyCaptor.getValue().size() == 1;
         }
     }

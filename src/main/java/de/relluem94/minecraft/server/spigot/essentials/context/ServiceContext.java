@@ -10,7 +10,9 @@ import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import lombok.Getter;
 import lombok.Setter;
 import org.jspecify.annotations.NonNull;
@@ -33,6 +35,8 @@ public class ServiceContext {
   private SchedulerService schedulerService;
   private DatabaseHelper databaseHelper;
   private ProtectionRegistry protectionRegistry;
+  private UndoHistoryService undoHistoryService;
+  private SelectionService selectionService;
 
   /**
    * Creates a new ServiceContext from the given plugin instance.
@@ -50,5 +54,6 @@ public class ServiceContext {
     this.translationService = plugin.getTranslationService();
     this.databaseHelper = plugin.getDatabaseHelper();
     this.protectionRegistry = plugin.getProtectionRegistry();
+    this.undoHistoryService = plugin.getUndoHistoryService();
   }
 }

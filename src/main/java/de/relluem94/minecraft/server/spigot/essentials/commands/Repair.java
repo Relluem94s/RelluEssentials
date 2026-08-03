@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -37,14 +37,14 @@ public class Repair implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -56,16 +56,16 @@ public class Repair implements CommandConstruct {
         dmg.setDamage(0);
         item.setItemMeta(im);
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
+            translationService.getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
       } else {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR, item.getType().name()));
+            translationService.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR, item.getType().name()));
       }
     } else {
       Player target = Bukkit.getPlayer(args[0]);
       if (target == null) {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return true;
       }
 
@@ -76,12 +76,12 @@ public class Repair implements CommandConstruct {
         dmg.setDamage(0);
         item.setItemMeta(im);
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
+            translationService.getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
         target.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_REPAIR_PLAYER, item.getType().name()));
+            translationService.getWithPrefix(MessageKey.COMMAND_REPAIR_PLAYER, item.getType().name()));
       } else {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR, item.getType().name()));
+            translationService.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR, item.getType().name()));
       }
     }
     return true;

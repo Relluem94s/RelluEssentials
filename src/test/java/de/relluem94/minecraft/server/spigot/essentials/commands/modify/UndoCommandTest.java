@@ -1,10 +1,22 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,14 +30,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
-import java.util.List;
-
-import static org.mockito.Mockito.*;
-
 class UndoCommandTest {
 
     private Player player;
-    private UndoHistoryManager undoHistoryManager;
+    private UndoHistoryService undoHistoryService;
     private UndoCommand undoCommand;
 
     private MockedStatic<RelluEssentials> mockedRelluEssentials;
@@ -37,16 +45,16 @@ class UndoCommandTest {
     @BeforeEach
     void setUp() {
         player = mock(Player.class);
-        undoHistoryManager = mock(UndoHistoryManager.class);
+        undoHistoryService = mock(UndoHistoryService.class);
 
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
+        translationService translationServiceMock = mock(translationService.class);
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
 
         RelluEssentials instanceMock = mock(RelluEssentials.class);
         mockedRelluEssentials = mockStatic(RelluEssentials.class);
         mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(instanceMock);
-        RelluEssentials.languageHelper = languageHelperMock;
+        RelluEssentials.translationService = translationServiceMock;
 
         schedulerMock = mock(BukkitScheduler.class);
         Server serverMock = mock(Server.class);
@@ -58,7 +66,7 @@ class UndoCommandTest {
         mockedModifyHelper = mockStatic(ModifyHelper.class);
         mockedModifyHelper.when(() -> ModifyHelper.undo(any())).thenAnswer(_ -> null);
 
-        undoCommand = new UndoCommand(2, undoHistoryManager);
+        undoCommand = new UndoCommand(2, undoHistoryService);
     }
 
     @AfterEach
@@ -70,7 +78,7 @@ class UndoCommandTest {
 
     @Test
     void execute_withNoHistory_sendsNoHistoryMessage() {
-        when(undoHistoryManager.popLastHistory(player)).thenReturn(null);
+        when(undoHistoryService.popLastHistory(player)).thenReturn(null);
 
         undoCommand.execute(player, new String[]{"undo"});
 
@@ -80,7 +88,7 @@ class UndoCommandTest {
 
     @Test
     void execute_withEmptyHistory_sendsNoHistoryMessage() {
-        when(undoHistoryManager.popLastHistory(player)).thenReturn(List.of());
+        when(undoHistoryService.popLastHistory(player)).thenReturn(List.of());
 
         undoCommand.execute(player, new String[]{"undo"});
 
@@ -95,7 +103,7 @@ class UndoCommandTest {
                 buildHistoryEntry(),
                 buildHistoryEntry()
         );
-        when(undoHistoryManager.popLastHistory(player)).thenReturn(history);
+        when(undoHistoryService.popLastHistory(player)).thenReturn(history);
 
         undoCommand.execute(player, new String[]{"undo"});
 
@@ -113,7 +121,7 @@ class UndoCommandTest {
                 buildHistoryEntry(),
                 buildHistoryEntry()
         );
-        when(undoHistoryManager.popLastHistory(player)).thenReturn(history);
+        when(undoHistoryService.popLastHistory(player)).thenReturn(history);
 
         undoCommand.execute(player, new String[]{"undo"});
 
@@ -126,7 +134,7 @@ class UndoCommandTest {
     void execute_withHistoryEntries_callsUndoWithCorrectEntry() {
         ModifyHistoryEntry entry = buildHistoryEntry();
         List<ModifyHistoryEntry> history = List.of(entry);
-        when(undoHistoryManager.popLastHistory(player)).thenReturn(history);
+        when(undoHistoryService.popLastHistory(player)).thenReturn(history);
 
         doAnswer(invocation -> {
             Runnable task = invocation.getArgument(1);

@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.rotate;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -24,14 +24,14 @@ public class ClipboardCommand implements SubCommand {
         player);
     if (clipboardEntry == null || clipboardEntry.getSecondValue() == null
         || clipboardEntry.getSecondValue().isEmpty()) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
       return;
     }
 
     RelluEssentials.getInstance().clipboard.put(player,
         rotate(clipboardEntry.getSecondValue(), clipboardEntry.getValue()));
     player.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS));
+        translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS));
   }
 
   @Override

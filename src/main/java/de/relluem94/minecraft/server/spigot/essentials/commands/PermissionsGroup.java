@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -46,12 +46,12 @@ public class PermissionsGroup implements CommandConstruct {
     Optional<GroupEntry> groupEntry = groupRegistry.findByName(groupName);
     if (!groupEntry.isPresent()) {
       p.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_SETGROUP_GROUP_NOT_FOUND, groupName));
+          translationService.getWithPrefix(MessageKey.COMMAND_SETGROUP_GROUP_NOT_FOUND, groupName));
       return null;
     }
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return null;
     }
     return groupEntry.get();
@@ -60,12 +60,12 @@ public class PermissionsGroup implements CommandConstruct {
   private static void setGroupForTarget(@NotNull CommandSender s, @NotNull GroupEntry g,
       @NotNull OfflinePlayer target) {
     s.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_SETGROUP, g.getPrefix() + g.getName(),
+        translationService.getWithPrefix(MessageKey.COMMAND_SETGROUP, g.getPrefix() + g.getName(),
             target.getName()));
     if (target.isOnline() && Bukkit.getPlayer(target.getUniqueId()) != null) {
       Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId()))
           .sendMessage(
-              languageHelper.getWithPrefix(MessageKey.COMMAND_SETGROUP, g.getPrefix() + g.getName(),
+              translationService.getWithPrefix(MessageKey.COMMAND_SETGROUP, g.getPrefix() + g.getName(),
                   target.getName()));
     }
     PlayerHelper.updateGroup(target, g);
@@ -76,12 +76,12 @@ public class PermissionsGroup implements CommandConstruct {
       @NonNull String label, String @NotNull [] args) {
 
     if (args.length < 2) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (args.length > 2) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
@@ -89,13 +89,13 @@ public class PermissionsGroup implements CommandConstruct {
 
     if (target == null) {
       sender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
     if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target.getUniqueId()) == null) {
       sender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
