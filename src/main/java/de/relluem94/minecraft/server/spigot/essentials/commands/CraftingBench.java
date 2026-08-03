@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -41,21 +41,21 @@ public class CraftingBench implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "vip")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     Inventory workbench = Bukkit.createInventory(null, InventoryType.WORKBENCH,
-        languageHelper.get(MessageKey.COMMAND_CRAFTINGBENCH_TITLE));
+        translationService.get(MessageKey.COMMAND_CRAFTINGBENCH_TITLE));
     p.openInventory(workbench);
     p.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_CRAFTINGBENCH, p.getCustomName()));
+        translationService.getWithPrefix(MessageKey.COMMAND_CRAFTINGBENCH, p.getCustomName()));
     return true;
   }
 

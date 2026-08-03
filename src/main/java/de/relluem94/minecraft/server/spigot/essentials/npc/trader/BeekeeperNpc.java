@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
@@ -82,12 +82,12 @@ public class BeekeeperNpc extends TraderNpc {
     }
 
     List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
-    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice),
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice * 64)));
-    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(sellPrice),
         PLUGIN_NAME_MONEY,
@@ -114,12 +114,12 @@ public class BeekeeperNpc extends TraderNpc {
     int sellPrice = price.getSellPrice();
 
     List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
-    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice),
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice * 64)));
-    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(sellPrice),
         PLUGIN_NAME_MONEY,

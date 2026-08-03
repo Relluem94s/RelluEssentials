@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_MSG_SPACER_IN;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_MSG_SPACER_OUT;
@@ -117,7 +117,7 @@ public class ChatHelper {
 
   public static void msg(GroupService groupService, CommandSender sender, Player target, String[] args, int start) {
     if (sender instanceof ConsoleCommandSender) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return;
     }
 
@@ -132,7 +132,7 @@ public class ChatHelper {
       target.sendMessage(p.getCustomName() + PLUGIN_FORMS_MSG_SPACER_IN + message);
       p.sendMessage(target.getCustomName() + PLUGIN_FORMS_MSG_SPACER_OUT + message);
     } else {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
     }
   }
 }

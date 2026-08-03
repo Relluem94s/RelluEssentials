@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
@@ -32,7 +32,7 @@ public class BankManager implements Enable {
       BankerHelper.doInterest();
       ChatHelper.consoleSendMessage(
           Constants.PLUGIN_NAME_CONSOLE,
-          languageHelper.get(MessageKey.PLUGIN_BANK_INTEREST_NEXT_RUN,
+          translationService.get(MessageKey.PLUGIN_BANK_INTEREST_NEXT_RUN,
               String.valueOf(getSecondsUntilMidnight()))
       );
       triggerNext(plugin);

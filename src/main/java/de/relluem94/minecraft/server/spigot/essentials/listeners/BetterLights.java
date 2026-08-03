@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
@@ -34,7 +34,7 @@ public class BetterLights implements ListenerConstruct {
       lightable.setLit(!lightable.isLit());
       b.setBlockData(lightable);
       e.getPlayer()
-          .sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_LIGHTS_TOGGLE));
+          .sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_LIGHTS_TOGGLE));
       pe.setPlayerState(PlayerState.DEFAULT);
       new BukkitRunnable() {
         @Override

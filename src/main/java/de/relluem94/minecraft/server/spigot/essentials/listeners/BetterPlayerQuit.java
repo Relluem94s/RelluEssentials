@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -40,7 +40,7 @@ public class BetterPlayerQuit implements ListenerConstruct {
     RelluEssentials.getInstance().getBuyBackService().clearBuyBackHistory(p);
 
     Bukkit.broadcastMessage(
-        languageHelper.get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
+        translationService.get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
     teleportWorld(p, Constants.PLUGIN_WORLD_LOBBY, true);
     ScoreBoardManager.removePlayer(e.getPlayer().getUniqueId());
     RelluEssentials.getInstance()

@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -40,7 +40,7 @@ public class GameModeSpectator implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command,
       @NonNull String label, String[] args) {
     if (!groupService.isSenderAuthorized(sender, "mod")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -48,7 +48,7 @@ public class GameModeSpectator implements CommandConstruct {
       Player target = Bukkit.getPlayer(args[0]);
 
       if (target == null) {
-        sender.sendMessage(languageHelper.get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+        sender.sendMessage(translationService.get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return true;
       }
 
@@ -57,7 +57,7 @@ public class GameModeSpectator implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
@@ -67,8 +67,8 @@ public class GameModeSpectator implements CommandConstruct {
 
   private void gameMode(@NotNull Player p) {
     p.setGameMode(GameMode.SPECTATOR);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(),
-        languageHelper.get(MessageKey.COMMAND_GAMEMODE_SPECTATOR)));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(),
+        translationService.get(MessageKey.COMMAND_GAMEMODE_SPECTATOR)));
   }
 
   @Override

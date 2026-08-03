@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
@@ -58,18 +58,18 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     long amountAll = Math.round(total);
 
     inv.setItem(10, BankerHelper.addLoreLine(BankerHelper.npc_gui_deposit_5_percent.getCustomItem(),
-        languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount5,
+        translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount5,
             PLUGIN_NAME_MONEY)));
     inv.setItem(12,
         BankerHelper.addLoreLine(BankerHelper.npc_gui_deposit_20_percent.getCustomItem(),
-            languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount20,
+            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount20,
                 PLUGIN_NAME_MONEY)));
     inv.setItem(14,
         BankerHelper.addLoreLine(BankerHelper.npc_gui_deposit_50_percent.getCustomItem(),
-            languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount50,
+            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount50,
                 PLUGIN_NAME_MONEY)));
     inv.setItem(16, BankerHelper.addLoreLine(BankerHelper.npc_gui_deposit_all.getCustomItem(),
-        languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amountAll,
+        translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amountAll,
             PLUGIN_NAME_MONEY)));
     inv.setItem(26, resolveCloseItem().getCustomItem());
 
@@ -88,18 +88,18 @@ public class BankerNpc extends TraderNpc implements BankerGui {
 
     inv.setItem(10,
         BankerHelper.addLoreLine(BankerHelper.npc_gui_withdraw_5_percent.getCustomItem(),
-            languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount5,
+            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount5,
                 PLUGIN_NAME_MONEY)));
     inv.setItem(12,
         BankerHelper.addLoreLine(BankerHelper.npc_gui_withdraw_20_percent.getCustomItem(),
-            languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount20,
+            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount20,
                 PLUGIN_NAME_MONEY)));
     inv.setItem(14,
         BankerHelper.addLoreLine(BankerHelper.npc_gui_withdraw_50_percent.getCustomItem(),
-            languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount50,
+            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount50,
                 PLUGIN_NAME_MONEY)));
     inv.setItem(16, BankerHelper.addLoreLine(BankerHelper.npc_gui_withdraw_all.getCustomItem(),
-        languageHelper.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amountAll,
+        translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amountAll,
             PLUGIN_NAME_MONEY)));
     inv.setItem(26, resolveCloseItem().getCustomItem());
 

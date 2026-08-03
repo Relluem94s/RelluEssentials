@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET;
@@ -132,12 +132,12 @@ public class EnchanterNpc extends TraderNpc {
 
   private ItemCostData buildCostDataFromCost(int cost) {
     return new ItemCostData(cost, List.of(
-        languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+        translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
             PLUGIN_NAME_MONEY,
             String.valueOf(cost),
             PLUGIN_NAME_MONEY,
             String.valueOf(cost * 64)),
-        languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+        translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
             PLUGIN_NAME_MONEY,
             String.valueOf(cost),
             PLUGIN_NAME_MONEY,

@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
@@ -69,10 +69,10 @@ public class InteractTraderNpc implements ListenerConstruct {
                   bae.setPlayerId(pe.getId());
 
                   RelluEssentials.getInstance().getDatabaseHelper().insertBankAccount(bae);
-                  p.sendMessage(languageHelper.getWithPrefix(
+                  p.sendMessage(translationService.getWithPrefix(
                       MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT));
                 } else {
-                  p.sendMessage(languageHelper.getWithPrefix(
+                  p.sendMessage(translationService.getWithPrefix(
                       MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS,
                       PLUGIN_NAME_MONEY, PLUGIN_NAME_MONEY, bte.getCost()));
                 }

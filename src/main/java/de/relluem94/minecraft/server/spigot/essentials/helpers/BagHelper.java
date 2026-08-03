@@ -1,11 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_COMMAND_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_INTERNAL_UTILITY_CLASS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
@@ -118,7 +117,7 @@ public class BagHelper {
   }
 
   public static Inventory getBags(PlayerEntry pe) {
-    String MAIN_GUI = languageHelper.get(MessageKey.PLUGIN_BAG_GUI_TITLE);
+    String MAIN_GUI = translationService.get(MessageKey.PLUGIN_BAG_GUI_TITLE);
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI),
         resolveDisabledItem());
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
@@ -141,11 +140,11 @@ public class BagHelper {
     String[] lore;
     if (npc) {
       lore = new String[]{
-          languageHelper.get(MessageKey.PLUGIN_BAG_CLICK_TO_BUY),
-          languageHelper.get(MessageKey.PLUGIN_BAG_COST_TO_BUY, bte.getCost())
+          translationService.get(MessageKey.PLUGIN_BAG_CLICK_TO_BUY),
+          translationService.get(MessageKey.PLUGIN_BAG_COST_TO_BUY, bte.getCost())
       };
     } else {
-      lore = new String[]{languageHelper.get(MessageKey.PLUGIN_BAG_CLICK_TO_OPEN)};
+      lore = new String[]{translationService.get(MessageKey.PLUGIN_BAG_CLICK_TO_OPEN)};
     }
     return new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG), bte.getDisplayName(),
         Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore));
@@ -202,8 +201,8 @@ public class BagHelper {
     }
 
     List<String> lore = new ArrayList<>();
-    lore.add(languageHelper.get(MessageKey.PLUGIN_BAG_AMOUNT, value));
-    lore.add(languageHelper.get(MessageKey.PLUGIN_BAG_RETRIEVE));
+    lore.add(translationService.get(MessageKey.PLUGIN_BAG_AMOUNT, value));
+    lore.add(translationService.get(MessageKey.PLUGIN_BAG_RETRIEVE));
 
     im.setLore(lore);
     is.setItemMeta(im);
@@ -312,7 +311,7 @@ public class BagHelper {
         be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
         be.setHasToBeUpdated(true);
         ChatHelper.sendMessageInActionBar(p,
-            languageHelper.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(),
+            translationService.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(),
                 i.getName()));
         p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
         lio.add(i);
@@ -337,7 +336,7 @@ public class BagHelper {
             be.setSlotValue(slot, be.getSlotValue(slot) + i.getAmount());
             be.setHasToBeUpdated(true);
             ChatHelper.sendMessageInActionBar(p,
-                languageHelper.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(),
+                translationService.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(),
                     i.getType().name().replace("_", " ").toLowerCase()));
             p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
             lio.add(i);
@@ -362,7 +361,7 @@ public class BagHelper {
         be.setSlotValue(slot, be.getSlotValue(slot) + item.getItemStack().getAmount());
         be.setHasToBeUpdated(true);
         ChatHelper.sendMessageInActionBar(p,
-            languageHelper.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(),
+            translationService.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(),
                 item.getName()));
         p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
         item.getItemStack().setAmount(0);
@@ -389,7 +388,7 @@ public class BagHelper {
     }
     if (updatedBags != 0) {
       sendMessageInChannel(
-          languageHelper.get(MessageKey.PLUGIN_BAGS_SAVED, updatedBags),
+          translationService.get(MessageKey.PLUGIN_BAGS_SAVED, updatedBags),
           PLUGIN_NAME_CHAT_CONSOLE,
           BetterChatFormat.ADMIN_CHANNEL,
           adminGroup

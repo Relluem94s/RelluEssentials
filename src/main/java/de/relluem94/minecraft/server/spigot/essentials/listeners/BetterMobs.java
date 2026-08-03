@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
@@ -83,7 +83,7 @@ public class BetterMobs implements ListenerConstruct {
       double losses = purse / 2;
       if (purse - losses >= 1) {
         pe.setPurse(purse - losses);
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS,
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS,
             StringHelper.formatDouble(losses), PLUGIN_NAME_MONEY));
       } else {
         pe.setPurse(0);
@@ -115,7 +115,7 @@ public class BetterMobs implements ListenerConstruct {
         pe.setHasToBeUpdated(true);
         ChatHelper.sendMessageInActionBar(
             p,
-            languageHelper.getWithPrefix(
+            translationService.getWithPrefix(
                 MessageKey.COMMAND_PURSE_GAIN,
                 StringHelper.formatInt(totalCoins),
                 PLUGIN_NAME_MONEY,
@@ -150,7 +150,7 @@ public class BetterMobs implements ListenerConstruct {
       PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
       if (pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)) {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(),
+            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(),
                 m.getLastDamage(), m.getHealth()));
       }
 

@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
@@ -58,7 +58,7 @@ public class EntityPickupItemBags implements ListenerConstruct {
 
           int coins = itemCoins * is.getAmount();
           ChatHelper.sendMessageInActionBar(p,
-              languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN,
+              translationService.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN,
                   StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
           pe.setPurse(pe.getPurse() + coins);
 

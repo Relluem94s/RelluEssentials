@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -67,14 +67,14 @@ public class Bags implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(commandSender)) {
-      commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      commandSender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) commandSender;
 
     if (!groupService.isSenderAuthorized(commandSender, "user")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -96,11 +96,11 @@ public class Bags implements CommandConstruct {
       if (BagHelper.hasBag(pe.getId(), bte.getId())) {
         p.openInventory(Objects.requireNonNull(BagHelper.getBag(bte.getId(), pe)));
       } else {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
       }
 
     } else {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
     }
     return true;
   }

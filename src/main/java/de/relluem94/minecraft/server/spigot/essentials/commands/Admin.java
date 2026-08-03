@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -32,6 +31,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,18 +49,20 @@ public class Admin implements CommandConstruct {
 
   private GroupService groupService;
   private SubCommandRegistry<SubCommand> subCommandRegistry;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
 
     this.subCommandRegistry = new SubCommandRegistry<>(List.of(
         new AdminToolsGuiCommand(context),
-        new CleanUpChatCommand(),
+        new CleanUpChatCommand(context),
         new CleanUpLocationsCommand(context),
         new CleanUpProtectionsCommand(context),
         new FakeAfkCommand(),
-        new LightToggleCommand(),
+        new LightToggleCommand(context),
         new NpcGuiCommand(context),
         new NpcCreateCommand(context),
         new NpcDeleteCommand(context),
@@ -69,9 +71,9 @@ public class Admin implements CommandConstruct {
         new NpcDialogueAddCommand(context),
         new NpcDialogueUpdateCommand(context),
         new NpcDialogueDeleteCommand(context),
-        new PingCommand(),
-        new PluginInfoCommand(),
-        new TopCommand()
+        new PingCommand(context),
+        new PluginInfoCommand(context),
+        new TopCommand(context)
     ));
   }
 
@@ -260,22 +262,22 @@ public class Admin implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
     Player p = (Player) sender;
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
     if (args.length == 0) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_INFO));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_INFO));
       return true;
     }
 
     SubCommand subCommand = subCommandRegistry.find(args);
     if (subCommand == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       return true;
     }
 

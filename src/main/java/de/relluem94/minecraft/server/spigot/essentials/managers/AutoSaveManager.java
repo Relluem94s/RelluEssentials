@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -35,7 +35,7 @@ public class AutoSaveManager implements Enable, Disable {
     }
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE));
+        translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE));
     new BukkitRunnable() {
       @Override
       public void run() {
@@ -59,7 +59,7 @@ public class AutoSaveManager implements Enable, Disable {
     }.runTaskTimer(plugin, 0L, 20 * 60 * AUTO_SAVE_MINUTES);
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_AUTOSAVE_REGISTERED));
+        translationService.get(MessageKey.PLUGIN_MANAGER_AUTOSAVE_REGISTERED));
   }
 
   @Override

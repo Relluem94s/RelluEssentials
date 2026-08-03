@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
@@ -73,11 +73,11 @@ public class DevPlattformCommand implements SubCommand {
       Material.MELON,
       Material.PALE_OAK_LOG
   );
-  private final UndoHistoryManager undoHistoryManager;
+  private final UndoHistoryService undoHistoryService;
   private final SchedulerService schedulerService;
 
-  public DevPlattformCommand(UndoHistoryManager undoHistoryManager, ServiceContext context) {
-    this.undoHistoryManager = undoHistoryManager;
+  public DevPlattformCommand(UndoHistoryService undoHistoryService, ServiceContext context) {
+    this.undoHistoryService = undoHistoryService;
     this.schedulerService = context.getSchedulerService();
   }
 
@@ -230,7 +230,7 @@ public class DevPlattformCommand implements SubCommand {
     inner.setBlocks(10);
     redstone.setBlocks(15);
 
-    undoHistoryManager.add(player, undoList);
+    undoHistoryService.add(player, undoList);
   }
 
   @Override

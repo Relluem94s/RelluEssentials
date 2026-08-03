@@ -16,7 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.dev.RemoveEnchan
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.RotateTestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.ShowPlayerStatsCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.ToggleDamageInfoCommand;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
@@ -47,11 +47,11 @@ public class DevCommand implements CommandConstruct {
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
     this.translationService = context.getTranslationService();
-    UndoHistoryManager undoHistoryManager = new UndoHistoryManager();
+    UndoHistoryService undoHistoryService = new UndoHistoryService();
     subCommandRegistry = new SubCommandRegistry<>(List.of(
         new CustomMobCommand(),
         new RotateTestCommand(context),
-        new DevPlattformCommand(undoHistoryManager, context),
+        new DevPlattformCommand(undoHistoryService, context),
         new GivePickaxeCommand(),
         new GiveCloudSailorCommand(),
         new GiveRelluGearCommand(),

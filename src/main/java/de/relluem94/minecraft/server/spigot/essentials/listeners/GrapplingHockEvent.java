@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
@@ -76,7 +76,7 @@ public class GrapplingHockEvent implements ListenerConstruct {
         }.runTaskLater(RelluEssentials.getInstance(), 50L);
       } else {
         e.getPlayer()
-            .sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
+            .sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
       }
     }
   }

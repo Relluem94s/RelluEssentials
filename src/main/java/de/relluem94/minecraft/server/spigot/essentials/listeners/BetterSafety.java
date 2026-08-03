@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -32,6 +32,6 @@ public class BetterSafety implements ListenerConstruct {
     }
     e.setCancelled(true);
     e.getPlayer()
-        .sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+        .sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
   }
 }

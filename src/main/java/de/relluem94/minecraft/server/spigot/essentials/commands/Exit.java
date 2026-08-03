@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -43,14 +43,14 @@ public class Exit implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (isConsole(sender)) {
-      Bukkit.broadcastMessage(languageHelper.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
+      Bukkit.broadcastMessage(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
 
       new BukkitRunnable() {
         @Override
         public void run() {
           Bukkit.getOnlinePlayers().forEach(op -> {
             TeleportHelper.teleportWorld(op, PLUGIN_WORLD_LOBBY, true);
-            op.kickPlayer(languageHelper.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
+            op.kickPlayer(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
           });
 
         }
@@ -62,18 +62,18 @@ public class Exit implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
     if (!groupService.isSenderAuthorized(p, "user")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     TeleportHelper.teleportWorld(p, PLUGIN_WORLD_LOBBY, true);
-    p.kickPlayer(languageHelper.get(MessageKey.COMMAND_EXIT_KICK_MESSAGE));
+    p.kickPlayer(translationService.get(MessageKey.COMMAND_EXIT_KICK_MESSAGE));
     return true;
   }
 

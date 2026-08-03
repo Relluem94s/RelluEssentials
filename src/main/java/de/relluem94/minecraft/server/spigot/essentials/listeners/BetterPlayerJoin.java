@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
@@ -44,7 +44,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
       RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
 
       pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
-      p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
+      p.sendMessage(translationService.get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
     } else {
       if (pe.getName() == null) {
         pe.setName(p.getName());
@@ -74,7 +74,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
     PlayerHelper.setFlying(p, groupService);
     PlayerHelper.setAFK(p, true);
     Bukkit.broadcastMessage(
-        languageHelper.get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
+        translationService.get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
 
     WorldHelper.loadWorldGroupInventory(p);
 
@@ -98,7 +98,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
 
     if (onlinePlayers >= maxPlayers) {
       e.disallow(PlayerLoginEvent.Result.KICK_FULL,
-          languageHelper.get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN));
+          translationService.get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN));
     }
   }
 
