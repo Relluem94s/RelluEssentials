@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
@@ -12,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,21 +29,23 @@ public class NpcDialogueUpdateCommand implements SubCommand {
   private static final int REQUIRED_ARGS_LENGTH = 6;
 
   private final GroupService groupService;
+  private final TranslationService translationService;
 
   public NpcDialogueUpdateCommand(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
   public void execute(Player player, String[] args) {
     if (!groupService.isSenderAuthorized(player, "admin")) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 
     if (args.length < REQUIRED_ARGS_LENGTH) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_UPDATE_USAGE));
+          translationService.getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_UPDATE_USAGE));
       return;
     }
 
@@ -55,7 +56,7 @@ public class NpcDialogueUpdateCommand implements SubCommand {
       npcId = UUID.fromString(args[ARGS_NPC_ID_INDEX]);
       listPosition = Integer.parseInt(args[ARGS_LIST_POSITION_INDEX]);
     } catch (IllegalArgumentException e) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_INVALID));
       return;
     }
 
@@ -77,13 +78,14 @@ public class NpcDialogueUpdateCommand implements SubCommand {
           .updateNPCDialogue(entry, foundNpc.getId());
 
       if (!updated) {
-        player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_NOT_FOUND));
+        player.sendMessage(
+            translationService.getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_NOT_FOUND));
         return;
       }
 
       RelluEssentials.getInstance().getNpcService().reloadNPCDialogue(foundNpc.getId());
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_UPDATED));
-    }, () -> player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID)));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_UPDATED));
+    }, () -> player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_INVALID)));
   }
 
   @Override

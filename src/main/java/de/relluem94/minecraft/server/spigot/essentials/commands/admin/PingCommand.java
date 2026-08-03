@@ -1,32 +1,38 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 public class PingCommand implements SubCommand {
 
+  private final TranslationService translationService;
+
+  public PingCommand(ServiceContext context) {
+    this.translationService = context.getTranslationService();
+  }
+
   @Override
   public void execute(Player player, String[] args) {
     if (args.length == 1) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_PING, player.getPing()));
+          translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_PING, player.getPing()));
       return;
     }
 
     Player target = Bukkit.getPlayer(args[1]);
     if (target == null) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_PING_OTHER_NOT_FOUND, args[1]));
+          translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_PING_OTHER_NOT_FOUND, args[1]));
       return;
     }
 
-    player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_PING_OTHER,
+    player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_PING_OTHER,
         target.getCustomName(), target.getPing()));
   }
 
