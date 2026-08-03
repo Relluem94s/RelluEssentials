@@ -1,17 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.normalizeYaw;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
@@ -25,10 +26,12 @@ public class PasteCommand implements SubCommand {
 
   private final int blocksPerTick;
   private final UndoHistoryService undoHistoryService;
+  private final TranslationService translationService;
 
-  public PasteCommand(int blocksPerTick, UndoHistoryService undoHistoryService) {
+  public PasteCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
-    this.undoHistoryService = undoHistoryService;
+    this.undoHistoryService = serviceContext.getUndoHistoryService();
+    this.translationService = serviceContext.getTranslationService();
   }
 
   @Override
@@ -74,7 +77,7 @@ public class PasteCommand implements SubCommand {
       }
     }
 
-    undoHistoryService.add(player, history);
+    undoHistoryService.addHistory(player, history);
     player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED,
         clipboardStore.getSecondValue().size()));
   }

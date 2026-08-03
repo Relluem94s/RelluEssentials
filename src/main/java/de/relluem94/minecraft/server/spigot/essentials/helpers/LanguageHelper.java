@@ -13,13 +13,13 @@ import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
 @Deprecated
-public class translationService {
+public class LanguageHelper {
 
   private final JavaPlugin plugin;
   private final Map<String, Properties> languages = new HashMap<>();
   private String defaultLanguage = "de_DE";
 
-  public translationService(JavaPlugin plugin) {
+  public LanguageHelper(JavaPlugin plugin) {
     this.plugin = plugin;
   }
 
