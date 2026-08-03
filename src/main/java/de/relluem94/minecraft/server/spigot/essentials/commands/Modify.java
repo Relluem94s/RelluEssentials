@@ -73,7 +73,7 @@ public class Modify implements CommandConstruct {
         new ReplaceCommand(context, BLOCKS_PER_TICK),
         new SetCommand(context, BLOCKS_PER_TICK),
         new UndoCommand(context, BLOCKS_PER_TICK),
-        new WallCommand(BLOCKS_PER_TICK, selectionService, undoHistoryService)
+        new WallCommand(context, BLOCKS_PER_TICK)
     ));
   }
 
