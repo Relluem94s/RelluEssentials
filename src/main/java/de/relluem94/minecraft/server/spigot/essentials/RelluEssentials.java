@@ -10,7 +10,6 @@ import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.AutoSaveManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.BankManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
@@ -55,6 +54,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.io.File;
 import java.util.ArrayList;
@@ -85,7 +85,8 @@ public class RelluEssentials extends JavaPlugin {
 
   public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
   public static final Map<Player, Player> reply = new HashMap<>();
-  public static LanguageHelper languageHelper;
+  //@Deprecated
+ // public static LanguageHelper languageHelper;
   private static RelluEssentials instance;
   private static BankerNpc banker;
   public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
@@ -189,6 +190,10 @@ public class RelluEssentials extends JavaPlugin {
   @Getter
   private SudoManager sudoManager;
 
+  @Getter
+  private TranslationService translationService;
+
+
   /**
    * Default constructor for the RelluEssentials plugin. Used by the Spigot server to instantiate
    * the plugin.
@@ -230,11 +235,15 @@ public class RelluEssentials extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    RelluEssentials.languageHelper = new LanguageHelper(this);
-    RelluEssentials.languageHelper.loadLanguages();
-
     String lang = getConfig().getString("language", "en_US");
-    RelluEssentials.languageHelper.setDefaultLanguage(lang);
+
+    translationService = new TranslationService(this);
+    translationService.loadLanguages();
+    translationService.setDefaultLanguage(lang);
+
+   // RelluEssentials.languageHelper = new LanguageHelper(this);
+   // RelluEssentials.languageHelper.loadLanguages();
+   // RelluEssentials.languageHelper.setDefaultLanguage(lang);
 
     startLoading();
     serviceContext = new ServiceContext(this);
@@ -315,7 +324,7 @@ public class RelluEssentials extends JavaPlugin {
   @Override
   public void onDisable() {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
+        translationService.get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
     if (npcService != null) {
       npcService.despawnAllNPCs();
     }
@@ -332,14 +341,14 @@ public class RelluEssentials extends JavaPlugin {
     consoleSendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
+        translationService.get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
   }
 
   private void stopLoading() {
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE,
+        translationService.get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE,
             Calendar.getInstance().getTimeInMillis() - start));
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     consoleSendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");

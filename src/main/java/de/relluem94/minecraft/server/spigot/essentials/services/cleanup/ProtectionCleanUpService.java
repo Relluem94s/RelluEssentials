@@ -1,10 +1,11 @@
-package de.relluem94.minecraft.server.spigot.essentials.commands.admin.shared;
-
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+package de.relluem94.minecraft.server.spigot.essentials.services.cleanup;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,20 +15,25 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
-public class AdminCommandHelper {
+public class ProtectionCleanUpService {
 
-  public static void cleanUpLocations(@NonNull Player p) {
-    int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupLocations();
-    p.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END, deleted));
+  private final TranslationService translationService;
+  private final DatabaseHelper databaseHelper;
+  private final ProtectionRegistry protectionRegistry;
+
+
+  public ProtectionCleanUpService(TranslationService translationService, ProtectionRegistry protectionRegistry, DatabaseHelper databaseHelper) {
+    this.translationService = translationService;
+    this.databaseHelper = databaseHelper;
+    this.protectionRegistry = protectionRegistry;
   }
 
-  public static void cleanUpProtections(@NonNull Player p) {
+  public void cleanUpProtections(@NonNull Player p) {
     HashMap<Location, ProtectionEntry> protectionEntryList = new HashMap<>(
-        RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntryList()
+        protectionRegistry.getProtectionEntryList()
     );
 
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
         protectionEntryList.size()));
 
     List<Location> locations = new ArrayList<>(protectionEntryList.keySet());
@@ -51,9 +57,10 @@ public class AdminCommandHelper {
 
             if (!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))) {
               removeMap.put(l, pe);
-              p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS,
-                  pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
-              RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(pe);
+              p.sendMessage(
+                  translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS,
+                      pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
+              databaseHelper.deleteProtection(pe);
             }
 
             index[0]++;
@@ -62,7 +69,8 @@ public class AdminCommandHelper {
 
           int percent = (int) Math.round((index[0] / (double) total) * 100);
           p.sendMessage(
-              languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE,
+              translationService.getWithPrefix(
+                  MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE,
                   index[0], total, percent));
 
           if (index[0] >= locations.size()) {
@@ -70,17 +78,18 @@ public class AdminCommandHelper {
 
             if (removeMap.isEmpty()) {
               p.sendMessage(
-                  languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE));
+                  translationService.getWithPrefix(
+                      MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE));
             } else {
-              p.sendMessage(languageHelper.getWithPrefix(
+              p.sendMessage(translationService.getWithPrefix(
                   MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP,
                   removeMap.size()));
               for (Location l : removeMap.keySet()) {
-                RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(l);
+                protectionRegistry.removeProtectionEntry(l);
               }
               p.sendMessage(
-                  languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
-                      RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntryList()
+                  translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
+                      protectionRegistry.getProtectionEntryList()
                           .size()));
             }
           }
@@ -89,8 +98,9 @@ public class AdminCommandHelper {
         300L
     );
 
-    int deleted = RelluEssentials.getInstance().getDatabaseHelper().cleanupProtections();
+    int deleted = databaseHelper.cleanupProtections();
     p.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END, deleted));
+        translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END,
+            deleted));
   }
 }
