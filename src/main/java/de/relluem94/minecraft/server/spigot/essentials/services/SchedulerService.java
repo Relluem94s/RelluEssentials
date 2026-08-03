@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import java.util.List;
+import java.util.function.Consumer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
@@ -164,6 +165,15 @@ public class SchedulerService {
    */
   public int scheduleAsyncRepeatingTask(Runnable task, long delay, long period) {
     return scheduler().scheduleAsyncRepeatingTask(plugin, task, delay, period);
+  }
+
+  public BukkitTask runTaskTimer(Consumer<BukkitTask> task, long delay, long period) {
+    return scheduler().runTaskTimer(plugin, (Runnable) task, delay, period);
+  }
+
+
+  public BukkitTask runTaskTimerAsynchronously(Consumer<BukkitTask> task, long delay, long period) {
+    return scheduler().runTaskTimerAsynchronously(plugin, (Runnable) task, delay, period);
   }
 
   /**

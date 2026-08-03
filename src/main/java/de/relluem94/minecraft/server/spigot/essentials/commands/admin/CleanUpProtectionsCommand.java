@@ -20,7 +20,8 @@ public class CleanUpProtectionsCommand implements SubCommand {
     this.groupService = context.getGroupService();
     translationService = context.getTranslationService();
     adminCommandHelper = new ProtectionCleanUpService(translationService,
-        context.getProtectionRegistry(), context.getDatabaseHelper());
+        context.getProtectionRegistry(), context.getDatabaseHelper(),
+        context.getSchedulerService());
   }
 
   @Override

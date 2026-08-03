@@ -1,16 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.services.cleanup;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,12 +19,16 @@ public class ProtectionCleanUpService {
   private final TranslationService translationService;
   private final DatabaseHelper databaseHelper;
   private final ProtectionRegistry protectionRegistry;
+  private final SchedulerService schedulerService;
 
 
-  public ProtectionCleanUpService(TranslationService translationService, ProtectionRegistry protectionRegistry, DatabaseHelper databaseHelper) {
+  public ProtectionCleanUpService(TranslationService translationService,
+      ProtectionRegistry protectionRegistry, DatabaseHelper databaseHelper,
+      SchedulerService schedulerService) {
     this.translationService = translationService;
     this.databaseHelper = databaseHelper;
     this.protectionRegistry = protectionRegistry;
+    this.schedulerService = schedulerService;
   }
 
   public void cleanUpProtections(@NonNull Player p) {
@@ -41,8 +44,7 @@ public class ProtectionCleanUpService {
     HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
     int total = locations.size();
 
-    Bukkit.getScheduler().runTaskTimer(
-        RelluEssentials.getInstance(),
+    schedulerService.runTaskTimer(
         task -> {
           int batchSize = 5;
           int processed = 0;
