@@ -1,13 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.context;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import lombok.Getter;
 import lombok.Setter;
 import org.jspecify.annotations.NonNull;
@@ -20,6 +23,7 @@ import org.jspecify.annotations.NonNull;
 @Getter
 public class ServiceContext {
 
+  private final TranslationService translationService;
   private GroupService groupService;
   private PlayerService playerService;
   private CommandManager commandManager;
@@ -27,6 +31,8 @@ public class ServiceContext {
   private NpcService npcService;
   private GroupRegistry groupRegistry;
   private SchedulerService schedulerService;
+  private DatabaseHelper databaseHelper;
+  private ProtectionRegistry protectionRegistry;
 
   /**
    * Creates a new ServiceContext from the given plugin instance.
@@ -41,5 +47,8 @@ public class ServiceContext {
     this.npcService = plugin.getNpcService();
     this.groupRegistry = plugin.getGroupRegistry();
     this.schedulerService = plugin.getSchedulerService();
+    this.translationService = plugin.getTranslationService();
+    this.databaseHelper = plugin.getDatabaseHelper();
+    this.protectionRegistry = plugin.getProtectionRegistry();
   }
 }
