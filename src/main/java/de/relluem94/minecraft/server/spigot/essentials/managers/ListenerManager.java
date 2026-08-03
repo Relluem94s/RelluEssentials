@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -67,11 +67,11 @@ public class ListenerManager implements Enable {
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
+        translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
     listenerWrapperList
         .forEach(listenerWrapper -> listenerWrapper.init(relluEssentialsPlugin, relluEssentialsPlugin.getServiceContext()));
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED,
+        translationService.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED,
             listenerWrapperList.size()));
   }
 

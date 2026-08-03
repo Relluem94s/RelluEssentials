@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
@@ -30,7 +30,7 @@ public class InventoryClickBags implements ListenerConstruct {
   @EventHandler
   public void onInventoryClickItem(@NotNull InventoryClickEvent e) {
     if (e.getWhoClicked() instanceof Player p && e.getCurrentItem() != null) {
-      String MAIN_GUI = languageHelper.get(MessageKey.PLUGIN_BAG_GUI_TITLE);
+      String MAIN_GUI = translationService.get(MessageKey.PLUGIN_BAG_GUI_TITLE);
       if (e.getView().getTitle()
           .startsWith(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE)
           && e.getView().getTitle().endsWith(" Bag")) {

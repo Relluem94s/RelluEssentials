@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.PLUGIN_INVENTORY_ADMIN_TOOLS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
@@ -292,10 +292,10 @@ public class ItemManager implements Enable {
 
     int itemCount = ItemRegistry.getAll().size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
+        translationService.get(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
 
     int inventoryCount = InventoryRegistry.getAllByNamespace(plugin.getName()).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
+        translationService.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
   }
 }

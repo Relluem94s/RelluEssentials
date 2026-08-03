@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.addRight;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.removeRight;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -52,20 +52,20 @@ public class Marry implements CommandConstruct {
         != null
         || RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target).getPartner()
         != null) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED));
       return;
     }
 
-    player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST,
+    player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST,
         target.getCustomName()));
-    target.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST,
+    target.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST,
         player.getCustomName()));
 
     marryAcceptList.put(target, player);
     Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
       if (hasMarryEntry(target)) {
-        player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
-        target.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
+        player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
+        target.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
         removeMarryEntry(target);
       }
     }, 20 * 60 * 2L);
@@ -81,9 +81,9 @@ public class Marry implements CommandConstruct {
 
   public void marry(@NotNull Player player, @NotNull Player target) {
     target.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, player.getCustomName()));
+        translationService.getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, player.getCustomName()));
     player.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, target.getCustomName()));
+        translationService.getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, target.getCustomName()));
 
     PlayerEntry firstPlayer = RelluEssentials.getInstance().getPlayerRegistry()
         .getPlayerEntry(target);
@@ -125,12 +125,12 @@ public class Marry implements CommandConstruct {
     if (firstPlayer != null && secondOfflinePlayer.getName() != null) {
       Player secondPlayer = Bukkit.getPlayer(secondOfflinePlayer.getName());
       if (secondOfflinePlayer.isOnline() && secondPlayer != null) {
-        firstPlayer.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
+        firstPlayer.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
             secondPlayer.getDisplayName()));
-        secondPlayer.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
+        secondPlayer.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
             firstPlayer.getCustomName()));
       } else {
-        firstPlayer.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
+        firstPlayer.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
             secondOfflinePlayer.getName()));
       }
 
@@ -169,12 +169,12 @@ public class Marry implements CommandConstruct {
     }
 
     if (!groupService.isSenderAuthorized(p, "vip")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_INFO,
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_INFO,
           command.getName(),
           command.getName(), Commands.ACCEPT.getName(),
           command.getName(), Commands.DIVORCE.getName()
@@ -190,7 +190,7 @@ public class Marry implements CommandConstruct {
           return true;
         }
 
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_ACCEPT_NO_REQUEST));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_ACCEPT_NO_REQUEST));
         return true;
       }
 
@@ -202,19 +202,19 @@ public class Marry implements CommandConstruct {
           return true;
         }
 
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCE_NOT_MARRIED));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCE_NOT_MARRIED));
         return true;
       }
 
       Player target = Bukkit.getPlayer(args[0]);
       if (target == null) {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return true;
       }
 
       if (target.getName().equalsIgnoreCase(p.getName())) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MARRY_SELF_MARRIAGE));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SELF_MARRIAGE));
         return true;
       }
 
@@ -223,7 +223,7 @@ public class Marry implements CommandConstruct {
       return true;
     }
 
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
     return true;
   }
 

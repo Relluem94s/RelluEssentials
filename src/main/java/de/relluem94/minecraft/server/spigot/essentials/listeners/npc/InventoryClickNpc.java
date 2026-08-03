@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE;
@@ -114,7 +114,7 @@ public class InventoryClickNpc implements ListenerConstruct {
           RelluEssentials.getBanker().getDepositGUI(playerEntry.getPurse()));
     } else if (BankerHelper.npc_gui_balance_total.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
+      player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
           StringHelper.formatDouble(bankAccount.getValue()), PLUGIN_NAME_MONEY));
     } else if (BankerHelper.npc_gui_balance.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
@@ -144,11 +144,11 @@ public class InventoryClickNpc implements ListenerConstruct {
   private void handleTransactionHistory(Player player, BankAccountEntry bankAccount) {
     InventoryHelper.closeInventory(player);
     player.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
+        translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
     List<BankTransactionEntry> transactions = RelluEssentials.getInstance().getDatabaseHelper()
         .getTransactionsToBankFromPlayer(bankAccount.getId());
     transactions.forEach(transaction -> player.sendMessage(
-        languageHelper.getWithPrefix(
+        translationService.getWithPrefix(
             MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST,
             transaction.getValue() > 1 ? PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE
                 : PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE,
@@ -163,7 +163,7 @@ public class InventoryClickNpc implements ListenerConstruct {
   private boolean isNpcOrCustomHeadsInventory(@NonNull String title) {
     return title.equals(
         Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs")
-        || title.equals(languageHelper.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE));
+        || title.equals(translationService.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE));
   }
 
   private void handleNpcOrCustomHeadsInventory(InventoryClickEvent e, Player player) {

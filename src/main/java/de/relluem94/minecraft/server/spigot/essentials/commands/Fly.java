@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -42,14 +42,14 @@ public class Fly implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "vip")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -61,20 +61,20 @@ public class Fly implements CommandConstruct {
     Player target = Bukkit.getPlayer(args[0]);
 
     if (target == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     if (groupService.isSenderAuthorized(sender, "mod")) {
-      p.sendMessage(languageHelper.getWithPrefix(
+      p.sendMessage(translationService.getWithPrefix(
           MessageKey.COMMAND_FLYMODE,
           target.getCustomName(),
-          !target.getAllowFlight() ? languageHelper.get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
-              : languageHelper.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
+          !target.getAllowFlight() ? translationService.get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
+              : translationService.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
       ));
       flyMode(target);
     } else {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
 
     }
     return true;
@@ -87,11 +87,11 @@ public class Fly implements CommandConstruct {
     pe.setUpdatedBy(pe.getId());
     pe.setHasToBeUpdated(true);
     p.setAllowFlight(pe.isFlying());
-    p.sendMessage(languageHelper.getWithPrefix(
+    p.sendMessage(translationService.getWithPrefix(
         MessageKey.COMMAND_FLYMODE,
         p.getCustomName(),
-        p.getAllowFlight() ? languageHelper.get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
-            : languageHelper.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
+        p.getAllowFlight() ? translationService.get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
+            : translationService.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
     ));
   }
 
