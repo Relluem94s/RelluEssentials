@@ -54,6 +54,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.io.File;
@@ -189,6 +190,8 @@ public class RelluEssentials extends JavaPlugin {
   private DatabaseManager databaseManager;
   @Getter
   private SudoManager sudoManager;
+  @Getter
+  private SchedulerService schedulerService;
 
   @Getter
   private TranslationService translationService;
@@ -246,6 +249,7 @@ public class RelluEssentials extends JavaPlugin {
    // RelluEssentials.languageHelper.setDefaultLanguage(lang);
 
     startLoading();
+    schedulerService = new SchedulerService(this);
     serviceContext = new ServiceContext(this);
     configManager = new ConfigManager();
     configManager.enable(this);
