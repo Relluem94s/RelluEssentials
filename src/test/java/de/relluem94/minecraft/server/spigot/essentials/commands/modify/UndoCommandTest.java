@@ -12,15 +12,15 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.translationService;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -32,141 +32,140 @@ import org.mockito.MockedStatic;
 
 class UndoCommandTest {
 
-    private Player player;
-    private UndoHistoryService undoHistoryService;
-    private UndoCommand undoCommand;
+  private Player player;
+  private UndoHistoryService undoHistoryService;
+  private UndoCommand undoCommand;
 
-    private MockedStatic<RelluEssentials> mockedRelluEssentials;
-    private MockedStatic<Bukkit> mockedBukkit;
-    private MockedStatic<ModifyHelper> mockedModifyHelper;
+  private MockedStatic<RelluEssentials> mockedRelluEssentials;
+  private MockedStatic<Bukkit> mockedBukkit;
+  private MockedStatic<ModifyHelper> mockedModifyHelper;
 
-    private BukkitScheduler schedulerMock;
+  private BukkitScheduler schedulerMock;
 
-    @BeforeEach
-    void setUp() {
-        player = mock(Player.class);
-        undoHistoryService = mock(UndoHistoryService.class);
+  @BeforeEach
+  void setUp() {
+    player = mock(Player.class);
+    undoHistoryService = mock(UndoHistoryService.class);
 
-        translationService translationServiceMock = mock(translationService.class);
-        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
-        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+    de.relluem94.minecraft.server.spigot.essentials.RelluEssentials relluEssentialsMock =
+        mock(de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
+    TranslationService translationServiceMock = mock(TranslationService.class);
 
-        RelluEssentials instanceMock = mock(RelluEssentials.class);
-        mockedRelluEssentials = mockStatic(RelluEssentials.class);
-        mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(instanceMock);
-        RelluEssentials.translationService = translationServiceMock;
+    mockedRelluEssentials = mockStatic(
+        de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
+    mockedRelluEssentials.when(
+            de.relluem94.minecraft.server.spigot.essentials.RelluEssentials::getInstance)
+        .thenReturn(relluEssentialsMock);
 
-        schedulerMock = mock(BukkitScheduler.class);
-        Server serverMock = mock(Server.class);
-        when(serverMock.getScheduler()).thenReturn(schedulerMock);
+    when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+    when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
 
-        mockedBukkit = mockStatic(Bukkit.class);
-        mockedBukkit.when(Bukkit::getServer).thenReturn(serverMock);
+    ServiceContext serviceContext = mock(ServiceContext.class);
+    when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
+    when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
 
-        mockedModifyHelper = mockStatic(ModifyHelper.class);
-        mockedModifyHelper.when(() -> ModifyHelper.undo(any())).thenAnswer(_ -> null);
+    undoCommand = new UndoCommand(serviceContext, 2);
+  }
 
-        undoCommand = new UndoCommand(2, undoHistoryService);
-    }
+  @AfterEach
+  void tearDown() {
+    mockedRelluEssentials.close();
+    mockedBukkit.close();
+    mockedModifyHelper.close();
+  }
 
-    @AfterEach
-    void tearDown() {
-        mockedRelluEssentials.close();
-        mockedBukkit.close();
-        mockedModifyHelper.close();
-    }
+  @Test
+  void execute_withNoHistory_sendsNoHistoryMessage() {
+    when(undoHistoryService.popLastHistory(player)).thenReturn(null);
 
-    @Test
-    void execute_withNoHistory_sendsNoHistoryMessage() {
-        when(undoHistoryService.popLastHistory(player)).thenReturn(null);
+    undoCommand.execute(player, new String[]{"undo"});
 
-        undoCommand.execute(player, new String[]{"undo"});
+    verify(player).sendMessage(anyString());
+    verifyNoInteractions(schedulerMock);
+  }
 
-        verify(player).sendMessage(anyString());
-        verifyNoInteractions(schedulerMock);
-    }
+  @Test
+  void execute_withEmptyHistory_sendsNoHistoryMessage() {
+    when(undoHistoryService.popLastHistory(player)).thenReturn(List.of());
 
-    @Test
-    void execute_withEmptyHistory_sendsNoHistoryMessage() {
-        when(undoHistoryService.popLastHistory(player)).thenReturn(List.of());
+    undoCommand.execute(player, new String[]{"undo"});
 
-        undoCommand.execute(player, new String[]{"undo"});
+    verify(player).sendMessage(anyString());
+    verifyNoInteractions(schedulerMock);
+  }
 
-        verify(player).sendMessage(anyString());
-        verifyNoInteractions(schedulerMock);
-    }
+  @Test
+  void execute_withHistoryEntries_schedulesTaskForEachEntry() {
+    List<ModifyHistoryEntry> history = List.of(
+        buildHistoryEntry(),
+        buildHistoryEntry(),
+        buildHistoryEntry()
+    );
+    when(undoHistoryService.popLastHistory(player)).thenReturn(history);
 
-    @Test
-    void execute_withHistoryEntries_schedulesTaskForEachEntry() {
-        List<ModifyHistoryEntry> history = List.of(
-                buildHistoryEntry(),
-                buildHistoryEntry(),
-                buildHistoryEntry()
-        );
-        when(undoHistoryService.popLastHistory(player)).thenReturn(history);
+    undoCommand.execute(player, new String[]{"undo"});
 
-        undoCommand.execute(player, new String[]{"undo"});
+    verify(schedulerMock, times(3)).scheduleSyncDelayedTask(
+        any(Plugin.class), any(Runnable.class), anyLong()
+    );
+    verify(player).sendMessage(anyString());
+  }
 
-        verify(schedulerMock, times(3)).scheduleSyncDelayedTask(
-                any(Plugin.class), any(Runnable.class), anyLong()
-        );
-        verify(player).sendMessage(anyString());
-    }
+  @Test
+  void execute_withMoreEntriesThanBlocksPerTick_incrementsDelay() {
+    List<ModifyHistoryEntry> history = List.of(
+        buildHistoryEntry(),
+        buildHistoryEntry(),
+        buildHistoryEntry(),
+        buildHistoryEntry()
+    );
+    when(undoHistoryService.popLastHistory(player)).thenReturn(history);
 
-    @Test
-    void execute_withMoreEntriesThanBlocksPerTick_incrementsDelay() {
-        List<ModifyHistoryEntry> history = List.of(
-                buildHistoryEntry(),
-                buildHistoryEntry(),
-                buildHistoryEntry(),
-                buildHistoryEntry()
-        );
-        when(undoHistoryService.popLastHistory(player)).thenReturn(history);
+    undoCommand.execute(player, new String[]{"undo"});
 
-        undoCommand.execute(player, new String[]{"undo"});
+    verify(schedulerMock, times(4)).scheduleSyncDelayedTask(
+        any(Plugin.class), any(Runnable.class), anyLong()
+    );
+  }
 
-        verify(schedulerMock, times(4)).scheduleSyncDelayedTask(
-                any(Plugin.class), any(Runnable.class), anyLong()
-        );
-    }
+  @Test
+  void execute_withHistoryEntries_callsUndoWithCorrectEntry() {
+    ModifyHistoryEntry entry = buildHistoryEntry();
+    List<ModifyHistoryEntry> history = List.of(entry);
+    when(undoHistoryService.popLastHistory(player)).thenReturn(history);
 
-    @Test
-    void execute_withHistoryEntries_callsUndoWithCorrectEntry() {
-        ModifyHistoryEntry entry = buildHistoryEntry();
-        List<ModifyHistoryEntry> history = List.of(entry);
-        when(undoHistoryService.popLastHistory(player)).thenReturn(history);
+    doAnswer(invocation -> {
+      Runnable task = invocation.getArgument(1);
+      task.run();
+      return 0;
+    }).when(schedulerMock)
+        .scheduleSyncDelayedTask(any(Plugin.class), any(Runnable.class), anyLong());
 
-        doAnswer(invocation -> {
-            Runnable task = invocation.getArgument(1);
-            task.run();
-            return 0;
-        }).when(schedulerMock).scheduleSyncDelayedTask(any(Plugin.class), any(Runnable.class), anyLong());
+    undoCommand.execute(player, new String[]{"undo"});
 
-        undoCommand.execute(player, new String[]{"undo"});
+    mockedModifyHelper.verify(() -> ModifyHelper.undo(entry), times(1));
+  }
 
-        mockedModifyHelper.verify(() -> ModifyHelper.undo(entry), times(1));
-    }
+  @Test
+  void matches_withCorrectArgs_returnsTrue() {
+    assert undoCommand.matches(new String[]{"undo"});
+  }
 
-    @Test
-    void matches_withCorrectArgs_returnsTrue() {
-        assert undoCommand.matches(new String[]{"undo"});
-    }
+  @Test
+  void matches_withWrongCommand_returnsFalse() {
+    assert !undoCommand.matches(new String[]{"set"});
+  }
 
-    @Test
-    void matches_withWrongCommand_returnsFalse() {
-        assert !undoCommand.matches(new String[]{"set"});
-    }
+  @Test
+  void matches_withTooManyArgs_returnsFalse() {
+    assert !undoCommand.matches(new String[]{"undo", "extra"});
+  }
 
-    @Test
-    void matches_withTooManyArgs_returnsFalse() {
-        assert !undoCommand.matches(new String[]{"undo", "extra"});
-    }
-
-    private ModifyHistoryEntry buildHistoryEntry() {
-        return new ModifyHistoryEntry(
-                mock(Location.class),
-                Material.STONE,
-                mock(BlockData.class)
-        );
-    }
+  private ModifyHistoryEntry buildHistoryEntry() {
+    return new ModifyHistoryEntry(
+        mock(Location.class),
+        Material.STONE,
+        mock(BlockData.class)
+    );
+  }
 }

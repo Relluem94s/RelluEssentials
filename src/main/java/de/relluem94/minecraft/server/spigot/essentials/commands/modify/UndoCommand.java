@@ -1,13 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.undo;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.List;
 import org.bukkit.Bukkit;
@@ -18,10 +19,12 @@ public class UndoCommand implements SubCommand {
 
   private final int blocksPerTick;
   private final UndoHistoryService undoHistoryService;
+  private final TranslationService translationService;
 
-  public UndoCommand(int blocksPerTick, UndoHistoryService undoHistoryService) {
+  public UndoCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
-    this.undoHistoryService = undoHistoryService;
+    this.undoHistoryService = serviceContext.getUndoHistoryService();
+    this.translationService = serviceContext.getTranslationService();
   }
 
   @Override
@@ -29,7 +32,8 @@ public class UndoCommand implements SubCommand {
     List<ModifyHistoryEntry> lastHistory = undoHistoryService.popLastHistory(player);
 
     if (lastHistory == null || lastHistory.isEmpty()) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_UNDO_HISTORY));
+      player.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_UNDO_HISTORY));
       return;
     }
 
@@ -48,7 +52,8 @@ public class UndoCommand implements SubCommand {
     }
 
     player.sendMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_UNDO_STARTED, lastHistory.size()));
+        translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_UNDO_STARTED,
+            lastHistory.size()));
   }
 
   @Override
