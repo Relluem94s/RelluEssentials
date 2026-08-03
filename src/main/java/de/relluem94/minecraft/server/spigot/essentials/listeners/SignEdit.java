@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
@@ -41,17 +41,17 @@ public class SignEdit implements ListenerConstruct {
           e.getPlayer().openSign(sign);
           pe.setPlayerState(PlayerState.DEFAULT);
 
-          e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_OPENED));
+          e.getPlayer().sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_OPENED));
         } else if (pe.getPlayerState().equals(PlayerState.SIGN_COPY)) {
           pe.setPlayerStateParameter(sign);
           pe.setPlayerState(PlayerState.SIGN_PASTE);
-          e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_COPIED));
+          e.getPlayer().sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_COPIED));
           e.getPlayer()
-              .sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_COPY_TO_PASTE));
+              .sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_COPY_TO_PASTE));
         } else if (pe.getPlayerState().equals(PlayerState.SIGN_PASTE)) {
           if (pe.getPlayerStateParameter() instanceof Sign) {
             updateSign(sign, (Sign) pe.getPlayerStateParameter());
-            e.getPlayer().sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_PASTED));
+            e.getPlayer().sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_PASTED));
           }
           pe.setPlayerState(PlayerState.DEFAULT);
         }

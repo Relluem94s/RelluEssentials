@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.registry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
@@ -69,12 +69,12 @@ public class TraderNpcRegistry {
                   .set(itemBuyPrice(), PersistentDataType.INTEGER, buyPricePerItem);
 
               itemMeta.setLore(List.of(
-                  languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+                  translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
                       PLUGIN_NAME_MONEY,
                       String.valueOf(buyPricePerItem),
                       PLUGIN_NAME_MONEY,
                       String.valueOf(buyPricePerItem * 64)),
-                  languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+                  translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
                       PLUGIN_NAME_MONEY,
                       String.valueOf(sellPricePerItem),
                       PLUGIN_NAME_MONEY,

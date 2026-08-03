@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -51,10 +51,10 @@ public class StringHelper {
 
     World world = l.getWorld();
     if (world == null) {
-      return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(),
+      return translationService.get(MessageKey.COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(),
           "null");
     }
-    return languageHelper.get(MessageKey.COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(),
+    return translationService.get(MessageKey.COMMAND_WHERE_STRING, l.getX(), l.getY(), l.getZ(),
         world.getName());
   }
 

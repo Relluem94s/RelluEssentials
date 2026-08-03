@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -35,14 +35,14 @@ public class Sun implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -51,21 +51,21 @@ public class Sun implements CommandConstruct {
       p.getWorld().setThundering(false);
       p.getWorld().setWeatherDuration(1000000);
       p.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, p.getWorld().getName()));
+          translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, p.getWorld().getName()));
       return true;
     }
 
     World world = Bukkit.getWorld(args[0]);
 
     if (world == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, args[0]));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, args[0]));
       return true;
     }
 
     world.setStorm(false);
     world.setThundering(false);
     world.setWeatherDuration(1000000);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, world.getName()));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, world.getName()));
     return true;
   }
 

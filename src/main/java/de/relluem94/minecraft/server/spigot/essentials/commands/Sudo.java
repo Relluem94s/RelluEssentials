@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -50,7 +50,7 @@ public class Sudo implements CommandConstruct {
     }
     WorldHelper.loadWorldGroupInventory(p);
     SudoManager.sudoers.remove(p.getUniqueId());
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SUDO_DEACTIVATED));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_DEACTIVATED));
   }
 
   @Override
@@ -63,19 +63,19 @@ public class Sudo implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!groupService.isSenderAuthorized(sender, "admin")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (args.length == 0) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
@@ -85,7 +85,7 @@ public class Sudo implements CommandConstruct {
     }
 
     if (args.length != 1) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       return true;
     }
 
@@ -99,13 +99,13 @@ public class Sudo implements CommandConstruct {
 
     if (target == null) {
       p.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
+          translationService.getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
       return true;
     }
 
     if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target.getId()) == null) {
       p.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
+          translationService.getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
       return true;
     }
 
@@ -123,7 +123,7 @@ public class Sudo implements CommandConstruct {
       p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
     }
     WorldHelper.loadWorldGroupInventory(p);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SUDO_ACTIVATED,
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_ACTIVATED,
         tpe.getGroup().getPrefix() + target.getName()));
 
     return true;

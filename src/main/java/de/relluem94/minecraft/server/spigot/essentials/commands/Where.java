@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -36,7 +36,7 @@ public class Where implements CommandConstruct {
       @NonNull String label, String @NotNull [] args) {
     if (args.length > 0) {
       if (!groupService.isSenderAuthorized(sender, "mod")) {
-        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }
 
@@ -45,14 +45,14 @@ public class Where implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "user")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -64,7 +64,7 @@ public class Where implements CommandConstruct {
     Player target = Bukkit.getPlayer(targetArg);
     if (target == null) {
       commandSender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetArg));
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetArg));
       return;
     }
 
@@ -73,7 +73,7 @@ public class Where implements CommandConstruct {
 
   private void where(@NotNull CommandSender sender, @NotNull Player target) {
     sender.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_WHERE, target.getCustomName(),
+        translationService.getWithPrefix(MessageKey.COMMAND_WHERE, target.getCustomName(),
             locationToString(target.getLocation())));
   }
 

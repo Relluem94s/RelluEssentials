@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.SignConstants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
@@ -74,7 +74,7 @@ public class SignUpAction implements ListenerConstruct {
 
     if (!endPointFound) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
     }
   }
 }

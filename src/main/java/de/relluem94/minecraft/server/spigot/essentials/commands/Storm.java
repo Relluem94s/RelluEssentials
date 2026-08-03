@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -31,18 +31,18 @@ public class Storm implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (args.length != 0) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -51,7 +51,7 @@ public class Storm implements CommandConstruct {
     p.getWorld().setThundering(true);
     p.getWorld().setWeatherDuration(1000000);
     p.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_WEATHER_STORM, p.getWorld().getName()));
+        translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_STORM, p.getWorld().getName()));
     return true;
   }
 

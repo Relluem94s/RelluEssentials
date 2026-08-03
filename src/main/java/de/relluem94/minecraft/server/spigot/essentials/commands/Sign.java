@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -39,25 +39,25 @@ public class Sign implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_INFO,
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_INFO,
           AnnotationHelper.getCommandName(this.getClass()), Commands.COPY.getName(),
           Commands.EDIT.getName()));
     }
 
     if (args.length > 1) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
@@ -65,10 +65,10 @@ public class Sign implements CommandConstruct {
 
     if (args[0].equalsIgnoreCase(Commands.EDIT.getName())) {
       pe.setPlayerState(PlayerState.SIGN_EDIT);
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_EDIT));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_EDIT));
     } else if (args[0].equalsIgnoreCase(Commands.COPY.getName())) {
       pe.setPlayerState(PlayerState.SIGN_COPY);
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SIGN_COPY));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_COPY));
     }
 
     return true;

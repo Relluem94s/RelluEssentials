@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -23,6 +23,6 @@ public class SignManager implements Enable {
 
     int signCount = SignRegistry.getAllByNamespace(plugin.getName()).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_SIGNS_REGISTERED, signCount));
+        translationService.get(MessageKey.PLUGIN_MANAGER_SIGNS_REGISTERED, signCount));
   }
 }

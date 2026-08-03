@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Back;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -26,7 +26,7 @@ public class TeleportHelper {
 
     Location spawn = w.getSpawnLocation();
 
-    addBackPointAndTeleport(languageHelper.getWithPrefix(MessageKey.COMMAND_SPAWN), p,
+    addBackPointAndTeleport(translationService.getWithPrefix(MessageKey.COMMAND_SPAWN), p,
         Bukkit.getWorld(name), silent, spawn);
   }
 
@@ -37,7 +37,7 @@ public class TeleportHelper {
   public static void teleportBed(@NotNull Player p, boolean silent) {
     if (p.getRespawnLocation() == null) {
       p.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_NO_BED, p.getWorld().getName()));
+          translationService.getWithPrefix(MessageKey.COMMAND_HOME_NO_BED, p.getWorld().getName()));
     }
 
     Location spawn = p.getRespawnLocation();
@@ -47,7 +47,7 @@ public class TeleportHelper {
       return;
     }
 
-    addBackPointAndTeleport(languageHelper.getWithPrefix(MessageKey.COMMAND_HOME), p, w, silent,
+    addBackPointAndTeleport(translationService.getWithPrefix(MessageKey.COMMAND_HOME), p, w, silent,
         spawn);
   }
 
@@ -55,7 +55,7 @@ public class TeleportHelper {
   public static void teleportHome(@NotNull Player p, LocationEntry locationEntry) {
     if (p.getRespawnLocation() == null) {
       p.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_NO_BED, p.getWorld().getName()));
+          translationService.getWithPrefix(MessageKey.COMMAND_HOME_NO_BED, p.getWorld().getName()));
     }
 
     Location home = locationEntry.getLocation();
@@ -67,7 +67,7 @@ public class TeleportHelper {
 
     addBackPointAndTeleport("", p, w, true, home);
     p.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_HOME_TP, locationEntry.getLocationName()));
+        translationService.getWithPrefix(MessageKey.COMMAND_HOME_TP, locationEntry.getLocationName()));
   }
 
   public static void teleportBack(Player p, @NotNull Location location) {
@@ -77,7 +77,7 @@ public class TeleportHelper {
     }
 
     addBackPointAndTeleport("", p, w, true, location, false);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_BACK));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_BACK));
   }
 
   public static void teleportWarp(Player p, @NotNull Location location) {
@@ -87,7 +87,7 @@ public class TeleportHelper {
     }
 
     addBackPointAndTeleport("", p, w, true, location, true);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WARP));
   }
 
   private static @Nullable World getWorld(Player p, boolean silent, @NotNull Location location,
@@ -96,7 +96,7 @@ public class TeleportHelper {
     if (w == null) {
       if (!silent) {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
+            translationService.getWithPrefix(MessageKey.PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
       }
 
       return null;
@@ -109,7 +109,7 @@ public class TeleportHelper {
     if (w == null) {
       if (!silent) {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
+            translationService.getWithPrefix(MessageKey.PLUGIN_COMMAND_WORLD_NOT_FOUND, worldName));
       }
 
       return null;
