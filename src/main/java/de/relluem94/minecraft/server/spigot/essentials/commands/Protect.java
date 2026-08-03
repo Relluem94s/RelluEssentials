@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -51,14 +51,14 @@ public class Protect implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(sender, "user")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -67,7 +67,7 @@ public class Protect implements CommandConstruct {
 
     if (args.length == 0) {
       p.sendMessage(
-          languageHelper.getWithPrefix(
+          translationService.getWithPrefix(
               MessageKey.COMMAND_PROTECT_COMMAND_INFO,
               AnnotationHelper.getCommandName(this.getClass()),
               Commands.ADD.getName(),
@@ -79,89 +79,89 @@ public class Protect implements CommandConstruct {
       );
     } else if (args.length == 1) {
       if (args[0].equalsIgnoreCase(Commands.ADD.getName())) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_ADD));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_ADD));
         pe.setPlayerState(PlayerState.PROTECTION_ADD);
       } else if (args[0].equalsIgnoreCase(Commands.REMOVE.getName())) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_REMOVE));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_REMOVE));
         pe.setPlayerState(PlayerState.PROTECTION_REMOVE);
       } else if (args[0].equalsIgnoreCase(Commands.FLAG.getName())) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG,
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG,
             AnnotationHelper.getCommandName(this.getClass()),
             Commands.FLAG.getName(),
             Commands.FLAG.getSubCommands()[1],
             Commands.FLAG.getSubCommands()[0]));
       } else if (args[0].equalsIgnoreCase(Commands.RIGHT.getName())) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT,
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT,
             AnnotationHelper.getCommandName(this.getClass()),
             Commands.RIGHT.getName(),
             Commands.RIGHT.getSubCommands()[1],
             Commands.RIGHT.getSubCommands()[0]));
       } else if (args[0].equalsIgnoreCase(Commands.INFO.getName())) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_INFO));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_INFO));
         pe.setPlayerState(PlayerState.PROTECTION_INFO);
       } else {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       }
     } else if (args.length == 3) {
       if (args[0].equalsIgnoreCase(Commands.FLAG.getName())) {
         if (args[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[0])) {
           try {
             if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
-              p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_ADD));
+              p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_ADD));
               pe.setPlayerState(PlayerState.PROTECTION_FLAG_ADD);
               pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
             }
           } catch (IllegalArgumentException ex) {
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
+            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
             p.sendMessage(getFlags());
           }
         } else if (args[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[1])) {
           try {
             if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
-              p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_REMOVE));
+              p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_REMOVE));
               pe.setPlayerState(PlayerState.PROTECTION_FLAG_REMOVE);
               pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
             }
           } catch (IllegalArgumentException ex) {
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
+            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
             p.sendMessage(getFlags());
           }
         } else {
-          p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+          p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         }
       } else if (args[0].equalsIgnoreCase(Commands.RIGHT.getName())) {
         if (args[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[0])) {
           OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
 
           if (player != null) {
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_ADD));
+            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_ADD));
             pe.setPlayerState(PlayerState.PROTECTION_RIGHT_ADD);
             pe.setPlayerStateParameter(player.getId().toString());
           } else {
             p.sendMessage(
-                languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND,
+                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND,
                     args[2]));
           }
         } else if (args[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[1])) {
           OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
 
           if (player != null) {
-            p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_REMOVE));
+            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_REMOVE));
             pe.setPlayerState(PlayerState.PROTECTION_RIGHT_REMOVE);
             pe.setPlayerStateParameter(player.getId().toString());
           } else {
             p.sendMessage(
-                languageHelper.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND,
+                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND,
                     args[2]));
           }
         } else {
-          p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+          p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         }
       } else {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       }
     } else {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
     }
     return true;
 

@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.registry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_COMMAND_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -29,7 +29,7 @@ public class RelluEssentialsRegistry {
   public void registerIntegration(RelluEssentialsIntegration integration) {
     integrations.add(integration);
     consoleSendMessage(PLUGIN_FORMS_COMMAND_PREFIX,
-        languageHelper.get(MessageKey.INTEGRATION_REGISTERED, integration.getPluginName(),
+        translationService.get(MessageKey.INTEGRATION_REGISTERED, integration.getPluginName(),
             integration.getPluginVersion()));
     integration.onRelluEssentialsInit(this);
   }
@@ -37,7 +37,7 @@ public class RelluEssentialsRegistry {
   public void unregisterIntegration(RelluEssentialsIntegration integration) {
     integrations.remove(integration);
     consoleSendMessage(PLUGIN_FORMS_COMMAND_PREFIX,
-        languageHelper.get(MessageKey.INTEGRATION_UNREGISTERED, integration.getPluginName()));
+        translationService.get(MessageKey.INTEGRATION_UNREGISTERED, integration.getPluginName()));
     integration.onRelluEssentialsShutdown();
   }
 }

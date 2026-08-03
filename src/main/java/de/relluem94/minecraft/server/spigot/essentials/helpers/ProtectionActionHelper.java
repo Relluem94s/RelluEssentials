@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_RIGHTS;
 
@@ -37,12 +37,12 @@ public class ProtectionActionHelper {
       if (bpe != null) {
         if (bpe.getLocationEntry().getPlayerId() != pe.getId()) {
           p.sendMessage(
-              languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+              translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
           return true;
         } else {
           RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
           RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(b.getLocation());
-          p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
+          p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
           return false;
         }
       }
@@ -53,10 +53,10 @@ public class ProtectionActionHelper {
           && bpe.getLocationEntry().getPlayerId() == pe.getId()) {
         RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
         RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(b.getLocation());
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
         return false;
       } else {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
         return true;
       }
 
@@ -67,10 +67,10 @@ public class ProtectionActionHelper {
           && bpe.getLocationEntry().getPlayerId() == pe.getId()) {
         RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
         RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(b.getLocation());
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
         return false;
       } else {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
         return true;
       }
     } else if (isAttachedToBlock(b, BlockFace.NORTH)) {
@@ -80,10 +80,10 @@ public class ProtectionActionHelper {
           && bpe.getLocationEntry().getPlayerId() == pe.getId()) {
         RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
         RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(b.getLocation());
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
         return false;
       } else {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
         return true;
       }
     } else if (isAttachedToBlock(b, BlockFace.WEST)) {
@@ -93,10 +93,10 @@ public class ProtectionActionHelper {
           && bpe.getLocationEntry().getPlayerId() == pe.getId()) {
         RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
         RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(b.getLocation());
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
         return false;
       } else {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
         return true;
       }
     } else if (isAttachedToBlock(b, BlockFace.UP)) {
@@ -106,12 +106,12 @@ public class ProtectionActionHelper {
           && bpe.getLocationEntry().getPlayerId() == pe.getId()) {
         RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(bpe);
         RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(b.getLocation());
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
         return false;
       } else {
         if (bpe != null && bpe.getLocationEntry() != null) {
           p.sendMessage(
-              languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+              translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
           return true;
         }
       }
@@ -156,8 +156,8 @@ public class ProtectionActionHelper {
               if (ProtectionHelper.hasPermission(b2, p)) {
                 hasRights = false;
                 p.sendMessage(
-                    languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-                p.sendMessage(languageHelper.getWithPrefix(
+                    translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                p.sendMessage(translationService.getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY));
               }
             }
@@ -166,8 +166,8 @@ public class ProtectionActionHelper {
               if (ProtectionHelper.hasPermission(b3, p)) {
                 hasRights = false;
                 p.sendMessage(
-                    languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-                p.sendMessage(languageHelper.getWithPrefix(
+                    translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                p.sendMessage(translationService.getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY));
               }
             }
@@ -183,7 +183,7 @@ public class ProtectionActionHelper {
         l.setLocationType(lt);
         l.setPlayerId(pe.getId());
 
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD));
 
         RelluEssentials.getInstance().getDatabaseHelper().insertLocation(l);
 
@@ -258,7 +258,7 @@ public class ProtectionActionHelper {
         pre.setRights(rights);
         if (!silent) {
           p.sendMessage(
-              languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD));
+              translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD));
         }
 
         RelluEssentials.getInstance().getDatabaseHelper().updateProtectionRight(pre);
@@ -267,7 +267,7 @@ public class ProtectionActionHelper {
       } else {
         if (!silent) {
           p.sendMessage(
-              languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED));
+              translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED));
         }
       }
     }
@@ -293,11 +293,11 @@ public class ProtectionActionHelper {
 
         if (!silent) {
           p.sendMessage(
-              languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE));
+              translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE));
         }
       } else {
         if (!silent) {
-          p.sendMessage(languageHelper.getWithPrefix(
+          p.sendMessage(translationService.getWithPrefix(
               MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED));
         }
       }

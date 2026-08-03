@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -42,7 +42,7 @@ public class PlayerList implements CommandConstruct {
 
     Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
     sender.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_LIST_HEADER, onlinePlayers.size()));
+        translationService.getWithPrefix(MessageKey.COMMAND_LIST_HEADER, onlinePlayers.size()));
     for (Player player : onlinePlayers) {
       if (sender instanceof Player p) {
         if (!p.canSee(player)) {
@@ -51,7 +51,7 @@ public class PlayerList implements CommandConstruct {
       }
       PlayerEntry pet = RelluEssentials.getInstance().getPlayerRegistry()
           .getPlayerEntry(player.getUniqueId());
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_LIST_ENTRY,
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_LIST_ENTRY,
           pet.getGroup().getPrefix(), pet.getCustomName(),
           pet.getGroup().getPrefix(), pet.getGroup().getName()));
     }

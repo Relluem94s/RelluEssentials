@@ -55,6 +55,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
@@ -158,6 +159,8 @@ public class RelluEssentials extends JavaPlugin {
   private UndoHistoryService undoHistoryService;
   @Getter
   private TranslationService translationService;
+  @Getter
+  private SelectionService selectionService;
 
   @Getter
   private ListenerManager listenerManager;
@@ -247,6 +250,7 @@ public class RelluEssentials extends JavaPlugin {
     schedulerService = new SchedulerService(this);
     undoHistoryRepository = new UndoHistoryRepository();
     undoHistoryService = new UndoHistoryService(undoHistoryRepository);
+    selectionService = new SelectionService(translationService);
 
     serviceContext = new ServiceContext(this);
     configManager = new ConfigManager();

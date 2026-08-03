@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SCOREBOARD_BORDER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_ESSENTIALS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
@@ -101,14 +101,14 @@ public class ScoreBoardManager implements Enable {
     objective.getScore(PLUGIN_FORMS_SCOREBOARD_BORDER).setScore(5);
     objective.getScore("§r").setScore(4);
     objective.getScore(
-        languageHelper.get(MessageKey.PLUGIN_SCOREBOARD_RANK) + ": " + pe.getGroup().getPrefix()
+        translationService.get(MessageKey.PLUGIN_SCOREBOARD_RANK) + ": " + pe.getGroup().getPrefix()
             + pe.getGroup().getName()).setScore(3);
     objective.getScore(
-        languageHelper.get(MessageKey.PLUGIN_SCOREBOARD_PURSE) + ": " + PLUGIN_NAME_MONEY + " "
+        translationService.get(MessageKey.PLUGIN_SCOREBOARD_PURSE) + ": " + PLUGIN_NAME_MONEY + " "
             + ChatColor.GOLD + StringHelper.formatDouble(pe.getPurse())
     ).setScore(2);
     objective.getScore(
-        languageHelper.get(MessageKey.PLUGIN_SCOREBOARD_WORLD) + ": " + ChatColor.GRAY + " "
+        translationService.get(MessageKey.PLUGIN_SCOREBOARD_WORLD) + ": " + ChatColor.GRAY + " "
             + Objects.requireNonNull(player.getLocation().getWorld()).getName()
     ).setScore(1);
   }

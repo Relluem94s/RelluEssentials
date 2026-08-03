@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -38,23 +38,23 @@ public class Poke implements CommandConstruct {
       @NonNull String label, String[] args) {
     if (args.length == 0) {
       if (!groupService.isSenderAuthorized(sender, "vip")) {
-        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }
 
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POKE));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_POKE));
       return true;
     }
 
     Player target = Bukkit.getPlayer(args[0]);
     if (target == null) {
       sender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
     if (!groupService.isSenderAuthorized(sender, "vip")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -62,8 +62,8 @@ public class Poke implements CommandConstruct {
         : PLUGIN_NAME_CHAT_CONSOLE + sender.getName();
     poke(target);
     target.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_POKE_MESSAGE_TARGET, senderName));
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_POKE_MESSAGE_SENDER,
+        translationService.getWithPrefix(MessageKey.COMMAND_POKE_MESSAGE_TARGET, senderName));
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_POKE_MESSAGE_SENDER,
         target.getDisplayName()));
     return true;
   }
@@ -74,8 +74,8 @@ public class Poke implements CommandConstruct {
     target.getWorld().playEffect(target.getLocation(), Effect.EXTINGUISH, 5);
     target.getWorld().playEffect(target.getLocation(), Effect.ENDERDRAGON_GROWL, 5);
     target.sendTitle(
-        languageHelper.get(MessageKey.COMMAND_POKE_TITLE),
-        languageHelper.get(MessageKey.COMMAND_POKE_SUBTITLE),
+        translationService.get(MessageKey.COMMAND_POKE_TITLE),
+        translationService.get(MessageKey.COMMAND_POKE_SUBTITLE),
         5, 80, 5
     );
   }

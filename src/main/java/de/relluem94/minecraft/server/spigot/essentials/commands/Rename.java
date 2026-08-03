@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import static de.relluem94.rellulib.utils.StringUtils.implode;
@@ -37,19 +37,19 @@ public class Rename implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_RENAME_INFO));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_RENAME_INFO));
       return true;
     }
 
@@ -65,10 +65,10 @@ public class Rename implements CommandConstruct {
     if (!is.getType().equals(Material.AIR) && im != null) {
       im.setDisplayName(message);
       is.setItemMeta(im);
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_RENAME));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_RENAME));
 
     } else {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_RENAME_AIR));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_RENAME_AIR));
     }
   }
 

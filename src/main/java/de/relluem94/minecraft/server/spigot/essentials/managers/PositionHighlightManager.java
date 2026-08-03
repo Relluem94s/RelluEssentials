@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -44,7 +44,7 @@ public class PositionHighlightManager implements Enable {
           World w = firstLocation != null ? firstLocation.getWorld() : secondLocation.getWorld();
           if (firstLocation != null && secondLocation != null) {
             if (!Objects.equals(firstLocation.getWorld(), secondLocation.getWorld())) {
-              p.sendMessage(languageHelper.getWithPrefix(
+              p.sendMessage(translationService.getWithPrefix(
                   MessageKey.COMMAND_POSITION_HIGHLIGHTING_DIFFERENT_WORLDS));
 
               continue;

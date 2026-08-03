@@ -1,11 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
+import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
@@ -76,7 +75,7 @@ public class PlayerHelper {
 
     if (!join) {
       Bukkit.broadcastMessage(
-          languageHelper.getWithPrefix(
+          translationService.getWithPrefix(
               !isAFK ? MessageKey.COMMAND_AFK_ACTIVATED : MessageKey.COMMAND_AFK_DEACTIVATED,
               p.getLocale(),
               p.getCustomName() + "§f",
@@ -181,7 +180,7 @@ public class PlayerHelper {
 
     if (updatedPlayers != 0) {
       sendMessageInChannel(
-          languageHelper.get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers),
+          translationService.get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers),
           PLUGIN_NAME_CHAT_CONSOLE,
           BetterChatFormat.ADMIN_CHANNEL,
           adminGroup
@@ -198,7 +197,7 @@ public class PlayerHelper {
 
     if (updatedPlayers != 0) {
       sendMessageInChannel(
-          languageHelper.get(MessageKey.PLUGIN_PLAYERS_INVENTORY_SAVED, updatedPlayers),
+          translationService.get(MessageKey.PLUGIN_PLAYERS_INVENTORY_SAVED, updatedPlayers),
           PLUGIN_NAME_CHAT_CONSOLE,
           BetterChatFormat.ADMIN_CHANNEL,
           adminGroup
