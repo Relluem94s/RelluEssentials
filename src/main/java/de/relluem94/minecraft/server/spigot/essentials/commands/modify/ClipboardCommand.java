@@ -1,14 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.rotate;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.List;
 import org.bukkit.entity.Player;
@@ -17,6 +18,11 @@ import org.jspecify.annotations.NonNull;
 public class ClipboardCommand implements SubCommand {
 
   private static final String ROTATE_SUB_COMMAND = Modify.Commands.CLIPBOARD.getSubCommands()[0];
+  private final TranslationService translationService;
+
+  public ClipboardCommand(ServiceContext context) {
+    this.translationService = context.getTranslationService();
+  }
 
   @Override
   public void execute(Player player, String[] args) {
