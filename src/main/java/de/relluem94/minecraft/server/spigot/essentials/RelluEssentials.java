@@ -55,6 +55,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.io.File;
 import java.util.ArrayList;
@@ -188,6 +189,8 @@ public class RelluEssentials extends JavaPlugin {
   private DatabaseManager databaseManager;
   @Getter
   private SudoManager sudoManager;
+  @Getter
+  private SchedulerService schedulerService;
 
   /**
    * Default constructor for the RelluEssentials plugin. Used by the Spigot server to instantiate
@@ -237,6 +240,7 @@ public class RelluEssentials extends JavaPlugin {
     RelluEssentials.languageHelper.setDefaultLanguage(lang);
 
     startLoading();
+    schedulerService = new SchedulerService(this);
     serviceContext = new ServiceContext(this);
     configManager = new ConfigManager();
     configManager.enable(this);
