@@ -81,7 +81,7 @@ public class CylinderCommand implements SubCommand {
     });
 
     blockHelper.setBlocks(0);
-    undoHistoryService.add(player, history);
+    undoHistoryService.addHistory(player, history);
     player.sendMessage(
         translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_CYLINDER_STARTED, history.size(),
             material.name()));

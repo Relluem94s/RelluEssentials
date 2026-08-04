@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -9,6 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
@@ -21,10 +20,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class SignEdit implements ListenerConstruct {
 
+  TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
   }
 
   @EventHandler
@@ -41,17 +41,20 @@ public class SignEdit implements ListenerConstruct {
           e.getPlayer().openSign(sign);
           pe.setPlayerState(PlayerState.DEFAULT);
 
-          e.getPlayer().sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_OPENED));
+          e.getPlayer()
+              .sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_OPENED));
         } else if (pe.getPlayerState().equals(PlayerState.SIGN_COPY)) {
           pe.setPlayerStateParameter(sign);
           pe.setPlayerState(PlayerState.SIGN_PASTE);
-          e.getPlayer().sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_COPIED));
+          e.getPlayer()
+              .sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_COPIED));
           e.getPlayer()
               .sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_COPY_TO_PASTE));
         } else if (pe.getPlayerState().equals(PlayerState.SIGN_PASTE)) {
           if (pe.getPlayerStateParameter() instanceof Sign) {
             updateSign(sign, (Sign) pe.getPlayerStateParameter());
-            e.getPlayer().sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_PASTED));
+            e.getPlayer()
+                .sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SIGN_PASTED));
           }
           pe.setPlayerState(PlayerState.DEFAULT);
         }
