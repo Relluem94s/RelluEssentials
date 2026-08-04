@@ -1,14 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isInt;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -34,21 +35,24 @@ public class FillCommand implements SubCommand {
   private final int maxRadius;
   private final int maxIterations;
   private final UndoHistoryService undoHistoryService;
+  private final TranslationService translationService;
 
-  public FillCommand(boolean recursive, int blocksPerTick, int maxRadius, int maxIterations,
-      UndoHistoryService undoHistoryService) {
+  public FillCommand(ServiceContext serviceContext, boolean recursive, int blocksPerTick,
+      int maxRadius, int maxIterations) {
     this.recursive = recursive;
     this.blocksPerTick = blocksPerTick;
     this.maxRadius = maxRadius;
     this.maxIterations = maxIterations;
-    this.undoHistoryService = undoHistoryService;
+    this.undoHistoryService = serviceContext.getUndoHistoryService();
+    this.translationService = serviceContext.getTranslationService();
   }
 
   @Override
   public void execute(Player player, String[] args) {
     Material material = Material.getMaterial(args[1].toUpperCase());
     if (material == null) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
+      player.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
       return;
     }
 
@@ -65,10 +69,11 @@ public class FillCommand implements SubCommand {
 
     if (radius > maxRadius) {
       player.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_RADIUS_TO_HIGH, maxRadius));
+          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_RADIUS_TO_HIGH,
+              maxRadius));
     }
 
-    BlockHelper blockHelper = new BlockHelper(material);
+    BlockHelper blockHelper = new Blockelper(material);
     List<ModifyHistoryEntry> history = new ArrayList<>();
     final long[] currentDelay = {0};
     final int[] counter = {0};
@@ -85,17 +90,17 @@ public class FillCommand implements SubCommand {
 
     int iterations = 0;
     while (!queue.isEmpty()) {
-        if (++iterations >= maxIterations) {
-            break;
-        }
+      if (++iterations >= maxIterations) {
+        break;
+      }
 
       Block block = queue.poll();
-        if (block.getLocation().distance(playerPos) > radius) {
-            continue;
-        }
-        if (!block.isEmpty()) {
-            continue;
-        }
+      if (block.getLocation().distance(playerPos) > radius) {
+        continue;
+      }
+      if (!block.isEmpty()) {
+        continue;
+      }
 
       checkAndRemoveProtection(block);
       history.add(
@@ -112,26 +117,28 @@ public class FillCommand implements SubCommand {
         int neighborY = block.getY() + dir[1];
         int neighborZ = block.getZ() + dir[2];
         Location neighborLocation = new Location(block.getWorld(), neighborX, neighborY, neighborZ);
-          if (visited.contains(neighborLocation)) {
-              continue;
-          }
+        if (visited.contains(neighborLocation)) {
+          continue;
+        }
         Block neighbor = block.getWorld().getBlockAt(neighborX, neighborY, neighborZ);
-          if (!neighbor.isEmpty()) {
-              continue;
-          }
+        if (!neighbor.isEmpty()) {
+          continue;
+        }
         queue.add(neighbor);
         visited.add(neighborLocation);
       }
     }
 
     blockHelper.setBlocks(0);
-    undoHistoryService.add(player, history);
+    undoHistoryService.addHistory(player, history);
 
     player.sendMessage(
         recursive
-            ? translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_FILLR_STARTED, history.size(),
+            ? translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_FILLR_STARTED,
+            history.size(),
             material.name(), radius)
-            : translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_STARTED, history.size(),
+            : translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_FILL_STARTED,
+                history.size(),
                 material.name(), radius)
     );
   }
