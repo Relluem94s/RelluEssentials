@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
@@ -14,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManage
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,9 +24,11 @@ import org.jspecify.annotations.NonNull;
 public class BetterPlayerJoin implements ListenerConstruct {
 
   GroupService groupService;
+  TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
+    this.translationService = context.getTranslationService();
     this.groupService = context.getGroupService();
   }
 

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -12,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,9 +22,11 @@ import org.jspecify.annotations.NonNull;
 
 public class BetterPlayerQuit implements ListenerConstruct {
 
+  TranslationService translationService;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
   }
 
   @EventHandler

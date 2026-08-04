@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
@@ -18,6 +17,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.entity.EntityType;
@@ -39,6 +39,8 @@ public class BetterMobs implements ListenerConstruct {
   private final EnchantmentHelper thunderstrike;
   private final EnchantmentHelper scavengers;
   private final EnchantmentHelper lifesteal;
+  TranslationService translationService;
+
   public BetterMobs() {
     this.telekinesis = EnchantmentRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(),
@@ -60,7 +62,7 @@ public class BetterMobs implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
   }
 
   @EventHandler
@@ -83,8 +85,9 @@ public class BetterMobs implements ListenerConstruct {
       double losses = purse / 2;
       if (purse - losses >= 1) {
         pe.setPurse(purse - losses);
-        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS,
-            StringHelper.formatDouble(losses), PLUGIN_NAME_MONEY));
+        p.sendMessage(
+            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS,
+                StringHelper.formatDouble(losses), PLUGIN_NAME_MONEY));
       } else {
         pe.setPurse(0);
       }

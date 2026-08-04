@@ -1,11 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
-
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -16,9 +15,11 @@ public class BetterSafety implements ListenerConstruct {
   private final List<String> strings2block = List.of("/pl", "/bukkit", "/ver");
 
   GroupService groupService;
+  TranslationService translationService;
 
   @Override
-  public void injectContext(@NonNull ServiceContext context) {
+  public void injectContext(ServiceContext context) {
+    this.translationService = context.getTranslationService();
     this.groupService = context.getGroupService();
   }
 
