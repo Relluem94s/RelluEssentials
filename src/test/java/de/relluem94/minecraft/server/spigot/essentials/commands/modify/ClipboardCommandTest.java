@@ -35,11 +35,11 @@ class ClipboardCommandTest {
     player = mock(Player.class);
 
     relluEssentialsMock = mock(RelluEssentials.class);
-    TranslationService translationServiceMock = mock(TranslationService.class);
 
     mockedRelluEssentials = mockStatic(RelluEssentials.class);
     mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
 
+    TranslationService translationServiceMock = mock(TranslationService.class);
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
 
     ServiceContext serviceContext = mock(ServiceContext.class);

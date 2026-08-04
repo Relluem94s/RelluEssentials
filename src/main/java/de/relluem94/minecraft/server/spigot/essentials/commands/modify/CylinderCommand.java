@@ -1,17 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,26 +24,28 @@ public class CylinderCommand implements SubCommand {
   private final int blocksPerTick;
   private final SelectionService selectionService;
   private final UndoHistoryService undoHistoryService;
+  private final TranslationService translationService;
 
-  public CylinderCommand(int blocksPerTick, SelectionService selectionService,
-      UndoHistoryService undoHistoryService) {
+  public CylinderCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
-    this.selectionService = selectionService;
-    this.undoHistoryService = undoHistoryService;
+    this.selectionService = serviceContext.getSelectionService();
+    this.translationService = serviceContext.getTranslationService();
+    this.undoHistoryService = serviceContext.getUndoHistoryService();
   }
 
   @Override
   public void execute(Player player, String[] args) {
     Material material = Material.getMaterial(args[1].toUpperCase());
     if (material == null) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
+      player.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
       return;
     }
 
     Selection selection = selectionService.resolve(player);
-      if (selection == null) {
-          return;
-      }
+    if (selection == null) {
+      return;
+    }
 
     double centerX = (selection.getMinX() + selection.getMaxX()) / 2.0;
     double centerZ = (selection.getMinZ() + selection.getMaxZ()) / 2.0;
@@ -67,9 +70,9 @@ public class CylinderCommand implements SubCommand {
       boolean isInsideOuterEllipse = distanceFromCenter <= 1.0;
       boolean isInsideInnerEllipse = radiusX > 1 && radiusZ > 1 && distanceFromCenterInner <= 1.0;
 
-        if (!isInsideOuterEllipse || isInsideInnerEllipse) {
-            return;
-        }
+      if (!isInsideOuterEllipse || isInsideInnerEllipse) {
+        return;
+      }
 
       checkAndRemoveProtection(block);
       history.add(

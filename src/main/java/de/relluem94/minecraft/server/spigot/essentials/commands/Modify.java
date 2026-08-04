@@ -63,7 +63,7 @@ public class Modify implements CommandConstruct {
     this.subCommandRegistry = new SubCommandRegistry<>(List.of(
         new CopyCommand(false, BLOCKS_PER_TICK, selectionService, undoHistoryService),
         new CopyCommand(true, BLOCKS_PER_TICK, selectionService, undoHistoryService),
-        new CylinderCommand(BLOCKS_PER_TICK, selectionService, undoHistoryService),
+        new CylinderCommand(context, BLOCKS_PER_TICK),
         new FillCommand(context, false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS),
         new FillCommand(context, true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS),
         new ClipboardCommand(context),
