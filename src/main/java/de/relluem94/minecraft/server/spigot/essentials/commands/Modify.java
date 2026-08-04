@@ -67,7 +67,7 @@ public class Modify implements CommandConstruct {
         new FillCommand(context, false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS),
         new FillCommand(context, true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS),
         new ClipboardCommand(context),
-        new MoveCommand(BLOCKS_PER_TICK, selectionService, undoHistoryService),
+        new MoveCommand(context, BLOCKS_PER_TICK),
         new PasteCommand(context, BLOCKS_PER_TICK),
         new PlantCommand(context, BLOCKS_PER_TICK),
         new ReplaceCommand(context, BLOCKS_PER_TICK),

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
@@ -8,11 +7,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +29,13 @@ public class MoveCommand implements SubCommand {
   private final int blocksPerTick;
   private final SelectionService selectionService;
   private final UndoHistoryService undoHistoryService;
+  private final TranslationService translationService;
 
-  public MoveCommand(int blocksPerTick, SelectionService selectionService,
-      UndoHistoryService undoHistoryService) {
+  public MoveCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
-    this.selectionService = selectionService;
-    this.undoHistoryService = undoHistoryService;
+    this.selectionService = serviceContext.getSelectionService();
+    this.undoHistoryService = serviceContext.getUndoHistoryService();
+    this.translationService = serviceContext.getTranslationService();
   }
 
   @Override
@@ -45,9 +47,9 @@ public class MoveCommand implements SubCommand {
 
     int offset = Integer.parseInt(args[1]);
     Selection selection = selectionService.resolve(player);
-      if (selection == null) {
-          return;
-      }
+    if (selection == null) {
+      return;
+    }
 
     List<ModifyHistoryEntry> history = new ArrayList<>();
     final long[] currentDelay = {0};
@@ -84,7 +86,7 @@ public class MoveCommand implements SubCommand {
       }
     });
 
-    undoHistoryService.add(player, history);
+    undoHistoryService.addHistory(player, history);
     player.sendMessage(
         translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_MOVE_STARTED, history.size(),
             offset));
