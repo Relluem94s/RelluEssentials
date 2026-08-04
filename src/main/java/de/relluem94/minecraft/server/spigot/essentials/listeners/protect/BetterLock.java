@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -12,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -29,10 +28,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BetterLock implements ListenerConstruct {
 
+  TranslationService translationService;
   private GroupService groupService;
 
   @Override
   public void injectContext(ServiceContext context) {
+    this.translationService = context.getTranslationService();
     this.groupService = context.getGroupService();
   }
 
@@ -67,7 +68,8 @@ public class BetterLock implements ListenerConstruct {
               } else {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(
-                    translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                    translationService.getWithPrefix(
+                        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
               }
 
             }
@@ -166,7 +168,8 @@ public class BetterLock implements ListenerConstruct {
               } else {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(
-                    translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                    translationService.getWithPrefix(
+                        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
               }
             }
           } else {
