@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
@@ -15,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BuyBackSlotResolver;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 public class InteractTraderNpc implements ListenerConstruct {
 
   private final BuyBackSlotResolver buyBackSlotResolver;
+  TranslationService translationService;
 
   public InteractTraderNpc() {
     this.buyBackSlotResolver = new BuyBackSlotResolver(
@@ -32,10 +33,9 @@ public class InteractTraderNpc implements ListenerConstruct {
         .orElseThrow().getCustomItem());
   }
 
-
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
   }
 
   @EventHandler

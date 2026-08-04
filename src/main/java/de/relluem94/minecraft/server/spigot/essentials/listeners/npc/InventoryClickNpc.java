@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE;
@@ -23,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEnt
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -35,7 +35,7 @@ import org.bukkit.inventory.ItemStack;
 public class InventoryClickNpc implements ListenerConstruct {
 
 
-  private final NpcTradeHandler tradeHandler = new NpcTradeHandler();
+  private NpcTradeHandler tradeHandler;
   private final Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
       BankerHelper.npc_gui_deposit_5_percent, (p, bae) -> BankerHelper.deposit(
           RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 5f),
@@ -55,9 +55,12 @@ public class InventoryClickNpc implements ListenerConstruct {
           RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 100f)
   );
 
+  TranslationService translationService;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
+    tradeHandler = new NpcTradeHandler(translationService);
   }
 
   private ItemHelper resolveDisabledItem() {

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
@@ -22,6 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BuyBackSlotResolver;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.Optional;
 import lombok.NonNull;
@@ -43,8 +43,9 @@ public class NpcTradeHandler {
   private final ItemHelper closeItem;
   private final ItemHelper coinsItem;
   private final BuyBackSlotResolver buyBackSlotResolver;
+  private final TranslationService translationService;
 
-  public NpcTradeHandler() {
+  public NpcTradeHandler(TranslationService translationService) {
     this.disabledItem = ItemRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
@@ -57,6 +58,7 @@ public class NpcTradeHandler {
 
     this.buyBackSlotResolver = new BuyBackSlotResolver(
         RelluEssentials.getInstance().getBuyBackService(), this.disabledItem.getCustomItem());
+    this.translationService = translationService;
   }
 
   public void handle(ItemStack clickedItem, Inventory clickedInventory, Player player,
@@ -409,13 +411,15 @@ public class NpcTradeHandler {
       }
 
       if (meta.hasDisplayName() && !(meta instanceof SkullMeta)) {
-        player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
+        player.sendMessage(
+            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
         return;
       }
     }
 
     if (sellPrice == 0) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
+      player.sendMessage(
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
       return;
     }
 
