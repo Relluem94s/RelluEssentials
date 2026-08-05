@@ -100,7 +100,7 @@ public class DatabaseManager implements Enable {
     relluEssentialsPlugin
         .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
             databaseHelper.getProtections()));
-    relluEssentialsPlugin.setTraderNpcRegistry(new TraderNpcRegistry());
+    relluEssentialsPlugin.setTraderNpcRegistry(new TraderNpcRegistry(translationService));
     relluEssentialsPlugin.getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
     relluEssentialsPlugin.setBagTypeRegistry(new BagTypeRegistry(new BagTypeRepository(databaseHelper.getBagTypes())));
     relluEssentialsPlugin

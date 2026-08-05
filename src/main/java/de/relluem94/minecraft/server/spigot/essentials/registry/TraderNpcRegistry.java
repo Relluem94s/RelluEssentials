@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.registry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
@@ -17,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNpc.Type;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,14 +35,16 @@ public class TraderNpcRegistry {
   private final List<TraderNpc> npcs = new ArrayList<>();
   private final ItemHelper disabledItem;
   private final ItemHelper closeItem;
+  private final TranslationService translationService;
 
-  public TraderNpcRegistry() {
+  public TraderNpcRegistry(TranslationService translationService) {
     this.disabledItem = ItemRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
     this.closeItem = ItemRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
+    this.translationService = translationService;
   }
 
   public void init(List<TraderNPCEntry> traderNpcEntryList) {
