@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
@@ -81,7 +80,7 @@ public class EntityPickupItemBags implements ListenerConstruct {
       boolean collectBagEnabled = RelluEssentials.getInstance().collectBagWorlds.contains(
           worldName);
 
-      if (collectBagEnabled && BagHelper.hasBags(pe.getId()) && bagService.collectItem(e.getItem(),
+      if (collectBagEnabled && bagService.hasBags(pe.getId()) && bagService.collectItem(e.getItem(),
           p, pe)) {
         p.getInventory().remove(is);
         e.setCancelled(true);

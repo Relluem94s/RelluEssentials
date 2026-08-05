@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
@@ -145,7 +144,7 @@ public class DatabaseManager implements Enable {
     }
 
     for (int i = 0; i < relluEssentialsPlugin.getBagTypeRegistry().getAll().size(); i++) {
-      ItemStack[] isa = BagHelper.getItemStacks(
+      ItemStack[] isa = relluEssentialsPlugin.getBagService().getItemStacks(
           relluEssentialsPlugin.getBagTypeRegistry().getAll().get(i));
       Collections.addAll(relluEssentialsPlugin.bagBlocks2collect, isa);
     }

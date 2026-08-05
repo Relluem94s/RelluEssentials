@@ -1,31 +1,47 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_COMMAND_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper.BAG_SIZE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper.getItemStacks;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 import static de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat.ADMIN_CHANNEL;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
+import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BagRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public class BagService {
 
@@ -211,5 +227,188 @@ public class BagService {
           adminGroup
       );
     }
+  }
+
+  public Collection<BagEntry> getBags(int playerFK) {
+    return bagRegistry.findAllByPlayerId(playerFK);
+  }
+
+  public Inventory getBagsInventory(PlayerEntry pe) {
+    String MAIN_GUI = translationService.get(MessageKey.PLUGIN_BAG_GUI_TITLE);
+    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI),
+        resolveDisabledItem());
+    ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
+        .getBagTypeRegistry()
+        .getAll().listIterator();
+    int slot = 0;
+    while (bagTypeEntryListIterator.hasNext()) {
+      slot = InventoryHelper.getNextSlot(slot);
+      BagTypeEntry bte = bagTypeEntryListIterator.next();
+      if (hasBag(pe.getId(), bte.getId())) {
+        inv.setItem(slot, getItem(bte, false).getCustomItem());
+        slot++;
+      }
+    }
+    return inv;
+  }
+
+  public Inventory getBagsInventory(boolean npc, String title) {
+    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title),
+        resolveDisabledItem());
+
+    ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
+        .getBagTypeRegistry()
+        .getAll().listIterator();
+
+    int slot = 0;
+    while (bagTypeEntryListIterator.hasNext()) {
+      slot = InventoryHelper.getNextSlot(slot);
+      BagTypeEntry bte = bagTypeEntryListIterator.next();
+      inv.setItem(slot, getItem(bte, npc).getCustomItem());
+      slot++;
+    }
+    return inv;
+  }
+
+
+  public @Nullable Inventory getBagInventory(int type, @NotNull PlayerEntry pe) {
+    Optional<BagEntry> optionalBagEntry = findBag(pe.getId(), type);
+
+    if (!optionalBagEntry.isPresent()) {
+      return null;
+    }
+    BagEntry bagEntry = optionalBagEntry.get();
+
+    Inventory inv = InventoryHelper.createInventory(54,
+        PLUGIN_FORMS_COMMAND_PREFIX + bagEntry.getBagType().getDisplayName());
+    InventoryHelper.fillInventory(inv, resolveDisabledItem());
+
+    inv.setItem(10, getItemStack(bagEntry, 0));
+    inv.setItem(11, getItemStack(bagEntry, 1));
+    inv.setItem(12, getItemStack(bagEntry, 2));
+    inv.setItem(13, getItemStack(bagEntry, 3));
+    inv.setItem(14, getItemStack(bagEntry, 4));
+    inv.setItem(15, getItemStack(bagEntry, 5));
+    inv.setItem(16, getItemStack(bagEntry, 6));
+
+    inv.setItem(19, getItemStack(bagEntry, 7));
+    inv.setItem(20, getItemStack(bagEntry, 8));
+    inv.setItem(21, getItemStack(bagEntry, 9));
+    inv.setItem(22, getItemStack(bagEntry, 10));
+    inv.setItem(23, getItemStack(bagEntry, 11));
+    inv.setItem(24, getItemStack(bagEntry, 12));
+    inv.setItem(25, getItemStack(bagEntry, 13));
+
+    inv.setItem(28, getItemStack(bagEntry, 14));
+    inv.setItem(29, getItemStack(bagEntry, 15));
+    inv.setItem(30, getItemStack(bagEntry, 16));
+    inv.setItem(31, getItemStack(bagEntry, 17));
+    inv.setItem(32, getItemStack(bagEntry, 18));
+    inv.setItem(33, getItemStack(bagEntry, 19));
+    inv.setItem(34, getItemStack(bagEntry, 20));
+
+    inv.setItem(37, getItemStack(bagEntry, 21));
+    inv.setItem(38, getItemStack(bagEntry, 22));
+    inv.setItem(39, getItemStack(bagEntry, 23));
+    inv.setItem(40, getItemStack(bagEntry, 24));
+    inv.setItem(41, getItemStack(bagEntry, 25));
+    inv.setItem(42, getItemStack(bagEntry, 26));
+    inv.setItem(43, getItemStack(bagEntry, 27));
+
+    return inv;
+  }
+
+  public void purchaseBag(@NonNull BagTypeEntry bagType, @NonNull Player player, @NonNull PlayerEntry playerEntry) {
+    playerEntry.setPurse(playerEntry.getPurse() - bagType.getCost());
+    playerEntry.setUpdatedBy(playerEntry.getId());
+    playerEntry.setHasToBeUpdated(true);
+    databaseHelper.insertBag(bagType.getId(), playerEntry.getId());
+    BagEntry newBagEntry = databaseHelper.getBag(bagType.getId(), playerEntry.getId());
+    bagRegistry.register(newBagEntry);
+
+    player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT,
+        bagType.getDisplayName()));
+  }
+
+
+  private ItemStack resolveDisabledItem() {
+    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow()
+        .getCustomItem();
+  }
+
+  @Contract("_, _ -> new")
+  private @NotNull ItemHelper getItem(BagTypeEntry bte, boolean npc) {
+    String[] lore;
+    if (npc) {
+      lore = new String[]{
+          translationService.get(MessageKey.PLUGIN_BAG_CLICK_TO_BUY),
+          translationService.get(MessageKey.PLUGIN_BAG_COST_TO_BUY, bte.getCost())
+      };
+    } else {
+      lore = new String[]{translationService.get(MessageKey.PLUGIN_BAG_CLICK_TO_OPEN)};
+    }
+    return new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG), bte.getDisplayName(),
+        Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore));
+  }
+
+  public ItemStack @NotNull [] getItemStacks(BagTypeEntry bte) {
+    ItemStack[] isa = new ItemStack[BAG_SIZE];
+    for (int i = 0; i < BAG_SIZE; i++) {
+      isa[i] = getItemStack(bte, i);
+    }
+    return isa;
+  }
+
+  private ItemStack getItemStack(@NotNull BagTypeEntry bte, int slot) {
+    String name = bte.getSlotName(slot);
+
+    if (name == null) {
+      return resolveDisabledItem();
+    }
+
+    Material mat = Material.matchMaterial(name);
+
+    if (mat == null) {
+      mat = Material.AIR;
+    }
+
+    return new ItemStack(mat, 1);
+  }
+
+
+  private ItemStack getItemStack(@NotNull BagEntry be, int slot) {
+    String name = be.getBagType().getSlotName(slot);
+    int value = be.getSlotValue(slot);
+
+    if (name == null) {
+      return resolveDisabledItem();
+    }
+
+    Material mat = Material.matchMaterial(name);
+
+    if (mat == null) {
+      mat = Material.AIR;
+    }
+
+    if (Material.AIR.equals(mat)) {
+      return resolveDisabledItem();
+    }
+
+    ItemStack is = new ItemStack(mat, 1);
+    ItemMeta im = is.getItemMeta();
+
+    if (im == null) {
+      return is;
+    }
+
+    List<String> lore = new ArrayList<>();
+    lore.add(translationService.get(MessageKey.PLUGIN_BAG_AMOUNT, value));
+    lore.add(translationService.get(MessageKey.PLUGIN_BAG_RETRIEVE));
+
+    im.setLore(lore);
+    is.setItemMeta(im);
+
+    return is;
   }
 }

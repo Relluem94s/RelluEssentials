@@ -89,4 +89,14 @@ public class BagTypeRegistry {
     return bagTypeRepository.findByName(name);
   }
 
+  public Optional<BagTypeEntry> findByPartialName(String name) {
+    return bagTypeRepository.findAll().stream()
+        .filter(bte -> name.contains(bte.getDisplayName())
+            || name.contains(bte.getName().toLowerCase())
+            || bte.getDisplayName().contains(name)
+            || bte.getName().toLowerCase().contains(name))
+        .findFirst();
+  }
+
+
 }
