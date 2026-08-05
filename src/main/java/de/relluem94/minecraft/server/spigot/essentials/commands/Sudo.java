@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -17,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,7 @@ public class Sudo implements CommandConstruct {
 
   private GroupService groupService;
   private CommandManager commandManager;
+  private TranslationService translationService;
 
   public static void exitSudo(@NotNull Player p) {
     PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
@@ -57,6 +58,7 @@ public class Sudo implements CommandConstruct {
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
     this.commandManager = context.getCommandManager();
+    this.translationService = context.getTranslationService();
   }
 
   @Override

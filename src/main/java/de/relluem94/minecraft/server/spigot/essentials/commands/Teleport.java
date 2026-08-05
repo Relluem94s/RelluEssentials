@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -11,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.utils.TypeUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,10 +31,12 @@ public class Teleport implements CommandConstruct {
   private final HashMap<Player, Player> teleportAcceptList = new HashMap<>();
   private final HashMap<Player, Player> teleportToAcceptList = new HashMap<>();
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   private void addTeleportEntry(Player p, Player t) {
@@ -151,7 +153,8 @@ public class Teleport implements CommandConstruct {
 
       Back.addBackPoint(p);
       p.teleport(target);
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP, target.getCustomName()));
+      p.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_TP, target.getCustomName()));
       return true;
     }
 
