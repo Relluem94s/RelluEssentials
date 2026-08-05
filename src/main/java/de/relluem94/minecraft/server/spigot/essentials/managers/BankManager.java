@@ -3,9 +3,9 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.time.Duration;
@@ -19,6 +19,7 @@ public class BankManager implements Enable {
 
   private TranslationService translationService;
   private SchedulerService schedulerService;
+  private BankService bankService;
 
   @Override
   public void enable(Plugin plugin) {
@@ -26,6 +27,7 @@ public class BankManager implements Enable {
 
     translationService = relluEssentialsPlugin.getTranslationService();
     schedulerService = relluEssentialsPlugin.getSchedulerService();
+    bankService = relluEssentialsPlugin.getBankService();
 
     if (relluEssentialsPlugin.isUnitTest()) {
       return;
@@ -35,7 +37,7 @@ public class BankManager implements Enable {
 
   private void triggerNext() {
     schedulerService.runTaskLater(() -> {
-      BankerHelper.doInterest();
+      bankService.triggerInterestForAllOnlinePlayers();
       ChatHelper.consoleSendMessage(
           Constants.PLUGIN_NAME_CONSOLE,
           translationService.get(MessageKey.PLUGIN_BANK_INTEREST_NEXT_RUN,

@@ -52,6 +52,7 @@ import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepositor
 import de.relluem94.minecraft.server.spigot.essentials.repository.UndoHistoryRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
@@ -165,6 +166,9 @@ public class RelluEssentials extends JavaPlugin {
   private BagService bagService;
   @Getter
   private MessageService messageService;
+  @Getter
+  private BankService bankService;
+
 
   @Getter
   private ListenerManager listenerManager;
@@ -287,6 +291,7 @@ public class RelluEssentials extends JavaPlugin {
     serviceContext.setGroupService(getGroupService());
     serviceContext.setNpcService(getNpcService());
     messageService = new MessageService(translationService);
+    bankService = new BankService(databaseHelper,playerRegistry,bankTierRegistry,translationService,bankInterestMap, this);
 
     commandManager = new CommandManager();
     serviceContext.setCommandManager(commandManager);

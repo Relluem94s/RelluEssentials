@@ -1,6 +1,5 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1;
@@ -21,14 +20,18 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -36,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -46,13 +50,13 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class BankerHelper {
+public class BankService {
 
-  @SuppressWarnings("unused")
   public static final ItemHelper npc_portable_bank = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1,
       PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK, Type.TOOL, Rarity.LEGENDARY,
       List.of(PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1));
@@ -84,29 +88,46 @@ public class BankerHelper {
       PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL, Type.NPC_GUI, Rarity.NONE,
       List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
   public static final ItemHelper npc_gui_withdraw_5_percent = new ItemHelper(Material.GOLD_NUGGET,
-      1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 5), Type.NPC_GUI, Rarity.NONE,
+      1,
+      String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 5), Type.NPC_GUI, Rarity.NONE,
       List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
   public static final ItemHelper npc_gui_withdraw_20_percent = new ItemHelper(Material.GOLD_INGOT,
-      1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 20), Type.NPC_GUI,
-      Rarity.NONE, List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
+      1,
+      String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 20), Type.NPC_GUI, Rarity.NONE,
+      List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
   public static final ItemHelper npc_gui_withdraw_50_percent = new ItemHelper(Material.GOLD_INGOT,
-      1, String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 50), Type.NPC_GUI,
-      Rarity.NONE, List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
+      1,
+      String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 50), Type.NPC_GUI, Rarity.NONE,
+      List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1));
   public static final ItemHelper npc_gui_balance_total = new ItemHelper(Material.YELLOW_SHULKER_BOX,
       1, PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL, Type.NPC_GUI, Rarity.NONE);
   public static final ItemHelper npc_gui_balance_transactions = new ItemHelper(Material.MAP, 1,
       PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS, Type.NPC_GUI, Rarity.NONE);
   public static final Material UPGRADE_MATERIAL = Material.AMETHYST_SHARD;
 
-  private BankerHelper() {
-    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  private final DatabaseHelper databaseHelper;
+  private final PlayerRegistry playerRegistry;
+  private final BankTierRegistry bankTierRegistry;
+  private final TranslationService translationService;
+  private final Map<UUID, BankAccountEntry> bankInterestMap;
+  private final JavaPlugin plugin;
+
+  public BankService(DatabaseHelper databaseHelper, PlayerRegistry playerRegistry,
+      BankTierRegistry bankTierRegistry, TranslationService translationService,
+      Map<UUID, BankAccountEntry> bankInterestMap, JavaPlugin plugin) {
+    this.databaseHelper = databaseHelper;
+    this.playerRegistry = playerRegistry;
+    this.bankTierRegistry = bankTierRegistry;
+    this.translationService = translationService;
+    this.bankInterestMap = bankInterestMap;
+    this.plugin = plugin;
   }
 
-  public static @NotNull ItemStack addLoreLine(@NotNull ItemStack is, String line) {
+  public @NotNull ItemStack addLoreLine(@NotNull ItemStack is, String line) {
     ItemMeta im = is.getItemMeta();
-      if (im == null) {
-          return is;
-      }
+    if (im == null) {
+      return is;
+    }
 
     List<String> lore = im.getLore() != null ? new ArrayList<>(im.getLore()) : new ArrayList<>();
     if (lore.size() == 1) {
@@ -120,10 +141,9 @@ public class BankerHelper {
     return is;
   }
 
-  public static @NonNull List<ItemHelper> getBankTiers() {
-    List<ItemHelper> lih = new ArrayList<>();
-    for (int i = 0; i < RelluEssentials.getInstance().getBankTierRegistry().getBankTiers().size(); i++) {
-      BankTierEntry bte = RelluEssentials.getInstance().getBankTierRegistry().getBankTiers().get(i);
+  public @NonNull List<ItemHelper> getBankTiers() {
+    List<ItemHelper> bankTierItems = new ArrayList<>();
+    for (BankTierEntry bte : bankTierRegistry.getBankTiers()) {
       String lore1 = translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_COST_LORE,
           bte.getCost());
       String lore2 = translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST_LORE,
@@ -133,16 +153,13 @@ public class BankerHelper {
 
       ItemHelper itemHelper = new ItemHelper(new ItemStack(UPGRADE_MATERIAL, 1), bte.getName(),
           Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore1, lore2, lore3));
-      itemHelper.setData(new NamespacedKey(RelluEssentials.getInstance(), "cost"),
-          "" + bte.getCost());
-      lih.add(itemHelper);
+      itemHelper.setData(new NamespacedKey(plugin, "cost"), "" + bte.getCost());
+      bankTierItems.add(itemHelper);
     }
-    return lih;
+    return bankTierItems;
   }
 
-
-  public static void deposit(@NonNull PlayerEntry pe, Player p, BankAccountEntry bae,
-      float percentage) {
+  public void deposit(@NonNull PlayerEntry pe, Player p, BankAccountEntry bae, float percentage) {
     double purse = pe.getPurse();
     if (purse >= 1) {
       double transactionValue = (purse / 100) * percentage;
@@ -155,17 +172,16 @@ public class BankerHelper {
           pe.setPurse(purse - transactionValue);
         }
 
-        RelluEssentials.getInstance().getDatabaseHelper()
-            .addTransactionToBank(pe.getId(), bae.getId(), transactionValue, bae.getValue(),
-                bae.getTier().getId());
+        databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), transactionValue,
+            bae.getValue(), bae.getTier().getId());
 
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
 
         p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-        p.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
-                StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
+        p.sendMessage(translationService.getWithPrefix(
+            MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
+            StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
         p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
             StringHelper.formatDouble(bae.getValue() + transactionValue), PLUGIN_NAME_MONEY));
       } else {
@@ -173,38 +189,34 @@ public class BankerHelper {
         if (transactionValue > 0) {
           pe.setPurse(purse - transactionValue);
 
-          RelluEssentials.getInstance().getDatabaseHelper()
-              .addTransactionToBank(pe.getId(), bae.getId(), transactionValue, bae.getValue(),
-                  bae.getTier().getId());
+          databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), transactionValue,
+              bae.getValue(), bae.getTier().getId());
 
           pe.setUpdatedBy(pe.getId());
           pe.setHasToBeUpdated(true);
 
           p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-          p.sendMessage(
-              translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
-                  StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
+          p.sendMessage(translationService.getWithPrefix(
+              MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
+              StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
           p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
               StringHelper.formatDouble(bae.getValue() + transactionValue), PLUGIN_NAME_MONEY));
-          p.sendMessage();
         }
 
-        p.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LIMIT_MESSAGE));
+        p.sendMessage(translationService.getWithPrefix(
+            MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LIMIT_MESSAGE));
       }
 
       InventoryHelper.closeInventory(p);
     } else {
-      p.sendMessage(
-          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_NO_COINS_MESSAGE,
-              PLUGIN_NAME_MONEY));
-
+      p.sendMessage(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_NO_COINS_MESSAGE, PLUGIN_NAME_MONEY));
       p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
       InventoryHelper.closeInventory(p);
     }
   }
 
-  public static void withdraw(@NonNull PlayerEntry pe, Player p, @NonNull BankAccountEntry bae,
+  public void withdraw(@NonNull PlayerEntry pe, Player p, @NonNull BankAccountEntry bae,
       float percentage) {
     double bank = bae.getValue();
     double purse = pe.getPurse();
@@ -216,45 +228,41 @@ public class BankerHelper {
       }
 
       pe.setPurse(purse + transactionValue);
-      RelluEssentials.getInstance().getDatabaseHelper()
-          .addTransactionToBank(pe.getId(), bae.getId(), transactionValue * -1, bae.getValue(),
-              bae.getTier().getId());
+      databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), transactionValue * -1,
+          bae.getValue(), bae.getTier().getId());
 
       pe.setUpdatedBy(pe.getId());
       pe.setHasToBeUpdated(true);
 
       p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-      p.sendMessage(String.format(
-          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE,
-              StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY)));
+      p.sendMessage(String.format(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE,
+          StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY)));
       p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
           StringHelper.formatDouble(bae.getValue() - transactionValue), PLUGIN_NAME_MONEY));
       InventoryHelper.closeInventory(p);
     } else {
-      p.sendMessage(
-          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS,
-              PLUGIN_NAME_MONEY));
-
+      p.sendMessage(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS, PLUGIN_NAME_MONEY));
       p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
       InventoryHelper.closeInventory(p);
     }
   }
 
-  public static void upgradeAccount(ItemStack itemStack, Player p, PlayerEntry pe,
-      BankAccountEntry bae) {
+  public void upgradeAccount(ItemStack itemStack, Player p, PlayerEntry pe, BankAccountEntry bae) {
     for (ItemHelper ih : getBankTiers()) {
       if (!ih.getCustomItem().equals(itemStack)) {
         continue;
       }
+
       long costs = 0;
-      if (ih.hasData(new NamespacedKey(RelluEssentials.getInstance(), "cost"))) {
-        costs = Long.parseLong(
-            ih.getData(new NamespacedKey(RelluEssentials.getInstance(), "cost")));
+      if (ih.hasData(new NamespacedKey(plugin, "cost"))) {
+        costs = Long.parseLong(ih.getData(new NamespacedKey(plugin, "cost")));
       }
 
       BankTierEntry bt = getBankTierEntryByCost(costs);
 
-      if (!checkAccount(p, bae, bt, costs)) {
+      if (!isValidUpgrade(p, bae, bt, costs)) {
         return;
       }
 
@@ -263,20 +271,19 @@ public class BankerHelper {
         pe.setPurse(purse - costs);
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
-        RelluEssentials.getInstance().getDatabaseHelper()
-            .updateBankAccount(pe.getId(), 0f, bae.getValue(), bt.getId());
-        p.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE));
+        databaseHelper.updateBankAccount(pe.getId(), 0f, bae.getValue(), bt.getId());
+        p.sendMessage(translationService.getWithPrefix(
+            MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE));
         p.closeInventory();
         return;
       }
 
       double account = bae.getValue();
       if (account >= costs) {
-        RelluEssentials.getInstance().getDatabaseHelper()
-            .addTransactionToBank(pe.getId(), bae.getId(), -costs, bae.getValue(), bt.getId());
-        p.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK));
+        databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), -costs, bae.getValue(),
+            bt.getId());
+        p.sendMessage(translationService.getWithPrefix(
+            MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK));
         p.closeInventory();
         return;
       }
@@ -285,68 +292,63 @@ public class BankerHelper {
         pe.setPurse(0);
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
-        RelluEssentials.getInstance().getDatabaseHelper()
-            .addTransactionToBank(pe.getId(), bae.getId(), -(costs - purse), bae.getValue(),
-                bt.getId());
-        p.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH));
+        databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), -(costs - purse),
+            bae.getValue(), bt.getId());
+        p.sendMessage(translationService.getWithPrefix(
+            MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH));
         p.closeInventory();
         return;
       }
 
-      p.sendMessage(
-          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS,
-              PLUGIN_NAME_MONEY));
+      p.sendMessage(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS, PLUGIN_NAME_MONEY));
     }
   }
 
-
-  public static void doInterest() {
+  public void triggerInterestForAllOnlinePlayers() {
     if (!Bukkit.getOnlinePlayers().isEmpty()) {
       for (Player p : Bukkit.getOnlinePlayers()) {
         checkInterest(p.getUniqueId(), true);
-        doInterest(p);
+        payInterestToPlayer(p);
       }
     }
   }
 
-  public static void doInterest(@NonNull Player p) {
-    if (!RelluEssentials.getInstance().bankInterestMap.containsKey(p.getUniqueId())) {
+  public void payInterestToPlayer(@NonNull Player p) {
+    if (!bankInterestMap.containsKey(p.getUniqueId())) {
       return;
     }
 
-    BankAccountEntry bae = RelluEssentials.getInstance().bankInterestMap.get(p.getUniqueId());
-
+    BankAccountEntry bae = bankInterestMap.get(p.getUniqueId());
     double interest = (bae.getValue() / 100) * bae.getTier().getInterest();
+
     p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST,
         StringHelper.formatDouble(interest), PLUGIN_NAME_MONEY));
 
-    RelluEssentials.getInstance().getDatabaseHelper()
-        .addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(),
-            bae.getTier().getId());
-    RelluEssentials.getInstance().bankInterestMap.remove(p.getUniqueId());
+    databaseHelper.addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(),
+        bae.getTier().getId());
+    bankInterestMap.remove(p.getUniqueId());
   }
 
-  public static void checkInterest(UUID uuid, boolean midnight) {
+  public void checkInterest(UUID uuid, boolean midnight) {
     OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
 
     if (!op.hasPlayedBefore()) {
       return;
     }
 
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(uuid);
+    PlayerEntry pe = playerRegistry.getPlayerEntry(uuid);
     if (pe == null) {
       return;
     }
 
-    BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper()
-        .getPlayerBankAccount(pe.getId());
+    BankAccountEntry bae = databaseHelper.getPlayerBankAccount(pe.getId());
     if (bae == null) {
       return;
     }
 
     if (midnight) {
-      RelluEssentials.getInstance().bankInterestMap.put(uuid, bae);
+      bankInterestMap.put(uuid, bae);
       return;
     }
 
@@ -359,12 +361,12 @@ public class BankerHelper {
     Date todayDate = new Date(startOfDayInZone.toInstant().toEpochMilli());
 
     if (lastPlayedDate.before(todayDate)) {
-      RelluEssentials.getInstance().bankInterestMap.put(uuid, bae);
+      bankInterestMap.put(uuid, bae);
     }
   }
 
-  public static @Nullable BankTierEntry getBankTierEntryByCost(long costs) {
-    for (BankTierEntry bte : RelluEssentials.getInstance().getBankTierRegistry().getBankTiers()) {
+  public @Nullable BankTierEntry getBankTierEntryByCost(long costs) {
+    for (BankTierEntry bte : bankTierRegistry.getBankTiers()) {
       if (bte.getCost() == costs) {
         return bte;
       }
@@ -372,28 +374,26 @@ public class BankerHelper {
     return null;
   }
 
-
-  private static boolean checkAccount(Player p, BankAccountEntry bae, BankTierEntry bt,
-      long costs) {
+  private boolean isValidUpgrade(Player p, BankAccountEntry bae, BankTierEntry bt, long costs) {
     if (bt == null) {
       return false;
     }
 
     if (bae.getTier().getCost() == costs) {
-      p.sendMessage(
-          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT));
+      p.sendMessage(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT));
       return false;
     }
 
     if (bt.getId() == bae.getTier().getId()) {
-      p.sendMessage(
-          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT));
+      p.sendMessage(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT));
       return false;
     }
 
     if (bae.getTier().getCost() > costs) {
-      p.sendMessage(
-          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT));
+      p.sendMessage(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT));
       return false;
     }
 

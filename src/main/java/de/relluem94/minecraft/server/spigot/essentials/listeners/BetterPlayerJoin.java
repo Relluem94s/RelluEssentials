@@ -4,13 +4,13 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Bukkit;
@@ -25,11 +25,13 @@ public class BetterPlayerJoin implements ListenerConstruct {
 
   GroupService groupService;
   TranslationService translationService;
+  private BankService bankService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.translationService = context.getTranslationService();
     this.groupService = context.getGroupService();
+    this.bankService = context.getBankService();
   }
 
   private void addPlayer(@NonNull Player p) {
@@ -79,7 +81,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
 
     WorldHelper.loadWorldGroupInventory(p);
 
-    BankerHelper.doInterest(e.getPlayer());
+    bankService.payInterestToPlayer(e.getPlayer());
 
     if (WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)) {
       PlayerHelper.setLobbyItems(p);
@@ -109,6 +111,6 @@ public class BetterPlayerJoin implements ListenerConstruct {
       return;
     }
 
-    BankerHelper.checkInterest(e.getUniqueId(), false);
+    bankService.checkInterest(e.getUniqueId(), false);
   }
 }
