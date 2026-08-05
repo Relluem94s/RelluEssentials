@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -17,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -30,10 +30,12 @@ import org.jetbrains.annotations.NotNull;
 public class Protect implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   private @NotNull String getFlags() {
@@ -112,18 +114,21 @@ public class Protect implements CommandConstruct {
               pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
             }
           } catch (IllegalArgumentException ex) {
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
+            p.sendMessage(
+                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
             p.sendMessage(getFlags());
           }
         } else if (args[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[1])) {
           try {
             if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
-              p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_REMOVE));
+              p.sendMessage(
+                  translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_REMOVE));
               pe.setPlayerState(PlayerState.PROTECTION_FLAG_REMOVE);
               pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
             }
           } catch (IllegalArgumentException ex) {
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
+            p.sendMessage(
+                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
             p.sendMessage(getFlags());
           }
         } else {
@@ -146,7 +151,8 @@ public class Protect implements CommandConstruct {
           OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
 
           if (player != null) {
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_REMOVE));
+            p.sendMessage(
+                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_REMOVE));
             pe.setPlayerState(PlayerState.PROTECTION_RIGHT_REMOVE);
             pe.setPlayerStateParameter(player.getId().toString());
           } else {

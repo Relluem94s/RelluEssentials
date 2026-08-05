@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -16,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,15 +34,10 @@ public class PermissionsGroup implements CommandConstruct {
 
   private GroupService groupService;
   private GroupRegistry groupRegistry;
+  private TranslationService translationService;
 
-
-  @Override
-  public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.groupRegistry = context.getGroupRegistry();
-  }
-
-  private static @Nullable GroupEntry checkGroupExists(GroupService groupService, GroupRegistry groupRegistry, String groupName, Player p) {
+  private @Nullable GroupEntry checkGroupExists(GroupService groupService,
+      GroupRegistry groupRegistry, String groupName, Player p) {
     Optional<GroupEntry> groupEntry = groupRegistry.findByName(groupName);
     if (!groupEntry.isPresent()) {
       p.sendMessage(
@@ -57,7 +52,7 @@ public class PermissionsGroup implements CommandConstruct {
     return groupEntry.get();
   }
 
-  private static void setGroupForTarget(@NotNull CommandSender s, @NotNull GroupEntry g,
+  private void setGroupForTarget(@NotNull CommandSender s, @NotNull GroupEntry g,
       @NotNull OfflinePlayer target) {
     s.sendMessage(
         translationService.getWithPrefix(MessageKey.COMMAND_SETGROUP, g.getPrefix() + g.getName(),
@@ -65,10 +60,18 @@ public class PermissionsGroup implements CommandConstruct {
     if (target.isOnline() && Bukkit.getPlayer(target.getUniqueId()) != null) {
       Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId()))
           .sendMessage(
-              translationService.getWithPrefix(MessageKey.COMMAND_SETGROUP, g.getPrefix() + g.getName(),
+              translationService.getWithPrefix(MessageKey.COMMAND_SETGROUP,
+                  g.getPrefix() + g.getName(),
                   target.getName()));
     }
     PlayerHelper.updateGroup(target, g);
+  }
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    this.groupRegistry = context.getGroupRegistry();
   }
 
   @Override
@@ -93,7 +96,8 @@ public class PermissionsGroup implements CommandConstruct {
       return true;
     }
 
-    if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target.getUniqueId()) == null) {
+    if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target.getUniqueId())
+        == null) {
       sender.sendMessage(
           translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;

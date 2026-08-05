@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -13,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,10 +30,12 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerInfo implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -87,7 +89,8 @@ public class PlayerInfo implements CommandConstruct {
     sender.sendMessage(
         translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO, target.getName()));
     sender.sendMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_HOMES, pet.getHomes().size()));
+        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_HOMES,
+            pet.getHomes().size()));
     sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_DEATHPOINTS,
         pet.getDeaths().size()));
     sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_GROUP,
@@ -99,8 +102,9 @@ public class PlayerInfo implements CommandConstruct {
               .getPlayerEntry(pet.getPartner().getFirstPartnerId()).getName(),
           RelluEssentials.getInstance().getPlayerRegistry()
               .getPlayerEntry(pet.getPartner().getSecondPartnerId())));
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_SINCE,
-          pet.getPartner().getCreated()));
+      sender.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_SINCE,
+              pet.getPartner().getCreated()));
     }
 
     sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_LAST_ONLINE,
@@ -121,7 +125,8 @@ public class PlayerInfo implements CommandConstruct {
         Material.COBBLESTONE.name(),
         target.getStatistic(Statistic.MINE_BLOCK, Material.COBBLESTONE)));
     sender.sendMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.DEEPSLATE.name(),
+        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
+            Material.DEEPSLATE.name(),
             target.getStatistic(Statistic.MINE_BLOCK, Material.DEEPSLATE)));
     sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
         Material.DIAMOND_ORE.name(),
