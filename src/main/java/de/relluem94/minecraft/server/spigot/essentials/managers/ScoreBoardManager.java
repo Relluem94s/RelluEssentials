@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SCOREBOARD_BORDER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_ESSENTIALS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
@@ -11,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,11 +33,12 @@ public class ScoreBoardManager implements Enable {
   public static final ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
   private static final Map<UUID, Scoreboard> playerBoards = new HashMap<>();
   private static final Set<UUID> hiddenBoards = new HashSet<>(); // NEU
+  private static TranslationService translationService;
 
   public static void applyToPlayer(Player player) {
-      if (sm == null) {
-          return;
-      }
+    if (sm == null) {
+      return;
+    }
 
     String currentWorld = player.getWorld().getName();
     if (!RelluEssentials.getInstance().scoreboardShow.contains(currentWorld)) {
@@ -72,26 +73,26 @@ public class ScoreBoardManager implements Enable {
   }
 
   public static void updatePlayer(@NonNull Player player) {
-      if (hiddenBoards.contains(player.getUniqueId())) {
-          return;
-      }
+    if (hiddenBoards.contains(player.getUniqueId())) {
+      return;
+    }
 
     Scoreboard board = playerBoards.get(player.getUniqueId());
-      if (board == null) {
-          return;
-      }
+    if (board == null) {
+      return;
+    }
 
     Objective objective = board.getObjective(PLUGIN_NAME_RELLU + PLUGIN_NAME_ESSENTIALS);
-      if (objective == null) {
-          return;
-      }
+    if (objective == null) {
+      return;
+    }
 
     PlayerEntry pe = RelluEssentials.getInstance()
         .getPlayerRegistry()
         .getPlayerEntry(player.getUniqueId());
-      if (pe == null) {
-          return;
-      }
+    if (pe == null) {
+      return;
+    }
 
     for (String entry : board.getEntries()) {
       board.resetScores(entry);
@@ -124,11 +125,13 @@ public class ScoreBoardManager implements Enable {
 
   @Override
   public void enable(Plugin plugin) {
+
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    translationService = relluEssentialsPlugin.getTranslationService();
+
     Bukkit.getOnlinePlayers().forEach(ScoreBoardManager::applyToPlayer);
 
-    Bukkit.getScheduler().runTaskTimer(
-        plugin,
-        ScoreBoardManager::updateAll,
+    relluEssentialsPlugin.getSchedulerService().runTaskTimer(ScoreBoardManager::updateAll,
         20L,
         20L
     );
