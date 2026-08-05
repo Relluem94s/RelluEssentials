@@ -61,6 +61,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
@@ -176,6 +177,11 @@ public class RelluEssentials extends JavaPlugin {
   private BackService backService;
   @Getter
   private TeleportService teleportService;
+  @Getter
+  private ProtectionActionService protectionActionService;
+
+
+
   @Getter
   private ListenerManager listenerManager;
   @Getter
@@ -305,6 +311,15 @@ public class RelluEssentials extends JavaPlugin {
     teleportService = new TeleportService(translationService, backService);
     serviceContext.setTeleportService(teleportService);
     serviceContext.setBackService(backService);
+
+    protectionActionService = new ProtectionActionService(
+        translationService,
+        databaseHelper,
+        protectionRegistry,
+        playerRegistry
+    );
+    serviceContext.setProtectionActionService(protectionActionService);
+
 
     commandManager = new CommandManager();
     serviceContext.setCommandManager(commandManager);

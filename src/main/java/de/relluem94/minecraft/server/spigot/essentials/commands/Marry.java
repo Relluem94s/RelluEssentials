@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.addRight;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.removeRight;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -15,6 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,11 +36,13 @@ public class Marry implements CommandConstruct {
   private final HashMap<Player, Player> marryAcceptList = new HashMap<>();
   private GroupService groupService;
   private TranslationService translationService;
+  private ProtectionActionService protectionActionService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
     this.translationService = context.getTranslationService();
+    this.protectionActionService = context.getProtectionActionService();
   }
 
   @Override
@@ -108,11 +109,11 @@ public class Marry implements CommandConstruct {
 
     RelluEssentials.getInstance().getProtectionRegistry()
         .getProtectionEntriesOwnedBy(firstPlayer.getId())
-        .forEach(pre -> addRight(target, pre, secondPlayer.getId(), true));
+        .forEach(pre -> protectionActionService.addRight(target, pre, secondPlayer.getId(), true));
 
     RelluEssentials.getInstance().getProtectionRegistry()
         .getProtectionEntriesOwnedBy(secondPlayer.getId())
-        .forEach(pre -> addRight(player, pre, firstPlayer.getId(), true));
+        .forEach(pre -> protectionActionService.addRight(player, pre, firstPlayer.getId(), true));
   }
 
   private void divorce(@NotNull PlayerEntry pe) {
@@ -150,11 +151,11 @@ public class Marry implements CommandConstruct {
 
       for (ProtectionEntry pre : protectionEntryList) {
         if (pre.getCreatedBy() == pe.getId()) {
-          removeRight(firstPlayer, pre, secondPlayerEntry.getId(), true);
+          protectionActionService.removeRight(firstPlayer, pre, secondPlayerEntry.getId(), true);
         }
 
         if (pre.getCreatedBy() == secondPlayerEntry.getId()) {
-          removeRight(pre, pe.getId());
+          protectionActionService.removeRight(pre, pe.getId());
         }
 
       }

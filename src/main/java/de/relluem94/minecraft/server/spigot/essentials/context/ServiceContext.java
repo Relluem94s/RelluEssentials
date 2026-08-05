@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
@@ -48,6 +49,7 @@ public class ServiceContext {
   private BankService bankService;
   private BackService backService;
   private TeleportService teleportService;
+  private ProtectionActionService protectionActionService;
 
   private BankerNpc bankerNpc;
 

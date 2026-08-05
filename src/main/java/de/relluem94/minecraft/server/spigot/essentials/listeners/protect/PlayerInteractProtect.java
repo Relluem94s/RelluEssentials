@@ -2,10 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN_DATE_FORMAT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.addRight;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.protectBlock;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.removeProtectionFromBlock;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.removeRight;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
@@ -16,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,10 +35,12 @@ import org.json.JSONObject;
 public class PlayerInteractProtect implements ListenerConstruct {
 
   TranslationService translationService;
+  ProtectionActionService protectionActionService;
 
   @Override
   public void injectContext(ServiceContext context) {
     translationService = context.getTranslationService();
+    protectionActionService = context.getProtectionActionService();
   }
 
   @EventHandler
@@ -50,12 +49,12 @@ public class PlayerInteractProtect implements ListenerConstruct {
         .getPlayerEntry(e.getPlayer());
 
     if (pe.getPlayerState().equals(PlayerState.PROTECTION_ADD)) {
-      protectBlock(e.getPlayer(), e.getClickedBlock());
+      protectionActionService.protectBlock(e.getPlayer(), e.getClickedBlock());
       pe.setPlayerState(PlayerState.DEFAULT);
       pe.setPlayerStateParameter(null);
       e.setCancelled(true);
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_REMOVE)) {
-      removeProtectionFromBlock(e.getPlayer(), e.getClickedBlock());
+      protectionActionService.removeProtectionFromBlock(e.getPlayer(), e.getClickedBlock());
       pe.setPlayerState(PlayerState.DEFAULT);
       pe.setPlayerStateParameter(null);
       e.setCancelled(true);
@@ -251,7 +250,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
         UUID uuid = UUID.fromString((String) pe.getPlayerStateParameter());
         int id = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(uuid).getId();
 
-        addRight(e.getPlayer(), pre, id, false);
+        protectionActionService.addRight(e.getPlayer(), pre, id, false);
 
         pe.setPlayerState(PlayerState.DEFAULT);
         pe.setPlayerStateParameter(null);
@@ -275,7 +274,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
         UUID uuid = UUID.fromString((String) pe.getPlayerStateParameter());
         int id = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(uuid).getId();
 
-        removeRight(e.getPlayer(), pre, id, false);
+        protectionActionService.removeRight(e.getPlayer(), pre, id, false);
 
         pe.setPlayerState(PlayerState.DEFAULT);
         pe.setPlayerStateParameter(null);
