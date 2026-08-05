@@ -9,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegist
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
@@ -40,6 +41,7 @@ public class ServiceContext {
   private UndoHistoryService undoHistoryService;
   private SelectionService selectionService;
   private BagService bagService;
+  private MessageService messageService;
 
 
   private BankerNpc bankerNpc;

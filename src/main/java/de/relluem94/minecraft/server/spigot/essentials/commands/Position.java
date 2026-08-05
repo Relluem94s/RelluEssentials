@@ -1,8 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -10,11 +8,12 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +30,14 @@ import org.jetbrains.annotations.Nullable;
 public class Position implements CommandConstruct {
 
   private GroupService groupService;
+  private MessageService messageService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.messageService = context.getMessageService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -71,14 +74,16 @@ public class Position implements CommandConstruct {
 
       String notAvailable = translationService.get(MessageKey.COMMAND_POSITION_NO_POSITIONS);
       String firstLocationString =
-          first == null ? notAvailable : StringHelper.locationToString(first);
+          first == null ? notAvailable : messageService.locationToString(first);
       String secondLocationString =
-          second == null ? notAvailable : StringHelper.locationToString(second);
+          second == null ? notAvailable : messageService.locationToString(second);
 
       p.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_2, firstLocationString));
+          translationService.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_2,
+              firstLocationString));
       p.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_3, secondLocationString));
+          translationService.getWithPrefix(MessageKey.COMMAND_POSITION_INFO_3,
+              secondLocationString));
       return true;
     }
 
@@ -112,11 +117,11 @@ public class Position implements CommandConstruct {
       if (sub.equals(Commands.SET.getSubCommands()[0])) {
         positions.setValue(location);
         p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_SET_FIRST,
-            locationToString(location)));
+            messageService.locationToString(location)));
       } else if (sub.equals(Commands.SET.getSubCommands()[1])) {
         positions.setSecondValue(location);
         p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_POSITION_SET_SECOND,
-            locationToString(location)));
+            messageService.locationToString(location)));
       } else {
         p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       }

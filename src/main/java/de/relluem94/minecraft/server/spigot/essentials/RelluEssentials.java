@@ -54,6 +54,7 @@ import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
@@ -162,6 +163,8 @@ public class RelluEssentials extends JavaPlugin {
   private BagRegistry bagRegistry;
   @Getter
   private BagService bagService;
+  @Getter
+  private MessageService messageService;
 
   @Getter
   private ListenerManager listenerManager;
@@ -283,6 +286,7 @@ public class RelluEssentials extends JavaPlugin {
     serviceContext.setGroupRegistry(getGroupRegistry());
     serviceContext.setGroupService(getGroupService());
     serviceContext.setNpcService(getNpcService());
+    messageService = new MessageService(translationService);
 
     commandManager = new CommandManager();
     serviceContext.setCommandManager(commandManager);

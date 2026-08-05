@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportBed;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportHome;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -16,6 +14,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -30,10 +30,14 @@ import org.jetbrains.annotations.Nullable;
 public class Home implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
+  private MessageService messageService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    this.messageService = context.getMessageService();
   }
 
   @Override
@@ -69,7 +73,7 @@ public class Home implements CommandConstruct {
             p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_LIST));
             pe.getHomes().forEach(fle -> p.sendMessage(
                 translationService.getWithPrefix(MessageKey.COMMAND_HOME_LIST_NAME,
-                    fle.getLocationName(), locationToString(fle.getLocation()))));
+                    fle.getLocationName(), messageService.locationToString(fle.getLocation()))));
           } else {
             p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_NONE));
           }
@@ -78,7 +82,7 @@ public class Home implements CommandConstruct {
             p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS));
             pe.getDeaths().forEach(fle -> p.sendMessage(
                 translationService.getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS_NAME,
-                    fle.getLocationName(), locationToString(fle.getLocation()))));
+                    fle.getLocationName(), messageService.locationToString(fle.getLocation()))));
           }
         } else {
           p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));

@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.locationToString;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -11,6 +9,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -25,11 +25,16 @@ import org.jetbrains.annotations.Nullable;
 public class Where implements CommandConstruct {
 
   private GroupService groupService;
+  private MessageService messageService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.messageService = context.getMessageService();
+    this.translationService = context.getTranslationService();
   }
+
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
@@ -74,7 +79,7 @@ public class Where implements CommandConstruct {
   private void where(@NotNull CommandSender sender, @NotNull Player target) {
     sender.sendMessage(
         translationService.getWithPrefix(MessageKey.COMMAND_WHERE, target.getCustomName(),
-            locationToString(target.getLocation())));
+            messageService.locationToString(target.getLocation())));
   }
 
   @Override
