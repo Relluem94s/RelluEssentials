@@ -1,27 +1,35 @@
 package de.relluem94.minecraft.server.spigot.essentials.registry;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_COMMAND_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.RelluEssentialsIntegration;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
 public class RelluEssentialsRegistry {
 
+  @Getter
   private static RelluEssentialsRegistry instance;
   @Getter
   private final List<RelluEssentialsIntegration> integrations = new ArrayList<>();
 
-  private RelluEssentialsRegistry() {
+  private final TranslationService translationService;
+
+  public RelluEssentialsRegistry(TranslationService translationService) {
+    this.translationService = translationService;
+  }
+
+  public static void initialize(TranslationService translationService) {
+    instance = new RelluEssentialsRegistry(translationService);
   }
 
   public static RelluEssentialsRegistry getInstance() {
     if (instance == null) {
-      instance = new RelluEssentialsRegistry();
+      throw new IllegalStateException("RelluEssentialsRegistry not initialized");
     }
     return instance;
   }

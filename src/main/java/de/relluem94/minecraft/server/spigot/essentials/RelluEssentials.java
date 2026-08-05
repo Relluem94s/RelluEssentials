@@ -45,6 +45,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registry.RelluEssentialsRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BackLocationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BagRepository;
@@ -250,6 +251,7 @@ public class RelluEssentials extends JavaPlugin {
     translationService = new TranslationService(this);
     translationService.loadLanguages();
     translationService.setDefaultLanguage(lang);
+    RelluEssentialsRegistry.initialize(translationService);
 
     startLoading();
     schedulerService = new SchedulerService(this);
