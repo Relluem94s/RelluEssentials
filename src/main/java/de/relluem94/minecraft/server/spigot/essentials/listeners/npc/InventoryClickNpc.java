@@ -6,7 +6,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
@@ -23,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +35,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventoryClickNpc implements ListenerConstruct {
 
-  TranslationService translationService;
-  BankerNpc bankerNpc;
+  private TranslationService translationService;
+  private BankerNpc bankerNpc;
   private NpcTradeHandler tradeHandler;
   private BankService bankService;
+  private TeleportService teleportService;
 
   @Override
   public void injectContext(ServiceContext context) {
@@ -46,6 +47,7 @@ public class InventoryClickNpc implements ListenerConstruct {
     tradeHandler = new NpcTradeHandler(translationService, context.getBagService());
     bankerNpc = context.getBankerNpc();
     bankService = context.getBankService();
+    teleportService = context.getTeleportService();
   }
 
   private Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
@@ -195,6 +197,6 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (e.getCurrentItem().getItemMeta() == null) {
       return;
     }
-    teleportWorld(player, e.getCurrentItem().getItemMeta().getDisplayName());
+    teleportService.teleportWorld(player, e.getCurrentItem().getItemMeta().getDisplayName());
   }
 }

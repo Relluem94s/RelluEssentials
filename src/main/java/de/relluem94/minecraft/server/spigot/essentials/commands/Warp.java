@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWarp;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -13,6 +11,9 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,10 +28,16 @@ import org.jetbrains.annotations.NotNull;
 public class Warp implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
+  private SchedulerService schedulerService;
+  private TeleportService teleportService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    this.schedulerService = context.getSchedulerService();
+    this.teleportService = context.getTeleportService();
   }
 
   @Override
@@ -177,7 +184,7 @@ public class Warp implements CommandConstruct {
       return;
     }
 
-    teleportWarp(p, le.getLocation());
+    teleportService.teleportWarp(p, le.getLocation());
   }
 
   @Getter

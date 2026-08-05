@@ -46,11 +46,13 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repository.BackLocationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BagRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BuyBackRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.UndoHistoryRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
@@ -60,6 +62,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
@@ -168,8 +171,10 @@ public class RelluEssentials extends JavaPlugin {
   private MessageService messageService;
   @Getter
   private BankService bankService;
-
-
+  @Getter
+  private BackService backService;
+  @Getter
+  private TeleportService teleportService;
   @Getter
   private ListenerManager listenerManager;
   @Getter
@@ -292,6 +297,12 @@ public class RelluEssentials extends JavaPlugin {
     serviceContext.setNpcService(getNpcService());
     messageService = new MessageService(translationService);
     bankService = new BankService(databaseHelper,playerRegistry,bankTierRegistry,translationService,bankInterestMap, this);
+
+    BackLocationRepository backLocationRepository = new BackLocationRepository();
+    backService = new BackService(backLocationRepository);
+    teleportService = new TeleportService(translationService, backService);
+    serviceContext.setTeleportService(teleportService);
+    serviceContext.setBackService(backService);
 
     commandManager = new CommandManager();
     serviceContext.setCommandManager(commandManager);

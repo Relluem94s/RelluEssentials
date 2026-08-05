@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportBed;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportHome;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -15,6 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +31,14 @@ public class Home implements CommandConstruct {
   private GroupService groupService;
   private TranslationService translationService;
   private MessageService messageService;
+  private TeleportService teleportService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
     this.translationService = context.getTranslationService();
     this.messageService = context.getMessageService();
+    this.teleportService = context.getTeleportService();
   }
 
   @Override
@@ -65,7 +66,7 @@ public class Home implements CommandConstruct {
 
     switch (args.length) {
       case 0:
-        teleportBed(p);
+        teleportService.teleportBed(p);
         return true;
       case 1:
         if (args[0].equalsIgnoreCase(Commands.LIST.getName())) {
@@ -79,7 +80,8 @@ public class Home implements CommandConstruct {
           }
 
           if (!pe.getDeaths().isEmpty()) {
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS));
+            p.sendMessage(
+                translationService.getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS));
             pe.getDeaths().forEach(fle -> p.sendMessage(
                 translationService.getWithPrefix(MessageKey.COMMAND_HOME_LIST_DEATHPOINTS_NAME,
                     fle.getLocationName(), messageService.locationToString(fle.getLocation()))));
@@ -97,20 +99,23 @@ public class Home implements CommandConstruct {
 
         if (args[0].equalsIgnoreCase(Commands.SET.getName())) {
           if (homeExists(pe, le)) {
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_EXISTS, args[1]));
+            p.sendMessage(
+                translationService.getWithPrefix(MessageKey.COMMAND_HOME_EXISTS, args[1]));
           } else if (!args[1].startsWith("death_")) {
             RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
             pe.getHomes().add(le);
             p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_SET, args[1]));
           } else {
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_RESERVED, args[1]));
+            p.sendMessage(
+                translationService.getWithPrefix(MessageKey.COMMAND_HOME_RESERVED, args[1]));
           }
           return true;
         } else if (args[0].equalsIgnoreCase(Commands.DELETE.getName())) {
           if (homeExists(pe, le)) {
             le = getLocationEntry(pe, le);
             pe.getHomes().remove(le);
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_DELETE, args[1]));
+            p.sendMessage(
+                translationService.getWithPrefix(MessageKey.COMMAND_HOME_DELETE, args[1]));
 
             if (le == null) {
               return true;
@@ -140,7 +145,8 @@ public class Home implements CommandConstruct {
             pe.getDeaths().clear();
             return true;
           } else {
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
+            p.sendMessage(
+                translationService.getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
             return true;
           }
         } else if (args[0].equalsIgnoreCase(Commands.TP.getName())) {
@@ -149,9 +155,10 @@ public class Home implements CommandConstruct {
           le.setPlayerId(pe.getId());
 
           if (homeExists(pe, le) || deathExists(pe, le)) {
-            teleportHome(p, getLocationEntry(pe, le));
+            teleportService.teleportHome(p, getLocationEntry(pe, le));
           } else {
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
+            p.sendMessage(
+                translationService.getWithPrefix(MessageKey.COMMAND_HOME_NOT_FOUND, args[1]));
           }
           return true;
         }

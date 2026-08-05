@@ -1,9 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -24,6 +22,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,6 +48,8 @@ import org.jetbrains.annotations.Nullable;
 public class Worlds implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
+  private TeleportService teleportService;
 
   public static void openWorldMenu(Player p) {
     org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
@@ -79,12 +81,15 @@ public class Worlds implements CommandConstruct {
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    this.teleportService = context.getTeleportService();
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender commandSender, @NotNull Command command,
       @NonNull String label, String[] args) {
-    if (isCMDBlock(commandSender) && args.length == 2 && !args[0].equalsIgnoreCase(Commands.LIST.getName())
+    if (isCMDBlock(commandSender) && args.length == 2 && !args[0].equalsIgnoreCase(
+        Commands.LIST.getName())
         && args[1].equals("@p")) {
       BlockCommandSender bcs = (BlockCommandSender) commandSender;
       CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
@@ -96,7 +101,7 @@ public class Worlds implements CommandConstruct {
         return true;
       }
 
-      teleportWorld(p, args[0]);
+      teleportService.teleportWorld(p, args[0]);
       return true;
     }
 
@@ -126,7 +131,7 @@ public class Worlds implements CommandConstruct {
 
     if (args.length == 1) {
       if (!args[0].equalsIgnoreCase(Commands.LIST.getName())) {
-        teleportWorld(p, args[0]);
+        teleportService.teleportWorld(p, args[0]);
         return true;
       }
 
@@ -207,7 +212,8 @@ public class Worlds implements CommandConstruct {
           : translationService.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE));
     } catch (WorldNotLoadedException ex) {
       Logger.getLogger(Worlds.class.getName())
-          .log(Level.SEVERE, translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED), ex);
+          .log(Level.SEVERE, translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED),
+              ex);
     }
   }
 
