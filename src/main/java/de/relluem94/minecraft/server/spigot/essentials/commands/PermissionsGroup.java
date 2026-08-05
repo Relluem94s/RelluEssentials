@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class PermissionsGroup implements CommandConstruct {
   private GroupService groupService;
   private GroupRegistry groupRegistry;
   private TranslationService translationService;
+  private PlayerService playerService;
 
   private @Nullable GroupEntry checkGroupExists(GroupService groupService,
       GroupRegistry groupRegistry, String groupName, Player p) {
@@ -64,7 +66,7 @@ public class PermissionsGroup implements CommandConstruct {
                   g.getPrefix() + g.getName(),
                   target.getName()));
     }
-    PlayerHelper.updateGroup(target, g);
+    playerService.updateGroup(target, g);
   }
 
   @Override

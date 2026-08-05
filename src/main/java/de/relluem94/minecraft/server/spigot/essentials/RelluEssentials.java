@@ -288,7 +288,7 @@ public class RelluEssentials extends JavaPlugin {
     groupService = new GroupService(groupRegistry, groupRepository);
     databaseManager.setGroupService(getGroupService());
     this.playerRegistry = new PlayerRegistry();
-    this.playerService = new PlayerService(playerRegistry);
+    this.playerService = new PlayerService(playerRegistry, databaseHelper, groupService, translationService);
     serviceContext.setPlayerService(getPlayerService());
     groupService.setPlayerRegistry(playerRegistry);
 

@@ -12,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,12 +27,14 @@ public class BetterPlayerJoin implements ListenerConstruct {
   GroupService groupService;
   TranslationService translationService;
   private BankService bankService;
+  private PlayerService playerService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.translationService = context.getTranslationService();
     this.groupService = context.getGroupService();
     this.bankService = context.getBankService();
+    this.playerService = context.getPlayerService();
   }
 
   private void addPlayer(@NonNull Player p) {
@@ -74,8 +77,8 @@ public class BetterPlayerJoin implements ListenerConstruct {
     p.setPlayerListHeader(pie.getTabHeader());
     p.setPlayerListFooter(pie.getTabFooter());
 
-    PlayerHelper.setFlying(p, groupService);
-    PlayerHelper.setAFK(p, true);
+    playerService.setFlying(p);
+    playerService.setAFK(p, true);
     Bukkit.broadcastMessage(
         translationService.get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
 

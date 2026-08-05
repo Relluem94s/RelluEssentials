@@ -5,11 +5,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +26,13 @@ public class AFK implements CommandConstruct {
 
   private GroupService groupService;
   private TranslationService translationService;
+  private PlayerService playerService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
     this.translationService = context.getTranslationService();
+    this.playerService = context.getPlayerService();
   }
 
   @Override
@@ -76,7 +78,7 @@ public class AFK implements CommandConstruct {
     }
 
     if (args.length == 0) {
-      PlayerHelper.setAFK(p, false);
+      playerService.setAFK(p, false);
       return true;
     }
 
@@ -93,7 +95,7 @@ public class AFK implements CommandConstruct {
     }
 
     if (args.length == 1) {
-      PlayerHelper.setAFK(target, false);
+      playerService.setAFK(target, false);
       return true;
     }
 

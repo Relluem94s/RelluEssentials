@@ -31,6 +31,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,18 +51,21 @@ public class Admin implements CommandConstruct {
   private GroupService groupService;
   private SubCommandRegistry<SubCommand> subCommandRegistry;
   private TranslationService translationService;
+  private PlayerService playerService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
     this.translationService = context.getTranslationService();
+    this.playerService = context.getPlayerService();
+    
 
     this.subCommandRegistry = new SubCommandRegistry<>(List.of(
         new AdminToolsGuiCommand(context),
         new CleanUpChatCommand(context),
         new CleanUpLocationsCommand(context),
         new CleanUpProtectionsCommand(context),
-        new FakeAfkCommand(),
+        new FakeAfkCommand(playerService),
         new LightToggleCommand(context),
         new NpcGuiCommand(context),
         new NpcCreateCommand(context),

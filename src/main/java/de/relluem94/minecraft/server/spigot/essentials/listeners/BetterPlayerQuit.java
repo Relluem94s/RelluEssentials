@@ -5,10 +5,10 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Objects;
@@ -23,11 +23,14 @@ public class BetterPlayerQuit implements ListenerConstruct {
 
   private TranslationService translationService;
   private TeleportService teleportService;
+  private PlayerService playerService;
+
 
   @Override
   public void injectContext(ServiceContext context) {
     this.translationService = context.getTranslationService();
     this.teleportService = context.getTeleportService();
+    this.playerService = context.getPlayerService();
   }
 
   @EventHandler
@@ -39,7 +42,7 @@ public class BetterPlayerQuit implements ListenerConstruct {
       Sudo.exitSudo(Objects.requireNonNull(Bukkit.getPlayer(p.getUniqueId())));
     }
 
-    PlayerHelper.savePlayer(p);
+    playerService.savePlayer(p);
     RelluEssentials.getInstance().getBuyBackService().clearBuyBackHistory(p);
 
     Bukkit.broadcastMessage(
