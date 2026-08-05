@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.addRight;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionActionHelper.removeRight;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -16,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,10 +36,12 @@ public class Marry implements CommandConstruct {
 
   private final HashMap<Player, Player> marryAcceptList = new HashMap<>();
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -52,7 +54,8 @@ public class Marry implements CommandConstruct {
         != null
         || RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target).getPartner()
         != null) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED));
+      player.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED));
       return;
     }
 
@@ -64,8 +67,10 @@ public class Marry implements CommandConstruct {
     marryAcceptList.put(target, player);
     Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
       if (hasMarryEntry(target)) {
-        player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
-        target.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
+        player.sendMessage(
+            translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
+        target.sendMessage(
+            translationService.getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
         removeMarryEntry(target);
       }
     }, 20 * 60 * 2L);
@@ -202,7 +207,8 @@ public class Marry implements CommandConstruct {
           return true;
         }
 
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCE_NOT_MARRIED));
+        p.sendMessage(
+            translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCE_NOT_MARRIED));
         return true;
       }
 

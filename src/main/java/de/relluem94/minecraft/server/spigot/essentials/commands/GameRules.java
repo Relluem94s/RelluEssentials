@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_POSITIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
@@ -15,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,10 +32,12 @@ import org.jetbrains.annotations.Nullable;
 public class GameRules implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -104,7 +106,8 @@ public class GameRules implements CommandConstruct {
   private void showGameRulesForWorld(CommandSender sender, String name) {
     World world = Bukkit.getWorld(name);
     if (world == null) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, name));
+      sender.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, name));
       return;
     }
 
