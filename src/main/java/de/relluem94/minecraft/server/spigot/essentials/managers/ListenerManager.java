@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -57,24 +56,12 @@ import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.EntityB
 import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.EntityExplodeProtect;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.InventoryMoveItemProtect;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.PlayerInteractProtect;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.ListenerWrapper;
 import java.util.List;
 import org.bukkit.plugin.Plugin;
 
 public class ListenerManager implements Enable {
-
-  @Override
-  public void enable(Plugin plugin) {
-    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
-    listenerWrapperList
-        .forEach(listenerWrapper -> listenerWrapper.init(relluEssentialsPlugin, relluEssentialsPlugin.getServiceContext()));
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        translationService.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED,
-            listenerWrapperList.size()));
-  }
-
 
   private final List<ListenerWrapper> listenerWrapperList = List.of(
       new ListenerWrapper(new BetterChatFormat()),
@@ -127,6 +114,21 @@ public class ListenerManager implements Enable {
       new ListenerWrapper(new SignHomeAction()),
       new ListenerWrapper(new SignTeleportAction()),
       new ListenerWrapper(new SignCommandAction())
-      );
+  );
+
+  @Override
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));
+    listenerWrapperList
+        .forEach(listenerWrapper -> listenerWrapper.init(relluEssentialsPlugin,
+            relluEssentialsPlugin.getServiceContext()));
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        translationService.get(MessageKey.PLUGIN_MANAGER_EVENTS_REGISTERED,
+            listenerWrapperList.size()));
+  }
 
 }

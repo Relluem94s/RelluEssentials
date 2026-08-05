@@ -39,7 +39,6 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.NpcDialogueTracker;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NpcValidator;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
@@ -89,7 +88,6 @@ public class RelluEssentials extends JavaPlugin {
   public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
   public static final Map<Player, Player> reply = new HashMap<>();
   private static RelluEssentials instance;
-  private static BankerNpc banker;
   public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
   public final Set<String> collectBagWorlds = new HashSet<>();
   public final Set<String> useCloudsailorWorlds = new HashSet<>();
@@ -229,14 +227,6 @@ public class RelluEssentials extends JavaPlugin {
     instance = re;
   }
 
-  public static BankerNpc getBanker() {
-    return RelluEssentials.banker;
-  }
-
-  public static void setBanker(BankerNpc banker) {
-    RelluEssentials.banker = banker;
-  }
-
   @Override
   public void onEnable() {
     start = Calendar.getInstance().getTimeInMillis();
@@ -281,8 +271,6 @@ public class RelluEssentials extends JavaPlugin {
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     buyBackService = new BuyBackService(buyBackRepository);
 
-
-
     serviceContext.setGroupRegistry(getGroupRegistry());
     serviceContext.setGroupService(getGroupService());
     serviceContext.setNpcService(getNpcService());
@@ -316,7 +304,7 @@ public class RelluEssentials extends JavaPlugin {
     positionHighlightManager.enable(this);
     scoreBoardManager = new ScoreBoardManager();
     scoreBoardManager.enable(this);
-    autoSaveManager =new AutoSaveManager();
+    autoSaveManager = new AutoSaveManager();
     autoSaveManager.enable(this);
     databaseManager.afterWorldLoaded(this);
     new BukkitRunnable() {
