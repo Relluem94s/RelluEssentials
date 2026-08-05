@@ -122,14 +122,19 @@ public class RelluEssentials extends JavaPlugin {
   private PlayerRegistry playerRegistry;
   @Getter
   private PlayerService playerService;
+  @Setter
   @Getter
   private ProtectionRegistry protectionRegistry;
+  @Setter
   @Getter
   private TraderNpcRegistry traderNpcRegistry;
+  @Setter
   @Getter
   private BagTypeRegistry bagTypeRegistry;
+  @Setter
   @Getter
   private BankTierRegistry bankTierRegistry;
+  @Setter
   @Getter
   private WarpRepository warpRepository;
   @Getter

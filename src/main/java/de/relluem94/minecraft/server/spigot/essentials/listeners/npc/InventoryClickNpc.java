@@ -61,7 +61,7 @@ public class InventoryClickNpc implements ListenerConstruct {
   @Override
   public void injectContext(ServiceContext context) {
     translationService = context.getTranslationService();
-    tradeHandler = new NpcTradeHandler(translationService);
+    tradeHandler = new NpcTradeHandler(translationService, context.getBagService());
     bankerNpc = context.getBankerNpc();
   }
 

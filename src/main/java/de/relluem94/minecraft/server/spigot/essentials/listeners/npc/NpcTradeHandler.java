@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
@@ -21,6 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BuyBackSlotResolver;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.Optional;
@@ -44,8 +44,9 @@ public class NpcTradeHandler {
   private final ItemHelper coinsItem;
   private final BuyBackSlotResolver buyBackSlotResolver;
   private final TranslationService translationService;
+  private final BagService bagService;
 
-  public NpcTradeHandler(TranslationService translationService) {
+  public NpcTradeHandler(TranslationService translationService, BagService bagService) {
     this.disabledItem = ItemRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
@@ -59,6 +60,7 @@ public class NpcTradeHandler {
     this.buyBackSlotResolver = new BuyBackSlotResolver(
         RelluEssentials.getInstance().getBuyBackService(), this.disabledItem.getCustomItem());
     this.translationService = translationService;
+    this.bagService = bagService;
   }
 
   public void handle(ItemStack clickedItem, Inventory clickedInventory, Player player,
@@ -165,7 +167,7 @@ public class NpcTradeHandler {
       return;
     }
 
-    if (BagHelper.hasBag(bagType.getId(), playerEntry)) {
+    if (bagService.hasBag(bagType.getId(), playerEntry)) {
       player.sendMessage(
           translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT,
               bagType.getDisplayName()));
@@ -189,16 +191,7 @@ public class NpcTradeHandler {
   }
 
   private void purchaseBag(BagTypeEntry bagType, Player player, PlayerEntry playerEntry) {
-    playerEntry.setPurse(playerEntry.getPurse() - bagType.getCost());
-    playerEntry.setUpdatedBy(playerEntry.getId());
-    playerEntry.setHasToBeUpdated(true);
-    RelluEssentials.getInstance().getDatabaseHelper()
-        .insertBag(bagType.getId(), playerEntry.getId());
-    RelluEssentials.getInstance().getPlayerRegistry().putPlayerBagEntry(
-        playerEntry.getId(),
-        RelluEssentials.getInstance().getDatabaseHelper()
-            .getBag(bagType.getId(), playerEntry.getId())
-    );
+    RelluEssentials.getInstance().getBagService().purchaseBag(bagType, player, playerEntry);
     player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT,
         bagType.getDisplayName()));
   }
