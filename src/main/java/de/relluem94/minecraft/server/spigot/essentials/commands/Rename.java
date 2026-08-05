@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import static de.relluem94.rellulib.utils.StringUtils.implode;
@@ -12,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -27,10 +27,12 @@ import org.jetbrains.annotations.Nullable;
 public class Rename implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override

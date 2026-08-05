@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -10,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -27,10 +27,12 @@ import org.jetbrains.annotations.Nullable;
 public class Repair implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -59,7 +61,8 @@ public class Repair implements CommandConstruct {
             translationService.getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
       } else {
         p.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR, item.getType().name()));
+            translationService.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR,
+                item.getType().name()));
       }
     } else {
       Player target = Bukkit.getPlayer(args[0]);
@@ -78,10 +81,12 @@ public class Repair implements CommandConstruct {
         p.sendMessage(
             translationService.getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
         target.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_REPAIR_PLAYER, item.getType().name()));
+            translationService.getWithPrefix(MessageKey.COMMAND_REPAIR_PLAYER,
+                item.getType().name()));
       } else {
         p.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR, item.getType().name()));
+            translationService.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR,
+                item.getType().name()));
       }
     }
     return true;

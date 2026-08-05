@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -10,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -25,10 +25,12 @@ import org.jetbrains.annotations.Nullable;
 public class Rain implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -51,7 +53,8 @@ public class Rain implements CommandConstruct {
       p.getWorld().setThundering(false);
       p.getWorld().setWeatherDuration(1000000);
       p.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_RAIN, p.getWorld().getName()));
+          translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_RAIN,
+              p.getWorld().getName()));
       return true;
     }
 
@@ -65,7 +68,8 @@ public class Rain implements CommandConstruct {
     world.setStorm(true);
     world.setThundering(false);
     world.setWeatherDuration(1000000);
-    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_RAIN, world.getName()));
+    p.sendMessage(
+        translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_RAIN, world.getName()));
     return true;
   }
 
