@@ -12,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BuyBackSlotResolver;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
@@ -25,6 +26,7 @@ public class InteractTraderNpc implements ListenerConstruct {
 
   private final BuyBackSlotResolver buyBackSlotResolver;
   TranslationService translationService;
+  BankerNpc bankerNpc;
 
   public InteractTraderNpc() {
     this.buyBackSlotResolver = new BuyBackSlotResolver(
@@ -36,6 +38,7 @@ public class InteractTraderNpc implements ListenerConstruct {
   @Override
   public void injectContext(ServiceContext context) {
     translationService = context.getTranslationService();
+    bankerNpc = context.getBankerNpc();
   }
 
   @EventHandler
@@ -49,12 +52,12 @@ public class InteractTraderNpc implements ListenerConstruct {
             i++) {
           if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList().get(i)
               .equals(customName)) {
-            if (customName.equals(RelluEssentials.getBanker().getName())) {
+            if (customName.equals(bankerNpc.getName())) {
               PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
               BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper()
                   .getPlayerBankAccount(pe.getId());
               if (bae != null) {
-                InventoryHelper.openInventory(p, RelluEssentials.getBanker().getMainGUI());
+                InventoryHelper.openInventory(p, bankerNpc.getMainGUI());
               } else {
                 BankTierEntry bte = RelluEssentials.getInstance().getDatabaseHelper()
                     .getBankTier(1);

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -23,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistr
 import de.relluem94.minecraft.server.spigot.essentials.repository.BagTypeRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -80,6 +80,8 @@ public class DatabaseManager implements Enable {
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+
+    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
 
     PluginInformationEntry pie = databaseHelper.getPluginInformation();
     relluEssentialsPlugin.setPluginInformation(pie);

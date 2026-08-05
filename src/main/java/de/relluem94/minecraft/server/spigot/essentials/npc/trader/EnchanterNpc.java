@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET;
@@ -11,6 +10,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Namespac
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.Objects;
 import org.bukkit.entity.Villager.Profession;
@@ -35,14 +36,17 @@ import org.jspecify.annotations.NonNull;
  */
 public class EnchanterNpc extends TraderNpc {
 
+  private final TranslationService translationService;
+
   private record ItemCostData(int cost, List<String> lore) {}
 
   /**
    * Creates a new EnchanterNpc with a predefined display name,
    * librarian profession and the enchanter trader type.
    */
-  public EnchanterNpc() {
+  public EnchanterNpc(ServiceContext serviceContext) {
     super("§dEnchanter", Profession.LIBRARIAN, Type.ENCHANTER);
+    translationService = serviceContext.getTranslationService();
   }
 
   private @NonNull @Unmodifiable List<EnchantmentHelper> resolveRegisteredEnchantments() {

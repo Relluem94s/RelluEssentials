@@ -21,6 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
@@ -35,7 +36,6 @@ import org.bukkit.inventory.ItemStack;
 public class InventoryClickNpc implements ListenerConstruct {
 
 
-  private NpcTradeHandler tradeHandler;
   private final Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
       BankerHelper.npc_gui_deposit_5_percent, (p, bae) -> BankerHelper.deposit(
           RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 5f),
@@ -54,13 +54,15 @@ public class InventoryClickNpc implements ListenerConstruct {
       BankerHelper.npc_gui_withdraw_all, (p, bae) -> BankerHelper.withdraw(
           RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 100f)
   );
-
   TranslationService translationService;
+  BankerNpc bankerNpc;
+  private NpcTradeHandler tradeHandler;
 
   @Override
   public void injectContext(ServiceContext context) {
     translationService = context.getTranslationService();
     tradeHandler = new NpcTradeHandler(translationService);
+    bankerNpc = context.getBankerNpc();
   }
 
   private ItemHelper resolveDisabledItem() {
@@ -85,7 +87,7 @@ public class InventoryClickNpc implements ListenerConstruct {
         .getPlayerEntry(player);
     String title = e.getView().getTitle();
 
-    if (title.equals(RelluEssentials.getBanker().getTitle())) {
+    if (title.equals(bankerNpc.getTitle())) {
       handleBankerInventory(e, player, playerEntry);
     } else if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCTraderTitleList()
         .contains(title)) {
@@ -114,26 +116,26 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (BankerHelper.npc_gui_deposit.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          RelluEssentials.getBanker().getDepositGUI(playerEntry.getPurse()));
+          bankerNpc.getDepositGUI(playerEntry.getPurse()));
     } else if (BankerHelper.npc_gui_balance_total.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
       player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
           StringHelper.formatDouble(bankAccount.getValue()), PLUGIN_NAME_MONEY));
     } else if (BankerHelper.npc_gui_balance.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
-      InventoryHelper.openInventory(player, RelluEssentials.getBanker().getBalanceGUI());
+      InventoryHelper.openInventory(player, bankerNpc.getBalanceGUI());
     } else if (BankerHelper.npc_gui_withdraw.getCustomItem().getType()
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          RelluEssentials.getBanker().getWithdrawGUI(bankAccount.getValue()));
+          bankerNpc.getWithdrawGUI(bankAccount.getValue()));
     } else if (BankerHelper.UPGRADE_MATERIAL.equals(clickedItem.getType())) {
       BankerHelper.upgradeAccount(clickedItem, player, playerEntry, bankAccount);
     } else if (BankerHelper.npc_gui_balance_transactions.equalsExact(clickedItem)) {
       handleTransactionHistory(player, bankAccount);
     } else if (BankerHelper.npc_gui_upgrade.equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
-      InventoryHelper.openInventory(player, RelluEssentials.getBanker().getUpgradeGUI());
+      InventoryHelper.openInventory(player, bankerNpc.getUpgradeGUI());
     } else if (resolveCloseItem().equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {
