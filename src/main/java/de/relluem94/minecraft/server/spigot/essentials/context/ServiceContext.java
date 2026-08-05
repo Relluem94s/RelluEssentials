@@ -6,6 +6,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
@@ -38,6 +39,7 @@ public class ServiceContext {
   private ProtectionRegistry protectionRegistry;
   private UndoHistoryService undoHistoryService;
   private SelectionService selectionService;
+  private BagService bagService;
 
 
   private BankerNpc bankerNpc;

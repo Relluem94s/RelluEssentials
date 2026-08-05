@@ -39,16 +39,19 @@ import de.relluem94.minecraft.server.spigot.essentials.npc.NpcDialogueTracker;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npc.NpcValidator;
+import de.relluem94.minecraft.server.spigot.essentials.registry.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.BankTierRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repository.BagRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.BuyBackRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.UndoHistoryRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
@@ -77,7 +80,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Main plugin class for RelluEssentials. Extends {@link JavaPlugin} to integrate with the Spigot
@@ -106,7 +108,6 @@ public class RelluEssentials extends JavaPlugin {
   public Map<Player,
       DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
 
-  @Setter
   @Getter
   private ServiceContext serviceContext;
   private long start;
@@ -117,25 +118,18 @@ public class RelluEssentials extends JavaPlugin {
   private PluginInformationEntry pluginInformation;
   @Getter
   private boolean isUnitTest = false;
-  @Setter
   @Getter
   private PlayerRegistry playerRegistry;
-  @Setter
   @Getter
   private PlayerService playerService;
-  @Setter
   @Getter
   private ProtectionRegistry protectionRegistry;
-  @Setter
   @Getter
   private TraderNpcRegistry traderNpcRegistry;
-  @Setter
   @Getter
   private BagTypeRegistry bagTypeRegistry;
-  @Setter
   @Getter
   private BankTierRegistry bankTierRegistry;
-  @Setter
   @Getter
   private WarpRepository warpRepository;
   @Getter
@@ -159,6 +153,10 @@ public class RelluEssentials extends JavaPlugin {
   private TranslationService translationService;
   @Getter
   private SelectionService selectionService;
+  @Getter
+  private BagRegistry bagRegistry;
+  @Getter
+  private BagService bagService;
 
   @Getter
   private ListenerManager listenerManager;
@@ -264,10 +262,16 @@ public class RelluEssentials extends JavaPlugin {
     groupRegistry = new GroupRegistry(groupRepository);
     groupService = new GroupService(groupRegistry, groupRepository);
     databaseManager.setGroupService(getGroupService());
-    this.playerRegistry = new PlayerRegistry(databaseHelper.getBags());
+    this.playerRegistry = new PlayerRegistry();
     this.playerService = new PlayerService(playerRegistry);
     serviceContext.setPlayerService(getPlayerService());
     groupService.setPlayerRegistry(playerRegistry);
+
+    BagRepository bagRepository = new BagRepository(databaseHelper.getBags());
+    bagRegistry = new BagRegistry(bagRepository);
+    bagService = new BagService(bagRegistry, databaseHelper, translationService, bagBlocks2collect);
+    serviceContext.setBagService(bagService);
+
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     buyBackService = new BuyBackService(buyBackRepository);
 
@@ -307,12 +311,9 @@ public class RelluEssentials extends JavaPlugin {
     autoSaveManager = new AutoSaveManager();
     autoSaveManager.enable(this);
     databaseManager.afterWorldLoaded(this);
-    new BukkitRunnable() {
-      @Override
-      public void run() {
+    schedulerService.runTaskLater(() -> {
         getNpcService().loadAndSpawnNpcsInLoadedChunks();
-      }
-    }.runTaskLater(this, 20L);
+      }, 20L);
   }
 
   @Override

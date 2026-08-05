@@ -9,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
@@ -17,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +40,7 @@ public class BetterMobs implements ListenerConstruct {
   private final EnchantmentHelper scavengers;
   private final EnchantmentHelper lifesteal;
   TranslationService translationService;
+  private BagService bagService;
 
   public BetterMobs() {
     this.telekinesis = EnchantmentRegistry.find(
@@ -62,6 +63,7 @@ public class BetterMobs implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
+    bagService = context.getBagService();
     translationService = context.getTranslationService();
   }
 
@@ -127,9 +129,9 @@ public class BetterMobs implements ListenerConstruct {
             )
         );
 
-        if (BagHelper.hasBags(pe.getId())) {
+        if (bagService.hasBags(pe.getId())) {
           List<ItemStack> li = new ArrayList<>(e.getDrops());
-          e.getDrops().removeAll(BagHelper.collectItemStacks(li, p, pe));
+          e.getDrops().removeAll(bagService.collectItemStacks(li, p, pe));
         }
 
         if (p.getInventory().getItemInMainHand().hasItemMeta() && telekinesis != null

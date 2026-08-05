@@ -5,11 +5,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Optional;
@@ -42,7 +42,8 @@ public class AutoSaveManager implements Enable, Disable {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE));
 
-    schedulerService.runTaskTimer(() -> adminGroup.ifPresent(BagHelper::saveBags),
+    BagService bagService = relluEssentialsPlugin.getBagService();
+    schedulerService.runTaskTimer(() -> adminGroup.ifPresent(bagService::savePendingBagUpdates),
         0L, 20 * 60 * AUTO_SAVE_MINUTES);
 
     schedulerService.runTaskTimer(
@@ -65,7 +66,10 @@ public class AutoSaveManager implements Enable, Disable {
     if (!adminGroup.isPresent()) {
       return;
     }
-    BagHelper.saveBags(adminGroup.get());
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+
+    BagService bagService = relluEssentialsPlugin.getBagService();
+    bagService.savePendingBagUpdates(adminGroup.get());
     PlayerHelper.savePlayers(adminGroup.get());
     PlayerHelper.savePlayersInv(adminGroup.get());
   }

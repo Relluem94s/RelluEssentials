@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -33,10 +34,12 @@ public class EntityPickupItemBags implements ListenerConstruct {
       .orElseThrow();
 
   TranslationService translationService;
+  BagService bagService;
 
   @Override
   public void injectContext(ServiceContext context) {
     translationService = context.getTranslationService();
+    bagService = context.getBagService();
   }
 
   @EventHandler
@@ -78,7 +81,7 @@ public class EntityPickupItemBags implements ListenerConstruct {
       boolean collectBagEnabled = RelluEssentials.getInstance().collectBagWorlds.contains(
           worldName);
 
-      if (collectBagEnabled && BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(),
+      if (collectBagEnabled && BagHelper.hasBags(pe.getId()) && bagService.collectItem(e.getItem(),
           p, pe)) {
         p.getInventory().remove(is);
         e.setCancelled(true);

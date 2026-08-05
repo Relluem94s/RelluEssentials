@@ -1,9 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_COMMAND_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_INTERNAL_UTILITY_CLASS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -11,11 +9,9 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
 import java.util.ArrayList;
@@ -24,10 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ListIterator;
 import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -287,112 +279,5 @@ public class BagHelper {
 
   public static @Nullable BagTypeEntry getBagTypeById(int id) {
     return RelluEssentials.getInstance().getBagTypeRegistry().findById(id).orElse(null);
-  }
-
-
-  public static @NotNull List<Item> collectItems(@NotNull List<Item> li, Player p, PlayerEntry pe) {
-    ListIterator<Item> lii = li.listIterator();
-    List<Item> lio = new ArrayList<>();
-    while (lii.hasNext()) {
-      Item i = lii.next();
-      ItemStack checkWithoutAmount = i.getItemStack().clone();
-      checkWithoutAmount.setAmount(1);
-      if (!RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)) {
-        continue;
-      }
-
-      Collection<BagEntry> bel = BagHelper.getBags(pe.getId());
-      for (BagEntry be : bel) {
-        int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
-        if (slot == -1) {
-          continue;
-        }
-
-        be.setSlotValue(slot, be.getSlotValue(slot) + i.getItemStack().getAmount());
-        be.setHasToBeUpdated(true);
-        ChatHelper.sendMessageInActionBar(p,
-            translationService.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, i.getItemStack().getAmount(),
-                i.getName()));
-        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
-        lio.add(i);
-      }
-    }
-    return lio;
-  }
-
-  public static @NotNull List<ItemStack> collectItemStacks(@NotNull List<ItemStack> li, Player p,
-      PlayerEntry pe) {
-    ListIterator<ItemStack> lii = li.listIterator();
-    List<ItemStack> lio = new ArrayList<>();
-    while (lii.hasNext()) {
-      ItemStack i = lii.next();
-      ItemStack checkWithoutAmount = i.clone();
-      checkWithoutAmount.setAmount(1);
-      if (RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)) {
-        Collection<BagEntry> bel = BagHelper.getBags(pe.getId());
-        for (BagEntry be : bel) {
-          int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
-          if (slot != -1) {
-            be.setSlotValue(slot, be.getSlotValue(slot) + i.getAmount());
-            be.setHasToBeUpdated(true);
-            ChatHelper.sendMessageInActionBar(p,
-                translationService.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, i.getAmount(),
-                    i.getType().name().replace("_", " ").toLowerCase()));
-            p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
-            lio.add(i);
-          }
-        }
-      }
-    }
-    return lio;
-  }
-
-  public static boolean collectItem(@NotNull Item item, Player p, PlayerEntry pe) {
-    ItemStack checkWithoutAmount = item.getItemStack().clone();
-    checkWithoutAmount.setAmount(1);
-    if (!RelluEssentials.getInstance().bagBlocks2collect.contains(checkWithoutAmount)) {
-      return false;
-    }
-
-    Collection<BagEntry> bel = BagHelper.getBags(pe.getId());
-    for (BagEntry be : bel) {
-      int slot = BagHelper.getSlotByItemStack(be, checkWithoutAmount);
-      if (slot != -1) {
-        be.setSlotValue(slot, be.getSlotValue(slot) + item.getItemStack().getAmount());
-        be.setHasToBeUpdated(true);
-        ChatHelper.sendMessageInActionBar(p,
-            translationService.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, item.getItemStack().getAmount(),
-                item.getName()));
-        p.playSound(p, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
-        item.getItemStack().setAmount(0);
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  public static void saveBags(GroupEntry adminGroup) {
-    int updatedBags = 0;
-    for (BagEntry be : RelluEssentials.getInstance().getPlayerRegistry().getPlayerBagMap()
-        .values()) {
-      if (be == null) {
-        continue;
-      }
-
-      if (be.isHasToBeUpdated()) {
-        RelluEssentials.getInstance().getDatabaseHelper().updateBagEntry(be);
-        be.setHasToBeUpdated(false);
-        updatedBags++;
-      }
-    }
-    if (updatedBags != 0) {
-      sendMessageInChannel(
-          translationService.get(MessageKey.PLUGIN_BAGS_SAVED, updatedBags),
-          PLUGIN_NAME_CHAT_CONSOLE,
-          BetterChatFormat.ADMIN_CHANNEL,
-          adminGroup
-      );
-    }
   }
 }

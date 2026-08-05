@@ -5,13 +5,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -28,9 +28,12 @@ import org.jspecify.annotations.NonNull;
 /* Better Call Soil */
 public class BetterSoil implements ListenerConstruct {
 
+
+  private BagService bagService;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    bagService = context.getBagService();
   }
 
   @EventHandler
@@ -75,7 +78,7 @@ public class BetterSoil implements ListenerConstruct {
     PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
         .getPlayerEntry(p.getUniqueId());
 
-    List<ItemStack> lis = BagHelper.collectItemStacks(e.getItemsHarvested(), e.getPlayer(), pe);
+    List<ItemStack> lis = bagService.collectItemStacks(e.getItemsHarvested(), e.getPlayer(), pe);
     e.getItemsHarvested().removeAll(lis);
 
     EnchantmentRegistry.find(RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
