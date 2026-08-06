@@ -36,7 +36,7 @@ public class Sudo implements CommandConstruct {
   private CommandManager commandManager;
   private TranslationService translationService;
 
-  public static void exitSudo(@NotNull Player p) {
+  public static void exitSudo(@NotNull Player p, TranslationService translationService) {
     PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
     PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
     WorldHelper.saveWorldGroupInventory(p, true);
@@ -92,7 +92,7 @@ public class Sudo implements CommandConstruct {
     }
 
     if (SudoManager.sudoers.containsKey(p.getUniqueId())) {
-      exitSudo(p);
+      exitSudo(p, translationService);
       return true;
     }
 

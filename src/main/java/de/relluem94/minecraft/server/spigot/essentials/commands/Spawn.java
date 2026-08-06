@@ -11,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
@@ -31,11 +32,13 @@ public class Spawn implements CommandConstruct {
 
   private GroupService groupService;
   private TranslationService translationService;
+  private BackService backService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
     this.translationService = context.getTranslationService();
+    this.backService = context.getBackService();
   }
 
   @Override
@@ -116,7 +119,7 @@ public class Spawn implements CommandConstruct {
   }
 
   public void spawn(Player p) {
-    Back.addBackPoint(p);
+    backService.saveBackPoint(p);
 
     Location coords = p.getWorld().getSpawnLocation();
     Location spawn = new Location(p.getWorld(), coords.getX(), coords.getY(), coords.getZ());

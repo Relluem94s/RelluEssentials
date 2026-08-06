@@ -9,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.utils.TypeUtils;
@@ -32,11 +33,13 @@ public class Teleport implements CommandConstruct {
   private final HashMap<Player, Player> teleportToAcceptList = new HashMap<>();
   private GroupService groupService;
   private TranslationService translationService;
+  private BackService backService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
     this.translationService = context.getTranslationService();
+    this.backService = context.getBackService();
   }
 
   private void addTeleportEntry(Player p, Player t) {
@@ -82,13 +85,13 @@ public class Teleport implements CommandConstruct {
   }
 
   public void teleport(Player p, Player t) {
-    Back.addBackPoint(t);
+    backService.saveBackPoint(t);
     t.teleport(p);
     t.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP, t.getCustomName()));
   }
 
   public void teleportTo(Player p, Player t) {
-    Back.addBackPoint(p);
+    backService.saveBackPoint(p);
     p.teleport(t);
     p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_TO, p.getCustomName()));
     t.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP, t.getCustomName()));
@@ -151,7 +154,7 @@ public class Teleport implements CommandConstruct {
         return true;
       }
 
-      Back.addBackPoint(p);
+      backService.saveBackPoint(p);
       p.teleport(target);
       p.sendMessage(
           translationService.getWithPrefix(MessageKey.COMMAND_TP, target.getCustomName()));
@@ -217,7 +220,7 @@ public class Teleport implements CommandConstruct {
     l.setY(Integer.parseInt(y));
     l.setZ(Integer.parseInt(z));
 
-    Back.addBackPoint(p);
+    backService.saveBackPoint(p);
     p.teleport(l);
     p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP,
         l.getX() + ", " + l.getY() + ", " + l.getZ()
