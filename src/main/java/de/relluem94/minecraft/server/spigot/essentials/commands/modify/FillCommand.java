@@ -73,7 +73,7 @@ public class FillCommand implements SubCommand {
               maxRadius));
     }
 
-    BlockHelper blockHelper = new Blockelper(material);
+    BlockHelper blockHelper = new BlockHelper(material);
     List<ModifyHistoryEntry> history = new ArrayList<>();
     final long[] currentDelay = {0};
     final int[] counter = {0};

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.translationService;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getModifyClipboardEntry;
@@ -9,6 +8,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelp
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
@@ -16,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
@@ -31,21 +32,22 @@ public class CopyCommand implements SubCommand {
   private final int blocksPerTick;
   private final SelectionService selectionService;
   private final UndoHistoryService undoHistoryService;
-
-  public CopyCommand(boolean isCut, int blocksPerTick, SelectionService selectionService,
-      UndoHistoryService undoHistoryService) {
+  private final TranslationService translationService;
+  
+  public CopyCommand(boolean isCut, int blocksPerTick, ServiceContext context) {
     this.isCut = isCut;
     this.blocksPerTick = blocksPerTick;
-    this.selectionService = selectionService;
-    this.undoHistoryService = undoHistoryService;
+    this.selectionService = context.getSelectionService();
+    this.undoHistoryService = context.getUndoHistoryService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
   public void execute(Player player, String[] args) {
     Selection selection = selectionService.resolve(player);
-      if (selection == null) {
-          return;
-      }
+    if (selection == null) {
+      return;
+    }
 
     List<ModifyClipboardEntry> clipboardList = new ArrayList<>();
     List<ModifyHistoryEntry> history = new ArrayList<>();
