@@ -112,6 +112,9 @@ class PasteCommandTest {
     when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
 
+    Location defaultPlayerLocation = buildPlayerLocation(0, 64, 0, 0f);
+    when(player.getLocation()).thenReturn(defaultPlayerLocation);
+
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);

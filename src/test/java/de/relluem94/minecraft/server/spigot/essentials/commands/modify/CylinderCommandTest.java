@@ -82,6 +82,8 @@ class CylinderCommandTest {
 
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+    when(serviceContext.getSelectionService()).thenReturn(selectionService);
+    when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
 
     cylinderCommand = new CylinderCommand(serviceContext, 2);
   }

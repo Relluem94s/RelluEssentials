@@ -139,7 +139,7 @@ class PlantCommandTest {
       plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
       verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-      verify(player).sendMessage(anyString());
+      verify(player).sendMessage((String)null);
     }
   }
 

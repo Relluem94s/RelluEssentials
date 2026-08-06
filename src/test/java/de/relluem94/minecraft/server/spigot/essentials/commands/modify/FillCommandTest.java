@@ -42,18 +42,16 @@ class FillCommandTest {
         player = mock(Player.class);
         undoHistoryService = mock(UndoHistoryService.class);
 
-        if (Bukkit.getServer() != null) {
-            return;
+        if (Bukkit.getServer() == null) {
+            org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
+            org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(org.bukkit.scheduler.BukkitScheduler.class);
+            java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
+            silentLogger.setUseParentHandlers(false);
+            silentLogger.setLevel(java.util.logging.Level.OFF);
+            when(serverMock.getScheduler()).thenReturn(schedulerMock);
+            when(serverMock.getLogger()).thenReturn(silentLogger);
+            org.bukkit.Bukkit.setServer(serverMock);
         }
-
-        org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
-        org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(org.bukkit.scheduler.BukkitScheduler.class);
-        java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
-        silentLogger.setUseParentHandlers(false);
-        silentLogger.setLevel(java.util.logging.Level.OFF);
-        when(serverMock.getScheduler()).thenReturn(schedulerMock);
-        when(serverMock.getLogger()).thenReturn(silentLogger);
-        org.bukkit.Bukkit.setServer(serverMock);
 
         fillCommand = new FillCommand(buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
         fillrCommand = new FillCommand(buildServiceContext(), true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);

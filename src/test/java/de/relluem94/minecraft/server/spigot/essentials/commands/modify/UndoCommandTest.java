@@ -25,10 +25,13 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 class UndoCommandTest {
 
@@ -37,25 +40,46 @@ class UndoCommandTest {
   private UndoCommand undoCommand;
 
   private MockedStatic<RelluEssentials> mockedRelluEssentials;
-  private MockedStatic<Bukkit> mockedBukkit;
   private MockedStatic<ModifyHelper> mockedModifyHelper;
 
   private BukkitScheduler schedulerMock;
+
+  @BeforeAll
+  static void setUpServer() throws Exception {
+    if (Bukkit.getServer() != null) {
+      tearDownServer();
+    }
+    org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
+    BukkitScheduler schedulerMock = mock(BukkitScheduler.class);
+    java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
+    silentLogger.setUseParentHandlers(false);
+    silentLogger.setLevel(java.util.logging.Level.OFF);
+    when(serverMock.getScheduler()).thenReturn(schedulerMock);
+    when(serverMock.getLogger()).thenReturn(silentLogger);
+    Bukkit.setServer(serverMock);
+  }
+
+  @AfterAll
+  static void tearDownServer() throws Exception {
+    java.lang.reflect.Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, null);
+  }
+
 
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
     undoHistoryService = mock(UndoHistoryService.class);
+    schedulerMock = Bukkit.getScheduler();
+    Mockito.reset(schedulerMock);
 
-    de.relluem94.minecraft.server.spigot.essentials.RelluEssentials relluEssentialsMock =
-        mock(de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
+    RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
     TranslationService translationServiceMock = mock(TranslationService.class);
 
-    mockedRelluEssentials = mockStatic(
-        de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
-    mockedRelluEssentials.when(
-            de.relluem94.minecraft.server.spigot.essentials.RelluEssentials::getInstance)
-        .thenReturn(relluEssentialsMock);
+    mockedRelluEssentials = mockStatic(RelluEssentials.class);
+    mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
+    mockedModifyHelper = mockStatic(ModifyHelper.class);
 
     when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
@@ -70,7 +94,6 @@ class UndoCommandTest {
   @AfterEach
   void tearDown() {
     mockedRelluEssentials.close();
-    mockedBukkit.close();
     mockedModifyHelper.close();
   }
 

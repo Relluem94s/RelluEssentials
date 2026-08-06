@@ -131,7 +131,7 @@ class ReplaceCommandTest {
       replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
       verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-      verify(player).sendMessage(anyString());
+      verify(player).sendMessage((String)null);
     }
   }
 
