@@ -12,25 +12,21 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 public class NpcGuiCommand implements SubCommand {
 
-  private final GroupService groupService;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public NpcGuiCommand(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public void execute(Player player, String[] args) {
-    if (!groupService.isSenderAuthorized(player, "admin")) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(player, "admin")) {
+      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 

@@ -30,9 +30,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SubCommandRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,24 +45,20 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("admin")
 public class Admin implements CommandConstruct {
 
-  private GroupService groupService;
   private SubCommandRegistry<SubCommand> subCommandRegistry;
-  private TranslationService translationService;
-  private PlayerService playerService;
+
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
-    this.playerService = context.getPlayerService();
-    
+    this.serviceContext = context;
 
     this.subCommandRegistry = new SubCommandRegistry<>(List.of(
         new AdminToolsGuiCommand(context),
         new CleanUpChatCommand(context),
         new CleanUpLocationsCommand(context),
         new CleanUpProtectionsCommand(context),
-        new FakeAfkCommand(playerService),
+        new FakeAfkCommand(context),
         new LightToggleCommand(context),
         new NpcGuiCommand(context),
         new NpcCreateCommand(context),
@@ -90,7 +83,7 @@ public class Admin implements CommandConstruct {
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
     if (!isPlayer(commandSender)) {
@@ -266,22 +259,26 @@ public class Admin implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
     Player p = (Player) sender;
-    if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
     if (args.length == 0) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_INFO));
+      p.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_ADMIN_INFO));
       return true;
     }
 
     SubCommand subCommand = subCommandRegistry.find(args);
     if (subCommand == null) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       return true;
     }
 

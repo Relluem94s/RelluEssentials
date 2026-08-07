@@ -9,28 +9,26 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 public class AdminToolsGuiCommand implements SubCommand {
 
-  private final GroupService groupService;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public AdminToolsGuiCommand(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public void execute(Player player, String[] args) {
-    if (!groupService.isSenderAuthorized(player, "admin")) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(player, "admin")) {
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
-    InventoryRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_INVENTORY_ADMIN_TOOLS))
+    InventoryRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_INVENTORY_ADMIN_TOOLS))
         .ifPresent(registeredInventory -> registeredInventory.openFor(player));
   }
 

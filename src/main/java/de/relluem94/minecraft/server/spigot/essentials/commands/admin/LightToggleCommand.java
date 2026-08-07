@@ -7,16 +7,15 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 public class LightToggleCommand implements SubCommand {
 
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public LightToggleCommand(ServiceContext context) {
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -26,9 +25,11 @@ public class LightToggleCommand implements SubCommand {
     if (pe.getPlayerState().equals(PlayerState.LIGHT_TOGGLE)) {
       pe.setPlayerState(PlayerState.DEFAULT);
       player.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_LIGHT_TOGGLE_DISABLED));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_ADMIN_LIGHT_TOGGLE_DISABLED));
     } else {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_LIGHT_TOGGLE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_ADMIN_LIGHT_TOGGLE));
       pe.setPlayerState(PlayerState.LIGHT_TOGGLE);
     }
   }
