@@ -21,8 +21,10 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BuyBackSlotResolver;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -97,13 +99,10 @@ public class NpcTradeHandler {
     if (skullMeta.getOwnerProfile() == null) {
       return false;
     }
-    String ownerName = skullMeta.getOwnerProfile().getName();
-    if (ownerName == null) {
-      return false;
-    }
-    return java.util.Arrays.stream(CustomHeads.values())
+    UUID profileUUID = skullMeta.getOwnerProfile().getUniqueId();
+    return Arrays.stream(CustomHeads.values())
         .filter(ch -> !ch.equals(CustomHeads.BAG))
-        .anyMatch(ch -> ch.getName().equals(ownerName));
+        .anyMatch(ch -> ch.getUUID().equals(profileUUID));
   }
 
   private void handleCustomHeadTrade(@NonNull ItemStack clickedItem, Inventory clickedInventory,
@@ -145,10 +144,16 @@ public class NpcTradeHandler {
   }
 
   private boolean isBagItem(@NonNull ItemStack item) {
-    return Material.PLAYER_HEAD.equals(item.getType())
-        && item.getItemMeta() instanceof SkullMeta skullMeta
-        && skullMeta.getOwnerProfile() != null
-        && CustomHeads.BAG.getName().equals(skullMeta.getOwnerProfile().getName());
+    if (!Material.PLAYER_HEAD.equals(item.getType())) {
+      return false;
+    }
+    if (!(item.getItemMeta() instanceof SkullMeta skullMeta)) {
+      return false;
+    }
+    if (skullMeta.getOwnerProfile() == null) {
+      return false;
+    }
+    return CustomHeads.BAG.getUUID().equals(skullMeta.getOwnerProfile().getUniqueId());
   }
 
   private void handleBagPurchase(@NonNull ItemStack clickedItem, Player player,

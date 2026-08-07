@@ -6,7 +6,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayer
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
-import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -69,7 +68,7 @@ public class PlayerHeadHelper {
       String skinUrl = extractSkinUrlFromBase64(jsonString);
 
       if (skinUrl != null) {
-        PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
+        PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
         PlayerTextures textures = profile.getTextures();
         textures.setSkin(new URL(skinUrl));
         profile.setTextures(textures);
