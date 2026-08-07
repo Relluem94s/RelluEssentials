@@ -290,6 +290,8 @@ public class RelluEssentials extends JavaPlugin {
     GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
     groupRegistry = new GroupRegistry(groupRepository);
     groupService = new GroupService(groupRegistry, groupRepository);
+    serviceContext.setGroupRegistry(getGroupRegistry());
+    serviceContext.setGroupService(getGroupService());
     databaseManager.setGroupService(getGroupService());
     this.playerRegistry = new PlayerRegistry();
     this.playerService = new PlayerService(serviceContext, playerRegistry);
@@ -304,8 +306,6 @@ public class RelluEssentials extends JavaPlugin {
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     buyBackService = new BuyBackService(buyBackRepository);
 
-    serviceContext.setGroupRegistry(getGroupRegistry());
-    serviceContext.setGroupService(getGroupService()); // TODO has to be moved up after refactor to serviceContext instead of copied fields
     messageService = new MessageService(translationService);
     serviceContext.setMessageService(messageService);
     chatService = new ChatService(serviceContext);
