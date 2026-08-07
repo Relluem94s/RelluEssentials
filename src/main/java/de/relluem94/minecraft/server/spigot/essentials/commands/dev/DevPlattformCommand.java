@@ -2,12 +2,14 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNpc;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +19,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
 
 public class DevPlattformCommand implements SubCommand {
@@ -72,10 +73,12 @@ public class DevPlattformCommand implements SubCommand {
       Material.MELON,
       Material.PALE_OAK_LOG
   );
-  private final UndoHistoryManager undoHistoryManager;
+  private final UndoHistoryService undoHistoryService;
+  private final SchedulerService schedulerService;
 
-  public DevPlattformCommand(UndoHistoryManager undoHistoryManager) {
-    this.undoHistoryManager = undoHistoryManager;
+  public DevPlattformCommand(UndoHistoryService undoHistoryService, ServiceContext context) {
+    this.undoHistoryService = undoHistoryService;
+    this.schedulerService = context.getSchedulerService();
   }
 
   @Override
@@ -127,9 +130,9 @@ public class DevPlattformCommand implements SubCommand {
     for (int r = 0; r < rows; r++) {
       for (int c = 0; c < cols; c++) {
         int oreIndex = r * cols + c;
-          if (oreIndex >= totalAmount) {
-              break;
-          }
+        if (oreIndex >= totalAmount) {
+          break;
+        }
 
         int forwardOffset = r * 5;
         int rightOffset = c * 5;
@@ -181,12 +184,7 @@ public class DevPlattformCommand implements SubCommand {
 
                   NpcHelper nh = new NpcHelper(world.getBlockAt(bx, originY + 1, bz).getLocation(),
                       traderNpcs.get(npcIndex));
-                  new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                      nh.spawn();
-                    }
-                  }.runTaskLater(RelluEssentials.getInstance(), schedule + 11);
+                  schedulerService.runTaskLater(nh::spawn, schedule + 11);
 
                   npcIndex++;
                   continue;
@@ -196,19 +194,16 @@ public class DevPlattformCommand implements SubCommand {
                 String blockName = "minecraft:" + oreMaterial.name().toLowerCase();
                 placedThisTick++;
 
-                new BukkitRunnable() {
-                  @Override
-                  public void run() {
-                    Block b = world.getBlockAt(bx, originY, bz);
-                    undoList.add(
-                        new ModifyHistoryEntry(b.getLocation(), b.getType(), b.getBlockData()));
-                    b.setType(Material.REPEATING_COMMAND_BLOCK, true);
-                    if (b.getState() instanceof CommandBlock cb) {
-                      cb.setCommand("/setblock ~ ~1 ~ " + blockName);
-                      cb.update(true);
-                    }
+                schedulerService.runTaskLater(() -> {
+                  Block b = world.getBlockAt(bx, originY, bz);
+                  undoList.add(
+                      new ModifyHistoryEntry(b.getLocation(), b.getType(), b.getBlockData()));
+                  b.setType(Material.REPEATING_COMMAND_BLOCK, true);
+                  if (b.getState() instanceof CommandBlock cb) {
+                    cb.setCommand("/setblock ~ ~1 ~ " + blockName);
+                    cb.update(true);
                   }
-                }.runTaskLater(RelluEssentials.getInstance(), schedule);
+                }, schedule);
 
                 Location redstoneLocation = world.getBlockAt(bx, originY, bz).getLocation().clone()
                     .subtract(0, 1, 0);
@@ -235,7 +230,7 @@ public class DevPlattformCommand implements SubCommand {
     inner.setBlocks(10);
     redstone.setBlocks(15);
 
-    undoHistoryManager.add(player, undoList);
+    undoHistoryService.addHistory(player, undoList);
   }
 
   @Override

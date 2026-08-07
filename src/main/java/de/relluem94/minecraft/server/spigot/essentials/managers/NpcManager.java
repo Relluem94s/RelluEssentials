@@ -12,9 +12,12 @@ public class NpcManager implements Enable {
 
   @Override
   public void enable(Plugin plugin) {
-    new BagSalesmanNpc();
-    RelluEssentials.setBanker(new BankerNpc());
-    new BeekeeperNpc();
-    new EnchanterNpc();
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    new BagSalesmanNpc(relluEssentialsPlugin.getServiceContext());
+
+    relluEssentialsPlugin.getServiceContext().setBankerNpc(new BankerNpc(relluEssentialsPlugin.getServiceContext()));
+
+    new BeekeeperNpc(relluEssentialsPlugin.getServiceContext());
+    new EnchanterNpc(relluEssentialsPlugin.getServiceContext());
   }
 }

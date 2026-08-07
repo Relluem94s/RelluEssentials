@@ -3,14 +3,23 @@ package de.relluem94.minecraft.server.spigot.essentials.context;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import lombok.Getter;
 import lombok.Setter;
 import org.jspecify.annotations.NonNull;
@@ -33,6 +42,16 @@ public class ServiceContext {
   private SchedulerService schedulerService;
   private DatabaseHelper databaseHelper;
   private ProtectionRegistry protectionRegistry;
+  private UndoHistoryService undoHistoryService;
+  private SelectionService selectionService;
+  private BagService bagService;
+  private MessageService messageService;
+  private BankService bankService;
+  private BackService backService;
+  private TeleportService teleportService;
+  private ProtectionActionService protectionActionService;
+
+  private BankerNpc bankerNpc;
 
   /**
    * Creates a new ServiceContext from the given plugin instance.
@@ -50,5 +69,6 @@ public class ServiceContext {
     this.translationService = plugin.getTranslationService();
     this.databaseHelper = plugin.getDatabaseHelper();
     this.protectionRegistry = plugin.getProtectionRegistry();
+    this.undoHistoryService = plugin.getUndoHistoryService();
   }
 }

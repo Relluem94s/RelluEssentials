@@ -1,12 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
@@ -23,13 +21,13 @@ import de.relluem94.minecraft.server.spigot.essentials.registry.TraderNpcRegistr
 import de.relluem94.minecraft.server.spigot.essentials.repository.BagTypeRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repository.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
 import java.util.Collections;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -81,6 +79,8 @@ public class DatabaseManager implements Enable {
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
 
+    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+
     PluginInformationEntry pie = databaseHelper.getPluginInformation();
     relluEssentialsPlugin.setPluginInformation(pie);
     databaseHelper.init();
@@ -99,7 +99,7 @@ public class DatabaseManager implements Enable {
     relluEssentialsPlugin
         .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
             databaseHelper.getProtections()));
-    relluEssentialsPlugin.setTraderNpcRegistry(new TraderNpcRegistry());
+    relluEssentialsPlugin.setTraderNpcRegistry(new TraderNpcRegistry(translationService));
     relluEssentialsPlugin.getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
     relluEssentialsPlugin.setBagTypeRegistry(new BagTypeRegistry(new BagTypeRepository(databaseHelper.getBagTypes())));
     relluEssentialsPlugin
@@ -137,34 +137,33 @@ public class DatabaseManager implements Enable {
         }
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE,
-            languageHelper.get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(), we.getName(),
+            translationService.get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(), we.getName(),
                 wge.getSettings().size()));
       }
     }
 
-    for (int i = 0; i < relluEssentialsPlugin.getBagTypeRegistry().getAll().size(); i++) {
-      ItemStack[] isa = BagHelper.getItemStacks(
-          relluEssentialsPlugin.getBagTypeRegistry().getAll().get(i));
-      Collections.addAll(relluEssentialsPlugin.bagBlocks2collect, isa);
-    }
+
   }
 
   /**
    * Initializes registries and repositories after the world has been loaded. Runs with a 1-tick
    * delay to ensure the world is fully available.
    */
-  public void afterWorldLoaded(RelluEssentials plugin) {
-    new BukkitRunnable() {
-      @Override
-      public void run() {
+  public void afterWorldLoaded(@NonNull RelluEssentials plugin) {
+    plugin.getSchedulerService().runTaskLater(() -> {
         plugin
             .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
                 databaseHelper.getProtections()));
         plugin
             .setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
         plugin.getPlayerService().reloadPlayerHomes();
-      }
-    }.runTaskLater(plugin, 1L);
+      }, 1L);
+
+    for (int i = 0; i < plugin.getBagTypeRegistry().getAll().size(); i++) {
+      ItemStack[] isa = plugin.getBagService().getItemStacks(
+          plugin.getBagTypeRegistry().getAll().get(i));
+      Collections.addAll(plugin.bagBlocks2collect, isa);
+    }
   }
 
   public void setGroupService(GroupService groupService){

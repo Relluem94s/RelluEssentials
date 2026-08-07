@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.PLUGIN_INVENTORY_ADMIN_TOOLS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
@@ -47,6 +46,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_WORLDSELECTOR;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
@@ -58,6 +58,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -77,6 +78,8 @@ public class ItemManager implements Enable {
 
   @Override
   public void enable(Plugin plugin) {
+
+
     ItemRegistry.initialize(plugin);
 
     ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_POSITION_AXE,
@@ -290,12 +293,16 @@ public class ItemManager implements Enable {
         .withFixedItem(ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
             .orElseThrow());
 
+
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+
     int itemCount = ItemRegistry.getAll().size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
+        translationService.get(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
 
     int inventoryCount = InventoryRegistry.getAllByNamespace(plugin.getName()).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
+        translationService.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
   }
 }

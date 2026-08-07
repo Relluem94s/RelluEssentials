@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
@@ -8,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
@@ -16,6 +14,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -32,9 +32,13 @@ public class EntityPickupItemBags implements ListenerConstruct {
           RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
       .orElseThrow();
 
+  TranslationService translationService;
+  BagService bagService;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
+    bagService = context.getBagService();
   }
 
   @EventHandler
@@ -58,7 +62,7 @@ public class EntityPickupItemBags implements ListenerConstruct {
 
           int coins = itemCoins * is.getAmount();
           ChatHelper.sendMessageInActionBar(p,
-              languageHelper.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN,
+              translationService.getWithPrefix(MessageKey.COMMAND_PURSE_GAIN,
                   StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
           pe.setPurse(pe.getPurse() + coins);
 
@@ -76,7 +80,7 @@ public class EntityPickupItemBags implements ListenerConstruct {
       boolean collectBagEnabled = RelluEssentials.getInstance().collectBagWorlds.contains(
           worldName);
 
-      if (collectBagEnabled && BagHelper.hasBags(pe.getId()) && BagHelper.collectItem(e.getItem(),
+      if (collectBagEnabled && bagService.hasBags(pe.getId()) && bagService.collectItem(e.getItem(),
           p, pe)) {
         p.getInventory().remove(is);
         e.setCancelled(true);

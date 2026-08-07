@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
@@ -10,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
@@ -18,6 +16,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.entity.EntityType;
@@ -39,6 +39,9 @@ public class BetterMobs implements ListenerConstruct {
   private final EnchantmentHelper thunderstrike;
   private final EnchantmentHelper scavengers;
   private final EnchantmentHelper lifesteal;
+  TranslationService translationService;
+  private BagService bagService;
+
   public BetterMobs() {
     this.telekinesis = EnchantmentRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(),
@@ -60,7 +63,8 @@ public class BetterMobs implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    bagService = context.getBagService();
+    translationService = context.getTranslationService();
   }
 
   @EventHandler
@@ -83,8 +87,9 @@ public class BetterMobs implements ListenerConstruct {
       double losses = purse / 2;
       if (purse - losses >= 1) {
         pe.setPurse(purse - losses);
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS,
-            StringHelper.formatDouble(losses), PLUGIN_NAME_MONEY));
+        p.sendMessage(
+            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PLAYER_DEATH_LOST_COINS,
+                StringHelper.formatDouble(losses), PLUGIN_NAME_MONEY));
       } else {
         pe.setPurse(0);
       }
@@ -115,7 +120,7 @@ public class BetterMobs implements ListenerConstruct {
         pe.setHasToBeUpdated(true);
         ChatHelper.sendMessageInActionBar(
             p,
-            languageHelper.getWithPrefix(
+            translationService.getWithPrefix(
                 MessageKey.COMMAND_PURSE_GAIN,
                 StringHelper.formatInt(totalCoins),
                 PLUGIN_NAME_MONEY,
@@ -124,9 +129,9 @@ public class BetterMobs implements ListenerConstruct {
             )
         );
 
-        if (BagHelper.hasBags(pe.getId())) {
+        if (bagService.hasBags(pe.getId())) {
           List<ItemStack> li = new ArrayList<>(e.getDrops());
-          e.getDrops().removeAll(BagHelper.collectItemStacks(li, p, pe));
+          e.getDrops().removeAll(bagService.collectItemStacks(li, p, pe));
         }
 
         if (p.getInventory().getItemInMainHand().hasItemMeta() && telekinesis != null
@@ -150,7 +155,7 @@ public class BetterMobs implements ListenerConstruct {
       PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
       if (pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)) {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(),
+            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_DAMAGE_SHOW, e.getDamage(),
                 m.getLastDamage(), m.getHealth()));
       }
 

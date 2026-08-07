@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportBack;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -9,7 +7,10 @@ import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,19 +28,16 @@ public class Back implements CommandConstruct {
 
   private static final Map<Player, Location> backPlayerLocation = new HashMap<>();
   private GroupService groupService;
-
-  public static void addBackPoint(Player p) {
-    removeBackPoint(p);
-    backPlayerLocation.put(p, p.getLocation());
-  }
-
-  public static void removeBackPoint(Player p) {
-    backPlayerLocation.remove(p);
-  }
+  private TranslationService translationService;
+  private BackService backService;
+  private TeleportService teleportService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    this.backService = context.getBackService();
+    this.teleportService = context.getTeleportService();
   }
 
   @Override
@@ -57,24 +55,25 @@ public class Back implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender commandSender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(commandSender)) {
-      commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      commandSender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
-    Player p = (Player) commandSender;
+    Player player = (Player) commandSender;
 
     if (!groupService.isSenderAuthorized(commandSender, "user")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
-    if (!backPlayerLocation.containsKey(p)) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_BACK_NO_LOCATION));
+    if (!backService.hasBackPoint(player)) {
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_BACK_NO_LOCATION));
       return true;
     }
 
-    teleportBack(p, backPlayerLocation.get(p));
-    backPlayerLocation.remove(p);
+    Location backLocation = backService.findBackPoint(player).get();
+    backService.removeBackPoint(player);
+    teleportService.teleportBack(player, backLocation);
     return true;
   }
 }

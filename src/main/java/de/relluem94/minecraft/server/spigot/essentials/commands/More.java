@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -10,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -24,49 +24,52 @@ import org.jetbrains.annotations.Nullable;
 public class More implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
       p.getInventory().getItemInMainHand().setAmount(64);
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MORE,
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MORE,
           p.getInventory().getItemInMainHand().getType()));
       return true;
     }
 
     if (args.length > 1) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
     Player target = Bukkit.getPlayer(args[0]);
     if (target == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+      p.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
     target.getInventory().getItemInMainHand().setAmount(64);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MORE,
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MORE,
         target.getInventory().getItemInMainHand().getType()));
-    target.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MORE_PLAYER,
+    target.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MORE_PLAYER,
         target.getInventory().getItemInMainHand().getType()));
     return true;
   }

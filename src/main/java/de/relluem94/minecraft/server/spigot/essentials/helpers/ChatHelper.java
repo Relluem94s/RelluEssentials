@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_MSG_SPACER_IN;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_MSG_SPACER_OUT;
@@ -14,6 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -115,9 +115,9 @@ public class ChatHelper {
     p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
   }
 
-  public static void msg(GroupService groupService, CommandSender sender, Player target, String[] args, int start) {
+  public static void msg(GroupService groupService, TranslationService translationService, CommandSender sender, Player target, String[] args, int start) {
     if (sender instanceof ConsoleCommandSender) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return;
     }
 
@@ -132,7 +132,7 @@ public class ChatHelper {
       target.sendMessage(p.getCustomName() + PLUGIN_FORMS_MSG_SPACER_IN + message);
       p.sendMessage(target.getCustomName() + PLUGIN_FORMS_MSG_SPACER_OUT + message);
     } else {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
     }
   }
 }

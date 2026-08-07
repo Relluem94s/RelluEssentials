@@ -115,7 +115,7 @@ class DatabaseHelperTest {
         GroupRepository groupRepository = new GroupRepository(List.of());
         GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
         GroupService groupService = new GroupService(groupRegistry, groupRepository);
-        groupService.setPlayerRegistry(new PlayerRegistry(List.of()));
+        groupService.setPlayerRegistry(new PlayerRegistry());
 
         when(fakeInstance.getGroupService()).thenReturn(groupService);
         when(fakeInstance.getGroupRegistry()).thenReturn(groupRegistry);

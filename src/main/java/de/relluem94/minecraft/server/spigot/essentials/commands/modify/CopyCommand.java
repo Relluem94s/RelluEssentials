@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getModifyClipboardEntry;
@@ -9,14 +8,16 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelp
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,23 +30,24 @@ public class CopyCommand implements SubCommand {
 
   private final boolean isCut;
   private final int blocksPerTick;
-  private final SelectionResolver selectionResolver;
-  private final UndoHistoryManager undoHistoryManager;
-
-  public CopyCommand(boolean isCut, int blocksPerTick, SelectionResolver selectionResolver,
-      UndoHistoryManager undoHistoryManager) {
+  private final SelectionService selectionService;
+  private final UndoHistoryService undoHistoryService;
+  private final TranslationService translationService;
+  
+  public CopyCommand(boolean isCut, int blocksPerTick, ServiceContext context) {
     this.isCut = isCut;
     this.blocksPerTick = blocksPerTick;
-    this.selectionResolver = selectionResolver;
-    this.undoHistoryManager = undoHistoryManager;
+    this.selectionService = context.getSelectionService();
+    this.undoHistoryService = context.getUndoHistoryService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
   public void execute(Player player, String[] args) {
-    Selection selection = selectionResolver.resolve(player);
-      if (selection == null) {
-          return;
-      }
+    Selection selection = selectionService.resolve(player);
+    if (selection == null) {
+      return;
+    }
 
     List<ModifyClipboardEntry> clipboardList = new ArrayList<>();
     List<ModifyHistoryEntry> history = new ArrayList<>();
@@ -75,16 +77,16 @@ public class CopyCommand implements SubCommand {
 
     if (isCut) {
       blockHelper.setBlocks(0);
-      undoHistoryManager.add(player, history);
+      undoHistoryService.addHistory(player, history);
     }
 
     RelluEssentials.getInstance().clipboard.put(player,
         new DoubleStore<>(newSelection, clipboardList));
     player.sendMessage(
         isCut
-            ? languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_CUT_STARTED,
+            ? translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_CUT_STARTED,
             clipboardList.size())
-            : languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_COPY_STARTED,
+            : translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_COPY_STARTED,
                 clipboardList.size())
     );
   }

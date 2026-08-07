@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -10,7 +9,9 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.utils.TypeUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,20 +32,24 @@ public class Teleport implements CommandConstruct {
   private final HashMap<Player, Player> teleportAcceptList = new HashMap<>();
   private final HashMap<Player, Player> teleportToAcceptList = new HashMap<>();
   private GroupService groupService;
+  private TranslationService translationService;
+  private BackService backService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    this.backService = context.getBackService();
   }
 
   private void addTeleportEntry(Player p, Player t) {
     teleportAcceptList.put(t, p);
     t.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_TARGET, p.getCustomName()));
+        translationService.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_TARGET, p.getCustomName()));
     Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
       if (hasTeleportEntry(t)) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_EXPIRED));
-        t.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_EXPIRED));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_EXPIRED));
+        t.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_EXPIRED));
         removeTeleportEntry(t);
       }
     }, 20 * 60 * 2L);
@@ -53,11 +58,11 @@ public class Teleport implements CommandConstruct {
   private void addTeleportToEntry(Player p, Player t) {
     teleportToAcceptList.put(t, p);
     t.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_TARGET, p.getCustomName()));
+        translationService.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_TARGET, p.getCustomName()));
     Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
       if (hasToTeleportEntry(t)) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_EXPIRED));
-        t.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_EXPIRED));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_EXPIRED));
+        t.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_REQUEST_EXPIRED));
         removeToTeleportEntry(t);
       }
     }, 20 * 60 * 2L);
@@ -80,35 +85,35 @@ public class Teleport implements CommandConstruct {
   }
 
   public void teleport(Player p, Player t) {
-    Back.addBackPoint(t);
+    backService.saveBackPoint(t);
     t.teleport(p);
-    t.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP, t.getCustomName()));
+    t.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP, t.getCustomName()));
   }
 
   public void teleportTo(Player p, Player t) {
-    Back.addBackPoint(p);
+    backService.saveBackPoint(p);
     p.teleport(t);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_TO, p.getCustomName()));
-    t.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP, t.getCustomName()));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_TO, p.getCustomName()));
+    t.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP, t.getCustomName()));
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "vip")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_INFO,
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_INFO,
           command.getName(),
           command.getName(), Commands.ACCEPT.getName(),
           command.getName(), Commands.TO.getName(),
@@ -131,27 +136,28 @@ public class Teleport implements CommandConstruct {
           return true;
         }
 
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_ACCEPT_NO_REQUEST));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_ACCEPT_NO_REQUEST));
         return true;
       }
 
       Player target = Bukkit.getPlayer(args[0]);
       if (target == null) {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return false;
       }
 
       if (!groupService.isSenderAuthorized(p, "mod")) {
         addTeleportEntry(p, target);
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_SEND_REQUEST,
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_SEND_REQUEST,
             target.getCustomName()));
         return true;
       }
 
-      Back.addBackPoint(p);
+      backService.saveBackPoint(p);
       p.teleport(target);
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP, target.getCustomName()));
+      p.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_TP, target.getCustomName()));
       return true;
     }
 
@@ -159,12 +165,12 @@ public class Teleport implements CommandConstruct {
       Player target = Bukkit.getPlayer(args[1]);
       if (target == null) {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[1]));
+            translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[1]));
         return true;
       }
 
       if (!args[0].equalsIgnoreCase(Commands.TO.getName())) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP_INFO,
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP_INFO,
             command.getName(),
             command.getName(), Commands.ACCEPT.getName(),
             command.getName(), Commands.TO.getName(),
@@ -186,18 +192,18 @@ public class Teleport implements CommandConstruct {
       return true;
     }
 
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
     return true;
   }
 
   private void teleportToLocation(Player p, String x, String y, String z) {
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 
     if (!TypeUtils.isInt(x)) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_INVALID));
       return;
     }
 
@@ -214,9 +220,9 @@ public class Teleport implements CommandConstruct {
     l.setY(Integer.parseInt(y));
     l.setZ(Integer.parseInt(z));
 
-    Back.addBackPoint(p);
+    backService.saveBackPoint(p);
     p.teleport(l);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TP,
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TP,
         l.getX() + ", " + l.getY() + ", " + l.getZ()
     ));
   }

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -13,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,10 +33,12 @@ import org.jetbrains.annotations.Nullable;
 public class Cookies implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -74,8 +76,8 @@ public class Cookies implements CommandConstruct {
       CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
       Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
       if (p == null) {
-        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
-            languageHelper.get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
+        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+            translationService.get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
         return true;
       }
 
@@ -84,14 +86,14 @@ public class Cookies implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "vip")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -102,18 +104,20 @@ public class Cookies implements CommandConstruct {
 
     Player target = Bukkit.getPlayer(args[0]);
     if (target == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+      p.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
-    sendMessage(p, languageHelper.get(MessageKey.COMMAND_COOKIES_PLAYER, target.getCustomName()));
+    sendMessage(p,
+        translationService.get(MessageKey.COMMAND_COOKIES_PLAYER, target.getCustomName()));
     getCookies(getCookie(p), target);
     return true;
   }
 
   private void getCookies(ItemStack is, @NotNull Player p) {
     p.getWorld().dropItem(p.getLocation(), is);
-    sendMessage(p, languageHelper.get(MessageKey.COMMAND_COOKIES, p.getCustomName()));
+    sendMessage(p, translationService.get(MessageKey.COMMAND_COOKIES, p.getCustomName()));
   }
 
   private @NotNull ItemStack getCookie(Player p) {
@@ -124,12 +128,12 @@ public class Cookies implements CommandConstruct {
       return is;
     }
 
-    im.setDisplayName(languageHelper.get(MessageKey.COMMAND_COOKIES_DISPLAYNAME));
+    im.setDisplayName(translationService.get(MessageKey.COMMAND_COOKIES_DISPLAYNAME));
     im.setLore(
         Arrays.asList(
-            languageHelper.get(MessageKey.COMMAND_COOKIES_LORE_1,
+            translationService.get(MessageKey.COMMAND_COOKIES_LORE_1,
                 p.getCustomName()),
-            languageHelper.get(MessageKey.COMMAND_COOKIES_LORE_3
+            translationService.get(MessageKey.COMMAND_COOKIES_LORE_3
             )
         )
     );

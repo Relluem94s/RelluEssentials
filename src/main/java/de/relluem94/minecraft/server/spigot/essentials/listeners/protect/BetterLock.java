@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -12,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -29,10 +28,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BetterLock implements ListenerConstruct {
 
+  TranslationService translationService;
   private GroupService groupService;
 
   @Override
   public void injectContext(ServiceContext context) {
+    this.translationService = context.getTranslationService();
     this.groupService = context.getGroupService();
   }
 
@@ -58,23 +59,24 @@ public class BetterLock implements ListenerConstruct {
           if (ProtectionHelper.hasRights(protection, pe.getId())) {
             if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
               e.getPlayer().sendMessage(
-                  languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                  translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
             } else {
               if (groupService.isSenderAuthorized(e.getPlayer(), "mod")) {
                 e.setCancelled(false);
-                e.getPlayer().sendMessage(languageHelper.getWithPrefix(
+                e.getPlayer().sendMessage(translationService.getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
               } else {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(
-                    languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                    translationService.getWithPrefix(
+                        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
               }
 
             }
           } else {
             // If Notify protection self on
             e.getPlayer().sendMessage(
-                languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
 
             Openable openable = (Openable) b.getBlockData();
 
@@ -97,7 +99,7 @@ public class BetterLock implements ListenerConstruct {
 
                             b.setBlockData(door);
                             b2.setBlockData(door2);
-                            e.getPlayer().sendMessage(languageHelper.getWithPrefix(
+                            e.getPlayer().sendMessage(translationService.getWithPrefix(
                                 MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
                           }, 50);
                         }
@@ -111,7 +113,7 @@ public class BetterLock implements ListenerConstruct {
                       door.setOpen(false);
 
                       b.setBlockData(door);
-                      e.getPlayer().sendMessage(languageHelper.getWithPrefix(
+                      e.getPlayer().sendMessage(translationService.getWithPrefix(
                           MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
                     }, 50);
                   }
@@ -124,7 +126,7 @@ public class BetterLock implements ListenerConstruct {
                     door.setOpen(false);
 
                     b.setBlockData(door);
-                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(
+                    e.getPlayer().sendMessage(translationService.getWithPrefix(
                         MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
                   }, 50);
                 }
@@ -136,7 +138,7 @@ public class BetterLock implements ListenerConstruct {
                     door.setOpen(false);
 
                     b.setBlockData(door);
-                    e.getPlayer().sendMessage(languageHelper.getWithPrefix(
+                    e.getPlayer().sendMessage(translationService.getWithPrefix(
                         MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
                   }, 50);
                 }
@@ -157,22 +159,23 @@ public class BetterLock implements ListenerConstruct {
           if (ProtectionHelper.hasRights(protection, pe.getId())) {
             if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
               e.getPlayer().sendMessage(
-                  languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                  translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
             } else {
               if (groupService.isSenderAuthorized(e.getPlayer(), "mod")) {
                 e.setCancelled(false);
-                e.getPlayer().sendMessage(languageHelper.getWithPrefix(
+                e.getPlayer().sendMessage(translationService.getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
               } else {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(
-                    languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+                    translationService.getWithPrefix(
+                        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
               }
             }
           } else {
             // If Notify protection self on
             e.getPlayer().sendMessage(
-                languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
           }
         }
       }

@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWarp;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -13,6 +11,9 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,10 +28,16 @@ import org.jetbrains.annotations.NotNull;
 public class Warp implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
+  private SchedulerService schedulerService;
+  private TeleportService teleportService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    this.schedulerService = context.getSchedulerService();
+    this.teleportService = context.getTeleportService();
   }
 
   @Override
@@ -81,23 +88,23 @@ public class Warp implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(sender, "user")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO));
       for (LocationEntry le : RelluEssentials.getInstance().getWarpRepository()
           .findByWorld(p.getWorld())) {
         p.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_LIST, le.getLocationName()));
+            translationService.getWithPrefix(MessageKey.COMMAND_WARP_LIST, le.getLocationName()));
       }
       return true;
     } else if (args.length == 1) {
@@ -105,7 +112,7 @@ public class Warp implements CommandConstruct {
       return true;
     } else if (args.length == 2) {
       if (!groupService.isSenderAuthorized(p, "admin")) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }
 
@@ -116,7 +123,7 @@ public class Warp implements CommandConstruct {
         removeWarp(args[1], p);
         return true;
       } else {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         return true;
       }
     }
@@ -145,14 +152,14 @@ public class Warp implements CommandConstruct {
     }
 
     RelluEssentials.getInstance().getWarpRepository().save(le);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ADD, name));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ADD, name));
   }
 
   private void removeWarp(String name, Player p) {
     RelluEssentials.getInstance().getWarpRepository().findByName(name).ifPresent(le -> {
       RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
       RelluEssentials.getInstance().getWarpRepository().delete(le);
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, name));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, name));
     });
   }
 
@@ -161,23 +168,23 @@ public class Warp implements CommandConstruct {
         .findByNameAndWorld(name, p.getWorld());
 
     if (result.isEmpty()) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_NO_WARP_FOUND));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_NO_WARP_FOUND));
       return;
     }
 
     LocationEntry le = result.get();
 
     if (le.getLocation() == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED));
       return;
     }
 
     if (le.getLocation().getWorld() == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WORLD_UNLOADED));
       return;
     }
 
-    teleportWarp(p, le.getLocation());
+    teleportService.teleportWarp(p, le.getLocation());
   }
 
   @Getter

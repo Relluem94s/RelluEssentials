@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -12,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,10 +28,12 @@ import org.jetbrains.annotations.Nullable;
 public class Heal implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -45,7 +47,7 @@ public class Heal implements CommandConstruct {
 
     if (isCMDBlock(sender) || isConsole(sender)) {
       if (args.length < 1) {
-        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
         return true;
       }
 
@@ -54,19 +56,19 @@ public class Heal implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length > 0) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
@@ -77,7 +79,7 @@ public class Heal implements CommandConstruct {
   private void heal(@org.jspecify.annotations.NonNull Player p) {
     p.setHealth(Objects.requireNonNull(p.getAttribute(Attribute.MAX_HEALTH)).getDefaultValue());
     p.setFoodLevel(20);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_HEAL));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_HEAL));
   }
 
   private void heal(CommandSender sender, String targetName) {
@@ -85,7 +87,7 @@ public class Heal implements CommandConstruct {
 
     if (target == null) {
       sender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
       return;
     }
 

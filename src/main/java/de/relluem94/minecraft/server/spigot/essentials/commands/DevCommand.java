@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -17,7 +16,6 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.dev.RemoveEnchan
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.RotateTestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.ShowPlayerStatsCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.ToggleDamageInfoCommand;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
@@ -26,6 +24,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -36,19 +36,22 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-
 @CommandName("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")
 public class DevCommand implements CommandConstruct {
 
-  private final SubCommandRegistry<SubCommand> subCommandRegistry;
+  private SubCommandRegistry<SubCommand> subCommandRegistry;
   private GroupService groupService;
+  private TranslationService translationService;
 
-  public DevCommand() {
-    UndoHistoryManager undoHistoryManager = new UndoHistoryManager();
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    UndoHistoryService undoHistoryService = context.getUndoHistoryService();
     subCommandRegistry = new SubCommandRegistry<>(List.of(
         new CustomMobCommand(),
-        new RotateTestCommand(),
-        new DevPlattformCommand(undoHistoryManager),
+        new RotateTestCommand(context),
+        new DevPlattformCommand(undoHistoryService, context),
         new GivePickaxeCommand(),
         new GiveCloudSailorCommand(),
         new GiveRelluGearCommand(),
@@ -63,38 +66,33 @@ public class DevCommand implements CommandConstruct {
   }
 
   @Override
-  public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-  }
-
-  @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!p.getName().equalsIgnoreCase("Relluem94")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_INVALID));
       return true;
     }
 
     if (args.length < 1) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (args.length > 1) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
     SubCommand subCommand = subCommandRegistry.find(args);
     if (subCommand == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       return true;
     }
 

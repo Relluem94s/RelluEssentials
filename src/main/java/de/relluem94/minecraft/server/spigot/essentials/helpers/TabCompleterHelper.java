@@ -4,13 +4,11 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
@@ -63,13 +61,10 @@ public class TabCompleterHelper {
   public static @NotNull List<String> getBags(Player p) {
     PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
 
-    Collection<BagEntry> bags = BagHelper.getBags(pe.getId());
-    List<String> bagsList = new ArrayList<>();
-    for (BagEntry bag : bags) {
-      bagsList.add(bag.getBagType().getName().toLowerCase());
-    }
-
-    return bagsList;
+    return RelluEssentials.getInstance().getBagService().getBags(pe.getId())
+        .stream()
+        .map(bag -> bag.getBagType().getName().toLowerCase())
+        .collect(Collectors.toList());
   }
 
   public static @NotNull List<String> getWorlds() {

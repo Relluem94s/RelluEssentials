@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -12,7 +11,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -30,10 +31,14 @@ import org.jetbrains.annotations.Nullable;
 public class Spawn implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
+  private BackService backService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    this.backService = context.getBackService();
   }
 
   @Override
@@ -65,8 +70,8 @@ public class Spawn implements CommandConstruct {
       CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
       Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
       if (p == null) {
-        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
-            languageHelper.get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
+        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+            translationService.get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
         return true;
       }
 
@@ -75,7 +80,7 @@ public class Spawn implements CommandConstruct {
     }
 
     if (args.length > 1) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
@@ -83,13 +88,13 @@ public class Spawn implements CommandConstruct {
       Player target = Bukkit.getPlayer(args[0]);
 
       if (!groupService.isSenderAuthorized(sender, "mod")) {
-        sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }
 
       if (target == null) {
         sender.sendMessage(
-            languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return true;
       }
 
@@ -98,14 +103,14 @@ public class Spawn implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "user")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -114,13 +119,14 @@ public class Spawn implements CommandConstruct {
   }
 
   public void spawn(Player p) {
-    Back.addBackPoint(p);
+    backService.saveBackPoint(p);
 
     Location coords = p.getWorld().getSpawnLocation();
     Location spawn = new Location(p.getWorld(), coords.getX(), coords.getY(), coords.getZ());
 
     p.teleport(spawn);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_SPAWN, p.getWorld().getName()));
+    p.sendMessage(
+        translationService.getWithPrefix(MessageKey.COMMAND_SPAWN, p.getWorld().getName()));
   }
 
   @Override

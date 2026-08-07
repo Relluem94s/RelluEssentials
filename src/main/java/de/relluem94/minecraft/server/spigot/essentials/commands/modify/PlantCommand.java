@@ -1,18 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.isPlantMaterial;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -23,28 +24,30 @@ import org.jspecify.annotations.NonNull;
 public class PlantCommand implements SubCommand {
 
   private final int blocksPerTick;
-  private final SelectionResolver selectionResolver;
-  private final UndoHistoryManager undoHistoryManager;
+  private final SelectionService selectionService;
+  private final UndoHistoryService undoHistoryService;
+  private final TranslationService translationService;
 
-  public PlantCommand(int blocksPerTick, SelectionResolver selectionResolver,
-      UndoHistoryManager undoHistoryManager) {
+  public PlantCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
-    this.selectionResolver = selectionResolver;
-    this.undoHistoryManager = undoHistoryManager;
+    this.selectionService = serviceContext.getSelectionService();
+    this.undoHistoryService = serviceContext.getUndoHistoryService();
+    this.translationService = serviceContext.getTranslationService();
   }
 
   @Override
   public void execute(Player player, String[] args) {
     Material material = Material.getMaterial(args[1].toUpperCase());
     if (material == null || !isPlantMaterial(material)) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
+      player.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
       return;
     }
 
-    Selection selection = selectionResolver.resolve(player);
-      if (selection == null) {
-          return;
-      }
+    Selection selection = selectionService.resolve(player);
+    if (selection == null) {
+      return;
+    }
 
     BlockHelper blockHelper = new BlockHelper(material);
     List<ModifyHistoryEntry> history = new ArrayList<>();
@@ -54,15 +57,15 @@ public class PlantCommand implements SubCommand {
 
     forEachBlock(selection, block -> {
       Block below = block.getRelative(0, -1, 0);
-        if (!below.getType().isSolid()) {
-            return;
-        }
-        if (!block.isEmpty()) {
-            return;
-        }
-        if (material.equals(block.getType())) {
-            return;
-        }
+      if (!below.getType().isSolid()) {
+        return;
+      }
+      if (!block.isEmpty()) {
+        return;
+      }
+      if (material.equals(block.getType())) {
+        return;
+      }
 
       checkAndRemoveProtection(block);
       history.add(
@@ -76,10 +79,10 @@ public class PlantCommand implements SubCommand {
     });
 
     blockHelper.setBlocks(0);
-    undoHistoryManager.add(player, history);
+    undoHistoryService.addHistory(player, history);
 
     player.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_PLANT_STARTED, history.size(),
+        translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_PLANT_STARTED, history.size(),
             material.name()));
   }
 

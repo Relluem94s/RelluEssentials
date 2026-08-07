@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
@@ -14,6 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enabl
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.recipe.Shaped;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -24,19 +24,22 @@ public class RecipeManager implements Enable {
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_RECIPE));
+        translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_RECIPE));
     int recipeCount = 0;
     Bukkit.addRecipe(buildCloudBootsRecipe(relluEssentialsPlugin).getRecipe());
     recipeCount++;
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_RECIPE_REGISTERED, recipeCount));
+        translationService.get(MessageKey.PLUGIN_MANAGER_RECIPE_REGISTERED, recipeCount));
   }
 
   private @NonNull RecipeHelper buildCloudBootsRecipe(RelluEssentials plugin) {
     ItemHelper cloudSailorItem = ItemRegistry.find(
         RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
-    ItemHelper cloudBootsItem = ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
+    ItemHelper cloudBootsItem = ItemRegistry.find(
+            RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
         .orElseThrow();
 
     return new RecipeHelper(

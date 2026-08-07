@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
@@ -9,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
@@ -16,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Objects;
 import java.util.Random;
 import net.md_5.bungee.api.ChatColor;
@@ -38,9 +39,13 @@ public class NoDeathMessage implements ListenerConstruct {
 
   private final Random random = new Random();
 
+  TranslationService translationService;
+  DatabaseHelper databaseHelper;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
+    databaseHelper = context.getDatabaseHelper();
   }
 
   @EventHandler
@@ -81,20 +86,19 @@ public class NoDeathMessage implements ListenerConstruct {
       le.setLocationType(locationType);
       le.setPlayerId(pe.getId());
 
-      World world = le.getLocation().getWorld();
-      String locationName = le.getLocationName();
-      Location leLocation = le.getLocation();
-
       TextComponent message = new TextComponent(
-          languageHelper.get(MessageKey.PLUGIN_EVENT_DEATH_TP));
+          translationService.get(MessageKey.PLUGIN_EVENT_DEATH_TP));
       message.setColor(ChatColor.AQUA);
       message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
           "/home " + Home.Commands.TP.getName() + " " + le.getLocationName()));
       p.spigot().sendMessage(message);
 
-      RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
-      le = RelluEssentials.getInstance().getDatabaseHelper()
-          .getLocation(location, locationType.getId());
+      databaseHelper.insertLocation(le);
+      le = databaseHelper.getLocation(location, locationType.getId());
+
+      World world = le.getLocation().getWorld();
+      String locationName = le.getLocationName();
+      Location leLocation = le.getLocation();
 
       if (le != null) {
         pe.getHomes().add(le);
@@ -105,10 +109,10 @@ public class NoDeathMessage implements ListenerConstruct {
       }
 
       p.sendMessage(
-          languageHelper.getWithPrefix(
+          translationService.getWithPrefix(
               MessageKey.PLUGIN_EVENT_DEATH,
               locationName,
-              languageHelper.get(
+              translationService.get(
                   MessageKey.COMMAND_WHERE_STRING,
                   (int) leLocation.getX(),
                   (int) leLocation.getY(),

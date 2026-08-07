@@ -1,19 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,10 +25,16 @@ import org.jspecify.annotations.NonNull;
 public class BetterPlayerJoin implements ListenerConstruct {
 
   GroupService groupService;
+  TranslationService translationService;
+  private BankService bankService;
+  private PlayerService playerService;
 
   @Override
   public void injectContext(ServiceContext context) {
+    this.translationService = context.getTranslationService();
     this.groupService = context.getGroupService();
+    this.bankService = context.getBankService();
+    this.playerService = context.getPlayerService();
   }
 
   private void addPlayer(@NonNull Player p) {
@@ -44,7 +50,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
       RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
 
       pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
-      p.sendMessage(languageHelper.get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
+      p.sendMessage(translationService.get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
     } else {
       if (pe.getName() == null) {
         pe.setName(p.getName());
@@ -71,14 +77,14 @@ public class BetterPlayerJoin implements ListenerConstruct {
     p.setPlayerListHeader(pie.getTabHeader());
     p.setPlayerListFooter(pie.getTabFooter());
 
-    PlayerHelper.setFlying(p, groupService);
-    PlayerHelper.setAFK(p, true);
+    playerService.setFlying(p);
+    playerService.setAFK(p, true);
     Bukkit.broadcastMessage(
-        languageHelper.get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
+        translationService.get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
 
     WorldHelper.loadWorldGroupInventory(p);
 
-    BankerHelper.doInterest(e.getPlayer());
+    bankService.payInterestToPlayer(e.getPlayer());
 
     if (WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)) {
       PlayerHelper.setLobbyItems(p);
@@ -98,7 +104,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
 
     if (onlinePlayers >= maxPlayers) {
       e.disallow(PlayerLoginEvent.Result.KICK_FULL,
-          languageHelper.get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN));
+          translationService.get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN));
     }
   }
 
@@ -108,6 +114,6 @@ public class BetterPlayerJoin implements ListenerConstruct {
       return;
     }
 
-    BankerHelper.checkInterest(e.getUniqueId(), false);
+    bankService.checkInterest(e.getUniqueId(), false);
   }
 }

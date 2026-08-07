@@ -1,41 +1,49 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 
 public class BankManager implements Enable {
 
+  private TranslationService translationService;
+  private SchedulerService schedulerService;
+  private BankService bankService;
+
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+
+    translationService = relluEssentialsPlugin.getTranslationService();
+    schedulerService = relluEssentialsPlugin.getSchedulerService();
+    bankService = relluEssentialsPlugin.getBankService();
+
     if (relluEssentialsPlugin.isUnitTest()) {
       return;
     }
-    triggerNext(relluEssentialsPlugin);
+    triggerNext();
   }
 
-  private void triggerNext(RelluEssentials plugin) {
-    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-      BankerHelper.doInterest();
+  private void triggerNext() {
+    schedulerService.runTaskLater(() -> {
+      bankService.triggerInterestForAllOnlinePlayers();
       ChatHelper.consoleSendMessage(
           Constants.PLUGIN_NAME_CONSOLE,
-          languageHelper.get(MessageKey.PLUGIN_BANK_INTEREST_NEXT_RUN,
+          translationService.get(MessageKey.PLUGIN_BANK_INTEREST_NEXT_RUN,
               String.valueOf(getSecondsUntilMidnight()))
       );
-      triggerNext(plugin);
+      triggerNext();
     }, 20 * getSecondsUntilMidnight());
   }
 

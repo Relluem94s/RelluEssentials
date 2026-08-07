@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND_BLOCK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MESSAGE;
@@ -20,6 +19,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,10 +39,12 @@ import org.jetbrains.annotations.Nullable;
 public class Print implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -51,7 +53,7 @@ public class Print implements CommandConstruct {
     Player targetedPlayerBySelector = null;
 
     if (args.length < 1) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PRINT_INFO));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PRINT_INFO));
       return true;
     }
 
@@ -66,8 +68,9 @@ public class Print implements CommandConstruct {
         CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
         targetedPlayerBySelector = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
         if (targetedPlayerBySelector == null) {
-          sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
-              languageHelper.get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
+          sender.sendMessage(
+              translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+                  translationService.get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
           return true;
         }
       }
@@ -82,7 +85,7 @@ public class Print implements CommandConstruct {
       Player p = (Player) sender;
 
       if (!groupService.isSenderAuthorized(p, "mod")) {
-        p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }
 
@@ -90,7 +93,7 @@ public class Print implements CommandConstruct {
     }
 
     if (name == null) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_INVALID));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_INVALID));
       return true;
     }
 

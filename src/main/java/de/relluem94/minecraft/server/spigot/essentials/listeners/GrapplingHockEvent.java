@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
@@ -10,6 +9,8 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
@@ -18,7 +19,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jspecify.annotations.NonNull;
 
@@ -30,9 +30,13 @@ public class GrapplingHockEvent implements ListenerConstruct {
 
   protected static final List<Player> COOL_DOWN = new ArrayList<>();
 
+  TranslationService translationService;
+  SchedulerService schedulerService;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
+    schedulerService = context.getSchedulerService();
   }
 
   /**
@@ -68,15 +72,13 @@ public class GrapplingHockEvent implements ListenerConstruct {
         e.getPlayer().setVelocity(playerVelocity);
         COOL_DOWN.add(e.getPlayer());
 
-        new BukkitRunnable() {
-          @Override
-          public void run() {
-            COOL_DOWN.remove(e.getPlayer());
-          }
-        }.runTaskLater(RelluEssentials.getInstance(), 50L);
+        schedulerService.runTaskLater(() -> {
+          COOL_DOWN.remove(e.getPlayer());
+        }, 50L);
       } else {
         e.getPlayer()
-            .sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
+            .sendMessage(
+                translationService.getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
       }
     }
   }

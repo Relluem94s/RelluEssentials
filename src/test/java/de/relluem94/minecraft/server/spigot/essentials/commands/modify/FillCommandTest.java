@@ -1,8 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.LanguageHelper;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,36 +21,40 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-
-import static org.mockito.Mockito.*;
 
 class FillCommandTest {
 
     private Player player;
-    private UndoHistoryManager undoHistoryManager;
-
-    private MockedStatic<RelluEssentials> mockedRelluEssentials;
+    private UndoHistoryService undoHistoryService;
+    private FillCommand fillCommand;
+    private FillCommand fillrCommand;
 
     private static final int BLOCKS_PER_TICK = 2;
     private static final int MAX_RADIUS = 10;
     private static final int MAX_ITERATIONS = 1000;
 
-    @BeforeAll
-    static void setUpServer(){
-        if(Bukkit.getServer() != null){
-            return;
+    @BeforeEach
+    void setUp() {
+        player = mock(Player.class);
+        undoHistoryService = mock(UndoHistoryService.class);
+
+        if (Bukkit.getServer() == null) {
+            org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
+            org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(org.bukkit.scheduler.BukkitScheduler.class);
+            java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
+            silentLogger.setUseParentHandlers(false);
+            silentLogger.setLevel(java.util.logging.Level.OFF);
+            when(serverMock.getScheduler()).thenReturn(schedulerMock);
+            when(serverMock.getLogger()).thenReturn(silentLogger);
+            org.bukkit.Bukkit.setServer(serverMock);
         }
 
-        org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
-        org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(org.bukkit.scheduler.BukkitScheduler.class);
-        java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
-        silentLogger.setUseParentHandlers(false);
-        silentLogger.setLevel(java.util.logging.Level.OFF);
-        when(serverMock.getScheduler()).thenReturn(schedulerMock);
-        when(serverMock.getLogger()).thenReturn(silentLogger);
-        org.bukkit.Bukkit.setServer(serverMock);
+        fillCommand = new FillCommand(buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
+        fillrCommand = new FillCommand(buildServiceContext(), true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
     }
 
     @AfterAll
@@ -49,104 +64,82 @@ class FillCommandTest {
         serverField.set(null, null);
     }
 
-    @BeforeEach
-    void setUp() {
-        player = mock(Player.class);
-        undoHistoryManager = mock(UndoHistoryManager.class);
 
-        RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
-        LanguageHelper languageHelperMock = mock(LanguageHelper.class);
+    private ServiceContext buildServiceContext() {
+        TranslationService translationServiceMock = mock(TranslationService.class);
+        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
 
-        mockedRelluEssentials = mockStatic(RelluEssentials.class);
-        mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-        RelluEssentials.languageHelper = languageHelperMock;
-
-        when(languageHelperMock.getWithPrefix(any(), any())).thenReturn("msg");
-        when(languageHelperMock.getWithPrefix(any())).thenReturn("msg");
+        ServiceContext serviceContext = mock(ServiceContext.class);
+        when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+        when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
+        return serviceContext;
     }
 
-    @AfterEach
-    void tearDown() {
-        mockedRelluEssentials.close();
-    }
 
     @Test
     void execute_fill_withInvalidMaterial_sendsWrongMaterialMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         fillCommand.execute(player, new String[]{"fill", "NOT_A_REAL_MATERIAL_XYZ", "5"});
 
-        verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(player).sendMessage(any(String.class));
+        verify(undoHistoryService, never()).addHistory(any(), any());
     }
 
     @Test
     void execute_fill_withNonIntegerRadius_sendsInvalidMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         fillCommand.execute(player, new String[]{"fill", "STONE", "notANumber"});
 
-        verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(player).sendMessage(any(String.class));
+        verify(undoHistoryService, never()).addHistory(any(), any());
     }
 
     @Test
     void execute_fill_withZeroRadius_sendsInvalidMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         fillCommand.execute(player, new String[]{"fill", "STONE", "0"});
 
-        verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(player).sendMessage(any(String.class));
+        verify(undoHistoryService, never()).addHistory(any(), any());
     }
 
     @Test
     void execute_fill_withNegativeRadius_sendsInvalidMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         fillCommand.execute(player, new String[]{"fill", "STONE", "-3"});
 
-        verify(player).sendMessage(anyString());
-        verify(undoHistoryManager, never()).add(any(), any());
+        verify(player).sendMessage(any(String.class));
+        verify(undoHistoryService, never()).addHistory(any(), any());
     }
 
     @Test
     void execute_fill_withRadiusExceedingMax_sendsRadiusTooHighMessage() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         World world = mock(World.class);
         Block startBlock = buildSolidBlock(world, 0, 0, 0);
         Location playerLocation = buildLocation(world, 0, 0, 0);
         when(player.getLocation()).thenReturn(playerLocation);
-        when(player.getLocation().clone()).thenReturn(playerLocation);
+        when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
         fillCommand.execute(player, new String[]{"fill", "STONE", "99"});
 
-        verify(player, atLeastOnce()).sendMessage(anyString());
-        verify(undoHistoryManager).add(eq(player), any());
+        verify(player, atLeastOnce()).sendMessage(any(String.class));
+        verify(undoHistoryService).addHistory(eq(player), any());
     }
 
     @Test
     void execute_fill_withNonEmptyStartBlock_addsEmptyHistory() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         World world = mock(World.class);
         Block startBlock = buildSolidBlock(world, 0, 0, 0);
         Location playerLocation = buildLocation(world, 0, 0, 0);
         when(player.getLocation()).thenReturn(playerLocation);
-        when(player.getLocation().clone()).thenReturn(playerLocation);
+        when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
         fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-        verify(undoHistoryManager).add(eq(player), argThat(java.util.List::isEmpty));
+        verify(undoHistoryService).addHistory(eq(player), argThat(java.util.List::isEmpty));
     }
 
     @Test
     void execute_fill_withEmptyStartBlock_fillsAdjacentAirAndAddsHistory() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
         Block solidNeighbor = buildSolidBlock(world, 0, 0, 0);
@@ -154,26 +147,24 @@ class FillCommandTest {
 
         Location playerLocation = buildLocation(world, 0, 0, 0);
         when(player.getLocation()).thenReturn(playerLocation);
-        when(player.getLocation().clone()).thenReturn(playerLocation);
+        when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
         try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection(any()))
-                    .thenAnswer(_ -> null);
+            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
+                    .checkAndRemoveProtection(any()))
+                .thenAnswer(_ -> null);
 
             fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
-            verify(player).sendMessage((String) null);
+            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
         }
     }
 
     @Test
     void execute_fillr_withEmptyStartBlockAndEmptyBelow_spreadsBothDirections() {
-        FillCommand fillrCommand = new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
         Block belowBlock = buildEmptyBlock(world, 0, -1, 0);
@@ -184,67 +175,59 @@ class FillCommandTest {
 
         Location playerLocation = buildLocation(world, 0, 0, 0);
         when(player.getLocation()).thenReturn(playerLocation);
-        when(player.getLocation().clone()).thenReturn(playerLocation);
+        when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
         try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection(any()))
-                    .thenAnswer(_ -> null);
+            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
+                    .checkAndRemoveProtection(any()))
+                .thenAnswer(_ -> null);
 
             fillrCommand.execute(player, new String[]{"fillr", "STONE", "5"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 2));
-            verify(player).sendMessage((String) null);
+            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 2));
         }
     }
 
     @Test
     void matches_fill_withCorrectArgs_returnsTrue() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
         assert fillCommand.matches(new String[]{"fill", "STONE", "5"});
     }
 
     @Test
     void matches_fillr_withCorrectArgs_returnsTrue() {
-        FillCommand fillrCommand = new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
         assert fillrCommand.matches(new String[]{"fillr", "STONE", "5"});
     }
 
     @Test
     void matches_fill_withWrongCommand_returnsFalse() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
         assert !fillCommand.matches(new String[]{"fillr", "STONE", "5"});
     }
 
     @Test
     void matches_fillr_withWrongCommand_returnsFalse() {
-        FillCommand fillrCommand = new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
         assert !fillrCommand.matches(new String[]{"fill", "STONE", "5"});
     }
 
     @Test
     void matches_fill_withTooFewArgs_returnsFalse() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
         assert !fillCommand.matches(new String[]{"fill", "STONE"});
     }
 
     @Test
     void matches_fill_withTooManyArgs_returnsFalse() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
         assert !fillCommand.matches(new String[]{"fill", "STONE", "5", "extra"});
     }
 
-
     @Test
     void execute_fill_whenMaxIterationsReached_stopsProcessingAndAddsPartialHistory() {
-        int maxIterations = 2;
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, maxIterations, undoHistoryManager);
+        FillCommand limitedFillCommand = new FillCommand(
+            buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, 2);
 
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
-
         Block emptyNeighbor1 = buildEmptyBlock(world, 1, 0, 0);
         Block emptyNeighbor2 = buildEmptyBlock(world, -1, 0, 0);
         Block solidFallback = buildSolidBlock(world, 0, 0, 0);
@@ -255,28 +238,26 @@ class FillCommandTest {
 
         Location playerLocation = buildLocation(world, 0, 0, 0);
         when(player.getLocation()).thenReturn(playerLocation);
-        when(player.getLocation().clone()).thenReturn(playerLocation);
+        when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
         try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection(any()))
-                    .thenAnswer(_ -> null);
+            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
+                    .checkAndRemoveProtection(any()))
+                .thenAnswer(_ -> null);
 
-            fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
+            limitedFillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() < 3));
+            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() < 3));
         }
     }
 
     @Test
     void execute_fill_whenBlockExceedsRadius_skipsBlockAndDoesNotAddToHistory() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
-
         Block farEmptyBlock = buildEmptyBlock(world, 10, 0, 0);
         Block solidFallback = buildSolidBlock(world, 0, 0, 0);
 
@@ -285,26 +266,24 @@ class FillCommandTest {
 
         Location playerLocation = buildLocation(world, 0, 0, 0);
         when(player.getLocation()).thenReturn(playerLocation);
-        when(player.getLocation().clone()).thenReturn(playerLocation);
+        when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
         try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection(any()))
-                    .thenAnswer(_ -> null);
+            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
+                    .checkAndRemoveProtection(any()))
+                .thenAnswer(_ -> null);
 
             fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
         }
     }
 
-
     @Test
     void execute_fill_whenNeighborAlreadyVisited_doesNotProcessNeighborTwice() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
         Block leftNeighbor = buildEmptyBlock(world, -1, 0, 0);
@@ -318,28 +297,25 @@ class FillCommandTest {
 
         Location playerLocation = buildLocation(world, 0, 0, 0);
         when(player.getLocation()).thenReturn(playerLocation);
-        when(player.getLocation().clone()).thenReturn(playerLocation);
+        when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
         try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection(any()))
-                    .thenAnswer(_ -> null);
+            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
+                    .checkAndRemoveProtection(any()))
+                .thenAnswer(_ -> null);
 
             fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 4));
+            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 4));
         }
     }
 
-
     @Test
     void execute_fill_whenNeighborExceedsRadius_skipsNeighborAndDoesNotAddToHistory() {
-        FillCommand fillCommand = new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager);
-
         World world = mock(World.class);
-
         Block startBlock = buildEmptyBlock(world, 0, 0, 0);
         Block outOfRadiusNeighbor = buildEmptyBlock(world, 1, 0, 0);
         Block solidFallback = buildSolidBlock(world, 0, 0, 0);
@@ -366,20 +342,22 @@ class FillCommandTest {
         when(outOfRadiusNeighbor.getLocation()).thenReturn(neighborLocation);
 
         when(player.getLocation()).thenReturn(startLocation);
-        when(player.getLocation().clone()).thenReturn(startLocation);
+        when(startLocation.clone()).thenReturn(startLocation);
         when(startLocation.getBlock()).thenReturn(startBlock);
 
         try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-                     mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection(any()))
-                    .thenAnswer(_ -> null);
+            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
+                    .checkAndRemoveProtection(any()))
+                .thenAnswer(_ -> null);
 
             fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
 
-            verify(undoHistoryManager).add(eq(player), argThat(list -> list.size() == 1));
+            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
         }
     }
+
 
     private Location buildLocation(World world, int x, int y, int z) {
         Location location = mock(Location.class);

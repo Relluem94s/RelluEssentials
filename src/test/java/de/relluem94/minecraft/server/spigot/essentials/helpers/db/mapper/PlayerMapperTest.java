@@ -81,7 +81,7 @@ class PlayerMapperTest {
         GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
 
         GroupService groupService = new GroupService(groupRegistry, groupRepository);
-        groupService.setPlayerRegistry(new PlayerRegistry(List.of()));
+        groupService.setPlayerRegistry(new PlayerRegistry());
         PlayerEntry result = PlayerMapper.mapPlayer(resultSet, groupService);
 
         assertAll(
@@ -109,7 +109,7 @@ class PlayerMapperTest {
         GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
 
         GroupService groupService = new GroupService(groupRegistry, groupRepository);
-        groupService.setPlayerRegistry(new PlayerRegistry(List.of()));
+        groupService.setPlayerRegistry(new PlayerRegistry());
 
         when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
         assertThrows(SQLException.class, () -> PlayerMapper.mapPlayer(resultSet, groupService));

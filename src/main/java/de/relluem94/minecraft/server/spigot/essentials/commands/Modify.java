@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -15,8 +14,6 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.modify.ReplaceCo
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.SetCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.UndoCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.WallCommand;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.SelectionResolver;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper;
@@ -26,6 +23,9 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,33 +43,38 @@ public class Modify implements CommandConstruct {
   public static final int BLOCKS_PER_TICK = 64;
   public static final int MAX_RADIUS = 128;
   public static final int MAX_ITERATIONS = 1048576;
-  private final SubCommandRegistry<SubCommand> subCommandRegistry;
+  private SubCommandRegistry<SubCommand> subCommandRegistry;
   private GroupService groupService;
+  private TranslationService translationService;
+  private SelectionService selectionService;
+  private UndoHistoryService undoHistoryService;
 
   public Modify() {
-    SelectionResolver selectionResolver = new SelectionResolver();
-    UndoHistoryManager undoHistoryManager = new UndoHistoryManager();
 
-    this.subCommandRegistry = new SubCommandRegistry<>(List.of(
-        new CopyCommand(false, BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
-        new CopyCommand(true, BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
-        new CylinderCommand(BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
-        new FillCommand(false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager),
-        new FillCommand(true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS, undoHistoryManager),
-        new ClipboardCommand(),
-        new MoveCommand(BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
-        new PasteCommand(BLOCKS_PER_TICK, undoHistoryManager),
-        new PlantCommand(BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
-        new ReplaceCommand(BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
-        new SetCommand(BLOCKS_PER_TICK, selectionResolver, undoHistoryManager),
-        new UndoCommand(BLOCKS_PER_TICK, undoHistoryManager),
-        new WallCommand(BLOCKS_PER_TICK, selectionResolver, undoHistoryManager)
-    ));
   }
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
+    this.selectionService = context.getSelectionService();
+    this.undoHistoryService = context.getUndoHistoryService();
+
+    this.subCommandRegistry = new SubCommandRegistry<>(List.of(
+        new CopyCommand(false, BLOCKS_PER_TICK, context),
+        new CopyCommand(true, BLOCKS_PER_TICK, context),
+        new CylinderCommand(context, BLOCKS_PER_TICK),
+        new FillCommand(context, false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS),
+        new FillCommand(context, true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS),
+        new ClipboardCommand(context),
+        new MoveCommand(context, BLOCKS_PER_TICK),
+        new PasteCommand(context, BLOCKS_PER_TICK),
+        new PlantCommand(context, BLOCKS_PER_TICK),
+        new ReplaceCommand(context, BLOCKS_PER_TICK),
+        new SetCommand(context, BLOCKS_PER_TICK),
+        new UndoCommand(context, BLOCKS_PER_TICK),
+        new WallCommand(context, BLOCKS_PER_TICK)
+    ));
   }
 
   @Override
@@ -82,25 +87,25 @@ public class Modify implements CommandConstruct {
       @NotNull String string, @NotNull String[] strings) {
     if (!groupService.isSenderAuthorized(commandSender, "mod")) {
       commandSender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+          translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (!isPlayer(commandSender)) {
-      commandSender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      commandSender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) commandSender;
 
     if (strings.length == 0) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     SubCommand subCommand = subCommandRegistry.find(strings);
     if (subCommand == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       return true;
     }
 

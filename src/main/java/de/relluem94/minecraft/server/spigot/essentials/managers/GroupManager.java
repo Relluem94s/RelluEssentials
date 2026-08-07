@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import java.util.List;
@@ -21,7 +20,7 @@ public class GroupManager implements Enable {
 
     Bukkit.getOnlinePlayers().forEach(p -> {
       PlayerEntry pe = relluEssentialsPlugin.getPlayerRegistry().getPlayerEntry(p);
-      PlayerHelper.setGroup(p, pe.getGroup());
+      relluEssentialsPlugin.getPlayerService().setGroup(p, pe.getGroup());
     });
   }
 }

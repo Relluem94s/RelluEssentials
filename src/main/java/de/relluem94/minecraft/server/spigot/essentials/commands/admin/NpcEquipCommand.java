@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
@@ -11,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcEquipmentInven
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -32,20 +31,22 @@ public class NpcEquipCommand implements SubCommand {
   private static final String NPC_EQUIPMENT_INVENTORY_TITLE_PREFIX = "NPC Equipment: ";
 
   private final GroupService groupService;
+  private final TranslationService translationService;
 
   public NpcEquipCommand(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
   public void execute(Player player, String[] args) {
     if (!groupService.isSenderAuthorized(player, "admin")) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 
     if (args.length < REQUIRED_ARGS_LENGTH) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_EQUIP_USAGE));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_EQUIP_USAGE));
       return;
     }
 
@@ -53,13 +54,13 @@ public class NpcEquipCommand implements SubCommand {
     try {
       npcId = UUID.fromString(args[ARGS_NPC_ID_INDEX]);
     } catch (IllegalArgumentException e) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
       return;
     }
 
     Optional<Npc> npcOptional = RelluEssentials.getInstance().getNpcService().getNPCById(npcId);
     if (npcOptional.isEmpty()) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NPC_NOT_FOUND));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_NOT_FOUND));
       return;
     }
 

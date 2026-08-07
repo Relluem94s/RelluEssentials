@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.npc.trader;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
@@ -8,6 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Namespac
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -16,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -27,17 +28,22 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class BeekeeperNpc extends TraderNpc {
 
-  public BeekeeperNpc() {
+  private final TranslationService translationService;
+
+  public BeekeeperNpc(ServiceContext serviceContext) {
     super("§dBeekeeper", Profession.NONE, Type.BEEKEEPER);
+    translationService = serviceContext.getTranslationService();
   }
 
   private ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+    return ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
   }
 
   private ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+    return ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
   }
 
@@ -82,12 +88,12 @@ public class BeekeeperNpc extends TraderNpc {
     }
 
     List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
-    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice),
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice * 64)));
-    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(sellPrice),
         PLUGIN_NAME_MONEY,
@@ -114,12 +120,12 @@ public class BeekeeperNpc extends TraderNpc {
     int sellPrice = price.getSellPrice();
 
     List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
-    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice),
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice * 64)));
-    lore.add(languageHelper.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(sellPrice),
         PLUGIN_NAME_MONEY,

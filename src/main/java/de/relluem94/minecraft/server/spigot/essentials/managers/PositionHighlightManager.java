@@ -1,10 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ public class PositionHighlightManager implements Enable {
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
     new BukkitRunnable() {
       @Override
       public void run() {
@@ -44,7 +44,7 @@ public class PositionHighlightManager implements Enable {
           World w = firstLocation != null ? firstLocation.getWorld() : secondLocation.getWorld();
           if (firstLocation != null && secondLocation != null) {
             if (!Objects.equals(firstLocation.getWorld(), secondLocation.getWorld())) {
-              p.sendMessage(languageHelper.getWithPrefix(
+              p.sendMessage(translationService.getWithPrefix(
                   MessageKey.COMMAND_POSITION_HIGHLIGHTING_DIFFERENT_WORLDS));
 
               continue;

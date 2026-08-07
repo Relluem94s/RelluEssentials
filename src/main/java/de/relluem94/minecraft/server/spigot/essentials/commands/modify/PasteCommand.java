@@ -1,18 +1,19 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.normalizeYaw;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
-import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.UndoHistoryManager;
+import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +25,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class PasteCommand implements SubCommand {
 
   private final int blocksPerTick;
-  private final UndoHistoryManager undoHistoryManager;
+  private final UndoHistoryService undoHistoryService;
+  private final TranslationService translationService;
 
-  public PasteCommand(int blocksPerTick, UndoHistoryManager undoHistoryManager) {
+  public PasteCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
-    this.undoHistoryManager = undoHistoryManager;
+    this.undoHistoryService = serviceContext.getUndoHistoryService();
+    this.translationService = serviceContext.getTranslationService();
   }
 
   @Override
@@ -37,7 +40,7 @@ public class PasteCommand implements SubCommand {
         player);
     if (clipboardStore == null || clipboardStore.getSecondValue() == null
         || clipboardStore.getSecondValue().isEmpty()) {
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
+      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
       return;
     }
 
@@ -74,8 +77,8 @@ public class PasteCommand implements SubCommand {
       }
     }
 
-    undoHistoryManager.add(player, history);
-    player.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED,
+    undoHistoryService.addHistory(player, history);
+    player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED,
         clipboardStore.getSecondValue().size()));
   }
 

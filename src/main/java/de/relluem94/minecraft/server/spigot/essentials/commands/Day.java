@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -10,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -25,10 +25,12 @@ import org.jetbrains.annotations.Nullable;
 public class Day implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
@@ -40,33 +42,33 @@ public class Day implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
       p.getWorld().setTime(0L);
       p.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TIME_DAY, p.getWorld().getName()));
+          translationService.getWithPrefix(MessageKey.COMMAND_TIME_DAY, p.getWorld().getName()));
       return true;
     }
 
     World world = Bukkit.getWorld(args[0]);
 
     if (world == null) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, args[0]));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, args[0]));
       return true;
     }
 
     world.setTime(0L);
-    p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TIME_DAY, world.getName()));
+    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TIME_DAY, world.getName()));
     return true;
   }
 

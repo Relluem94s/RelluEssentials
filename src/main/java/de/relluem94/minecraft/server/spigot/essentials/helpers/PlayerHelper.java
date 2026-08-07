@@ -1,23 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.rellulib.utils.NetworkUtils;
 import java.util.Properties;
 import java.util.UUID;
@@ -42,61 +32,6 @@ public class PlayerHelper {
 
   private PlayerHelper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
-  }
-
-  /**
-   *
-   * @param p Player to set Flying
-   */
-  public static void setFlying(Player p, GroupService groupService) {
-    if (groupService.isSenderAuthorized(p, "vip")) {
-      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
-      if (pe.isFlying()) {
-        p.setAllowFlight(true);
-        p.setFlying(true);
-      }
-    }
-  }
-
-  /**
-   *
-   * @param p    Player
-   * @param join Boolean
-   *
-   */
-  public static void setAFK(Player p, boolean join) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
-    boolean isAFK = pe.isAfk();
-
-    if (pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)) {
-      isAFK = true;
-    } else if (pe.getPlayerState().equals(PlayerState.FAKE_AFK_ON)) {
-      isAFK = false;
-    }
-
-    if (!join) {
-      Bukkit.broadcastMessage(
-          languageHelper.getWithPrefix(
-              !isAFK ? MessageKey.COMMAND_AFK_ACTIVATED : MessageKey.COMMAND_AFK_DEACTIVATED,
-              p.getLocale(),
-              p.getCustomName() + "§f",
-              !isAFK ? "§c" : "§a"
-          )
-      );
-      isAFK = !isAFK; // Invert for single invertion ^_^
-    }
-
-    if (pe.getPlayerState().equals(PlayerState.DEFAULT)) {
-      if (!join) {
-        pe.setUpdatedBy(pe.getId());
-        pe.setAfk(isAFK);
-        pe.setUpdatedBy(pe.getId());
-        pe.setHasToBeUpdated(true);
-      }
-      p.setInvulnerable(isAFK);
-    }
-
-    p.setPlayerListName((isAFK ? "§c[AFK] " : "") + p.getCustomName());
   }
 
 
@@ -136,108 +71,10 @@ public class PlayerHelper {
     }
   }
 
-  public static void setGroup(Player p, GroupEntry g) {
-    p.setCustomName(g.getPrefix() + getCustomName(p));
-    p.setPlayerListName(p.getCustomName());
-  }
-
-  public static void updateGroup(OfflinePlayer p, GroupEntry g) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
-
-    if (p.isOnline()) {
-      Player player = Bukkit.getPlayer(p.getUniqueId());
-      if (player != null) {
-        player.setCustomName(g.getPrefix() + getCustomName(player));
-        player.setPlayerListName(g.getPrefix() + getCustomName(player));
-      }
-    }
-
-    pe.setGroup(g);
-    pe.setUpdatedBy(pe.getId());
-    pe.setHasToBeUpdated(true);
-  }
-
-
-  public static String getCustomName(Player p) {
-    String name;
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId());
-    if (pe.getCustomName() != null && !pe.getCustomName().equals("null")) {
-      name = pe.getCustomName();
-    } else {
-      name = p.getName();
-    }
-
-    return name;
-  }
-
-
-  public static void savePlayers(GroupEntry adminGroup) {
-    int updatedPlayers = 0;
-
-    for (PlayerEntry pe : RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntryMap()
-        .values()) {
-      updatedPlayers += savePlayer(pe);
-    }
-
-    if (updatedPlayers != 0) {
-      sendMessageInChannel(
-          languageHelper.get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers),
-          PLUGIN_NAME_CHAT_CONSOLE,
-          BetterChatFormat.ADMIN_CHANNEL,
-          adminGroup
-      );
-    }
-  }
-
-  public static void savePlayersInv(GroupEntry adminGroup) {
-    int updatedPlayers = 0;
-
-    for (Player p : Bukkit.getOnlinePlayers()) {
-      updatedPlayers += WorldHelper.saveWorldGroupInventory(p, false) ? 1 : 0;
-    }
-
-    if (updatedPlayers != 0) {
-      sendMessageInChannel(
-          languageHelper.get(MessageKey.PLUGIN_PLAYERS_INVENTORY_SAVED, updatedPlayers),
-          PLUGIN_NAME_CHAT_CONSOLE,
-          BetterChatFormat.ADMIN_CHANNEL,
-          adminGroup
-      );
-    }
-  }
-
-
-  public static void savePlayer(Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
-    savePlayer(pe);
-  }
-
-  public static int savePlayer(@NotNull PlayerEntry pe) {
-    if (pe.isHasToBeUpdated()) {
-      RelluEssentials.getInstance().getDatabaseHelper().updatePlayer(pe);
-      pe.setHasToBeUpdated(false);
-      return 1;
-    }
-
-    return 0;
-  }
-
   public static @Nullable OfflinePlayer getOfflinePlayer(@NotNull String name) {
     for (OfflinePlayer op : Bukkit.getOfflinePlayers()) {
       if (name.equals(op.getName())) {
         return op;
-      }
-    }
-
-    return null;
-  }
-
-  @SuppressWarnings("unused")
-  public static @Nullable PlayerEntry getPlayer(String name) {
-    for (PlayerEntry pe : RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntryMap()
-        .values()) {
-      if (pe.getName().equals(name)) {
-        return pe;
       }
     }
 
@@ -276,15 +113,15 @@ public class PlayerHelper {
         continue;
       }
 
-        if (i.isSimilar(grapplingHookItem.getCustomItem())) {
-            p.getInventory().remove(i);
-        }
-        if (i.isSimilar(cloudSailorItem.getCustomItem())) {
-            p.getInventory().remove(i);
-        }
-        if (i.isSimilar(worldSelectorItem.getCustomItem())) {
-            p.getInventory().remove(i);
-        }
+      if (i.isSimilar(grapplingHookItem.getCustomItem())) {
+        p.getInventory().remove(i);
+      }
+      if (i.isSimilar(cloudSailorItem.getCustomItem())) {
+        p.getInventory().remove(i);
+      }
+      if (i.isSimilar(worldSelectorItem.getCustomItem())) {
+        p.getInventory().remove(i);
+      }
     }
 
     p.getInventory().setArmorContents(new ItemStack[]{null, null, null, null});

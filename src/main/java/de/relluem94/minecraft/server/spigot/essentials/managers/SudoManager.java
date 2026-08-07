@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
@@ -21,7 +22,7 @@ public class SudoManager implements Disable {
       if (player == null) {
         continue;
       }
-      Sudo.exitSudo(player);
+      Sudo.exitSudo(player, ((RelluEssentials)plugin).getTranslationService());
     }
   }
 }

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
@@ -71,78 +70,81 @@ import org.bukkit.plugin.Plugin;
 
 public class CommandManager implements Enable {
 
+  @Getter
+  private List<CommandWrapper> commandWrapperList = List.of(
+      new CommandWrapper(new Admin()),
+      new CommandWrapper(new AFK()),
+      new CommandWrapper(new Back()),
+      new CommandWrapper(new Bags()),
+      new CommandWrapper(new Broadcast()),
+      new CommandWrapper(new Cookies()),
+      new CommandWrapper(new CraftingBench()),
+      new CommandWrapper(new CustomHead()),
+      new CommandWrapper(new Day()),
+      new CommandWrapper(new Enderchest()),
+      new CommandWrapper(new Exit()),
+      new CommandWrapper(new Fly()),
+      new CommandWrapper(new GameModeAdventure()),
+      new CommandWrapper(new GameModeCreative()),
+      new CommandWrapper(new GameModeSpectator()),
+      new CommandWrapper(new GameModeSurvival()),
+      new CommandWrapper(new GameRules()),
+      new CommandWrapper(new God()),
+      new CommandWrapper(new Head()),
+      new CommandWrapper(new Heal()),
+      new CommandWrapper(new Home()),
+      new CommandWrapper(new Inventory()),
+      new CommandWrapper(new Marry()),
+      new CommandWrapper(new Message()),
+      new CommandWrapper(new Modify()),
+      new CommandWrapper(new More()),
+      new CommandWrapper(new Nick()),
+      new CommandWrapper(new Night()),
+      new CommandWrapper(new PermissionsGroup()),
+      new CommandWrapper(new PlayerInfo()),
+      new CommandWrapper(new PlayerList()),
+      new CommandWrapper(new PlayerWeather()),
+      new CommandWrapper(new Poke()),
+      new CommandWrapper(new Position()),
+      new CommandWrapper(new Print()),
+      new CommandWrapper(new Protect()),
+      new CommandWrapper(new Purse()),
+      new CommandWrapper(new Rain()),
+      new CommandWrapper(new Rename()),
+      new CommandWrapper(new Repair()),
+      new CommandWrapper(new Reply()),
+      new CommandWrapper(new Sign()),
+      new CommandWrapper(new Spawn()),
+      new CommandWrapper(new Speed()),
+      new CommandWrapper(new Storm()),
+      new CommandWrapper(new Sudo()),
+      new CommandWrapper(new Suicide()),
+      new CommandWrapper(new Sun()),
+      new CommandWrapper(new Team()),
+      new CommandWrapper(new Teleport()),
+      new CommandWrapper(new Title()),
+      new CommandWrapper(new Vanish()),
+      new CommandWrapper(new Warp()),
+      new CommandWrapper(new Where()),
+      new CommandWrapper(new Worlds()),
+
+      // THIS IS A DEV COMMAND
+      new CommandWrapper(new DevCommand())
+  );
+
   @Override
   public void enable(Plugin plugin) {
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_REGISTER_COMMANDS));
-
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    getCommandWrapperList().forEach(wrapper -> wrapper.init(relluEssentialsPlugin, relluEssentialsPlugin.getServiceContext()));
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        relluEssentialsPlugin.getTranslationService()
+            .get(MessageKey.PLUGIN_MANAGER_REGISTER_COMMANDS));
+
+    getCommandWrapperList().forEach(
+        wrapper -> wrapper.init(relluEssentialsPlugin, relluEssentialsPlugin.getServiceContext()));
 
     int commands = PluginCommandYamlParser.parse(plugin).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        languageHelper.get(MessageKey.PLUGIN_MANAGER_COMMANDS_REGISTERED, commands));
+        relluEssentialsPlugin.getTranslationService()
+            .get(MessageKey.PLUGIN_MANAGER_COMMANDS_REGISTERED, commands));
   }
-
-  @Getter
-  private List<CommandWrapper> commandWrapperList = List.of(
-          new CommandWrapper(new Admin()),
-          new CommandWrapper(new AFK()),
-          new CommandWrapper(new Back()),
-          new CommandWrapper(new Bags()),
-          new CommandWrapper(new Broadcast()),
-          new CommandWrapper(new Cookies()),
-          new CommandWrapper(new CraftingBench()),
-          new CommandWrapper(new CustomHead()),
-          new CommandWrapper(new Day()),
-          new CommandWrapper(new Enderchest()),
-          new CommandWrapper(new Exit()),
-          new CommandWrapper(new Fly()),
-          new CommandWrapper(new GameModeAdventure()),
-          new CommandWrapper(new GameModeCreative()),
-          new CommandWrapper(new GameModeSpectator()),
-          new CommandWrapper(new GameModeSurvival()),
-          new CommandWrapper(new GameRules()),
-          new CommandWrapper(new God()),
-          new CommandWrapper(new Head()),
-          new CommandWrapper(new Heal()),
-          new CommandWrapper(new Home()),
-          new CommandWrapper(new Inventory()),
-          new CommandWrapper(new Marry()),
-          new CommandWrapper(new Message()),
-          new CommandWrapper(new Modify()),
-          new CommandWrapper(new More()),
-          new CommandWrapper(new Nick()),
-          new CommandWrapper(new Night()),
-          new CommandWrapper(new PermissionsGroup()),
-          new CommandWrapper(new PlayerInfo()),
-          new CommandWrapper(new PlayerList()),
-          new CommandWrapper(new PlayerWeather()),
-          new CommandWrapper(new Poke()),
-          new CommandWrapper(new Position()),
-          new CommandWrapper(new Print()),
-          new CommandWrapper(new Protect()),
-          new CommandWrapper(new Purse()),
-          new CommandWrapper(new Rain()),
-          new CommandWrapper(new Rename()),
-          new CommandWrapper(new Repair()),
-          new CommandWrapper(new Reply()),
-          new CommandWrapper(new Sign()),
-          new CommandWrapper(new Spawn()),
-          new CommandWrapper(new Speed()),
-          new CommandWrapper(new Storm()),
-          new CommandWrapper(new Sudo()),
-          new CommandWrapper(new Suicide()),
-          new CommandWrapper(new Sun()),
-          new CommandWrapper(new Team()),
-          new CommandWrapper(new Teleport()),
-          new CommandWrapper(new Title()),
-          new CommandWrapper(new Vanish()),
-          new CommandWrapper(new Warp()),
-          new CommandWrapper(new Where()),
-          new CommandWrapper(new Worlds()),
-
-          // THIS IS A DEV COMMAND
-          new CommandWrapper(new DevCommand())
-      );
 }

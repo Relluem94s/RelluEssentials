@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -11,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -26,29 +26,31 @@ public class Vanish implements CommandConstruct {
 
   private final List<Player> isVanished = new ArrayList<>();
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_VANISH));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_VANISH));
       boolean canSee = !isVanished.contains(p);
 
       for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
@@ -61,7 +63,7 @@ public class Vanish implements CommandConstruct {
         }
       }
 
-      p.sendMessage(languageHelper.getWithPrefix(
+      p.sendMessage(translationService.getWithPrefix(
           canSee ? MessageKey.COMMAND_VANISH_ENABLE : MessageKey.COMMAND_VANISH_DISABLE,
           p.getCustomName()
       ));
@@ -71,11 +73,11 @@ public class Vanish implements CommandConstruct {
 
     Player target = Bukkit.getPlayer(args[0]);
     if (target == null) {
-      p.sendMessage(languageHelper.get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+      p.sendMessage(translationService.get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
-    target.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_VANISH));
+    target.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_VANISH));
 
     boolean canSee = false;
     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
@@ -87,7 +89,7 @@ public class Vanish implements CommandConstruct {
       }
     }
 
-    p.sendMessage(languageHelper.getWithPrefix(
+    p.sendMessage(translationService.getWithPrefix(
         canSee ? MessageKey.COMMAND_VANISH_ENABLE : MessageKey.COMMAND_VANISH_DISABLE,
         target.getCustomName()
     ));

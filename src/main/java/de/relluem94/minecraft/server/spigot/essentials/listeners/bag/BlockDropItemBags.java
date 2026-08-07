@@ -3,13 +3,13 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,8 @@ public class BlockDropItemBags implements ListenerConstruct {
   private final EnchantmentHelper autosmelt;
   private final EnchantmentHelper replenishment;
   private final EnchantmentHelper telekinesis;
+  private BagService bagService;
+
   public BlockDropItemBags() {
     this.autosmelt = EnchantmentRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(),
@@ -48,7 +50,7 @@ public class BlockDropItemBags implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    bagService = context.getBagService();
   }
 
   @EventHandler
@@ -112,8 +114,8 @@ public class BlockDropItemBags implements ListenerConstruct {
       }
     }
 
-    if (BagHelper.hasBags(pe.getId())) {
-      List<Item> lis = BagHelper.collectItems(e.getItems(), e.getPlayer(), pe);
+    if (bagService.hasBags(pe.getId())) {
+      List<Item> lis = bagService.collectItems(e.getItems(), e.getPlayer(), pe);
       e.getItems().removeAll(lis);
     }
 

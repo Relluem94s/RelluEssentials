@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.reply;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.msg;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -12,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -26,29 +26,31 @@ import org.jetbrains.annotations.Nullable;
 public class Message implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
     if (args.length <= 1) {
-      p.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MSG_INFO));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MSG_INFO));
       return true;
     }
 
     Player target = Bukkit.getPlayer(args[0]);
     if (target == null) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_MSG_PLAYER_OFFLINE));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MSG_PLAYER_OFFLINE));
       return true;
     }
 
@@ -58,7 +60,7 @@ public class Message implements CommandConstruct {
     reply.put(p, target);
     reply.put(target, p);
 
-    msg(groupService, sender, target, args, 1);
+    msg(groupService, translationService, sender, target, args, 1);
     return true;
   }
 

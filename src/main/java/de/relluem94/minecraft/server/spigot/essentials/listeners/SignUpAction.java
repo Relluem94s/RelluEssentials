@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
-
 import de.relluem94.minecraft.server.spigot.essentials.constants.SignConstants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -10,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registry.SignRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,6 +23,7 @@ public class SignUpAction implements ListenerConstruct {
 
 
   private final RegistryKey signAction;
+  TranslationService translationService;
 
   public SignUpAction() {
     this.signAction = RegistryKey.of(SignConstants.PLUGIN_SIGN_ACTION_UP);
@@ -31,7 +31,7 @@ public class SignUpAction implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
   }
 
   @EventHandler
@@ -74,7 +74,7 @@ public class SignUpAction implements ListenerConstruct {
 
     if (!endPointFound) {
       player.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
     }
   }
 }

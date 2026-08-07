@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -13,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,27 +30,29 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerInfo implements CommandConstruct {
 
   private GroupService groupService;
+  private TranslationService translationService;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.groupService = context.getGroupService();
+    this.translationService = context.getTranslationService();
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (args.length < 1) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (args.length > 1) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
     if (!groupService.isSenderAuthorized(sender, "vip")) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -58,7 +60,7 @@ public class PlayerInfo implements CommandConstruct {
 
     if (target == null) {
       sender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
@@ -71,7 +73,7 @@ public class PlayerInfo implements CommandConstruct {
 
     if (target == null) {
       sender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
       return;
     }
 
@@ -80,58 +82,61 @@ public class PlayerInfo implements CommandConstruct {
 
     if (pet == null) {
       sender.sendMessage(
-          languageHelper.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
+          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
       return;
     }
 
     sender.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO, target.getName()));
+        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO, target.getName()));
     sender.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_HOMES, pet.getHomes().size()));
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_DEATHPOINTS,
+        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_HOMES,
+            pet.getHomes().size()));
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_DEATHPOINTS,
         pet.getDeaths().size()));
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_GROUP,
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_GROUP,
         pet.getGroup().getPrefix() + pet.getGroup().getName()));
 
     if (pet.getPartner() != null) {
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_TO,
+      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_TO,
           RelluEssentials.getInstance().getPlayerRegistry()
               .getPlayerEntry(pet.getPartner().getFirstPartnerId()).getName(),
           RelluEssentials.getInstance().getPlayerRegistry()
               .getPlayerEntry(pet.getPartner().getSecondPartnerId())));
-      sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_SINCE,
-          pet.getPartner().getCreated()));
+      sender.sendMessage(
+          translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_SINCE,
+              pet.getPartner().getCreated()));
     }
 
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_LAST_ONLINE,
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_LAST_ONLINE,
         new Date(target.getLastPlayed())));
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_FIRST_ONLINE,
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_FIRST_ONLINE,
         new Date(target.getFirstPlayed())));
 
     sender.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.STONE.name(),
+        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.STONE.name(),
             target.getStatistic(Statistic.MINE_BLOCK, Material.STONE)));
     sender.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.DIRT.name(),
+        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.DIRT.name(),
             target.getStatistic(Statistic.MINE_BLOCK, Material.DIRT)));
     sender.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.SAND.name(),
+        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.SAND.name(),
             target.getStatistic(Statistic.MINE_BLOCK, Material.SAND)));
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
         Material.COBBLESTONE.name(),
         target.getStatistic(Statistic.MINE_BLOCK, Material.COBBLESTONE)));
     sender.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED, Material.DEEPSLATE.name(),
+        translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
+            Material.DEEPSLATE.name(),
             target.getStatistic(Statistic.MINE_BLOCK, Material.DEEPSLATE)));
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MINED,
         Material.DIAMOND_ORE.name(),
         target.getStatistic(Statistic.MINE_BLOCK, Material.DIAMOND_ORE) + target.getStatistic(
             Statistic.MINE_BLOCK, Material.DEEPSLATE_DIAMOND_ORE)));
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_DEATHS,
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_DEATHS,
         target.getStatistic(Statistic.DEATHS)));
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_JUMPED,
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_JUMPED,
         target.getStatistic(Statistic.JUMP)));
-    sender.sendMessage(languageHelper.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_LEFT_GAME,
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PLAYERINFO_LEFT_GAME,
         target.getStatistic(Statistic.LEAVE_GAME)));
   }
 

@@ -1,19 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.languageHelper;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TeleportHelper.teleportWorld;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BankerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
@@ -22,7 +19,11 @@ import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -34,31 +35,39 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventoryClickNpc implements ListenerConstruct {
 
-
-  private final NpcTradeHandler tradeHandler = new NpcTradeHandler();
-  private final Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
-      BankerHelper.npc_gui_deposit_5_percent, (p, bae) -> BankerHelper.deposit(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 5f),
-      BankerHelper.npc_gui_deposit_20_percent, (p, bae) -> BankerHelper.deposit(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 20f),
-      BankerHelper.npc_gui_deposit_50_percent, (p, bae) -> BankerHelper.deposit(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 50f),
-      BankerHelper.npc_gui_deposit_all, (p, bae) -> BankerHelper.deposit(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 100f),
-      BankerHelper.npc_gui_withdraw_5_percent, (p, bae) -> BankerHelper.withdraw(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 5f),
-      BankerHelper.npc_gui_withdraw_20_percent, (p, bae) -> BankerHelper.withdraw(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 20f),
-      BankerHelper.npc_gui_withdraw_50_percent, (p, bae) -> BankerHelper.withdraw(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 50f),
-      BankerHelper.npc_gui_withdraw_all, (p, bae) -> BankerHelper.withdraw(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 100f)
-  );
+  private TranslationService translationService;
+  private BankerNpc bankerNpc;
+  private NpcTradeHandler tradeHandler;
+  private BankService bankService;
+  private TeleportService teleportService;
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    translationService = context.getTranslationService();
+    tradeHandler = new NpcTradeHandler(translationService, context.getBagService());
+    bankerNpc = context.getBankerNpc();
+    bankService = context.getBankService();
+    teleportService = context.getTeleportService();
   }
+
+  private Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
+      bankService.npc_gui_deposit_5_percent, (p, bae) -> bankService.deposit(
+          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 5f),
+      bankService.npc_gui_deposit_20_percent, (p, bae) -> bankService.deposit(
+          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 20f),
+      bankService.npc_gui_deposit_50_percent, (p, bae) -> bankService.deposit(
+          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 50f),
+      bankService.npc_gui_deposit_all, (p, bae) -> bankService.deposit(
+          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 100f),
+      bankService.npc_gui_withdraw_5_percent, (p, bae) -> bankService.withdraw(
+          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 5f),
+      bankService.npc_gui_withdraw_20_percent, (p, bae) -> bankService.withdraw(
+          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 20f),
+      bankService.npc_gui_withdraw_50_percent, (p, bae) -> bankService.withdraw(
+          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 50f),
+      bankService.npc_gui_withdraw_all, (p, bae) -> bankService.withdraw(
+          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 100f)
+  );
 
   private ItemHelper resolveDisabledItem() {
     return ItemRegistry.find(
@@ -82,7 +91,7 @@ public class InventoryClickNpc implements ListenerConstruct {
         .getPlayerEntry(player);
     String title = e.getView().getTitle();
 
-    if (title.equals(RelluEssentials.getBanker().getTitle())) {
+    if (title.equals(bankerNpc.getTitle())) {
       handleBankerInventory(e, player, playerEntry);
     } else if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCTraderTitleList()
         .contains(title)) {
@@ -108,29 +117,29 @@ public class InventoryClickNpc implements ListenerConstruct {
       return;
     }
 
-    if (BankerHelper.npc_gui_deposit.equalsName(clickedItem)) {
+    if (bankService.npc_gui_deposit.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          RelluEssentials.getBanker().getDepositGUI(playerEntry.getPurse()));
-    } else if (BankerHelper.npc_gui_balance_total.equalsName(clickedItem)) {
+          bankerNpc.getDepositGUI(playerEntry.getPurse()));
+    } else if (bankService.npc_gui_balance_total.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
-      player.sendMessage(languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
+      player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
           StringHelper.formatDouble(bankAccount.getValue()), PLUGIN_NAME_MONEY));
-    } else if (BankerHelper.npc_gui_balance.equalsName(clickedItem)) {
+    } else if (bankService.npc_gui_balance.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
-      InventoryHelper.openInventory(player, RelluEssentials.getBanker().getBalanceGUI());
-    } else if (BankerHelper.npc_gui_withdraw.getCustomItem().getType()
+      InventoryHelper.openInventory(player, bankerNpc.getBalanceGUI());
+    } else if (bankService.npc_gui_withdraw.getCustomItem().getType()
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          RelluEssentials.getBanker().getWithdrawGUI(bankAccount.getValue()));
-    } else if (BankerHelper.UPGRADE_MATERIAL.equals(clickedItem.getType())) {
-      BankerHelper.upgradeAccount(clickedItem, player, playerEntry, bankAccount);
-    } else if (BankerHelper.npc_gui_balance_transactions.equalsExact(clickedItem)) {
+          bankerNpc.getWithdrawGUI(bankAccount.getValue()));
+    } else if (bankService.UPGRADE_MATERIAL.equals(clickedItem.getType())) {
+      bankService.upgradeAccount(clickedItem, player, playerEntry, bankAccount);
+    } else if (bankService.npc_gui_balance_transactions.equalsExact(clickedItem)) {
       handleTransactionHistory(player, bankAccount);
-    } else if (BankerHelper.npc_gui_upgrade.equalsExact(clickedItem)) {
+    } else if (bankService.npc_gui_upgrade.equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
-      InventoryHelper.openInventory(player, RelluEssentials.getBanker().getUpgradeGUI());
+      InventoryHelper.openInventory(player, bankerNpc.getUpgradeGUI());
     } else if (resolveCloseItem().equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {
@@ -144,11 +153,11 @@ public class InventoryClickNpc implements ListenerConstruct {
   private void handleTransactionHistory(Player player, BankAccountEntry bankAccount) {
     InventoryHelper.closeInventory(player);
     player.sendMessage(
-        languageHelper.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
+        translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
     List<BankTransactionEntry> transactions = RelluEssentials.getInstance().getDatabaseHelper()
         .getTransactionsToBankFromPlayer(bankAccount.getId());
     transactions.forEach(transaction -> player.sendMessage(
-        languageHelper.getWithPrefix(
+        translationService.getWithPrefix(
             MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST,
             transaction.getValue() > 1 ? PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE
                 : PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE,
@@ -163,7 +172,7 @@ public class InventoryClickNpc implements ListenerConstruct {
   private boolean isNpcOrCustomHeadsInventory(@NonNull String title) {
     return title.equals(
         Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs")
-        || title.equals(languageHelper.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE));
+        || title.equals(translationService.getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE));
   }
 
   private void handleNpcOrCustomHeadsInventory(InventoryClickEvent e, Player player) {
@@ -188,6 +197,6 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (e.getCurrentItem().getItemMeta() == null) {
       return;
     }
-    teleportWorld(player, e.getCurrentItem().getItemMeta().getDisplayName());
+    teleportService.teleportWorld(player, e.getCurrentItem().getItemMeta().getDisplayName());
   }
 }
