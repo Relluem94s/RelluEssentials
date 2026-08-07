@@ -28,7 +28,6 @@ import java.util.Collections;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -143,29 +142,28 @@ public class DatabaseManager implements Enable {
       }
     }
 
-    for (int i = 0; i < relluEssentialsPlugin.getBagTypeRegistry().getAll().size(); i++) {
-      ItemStack[] isa = relluEssentialsPlugin.getBagService().getItemStacks(
-          relluEssentialsPlugin.getBagTypeRegistry().getAll().get(i));
-      Collections.addAll(relluEssentialsPlugin.bagBlocks2collect, isa);
-    }
+
   }
 
   /**
    * Initializes registries and repositories after the world has been loaded. Runs with a 1-tick
    * delay to ensure the world is fully available.
    */
-  public void afterWorldLoaded(RelluEssentials plugin) {
-    new BukkitRunnable() {
-      @Override
-      public void run() {
+  public void afterWorldLoaded(@NonNull RelluEssentials plugin) {
+    plugin.getSchedulerService().runTaskLater(() -> {
         plugin
             .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
                 databaseHelper.getProtections()));
         plugin
             .setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
         plugin.getPlayerService().reloadPlayerHomes();
-      }
-    }.runTaskLater(plugin, 1L);
+      }, 1L);
+
+    for (int i = 0; i < plugin.getBagTypeRegistry().getAll().size(); i++) {
+      ItemStack[] isa = plugin.getBagService().getItemStacks(
+          plugin.getBagTypeRegistry().getAll().get(i));
+      Collections.addAll(plugin.bagBlocks2collect, isa);
+    }
   }
 
   public void setGroupService(GroupService groupService){
