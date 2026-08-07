@@ -1,9 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

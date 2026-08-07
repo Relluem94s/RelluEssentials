@@ -9,8 +9,8 @@ import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoaded
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -1,10 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
 import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

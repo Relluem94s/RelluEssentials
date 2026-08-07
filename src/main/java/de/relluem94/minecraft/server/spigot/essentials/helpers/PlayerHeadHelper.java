@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;

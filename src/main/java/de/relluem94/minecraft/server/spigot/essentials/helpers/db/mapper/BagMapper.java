@@ -16,8 +16,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jspecify.annotations.NonNull;

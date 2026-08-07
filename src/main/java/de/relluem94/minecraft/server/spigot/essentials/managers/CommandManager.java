@@ -62,7 +62,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Where;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.wrapper.CommandWrapper;
+import de.relluem94.minecraft.server.spigot.essentials.wrappers.CommandWrapper;
 import java.util.List;
 import lombok.Getter;
 import org.bukkit.command.PluginCommandYamlParser;

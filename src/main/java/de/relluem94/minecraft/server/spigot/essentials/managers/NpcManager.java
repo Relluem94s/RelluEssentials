@@ -2,10 +2,10 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BagSalesmanNpc;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BankerNpc;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.BeekeeperNpc;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.EnchanterNpc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BagSalesmanNpc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BankerNpc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BeekeeperNpc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.EnchanterNpc;
 import org.bukkit.plugin.Plugin;
 
 public class NpcManager implements Enable {

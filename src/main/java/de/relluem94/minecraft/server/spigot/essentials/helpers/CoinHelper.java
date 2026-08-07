@@ -4,8 +4,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
-import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.Collections;
 import java.util.Objects;
 import org.bukkit.inventory.ItemStack;

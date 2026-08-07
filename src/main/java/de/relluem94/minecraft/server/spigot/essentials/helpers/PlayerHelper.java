@@ -5,9 +5,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.rellulib.utils.NetworkUtils;
 import java.util.Properties;
 import java.util.UUID;

@@ -13,9 +13,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UUID;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_WORLD;
 
-import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcDialogueEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcEntry;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;

@@ -13,8 +13,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UPDATEDBY;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.TraderNPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNpc;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Function;

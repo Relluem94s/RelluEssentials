@@ -57,7 +57,7 @@ import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.EntityE
 import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.InventoryMoveItemProtect;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.protect.PlayerInteractProtect;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import de.relluem94.minecraft.server.spigot.essentials.wrapper.ListenerWrapper;
+import de.relluem94.minecraft.server.spigot.essentials.wrappers.ListenerWrapper;
 import java.util.List;
 import org.bukkit.plugin.Plugin;
 

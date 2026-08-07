@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNpc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;

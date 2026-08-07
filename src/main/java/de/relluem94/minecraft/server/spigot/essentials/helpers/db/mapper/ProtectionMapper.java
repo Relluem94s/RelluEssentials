@@ -13,8 +13,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_VALUE;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionLockEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionLockEntry;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.bukkit.Material;

@@ -1,12 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsSignInteractEvent;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.model.SignAction;
-import de.relluem94.minecraft.server.spigot.essentials.registry.SignRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.SignAction;
+import de.relluem94.minecraft.server.spigot.essentials.registries.SignRegistry;
 import java.util.Map;
 import java.util.Optional;
 import org.bukkit.block.Block;

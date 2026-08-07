@@ -22,7 +22,7 @@ public interface SubCommand {
   /**
    * Determines whether this sub-command matches the given argument pattern.
    * <p>
-   * Used by the {@link de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry}
+   * Used by the {@link de.relluem94.minecraft.server.spigot.essentials.registries.SubCommandRegistry}
    * to find the correct sub-command for a given input.
    * </p>
    *

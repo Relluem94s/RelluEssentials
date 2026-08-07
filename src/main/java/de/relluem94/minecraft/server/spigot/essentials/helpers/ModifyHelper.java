@@ -2,10 +2,10 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.List;
 import java.util.function.Consumer;

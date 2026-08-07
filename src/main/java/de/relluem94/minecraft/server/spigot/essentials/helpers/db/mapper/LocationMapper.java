@@ -14,8 +14,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jspecify.annotations.NonNull;

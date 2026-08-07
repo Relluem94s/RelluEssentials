@@ -8,7 +8,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UPDATEDBY;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcDialogueEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

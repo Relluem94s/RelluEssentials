@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.interfaces;
 
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.registries.SubCommandRegistry;
 import java.util.Optional;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;

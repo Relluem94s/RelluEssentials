@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.repository.BuyBackRepository;
+import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BuyBackRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.entity.Player;

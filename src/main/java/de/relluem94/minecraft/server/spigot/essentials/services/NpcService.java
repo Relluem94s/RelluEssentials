@@ -2,11 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcEquipmentInventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NpcOperationResult;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NpcRepository;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NpcSpawner;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NpcValidator;
+import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcOperationResult;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcRepository;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;

@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.model.CustomInventory;
+import de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;

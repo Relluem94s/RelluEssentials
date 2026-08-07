@@ -6,8 +6,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.model.SignAction;
-import de.relluem94.minecraft.server.spigot.essentials.registry.SignRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.SignAction;
+import de.relluem94.minecraft.server.spigot.essentials.registries.SignRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.plugin.Plugin;
 

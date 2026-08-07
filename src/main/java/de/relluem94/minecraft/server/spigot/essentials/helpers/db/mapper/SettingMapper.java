@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.SettingEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
