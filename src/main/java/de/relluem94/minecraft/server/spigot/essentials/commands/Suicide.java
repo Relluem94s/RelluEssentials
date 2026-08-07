@@ -10,8 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -25,13 +23,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("suicide")
 public class Suicide implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -39,30 +35,35 @@ public class Suicide implements CommandConstruct {
       @NonNull String label, String[] args) {
     if (isCMDBlock(sender) || isConsole(sender)) {
       if (args.length == 0) {
-        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+        sender.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
         return true;
       }
 
       Player target = Bukkit.getPlayer(args[0]);
       if (target == null) {
         sender.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return true;
       }
 
       sender.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       suicide(target);
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
-    if (!groupService.isSenderAuthorized(p, "user")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "user")) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -74,12 +75,14 @@ public class Suicide implements CommandConstruct {
     Player target = Bukkit.getPlayer(args[0]);
     if (target == null) {
       p.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
-    if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -90,7 +93,8 @@ public class Suicide implements CommandConstruct {
   private void suicide(@NotNull Player p) {
     p.setHealth(0);
     Bukkit.broadcastMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_SUICIDE, p.getCustomName()));
+        serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_SUICIDE, p.getCustomName()));
   }
 
   @Override
@@ -103,7 +107,7 @@ public class Suicide implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 

@@ -7,8 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcOperationResult;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
@@ -22,23 +20,23 @@ public class NpcCreateCommand implements SubCommand {
   private static final int ARGS_Z_INDEX = 5;
   private static final int REQUIRED_ARGS_LENGTH = 6;
 
-  private final GroupService groupService;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public NpcCreateCommand(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public void execute(Player player, String[] args) {
-    if (!groupService.isSenderAuthorized(player, "admin")) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(player, "admin")) {
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 
     if (args.length < REQUIRED_ARGS_LENGTH) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_CREATE_USAGE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_CREATE_USAGE));
       return;
     }
 
@@ -53,7 +51,8 @@ public class NpcCreateCommand implements SubCommand {
       z = Double.parseDouble(args[ARGS_Z_INDEX]);
     } catch (NumberFormatException e) {
       player.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_COORDINATES));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_NPC_INVALID_COORDINATES));
       return;
     }
     PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
@@ -64,12 +63,14 @@ public class NpcCreateCommand implements SubCommand {
 
     if (!result.isSuccessful()) {
       player.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_NPC_OPERATION_FAILED) + " "
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_NPC_OPERATION_FAILED) + " "
               + result.getErrorMessage());
       return;
     }
 
-    player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_CREATED));
+    player.sendMessage(
+        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_CREATED));
   }
 
   @Override

@@ -4,24 +4,23 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 public class TopCommand implements SubCommand {
 
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public TopCommand(ServiceContext context) {
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public void execute(Player player, String[] args) {
     Location l = player.getWorld().getHighestBlockAt(player.getLocation()).getLocation()
         .add(0, 1, 0);
-    player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_TOP));
+    player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_ADMIN_TOP));
     player.teleport(l);
   }
 

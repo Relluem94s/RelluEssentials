@@ -12,10 +12,8 @@ import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BuyBackSlotResolver;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -25,8 +23,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 public class InteractTraderNpc implements ListenerConstruct {
 
   private final BuyBackSlotResolver buyBackSlotResolver;
-  TranslationService translationService;
-  BankerNpc bankerNpc;
+  private ServiceContext serviceContext;
 
   public InteractTraderNpc() {
     this.buyBackSlotResolver = new BuyBackSlotResolver(
@@ -37,8 +34,7 @@ public class InteractTraderNpc implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-    translationService = context.getTranslationService();
-    bankerNpc = context.getBankerNpc();
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -52,12 +48,12 @@ public class InteractTraderNpc implements ListenerConstruct {
             i++) {
           if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList().get(i)
               .equals(customName)) {
-            if (customName.equals(bankerNpc.getName())) {
+            if (customName.equals(serviceContext.getBankerNpc().getName())) {
               PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
               BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper()
                   .getPlayerBankAccount(pe.getId());
               if (bae != null) {
-                InventoryHelper.openInventory(p, bankerNpc.getMainGUI());
+                InventoryHelper.openInventory(p, serviceContext.getBankerNpc().getMainGUI());
               } else {
                 BankTierEntry bte = RelluEssentials.getInstance().getDatabaseHelper()
                     .getBankTier(1);
@@ -72,10 +68,10 @@ public class InteractTraderNpc implements ListenerConstruct {
                   bae.setPlayerId(pe.getId());
 
                   RelluEssentials.getInstance().getDatabaseHelper().insertBankAccount(bae);
-                  p.sendMessage(translationService.getWithPrefix(
+                  p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
                       MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT));
                 } else {
-                  p.sendMessage(translationService.getWithPrefix(
+                  p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
                       MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT_TO_LESS_COINS,
                       PLUGIN_NAME_MONEY, PLUGIN_NAME_MONEY, bte.getCost()));
                 }

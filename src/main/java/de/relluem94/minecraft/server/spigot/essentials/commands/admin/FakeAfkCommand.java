@@ -2,19 +2,19 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 public class FakeAfkCommand implements SubCommand {
 
-  private final PlayerService playerService;
+  private final ServiceContext serviceContext;
 
-  public FakeAfkCommand(PlayerService playerService) {
-    this.playerService = playerService;
+  public FakeAfkCommand(ServiceContext serviceContext) {
+    this.serviceContext = serviceContext;
   }
 
   @Override
@@ -22,11 +22,11 @@ public class FakeAfkCommand implements SubCommand {
     PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(player);
 
     if (pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)) {
-      playerService.setAFK(player, false);
+      serviceContext.getPlayerService().setAFK(player, false);
       pe.setPlayerState(PlayerState.DEFAULT);
     } else {
       pe.setPlayerState(PlayerState.FAKE_AFK_ON);
-      playerService.setAFK(player, false);
+      serviceContext.getPlayerService().setAFK(player, false);
       pe.setPlayerState(PlayerState.FAKE_AFK_ACTIVE);
     }
   }

@@ -8,8 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,22 +16,22 @@ import org.jspecify.annotations.NonNull;
 public class UndoCommand implements SubCommand {
 
   private final int blocksPerTick;
-  private final UndoHistoryService undoHistoryService;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public UndoCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
-    this.undoHistoryService = serviceContext.getUndoHistoryService();
-    this.translationService = serviceContext.getTranslationService();
+    this.serviceContext = serviceContext;
   }
 
   @Override
   public void execute(Player player, String[] args) {
-    List<ModifyHistoryEntry> lastHistory = undoHistoryService.popLastHistory(player);
+    List<ModifyHistoryEntry> lastHistory = serviceContext.getUndoHistoryService()
+        .popLastHistory(player);
 
     if (lastHistory == null || lastHistory.isEmpty()) {
       player.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_UNDO_HISTORY));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_MODIFY_NO_UNDO_HISTORY));
       return;
     }
 
@@ -52,7 +50,7 @@ public class UndoCommand implements SubCommand {
     }
 
     player.sendMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_UNDO_STARTED,
+        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_UNDO_STARTED,
             lastHistory.size()));
   }
 

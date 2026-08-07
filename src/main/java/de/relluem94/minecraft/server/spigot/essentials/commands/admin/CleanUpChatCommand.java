@@ -4,17 +4,16 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 public class CleanUpChatCommand implements SubCommand {
 
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public CleanUpChatCommand(ServiceContext context) {
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -24,7 +23,7 @@ public class CleanUpChatCommand implements SubCommand {
         onlinePlayer.sendMessage("");
       }
     }
-    player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_CHAT_CLEARED));
+    player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_ADMIN_CHAT_CLEARED));
   }
 
   @Override

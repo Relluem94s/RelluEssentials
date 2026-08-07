@@ -59,7 +59,8 @@ public class Reply implements CommandConstruct {
     }
 
     if (!target.isOnline()) {
-      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MSG_PLAYER_OFFLINE));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MSG_PLAYER_OFFLINE));
       return true;
     }
 

@@ -4,7 +4,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
@@ -19,18 +18,19 @@ import org.bukkit.profile.PlayerProfile;
 public class SkullInfo implements ListenerConstruct {
 
 
-  private GroupService groupService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
+    this.serviceContext = context;
   }
 
   @EventHandler
   public void onClick(PlayerInteractEvent e) {
     Player p = e.getPlayer();
     if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)
-        && groupService.isSenderAuthorized(p, "vip") && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        && serviceContext.getGroupService().isSenderAuthorized(p, "vip")
+        && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
       Block clickedBlock = e.getClickedBlock();
       if (clickedBlock == null) {
         return;

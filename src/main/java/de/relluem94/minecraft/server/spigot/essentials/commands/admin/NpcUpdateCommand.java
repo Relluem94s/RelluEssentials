@@ -7,8 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcOperationResult;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
@@ -26,23 +24,23 @@ public class NpcUpdateCommand implements SubCommand {
   private static final int REQUIRED_ARGS_PROFILE_LENGTH = 5;
   private static final int REQUIRED_ARGS_POSITION_LENGTH = 7;
 
-  private final GroupService groupService;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public NpcUpdateCommand(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public void execute(Player player, String[] args) {
-    if (!groupService.isSenderAuthorized(player, "admin")) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(player, "admin")) {
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 
     if (args.length < REQUIRED_ARGS_PROFILE_LENGTH) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
       return;
     }
 
@@ -50,7 +48,8 @@ public class NpcUpdateCommand implements SubCommand {
     try {
       npcId = UUID.fromString(args[ARGS_ID_INDEX]);
     } catch (IllegalArgumentException e) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
+      player.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
       return;
     }
 
@@ -61,13 +60,15 @@ public class NpcUpdateCommand implements SubCommand {
     } else if ("position".equalsIgnoreCase(field)) {
       handlePositionUpdate(player, npcId, args);
     } else {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
     }
   }
 
   private void handleProfileUpdate(Player player, UUID npcId, String[] args) {
     if (args.length < REQUIRED_ARGS_PROFILE_LENGTH) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
       return;
     }
     String newProfile = args[ARGS_PROFILE_VALUE_INDEX];
@@ -81,7 +82,8 @@ public class NpcUpdateCommand implements SubCommand {
 
   private void handlePositionUpdate(Player player, UUID npcId, String[] args) {
     if (args.length < REQUIRED_ARGS_POSITION_LENGTH) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_UPDATE_USAGE));
       return;
     }
     double x;
@@ -93,7 +95,8 @@ public class NpcUpdateCommand implements SubCommand {
       z = Double.parseDouble(args[ARGS_Z_INDEX]);
     } catch (NumberFormatException e) {
       player.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_COORDINATES));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_NPC_INVALID_COORDINATES));
       return;
     }
 
@@ -109,10 +112,11 @@ public class NpcUpdateCommand implements SubCommand {
       MessageKey successKey, MessageKey failureKey) {
     if (!result.isSuccessful()) {
       player.sendMessage(
-          translationService.getWithPrefix(failureKey) + " " + result.getErrorMessage());
+          serviceContext.getTranslationService().getWithPrefix(failureKey) + " "
+              + result.getErrorMessage());
       return;
     }
-    player.sendMessage(translationService.getWithPrefix(successKey));
+    player.sendMessage(serviceContext.getTranslationService().getWithPrefix(successKey));
   }
 
   @Override

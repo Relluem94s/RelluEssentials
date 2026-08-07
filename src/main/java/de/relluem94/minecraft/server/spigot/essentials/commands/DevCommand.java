@@ -23,9 +23,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SubCommandRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -40,18 +37,16 @@ import org.jetbrains.annotations.Nullable;
 public class DevCommand implements CommandConstruct {
 
   private SubCommandRegistry<SubCommand> subCommandRegistry;
-  private GroupService groupService;
-  private TranslationService translationService;
+
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
-    UndoHistoryService undoHistoryService = context.getUndoHistoryService();
+    this.serviceContext = context;
     subCommandRegistry = new SubCommandRegistry<>(List.of(
         new CustomMobCommand(),
         new RotateTestCommand(context),
-        new DevPlattformCommand(undoHistoryService, context),
+        new DevPlattformCommand(context),
         new GivePickaxeCommand(),
         new GiveCloudSailorCommand(),
         new GiveRelluGearCommand(),
@@ -69,30 +64,30 @@ public class DevCommand implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!p.getName().equalsIgnoreCase("Relluem94")) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_INVALID));
+      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_INVALID));
       return true;
     }
 
     if (args.length < 1) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (args.length > 1) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
     SubCommand subCommand = subCommandRegistry.find(args);
     if (subCommand == null) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       return true;
     }
 
@@ -110,7 +105,7 @@ public class DevCommand implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 

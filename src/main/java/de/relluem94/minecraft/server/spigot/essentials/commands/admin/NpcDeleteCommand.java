@@ -7,8 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcOperationResult;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
@@ -20,23 +18,23 @@ public class NpcDeleteCommand implements SubCommand {
   private static final int ARGS_ID_INDEX = 2;
   private static final int REQUIRED_ARGS_LENGTH = 3;
 
-  private final GroupService groupService;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public NpcDeleteCommand(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public void execute(Player player, String[] args) {
-    if (!groupService.isSenderAuthorized(player, "admin")) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(player, "admin")) {
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 
     if (args.length < REQUIRED_ARGS_LENGTH) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_DELETE_USAGE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_NPC_DELETE_USAGE));
       return;
     }
 
@@ -44,7 +42,8 @@ public class NpcDeleteCommand implements SubCommand {
     try {
       npcId = UUID.fromString(args[ARGS_ID_INDEX]);
     } catch (IllegalArgumentException e) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
+      player.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
       return;
     }
     PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
@@ -53,12 +52,15 @@ public class NpcDeleteCommand implements SubCommand {
         .deleteNPC(npcId, playerEntry.getId());
 
     if (!result.isSuccessful()) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_NOT_FOUND) + " "
-          + result.getErrorMessage());
+      player.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_NOT_FOUND)
+              + " "
+              + result.getErrorMessage());
       return;
     }
 
-    player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NPC_DELETED));
+    player.sendMessage(
+        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_DELETED));
   }
 
   @Override

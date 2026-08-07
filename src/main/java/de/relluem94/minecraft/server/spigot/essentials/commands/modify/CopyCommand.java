@@ -15,9 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,21 +27,17 @@ public class CopyCommand implements SubCommand {
 
   private final boolean isCut;
   private final int blocksPerTick;
-  private final SelectionService selectionService;
-  private final UndoHistoryService undoHistoryService;
-  private final TranslationService translationService;
-  
+  private final ServiceContext serviceContext;
+
   public CopyCommand(boolean isCut, int blocksPerTick, ServiceContext context) {
     this.isCut = isCut;
     this.blocksPerTick = blocksPerTick;
-    this.selectionService = context.getSelectionService();
-    this.undoHistoryService = context.getUndoHistoryService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public void execute(Player player, String[] args) {
-    Selection selection = selectionService.resolve(player);
+    Selection selection = serviceContext.getSelectionService().resolve(player);
     if (selection == null) {
       return;
     }
@@ -77,17 +70,19 @@ public class CopyCommand implements SubCommand {
 
     if (isCut) {
       blockHelper.setBlocks(0);
-      undoHistoryService.addHistory(player, history);
+      serviceContext.getUndoHistoryService().addHistory(player, history);
     }
 
     RelluEssentials.getInstance().clipboard.put(player,
         new DoubleStore<>(newSelection, clipboardList));
     player.sendMessage(
         isCut
-            ? translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_CUT_STARTED,
-            clipboardList.size())
-            : translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_COPY_STARTED,
+            ? serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_MODIFY_CUT_STARTED,
                 clipboardList.size())
+            : serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_MODIFY_COPY_STARTED,
+                    clipboardList.size())
     );
   }
 

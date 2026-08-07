@@ -8,8 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -24,13 +22,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("night")
 public class Night implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -38,33 +34,38 @@ public class Night implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(p, "mod")) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
       p.getWorld().setTime(18000L);
       p.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_TIME_NIGHT, p.getWorld().getName()));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_TIME_NIGHT, p.getWorld().getName()));
       return true;
     }
 
     World world = Bukkit.getWorld(args[0]);
 
     if (world == null) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, args[0]));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, args[0]));
       return true;
     }
 
     world.setTime(18000L);
-    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TIME_NIGHT, world.getName()));
+    p.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_TIME_NIGHT, world.getName()));
     return true;
   }
 
@@ -76,7 +77,7 @@ public class Night implements CommandConstruct {
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
     }
 

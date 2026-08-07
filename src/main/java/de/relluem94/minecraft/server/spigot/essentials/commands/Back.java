@@ -7,10 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,17 +23,12 @@ import org.jetbrains.annotations.Nullable;
 public class Back implements CommandConstruct {
 
   private static final Map<Player, Location> backPlayerLocation = new HashMap<>();
-  private GroupService groupService;
-  private TranslationService translationService;
-  private BackService backService;
-  private TeleportService teleportService;
+
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
-    this.backService = context.getBackService();
-    this.teleportService = context.getTeleportService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -55,25 +46,26 @@ public class Back implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender commandSender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(commandSender)) {
-      commandSender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      commandSender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player player = (Player) commandSender;
 
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "user")) {
+      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
-    if (!backService.hasBackPoint(player)) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_BACK_NO_LOCATION));
+    if (!serviceContext.getBackService().hasBackPoint(player)) {
+      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_BACK_NO_LOCATION));
       return true;
     }
 
-    Location backLocation = backService.findBackPoint(player).get();
-    backService.removeBackPoint(player);
-    teleportService.teleportBack(player, backLocation);
+    Location backLocation = serviceContext.getBackService()
+        .findBackPoint(player).get();
+    serviceContext.getBackService().removeBackPoint(player);
+    serviceContext.getTeleportService().teleportBack(player, backLocation);
     return true;
   }
 }

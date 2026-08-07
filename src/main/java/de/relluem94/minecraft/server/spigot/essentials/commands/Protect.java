@@ -15,8 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -29,13 +27,11 @@ import org.jetbrains.annotations.NotNull;
 @CommandName("protect")
 public class Protect implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   private @NotNull String getFlags() {
@@ -53,14 +49,16 @@ public class Protect implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(sender, "user")) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(sender, "user")) {
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -69,7 +67,7 @@ public class Protect implements CommandConstruct {
 
     if (args.length == 0) {
       p.sendMessage(
-          translationService.getWithPrefix(
+          serviceContext.getTranslationService().getWithPrefix(
               MessageKey.COMMAND_PROTECT_COMMAND_INFO,
               AnnotationHelper.getCommandName(this.getClass()),
               Commands.ADD.getName(),
@@ -81,93 +79,111 @@ public class Protect implements CommandConstruct {
       );
     } else if (args.length == 1) {
       if (args[0].equalsIgnoreCase(Commands.ADD.getName())) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_ADD));
+        p.sendMessage(
+            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PROTECT_ADD));
         pe.setPlayerState(PlayerState.PROTECTION_ADD);
       } else if (args[0].equalsIgnoreCase(Commands.REMOVE.getName())) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_REMOVE));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_PROTECT_REMOVE));
         pe.setPlayerState(PlayerState.PROTECTION_REMOVE);
       } else if (args[0].equalsIgnoreCase(Commands.FLAG.getName())) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG,
-            AnnotationHelper.getCommandName(this.getClass()),
-            Commands.FLAG.getName(),
-            Commands.FLAG.getSubCommands()[1],
-            Commands.FLAG.getSubCommands()[0]));
+        p.sendMessage(
+            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG,
+                AnnotationHelper.getCommandName(this.getClass()),
+                Commands.FLAG.getName(),
+                Commands.FLAG.getSubCommands()[1],
+                Commands.FLAG.getSubCommands()[0]));
       } else if (args[0].equalsIgnoreCase(Commands.RIGHT.getName())) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT,
-            AnnotationHelper.getCommandName(this.getClass()),
-            Commands.RIGHT.getName(),
-            Commands.RIGHT.getSubCommands()[1],
-            Commands.RIGHT.getSubCommands()[0]));
+        p.sendMessage(
+            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT,
+                AnnotationHelper.getCommandName(this.getClass()),
+                Commands.RIGHT.getName(),
+                Commands.RIGHT.getSubCommands()[1],
+                Commands.RIGHT.getSubCommands()[0]));
       } else if (args[0].equalsIgnoreCase(Commands.INFO.getName())) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_INFO));
+        p.sendMessage(
+            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PROTECT_INFO));
         pe.setPlayerState(PlayerState.PROTECTION_INFO);
       } else {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       }
     } else if (args.length == 3) {
       if (args[0].equalsIgnoreCase(Commands.FLAG.getName())) {
         if (args[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[0])) {
           try {
             if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
-              p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_ADD));
+              p.sendMessage(serviceContext.getTranslationService()
+                  .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_ADD));
               pe.setPlayerState(PlayerState.PROTECTION_FLAG_ADD);
               pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
             }
           } catch (IllegalArgumentException ex) {
             p.sendMessage(
-                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
+                serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
             p.sendMessage(getFlags());
           }
         } else if (args[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[1])) {
           try {
             if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
               p.sendMessage(
-                  translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_REMOVE));
+                  serviceContext.getTranslationService()
+                      .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_REMOVE));
               pe.setPlayerState(PlayerState.PROTECTION_FLAG_REMOVE);
               pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
             }
           } catch (IllegalArgumentException ex) {
             p.sendMessage(
-                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
+                serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
             p.sendMessage(getFlags());
           }
         } else {
-          p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+          p.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         }
       } else if (args[0].equalsIgnoreCase(Commands.RIGHT.getName())) {
         if (args[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[0])) {
           OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
 
           if (player != null) {
-            p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_ADD));
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_ADD));
             pe.setPlayerState(PlayerState.PROTECTION_RIGHT_ADD);
             pe.setPlayerStateParameter(player.getId().toString());
           } else {
             p.sendMessage(
-                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND,
-                    args[2]));
+                serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND,
+                        args[2]));
           }
         } else if (args[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[1])) {
           OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(args[2]);
 
           if (player != null) {
             p.sendMessage(
-                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_REMOVE));
+                serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_REMOVE));
             pe.setPlayerState(PlayerState.PROTECTION_RIGHT_REMOVE);
             pe.setPlayerStateParameter(player.getId().toString());
           } else {
             p.sendMessage(
-                translationService.getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND,
-                    args[2]));
+                serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.COMMAND_PROTECT_RIGHT_PLAYER_NOTFOUND,
+                        args[2]));
           }
         } else {
-          p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+          p.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         }
       } else {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       }
     } else {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
     }
     return true;
 
@@ -178,7 +194,7 @@ public class Protect implements CommandConstruct {
       @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "user")) {
       return tabList;
     }
 

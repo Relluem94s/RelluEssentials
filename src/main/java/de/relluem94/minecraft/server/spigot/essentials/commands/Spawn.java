@@ -11,9 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -30,15 +27,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("spawn")
 public class Spawn implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
-  private BackService backService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
-    this.backService = context.getBackService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -46,7 +39,7 @@ public class Spawn implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 
@@ -70,8 +63,9 @@ public class Spawn implements CommandConstruct {
       CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
       Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
       if (p == null) {
-        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
-            translationService.get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
+        sender.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+                serviceContext.getTranslationService().get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
         return true;
       }
 
@@ -80,21 +74,24 @@ public class Spawn implements CommandConstruct {
     }
 
     if (args.length > 1) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
     if (args.length == 1) {
       Player target = Bukkit.getPlayer(args[0]);
 
-      if (!groupService.isSenderAuthorized(sender, "mod")) {
-        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      if (!serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
+        sender.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }
 
       if (target == null) {
         sender.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return true;
       }
 
@@ -103,14 +100,16 @@ public class Spawn implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(p, "user")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "user")) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -119,14 +118,15 @@ public class Spawn implements CommandConstruct {
   }
 
   public void spawn(Player p) {
-    backService.saveBackPoint(p);
+    serviceContext.getBackService().saveBackPoint(p);
 
     Location coords = p.getWorld().getSpawnLocation();
     Location spawn = new Location(p.getWorld(), coords.getX(), coords.getY(), coords.getZ());
 
     p.teleport(spawn);
     p.sendMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_SPAWN, p.getWorld().getName()));
+        serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_SPAWN, p.getWorld().getName()));
   }
 
   @Override

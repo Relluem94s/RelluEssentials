@@ -7,8 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,13 +21,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("list")
 public class PlayerList implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -43,7 +39,8 @@ public class PlayerList implements CommandConstruct {
 
     Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
     sender.sendMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_LIST_HEADER, onlinePlayers.size()));
+        serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_LIST_HEADER, onlinePlayers.size()));
     for (Player player : onlinePlayers) {
       if (sender instanceof Player p) {
         if (!p.canSee(player)) {
@@ -52,9 +49,10 @@ public class PlayerList implements CommandConstruct {
       }
       PlayerEntry pet = RelluEssentials.getInstance().getPlayerRegistry()
           .getPlayerEntry(player.getUniqueId());
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_LIST_ENTRY,
-          pet.getGroup().getPrefix(), pet.getCustomName(),
-          pet.getGroup().getPrefix(), pet.getGroup().getName()));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_LIST_ENTRY,
+              pet.getGroup().getPrefix(), pet.getCustomName(),
+              pet.getGroup().getPrefix(), pet.getGroup().getName()));
     }
 
     return true;

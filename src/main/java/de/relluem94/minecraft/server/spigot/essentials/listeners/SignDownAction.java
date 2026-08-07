@@ -8,7 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SignRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,7 +22,7 @@ public class SignDownAction implements ListenerConstruct {
 
 
   private final RegistryKey signAction;
-  TranslationService translationService;
+  private ServiceContext serviceContext;
 
   public SignDownAction() {
     this.signAction = RegistryKey.of(SignConstants.PLUGIN_SIGN_ACTION_DOWN);
@@ -31,7 +30,7 @@ public class SignDownAction implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-    translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -74,7 +73,8 @@ public class SignDownAction implements ListenerConstruct {
 
     if (!endPointFound) {
       player.sendMessage(
-          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
     }
   }
 }

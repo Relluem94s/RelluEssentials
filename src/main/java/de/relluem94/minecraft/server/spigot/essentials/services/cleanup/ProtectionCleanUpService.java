@@ -1,11 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.services.cleanup;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,35 +13,28 @@ import org.bukkit.entity.Player;
 
 public class ProtectionCleanUpService {
 
-  private final TranslationService translationService;
-  private final DatabaseHelper databaseHelper;
-  private final ProtectionRegistry protectionRegistry;
-  private final SchedulerService schedulerService;
+  private final ServiceContext serviceContext;
 
 
-  public ProtectionCleanUpService(TranslationService translationService,
-      ProtectionRegistry protectionRegistry, DatabaseHelper databaseHelper,
-      SchedulerService schedulerService) {
-    this.translationService = translationService;
-    this.databaseHelper = databaseHelper;
-    this.protectionRegistry = protectionRegistry;
-    this.schedulerService = schedulerService;
+  public ProtectionCleanUpService(ServiceContext serviceContext) {
+    this.serviceContext = serviceContext;
   }
 
   public void cleanUpProtections(@NonNull Player p) {
     HashMap<Location, ProtectionEntry> protectionEntryList = new HashMap<>(
-        protectionRegistry.getProtectionEntryList()
+        serviceContext.getProtectionRegistry().getProtectionEntryList()
     );
 
-    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
-        protectionEntryList.size()));
+    p.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_START,
+            protectionEntryList.size()));
 
     List<Location> locations = new ArrayList<>(protectionEntryList.keySet());
     int[] index = {0};
     HashMap<Location, ProtectionEntry> removeMap = new HashMap<>();
     int total = locations.size();
 
-    schedulerService.runTaskTimer(
+    serviceContext.getSchedulerService().runTaskTimer(
         task -> {
           int batchSize = 5;
           int processed = 0;
@@ -60,9 +50,10 @@ public class ProtectionCleanUpService {
             if (!l.getBlock().getType().equals(Material.getMaterial(pe.getMaterialName()))) {
               removeMap.put(l, pe);
               p.sendMessage(
-                  translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS,
-                      pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
-              databaseHelper.deleteProtection(pe);
+                  serviceContext.getTranslationService()
+                      .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS,
+                          pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
+              serviceContext.getDatabaseHelper().deleteProtection(pe);
             }
 
             index[0]++;
@@ -71,7 +62,7 @@ public class ProtectionCleanUpService {
 
           int percent = (int) Math.round((index[0] / (double) total) * 100);
           p.sendMessage(
-              translationService.getWithPrefix(
+              serviceContext.getTranslationService().getWithPrefix(
                   MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE,
                   index[0], total, percent));
 
@@ -80,19 +71,20 @@ public class ProtectionCleanUpService {
 
             if (removeMap.isEmpty()) {
               p.sendMessage(
-                  translationService.getWithPrefix(
+                  serviceContext.getTranslationService().getWithPrefix(
                       MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_NONE));
             } else {
-              p.sendMessage(translationService.getWithPrefix(
+              p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
                   MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP,
                   removeMap.size()));
               for (Location l : removeMap.keySet()) {
-                protectionRegistry.removeProtectionEntry(l);
+                serviceContext.getProtectionRegistry().removeProtectionEntry(l);
               }
               p.sendMessage(
-                  translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
-                      protectionRegistry.getProtectionEntryList()
-                          .size()));
+                  serviceContext.getTranslationService()
+                      .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
+                          serviceContext.getProtectionRegistry().getProtectionEntryList()
+                              .size()));
             }
           }
         },
@@ -100,9 +92,10 @@ public class ProtectionCleanUpService {
         300L
     );
 
-    int deleted = databaseHelper.cleanupProtections();
+    int deleted = serviceContext.getDatabaseHelper().cleanupProtections();
     p.sendMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END,
-            deleted));
+        serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END,
+                deleted));
   }
 }

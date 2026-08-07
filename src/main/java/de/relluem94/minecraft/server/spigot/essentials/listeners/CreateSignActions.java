@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.SignAction;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SignRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.Optional;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.SignChangeEvent;
@@ -15,16 +14,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class CreateSignActions implements ListenerConstruct {
 
-  private GroupService groupService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
+    this.serviceContext = context;
   }
 
   @EventHandler
   public void onChangeSignCreateActionSign(@NotNull SignChangeEvent event) {
-    if (!groupService.isSenderAuthorized(event.getPlayer(), "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(event.getPlayer(), "mod")) {
       return;
     }
 

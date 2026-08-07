@@ -11,9 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -22,15 +19,11 @@ import org.bukkit.entity.Player;
 public class ReplaceCommand implements SubCommand {
 
   private final int blocksPerTick;
-  private final SelectionService selectionService;
-  private final UndoHistoryService undoHistoryService;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public ReplaceCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
-    this.selectionService = serviceContext.getSelectionService();
-    this.undoHistoryService = serviceContext.getUndoHistoryService();
-    this.translationService = serviceContext.getTranslationService();
+    this.serviceContext = serviceContext;
   }
 
   @Override
@@ -40,11 +33,12 @@ public class ReplaceCommand implements SubCommand {
 
     if (fromMaterial == null || toMaterial == null) {
       player.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_MODIFY_WRONG_MATERIAL));
       return;
     }
 
-    Selection selection = selectionService.resolve(player);
+    Selection selection = serviceContext.getSelectionService().resolve(player);
     if (selection == null) {
       return;
     }
@@ -68,10 +62,11 @@ public class ReplaceCommand implements SubCommand {
     });
 
     blockHelper.setBlocks(0);
-    undoHistoryService.addHistory(player, history);
+    serviceContext.getUndoHistoryService().addHistory(player, history);
     player.sendMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_REPLACE_STARTED, history.size(),
-            fromMaterial.name(), toMaterial.name()));
+        serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_MODIFY_REPLACE_STARTED, history.size(),
+                fromMaterial.name(), toMaterial.name()));
   }
 
   @Override

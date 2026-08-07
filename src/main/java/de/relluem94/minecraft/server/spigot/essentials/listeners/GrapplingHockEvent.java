@@ -9,8 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
@@ -30,13 +28,11 @@ public class GrapplingHockEvent implements ListenerConstruct {
 
   protected static final List<Player> COOL_DOWN = new ArrayList<>();
 
-  TranslationService translationService;
-  SchedulerService schedulerService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    translationService = context.getTranslationService();
-    schedulerService = context.getSchedulerService();
+    this.serviceContext = context;
   }
 
   /**
@@ -72,13 +68,14 @@ public class GrapplingHockEvent implements ListenerConstruct {
         e.getPlayer().setVelocity(playerVelocity);
         COOL_DOWN.add(e.getPlayer());
 
-        schedulerService.runTaskLater(() -> {
+        serviceContext.getSchedulerService().runTaskLater(() -> {
           COOL_DOWN.remove(e.getPlayer());
         }, 50L);
       } else {
         e.getPlayer()
             .sendMessage(
-                translationService.getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
+                serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
       }
     }
   }

@@ -10,8 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -25,13 +23,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("god")
 public class God implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -45,7 +41,8 @@ public class God implements CommandConstruct {
 
     if (isCMDBlock(sender) || isConsole(sender)) {
       if (args.length < 1) {
-        sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+        sender.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
         return true;
       }
 
@@ -54,19 +51,22 @@ public class God implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(p, "mod")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length > 0) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
@@ -76,8 +76,8 @@ public class God implements CommandConstruct {
 
   private void toggleGodMode(@NotNull Player p) {
     p.sendMessage(!p.isInvulnerable()
-        ? translationService.getWithPrefix(MessageKey.COMMAND_GOD_ON)
-        : translationService.getWithPrefix(MessageKey.COMMAND_GOD_OFF));
+        ? serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_GOD_ON)
+        : serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_GOD_OFF));
     p.setInvulnerable(!p.isInvulnerable());
   }
 
@@ -86,7 +86,8 @@ public class God implements CommandConstruct {
 
     if (target == null) {
       sender.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
       return;
     }
 
@@ -98,7 +99,7 @@ public class God implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 

@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -12,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class DamgeTraderNpc implements ListenerConstruct {
 
-  GroupService groupService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -39,7 +38,7 @@ public class DamgeTraderNpc implements ListenerConstruct {
       return;
     }
 
-    if (!groupService.isSenderAuthorized(p, "admin")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "admin")) {
       e.setCancelled(true);
     }
   }

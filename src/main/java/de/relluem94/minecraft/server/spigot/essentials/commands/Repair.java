@@ -8,8 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -26,27 +24,27 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("repair")
 public class Repair implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(p, "mod")) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -58,17 +56,19 @@ public class Repair implements CommandConstruct {
         dmg.setDamage(0);
         item.setItemMeta(im);
         p.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
+            serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
       } else {
         p.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR,
+            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR,
                 item.getType().name()));
       }
     } else {
       Player target = Bukkit.getPlayer(args[0]);
       if (target == null) {
         p.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+            serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return true;
       }
 
@@ -79,13 +79,14 @@ public class Repair implements CommandConstruct {
         dmg.setDamage(0);
         item.setItemMeta(im);
         p.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
+            serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_REPAIR, item.getType().name()));
         target.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_REPAIR_PLAYER,
+            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_REPAIR_PLAYER,
                 item.getType().name()));
       } else {
         p.sendMessage(
-            translationService.getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR,
+            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR,
                 item.getType().name()));
       }
     }
@@ -102,7 +103,7 @@ public class Repair implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 
