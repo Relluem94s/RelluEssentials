@@ -12,8 +12,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -34,27 +32,24 @@ import org.json.JSONObject;
 
 public class PlayerInteractProtect implements ListenerConstruct {
 
-  TranslationService translationService;
-  ProtectionActionService protectionActionService;
+  ServiceContext context;
 
   @Override
   public void injectContext(ServiceContext context) {
-    translationService = context.getTranslationService();
-    protectionActionService = context.getProtectionActionService();
+    this.context = context;
   }
 
   @EventHandler
   public void onPlayerProtectionChange(@NotNull PlayerInteractEvent e) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(e.getPlayer());
+    PlayerEntry pe = context.getPlayerService().getPlayerEntry(e.getPlayer());
 
     if (pe.getPlayerState().equals(PlayerState.PROTECTION_ADD)) {
-      protectionActionService.protectBlock(e.getPlayer(), e.getClickedBlock());
+      context.getProtectionActionService().protectBlock(e.getPlayer(), e.getClickedBlock());
       pe.setPlayerState(PlayerState.DEFAULT);
       pe.setPlayerStateParameter(null);
       e.setCancelled(true);
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_REMOVE)) {
-      protectionActionService.removeProtectionFromBlock(e.getPlayer(), e.getClickedBlock());
+      context.getProtectionActionService().removeProtectionFromBlock(e.getPlayer(), e.getClickedBlock());
       pe.setPlayerState(PlayerState.DEFAULT);
       pe.setPlayerStateParameter(null);
       e.setCancelled(true);
@@ -69,19 +64,19 @@ public class PlayerInteractProtect implements ListenerConstruct {
 
         p.sendMessage("");
         p.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO));
+            context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO));
         p.sendMessage("");
         p.sendMessage(
-            translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID, pre.getId()));
-        p.sendMessage(translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED,
+            context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_ID, pre.getId()));
+        p.sendMessage(context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_CREATED,
             pre.getCreated()));
-        p.sendMessage(translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED,
+        p.sendMessage(context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_UPDATED,
             pre.getUpdated()));
         p.sendMessage(
-            translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION,
+            context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_LOCATION,
                 loc.getX(),
                 loc.getY(), loc.getZ(), Objects.requireNonNull(loc.getWorld()).getName()));
-        p.sendMessage(translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID,
+        p.sendMessage(context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_ID,
             pre.getLocationEntry().getPlayerId()));
 
         for (Map.Entry<UUID, PlayerEntry> entry : RelluEssentials.getInstance().getPlayerRegistry()
@@ -95,23 +90,23 @@ public class PlayerInteractProtect implements ListenerConstruct {
             cal.setTimeInMillis(op.getLastPlayed());
 
             p.sendMessage(
-                translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_UUID,
+                context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_UUID,
                     entry.getValue().getUuid()));
             p.sendMessage(
-                translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_NAME,
+                context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_NAME,
                     op.getName()));
             p.sendMessage(
-                translationService.get(
+                context.getTranslationService().get(
                     MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_PLAYER_LAST_LOGIN,
                     df.format(cal.getTime())));
           }
         }
 
-        p.sendMessage(translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_MATERIAL,
+        p.sendMessage(context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_MATERIAL,
             pre.getMaterialName()));
-        p.sendMessage(translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_FLAGS,
+        p.sendMessage(context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_FLAGS,
             pre.getFlags().toString()));
-        p.sendMessage(translationService.get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_RIGHTS,
+        p.sendMessage(context.getTranslationService().get(MessageKey.PLUGIN_EVENT_PROTECTED_BLOCK_INFO_RIGHTS,
             pre.getRights().toString()));
         p.sendMessage("");
         p.sendMessage("");
@@ -129,7 +124,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(
-                translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
         boolean update = false;
         if (pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)) {
           JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
@@ -152,9 +147,9 @@ public class PlayerInteractProtect implements ListenerConstruct {
           RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(l);
           RelluEssentials.getInstance().getProtectionRegistry().putProtectionEntry(l, pre);
           e.getPlayer().sendMessage(
-              translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE));
+              context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE));
         } else {
-          e.getPlayer().sendMessage(translationService.getWithPrefix(
+          e.getPlayer().sendMessage(context.getTranslationService().getWithPrefix(
               MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE_FAILED));
         }
 
@@ -164,7 +159,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
         e.setCancelled(true);
       } else {
         e.getPlayer().sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+            context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
         pe.setPlayerState(PlayerState.DEFAULT);
         pe.setPlayerStateParameter(null);
       }
@@ -176,7 +171,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(
-                translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
         boolean update = false;
         if (pre.getFlags().has(PLUGIN_EVENT_PROTECT_FLAGS)) {
           JSONArray flagJSON = pre.getFlags().getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
@@ -221,10 +216,10 @@ public class PlayerInteractProtect implements ListenerConstruct {
           RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(l);
           RelluEssentials.getInstance().getProtectionRegistry().putProtectionEntry(l, pre);
           e.getPlayer().sendMessage(
-              translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD));
+              context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD));
         } else {
           e.getPlayer().sendMessage(
-              translationService.getWithPrefix(
+              context.getTranslationService().getWithPrefix(
                   MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD_FAILED));
         }
 
@@ -233,7 +228,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
         e.setCancelled(true);
       } else {
         e.getPlayer().sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+            context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
         pe.setPlayerState(PlayerState.DEFAULT);
         pe.setPlayerStateParameter(null);
       }
@@ -245,19 +240,19 @@ public class PlayerInteractProtect implements ListenerConstruct {
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(
-                translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
 
         UUID uuid = UUID.fromString((String) pe.getPlayerStateParameter());
         int id = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(uuid).getId();
 
-        protectionActionService.addRight(e.getPlayer(), pre, id, false);
+        context.getProtectionActionService().addRight(e.getPlayer(), pre, id, false);
 
         pe.setPlayerState(PlayerState.DEFAULT);
         pe.setPlayerStateParameter(null);
         e.setCancelled(true);
       } else {
         e.getPlayer().sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+            context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
         pe.setPlayerState(PlayerState.DEFAULT);
         pe.setPlayerStateParameter(null);
       }
@@ -269,19 +264,19 @@ public class PlayerInteractProtect implements ListenerConstruct {
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(
-                translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
 
         UUID uuid = UUID.fromString((String) pe.getPlayerStateParameter());
         int id = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(uuid).getId();
 
-        protectionActionService.removeRight(e.getPlayer(), pre, id, false);
+        context.getProtectionActionService().removeRight(e.getPlayer(), pre, id, false);
 
         pe.setPlayerState(PlayerState.DEFAULT);
         pe.setPlayerStateParameter(null);
         e.setCancelled(true);
       } else {
         e.getPlayer().sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+            context.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
         pe.setPlayerState(PlayerState.DEFAULT);
         pe.setPlayerStateParameter(null);
       }

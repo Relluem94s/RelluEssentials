@@ -37,28 +37,28 @@ public class InventoryClickNpc implements ListenerConstruct {
   private final Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
       BankService.npc_gui_deposit_5_percent,
       (p, bae) -> serviceContext.getBankService().deposit(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 5f),
+          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 5f),
       BankService.npc_gui_deposit_20_percent,
       (p, bae) -> serviceContext.getBankService().deposit(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 20f),
+          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 20f),
       BankService.npc_gui_deposit_50_percent,
       (p, bae) -> serviceContext.getBankService().deposit(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 50f),
+          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 50f),
       BankService.npc_gui_deposit_all,
       (p, bae) -> serviceContext.getBankService().deposit(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 100f),
+          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 100f),
       BankService.npc_gui_withdraw_5_percent,
       (p, bae) -> serviceContext.getBankService().withdraw(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 5f),
+          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 5f),
       BankService.npc_gui_withdraw_20_percent,
       (p, bae) -> serviceContext.getBankService().withdraw(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 20f),
+          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 20f),
       BankService.npc_gui_withdraw_50_percent,
       (p, bae) -> serviceContext.getBankService().withdraw(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 50f),
+          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 50f),
       BankService.npc_gui_withdraw_all,
       (p, bae) -> serviceContext.getBankService().withdraw(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p), p, bae, 100f)
+          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 100f)
   );
 
   @Override

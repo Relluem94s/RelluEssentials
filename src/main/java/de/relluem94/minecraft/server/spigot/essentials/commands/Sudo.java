@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.utils.StringUtils;
 import java.util.ArrayList;
@@ -32,9 +33,9 @@ public class Sudo implements CommandConstruct {
 
   private ServiceContext serviceContext;
 
-  public static void exitSudo(@NotNull Player p, TranslationService translationService) {
+  public static void exitSudo(@NotNull Player p, TranslationService translationService, PlayerService playerService) {
     PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = playerService.getPlayerEntry(p);
     WorldHelper.saveWorldGroupInventory(p, true);
     pe.setId(tpe.getId());
     pe.setCustomName(tpe.getCustomName());
@@ -90,12 +91,12 @@ public class Sudo implements CommandConstruct {
     }
 
     if (SudoManager.sudoers.containsKey(p.getUniqueId())) {
-      exitSudo(p, serviceContext.getTranslationService());
+      exitSudo(p, serviceContext.getTranslationService(), serviceContext.getPlayerService());
       return true;
     }
 
     OfflinePlayerEntry target = PlayerHelper.getOfflinePlayerByName(args[0]);
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
 
     if (target == null) {
       p.sendMessage(

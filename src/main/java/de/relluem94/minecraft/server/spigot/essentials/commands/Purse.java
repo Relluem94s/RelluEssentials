@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -53,8 +52,7 @@ public class Purse implements CommandConstruct {
     }
 
     if (args.length == 0) {
-      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-          .getPlayerEntry(p.getUniqueId());
+      PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL,
               StringHelper.formatDouble(pe.getPurse())));
@@ -64,8 +62,7 @@ public class Purse implements CommandConstruct {
     Player target = Bukkit.getPlayer(args[0]);
     if (target != null) {
       if (serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-            .getPlayerEntry(target.getUniqueId());
+        PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(target);
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL_OTHER,
                 target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
@@ -83,8 +80,7 @@ public class Purse implements CommandConstruct {
       return true;
     }
 
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
     double purse = pe.getPurse();
     int coins = Math.abs(Integer.parseInt(args[0]));
 

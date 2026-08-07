@@ -73,8 +73,7 @@ public class NoDeathMessage implements ListenerConstruct {
       Location location = new Location(ploc.getWorld(), ploc.getBlockX(), ploc.getBlockY(),
           ploc.getBlockZ(), ploc.getYaw(), ploc.getPitch());
 
-      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-          .getPlayerEntry(p.getUniqueId());
+      PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
       LocationEntry le = new LocationEntry();
       le.setLocation(location);
       le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(994)));
@@ -123,8 +122,7 @@ public class NoDeathMessage implements ListenerConstruct {
   @EventHandler
   public void onRespawn(@NotNull PlayerRespawnEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
     if (pe != null) {
       p.setAllowFlight(pe.isFlying());
       p.setFlying(pe.isFlying());
@@ -134,8 +132,7 @@ public class NoDeathMessage implements ListenerConstruct {
   @EventHandler
   public void onWorldChange(@NotNull PlayerChangedWorldEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
     if (pe != null) {
       p.setAllowFlight(pe.isFlying());
       p.setFlying(pe.isFlying());
@@ -145,8 +142,7 @@ public class NoDeathMessage implements ListenerConstruct {
   @EventHandler
   public void onWorldChange(@NotNull PlayerTeleportEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
     if (pe != null) {
       p.setAllowFlight(pe.isFlying());
       p.setFlying(pe.isFlying());

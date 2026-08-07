@@ -32,7 +32,7 @@ public class BetterPlayerQuit implements ListenerConstruct {
 
     if (SudoManager.sudoers.containsKey(p.getUniqueId())) {
       Sudo.exitSudo(Objects.requireNonNull(Bukkit.getPlayer(p.getUniqueId())),
-          serviceContext.getTranslationService());
+          serviceContext.getTranslationService(), serviceContext.getPlayerService());
     }
 
     serviceContext.getPlayerService().savePlayer(p);

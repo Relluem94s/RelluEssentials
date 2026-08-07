@@ -22,7 +22,8 @@ public class SudoManager implements Disable {
       if (player == null) {
         continue;
       }
-      Sudo.exitSudo(player, ((RelluEssentials)plugin).getTranslationService());
+      RelluEssentials relluEssentialsPlugin = (RelluEssentials)plugin;
+      Sudo.exitSudo(player, relluEssentialsPlugin.getTranslationService(), relluEssentialsPlugin.getPlayerService());
     }
   }
 }

@@ -83,6 +83,14 @@ public class PlayerService {
     return playerRegistry.getPlayerEntry(id);
   }
 
+  public @Nullable PlayerEntry getPlayerEntryByInternalId(int id) {
+    return playerRegistry.getPlayerEntryMap()
+        .values()
+        .stream()
+        .filter(pe -> pe.getId() == id)
+        .findFirst()
+        .orElse(null);
+  }
 
   /**
    *
