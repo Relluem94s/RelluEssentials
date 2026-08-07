@@ -7,8 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -24,13 +22,12 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("craft")
 public class CraftingBench implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -43,21 +40,21 @@ public class CraftingBench implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(p, "vip")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "vip")) {
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     Inventory workbench = Bukkit.createInventory(null, InventoryType.WORKBENCH,
-        translationService.get(MessageKey.COMMAND_CRAFTINGBENCH_TITLE));
+        serviceContext.getTranslationService().get(MessageKey.COMMAND_CRAFTINGBENCH_TITLE));
     p.openInventory(workbench);
     p.sendMessage(
-        translationService.getWithPrefix(MessageKey.COMMAND_CRAFTINGBENCH, p.getCustomName()));
+        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_CRAFTINGBENCH, p.getCustomName()));
     return true;
   }
 

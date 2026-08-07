@@ -10,10 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -27,17 +23,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("exit")
 public class Exit implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
-  private SchedulerService schedulerService;
-  private TeleportService teleportService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
-    this.schedulerService = context.getSchedulerService();
-    this.teleportService = context.getTeleportService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -49,12 +39,14 @@ public class Exit implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (isConsole(sender)) {
-      Bukkit.broadcastMessage(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
+      Bukkit.broadcastMessage(
+          serviceContext.getTranslationService().get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
 
-      schedulerService.runTaskLater(() -> {
+      serviceContext.getSchedulerService().runTaskLater(() -> {
         Bukkit.getOnlinePlayers().forEach(op -> {
-          teleportService.teleportWorld(op, PLUGIN_WORLD_LOBBY, true);
-          op.kickPlayer(translationService.get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
+          serviceContext.getTeleportService().teleportWorld(op, PLUGIN_WORLD_LOBBY, true);
+          op.kickPlayer(serviceContext.getTranslationService()
+              .get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
         });
 
       }, 10L);
@@ -65,18 +57,20 @@ public class Exit implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
-    if (!groupService.isSenderAuthorized(p, "user")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "user")) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
-    teleportService.teleportWorld(p, PLUGIN_WORLD_LOBBY, true);
-    p.kickPlayer(translationService.get(MessageKey.COMMAND_EXIT_KICK_MESSAGE));
+    serviceContext.getTeleportService().teleportWorld(p, PLUGIN_WORLD_LOBBY, true);
+    p.kickPlayer(serviceContext.getTranslationService().get(MessageKey.COMMAND_EXIT_KICK_MESSAGE));
     return true;
   }
 

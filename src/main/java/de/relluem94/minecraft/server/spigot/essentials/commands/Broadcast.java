@@ -13,8 +13,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -29,13 +27,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("broadcast")
 public class Broadcast implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -43,7 +39,7 @@ public class Broadcast implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return tabList;
     }
 
@@ -65,12 +61,14 @@ public class Broadcast implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (args.length < 1) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_BROADCAST_INFO));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_BROADCAST_INFO));
       return true;
     }
 
-    if (!groupService.isSenderAuthorized(sender, "mod")) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 

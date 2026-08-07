@@ -10,8 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -25,13 +23,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("fly")
 public class Fly implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -44,14 +40,14 @@ public class Fly implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(p, "vip")) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "vip")) {
+      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -63,20 +59,20 @@ public class Fly implements CommandConstruct {
     Player target = Bukkit.getPlayer(args[0]);
 
     if (target == null) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
-    if (groupService.isSenderAuthorized(sender, "mod")) {
-      p.sendMessage(translationService.getWithPrefix(
+    if (serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
           MessageKey.COMMAND_FLYMODE,
           target.getCustomName(),
-          !target.getAllowFlight() ? translationService.get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
-              : translationService.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
+          !target.getAllowFlight() ? serviceContext.getTranslationService().get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
+              : serviceContext.getTranslationService().get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
       ));
       flyMode(target);
     } else {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
 
     }
     return true;
@@ -89,18 +85,18 @@ public class Fly implements CommandConstruct {
     pe.setUpdatedBy(pe.getId());
     pe.setHasToBeUpdated(true);
     p.setAllowFlight(pe.isFlying());
-    p.sendMessage(translationService.getWithPrefix(
+    p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
         MessageKey.COMMAND_FLYMODE,
         p.getCustomName(),
-        p.getAllowFlight() ? translationService.get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
-            : translationService.get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
+        p.getAllowFlight() ? serviceContext.getTranslationService().get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
+            : serviceContext.getTranslationService().get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
     ));
   }
 
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
     }
 

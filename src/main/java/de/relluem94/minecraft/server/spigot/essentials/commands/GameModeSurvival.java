@@ -8,9 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -25,15 +22,12 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("0")
 public class GameModeSurvival implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
-  private PlayerService playerService;
+
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
-    this.playerService = context.getPlayerService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -44,8 +38,9 @@ public class GameModeSurvival implements CommandConstruct {
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command,
       @NonNull String label, String[] args) {
-    if (!groupService.isSenderAuthorized(sender, "mod")) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -53,7 +48,8 @@ public class GameModeSurvival implements CommandConstruct {
       Player target = Bukkit.getPlayer(args[0]);
 
       if (target == null) {
-        sender.sendMessage(translationService.get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+        sender.sendMessage(serviceContext.getTranslationService()
+            .get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return true;
       }
 
@@ -62,7 +58,8 @@ public class GameModeSurvival implements CommandConstruct {
     }
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
@@ -72,15 +69,16 @@ public class GameModeSurvival implements CommandConstruct {
 
   private void gameMode(@NotNull Player p) {
     p.setGameMode(GameMode.SURVIVAL);
-    playerService.setFlying(p);
-    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(),
-        translationService.get(MessageKey.COMMAND_GAMEMODE_SURVIVAL)));
+    serviceContext.getPlayerService().setFlying(p);
+    p.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_GAMEMODE, p.getCustomName(),
+            serviceContext.getTranslationService().get(MessageKey.COMMAND_GAMEMODE_SURVIVAL)));
   }
 
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
     }
 

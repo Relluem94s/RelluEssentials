@@ -11,9 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.utils.TypeUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +26,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("bags")
 public class Bags implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
-  private BagService bagService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
-    this.bagService = context.getBagService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -45,7 +38,7 @@ public class Bags implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "user")) {
       return tabList;
     }
 
@@ -72,20 +65,20 @@ public class Bags implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(commandSender)) {
-      commandSender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      commandSender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) commandSender;
 
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "user")) {
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length != 1) {
       p.openInventory(
-          bagService.getBagsInventory(
+          serviceContext.getBagService().getBagsInventory(
               RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p)));
       return true;
     }
@@ -99,14 +92,14 @@ public class Bags implements CommandConstruct {
 
     if (bte.isPresent()) {
       PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
-      if (bagService.hasBag(pe.getId(), bte.get().getId())) {
-        p.openInventory(Objects.requireNonNull(bagService.getBagInventory(bte.get().getId(), pe)));
+      if (serviceContext.getBagService().hasBag(pe.getId(), bte.get().getId())) {
+        p.openInventory(Objects.requireNonNull(serviceContext.getBagService().getBagInventory(bte.get().getId(), pe)));
       } else {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
+        p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
       }
 
     } else {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_BAGS_NOT_FOUND, args[0]));
     }
     return true;
   }

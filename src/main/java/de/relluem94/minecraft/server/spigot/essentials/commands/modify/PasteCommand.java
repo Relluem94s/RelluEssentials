@@ -12,8 +12,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +23,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class PasteCommand implements SubCommand {
 
   private final int blocksPerTick;
-  private final UndoHistoryService undoHistoryService;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
   public PasteCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
-    this.undoHistoryService = serviceContext.getUndoHistoryService();
-    this.translationService = serviceContext.getTranslationService();
+    this.serviceContext = serviceContext;
   }
 
   @Override
@@ -40,7 +36,7 @@ public class PasteCommand implements SubCommand {
         player);
     if (clipboardStore == null || clipboardStore.getSecondValue() == null
         || clipboardStore.getSecondValue().isEmpty()) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
+      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
       return;
     }
 
@@ -77,8 +73,8 @@ public class PasteCommand implements SubCommand {
       }
     }
 
-    undoHistoryService.addHistory(player, history);
-    player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED,
+    serviceContext.getUndoHistoryService().addHistory(player, history);
+    player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED,
         clipboardStore.getSecondValue().size()));
   }
 

@@ -10,8 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -25,13 +23,11 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("nick")
 public class Nick implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -39,17 +35,20 @@ public class Nick implements CommandConstruct {
       @NonNull String label, String @NotNull [] args) {
 
     if (args.length < 2) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (args.length > 2) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
-    if (!groupService.isSenderAuthorized(sender, "admin")) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(sender, "admin")) {
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -57,7 +56,8 @@ public class Nick implements CommandConstruct {
 
     if (target == null) {
       sender.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
@@ -69,7 +69,7 @@ public class Nick implements CommandConstruct {
     pe.setHasToBeUpdated(true);
     target.setCustomName(pe.getGroup().getPrefix() + args[1]);
     target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);
-    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NICK,
+    sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NICK,
         pe.getGroup().getPrefix() + target.getName()));
     return true;
   }
@@ -84,7 +84,7 @@ public class Nick implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "admin")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "admin")) {
       return tabList;
     }
 

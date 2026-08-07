@@ -8,8 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
-import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,12 +71,10 @@ public class DevPlattformCommand implements SubCommand {
       Material.MELON,
       Material.PALE_OAK_LOG
   );
-  private final UndoHistoryService undoHistoryService;
-  private final SchedulerService schedulerService;
+  private final ServiceContext serviceContext;
 
-  public DevPlattformCommand(UndoHistoryService undoHistoryService, ServiceContext context) {
-    this.undoHistoryService = undoHistoryService;
-    this.schedulerService = context.getSchedulerService();
+  public DevPlattformCommand(ServiceContext context) {
+    this.serviceContext = context;
   }
 
   @Override
@@ -184,7 +180,7 @@ public class DevPlattformCommand implements SubCommand {
 
                   NpcHelper nh = new NpcHelper(world.getBlockAt(bx, originY + 1, bz).getLocation(),
                       traderNpcs.get(npcIndex));
-                  schedulerService.runTaskLater(nh::spawn, schedule + 11);
+                  serviceContext.getSchedulerService().runTaskLater(nh::spawn, schedule + 11);
 
                   npcIndex++;
                   continue;
@@ -194,7 +190,7 @@ public class DevPlattformCommand implements SubCommand {
                 String blockName = "minecraft:" + oreMaterial.name().toLowerCase();
                 placedThisTick++;
 
-                schedulerService.runTaskLater(() -> {
+                serviceContext.getSchedulerService().runTaskLater(() -> {
                   Block b = world.getBlockAt(bx, originY, bz);
                   undoList.add(
                       new ModifyHistoryEntry(b.getLocation(), b.getType(), b.getBlockData()));
@@ -230,7 +226,7 @@ public class DevPlattformCommand implements SubCommand {
     inner.setBlocks(10);
     redstone.setBlocks(15);
 
-    undoHistoryService.addHistory(player, undoList);
+    serviceContext.getUndoHistoryService().addHistory(player, undoList);
   }
 
   @Override

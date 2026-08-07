@@ -12,8 +12,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -30,54 +28,58 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("purse")
 public class Purse implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
-    if (!groupService.isSenderAuthorized(sender, "user")) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(sender, "user")) {
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
       PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
           .getPlayerEntry(p.getUniqueId());
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL,
-          StringHelper.formatDouble(pe.getPurse())));
+      p.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL,
+              StringHelper.formatDouble(pe.getPurse())));
       return true;
     }
 
     Player target = Bukkit.getPlayer(args[0]);
     if (target != null) {
-      if (groupService.isSenderAuthorized(sender, "mod")) {
+      if (serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
         PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
             .getPlayerEntry(target.getUniqueId());
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL_OTHER,
-            target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL_OTHER,
+                target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
       } else {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       }
       return true;
     }
 
     if (!TypeHelper.isInt(args[0])) {
       p.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_VALUE_INVALID));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_VALUE_INVALID));
       return true;
     }
 
@@ -92,11 +94,13 @@ public class Purse implements CommandConstruct {
       pe.setUpdatedBy(pe.getId());
 
       p.getInventory().addItem(CoinHelper.buildCoinItem(coins));
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM,
-          StringHelper.formatInt(coins)));
+      p.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM,
+              StringHelper.formatInt(coins)));
     } else {
       p.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY));
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY));
     }
     return true;
   }
@@ -109,7 +113,7 @@ public class Purse implements CommandConstruct {
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return List.of();
     }
     if (strings.length != 1) {

@@ -20,9 +20,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,9 +43,7 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("world")
 public class Worlds implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
-  private TeleportService teleportService;
+  private ServiceContext serviceContext;
 
   public static void openWorldMenu(Player p) {
     org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
@@ -79,9 +74,7 @@ public class Worlds implements CommandConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
-    this.teleportService = context.getTeleportService();
+    this.serviceContext = context;
   }
 
   @Override
@@ -95,64 +88,72 @@ public class Worlds implements CommandConstruct {
       Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
       if (p == null) {
         commandSender.sendMessage(
-            String.format(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER),
+            String.format(serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER),
                 "No Player in Reach"));
         return true;
       }
 
-      teleportService.teleportWorld(p, args[0]);
+      serviceContext.getTeleportService().teleportWorld(p, args[0]);
       return true;
     }
 
     if (!isPlayer(commandSender)) {
-      commandSender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      commandSender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) commandSender;
 
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "user")) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 0) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_INFO,
-          Commands.LIST.getName(),
-          Commands.LOAD.getName(),
-          Commands.UNLOAD.getName(),
-          Commands.UNLOAD_NO_SAVE.getName(),
-          Commands.CREATE.getName()
-      ));
+      p.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_INFO,
+              Commands.LIST.getName(),
+              Commands.LOAD.getName(),
+              Commands.UNLOAD.getName(),
+              Commands.UNLOAD_NO_SAVE.getName(),
+              Commands.CREATE.getName()
+          ));
       openWorldMenu(p);
       return true;
     }
 
     if (args.length == 1) {
       if (!args[0].equalsIgnoreCase(Commands.LIST.getName())) {
-        teleportService.teleportWorld(p, args[0]);
+        serviceContext.getTeleportService().teleportWorld(p, args[0]);
         return true;
       }
 
-      if (!groupService.isSenderAuthorized(p, "mod")) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
         return true;
       }
 
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_INFO));
+      p.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_INFO));
       Bukkit.getWorlds().forEach(w -> p.sendMessage(w.getName()));
       return true;
     }
 
-    if (!groupService.isSenderAuthorized(p, "admin")) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "admin")) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
     if (args.length == 2) {
       if (Commands.LOAD.getName().equalsIgnoreCase(args[0])) {
         WorldHelper.loadWorld(args[1]);
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_LOAD));
+        p.sendMessage(
+            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_LOAD));
         return true;
       } else if (Commands.UNLOAD.getName().equalsIgnoreCase(args[0])) {
         unloadWorld(p, args[1], true);
@@ -161,21 +162,25 @@ public class Worlds implements CommandConstruct {
         unloadWorld(p, args[1], false);
         return true;
       } else if (Commands.CREATE.getName().equalsIgnoreCase(args[0])) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE_INFO));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_WORLD_CREATE_INFO));
         return true;
       } else {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         return true;
       }
     }
 
     if (args.length > 5) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (!args[0].equalsIgnoreCase(Commands.CREATE.getName())) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       return true;
     }
 
@@ -197,9 +202,11 @@ public class Worlds implements CommandConstruct {
       World.Environment worldEnvironment = World.Environment.valueOf(args[3].toUpperCase());
       boolean structures = Boolean.parseBoolean(args[4]);
       WorldHelper.createWorld(args[1], type, worldEnvironment, structures);
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_CREATE));
+      p.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_CREATE));
     } else {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_WRONG_ARGUMENTS));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WORLD_WRONG_ARGUMENTS));
     }
   }
 
@@ -207,11 +214,13 @@ public class Worlds implements CommandConstruct {
     try {
       WorldHelper.unloadWorld(name, save);
       p.sendMessage(save
-          ? translationService.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD)
-          : translationService.getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE));
+          ? serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD)
+          : serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE));
     } catch (WorldNotLoadedException ex) {
       Logger.getLogger(Worlds.class.getName())
-          .log(Level.SEVERE, translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED),
+          .log(Level.SEVERE, serviceContext.getTranslationService()
+                  .getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED),
               ex);
     }
   }
@@ -224,7 +233,7 @@ public class Worlds implements CommandConstruct {
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (!groupService.isSenderAuthorized(commandSender, "mod")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
     }
 
