@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.reply;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -44,21 +43,15 @@ public class Reply implements CommandConstruct {
       return true;
     }
 
-    if (!reply.containsKey(p)) {
+    if (!serviceContext.getChatService().hasReplyTarget(p)) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_MSG_NO_ONE_TO_REPLY));
       return true;
     }
 
-    Player target = reply.get(p);
+    Player target = serviceContext.getChatService().findReplyTarget(p);
 
-    if (target == null) {
-      p.sendMessage(serviceContext.getTranslationService()
-          .getWithPrefix(MessageKey.COMMAND_MSG_NO_ONE_TO_REPLY));
-      return true;
-    }
-
-    if (!target.isOnline()) {
+    if (target == null || !target.isOnline()) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_MSG_PLAYER_OFFLINE));
       return true;

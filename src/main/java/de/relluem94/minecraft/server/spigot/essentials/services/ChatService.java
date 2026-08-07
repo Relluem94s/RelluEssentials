@@ -12,6 +12,7 @@ import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -23,9 +24,11 @@ import org.jspecify.annotations.NonNull;
 public class ChatService {
 
   private final ServiceContext serviceContext;
+  private final ReplyRegistry replyRegistry;
 
-  public ChatService(ServiceContext serviceContext) {
+  public ChatService(ServiceContext serviceContext, ReplyRegistry replyRegistry) {
     this.serviceContext = serviceContext;
+    this.replyRegistry = replyRegistry;
   }
 
   public void sendMessage(CommandSender sender, String message) {
@@ -49,7 +52,8 @@ public class ChatService {
     }
   }
 
-  public void sendMessageInChannel(String message, Player sender, String channel, GroupEntry group) {
+  public void sendMessageInChannel(String message, Player sender, String channel,
+      GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
       if (serviceContext.getGroupService().isSenderAuthorized(onlinePlayer, group.getName())) {
@@ -59,7 +63,8 @@ public class ChatService {
     }
   }
 
-  public void sendMessageInChannel(String message, String senderName, String channel, GroupEntry group) {
+  public void sendMessageInChannel(String message, String senderName, String channel,
+      GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
       if (serviceContext.getGroupService().isSenderAuthorized(onlinePlayer, group.getName())) {
@@ -73,9 +78,22 @@ public class ChatService {
     p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
   }
 
+  public void registerReply(Player sender, Player target) {
+    replyRegistry.register(sender, target);
+  }
+
+  public boolean hasReplyTarget(Player sender) {
+    return replyRegistry.hasReplyTarget(sender);
+  }
+
+  public Player findReplyTarget(Player sender) {
+    return replyRegistry.findReplyTarget(sender);
+  }
+
   public void sendPrivateMessage(CommandSender sender, Player target, String[] args, int start) {
     if (sender instanceof ConsoleCommandSender) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return;
     }
 
@@ -86,7 +104,8 @@ public class ChatService {
       target.sendMessage(senderPlayer.getCustomName() + PLUGIN_FORMS_MSG_SPACER_IN + message);
       senderPlayer.sendMessage(target.getCustomName() + PLUGIN_FORMS_MSG_SPACER_OUT + message);
     } else {
-      senderPlayer.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      senderPlayer.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
     }
   }
 
