@@ -3,7 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

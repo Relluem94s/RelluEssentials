@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.events;
 
-import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.model.SignAction;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.SignAction;
 import lombok.Getter;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

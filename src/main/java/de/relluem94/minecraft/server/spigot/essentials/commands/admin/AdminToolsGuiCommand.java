@@ -4,11 +4,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Inventor
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registry.InventoryRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.entity.Player;

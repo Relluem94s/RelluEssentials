@@ -12,7 +12,7 @@ import static de.relluem94.rellulib.utils.StringUtils.implode;
 import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;

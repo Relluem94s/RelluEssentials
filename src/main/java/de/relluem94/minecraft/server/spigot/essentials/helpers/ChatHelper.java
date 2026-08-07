@@ -11,7 +11,7 @@ import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import net.md_5.bungee.api.ChatMessageType;

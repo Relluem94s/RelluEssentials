@@ -5,14 +5,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import com.mysql.cj.jdbc.MysqlDataSource;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.ClasspathSqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 

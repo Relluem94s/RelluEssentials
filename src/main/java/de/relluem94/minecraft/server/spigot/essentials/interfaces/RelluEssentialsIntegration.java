@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.interfaces;
 
-import de.relluem94.minecraft.server.spigot.essentials.registry.RelluEssentialsRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 
 public interface RelluEssentialsIntegration {
 

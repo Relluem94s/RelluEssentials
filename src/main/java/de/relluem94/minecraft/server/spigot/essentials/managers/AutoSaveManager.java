@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;

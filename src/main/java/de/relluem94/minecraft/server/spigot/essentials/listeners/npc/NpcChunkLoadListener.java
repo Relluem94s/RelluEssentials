@@ -1,9 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
+import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;

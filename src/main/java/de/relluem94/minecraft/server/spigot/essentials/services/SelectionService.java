@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;

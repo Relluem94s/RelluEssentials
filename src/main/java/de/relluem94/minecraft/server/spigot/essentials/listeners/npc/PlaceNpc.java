@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;

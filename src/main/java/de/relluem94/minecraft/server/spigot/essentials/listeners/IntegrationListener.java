@@ -1,9 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.RelluEssentialsIntegration;
-import de.relluem94.minecraft.server.spigot.essentials.registry.RelluEssentialsRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;

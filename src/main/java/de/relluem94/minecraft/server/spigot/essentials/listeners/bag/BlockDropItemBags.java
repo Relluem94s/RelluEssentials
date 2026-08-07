@@ -2,13 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;

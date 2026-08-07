@@ -4,16 +4,16 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.CoinHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.Objects;
 import org.bukkit.Location;
 import org.bukkit.Material;

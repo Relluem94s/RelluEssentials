@@ -5,7 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.Enchantmen
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
@@ -13,9 +13,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;

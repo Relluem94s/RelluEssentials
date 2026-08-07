@@ -3,10 +3,10 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_CLICK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_SIGN_NAME;
 
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.SignAction;
-import de.relluem94.minecraft.server.spigot.essentials.registry.SignRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.SignAction;
+import de.relluem94.minecraft.server.spigot.essentials.registries.SignRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.util.Optional;
 import org.bukkit.event.EventHandler;

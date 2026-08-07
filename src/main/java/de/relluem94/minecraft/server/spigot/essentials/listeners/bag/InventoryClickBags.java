@@ -2,13 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Objects;

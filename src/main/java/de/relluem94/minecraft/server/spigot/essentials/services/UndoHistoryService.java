@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.repository.UndoHistoryRepository;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
 import java.util.List;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;

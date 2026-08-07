@@ -4,7 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
@@ -13,8 +13,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.OfflinePlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.utils.StringUtils;

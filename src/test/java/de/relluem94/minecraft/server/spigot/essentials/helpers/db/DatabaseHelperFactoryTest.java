@@ -11,8 +11,8 @@ import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

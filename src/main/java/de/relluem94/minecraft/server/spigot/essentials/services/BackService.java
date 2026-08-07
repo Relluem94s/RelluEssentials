@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.repository.BackLocationRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BackLocationRepository;
 import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

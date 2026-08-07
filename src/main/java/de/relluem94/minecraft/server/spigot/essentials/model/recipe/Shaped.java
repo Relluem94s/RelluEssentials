@@ -1,8 +1,0 @@
-package de.relluem94.minecraft.server.spigot.essentials.model.recipe;
-
-import java.util.Map;
-import org.bukkit.Material;
-
-public record Shaped(String[] rows, Map<Character, Material> ingredients) {
-
-}

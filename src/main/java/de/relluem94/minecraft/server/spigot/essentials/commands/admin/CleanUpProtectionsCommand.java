@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;

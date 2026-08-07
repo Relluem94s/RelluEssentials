@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.rellulib.stores.DoubleStore;

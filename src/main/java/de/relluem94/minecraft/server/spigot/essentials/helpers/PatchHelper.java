@@ -4,10 +4,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;

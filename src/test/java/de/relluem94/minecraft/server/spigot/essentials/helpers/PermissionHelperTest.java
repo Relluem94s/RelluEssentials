@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;

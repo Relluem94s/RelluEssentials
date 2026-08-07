@@ -7,7 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

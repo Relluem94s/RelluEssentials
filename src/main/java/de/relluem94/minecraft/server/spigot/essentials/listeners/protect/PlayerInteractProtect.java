@@ -4,14 +4,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.text.SimpleDateFormat;

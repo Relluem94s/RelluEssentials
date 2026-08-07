@@ -1,24 +1,38 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.DropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_CREATED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_CREATEDBY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_DB_VERSION;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_ID;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_MATERIAL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_MAX_INT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_MIN_INT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_MOTD_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_MOTD_PLAYERS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_PLANT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_SEED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_TAB_FOOTER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_TAB_HEADER;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.CropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.DropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.bukkit.Material;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MiscMapperTest {

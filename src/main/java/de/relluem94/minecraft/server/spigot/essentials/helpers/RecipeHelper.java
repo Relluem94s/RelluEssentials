@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.model.recipe.Shaped;
+import de.relluem94.minecraft.server.spigot.essentials.models.recipe.Shaped;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

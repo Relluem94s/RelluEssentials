@@ -4,11 +4,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelp
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.model.Selection;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.List;

@@ -21,9 +21,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.sql.ResultSet;
 import java.sql.SQLException;

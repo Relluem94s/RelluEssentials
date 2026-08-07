@@ -3,11 +3,11 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_MSG_SPACER_IN;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.model.Npc;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.NpcDialogueEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.NpcDialogueTracker;
+import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcDialogueTracker;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

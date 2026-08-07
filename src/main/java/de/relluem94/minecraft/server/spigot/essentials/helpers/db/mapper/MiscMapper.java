@@ -15,9 +15,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_TAB_HEADER;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.DropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.CropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.DropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.bukkit.Material;

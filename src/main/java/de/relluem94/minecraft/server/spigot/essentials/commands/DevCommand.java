@@ -16,13 +16,13 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.dev.RemoveEnchan
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.RotateTestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.ShowPlayerStatsCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.ToggleDamageInfoCommand;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.registry.SubCommandRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.SubCommandRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;

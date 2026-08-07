@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.TraderNPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNpc;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;

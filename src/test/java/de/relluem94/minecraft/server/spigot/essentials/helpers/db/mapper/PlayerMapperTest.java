@@ -27,12 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerPartnerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.GroupRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.PlayerRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.repository.GroupRepository;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

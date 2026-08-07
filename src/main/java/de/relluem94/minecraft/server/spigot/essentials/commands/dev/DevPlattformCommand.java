@@ -2,12 +2,12 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npc.trader.TraderNpc;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.ArrayList;

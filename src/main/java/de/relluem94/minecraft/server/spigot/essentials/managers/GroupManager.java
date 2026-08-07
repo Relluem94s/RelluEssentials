@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;

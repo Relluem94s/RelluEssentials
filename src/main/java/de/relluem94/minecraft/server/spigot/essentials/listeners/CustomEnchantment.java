@@ -2,11 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.registry.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

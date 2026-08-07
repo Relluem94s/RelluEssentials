@@ -1,17 +1,31 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
 
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionLockEntry;
-import org.bukkit.Material;
-import org.junit.jupiter.api.Test;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_CREATED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_CREATEDBY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_DELETED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_DELETEDBY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_FLAGS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_ID;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_MATERIAL_NAME;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_RIGHTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UPDATED;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UPDATEDBY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_VALUE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionLockEntry;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import org.bukkit.Material;
+import org.junit.jupiter.api.Test;
 
 class ProtectionMapperTest {
 

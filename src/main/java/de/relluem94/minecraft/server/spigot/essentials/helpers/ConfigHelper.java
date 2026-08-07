@@ -4,9 +4,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

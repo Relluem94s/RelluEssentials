@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.context.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import org.bukkit.event.EventHandler;

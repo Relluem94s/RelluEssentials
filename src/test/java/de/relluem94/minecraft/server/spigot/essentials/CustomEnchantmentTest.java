@@ -1,8 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
+
 import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.model.enchantment.CustomEnchantment;
+import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.CustomEnchantment;
+import java.lang.reflect.Field;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -12,11 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.lang.reflect.Field;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class CustomEnchantmentTest {

@@ -2,8 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.services.cleanup;
 
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.model.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registry.ProtectionRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
