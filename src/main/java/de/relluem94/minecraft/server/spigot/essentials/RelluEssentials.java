@@ -28,7 +28,6 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
@@ -80,7 +79,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -106,7 +104,6 @@ public class RelluEssentials extends JavaPlugin {
   public final Set<String> oreRespawn = new HashSet<>();
   public final Set<String> scoreboardShow = new HashSet<>();
   public final Map<Player, DoubleStore<Location, Location>> position = new HashMap<>();
-  public final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
   public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
   public final Map<Material, Material> crops = new EnumMap<>(Material.class);
 
@@ -284,7 +281,6 @@ public class RelluEssentials extends JavaPlugin {
     GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
     groupRegistry = new GroupRegistry(groupRepository);
     groupService = new GroupService(groupRegistry, groupRepository);
-    serviceContext.setGroupRegistry(getGroupRegistry());
     serviceContext.setGroupService(getGroupService());
     databaseManager.setGroupService(getGroupService());
     this.playerRegistry = new PlayerRegistry();
@@ -308,7 +304,7 @@ public class RelluEssentials extends JavaPlugin {
     chatService = new ChatService(serviceContext, replyRegistry);
     serviceContext.setChatService(chatService);
     bankService = new BankService(databaseHelper, playerRegistry, bankTierRegistry,
-        translationService, bankInterestMap, this);
+        translationService, this);
     serviceContext.setBankService(bankService);
 
     BackLocationRepository backLocationRepository = new BackLocationRepository();

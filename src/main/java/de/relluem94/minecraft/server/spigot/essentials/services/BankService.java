@@ -38,6 +38,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -109,17 +110,15 @@ public class BankService {
   private final PlayerRegistry playerRegistry;
   private final BankTierRegistry bankTierRegistry;
   private final TranslationService translationService;
-  private final Map<UUID, BankAccountEntry> bankInterestMap;
+  private final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
   private final JavaPlugin plugin;
 
   public BankService(DatabaseHelper databaseHelper, PlayerRegistry playerRegistry,
-      BankTierRegistry bankTierRegistry, TranslationService translationService,
-      Map<UUID, BankAccountEntry> bankInterestMap, JavaPlugin plugin) {
+      BankTierRegistry bankTierRegistry, TranslationService translationService, JavaPlugin plugin) {
     this.databaseHelper = databaseHelper;
     this.playerRegistry = playerRegistry;
     this.bankTierRegistry = bankTierRegistry;
     this.translationService = translationService;
-    this.bankInterestMap = bankInterestMap;
     this.plugin = plugin;
   }
 
