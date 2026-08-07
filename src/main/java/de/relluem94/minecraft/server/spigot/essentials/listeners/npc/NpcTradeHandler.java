@@ -162,15 +162,17 @@ public class NpcTradeHandler {
       return;
     }
 
-    BagTypeEntry bagType = findMatchingBagType(clickedItem.getItemMeta().getDisplayName());
+    Optional<BagTypeEntry> bagTypeOptional = serviceContext.getBagService()
+        .findBagTypeByPartialName(clickedItem.getItemMeta().getDisplayName());
 
-    if (bagType == null) {
+    if (bagTypeOptional.isPresent()) {
       player.sendMessage(
           serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND));
       return;
     }
 
+    BagTypeEntry bagType = bagTypeOptional.get();
     if (serviceContext.getBagService().hasBag(bagType.getId(), playerEntry)) {
       player.sendMessage(
           serviceContext.getTranslationService()
@@ -187,13 +189,6 @@ public class NpcTradeHandler {
     }
 
     purchaseBag(bagType, player, playerEntry);
-  }
-
-  private BagTypeEntry findMatchingBagType(String displayName) {
-    return RelluEssentials.getInstance().getBagTypeRegistry().getAll().stream()
-        .filter(entry -> entry.getDisplayName().equals(displayName))
-        .findFirst()
-        .orElse(null);
   }
 
   private void purchaseBag(BagTypeEntry bagType, Player player, PlayerEntry playerEntry) {

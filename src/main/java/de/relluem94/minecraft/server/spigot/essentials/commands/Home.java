@@ -53,8 +53,8 @@ public class Home implements CommandConstruct {
       return true;
     }
 
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = serviceContext.getPlayerService()
+.getPlayerEntry(p);
 
     switch (args.length) {
       case 0:

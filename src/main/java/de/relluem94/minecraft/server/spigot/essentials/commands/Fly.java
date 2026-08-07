@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -40,14 +39,16 @@ public class Fly implements CommandConstruct {
       @NonNull String label, String[] args) {
 
     if (!isPlayer(sender)) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!serviceContext.getGroupService().isSenderAuthorized(p, "vip")) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -59,7 +60,8 @@ public class Fly implements CommandConstruct {
     Player target = Bukkit.getPlayer(args[0]);
 
     if (target == null) {
-      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      p.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
@@ -67,20 +69,22 @@ public class Fly implements CommandConstruct {
       p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
           MessageKey.COMMAND_FLYMODE,
           target.getCustomName(),
-          !target.getAllowFlight() ? serviceContext.getTranslationService().get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
+          !target.getAllowFlight() ? serviceContext.getTranslationService()
+              .get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
               : serviceContext.getTranslationService().get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
       ));
       flyMode(target);
     } else {
-      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
 
     }
     return true;
   }
 
   private void flyMode(@NotNull Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = serviceContext.getPlayerService()
+        .getPlayerEntry(p);
     pe.setFlying(!pe.isFlying());
     pe.setUpdatedBy(pe.getId());
     pe.setHasToBeUpdated(true);
@@ -88,7 +92,8 @@ public class Fly implements CommandConstruct {
     p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
         MessageKey.COMMAND_FLYMODE,
         p.getCustomName(),
-        p.getAllowFlight() ? serviceContext.getTranslationService().get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
+        p.getAllowFlight() ? serviceContext.getTranslationService()
+            .get(MessageKey.COMMAND_FLYMODE_ACTIVATED)
             : serviceContext.getTranslationService().get(MessageKey.COMMAND_FLYMODE_DEACTIVATED)
     ));
   }

@@ -44,9 +44,11 @@ public class Marry implements CommandConstruct {
   }
 
   private void addMarryEntry(Player player, Player target) {
-    if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(player).getPartner()
+    if (serviceContext.getPlayerService()
+.getPlayerEntry(player).getPartner()
         != null
-        || RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target).getPartner()
+        || serviceContext.getPlayerService()
+.getPlayerEntry(target).getPartner()
         != null) {
       player.sendMessage(
           serviceContext.getTranslationService()
@@ -91,9 +93,11 @@ public class Marry implements CommandConstruct {
         serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, target.getCustomName()));
 
-    PlayerEntry firstPlayer = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry firstPlayer = serviceContext.getPlayerService()
+
         .getPlayerEntry(target);
-    PlayerEntry secondPlayer = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry secondPlayer = serviceContext.getPlayerService()
+
         .getPlayerEntry(player);
 
     PlayerPartnerEntry playerPartnerEntry = new PlayerPartnerEntry();
@@ -121,7 +125,8 @@ public class Marry implements CommandConstruct {
   private void divorce(@NotNull PlayerEntry pe) {
     PlayerPartnerEntry ppe = pe.getPartner();
 
-    PlayerEntry secondPlayerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry secondPlayerEntry = serviceContext.getPlayerService()
+
         .getPlayerEntry(
             ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId()
                 : ppe.getFirstPartnerId());
@@ -210,8 +215,10 @@ public class Marry implements CommandConstruct {
       }
 
       if (args[0].equalsIgnoreCase(Commands.DIVORCE.getName())) {
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
-        if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p).getPartner()
+        PlayerEntry pe = serviceContext.getPlayerService()
+.getPlayerEntry(p);
+        if (serviceContext.getPlayerService()
+.getPlayerEntry(p).getPartner()
             != null) {
           divorce(pe);
           return true;

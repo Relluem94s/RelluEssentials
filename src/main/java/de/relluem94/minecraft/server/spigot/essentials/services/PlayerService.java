@@ -75,6 +75,15 @@ public class PlayerService {
     pe.setHasToBeUpdated(true);
   }
 
+
+  public PlayerEntry getPlayerEntry(Player player) {
+    return playerRegistry.getPlayerEntry(player);
+  }
+  public PlayerEntry getPlayerEntry(int id) {
+    return playerRegistry.getPlayerEntry(id);
+  }
+
+
   /**
    *
    * @param p    Player

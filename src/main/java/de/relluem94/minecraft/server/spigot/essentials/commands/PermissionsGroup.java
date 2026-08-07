@@ -4,7 +4,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -61,8 +60,7 @@ public class PermissionsGroup implements CommandConstruct {
       return true;
     }
 
-    if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target.getUniqueId())
-        == null) {
+    if (serviceContext.getPlayerService().getPlayerEntry(target.getPlayer()) == null) {
       sender.sendMessage(
           serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));

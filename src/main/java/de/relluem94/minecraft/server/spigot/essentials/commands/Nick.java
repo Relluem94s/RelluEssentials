@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -61,11 +60,11 @@ public class Nick implements CommandConstruct {
       return true;
     }
 
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(target.getUniqueId());
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(target);
     pe.setCustomName(args[1]);
-    pe.setUpdatedBy(isPlayer(sender) ? RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(((Player) sender).getUniqueId()).getId() : 1);
+    pe.setUpdatedBy(
+        isPlayer(sender) ? serviceContext.getPlayerService().getPlayerEntry(((Player) sender))
+            .getId() : 1);
     pe.setHasToBeUpdated(true);
     target.setCustomName(pe.getGroup().getPrefix() + args[1]);
     target.setPlayerListName(pe.getGroup().getPrefix() + args[1]);

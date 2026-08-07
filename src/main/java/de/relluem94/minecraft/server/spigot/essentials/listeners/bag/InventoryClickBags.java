@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -9,8 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Objects;
 import java.util.Optional;
 import org.bukkit.entity.Player;
@@ -22,32 +19,31 @@ import org.jetbrains.annotations.NotNull;
 
 public class InventoryClickBags implements ListenerConstruct {
 
-  TranslationService translationService;
-  BagService bagService;
+  ServiceContext context;
 
   @Override
   public void injectContext(ServiceContext context) {
-    translationService = context.getTranslationService();
-    bagService = context.getBagService();
+    this.context = context;
   }
 
   @EventHandler
   public void onInventoryClickItem(@NotNull InventoryClickEvent e) {
     if (e.getWhoClicked() instanceof Player p && e.getCurrentItem() != null) {
-      String MAIN_GUI = translationService.get(MessageKey.PLUGIN_BAG_GUI_TITLE);
+      String MAIN_GUI = context.getTranslationService().get(MessageKey.PLUGIN_BAG_GUI_TITLE);
       if (e.getView().getTitle()
           .startsWith(Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE)
           && e.getView().getTitle().endsWith(" Bag")) {
 
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
-        Optional<BagTypeEntry> bte = RelluEssentials.getInstance().getBagTypeRegistry()
-            .findByPartialName(e.getView().getTitle());
+        PlayerEntry pe = context.getPlayerService().getPlayerEntry(p);
+        Optional<BagTypeEntry> bte = context.getBagService()
+            .findBagTypeByPartialName(e.getView().getTitle());
 
         if (!bte.isPresent()) {
           return;
         }
 
-        Optional<BagEntry> bagEntryOptional = bagService.findBag(pe.getId(), bte.get().getId());
+        Optional<BagEntry> bagEntryOptional = context.getBagService()
+            .findBag(pe.getId(), bte.get().getId());
 
         if (!bagEntryOptional.isPresent()) {
           return;
@@ -57,7 +53,7 @@ public class InventoryClickBags implements ListenerConstruct {
 
         ItemStack is = e.getCurrentItem();
 
-        int slot = bagService.getSlotByItemStack(bagEntry, is);
+        int slot = context.getBagService().getSlotByItemStack(bagEntry, is);
         if (slot != -1 && e.getClickedInventory() != null) {
           int value = bagEntry.getSlotValue(slot);
           boolean isRightClick = e.isRightClick();
@@ -122,21 +118,22 @@ public class InventoryClickBags implements ListenerConstruct {
           }
 
           p.openInventory(
-              Objects.requireNonNull(bagService.getBagInventory(bagEntry.getBagTypeId(), pe)));
+              Objects.requireNonNull(
+                  context.getBagService().getBagInventory(bagEntry.getBagTypeId(), pe)));
         }
         e.setCancelled(true);
       } else if (e.getView().getTitle().equals(MAIN_GUI)) {
         e.setCancelled(true);
         String name = Objects.requireNonNull(e.getCurrentItem().getItemMeta()).getDisplayName();
-        Optional<BagTypeEntry> bte = RelluEssentials.getInstance().getBagTypeRegistry()
-            .findByPartialName(name);
+        Optional<BagTypeEntry> bte = context.getBagService().findBagTypeByPartialName(name);
 
         if (bte.isPresent()) {
-          PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-              .getPlayerEntry(e.getWhoClicked().getUniqueId());
+          PlayerEntry pe = context.getPlayerService()
+              .getPlayerEntry(p);
           e.getWhoClicked()
               .openInventory(
-                  Objects.requireNonNull(bagService.getBagInventory(bte.get().getId(), pe)));
+                  Objects.requireNonNull(
+                      context.getBagService().getBagInventory(bte.get().getId(), pe)));
         }
       }
     }

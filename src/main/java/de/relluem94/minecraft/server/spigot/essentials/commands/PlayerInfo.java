@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -78,8 +77,7 @@ public class PlayerInfo implements CommandConstruct {
       return;
     }
 
-    PlayerEntry pet = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(target.getUniqueId());
+    PlayerEntry pet = serviceContext.getPlayerService().getPlayerEntry(target.getPlayer());
 
     if (pet == null) {
       sender.sendMessage(
@@ -104,9 +102,11 @@ public class PlayerInfo implements CommandConstruct {
     if (pet.getPartner() != null) {
       sender.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_TO,
-              RelluEssentials.getInstance().getPlayerRegistry()
+              serviceContext.getPlayerService()
+
                   .getPlayerEntry(pet.getPartner().getFirstPartnerId()).getName(),
-              RelluEssentials.getInstance().getPlayerRegistry()
+              serviceContext.getPlayerService()
+
                   .getPlayerEntry(pet.getPartner().getSecondPartnerId())));
       sender.sendMessage(
           serviceContext.getTranslationService()

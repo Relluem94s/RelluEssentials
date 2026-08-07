@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -47,8 +46,9 @@ public class PlayerList implements CommandConstruct {
           continue;
         }
       }
-      PlayerEntry pet = RelluEssentials.getInstance().getPlayerRegistry()
-          .getPlayerEntry(player.getUniqueId());
+      PlayerEntry pet = serviceContext.getPlayerService()
+
+          .getPlayerEntry(player);
       sender.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_LIST_ENTRY,
               pet.getGroup().getPrefix(), pet.getCustomName(),
