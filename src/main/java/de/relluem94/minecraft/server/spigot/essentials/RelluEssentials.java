@@ -285,6 +285,7 @@ public class RelluEssentials extends JavaPlugin {
     );
     databaseManager.enable(this);
     databaseHelper = databaseManager.getDatabaseHelper();
+    serviceContext.setDatabaseHelper(databaseHelper);
 
     GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
     groupRegistry = new GroupRegistry(groupRepository);
