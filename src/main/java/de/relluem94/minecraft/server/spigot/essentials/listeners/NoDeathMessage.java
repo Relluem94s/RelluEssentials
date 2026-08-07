@@ -8,7 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
@@ -16,7 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Objects;
 import java.util.Random;
 import net.md_5.bungee.api.ChatColor;
@@ -39,13 +37,11 @@ public class NoDeathMessage implements ListenerConstruct {
 
   private final Random random = new Random();
 
-  TranslationService translationService;
-  DatabaseHelper databaseHelper;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    translationService = context.getTranslationService();
-    databaseHelper = context.getDatabaseHelper();
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -87,14 +83,14 @@ public class NoDeathMessage implements ListenerConstruct {
       le.setPlayerId(pe.getId());
 
       TextComponent message = new TextComponent(
-          translationService.get(MessageKey.PLUGIN_EVENT_DEATH_TP));
+          serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_DEATH_TP));
       message.setColor(ChatColor.AQUA);
       message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
           "/home " + Home.Commands.TP.getName() + " " + le.getLocationName()));
       p.spigot().sendMessage(message);
 
-      databaseHelper.insertLocation(le);
-      le = databaseHelper.getLocation(location, locationType.getId());
+      serviceContext.getDatabaseHelper().insertLocation(le);
+      le = serviceContext.getDatabaseHelper().getLocation(location, locationType.getId());
 
       World world = le.getLocation().getWorld();
       String locationName = le.getLocationName();
@@ -109,10 +105,10 @@ public class NoDeathMessage implements ListenerConstruct {
       }
 
       p.sendMessage(
-          translationService.getWithPrefix(
+          serviceContext.getTranslationService().getWithPrefix(
               MessageKey.PLUGIN_EVENT_DEATH,
               locationName,
-              translationService.get(
+              serviceContext.getTranslationService().get(
                   MessageKey.COMMAND_WHERE_STRING,
                   (int) leLocation.getX(),
                   (int) leLocation.getY(),

@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -29,11 +28,11 @@ import org.jspecify.annotations.NonNull;
 public class BetterSoil implements ListenerConstruct {
 
 
-  private BagService bagService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    bagService = context.getBagService();
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -78,7 +77,7 @@ public class BetterSoil implements ListenerConstruct {
     PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
         .getPlayerEntry(p.getUniqueId());
 
-    List<ItemStack> lis = bagService.collectItemStacks(e.getItemsHarvested(), e.getPlayer(), pe);
+    List<ItemStack> lis = serviceContext.getBagService().collectItemStacks(e.getItemsHarvested(), e.getPlayer(), pe);
     e.getItemsHarvested().removeAll(lis);
 
     EnchantmentRegistry.find(RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))

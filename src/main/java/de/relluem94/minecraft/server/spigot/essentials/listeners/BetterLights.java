@@ -6,7 +6,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Lightable;
@@ -17,11 +16,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class BetterLights implements ListenerConstruct {
 
-  TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -34,7 +33,7 @@ public class BetterLights implements ListenerConstruct {
       lightable.setLit(!lightable.isLit());
       b.setBlockData(lightable);
       e.getPlayer()
-          .sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_LIGHTS_TOGGLE));
+          .sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.PLUGIN_EVENT_LIGHTS_TOGGLE));
       pe.setPlayerState(PlayerState.DEFAULT);
       new BukkitRunnable() {
         @Override

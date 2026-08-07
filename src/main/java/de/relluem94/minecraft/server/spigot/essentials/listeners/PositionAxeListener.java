@@ -9,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -26,11 +25,11 @@ public class PositionAxeListener implements ListenerConstruct {
   private final ItemHelper positionAxeItem = ItemRegistry.find(
       RegistryKey.of(PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow();
 
-  TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -66,25 +65,29 @@ public class PositionAxeListener implements ListenerConstruct {
       if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
         positions.setValue(null);
         player.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_FIRST_RESET));
+            serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_FIRST_RESET));
       } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
         positions.setSecondValue(null);
         player.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_SECOND_RESET));
+            serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_SECOND_RESET));
       }
     } else {
       if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
         positions.setValue(clickedLocation);
         player.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_FIRST_SET,
-                clickedLocation.getBlockX(), clickedLocation.getBlockY(),
-                clickedLocation.getBlockZ()));
+            serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_FIRST_SET,
+                    clickedLocation.getBlockX(), clickedLocation.getBlockY(),
+                    clickedLocation.getBlockZ()));
       } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
         positions.setSecondValue(clickedLocation);
         player.sendMessage(
-            translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_SECOND_SET,
-                clickedLocation.getBlockX(), clickedLocation.getBlockY(),
-                clickedLocation.getBlockZ()));
+            serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.PLUGIN_EVENT_POSITION_AXE_SECOND_SET,
+                    clickedLocation.getBlockX(), clickedLocation.getBlockY(),
+                    clickedLocation.getBlockZ()));
       }
     }
   }
