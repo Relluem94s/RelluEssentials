@@ -4,7 +4,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BankerNpc;
-import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
@@ -36,13 +35,12 @@ public class ServiceContext {
   private final TranslationService translationService;
   private GroupService groupService;
   private PlayerService playerService;
-  private CommandManager commandManager;
+  private CommandManager commandManager; // TODO SERVICE
   private BuyBackService buyBackService;
   private NpcService npcService;
-  private GroupRegistry groupRegistry;
   private SchedulerService schedulerService;
   private DatabaseHelper databaseHelper;
-  private ProtectionRegistry protectionRegistry;
+  private ProtectionRegistry protectionRegistry; // TODO SERVICE
   private UndoHistoryService undoHistoryService;
   private SelectionService selectionService;
   private BagService bagService;
@@ -66,7 +64,6 @@ public class ServiceContext {
     this.commandManager = plugin.getCommandManager();
     this.buyBackService = plugin.getBuyBackService();
     this.npcService = plugin.getNpcService();
-    this.groupRegistry = plugin.getGroupRegistry();
     this.schedulerService = plugin.getSchedulerService();
     this.translationService = plugin.getTranslationService();
     this.databaseHelper = plugin.getDatabaseHelper();
