@@ -95,9 +95,10 @@ commands:
     msg:
         description: message other player
         usage: /msg
-    r:
+    reply:
         description: reply other player
-        usage: /r
+        usage: /reply
+        aliases: r
     title:
         description: spawn title for player
         usage: /title

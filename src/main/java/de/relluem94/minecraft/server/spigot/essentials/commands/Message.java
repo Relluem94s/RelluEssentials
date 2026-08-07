@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.reply;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -52,12 +51,7 @@ public class Message implements CommandConstruct {
       return true;
     }
 
-    reply.remove(p);
-    reply.remove(target);
-
-    reply.put(p, target);
-    reply.put(target, p);
-
+    serviceContext.getChatService().registerReply(p, target);
     serviceContext.getChatService().sendPrivateMessage(sender, target, args, 1);
     return true;
   }
