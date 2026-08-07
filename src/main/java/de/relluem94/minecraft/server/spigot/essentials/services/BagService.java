@@ -4,14 +4,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper.BAG_SIZE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 import static de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat.ADMIN_CHANNEL;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
@@ -46,19 +44,16 @@ import org.jspecify.annotations.NonNull;
 public class BagService {
 
   private final BagRegistry bagRegistry;
-  private final DatabaseHelper databaseHelper;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
   private final List<ItemStack> bagBlocks2collect;
 
   public BagService(
+      ServiceContext serviceContext,
       BagRegistry bagRegistry,
-      DatabaseHelper databaseHelper,
-      TranslationService translationService,
       List<ItemStack> bagBlocks2collect
   ) {
     this.bagRegistry = bagRegistry;
-    this.databaseHelper = databaseHelper;
-    this.translationService = translationService;
+    this.serviceContext = serviceContext;
     this.bagBlocks2collect = bagBlocks2collect;
   }
 
@@ -123,10 +118,11 @@ public class BagService {
           continue;
         }
 
-        bagEntry.setSlotValue(slot, bagEntry.getSlotValue(slot) + droppedItem.getItemStack().getAmount());
+        bagEntry.setSlotValue(slot,
+            bagEntry.getSlotValue(slot) + droppedItem.getItemStack().getAmount());
         bagEntry.setHasToBeUpdated(true);
-        ChatHelper.sendMessageInActionBar(player,
-            translationService.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
+        serviceContext.getChatService().sendMessageInActionBar(player,
+            serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
                 droppedItem.getItemStack().getAmount(), droppedItem.getName()));
         player.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
         collectedItems.add(droppedItem);
@@ -162,8 +158,8 @@ public class BagService {
 
         bagEntry.setSlotValue(slot, bagEntry.getSlotValue(slot) + itemStack.getAmount());
         bagEntry.setHasToBeUpdated(true);
-        ChatHelper.sendMessageInActionBar(player,
-            translationService.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
+        serviceContext.getChatService().sendMessageInActionBar(player,
+            serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
                 itemStack.getAmount(),
                 itemStack.getType().name().replace("_", " ").toLowerCase()));
         player.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
@@ -193,10 +189,11 @@ public class BagService {
         continue;
       }
 
-      bagEntry.setSlotValue(slot, bagEntry.getSlotValue(slot) + droppedItem.getItemStack().getAmount());
+      bagEntry.setSlotValue(slot,
+          bagEntry.getSlotValue(slot) + droppedItem.getItemStack().getAmount());
       bagEntry.setHasToBeUpdated(true);
-      ChatHelper.sendMessageInActionBar(player,
-          translationService.get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
+      serviceContext.getChatService().sendMessageInActionBar(player,
+          serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
               droppedItem.getItemStack().getAmount(), droppedItem.getName()));
       player.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
       droppedItem.getItemStack().setAmount(0);
@@ -214,14 +211,14 @@ public class BagService {
         continue;
       }
 
-      databaseHelper.updateBagEntry(bagEntry);
+      serviceContext.getDatabaseHelper().updateBagEntry(bagEntry);
       bagEntry.setHasToBeUpdated(false);
       updatedBagCount++;
     }
 
     if (updatedBagCount != 0) {
-      sendMessageInChannel(
-          translationService.get(MessageKey.PLUGIN_BAGS_SAVED, updatedBagCount),
+      serviceContext.getChatService().sendMessageInChannel(
+          serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAGS_SAVED, updatedBagCount),
           PLUGIN_NAME_CHAT_CONSOLE,
           ADMIN_CHANNEL,
           adminGroup
@@ -234,7 +231,7 @@ public class BagService {
   }
 
   public Inventory getBagsInventory(PlayerEntry pe) {
-    String MAIN_GUI = translationService.get(MessageKey.PLUGIN_BAG_GUI_TITLE);
+    String MAIN_GUI = serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_GUI_TITLE);
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI),
         resolveDisabledItem());
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
@@ -318,16 +315,19 @@ public class BagService {
     return inv;
   }
 
-  public void purchaseBag(@NonNull BagTypeEntry bagType, @NonNull Player player, @NonNull PlayerEntry playerEntry) {
+  public void purchaseBag(@NonNull BagTypeEntry bagType, @NonNull Player player,
+      @NonNull PlayerEntry playerEntry) {
     playerEntry.setPurse(playerEntry.getPurse() - bagType.getCost());
     playerEntry.setUpdatedBy(playerEntry.getId());
     playerEntry.setHasToBeUpdated(true);
-    databaseHelper.insertBag(bagType.getId(), playerEntry.getId());
-    BagEntry newBagEntry = databaseHelper.getBag(bagType.getId(), playerEntry.getId());
+    serviceContext.getDatabaseHelper().insertBag(bagType.getId(), playerEntry.getId());
+    BagEntry newBagEntry = serviceContext.getDatabaseHelper()
+        .getBag(bagType.getId(), playerEntry.getId());
     bagRegistry.register(newBagEntry);
 
-    player.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT,
-        bagType.getDisplayName()));
+    player.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT,
+            bagType.getDisplayName()));
   }
 
 
@@ -342,11 +342,13 @@ public class BagService {
     String[] lore;
     if (npc) {
       lore = new String[]{
-          translationService.get(MessageKey.PLUGIN_BAG_CLICK_TO_BUY),
-          translationService.get(MessageKey.PLUGIN_BAG_COST_TO_BUY, bte.getCost())
+          serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_CLICK_TO_BUY),
+          serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_COST_TO_BUY,
+              bte.getCost())
       };
     } else {
-      lore = new String[]{translationService.get(MessageKey.PLUGIN_BAG_CLICK_TO_OPEN)};
+      lore = new String[]{
+          serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_CLICK_TO_OPEN)};
     }
     return new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG), bte.getDisplayName(),
         Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore));
@@ -403,8 +405,8 @@ public class BagService {
     }
 
     List<String> lore = new ArrayList<>();
-    lore.add(translationService.get(MessageKey.PLUGIN_BAG_AMOUNT, value));
-    lore.add(translationService.get(MessageKey.PLUGIN_BAG_RETRIEVE));
+    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_AMOUNT, value));
+    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_RETRIEVE));
 
     im.setLore(lore);
     is.setItemMeta(im);

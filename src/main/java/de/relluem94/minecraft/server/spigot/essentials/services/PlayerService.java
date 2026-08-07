@@ -1,12 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessageInChannel;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
@@ -24,16 +23,11 @@ import org.jetbrains.annotations.Nullable;
 public class PlayerService {
 
   private final PlayerRegistry playerRegistry;
-  private final DatabaseHelper databaseHelper;
-  private final GroupService groupService;
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
-  public PlayerService(PlayerRegistry playerRegistry, DatabaseHelper databaseHelper,
-      GroupService groupService, TranslationService translationService) {
+  public PlayerService(ServiceContext serviceContext, PlayerRegistry playerRegistry) {
+    this.serviceContext = serviceContext;
     this.playerRegistry = playerRegistry;
-    this.databaseHelper = databaseHelper;
-    this.groupService = groupService;
-    this.translationService = translationService;
   }
 
   public @Nullable PlayerEntry getPlayer(String name) {
@@ -99,7 +93,7 @@ public class PlayerService {
 
     if (!join) {
       Bukkit.broadcastMessage(
-          translationService.getWithPrefix(
+          serviceContext.getTranslationService().getWithPrefix(
               !isAFK ? MessageKey.COMMAND_AFK_ACTIVATED : MessageKey.COMMAND_AFK_DEACTIVATED,
               p.getLocale(),
               p.getCustomName() + "§f",
@@ -124,13 +118,13 @@ public class PlayerService {
 
   public PlayerPartnerEntry getPartner(PlayerEntry playerEntry) {
     if (playerEntry.getPartner() == null) {
-      return databaseHelper.getPlayerPartner(playerEntry.getId());
+      return serviceContext.getDatabaseHelper().getPlayerPartner(playerEntry.getId());
     }
     return playerEntry.getPartner();
   }
 
   public void reloadPlayerHomes() {
-    List<PlayerEntry> playerEntries = databaseHelper.getPlayers();
+    List<PlayerEntry> playerEntries = serviceContext.getDatabaseHelper().getPlayers();
 
     playerRegistry.clearPlayerEntries();
 
@@ -143,7 +137,7 @@ public class PlayerService {
    * @param p Player to set Flying
    */
   public void setFlying(Player p) {
-    if (groupService.isSenderAuthorized(p, "vip")) {
+    if (serviceContext.getGroupService().isSenderAuthorized(p, "vip")) {
       PlayerEntry pe = playerRegistry.getPlayerEntry(p.getUniqueId());
       if (pe.isFlying()) {
         p.setAllowFlight(true);
@@ -161,8 +155,9 @@ public class PlayerService {
     }
 
     if (updatedPlayers != 0) {
-      sendMessageInChannel(
-          translationService.get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers),
+      serviceContext.getChatService().sendMessageInChannel(
+          serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers),
           PLUGIN_NAME_CHAT_CONSOLE,
           BetterChatFormat.ADMIN_CHANNEL,
           adminGroup
@@ -178,8 +173,9 @@ public class PlayerService {
     }
 
     if (updatedPlayers != 0) {
-      sendMessageInChannel(
-          translationService.get(MessageKey.PLUGIN_PLAYERS_INVENTORY_SAVED, updatedPlayers),
+      serviceContext.getChatService().sendMessageInChannel(
+          serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_PLAYERS_INVENTORY_SAVED, updatedPlayers),
           PLUGIN_NAME_CHAT_CONSOLE,
           BetterChatFormat.ADMIN_CHANNEL,
           adminGroup
@@ -195,7 +191,7 @@ public class PlayerService {
 
   public int savePlayer(@NotNull PlayerEntry pe) {
     if (pe.isHasToBeUpdated()) {
-      databaseHelper.updatePlayer(pe);
+      serviceContext.getDatabaseHelper().updatePlayer(pe);
       pe.setHasToBeUpdated(false);
       return 1;
     }

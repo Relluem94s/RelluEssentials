@@ -1,26 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MESSAGE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_MSG_SPACER_IN;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_MSG_SPACER_OUT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SPACER_CHANNEL;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
-import static de.relluem94.rellulib.utils.StringUtils.implode;
-import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
-
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
-import org.jspecify.annotations.NonNull;
 
 /**
  *
@@ -30,20 +12,6 @@ public class ChatHelper {
 
   private ChatHelper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
-  }
-
-  /**
-   *
-   * @param sender  CommandSender
-   * @param message Message to send
-   */
-  public static void sendMessage(CommandSender sender, String message) {
-    if (isPlayer(sender)) {
-      Player p = (Player) sender;
-      p.sendMessage(message);
-    } else {
-      consoleSendMessage(message, "");
-    }
   }
 
   /**
@@ -69,70 +37,6 @@ public class ChatHelper {
     }
   }
 
-  /**
-   *
-   * @param message String
-   * @param p       Player
-   * @param channel String
-   * @param group   GroupEntry
-   */
-  public static void sendMessageInChannel(String message, Player p, String channel,
-      GroupEntry group) {
-    message = message.replaceFirst(channel, "");
-    for (Player op : Bukkit.getOnlinePlayers()) {
-      if (PermissionHelper.isAuthorized(op, group.getId())) {
-        sendMessage(op, p.getCustomName() + group.getPrefix() + PLUGIN_FORMS_SPACER_CHANNEL
-            + PLUGIN_COLOR_MESSAGE + replaceColor(message));
-      }
-    }
-  }
 
-  /**
-   *
-   * @param message String
-   * @param sender  String
-   * @param channel String
-   * @param group   GroupEntry
-   */
-  public static void sendMessageInChannel(String message, String sender, String channel,
-      GroupEntry group) {
-    message = message.replaceFirst(channel, "");
-    for (Player op : Bukkit.getOnlinePlayers()) {
-      if (PermissionHelper.isAuthorized(op, group.getId())) {
-        sendMessage(op,
-            sender + group.getPrefix() + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE
-                + replaceColor(message));
-      }
-    }
-  }
 
-  /**
-   *
-   * @param p       Player
-   * @param message String
-   */
-  public static void sendMessageInActionBar(@NonNull Player p, String message) {
-    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-  }
-
-  public static void msg(GroupService groupService, TranslationService translationService, CommandSender sender, Player target, String[] args, int start) {
-    if (sender instanceof ConsoleCommandSender) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
-      return;
-    }
-
-    String message = implode(start, args);
-
-    Player p = (Player) sender;
-    if (groupService.isSenderAuthorized(p, "vip")) {
-      message = replaceSymbols(replaceColor(message));
-    }
-
-    if (groupService.isSenderAuthorized(p, "user")) {
-      target.sendMessage(p.getCustomName() + PLUGIN_FORMS_MSG_SPACER_IN + message);
-      p.sendMessage(target.getCustomName() + PLUGIN_FORMS_MSG_SPACER_OUT + message);
-    } else {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-    }
-  }
 }

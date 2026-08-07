@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_POSITIVE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
@@ -88,8 +87,7 @@ public class GameRules implements CommandConstruct {
 
   private void showGameRule(CommandSender sender, @NotNull World world) {
     String[] gameRules = world.getGameRules();
-    sendMessage(sender,
-        translationService.getWithPrefix(MessageKey.COMMAND_GAMERULES, world.getName()));
+    sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_GAMERULES, world.getName()));
     for (String gameRule : gameRules) {
       Object value = world.getGameRuleValue(Objects.requireNonNull(GameRule.getByName(gameRule)));
       String color;
@@ -99,7 +97,7 @@ public class GameRules implements CommandConstruct {
         color = "§7";
       }
 
-      sendMessage(sender, "        §d" + gameRule + "§f = " + color + value);
+      sender.sendMessage("        §d" + gameRule + "§f = " + color + value);
     }
   }
 
