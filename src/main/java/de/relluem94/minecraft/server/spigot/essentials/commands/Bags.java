@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -79,19 +78,19 @@ public class Bags implements CommandConstruct {
     if (args.length != 1) {
       p.openInventory(
           serviceContext.getBagService().getBagsInventory(
-              RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p)));
+              serviceContext.getPlayerService().getPlayerEntry(p)));
       return true;
     }
 
     Optional<BagTypeEntry> bte;
     if (TypeUtils.isInt(args[0])) {
-      bte = RelluEssentials.getInstance().getBagTypeRegistry().findById(Integer.parseInt(args[0]));
+      bte = serviceContext.getBagService().findBagTypeById(Integer.parseInt(args[0]));
     } else {
-      bte = RelluEssentials.getInstance().getBagTypeRegistry().findByName(args[0]);
+      bte = serviceContext.getBagService().findBagTypeByPartialName(args[0]);
     }
 
     if (bte.isPresent()) {
-      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+      PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
       if (serviceContext.getBagService().hasBag(pe.getId(), bte.get().getId())) {
         p.openInventory(Objects.requireNonNull(serviceContext.getBagService().getBagInventory(bte.get().getId(), pe)));
       } else {

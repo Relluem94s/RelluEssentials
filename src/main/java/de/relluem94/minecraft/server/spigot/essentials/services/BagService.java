@@ -6,7 +6,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper.BAG_SIZE;
 import static de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat.ADMIN_CHANNEL;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -21,10 +20,12 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
@@ -45,16 +46,20 @@ public class BagService {
 
   private final BagRegistry bagRegistry;
   private final ServiceContext serviceContext;
-  private final List<ItemStack> bagBlocks2collect;
+  private final List<ItemStack> bagBlocks2collect = new ArrayList<>();
+  private final BagTypeRegistry bagTypeRegistry;
 
   public BagService(
       ServiceContext serviceContext,
       BagRegistry bagRegistry,
-      List<ItemStack> bagBlocks2collect
+      BagTypeRegistry bagTypeRegistry
   ) {
     this.bagRegistry = bagRegistry;
     this.serviceContext = serviceContext;
-    this.bagBlocks2collect = bagBlocks2collect;
+    this.bagTypeRegistry = bagTypeRegistry;
+    for (BagTypeEntry bagTypeEntry : this.bagTypeRegistry.getAll()) {
+      Collections.addAll(this.bagBlocks2collect, getItemStacks(bagTypeEntry));
+    }
   }
 
   public Optional<BagEntry> findBag(int playerId, int bagTypeId) {
@@ -63,6 +68,14 @@ public class BagService {
 
   public Collection<BagEntry> findBags(int playerId) {
     return bagRegistry.findAllByPlayerId(playerId);
+  }
+
+  public Optional<BagTypeEntry> findBagTypeByPartialName(String displayName) {
+    return bagTypeRegistry.findByPartialName(displayName);
+  }
+
+  public Optional<BagTypeEntry> findBagTypeById(int id) {
+    return bagTypeRegistry.findById(id);
   }
 
   public boolean hasBag(int playerId, int bagTypeId) {
@@ -234,9 +247,7 @@ public class BagService {
     String MAIN_GUI = serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_GUI_TITLE);
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI),
         resolveDisabledItem());
-    ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
-        .getBagTypeRegistry()
-        .getAll().listIterator();
+    ListIterator<BagTypeEntry> bagTypeEntryListIterator = bagTypeRegistry.getAll().listIterator();
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
       slot = InventoryHelper.getNextSlot(slot);
@@ -253,9 +264,7 @@ public class BagService {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title),
         resolveDisabledItem());
 
-    ListIterator<BagTypeEntry> bagTypeEntryListIterator = RelluEssentials.getInstance()
-        .getBagTypeRegistry()
-        .getAll().listIterator();
+    ListIterator<BagTypeEntry> bagTypeEntryListIterator = bagTypeRegistry.getAll().listIterator();
 
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {

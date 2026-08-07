@@ -50,6 +50,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BackLocationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BuyBackRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
@@ -85,7 +86,6 @@ import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -109,7 +109,6 @@ public class RelluEssentials extends JavaPlugin {
   public final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
   public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
   public final Map<Material, Material> crops = new EnumMap<>(Material.class);
-  public final List<ItemStack> bagBlocks2collect = new ArrayList<>();
 
   @Getter
   public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
@@ -137,9 +136,6 @@ public class RelluEssentials extends JavaPlugin {
   @Setter
   @Getter
   private TraderNpcRegistry traderNpcRegistry;
-  @Setter
-  @Getter
-  private BagTypeRegistry bagTypeRegistry;
   @Setter
   @Getter
   private BankTierRegistry bankTierRegistry;
@@ -297,8 +293,10 @@ public class RelluEssentials extends JavaPlugin {
     groupService.setPlayerRegistry(playerRegistry);
 
     BagRepository bagRepository = new BagRepository(databaseHelper.getBags());
+    BagTypeRepository bagTypeRepository = new BagTypeRepository(databaseHelper.getBagTypes());
+    BagTypeRegistry bagTypeRegistry = new BagTypeRegistry(bagTypeRepository);
     bagRegistry = new BagRegistry(bagRepository);
-    bagService = new BagService(serviceContext, bagRegistry, bagBlocks2collect);
+    bagService = new BagService(serviceContext, bagRegistry, bagTypeRegistry);
     serviceContext.setBagService(bagService);
 
     BuyBackRepository buyBackRepository = new BuyBackRepository();
@@ -362,9 +360,7 @@ public class RelluEssentials extends JavaPlugin {
     scoreBoardManager = new ScoreBoardManager();
     scoreBoardManager.enable(this);
     databaseManager.afterWorldLoaded(this);
-    schedulerService.runTaskLater(() -> {
-      getNpcService().loadAndSpawnNpcsInLoadedChunks();
-    }, 20L);
+    schedulerService.runTaskLater(() -> getNpcService().loadAndSpawnNpcsInLoadedChunks(), 20L);
   }
 
   @Override

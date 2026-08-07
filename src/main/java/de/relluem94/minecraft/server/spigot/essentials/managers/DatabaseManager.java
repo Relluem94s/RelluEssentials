@@ -14,25 +14,21 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInforma
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSettingEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
-import java.util.Collections;
 import lombok.Getter;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 
 /**
  * Manages database access and initializes all registries and plugin data on startup.
  */
+@SuppressWarnings("ClassCanBeRecord")
 public class DatabaseManager implements Enable {
 
   @Getter
@@ -45,7 +41,6 @@ public class DatabaseManager implements Enable {
    * @param user     the database user
    * @param password the database password
    * @param port     the database port
-   *
    * @throws RuntimeException if the database connection fails
    */
   public DatabaseManager(String host, String user, String password, int port) {
@@ -79,8 +74,6 @@ public class DatabaseManager implements Enable {
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
 
-    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
-
     PluginInformationEntry pie = databaseHelper.getPluginInformation();
     relluEssentialsPlugin.setPluginInformation(pie);
     databaseHelper.init();
@@ -99,9 +92,9 @@ public class DatabaseManager implements Enable {
     relluEssentialsPlugin
         .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
             databaseHelper.getProtections()));
-    relluEssentialsPlugin.setTraderNpcRegistry(new TraderNpcRegistry(translationService));
+    relluEssentialsPlugin.setTraderNpcRegistry(
+        new TraderNpcRegistry(relluEssentialsPlugin.getTranslationService()));
     relluEssentialsPlugin.getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
-    relluEssentialsPlugin.setBagTypeRegistry(new BagTypeRegistry(new BagTypeRepository(databaseHelper.getBagTypes())));
     relluEssentialsPlugin
         .setBankTierRegistry(new BankTierRegistry(databaseHelper.getBankTiers()));
     relluEssentialsPlugin.setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
@@ -137,8 +130,10 @@ public class DatabaseManager implements Enable {
         }
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE,
-            translationService.get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(), we.getName(),
-                wge.getSettings().size()));
+            relluEssentialsPlugin.getTranslationService()
+                .get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(),
+                    we.getName(),
+                    wge.getSettings().size()));
       }
     }
 
@@ -151,22 +146,16 @@ public class DatabaseManager implements Enable {
    */
   public void afterWorldLoaded(@NonNull RelluEssentials plugin) {
     plugin.getSchedulerService().runTaskLater(() -> {
-        plugin
-            .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
-                databaseHelper.getProtections()));
-        plugin
-            .setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
-        plugin.getPlayerService().reloadPlayerHomes();
-      }, 1L);
-
-    for (int i = 0; i < plugin.getBagTypeRegistry().getAll().size(); i++) {
-      ItemStack[] isa = plugin.getBagService().getItemStacks(
-          plugin.getBagTypeRegistry().getAll().get(i));
-      Collections.addAll(plugin.bagBlocks2collect, isa);
-    }
+      plugin
+          .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
+              databaseHelper.getProtections()));
+      plugin
+          .setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
+      plugin.getPlayerService().reloadPlayerHomes();
+    }, 1L);
   }
 
-  public void setGroupService(GroupService groupService){
+  public void setGroupService(GroupService groupService) {
     databaseHelper.setGroupService(groupService);
   }
 }
