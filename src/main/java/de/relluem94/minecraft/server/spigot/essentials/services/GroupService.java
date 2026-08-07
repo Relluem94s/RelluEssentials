@@ -5,6 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
+import java.util.Optional;
 import lombok.Setter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -43,6 +44,17 @@ public class GroupService {
     return groupRegistry.findById(id)
         .or(() -> groupRegistry.findByName("user"))
         .orElse(new GroupEntry(1, "user", "§8"));
+  }
+
+  public Optional<GroupEntry> resolveAuthorizedGroup(Player player, String groupName) {
+    Optional<GroupEntry> groupEntry = groupRegistry.findByName(groupName);
+    if (groupEntry.isEmpty()) {
+      return Optional.empty();
+    }
+    if (!isPlayerInGroupOrHigher(player, "mod")) {
+      return Optional.empty();
+    }
+    return groupEntry;
   }
 
   public boolean isPlayerInGroupOrHigher(Player player, String groupName) {
