@@ -52,6 +52,7 @@ What does the plugin include?
 * Save, Reload your config or more (`/rellu`)
 * Rename item in your Hand (`/rename`)
 * Repair your favorite Tools (`/repair`)
+* Reply to Player (`/reply`)
 * Edit or Copy your Signs (`/sign`)
 * Teleport to World Spawn (`/spawn`)
 * Change your Speed with (`/speed`)
