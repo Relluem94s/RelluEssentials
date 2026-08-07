@@ -10,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
@@ -46,6 +47,7 @@ public class ServiceContext {
   private SelectionService selectionService;
   private BagService bagService;
   private MessageService messageService;
+  private ChatService chatService;
   private BankService bankService;
   private BackService backService;
   private TeleportService teleportService;

@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -140,8 +139,8 @@ public class Worlds implements CommandConstruct {
         return true;
       }
 
-      sendMessage(p, translationService.getWithPrefix(MessageKey.COMMAND_WORLD_INFO));
-      Bukkit.getWorlds().forEach(w -> sendMessage(p, w.getName()));
+      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_INFO));
+      Bukkit.getWorlds().forEach(w -> p.sendMessage(w.getName()));
       return true;
     }
 

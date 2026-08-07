@@ -57,6 +57,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
@@ -171,6 +172,8 @@ public class RelluEssentials extends JavaPlugin {
   private BagService bagService;
   @Getter
   private MessageService messageService;
+  @Getter
+  ChatService chatService;
   @Getter
   private BankService bankService;
   @Getter
@@ -288,21 +291,24 @@ public class RelluEssentials extends JavaPlugin {
     groupService = new GroupService(groupRegistry, groupRepository);
     databaseManager.setGroupService(getGroupService());
     this.playerRegistry = new PlayerRegistry();
-    this.playerService = new PlayerService(playerRegistry, databaseHelper, groupService, translationService);
+    this.playerService = new PlayerService(serviceContext, playerRegistry);
     serviceContext.setPlayerService(getPlayerService());
     groupService.setPlayerRegistry(playerRegistry);
 
     BagRepository bagRepository = new BagRepository(databaseHelper.getBags());
     bagRegistry = new BagRegistry(bagRepository);
-    bagService = new BagService(bagRegistry, databaseHelper, translationService, bagBlocks2collect);
+    bagService = new BagService(serviceContext, bagRegistry, bagBlocks2collect);
     serviceContext.setBagService(bagService);
 
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     buyBackService = new BuyBackService(buyBackRepository);
 
     serviceContext.setGroupRegistry(getGroupRegistry());
-    serviceContext.setGroupService(getGroupService());
+    serviceContext.setGroupService(getGroupService()); // TODO has to be moved up after refactor to serviceContext instead of copied fields
     messageService = new MessageService(translationService);
+    serviceContext.setMessageService(messageService);
+    chatService = new ChatService(serviceContext);
+    serviceContext.setChatService(chatService);
     bankService = new BankService(databaseHelper,playerRegistry,bankTierRegistry,translationService,bankInterestMap, this);
     serviceContext.setBankService(bankService);
 

@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.reply;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.msg;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
@@ -10,8 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -25,32 +22,33 @@ import org.jetbrains.annotations.Nullable;
 @CommandName("msg")
 public class Message implements CommandConstruct {
 
-  private GroupService groupService;
-  private TranslationService translationService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.groupService = context.getGroupService();
-    this.translationService = context.getTranslationService();
+    this.serviceContext = context;
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
     if (args.length <= 1) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MSG_INFO));
+      p.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MSG_INFO));
       return true;
     }
 
     Player target = Bukkit.getPlayer(args[0]);
     if (target == null) {
-      sender.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MSG_PLAYER_OFFLINE));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MSG_PLAYER_OFFLINE));
       return true;
     }
 
@@ -60,7 +58,7 @@ public class Message implements CommandConstruct {
     reply.put(p, target);
     reply.put(target, p);
 
-    msg(groupService, translationService, sender, target, args, 1);
+    serviceContext.getChatService().sendPrivateMessage(sender, target, args, 1);
     return true;
   }
 
@@ -75,7 +73,7 @@ public class Message implements CommandConstruct {
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
-    if (!groupService.isSenderAuthorized(commandSender, "user")) {
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "user")) {
       return tabList;
     }
 

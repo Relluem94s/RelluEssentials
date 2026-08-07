@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.sendMessage;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -109,7 +108,7 @@ public class Cookies implements CommandConstruct {
       return true;
     }
 
-    sendMessage(p,
+    p.sendMessage(
         translationService.get(MessageKey.COMMAND_COOKIES_PLAYER, target.getCustomName()));
     getCookies(getCookie(p), target);
     return true;
@@ -117,7 +116,7 @@ public class Cookies implements CommandConstruct {
 
   private void getCookies(ItemStack is, @NotNull Player p) {
     p.getWorld().dropItem(p.getLocation(), is);
-    sendMessage(p, translationService.get(MessageKey.COMMAND_COOKIES, p.getCustomName()));
+    p.sendMessage(translationService.get(MessageKey.COMMAND_COOKIES, p.getCustomName()));
   }
 
   private @NotNull ItemStack getCookie(Player p) {
