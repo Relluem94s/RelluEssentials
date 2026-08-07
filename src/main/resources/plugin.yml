@@ -98,7 +98,6 @@ commands:
     reply:
         description: reply other player
         usage: /reply
-        aliases: r
     title:
         description: spawn title for player
         usage: /title

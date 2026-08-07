@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@CommandName("r")
+@CommandName("reply")
 public class Reply implements CommandConstruct {
 
   private ServiceContext serviceContext;
