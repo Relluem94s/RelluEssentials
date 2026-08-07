@@ -302,9 +302,9 @@ public class RelluEssentials extends JavaPlugin {
 
     serviceContext.setGroupRegistry(getGroupRegistry());
     serviceContext.setGroupService(getGroupService());
-    serviceContext.setNpcService(getNpcService());
     messageService = new MessageService(translationService);
     bankService = new BankService(databaseHelper,playerRegistry,bankTierRegistry,translationService,bankInterestMap, this);
+    serviceContext.setBankService(bankService);
 
     BackLocationRepository backLocationRepository = new BackLocationRepository();
     backService = new BackService(backLocationRepository);
@@ -326,8 +326,6 @@ public class RelluEssentials extends JavaPlugin {
     commandManager.enable(this);
     signManager = new SignManager();
     signManager.enable(this);
-    listenerManager = new ListenerManager();
-    listenerManager.enable(this);
     skillManager = new SkillManager();
     skillManager.enable(this);
     recipeManager = new RecipeManager();
@@ -340,6 +338,7 @@ public class RelluEssentials extends JavaPlugin {
     NpcSpawner npcSpawner = new NpcSpawner();
     NpcValidator npcValidator = new NpcValidator();
     npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
+    serviceContext.setNpcService(npcService);
     npcDialogueTracker = new NpcDialogueTracker();
     stopLoading();
     worldManager = new WorldManager();
@@ -350,6 +349,8 @@ public class RelluEssentials extends JavaPlugin {
     positionHighlightManager.enable(this);
     scoreBoardManager = new ScoreBoardManager();
     scoreBoardManager.enable(this);
+    listenerManager = new ListenerManager();
+    listenerManager.enable(this);
     autoSaveManager = new AutoSaveManager();
     autoSaveManager.enable(this);
     databaseManager.afterWorldLoaded(this);
