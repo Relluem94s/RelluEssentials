@@ -15,7 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -35,40 +34,6 @@ public class PermissionsGroup implements CommandConstruct {
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
-  }
-
-  private @Nullable GroupEntry checkGroupExists(String groupName,
-      Player p) {
-    Optional<GroupEntry> groupEntry = serviceContext.getGroupRegistry().findByName(groupName);
-    if (!groupEntry.isPresent()) {
-      p.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_SETGROUP_GROUP_NOT_FOUND, groupName));
-      return null;
-    }
-
-    if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
-      p.sendMessage(serviceContext.getTranslationService()
-          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
-      return null;
-    }
-    return groupEntry.get();
-  }
-
-  private void setGroupForTarget(@NotNull CommandSender s, @NotNull GroupEntry g,
-      @NotNull OfflinePlayer target) {
-    s.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_SETGROUP, g.getPrefix() + g.getName(),
-                target.getName()));
-    if (target.isOnline() && Bukkit.getPlayer(target.getUniqueId()) != null) {
-      Objects.requireNonNull(Bukkit.getPlayer(target.getUniqueId()))
-          .sendMessage(
-              serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_SETGROUP,
-                  g.getPrefix() + g.getName(),
-                  target.getName()));
-    }
-    serviceContext.getPlayerService().updateGroup(target, g);
   }
 
   @Override
@@ -106,12 +71,22 @@ public class PermissionsGroup implements CommandConstruct {
 
     if (isPlayer(sender)) {
       Player p = (Player) sender;
-      GroupEntry g = checkGroupExists(args[1], p);
-      setGroupForTarget(p, Objects.requireNonNull(g), target);
+      Optional<GroupEntry> groupEntry = serviceContext.getGroupService()
+          .resolveAuthorizedGroup(p, args[1]);
+
+      if (groupEntry.isEmpty()) {
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_SETGROUP_GROUP_NOT_FOUND, args[1]));
+        return true;
+      }
+
+      serviceContext.getPlayerService().updateGroup(target, groupEntry.get());
+      notifySenderAndTarget(sender, groupEntry.get(), target);
       return true;
     } else if (isCMDBlock(sender) || isConsole(sender)) {
       GroupEntry g = serviceContext.getGroupService().resolveGroupWithFallback(args[1]);
-      setGroupForTarget(sender, Objects.requireNonNull(g), target);
+      serviceContext.getPlayerService().updateGroup(target, g);
+      notifySenderAndTarget(sender, g, target);
       return true;
     }
     return false;
@@ -138,5 +113,20 @@ public class PermissionsGroup implements CommandConstruct {
     }
 
     return TabCompleterHelper.getGroups(serviceContext.getGroupRegistry().getAll());
+  }
+
+  private void notifySenderAndTarget(@NotNull CommandSender sender, @NotNull GroupEntry g,
+      @NotNull OfflinePlayer target) {
+    String groupDisplayName = g.getPrefix() + g.getName();
+    sender.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_SETGROUP, groupDisplayName, target.getName()));
+
+    if (target.isOnline()) {
+      Player onlineTarget = Bukkit.getPlayer(target.getUniqueId());
+      if (onlineTarget != null) {
+        onlineTarget.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_SETGROUP, groupDisplayName, target.getName()));
+      }
+    }
   }
 }
