@@ -11,7 +11,6 @@ import static de.relluem94.rellulib.utils.StringUtils.replaceSymbols;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PermissionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -53,7 +52,7 @@ public class ChatService {
   public void sendMessageInChannel(String message, Player sender, String channel, GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-      if (PermissionHelper.isAuthorized(onlinePlayer, group.getId())) {
+      if (serviceContext.getGroupService().isSenderAuthorized(onlinePlayer, group.getName())) {
         sendMessage(onlinePlayer, sender.getCustomName() + group.getPrefix()
             + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE + replaceColor(strippedMessage));
       }
@@ -63,7 +62,7 @@ public class ChatService {
   public void sendMessageInChannel(String message, String senderName, String channel, GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-      if (PermissionHelper.isAuthorized(onlinePlayer, group.getId())) {
+      if (serviceContext.getGroupService().isSenderAuthorized(onlinePlayer, group.getName())) {
         sendMessage(onlinePlayer, senderName + group.getPrefix()
             + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE + replaceColor(strippedMessage));
       }
