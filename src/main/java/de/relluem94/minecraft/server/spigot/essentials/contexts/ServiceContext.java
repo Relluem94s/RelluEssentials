@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.contexts;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
@@ -23,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,7 +53,7 @@ public class ServiceContext {
   private TeleportService teleportService;
   private ProtectionActionService protectionActionService;
   private BlockDropService blockDropService;
-  private WarpRepository warpRepository; // TODO SERVICE
+  private WarpService warpService;
   private NpcDialogueService npcDialogueService;
   private TraderNpcService traderNpcService;
 

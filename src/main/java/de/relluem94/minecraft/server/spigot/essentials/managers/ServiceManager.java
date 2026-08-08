@@ -50,6 +50,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.plugin.Plugin;
 
@@ -92,7 +93,8 @@ public class ServiceManager implements Enable {
     TraderNpcService traderNpcService = new TraderNpcService(traderNpcRegistry, bankerNpc);
     serviceContext.setTraderNpcService(traderNpcService);
 
-    serviceContext.setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
+    WarpRepository warpRepository = new WarpRepository(databaseHelper.getWarps());
+    serviceContext.setWarpService(new WarpService(warpRepository, databaseHelper));
 
     SchedulerService schedulerService = new SchedulerService(relluEssentials);
     serviceContext.setSchedulerService(schedulerService);

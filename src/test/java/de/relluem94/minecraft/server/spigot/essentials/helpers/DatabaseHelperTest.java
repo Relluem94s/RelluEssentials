@@ -36,9 +36,9 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupInv
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -112,12 +112,12 @@ class DatabaseHelperTest {
         groupService.setPlayerRegistry(new PlayerRegistry());
 
         PlayerService playerService = mock(PlayerService.class);
-        WarpRepository warpRepository = mock(WarpRepository.class);
+        WarpService warpService = mock(WarpService.class);
 
         ServiceContext serviceContext = mock(ServiceContext.class);
         when(serviceContext.getGroupService()).thenReturn(groupService);
         when(serviceContext.getPlayerService()).thenReturn(playerService);
-        when(serviceContext.getWarpRepository()).thenReturn(warpRepository);
+        when(serviceContext.getWarpService()).thenReturn(warpService);
 
         databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema, sqlResourceLoader, serviceContext);
         databaseHelper.setPatchHelper(patchHelper);
