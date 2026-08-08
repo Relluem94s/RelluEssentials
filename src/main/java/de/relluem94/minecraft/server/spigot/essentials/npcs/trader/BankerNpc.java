@@ -13,20 +13,17 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.npc.BankerGui;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
 public class BankerNpc extends TraderNpc implements BankerGui {
 
-  private final TranslationService translationService;
-  private final BankService bankService;
+  private final ServiceContext serviceContext;
 
   public BankerNpc(ServiceContext serviceContext) {
     super("§dBanker", Profession.NONE, Type.BANKER);
-    translationService = serviceContext.getTranslationService();
-    bankService = serviceContext.getBankService();
+    this.serviceContext = serviceContext;
   }
 
   private ItemHelper resolveDisabledItem() {
@@ -46,10 +43,10 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     Inventory inv = InventoryHelper.fillInventory(
         InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
 
-    inv.setItem(10, bankService.npc_gui_deposit.getCustomItem());
-    inv.setItem(12, bankService.npc_gui_withdraw.getCustomItem());
-    inv.setItem(14, bankService.npc_gui_balance.getCustomItem());
-    inv.setItem(16, bankService.npc_gui_upgrade.getCustomItem());
+    inv.setItem(10, BankService.npc_gui_deposit.getCustomItem());
+    inv.setItem(12, BankService.npc_gui_withdraw.getCustomItem());
+    inv.setItem(14, BankService.npc_gui_balance.getCustomItem());
+    inv.setItem(16, BankService.npc_gui_upgrade.getCustomItem());
     inv.setItem(26, resolveCloseItem().getCustomItem());
 
     return inv;
@@ -65,20 +62,28 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     long amount50 = Math.round(total * 0.50);
     long amountAll = Math.round(total);
 
-    inv.setItem(10, bankService.addLoreLine(bankService.npc_gui_deposit_5_percent.getCustomItem(),
-        translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount5,
-            PLUGIN_NAME_MONEY)));
+    inv.setItem(10, serviceContext.getBankService()
+        .addLoreLine(BankService.npc_gui_deposit_5_percent.getCustomItem(),
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount5,
+                    PLUGIN_NAME_MONEY)));
     inv.setItem(12,
-        bankService.addLoreLine(bankService.npc_gui_deposit_20_percent.getCustomItem(),
-            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount20,
-                PLUGIN_NAME_MONEY)));
+        serviceContext.getBankService()
+            .addLoreLine(BankService.npc_gui_deposit_20_percent.getCustomItem(),
+                serviceContext.getTranslationService()
+                    .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount20,
+                        PLUGIN_NAME_MONEY)));
     inv.setItem(14,
-        bankService.addLoreLine(bankService.npc_gui_deposit_50_percent.getCustomItem(),
-            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount50,
-                PLUGIN_NAME_MONEY)));
-    inv.setItem(16, bankService.addLoreLine(bankService.npc_gui_deposit_all.getCustomItem(),
-        translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amountAll,
-            PLUGIN_NAME_MONEY)));
+        serviceContext.getBankService()
+            .addLoreLine(BankService.npc_gui_deposit_50_percent.getCustomItem(),
+                serviceContext.getTranslationService()
+                    .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount50,
+                        PLUGIN_NAME_MONEY)));
+    inv.setItem(16, serviceContext.getBankService()
+        .addLoreLine(BankService.npc_gui_deposit_all.getCustomItem(),
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amountAll,
+                    PLUGIN_NAME_MONEY)));
     inv.setItem(26, resolveCloseItem().getCustomItem());
 
     return inv;
@@ -95,20 +100,28 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     long amountAll = Math.round(total);
 
     inv.setItem(10,
-        bankService.addLoreLine(bankService.npc_gui_withdraw_5_percent.getCustomItem(),
-            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount5,
-                PLUGIN_NAME_MONEY)));
+        serviceContext.getBankService()
+            .addLoreLine(BankService.npc_gui_withdraw_5_percent.getCustomItem(),
+                serviceContext.getTranslationService()
+                    .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount5,
+                        PLUGIN_NAME_MONEY)));
     inv.setItem(12,
-        bankService.addLoreLine(bankService.npc_gui_withdraw_20_percent.getCustomItem(),
-            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount20,
-                PLUGIN_NAME_MONEY)));
+        serviceContext.getBankService().addLoreLine(
+            BankService.npc_gui_withdraw_20_percent.getCustomItem(),
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount20,
+                    PLUGIN_NAME_MONEY)));
     inv.setItem(14,
-        bankService.addLoreLine(bankService.npc_gui_withdraw_50_percent.getCustomItem(),
-            translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount50,
-                PLUGIN_NAME_MONEY)));
-    inv.setItem(16, bankService.addLoreLine(bankService.npc_gui_withdraw_all.getCustomItem(),
-        translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amountAll,
-            PLUGIN_NAME_MONEY)));
+        serviceContext.getBankService().addLoreLine(
+            BankService.npc_gui_withdraw_50_percent.getCustomItem(),
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount50,
+                    PLUGIN_NAME_MONEY)));
+    inv.setItem(16, serviceContext.getBankService()
+        .addLoreLine(BankService.npc_gui_withdraw_all.getCustomItem(),
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amountAll,
+                    PLUGIN_NAME_MONEY)));
     inv.setItem(26, resolveCloseItem().getCustomItem());
 
     return inv;
@@ -119,8 +132,8 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     Inventory inv = InventoryHelper.fillInventory(
         InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
 
-    inv.setItem(10, bankService.npc_gui_balance_total.getCustomItem());
-    inv.setItem(12, bankService.npc_gui_balance_transactions.getCustomItem());
+    inv.setItem(10, BankService.npc_gui_balance_total.getCustomItem());
+    inv.setItem(12, BankService.npc_gui_balance_transactions.getCustomItem());
     inv.setItem(26, resolveCloseItem().getCustomItem());
 
     return inv;
@@ -132,7 +145,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
         InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
 
     int slot = 0;
-    List<ItemHelper> bankTiersItems = bankService.getBankTiers();
+    List<ItemHelper> bankTiersItems = serviceContext.getBankService().getBankTiers();
     for (int i = 0; i < bankTiersItems.size(); i++) {
       slot = InventoryHelper.getNextSlot(slot);
       inv.setItem(slot, bankTiersItems.get(i).getCustomItem());

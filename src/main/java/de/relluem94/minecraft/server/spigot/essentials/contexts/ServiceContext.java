@@ -2,8 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.contexts;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BankerNpc;
-import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
@@ -22,6 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionServic
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import lombok.Getter;
@@ -55,10 +54,8 @@ public class ServiceContext {
   private ProtectionActionService protectionActionService;
   private BlockDropService blockDropService;
   private WarpRepository warpRepository; // TODO SERVICE
-  private TraderNpcRegistry traderNpcRegistry; // TODO SERVICE
   private NpcDialogueService npcDialogueService;
-
-  private BankerNpc bankerNpc; // TODO CHANGE THIS
+  private TraderNpcService traderNpcService;
 
   /**
    * Creates a new ServiceContext.

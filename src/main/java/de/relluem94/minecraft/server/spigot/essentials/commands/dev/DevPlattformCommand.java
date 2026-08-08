@@ -90,7 +90,7 @@ public class DevPlattformCommand implements SubCommand {
     BlockHelper redstone = new BlockHelper(Material.REDSTONE_BLOCK);
     BlockHelper air = new BlockHelper(Material.AIR);
 
-    List<TraderNpc> traderNpcs = serviceContext.getTraderNpcRegistry().getNPCs();
+    List<TraderNpc> traderNpcs = serviceContext.getTraderNpcService().getAllNpcs();
 
     int npcIndex = 0;
     int cols = 5;
