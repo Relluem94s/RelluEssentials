@@ -41,16 +41,16 @@ public class InteractTraderNpc implements ListenerConstruct {
       if (e.getRightClicked().getCustomName() != null) {
         String customName = e.getRightClicked().getCustomName();
         for (int i = 0;
-            i < serviceContext.getTraderNpcRegistry().getNPCNameList().size();
+            i < serviceContext.getTraderNpcService().getNpcNames().size();
             i++) {
-          if (serviceContext.getTraderNpcRegistry().getNPCNameList().get(i)
+          if (serviceContext.getTraderNpcService().getNpcNames().get(i)
               .equals(customName)) {
-            if (customName.equals(serviceContext.getBankerNpc().getName())) {
+            if (customName.equals(serviceContext.getTraderNpcService().getBankerNpc().getName())) {
               PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
               BankAccountEntry bae = serviceContext.getDatabaseHelper()
                   .getPlayerBankAccount(pe.getId());
               if (bae != null) {
-                InventoryHelper.openInventory(p, serviceContext.getBankerNpc().getMainGUI());
+                InventoryHelper.openInventory(p, serviceContext.getTraderNpcService().getBankerNpc().getMainGUI());
               } else {
                 BankTierEntry bte = serviceContext.getDatabaseHelper()
                     .getBankTier(1);
@@ -76,7 +76,7 @@ public class InteractTraderNpc implements ListenerConstruct {
               e.setCancelled(true);
             } else {
               org.bukkit.inventory.Inventory gui =
-                  serviceContext.getTraderNpcRegistry().getNPC(i).getMainGUI();
+                  serviceContext.getTraderNpcService().getNpc(i).getMainGUI();
 
               gui.setItem(49, buyBackSlotResolver.resolveForPlayer(p));
               InventoryHelper.openInventory(p, gui);

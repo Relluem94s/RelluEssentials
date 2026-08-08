@@ -27,7 +27,7 @@ public class DamgeTraderNpc implements ListenerConstruct {
       return;
     }
 
-    if (!serviceContext.getTraderNpcRegistry().getNPCNameList()
+    if (!serviceContext.getTraderNpcService().getNpcNames()
         .contains(e.getEntity().getCustomName())) {
       return;
     }

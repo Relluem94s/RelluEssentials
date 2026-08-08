@@ -8,6 +8,10 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.CropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.DropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BagSalesmanNpc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BankerNpc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BeekeeperNpc;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.EnchanterNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
@@ -43,6 +47,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionServic
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
@@ -75,9 +80,17 @@ public class ServiceManager implements Enable {
         databaseHelper.getProtections(),
         databaseHelper);
     serviceContext.setProtectionService(protectionService);
-    serviceContext.setTraderNpcRegistry(
-        new TraderNpcRegistry(serviceContext.getTranslationService()));
-    serviceContext.getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
+
+    TraderNpcRegistry traderNpcRegistry = new TraderNpcRegistry(
+        serviceContext.getTranslationService());
+    traderNpcRegistry.init(databaseHelper.getTraderNPCs());
+    BankerNpc bankerNpc = new BankerNpc(serviceContext);
+    traderNpcRegistry.addNPC(new BagSalesmanNpc(serviceContext));
+    traderNpcRegistry.addNPC(bankerNpc);
+    traderNpcRegistry.addNPC(new BeekeeperNpc(serviceContext));
+    traderNpcRegistry.addNPC(new EnchanterNpc(serviceContext));
+    TraderNpcService traderNpcService = new TraderNpcService(traderNpcRegistry, bankerNpc);
+    serviceContext.setTraderNpcService(traderNpcService);
 
     serviceContext.setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
 
@@ -95,7 +108,8 @@ public class ServiceManager implements Enable {
     serviceContext.setGroupService(groupService);
     PlayerRegistry playerRegistry = new PlayerRegistry();
     PlayerRepository playerRepository = new PlayerRepository(serviceContext.getDatabaseHelper());
-    PlayerService playerService = new PlayerService(serviceContext, playerRegistry, playerRepository);
+    PlayerService playerService = new PlayerService(serviceContext, playerRegistry,
+        playerRepository);
     playerService.initialize();
     serviceContext.setPlayerService(playerService);
     groupService.setPlayerRegistry(playerRegistry);

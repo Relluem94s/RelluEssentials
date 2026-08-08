@@ -89,9 +89,9 @@ public class InventoryClickNpc implements ListenerConstruct {
         .getPlayerEntry(player);
     String title = e.getView().getTitle();
 
-    if (title.equals(serviceContext.getBankerNpc().getTitle())) {
+    if (title.equals(serviceContext.getTraderNpcService().getBankerNpc().getTitle())) {
       handleBankerInventory(e, player, playerEntry);
-    } else if (serviceContext.getTraderNpcRegistry().getNPCTraderTitleList()
+    } else if (serviceContext.getTraderNpcService().getTraderNpcTitles()
         .contains(title)) {
       tradeHandler.handle(e.getCurrentItem(), e.getClickedInventory(), player, playerEntry,
           e.getSlot(), e.isRightClick());
@@ -118,7 +118,8 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (BankService.npc_gui_deposit.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          serviceContext.getBankerNpc().getDepositGUI(playerEntry.getPurse()));
+          serviceContext.getTraderNpcService().getBankerNpc()
+              .getDepositGUI(playerEntry.getPurse()));
     } else if (BankService.npc_gui_balance_total.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
       player.sendMessage(serviceContext.getTranslationService()
@@ -126,12 +127,14 @@ public class InventoryClickNpc implements ListenerConstruct {
               StringHelper.formatDouble(bankAccount.getValue()), PLUGIN_NAME_MONEY));
     } else if (BankService.npc_gui_balance.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
-      InventoryHelper.openInventory(player, serviceContext.getBankerNpc().getBalanceGUI());
+      InventoryHelper.openInventory(player,
+          serviceContext.getTraderNpcService().getBankerNpc().getBalanceGUI());
     } else if (BankService.npc_gui_withdraw.getCustomItem().getType()
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          serviceContext.getBankerNpc().getWithdrawGUI(bankAccount.getValue()));
+          serviceContext.getTraderNpcService().getBankerNpc()
+              .getWithdrawGUI(bankAccount.getValue()));
     } else if (BankService.UPGRADE_MATERIAL.equals(clickedItem.getType())) {
       serviceContext.getBankService().upgradeAccount(clickedItem, player, playerEntry, bankAccount);
     } else if (BankService.npc_gui_balance_transactions.equalsExact(
@@ -139,7 +142,8 @@ public class InventoryClickNpc implements ListenerConstruct {
       handleTransactionHistory(player, bankAccount);
     } else if (BankService.npc_gui_upgrade.equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
-      InventoryHelper.openInventory(player, serviceContext.getBankerNpc().getUpgradeGUI());
+      InventoryHelper.openInventory(player,
+          serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGUI());
     } else if (resolveCloseItem().equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {

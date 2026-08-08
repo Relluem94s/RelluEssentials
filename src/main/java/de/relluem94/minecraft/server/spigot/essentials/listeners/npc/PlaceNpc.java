@@ -25,8 +25,7 @@ public class PlaceNpc implements ListenerConstruct {
   public void onNPCPlacement(@NotNull PlayerInteractEvent e) {
     if (e.getHand() != null && e.getHand().equals(EquipmentSlot.HAND)) {
       if ((e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.LEFT_CLICK_BLOCK)
-          && e.getItem() != null && serviceContext.getTraderNpcRegistry()
-          .getNPCItemStackList()
+          && e.getItem() != null && serviceContext.getTraderNpcService().getNpcSpawnEggs()
           .contains(e.getItem())) {
         e.setCancelled(true);
 
@@ -38,11 +37,11 @@ public class PlaceNpc implements ListenerConstruct {
         location.setYaw(e.getPlayer().getLocation().getYaw());
 
         for (int i = 0;
-            i < serviceContext.getTraderNpcRegistry().getNPCItemStackList().size(); i++) {
-          if (serviceContext.getTraderNpcRegistry().getNPCItemStackList().get(i)
+            i < serviceContext.getTraderNpcService().getNpcSpawnEggs().size(); i++) {
+          if (serviceContext.getTraderNpcService().getNpcSpawnEggs().get(i)
               .equals(e.getItem())) {
             NpcHelper nh = new NpcHelper(location,
-                serviceContext.getTraderNpcRegistry().getNPC(i));
+                serviceContext.getTraderNpcService().getNpc(i));
             nh.spawn();
             e.getPlayer().sendMessage(
                 serviceContext.getTranslationService()

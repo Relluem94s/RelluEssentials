@@ -18,7 +18,6 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EnchantmentManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ItemManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ListenerManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.NpcManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.PositionHighlightManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.RecipeManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
@@ -98,8 +97,6 @@ public class RelluEssentials extends JavaPlugin {
   private AutoSaveManager autoSaveManager;
   @Getter
   private BankManager bankManager;
-  @Getter
-  private NpcManager npcManager;
   @Getter
   private ConfigManager configManager;
   @Getter
@@ -190,8 +187,6 @@ public class RelluEssentials extends JavaPlugin {
     recipeManager.enable(this);
     bankManager = new BankManager();
     bankManager.enable(this);
-    npcManager = new NpcManager();
-    npcManager.enable(this);
     listenerManager = new ListenerManager();
     listenerManager.enable(this);
     autoSaveManager = new AutoSaveManager();

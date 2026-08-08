@@ -6,9 +6,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
-import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -18,18 +15,13 @@ import org.bukkit.plugin.Plugin;
 
 public class BankManager implements Enable {
 
-  private TranslationService translationService;
-  private SchedulerService schedulerService;
-  private BankService bankService;
+  private ServiceContext serviceContext;
 
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
 
-    ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
-    translationService = serviceContext.getTranslationService();
-    schedulerService = serviceContext.getSchedulerService();
-    bankService = serviceContext.getBankService();
+    serviceContext = relluEssentialsPlugin.getServiceContext();
 
     if (relluEssentialsPlugin.isUnitTest()) {
       return;
@@ -38,11 +30,11 @@ public class BankManager implements Enable {
   }
 
   private void triggerNext() {
-    schedulerService.runTaskLater(() -> {
-      bankService.triggerInterestForAllOnlinePlayers();
+    serviceContext.getSchedulerService().runTaskLater(() -> {
+      serviceContext.getBankService().triggerInterestForAllOnlinePlayers();
       ChatHelper.consoleSendMessage(
           Constants.PLUGIN_NAME_CONSOLE,
-          translationService.get(MessageKey.PLUGIN_BANK_INTEREST_NEXT_RUN,
+          serviceContext.getTranslationService().get(MessageKey.PLUGIN_BANK_INTEREST_NEXT_RUN,
               String.valueOf(getSecondsUntilMidnight()))
       );
       triggerNext();
