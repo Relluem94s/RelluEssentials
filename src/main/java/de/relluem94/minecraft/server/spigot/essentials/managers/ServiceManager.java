@@ -1,0 +1,151 @@
+package de.relluem94.minecraft.server.spigot.essentials.managers;
+
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.CropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.DropEntry;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
+import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BackLocationRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BuyBackRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.CropRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.DropRuleRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
+import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import de.relluem94.rellulib.stores.DoubleStore;
+import org.bukkit.plugin.Plugin;
+
+public class ServiceManager implements Enable {
+
+  @Override
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentials = (RelluEssentials) plugin;
+    ServiceContext serviceContext = relluEssentials.getServiceContext();
+    DatabaseHelper databaseHelper = serviceContext.getDatabaseHelper();
+
+    /* Services */
+    DropRuleRepository dropRuleRepository = new DropRuleRepository();
+    for (DropEntry de : databaseHelper.getDrops()) {
+      dropRuleRepository.register(de.getMaterial(), new DoubleStore<>(de.getMin(), de.getMax()));
+    }
+
+    CropRepository cropRepository = new CropRepository();
+    for (CropEntry ce : databaseHelper.getCrops()) {
+      cropRepository.register(ce.getSeed(), ce.getPlant());
+    }
+
+    BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
+    serviceContext.setBlockDropService(blockDropService);
+
+    ProtectionService protectionService = new ProtectionService(
+        databaseHelper.getProtectionLocks(),
+        databaseHelper.getProtections(),
+        databaseHelper);
+    serviceContext.setProtectionService(protectionService);
+    serviceContext.setTraderNpcRegistry(
+        new TraderNpcRegistry(serviceContext.getTranslationService()));
+    serviceContext.getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
+
+    serviceContext.setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
+
+    SchedulerService schedulerService = new SchedulerService(relluEssentials);
+    serviceContext.setSchedulerService(schedulerService);
+    UndoHistoryRepository undoHistoryRepository = new UndoHistoryRepository();
+    UndoHistoryService undoHistoryService = new UndoHistoryService(undoHistoryRepository);
+    serviceContext.setUndoHistoryService(undoHistoryService);
+    SelectionService selectionService = new SelectionService(
+        serviceContext.getTranslationService());
+    serviceContext.setSelectionService(selectionService);
+    GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
+    GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
+    GroupService groupService = new GroupService(groupRegistry, groupRepository);
+    serviceContext.setGroupService(groupService);
+    PlayerRegistry playerRegistry = new PlayerRegistry();
+    PlayerService playerService = new PlayerService(serviceContext, playerRegistry);
+    serviceContext.setPlayerService(playerService);
+    groupService.setPlayerRegistry(playerRegistry);
+
+    BagRepository bagRepository = new BagRepository(databaseHelper.getBags());
+    BagTypeRepository bagTypeRepository = new BagTypeRepository(databaseHelper.getBagTypes());
+    BagTypeRegistry bagTypeRegistry = new BagTypeRegistry(bagTypeRepository);
+    BagRegistry bagRegistry = new BagRegistry(bagRepository);
+    BagService bagService = new BagService(serviceContext, bagRegistry, bagTypeRegistry);
+    serviceContext.setBagService(bagService);
+
+    BuyBackRepository buyBackRepository = new BuyBackRepository();
+    BuyBackService buyBackService = new BuyBackService(buyBackRepository);
+    serviceContext.setBuyBackService(buyBackService);
+    MessageService messageService = new MessageService(serviceContext.getTranslationService());
+    serviceContext.setMessageService(messageService);
+    ReplyRegistry replyRegistry = new ReplyRegistry();
+    ChatService chatService = new ChatService(serviceContext, replyRegistry);
+    serviceContext.setChatService(chatService);
+    BankService bankService = new BankService(databaseHelper, playerRegistry,
+        new BankTierRegistry(databaseHelper.getBankTiers()), serviceContext.getTranslationService(),
+        relluEssentials);
+    serviceContext.setBankService(bankService);
+
+    BackLocationRepository backLocationRepository = new BackLocationRepository();
+    BackService backService = new BackService(backLocationRepository);
+    serviceContext.setBackService(backService);
+    TeleportService teleportService = new TeleportService(serviceContext.getTranslationService(),
+        backService);
+    serviceContext.setTeleportService(teleportService);
+
+    ProtectionActionService protectionActionService = new ProtectionActionService(serviceContext);
+    serviceContext.setProtectionActionService(protectionActionService);
+
+    NpcRepository npcRepository = new NpcRepository(databaseHelper);
+    NpcSpawner npcSpawner = new NpcSpawner();
+    NpcValidator npcValidator = new NpcValidator();
+    NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
+    serviceContext.setNpcService(npcService);
+
+    NpcDialogueRegistry npcDialogueRegistry = new NpcDialogueRegistry();
+    NpcDialogueService npcDialogueService = new NpcDialogueService(npcDialogueRegistry);
+    serviceContext.setNpcDialogueService(npcDialogueService);
+
+  }
+
+  public void preEnable(RelluEssentials relluEssentials) {
+
+    String lang = relluEssentials.getConfig().getString("language", "en_US");
+
+    TranslationService translationService = new TranslationService(relluEssentials);
+    translationService.loadLanguages();
+    translationService.setDefaultLanguage(lang);
+    relluEssentials.getServiceContext().setTranslationService(translationService);
+  }
+}
