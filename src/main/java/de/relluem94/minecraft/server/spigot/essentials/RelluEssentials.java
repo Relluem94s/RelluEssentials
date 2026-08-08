@@ -34,14 +34,13 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInforma
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcDialogueTracker;
-import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
@@ -50,6 +49,7 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepositor
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BuyBackRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
@@ -58,6 +58,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
@@ -107,9 +108,9 @@ public class RelluEssentials extends JavaPlugin {
 
   private long start;
 
-  /* Services Repos Registries */
   @Getter
   private ServiceContext serviceContext;
+
   @Getter
   private DatabaseHelper databaseHelper;
   @Setter
@@ -117,8 +118,6 @@ public class RelluEssentials extends JavaPlugin {
   private PluginInformationEntry pluginInformation;
   @Getter
   private boolean isUnitTest = false;
-  @Getter
-  private NpcDialogueTracker npcDialogueTracker;
 
   /* Manager */
   @Getter
@@ -288,7 +287,11 @@ public class RelluEssentials extends JavaPlugin {
     NpcValidator npcValidator = new NpcValidator();
     NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
     serviceContext.setNpcService(npcService);
-    npcDialogueTracker = new NpcDialogueTracker();
+
+    NpcDialogueRegistry npcDialogueRegistry = new NpcDialogueRegistry();
+    NpcDialogueService npcDialogueService = new NpcDialogueService(npcDialogueRegistry);
+    serviceContext.setNpcDialogueService(npcDialogueService);
+
     stopLoading();
     worldManager = new WorldManager();
     worldManager.enable(this);
