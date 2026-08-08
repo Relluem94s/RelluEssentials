@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.npcs.trader;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_NPC_UNIMPLEMENTED_METHOD;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
@@ -31,9 +30,7 @@ public class TraderNpc implements Trader {
     this.profession = profession;
     this.type = type;
     this.npcSpawnItem = new ItemHelper(Material.VILLAGER_SPAWN_EGG, 1, getName(),
-        de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type.NPC,
-        Rarity.LEGENDARY, List.of(ItemConstants.PLUGIN_ITEM_NPC_LORE1));
-    RelluEssentials.getInstance().getTraderNpcRegistry().addNPC(this);
+        ItemHelper.Type.NPC, Rarity.LEGENDARY, List.of(ItemConstants.PLUGIN_ITEM_NPC_LORE1));
   }
 
   @Override

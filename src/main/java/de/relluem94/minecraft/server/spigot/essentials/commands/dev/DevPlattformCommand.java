@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
@@ -91,7 +90,7 @@ public class DevPlattformCommand implements SubCommand {
     BlockHelper redstone = new BlockHelper(Material.REDSTONE_BLOCK);
     BlockHelper air = new BlockHelper(Material.AIR);
 
-    List<TraderNpc> traderNpcs = RelluEssentials.getInstance().getTraderNpcRegistry().getNPCs();
+    List<TraderNpc> traderNpcs = serviceContext.getTraderNpcRegistry().getNPCs();
 
     int npcIndex = 0;
     int cols = 5;

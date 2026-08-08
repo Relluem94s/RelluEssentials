@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import org.bukkit.entity.Player;
@@ -28,7 +27,7 @@ public class DamgeTraderNpc implements ListenerConstruct {
       return;
     }
 
-    if (!RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList()
+    if (!serviceContext.getTraderNpcRegistry().getNPCNameList()
         .contains(e.getEntity().getCustomName())) {
       return;
     }

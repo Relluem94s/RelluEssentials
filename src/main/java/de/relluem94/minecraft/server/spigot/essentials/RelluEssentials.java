@@ -46,7 +46,6 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry
 import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BackLocationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
@@ -121,9 +120,6 @@ public class RelluEssentials extends JavaPlugin {
   @Setter
   @Getter
   private ProtectionRegistry protectionRegistry;
-  @Setter
-  @Getter
-  private TraderNpcRegistry traderNpcRegistry;
   @Getter
   private NpcDialogueTracker npcDialogueTracker;
 
