@@ -101,16 +101,6 @@ public class TabCompleterHelper {
     return groups;
   }
 
-  public static @NotNull List<String> getWarps(World world) {
-    List<String> warps = new ArrayList<>();
-
-    for (LocationEntry le : RelluEssentials.getInstance().getServiceContext().getWarpRepository().findByWorld(world)) {
-      warps.add(le.getLocationName());
-    }
-
-    return warps;
-  }
-
   public static @NotNull List<String> getWorldTypes() {
     List<String> worldTypes = new ArrayList<>();
 

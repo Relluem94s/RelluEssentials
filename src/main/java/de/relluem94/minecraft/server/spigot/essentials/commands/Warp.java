@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -50,7 +49,7 @@ public class Warp implements CommandConstruct {
         if (serviceContext.getGroupService().isSenderAuthorized(p, "admin")) {
           tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
         }
-        tabList.addAll(TabCompleterHelper.getWarps(p.getWorld()));
+        tabList.addAll(serviceContext.getWarpService().getWarpNamesByWorld(p.getWorld()));
         break;
       case 2:
         if (!serviceContext.getGroupService().isSenderAuthorized(p, "admin")) {
@@ -59,7 +58,7 @@ public class Warp implements CommandConstruct {
         if (Commands.ADD.getName().equalsIgnoreCase(strings[1])) {
           return tabList;
         }
-        tabList.addAll(TabCompleterHelper.getWarps(p.getWorld()));
+        tabList.addAll(serviceContext.getWarpService().getWarpNamesByWorld(p.getWorld()));
         return tabList;
       default:
         break;
@@ -94,8 +93,8 @@ public class Warp implements CommandConstruct {
     if (args.length == 0) {
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO));
-      for (LocationEntry le : serviceContext.getWarpRepository()
-          .findByWorld(p.getWorld())) {
+      for (LocationEntry le : serviceContext.getWarpService()
+          .findWarpsByWorld(p.getWorld())) {
         p.sendMessage(
             serviceContext.getTranslationService()
                 .getWithPrefix(MessageKey.COMMAND_WARP_LIST, le.getLocationName()));
@@ -112,10 +111,28 @@ public class Warp implements CommandConstruct {
       }
 
       if (args[0].equalsIgnoreCase(Commands.ADD.getName())) {
-        addWarp(args[1], p);
+        int playerId = serviceContext.getPlayerService().getPlayerEntry(p).getId();
+        boolean added = serviceContext.getWarpService().addWarp(args[1], p, playerId);
+        if (added) {
+          p.sendMessage(
+              serviceContext.getTranslationService()
+                  .getWithPrefix(MessageKey.COMMAND_WARP_ADD, args[1]));
+        } else {
+          p.sendMessage(
+              serviceContext.getTranslationService()
+                  .getWithPrefix(MessageKey.COMMAND_WARP_ERROR_ALREADY_EXISTS, args[1]));
+        }
         return true;
       } else if (args[0].equalsIgnoreCase(Commands.REMOVE.getName())) {
-        removeWarp(args[1], p);
+        boolean removed = serviceContext.getWarpService().removeWarp(args[1]);
+        if(removed){
+          p.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, args[1]));
+        } else{
+          p.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WARP_NOT_DELETED_NOT_FOUND, args[1]));
+        }
+
         return true;
       } else {
         p.sendMessage(serviceContext.getTranslationService()
@@ -126,44 +143,9 @@ public class Warp implements CommandConstruct {
     return false;
   }
 
-  private void addWarp(String name, Player p) {
-    Optional<LocationEntry> existing = serviceContext.getWarpRepository()
-        .findByName(name);
-    if (existing.isPresent()) {
-      return;
-    }
-
-    int typeId = 3;
-    LocationEntry le = new LocationEntry();
-    le.setLocation(p.getLocation());
-    le.setLocationName(name);
-    le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(typeId - 1));
-    le.setPlayerId(serviceContext.getPlayerService().getPlayerEntry(p).getId());
-    serviceContext.getDatabaseHelper().insertLocation(le);
-
-    LocationEntry persisted = RelluEssentials.getInstance().getDatabaseHelper()
-        .getLocation(p.getLocation(), typeId);
-    if (persisted != null) {
-      le = persisted;
-    }
-
-    serviceContext.getWarpRepository().save(le);
-    p.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WARP_ADD, name));
-  }
-
-  private void removeWarp(String name, Player p) {
-    serviceContext.getWarpRepository().findByName(name).ifPresent(le -> {
-      serviceContext.getDatabaseHelper().deleteLocation(le);
-      serviceContext.getWarpRepository().delete(le);
-      p.sendMessage(serviceContext.getTranslationService()
-          .getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, name));
-    });
-  }
-
   private void warp(String name, @NotNull Player p) {
-    Optional<LocationEntry> result = serviceContext.getWarpRepository()
-        .findByNameAndWorld(name, p.getWorld());
+    Optional<LocationEntry> result = serviceContext.getWarpService()
+        .findWarpByNameAndWorld(name, p.getWorld());
 
     if (result.isEmpty()) {
       p.sendMessage(serviceContext.getTranslationService()

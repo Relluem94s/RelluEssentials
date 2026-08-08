@@ -18,9 +18,9 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -43,7 +43,7 @@ class TabCompleterHelperTest {
 
   private static RelluEssentials relluEssentials;
   private static PlayerService playerService;
-  private static WarpRepository warpRepository;
+  private static WarpService warpService;
 
   @Mock
   private Player player;
@@ -55,7 +55,7 @@ class TabCompleterHelperTest {
   static void setUp() throws NoSuchFieldException, IllegalAccessException {
     relluEssentials = mock(RelluEssentials.class);
     playerService = mock(PlayerService.class);
-    warpRepository = mock(WarpRepository.class);
+    warpService = mock(WarpService.class);
 
     Field instanceField = RelluEssentials.class.getDeclaredField("instance");
     instanceField.setAccessible(true);
@@ -69,7 +69,7 @@ class TabCompleterHelperTest {
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
-    when(serviceContext.getWarpRepository()).thenReturn(warpRepository);
+    when(serviceContext.getWarpService()).thenReturn(warpService);
     when(relluEssentials.getServiceContext()).thenReturn(serviceContext);
   }
 
@@ -235,29 +235,6 @@ class TabCompleterHelperTest {
     assertTrue(result.contains("user"));
   }
 
-  @Test
-  void getWarpsReturnsEmptyListWhenNoWarpsExistForWorld() {
-    when(relluEssentials.getServiceContext().getWarpRepository()).thenReturn(warpRepository);
-    when(warpRepository.findByWorld(world)).thenReturn(new ArrayList<>());
-
-    List<String> result = TabCompleterHelper.getWarps(world);
-
-    assertTrue(result.isEmpty());
-  }
-
-  @Test
-  void getWarpsReturnsWarpNames() {
-    LocationEntry warpEntry = new LocationEntry();
-    warpEntry.setLocationName("spawn");
-
-    when(relluEssentials.getServiceContext().getWarpRepository()).thenReturn(warpRepository);
-    when(warpRepository.findByWorld(world)).thenReturn(List.of(warpEntry));
-
-    List<String> result = TabCompleterHelper.getWarps(world);
-
-    assertEquals(1, result.size());
-    assertTrue(result.contains("spawn"));
-  }
 
   @Test
   void getWorldTypesReturnsAllWorldTypes() {

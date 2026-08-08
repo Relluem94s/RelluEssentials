@@ -185,6 +185,8 @@ public enum MessageKey {
   COMMAND_WARP_LIST("command.warp.list"),
   COMMAND_WARP_ERROR_WORLD_UNLOADED("command.warp.error_world_unloaded"),
   COMMAND_WARP_ERROR_NO_WARP_FOUND("command.warp.error_no_warp_found"),
+  COMMAND_WARP_ERROR_ALREADY_EXISTS("command.warp.error_warp_already_exists"),
+  COMMAND_WARP_ERROR_WARP_NOT_DELETED_NOT_FOUND("command.warp.error_warp_not_deleted_not_found"),
   COMMAND_WARP_ADD("command.warp.add"),
   COMMAND_WARP_REMOVE("command.warp.remove"),
   COMMAND_WORLD_INFO("command.world.info"),
@@ -373,7 +375,6 @@ public enum MessageKey {
   PLUGIN_EVENT_POSITION_AXE_SECOND_RESET("plugin.event.position_axe.second_reset"),
   PLUGIN_EVENT_POSITION_AXE_FIRST_SET("plugin.event.position_axe.first_set"),
   PLUGIN_EVENT_POSITION_AXE_SECOND_SET("plugin.event.position_axe.second_set");
-
 
   private final String key;
 
