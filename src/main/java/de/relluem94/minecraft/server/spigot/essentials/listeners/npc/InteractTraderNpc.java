@@ -27,7 +27,7 @@ public class InteractTraderNpc implements ListenerConstruct {
 
   public InteractTraderNpc() {
     this.buyBackSlotResolver = new BuyBackSlotResolver(
-        RelluEssentials.getInstance().getBuyBackService(), ItemRegistry.find(
+        serviceContext.getBuyBackService(), ItemRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow().getCustomItem());
   }
@@ -44,18 +44,18 @@ public class InteractTraderNpc implements ListenerConstruct {
       if (e.getRightClicked().getCustomName() != null) {
         String customName = e.getRightClicked().getCustomName();
         for (int i = 0;
-            i < RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList().size();
+            i < serviceContext.getTraderNpcRegistry().getNPCNameList().size();
             i++) {
-          if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCNameList().get(i)
+          if (serviceContext.getTraderNpcRegistry().getNPCNameList().get(i)
               .equals(customName)) {
             if (customName.equals(serviceContext.getBankerNpc().getName())) {
-              PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
-              BankAccountEntry bae = RelluEssentials.getInstance().getDatabaseHelper()
+              PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
+              BankAccountEntry bae = serviceContext.getDatabaseHelper()
                   .getPlayerBankAccount(pe.getId());
               if (bae != null) {
                 InventoryHelper.openInventory(p, serviceContext.getBankerNpc().getMainGUI());
               } else {
-                BankTierEntry bte = RelluEssentials.getInstance().getDatabaseHelper()
+                BankTierEntry bte = serviceContext.getDatabaseHelper()
                     .getBankTier(1);
                 if (pe.getPurse() > bte.getCost()) {
                   pe.setPurse(pe.getPurse() - bte.getCost());
@@ -67,7 +67,7 @@ public class InteractTraderNpc implements ListenerConstruct {
                   bae.setTier(bte);
                   bae.setPlayerId(pe.getId());
 
-                  RelluEssentials.getInstance().getDatabaseHelper().insertBankAccount(bae);
+                  serviceContext.getDatabaseHelper().insertBankAccount(bae);
                   p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
                       MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT));
                 } else {
@@ -79,7 +79,7 @@ public class InteractTraderNpc implements ListenerConstruct {
               e.setCancelled(true);
             } else {
               org.bukkit.inventory.Inventory gui =
-                  RelluEssentials.getInstance().getTraderNpcRegistry().getNPC(i).getMainGUI();
+                  serviceContext.getTraderNpcRegistry().getNPC(i).getMainGUI();
 
               gui.setItem(49, buyBackSlotResolver.resolveForPlayer(p));
               InventoryHelper.openInventory(p, gui);

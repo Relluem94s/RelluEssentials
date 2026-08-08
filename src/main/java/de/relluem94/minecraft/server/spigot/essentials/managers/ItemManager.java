@@ -295,7 +295,7 @@ public class ItemManager implements Enable {
 
 
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+    TranslationService translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
 
     int itemCount = ItemRegistry.getAll().size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,

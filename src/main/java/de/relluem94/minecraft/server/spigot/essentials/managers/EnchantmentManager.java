@@ -34,7 +34,7 @@ public class EnchantmentManager implements Enable {
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
 
-    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+    TranslationService translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
     EnchantmentRegistry.register(relluEssentialsPlugin,
         EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS,
         new EnchantmentHelper(

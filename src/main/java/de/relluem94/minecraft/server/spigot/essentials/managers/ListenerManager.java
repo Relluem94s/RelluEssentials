@@ -119,7 +119,7 @@ public class ListenerManager implements Enable {
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+    TranslationService translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));

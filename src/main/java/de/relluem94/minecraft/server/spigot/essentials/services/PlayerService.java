@@ -215,4 +215,16 @@ public class PlayerService {
 
     return 0;
   }
+
+  public void putPlayerEntry(UUID uuid, PlayerEntry playerEntry) {
+    playerRegistry.putPlayerEntry(uuid, playerEntry);
+  }
+
+  public PlayerEntry getPlayerEntry(UUID uuid) {
+    return playerRegistry.getPlayerEntry(uuid);
+  }
+
+  public void clearPlayerEntries() {
+    playerRegistry.clearPlayerEntries();
+  }
 }

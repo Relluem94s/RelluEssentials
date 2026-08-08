@@ -22,7 +22,7 @@ public class PositionHighlightManager implements Enable {
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+    TranslationService translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
     new BukkitRunnable() {
       @Override
       public void run() {

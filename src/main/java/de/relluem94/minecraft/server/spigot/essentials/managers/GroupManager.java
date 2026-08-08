@@ -14,13 +14,13 @@ public class GroupManager implements Enable {
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
 
-    List<PlayerEntry> pel = relluEssentialsPlugin.getDatabaseHelper().getPlayers();
-    pel.forEach(p -> relluEssentialsPlugin.getPlayerRegistry()
+    List<PlayerEntry> pel = relluEssentialsPlugin.getServiceContext().getDatabaseHelper().getPlayers();
+    pel.forEach(p -> relluEssentialsPlugin.getServiceContext().getPlayerService()
         .putPlayerEntry(UUID.fromString(p.getUuid()), p));
 
     Bukkit.getOnlinePlayers().forEach(p -> {
-      PlayerEntry pe = relluEssentialsPlugin.getPlayerRegistry().getPlayerEntry(p);
-      relluEssentialsPlugin.getPlayerService().setGroup(p, pe.getGroup());
+      PlayerEntry pe = relluEssentialsPlugin.getServiceContext().getPlayerService().getPlayerEntry(p);
+      relluEssentialsPlugin.getServiceContext().getPlayerService().setGroup(p, pe.getGroup());
     });
   }
 }

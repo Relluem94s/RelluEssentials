@@ -117,13 +117,13 @@ class DatabaseHelperTest {
         GroupService groupService = new GroupService(groupRegistry, groupRepository);
         groupService.setPlayerRegistry(new PlayerRegistry());
 
-        when(fakeInstance.getGroupService()).thenReturn(groupService);
-        when(fakeInstance.getPlayerService()).thenReturn(mock(PlayerService.class));
-        when(fakeInstance.getCommandManager()).thenReturn(mock(CommandManager.class));
-        when(fakeInstance.getBuyBackService()).thenReturn(mock(BuyBackService.class));
-        when(fakeInstance.getNpcService()).thenReturn(mock(NpcService.class));
-
-        databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema, sqlResourceLoader, new ServiceContext(fakeInstance));
+        when(fakeInstance.getServiceContext().getGroupService()).thenReturn(groupService);
+        when(fakeInstance.getServiceContext().getPlayerService()).thenReturn(mock(PlayerService.class));
+        when(fakeInstance.getServiceContext().getCommandManager()).thenReturn(mock(CommandManager.class));
+        when(fakeInstance.getServiceContext().getBuyBackService()).thenReturn(mock(BuyBackService.class));
+        when(fakeInstance.getServiceContext().getNpcService()).thenReturn(mock(NpcService.class));
+// TODO serviceContext mock
+        databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema, sqlResourceLoader, new ServiceContext());
         databaseHelper.setPatchHelper(patchHelper);
     }
 

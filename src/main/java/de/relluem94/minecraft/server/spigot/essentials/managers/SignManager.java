@@ -24,7 +24,7 @@ public class SignManager implements Enable {
     SignRegistry.register(plugin, "home", new SignAction("Home", true));
 
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+    TranslationService translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
     int signCount = SignRegistry.getAllByNamespace(plugin.getName()).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_SIGNS_REGISTERED, signCount));

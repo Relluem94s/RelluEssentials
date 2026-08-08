@@ -127,11 +127,11 @@ public class ScoreBoardManager implements Enable {
   public void enable(Plugin plugin) {
 
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    translationService = relluEssentialsPlugin.getTranslationService();
+    translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
 
     Bukkit.getOnlinePlayers().forEach(ScoreBoardManager::applyToPlayer);
 
-    relluEssentialsPlugin.getSchedulerService().runTaskTimer(ScoreBoardManager::updateAll,
+    relluEssentialsPlugin.getServiceContext().getSchedulerService().runTaskTimer(ScoreBoardManager::updateAll,
         20L,
         20L
     );

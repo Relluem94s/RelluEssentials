@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -44,11 +43,9 @@ public class Marry implements CommandConstruct {
   }
 
   private void addMarryEntry(Player player, Player target) {
-    if (serviceContext.getPlayerService()
-.getPlayerEntry(player).getPartner()
+    if (serviceContext.getPlayerService().getPlayerEntry(player).getPartner()
         != null
-        || serviceContext.getPlayerService()
-.getPlayerEntry(target).getPartner()
+        || serviceContext.getPlayerService().getPlayerEntry(target).getPartner()
         != null) {
       player.sendMessage(
           serviceContext.getTranslationService()
@@ -64,7 +61,7 @@ public class Marry implements CommandConstruct {
             player.getCustomName()));
 
     marryAcceptList.put(target, player);
-    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+    serviceContext.getSchedulerService().runTaskLater(() -> {
       if (hasMarryEntry(target)) {
         player.sendMessage(
             serviceContext.getTranslationService()
@@ -105,18 +102,18 @@ public class Marry implements CommandConstruct {
     playerPartnerEntry.setFirstPartnerId(firstPlayer.getId());
     playerPartnerEntry.setSecondPartnerId(secondPlayer.getId());
 
-    RelluEssentials.getInstance().getDatabaseHelper().insertPlayerPartner(playerPartnerEntry);
-    playerPartnerEntry = RelluEssentials.getInstance().getPlayerService().getPartner(firstPlayer);
+    serviceContext.getDatabaseHelper().insertPlayerPartner(playerPartnerEntry);
+    playerPartnerEntry = serviceContext.getPlayerService().getPartner(firstPlayer);
 
     firstPlayer.setPartner(playerPartnerEntry);
     secondPlayer.setPartner(playerPartnerEntry);
 
-    RelluEssentials.getInstance().getProtectionRegistry()
+    serviceContext.getProtectionRegistry()
         .getProtectionEntriesOwnedBy(firstPlayer.getId())
         .forEach(pre -> serviceContext.getProtectionActionService()
             .addRight(target, pre, secondPlayer.getId(), true));
 
-    RelluEssentials.getInstance().getProtectionRegistry()
+    serviceContext.getProtectionRegistry()
         .getProtectionEntriesOwnedBy(secondPlayer.getId())
         .forEach(pre -> serviceContext.getProtectionActionService()
             .addRight(player, pre, firstPlayer.getId(), true));
@@ -154,10 +151,10 @@ public class Marry implements CommandConstruct {
       pe.setPartner(null);
       secondPlayerEntry.setPartner(null);
 
-      RelluEssentials.getInstance().getDatabaseHelper().deletePlayerPartner(ppe);
+      serviceContext.getDatabaseHelper().deletePlayerPartner(ppe);
 
       Collection<ProtectionEntry> protectionEntryList = new ArrayList<>(
-          RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntryList().values());
+          serviceContext.getProtectionRegistry().getProtectionEntryList().values());
 
       for (ProtectionEntry pre : protectionEntryList) {
         if (pre.getCreatedBy() == pe.getId()) {
@@ -216,9 +213,9 @@ public class Marry implements CommandConstruct {
 
       if (args[0].equalsIgnoreCase(Commands.DIVORCE.getName())) {
         PlayerEntry pe = serviceContext.getPlayerService()
-.getPlayerEntry(p);
+            .getPlayerEntry(p);
         if (serviceContext.getPlayerService()
-.getPlayerEntry(p).getPartner()
+            .getPlayerEntry(p).getPartner()
             != null) {
           divorce(pe);
           return true;

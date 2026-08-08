@@ -59,9 +59,9 @@ public class TabCompleterHelper {
   }
 
   public static @NotNull List<String> getBags(Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService().getPlayerEntry(p);
 
-    return RelluEssentials.getInstance().getBagService().getBags(pe.getId())
+    return RelluEssentials.getInstance().getServiceContext().getBagService().getBags(pe.getId())
         .stream()
         .map(bag -> bag.getBagType().getName().toLowerCase())
         .collect(Collectors.toList());
@@ -78,7 +78,7 @@ public class TabCompleterHelper {
   }
 
   public static @NotNull List<String> getHomes(Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService().getPlayerEntry(p);
     List<String> homes = new ArrayList<>();
 
     for (LocationEntry le : pe.getHomes()) {
@@ -111,7 +111,7 @@ public class TabCompleterHelper {
   public static @NotNull List<String> getWarps(World world) {
     List<String> warps = new ArrayList<>();
 
-    for (LocationEntry le : RelluEssentials.getInstance().getWarpRepository().findByWorld(world)) {
+    for (LocationEntry le : RelluEssentials.getInstance().getServiceContext().getWarpRepository().findByWorld(world)) {
       warps.add(le.getLocationName());
     }
 
