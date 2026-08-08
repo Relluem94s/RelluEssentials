@@ -22,19 +22,16 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class InteractTraderNpc implements ListenerConstruct {
 
-  private final BuyBackSlotResolver buyBackSlotResolver;
+  private BuyBackSlotResolver buyBackSlotResolver;
   private ServiceContext serviceContext;
-
-  public InteractTraderNpc() {
-    this.buyBackSlotResolver = new BuyBackSlotResolver(
-        serviceContext.getBuyBackService(), ItemRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow().getCustomItem());
-  }
 
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
+    this.buyBackSlotResolver = new BuyBackSlotResolver(
+        serviceContext.getBuyBackService(), ItemRegistry.find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow().getCustomItem());
   }
 
   @EventHandler

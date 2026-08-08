@@ -1,9 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -13,21 +11,23 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockModifyProtect implements ListenerConstruct {
 
-  private ProtectionActionService protectionActionService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.protectionActionService = context.getProtectionActionService();
+    this.serviceContext = context;
   }
 
   @EventHandler
   public void placeBlocks(@NotNull BlockPlaceEvent e) {
-    e.setCancelled(!protectionActionService.protectBlock(e.getPlayer(), e.getBlock()));
+    e.setCancelled(
+        !serviceContext.getProtectionActionService().protectBlock(e.getPlayer(), e.getBlock()));
   }
 
   @EventHandler
   public void onBlockBreak(@NotNull BlockBreakEvent e) {
-    if (protectionActionService.removeProtectionFromBlock(e.getPlayer(), e.getBlock())) {
+    if (serviceContext.getProtectionActionService()
+        .removeProtectionFromBlock(e.getPlayer(), e.getBlock())) {
       e.setCancelled(true);
     }
   }
@@ -35,9 +35,9 @@ public class BlockModifyProtect implements ListenerConstruct {
   @EventHandler
   public void onBlockMove(@NotNull BlockFromToEvent e) {
     Block block = e.getToBlock();
-    if (RelluEssentials.getInstance().getProtectionRegistry()
+    if (serviceContext.getProtectionService()
         .isProtectableMaterial(block.getType())) {
-      if (RelluEssentials.getInstance().getProtectionRegistry()
+      if (serviceContext.getProtectionService()
           .getProtectionEntry(block.getLocation())
           != null) {
         e.setCancelled(true);

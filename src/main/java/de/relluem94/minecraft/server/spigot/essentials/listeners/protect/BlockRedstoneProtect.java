@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
@@ -17,9 +16,10 @@ import org.json.JSONObject;
 
 public class BlockRedstoneProtect implements ListenerConstruct {
 
+  private ServiceContext serviceContext;
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -28,7 +28,7 @@ public class BlockRedstoneProtect implements ListenerConstruct {
     ProtectionEntry protection;
 
     Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-    protection = RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntry(l);
+    protection = serviceContext.getProtectionService().getProtectionEntry(l);
 
     if (protection != null) {
       JSONObject flags = protection.getFlags();
