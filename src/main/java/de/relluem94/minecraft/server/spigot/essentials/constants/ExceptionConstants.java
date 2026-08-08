@@ -20,6 +20,7 @@ public class ExceptionConstants {
   public static final String PLUGIN_EXCEPTION_NPC_UNIMPLEMENTED_METHOD = "Unimplemented method 'getMainGUI'";
   public static final String PLUGIN_EXCEPTION_INVENTORY_REGISTRY = "Inventory already registered: %s";
   public static final String PLUGIN_EXCEPTION_ITEM_REGISTRY = "Item already registered: %s";
+  public static final String PLUGIN_EXCEPTION_PLAYERSERVICE_ALREADY_INITIALIZED = "PlayerService is already initialized";
 
 
 }

@@ -124,7 +124,7 @@ public class Marry implements CommandConstruct {
 
     PlayerEntry secondPlayerEntry = serviceContext.getPlayerService()
 
-        .getPlayerEntry(
+        .getPlayerEntryByInternalId(
             ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId()
                 : ppe.getFirstPartnerId());
 

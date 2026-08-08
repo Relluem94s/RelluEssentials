@@ -24,6 +24,7 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.CropReposito
 import de.relluem94.minecraft.server.spigot.essentials.repositories.DropRuleRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.PlayerRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
@@ -93,7 +94,9 @@ public class ServiceManager implements Enable {
     GroupService groupService = new GroupService(groupRegistry, groupRepository);
     serviceContext.setGroupService(groupService);
     PlayerRegistry playerRegistry = new PlayerRegistry();
-    PlayerService playerService = new PlayerService(serviceContext, playerRegistry);
+    PlayerRepository playerRepository = new PlayerRepository(serviceContext.getDatabaseHelper());
+    PlayerService playerService = new PlayerService(serviceContext, playerRegistry, playerRepository);
+    playerService.initialize();
     serviceContext.setPlayerService(playerService);
     groupService.setPlayerRegistry(playerRegistry);
 

@@ -16,7 +16,6 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ConfigManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EnchantmentManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.GroupManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ItemManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ListenerManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.NpcManager;
@@ -112,8 +111,6 @@ public class RelluEssentials extends JavaPlugin {
   @Getter
   private WorldManager worldManager;
   @Getter
-  private GroupManager groupManager;
-  @Getter
   private PositionHighlightManager positionHighlightManager;
   @Getter
   private ScoreBoardManager scoreBoardManager;
@@ -204,8 +201,6 @@ public class RelluEssentials extends JavaPlugin {
     stopLoading();
     worldManager = new WorldManager();
     worldManager.enable(this);
-    groupManager = new GroupManager();
-    groupManager.enable(this);
     positionHighlightManager = new PositionHighlightManager();
     positionHighlightManager.enable(this);
     serviceContext.getSchedulerService()
