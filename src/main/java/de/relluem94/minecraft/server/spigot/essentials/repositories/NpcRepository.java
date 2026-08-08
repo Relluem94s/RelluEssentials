@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.npcs;
+package de.relluem94.minecraft.server.spigot.essentials.repositories;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.NpcMapper;

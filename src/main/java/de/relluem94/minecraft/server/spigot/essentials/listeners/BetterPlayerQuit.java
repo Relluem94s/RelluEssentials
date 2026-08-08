@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
@@ -43,8 +42,6 @@ public class BetterPlayerQuit implements ListenerConstruct {
             .get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
     serviceContext.getTeleportService().teleportWorld(p, Constants.PLUGIN_WORLD_LOBBY, true);
     ScoreBoardManager.removePlayer(e.getPlayer().getUniqueId());
-    RelluEssentials.getInstance()
-        .getNpcDialogueTracker()
-        .resetPlayerProgress(e.getPlayer().getUniqueId());
+    serviceContext.getNpcDialogueService().resetPlayerProgress(e.getPlayer().getUniqueId());
   }
 }

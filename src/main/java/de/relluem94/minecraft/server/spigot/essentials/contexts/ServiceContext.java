@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
+import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
@@ -55,6 +56,7 @@ public class ServiceContext {
   private BlockDropService blockDropService;
   private WarpRepository warpRepository; // TODO SERVICE
   private TraderNpcRegistry traderNpcRegistry; // TODO SERVICE
+  private NpcDialogueService npcDialogueService;
 
   private BankerNpc bankerNpc;
 
