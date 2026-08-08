@@ -94,6 +94,7 @@ public class DatabaseManager implements Enable {
     }
 
     BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
+    relluEssentialsPlugin.setBlockDropService(blockDropService);
     relluEssentialsPlugin.getServiceContext().setBlockDropService(blockDropService);
 
     relluEssentialsPlugin

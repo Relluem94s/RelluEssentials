@@ -57,6 +57,7 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpReposito
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
@@ -171,6 +172,9 @@ public class RelluEssentials extends JavaPlugin {
   private TeleportService teleportService;
   @Getter
   private ProtectionActionService protectionActionService;
+  @Setter
+  @Getter
+  private BlockDropService blockDropService;
 
   /* Manager */
   @Getter
