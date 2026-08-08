@@ -46,7 +46,7 @@ public class BetterLock implements ListenerConstruct {
       if (ProtectionHelper.isOpenAble(b)) {
         ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
             .getProtectionEntry(l);
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+        PlayerEntry pe = serviceContext.getPlayerService()
             .getPlayerEntry(e.getPlayer());
         if (protection != null && pe != null && !(
             pe.getPlayerState().equals(PlayerState.PROTECTION_INFO) || pe.getPlayerState()
@@ -153,7 +153,7 @@ public class BetterLock implements ListenerConstruct {
           .isProtectableMaterial(b.getType())) {
         ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
             .getProtectionEntry(l);
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+        PlayerEntry pe = serviceContext.getPlayerService()
             .getPlayerEntry(e.getPlayer());
         if (protection != null && pe != null && pe.getPlayerState().equals(PlayerState.DEFAULT)) {
           if (ProtectionHelper.hasRights(protection, pe.getId())) {

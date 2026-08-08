@@ -43,7 +43,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupInventoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSettingEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -73,7 +72,7 @@ public class DatabaseHelper {
   private final DataSource dataSource;
   private final DataSource dataSourceNoSchema;
   private final SqlResourceLoader sqlResourceLoader;
-  private GroupService groupService;
+  private ServiceContext serviceContext;
   @Setter
   private IPatchHelper patchHelper;
 
@@ -82,11 +81,7 @@ public class DatabaseHelper {
     this.dataSource = dataSource;
     this.dataSourceNoSchema = dataSourceNoSchema;
     this.sqlResourceLoader = sqlResourceLoader;
-    this.groupService = serviceContext.getGroupService();
-  }
-
-  public void setGroupService(GroupService groupService) {
-    this.groupService = groupService;
+    this.serviceContext = serviceContext;
   }
 
   public void init() {
@@ -515,7 +510,7 @@ public class DatabaseHelper {
 
   public PlayerEntry getPlayer(String uuid) {
     return querySingle("getPlayer.sql", ps -> ps.setString(1, uuid), rs -> {
-      PlayerEntry p = PlayerMapper.mapPlayer(rs, groupService);
+      PlayerEntry p = PlayerMapper.mapPlayer(rs, serviceContext.getGroupService());
       p.setHomes(getLocations(p.getId(), 1));
       p.setDeaths(getLocations(p.getId(), 2));
       p.setPartner(getPlayerPartner(p.getId()));
@@ -608,7 +603,7 @@ public class DatabaseHelper {
   public List<PlayerEntry> getPlayers() {
     return queryList("getPlayers.sql", _ -> {
     }, rs -> {
-      PlayerEntry p = PlayerMapper.mapPlayer(rs, groupService);
+      PlayerEntry p = PlayerMapper.mapPlayer(rs, serviceContext.getGroupService());
       p.setHomes(getLocations(p.getId(), 1));
       p.setDeaths(getLocations(p.getId(), 2));
       p.setPartner(getPlayerPartner(p.getId()));

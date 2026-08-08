@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
@@ -74,7 +73,7 @@ public class BetterSoil implements ListenerConstruct {
   @EventHandler
   public void onHarvest(@NonNull PlayerHarvestBlockEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry pe = serviceContext.getPlayerService()
         .getPlayerEntry(p.getUniqueId());
 
     List<ItemStack> lis = serviceContext.getBagService().collectItemStacks(e.getItemsHarvested(), e.getPlayer(), pe);

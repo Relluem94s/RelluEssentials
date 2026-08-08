@@ -94,7 +94,7 @@ public class Warp implements CommandConstruct {
     if (args.length == 0) {
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO));
-      for (LocationEntry le : RelluEssentials.getInstance().getWarpRepository()
+      for (LocationEntry le : serviceContext.getWarpRepository()
           .findByWorld(p.getWorld())) {
         p.sendMessage(
             serviceContext.getTranslationService()
@@ -127,7 +127,7 @@ public class Warp implements CommandConstruct {
   }
 
   private void addWarp(String name, Player p) {
-    Optional<LocationEntry> existing = RelluEssentials.getInstance().getWarpRepository()
+    Optional<LocationEntry> existing = serviceContext.getWarpRepository()
         .findByName(name);
     if (existing.isPresent()) {
       return;
@@ -138,8 +138,8 @@ public class Warp implements CommandConstruct {
     le.setLocation(p.getLocation());
     le.setLocationName(name);
     le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(typeId - 1));
-    le.setPlayerId(RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p).getId());
-    RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
+    le.setPlayerId(serviceContext.getPlayerService().getPlayerEntry(p).getId());
+    serviceContext.getDatabaseHelper().insertLocation(le);
 
     LocationEntry persisted = RelluEssentials.getInstance().getDatabaseHelper()
         .getLocation(p.getLocation(), typeId);
@@ -147,22 +147,22 @@ public class Warp implements CommandConstruct {
       le = persisted;
     }
 
-    RelluEssentials.getInstance().getWarpRepository().save(le);
+    serviceContext.getWarpRepository().save(le);
     p.sendMessage(
         serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WARP_ADD, name));
   }
 
   private void removeWarp(String name, Player p) {
-    RelluEssentials.getInstance().getWarpRepository().findByName(name).ifPresent(le -> {
-      RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
-      RelluEssentials.getInstance().getWarpRepository().delete(le);
+    serviceContext.getWarpRepository().findByName(name).ifPresent(le -> {
+      serviceContext.getDatabaseHelper().deleteLocation(le);
+      serviceContext.getWarpRepository().delete(le);
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, name));
     });
   }
 
   private void warp(String name, @NotNull Player p) {
-    Optional<LocationEntry> result = RelluEssentials.getInstance().getWarpRepository()
+    Optional<LocationEntry> result = serviceContext.getWarpRepository()
         .findByNameAndWorld(name, p.getWorld());
 
     if (result.isEmpty()) {

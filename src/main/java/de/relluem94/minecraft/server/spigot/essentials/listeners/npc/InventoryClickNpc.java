@@ -85,7 +85,7 @@ public class InventoryClickNpc implements ListenerConstruct {
       return;
     }
 
-    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player);
     String title = e.getView().getTitle();
 

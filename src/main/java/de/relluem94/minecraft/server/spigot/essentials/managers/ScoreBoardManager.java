@@ -87,8 +87,8 @@ public class ScoreBoardManager implements Enable {
       return;
     }
 
-    PlayerEntry pe = RelluEssentials.getInstance()
-        .getPlayerRegistry()
+    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext()
+        .getPlayerService()
         .getPlayerEntry(player.getUniqueId());
     if (pe == null) {
       return;

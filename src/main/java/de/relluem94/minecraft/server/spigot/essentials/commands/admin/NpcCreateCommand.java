@@ -55,7 +55,7 @@ public class NpcCreateCommand implements SubCommand {
               .getWithPrefix(MessageKey.COMMAND_NPC_INVALID_COORDINATES));
       return;
     }
-    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
     String worldName = player.getWorld().getName();
     NpcOperationResult result = RelluEssentials.getInstance().getNpcService()

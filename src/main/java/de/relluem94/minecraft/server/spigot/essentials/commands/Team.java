@@ -4,7 +4,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SPACER_CHANNEL;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -50,7 +49,7 @@ public class Team implements CommandConstruct {
 
     p.sendMessage(
         serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TEAM_TITLE));
-    for (Map.Entry<UUID, PlayerEntry> e : RelluEssentials.getInstance().getPlayerRegistry()
+    for (Map.Entry<UUID, PlayerEntry> e : serviceContext.getPlayerService()
         .getPlayerEntryMap().entrySet()) {
       PlayerEntry pe = e.getValue();
       if (serviceContext.getGroupService().isSenderAuthorized(sender, pe.getGroup().getName())) {

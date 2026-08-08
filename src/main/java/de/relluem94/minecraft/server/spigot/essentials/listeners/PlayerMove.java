@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -21,9 +20,11 @@ import org.bukkit.util.Vector;
 public class PlayerMove implements ListenerConstruct {
 
 
-  @Override
-  public void injectContext(ServiceContext context) {
+  private ServiceContext serviceContext;
 
+  @Override
+  public void injectContext(ServiceContext serviceContext) {
+    this.serviceContext = serviceContext;
   }
 
   @EventHandler
@@ -48,9 +49,9 @@ public class PlayerMove implements ListenerConstruct {
       }
     }
 
-    if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId()) != null) {
+    if (serviceContext.getPlayerService().getPlayerEntry(p.getUniqueId()) != null) {
       e.setCancelled(
-          RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p.getUniqueId())
+          serviceContext.getPlayerService().getPlayerEntry(p.getUniqueId())
               .isAfk());
     }
   }

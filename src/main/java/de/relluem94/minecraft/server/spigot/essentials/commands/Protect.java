@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -62,7 +61,7 @@ public class Protect implements CommandConstruct {
       return true;
     }
 
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry pe = serviceContext.getPlayerService()
         .getPlayerEntry(p.getUniqueId());
 
     if (args.length == 0) {

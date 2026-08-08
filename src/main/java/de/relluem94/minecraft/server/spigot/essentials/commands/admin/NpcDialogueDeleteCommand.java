@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -54,14 +53,14 @@ public class NpcDialogueDeleteCommand implements SubCommand {
       return;
     }
 
-    Optional<Npc> npc = RelluEssentials.getInstance().getNpcService().getNPCById(npcId);
+    Optional<Npc> npc = serviceContext.getNpcService().getNPCById(npcId);
     npc.ifPresentOrElse(foundNpc -> {
-      PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+      PlayerEntry playerEntry = serviceContext.getPlayerService()
           .getPlayerEntry(player.getUniqueId());
 
-      RelluEssentials.getInstance().getDatabaseHelper()
+      serviceContext.getDatabaseHelper()
           .deleteNPCDialogueById(foundNpc.getId(), listPosition, playerEntry.getId());
-      RelluEssentials.getInstance().getNpcService().reloadNPCDialogue(foundNpc.getId());
+      serviceContext.getNpcService().reloadNPCDialogue(foundNpc.getId());
       player.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_DELETED));
     }, () -> player.sendMessage(

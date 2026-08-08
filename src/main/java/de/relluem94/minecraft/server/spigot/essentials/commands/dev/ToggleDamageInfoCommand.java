@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
@@ -12,7 +11,7 @@ public class ToggleDamageInfoCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(player);
+    PlayerEntry playerEntry = serviceContext.getPlayerService().getPlayerEntry(player);
     if (playerEntry.getPlayerState().equals(PlayerState.DEFAULT)) {
       playerEntry.setPlayerState(PlayerState.DAMAGE_INFO);
     } else {

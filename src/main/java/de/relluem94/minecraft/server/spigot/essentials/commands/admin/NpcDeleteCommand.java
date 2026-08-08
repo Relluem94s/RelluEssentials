@@ -46,7 +46,7 @@ public class NpcDeleteCommand implements SubCommand {
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_INVALID_ID));
       return;
     }
-    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
     NpcOperationResult result = RelluEssentials.getInstance().getNpcService()
         .deleteNPC(npcId, playerEntry.getId());

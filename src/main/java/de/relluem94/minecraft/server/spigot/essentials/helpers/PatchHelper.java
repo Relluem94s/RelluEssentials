@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatch
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -17,22 +17,22 @@ public class PatchHelper implements IPatchHelper {
   private static final String INSERT_NEW_DB_VERSION = "insertNewDBVersion.sql";
   private static final String UPDATE_OLD_PLUGIN_INFORMATION = "updateOldPluginInformation.sql";
   private final DatabaseHelper databaseHelper;
-  private final PlayerRegistry playerRegistry;
+  private final PlayerService playerService;
   private final Consumer<PluginInformationEntry> onPatchingFinished;
   private final ConfigHelper configHelper;
 
 
-  public PatchHelper(DatabaseHelper databaseHelper, PlayerRegistry playerRegistry,
+  public PatchHelper(DatabaseHelper databaseHelper, PlayerService playerService,
       Consumer<PluginInformationEntry> onPatchingFinished, ConfigHelper configHelper) {
     this.databaseHelper = databaseHelper;
-    this.playerRegistry = playerRegistry;
+    this.playerService = playerService;
     this.onPatchingFinished = onPatchingFinished;
     this.configHelper = configHelper;
   }
 
   private void finishPatching() {
     List<PlayerEntry> players = databaseHelper.getPlayers();
-    players.forEach(p -> playerRegistry.putPlayerEntry(UUID.fromString(p.getUuid()), p));
+    players.forEach(p -> playerService.putPlayerEntry(UUID.fromString(p.getUuid()), p));
 
     PluginInformationEntry pluginInformation = databaseHelper.getPluginInformation();
     onPatchingFinished.accept(pluginInformation);
@@ -58,7 +58,7 @@ public class PatchHelper implements IPatchHelper {
       pe.forEach(databaseHelper::insertPlayer);
 
       for (PlayerEntry p : pe) {
-        PlayerEntry pu = playerRegistry
+        PlayerEntry pu = playerService
             .getPlayerEntry(UUID.fromString(p.getUuid()));
         pu.setAfk(p.isAfk());
         pu.setFlying(p.isFlying());

@@ -118,8 +118,6 @@ public class RelluEssentials extends JavaPlugin {
   private PluginInformationEntry pluginInformation;
   @Getter
   private boolean isUnitTest = false;
-  @Getter
-  private PlayerRegistry playerRegistry;
   @Setter
   @Getter
   private ProtectionRegistry protectionRegistry;
@@ -229,10 +227,11 @@ public class RelluEssentials extends JavaPlugin {
     itemManager.enable(this);
 
     databaseManager = new DatabaseManager(
+        serviceContext,
         getConfig().getString("database.host"),
         getConfig().getString("database.user"),
         getConfig().getString("database.password"),
-        getConfig().getInt("database.port")
+        (getConfig().getInt("database.port"))
     );
     databaseManager.enable(this);
     databaseHelper = databaseManager.getDatabaseHelper();
@@ -242,7 +241,6 @@ public class RelluEssentials extends JavaPlugin {
     GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
     GroupService groupService = new GroupService(groupRegistry, groupRepository);
     serviceContext.setGroupService(groupService);
-    databaseManager.setGroupService(groupService);
     PlayerRegistry playerRegistry = new PlayerRegistry();
     PlayerService playerService = new PlayerService(serviceContext, playerRegistry);
     serviceContext.setPlayerService(playerService);

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -58,12 +57,12 @@ public class NpcDialogueAddCommand implements SubCommand {
       return;
     }
 
-    Optional<Npc> npc = RelluEssentials.getInstance().getNpcService().getNPCById(npcId);
+    Optional<Npc> npc = serviceContext.getNpcService().getNPCById(npcId);
     npc.ifPresentOrElse(npc1 -> {
           String text = Arrays.stream(args, ARGS_TEXT_START_INDEX, args.length)
               .collect(Collectors.joining(" "));
 
-          PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+          PlayerEntry playerEntry = serviceContext.getPlayerService()
               .getPlayerEntry(player.getUniqueId());
 
           NpcDialogueEntry entry = new NpcDialogueEntry();
@@ -72,8 +71,8 @@ public class NpcDialogueAddCommand implements SubCommand {
           entry.setText(StringHelper.replaceColor(text));
           entry.setCreatedBy(playerEntry.getId());
 
-          RelluEssentials.getInstance().getDatabaseHelper().insertNPCDialogue(entry);
-          RelluEssentials.getInstance().getNpcService().reloadNPCDialogue(npc1.getId());
+          serviceContext.getDatabaseHelper().insertNPCDialogue(entry);
+          serviceContext.getNpcService().reloadNPCDialogue(npc1.getId());
           player.sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_ADDED));
         },

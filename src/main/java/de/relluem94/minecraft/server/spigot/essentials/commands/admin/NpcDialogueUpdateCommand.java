@@ -56,12 +56,12 @@ public class NpcDialogueUpdateCommand implements SubCommand {
       return;
     }
 
-    Optional<Npc> npc = RelluEssentials.getInstance().getNpcService().getNPCById(npcId);
+    Optional<Npc> npc = serviceContext.getNpcService().getNPCById(npcId);
     npc.ifPresentOrElse(foundNpc -> {
       String text = Arrays.stream(args, ARGS_TEXT_START_INDEX, args.length)
           .collect(Collectors.joining(" "));
 
-      PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+      PlayerEntry playerEntry = serviceContext.getPlayerService()
           .getPlayerEntry(player.getUniqueId());
 
       NpcDialogueEntry entry = new NpcDialogueEntry();
@@ -79,7 +79,7 @@ public class NpcDialogueUpdateCommand implements SubCommand {
         return;
       }
 
-      RelluEssentials.getInstance().getNpcService().reloadNPCDialogue(foundNpc.getId());
+      serviceContext.getNpcService().reloadNPCDialogue(foundNpc.getId());
       player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_UPDATED));
     }, () -> player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_INVALID)));
   }

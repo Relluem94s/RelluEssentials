@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
@@ -20,7 +21,6 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.CropReposito
 import de.relluem94.minecraft.server.spigot.essentials.repositories.DropRuleRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
 import lombok.Getter;
@@ -45,10 +45,9 @@ public class DatabaseManager implements Enable {
    * @param port     the database port
    * @throws RuntimeException if the database connection fails
    */
-  public DatabaseManager(String host, String user, String password, int port) {
+  public DatabaseManager(ServiceContext serviceContext, String host, String user, String password, int port) {
     try {
-      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password,
-          RelluEssentials.getInstance().getPlayerRegistry());
+      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password, serviceContext);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -155,9 +154,5 @@ public class DatabaseManager implements Enable {
       plugin.getServiceContext().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
       plugin.getServiceContext().getPlayerService().reloadPlayerHomes();
     }, 1L);
-  }
-
-  public void setGroupService(GroupService groupService) {
-    databaseHelper.setGroupService(groupService);
   }
 }

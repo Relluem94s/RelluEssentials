@@ -12,7 +12,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.ClasspathSqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
@@ -23,17 +22,17 @@ public class DatabaseHelperFactory {
   }
 
   public static DatabaseHelper createForProduction(String host, int port, String user,
-      String password, PlayerRegistry playerRegistry) throws SQLException {
+      String password, ServiceContext serviceContext) throws SQLException {
     MysqlDataSource dataSource = buildDataSource(host, port, user, password, PLUGIN_DATABASE_NAME);
     MysqlDataSource dataSourceNoSchema = buildDataSource(host, port, user, password, null);
     ClasspathSqlResourceLoader sqlResourceLoader = new ClasspathSqlResourceLoader();
 
     DatabaseHelper databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema,
-        sqlResourceLoader, new ServiceContext(RelluEssentials.getInstance()));
+        sqlResourceLoader, serviceContext);
 
     IPatchHelper patchHelper = new PatchHelper(
         databaseHelper,
-        playerRegistry,
+        serviceContext.getPlayerService(),
         RelluEssentials.getInstance()::setPluginInformation,
         new ConfigHelper("players")
     );
@@ -43,18 +42,18 @@ public class DatabaseHelperFactory {
   }
 
   @SuppressWarnings("unused")
-  public static DatabaseHelper createForTest(String host, int port, PlayerRegistry playerRegistry)
+  public static DatabaseHelper createForTest(String host, int port, ServiceContext serviceContext)
       throws SQLException {
     MysqlDataSource dataSource = buildDataSource(host, port, "root", "", PLUGIN_DATABASE_NAME);
     MysqlDataSource dataSourceNoSchema = buildDataSource(host, port, "root", "", null);
     ClasspathSqlResourceLoader sqlResourceLoader = new ClasspathSqlResourceLoader();
 
     DatabaseHelper databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema,
-        sqlResourceLoader, new ServiceContext(RelluEssentials.getInstance()));
+        sqlResourceLoader, new ServiceContext());
 
     IPatchHelper patchHelper = new PatchHelper(
         databaseHelper,
-        playerRegistry,
+        serviceContext.getPlayerService(),
         noOpPluginInfoConsumer(),
         new ConfigHelper("players")
     );

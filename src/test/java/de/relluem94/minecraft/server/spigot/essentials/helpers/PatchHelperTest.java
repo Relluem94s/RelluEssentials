@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +30,7 @@ class PatchHelperTest {
     @Mock
     private DatabaseHelper databaseHelper;
     @Mock
-    private PlayerRegistry playerRegistry;
+    private PlayerService playerService;
     @Mock
     private ConfigHelper configHelperMock;
 
@@ -41,7 +41,7 @@ class PatchHelperTest {
     @BeforeEach
     void setUp() {
         chatHelperMock = mockStatic(ChatHelper.class);
-        patchHelper = new PatchHelper(databaseHelper, playerRegistry, _ -> {}, configHelperMock);
+        patchHelper = new PatchHelper(databaseHelper, playerService, _ -> {}, configHelperMock);
     }
 
     @AfterEach

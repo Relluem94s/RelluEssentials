@@ -14,8 +14,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -40,7 +40,7 @@ class TabCompleterHelperTest {
   private RelluEssentials relluEssentials;
 
   @Mock
-  private PlayerRegistry playerRegistry;
+  private PlayerService playerService;
 
   @Mock
   private WarpRepository warpRepository;
@@ -167,8 +167,8 @@ class TabCompleterHelperTest {
     playerEntry.setHomes(new ArrayList<>());
     playerEntry.setDeaths(new ArrayList<>());
 
-    when(relluEssentials.getPlayerRegistry()).thenReturn(playerRegistry);
-    when(playerRegistry.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(relluEssentials.getServiceContext().getPlayerService()).thenReturn(playerService);
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     List<String> result = TabCompleterHelper.getHomes(player);
 
@@ -187,8 +187,8 @@ class TabCompleterHelperTest {
     playerEntry.setHomes(List.of(homeEntry));
     playerEntry.setDeaths(List.of(deathEntry));
 
-    when(relluEssentials.getPlayerRegistry()).thenReturn(playerRegistry);
-    when(playerRegistry.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(relluEssentials.getServiceContext().getPlayerService()).thenReturn(playerService);
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     List<String> result = TabCompleterHelper.getHomes(player);
 
@@ -197,32 +197,33 @@ class TabCompleterHelperTest {
     assertTrue(result.contains("death_1"));
   }
 
-    @Test
-    void getGroupsReturnsEmptyListWhenNoGroupsExist() throws NoSuchFieldException, IllegalAccessException {
-        List<String> result = TabCompleterHelper.getGroups(List.of());
+  @Test
+  void getGroupsReturnsEmptyListWhenNoGroupsExist()
+      throws NoSuchFieldException, IllegalAccessException {
+    List<String> result = TabCompleterHelper.getGroups(List.of());
 
-        assertTrue(result.isEmpty());
-    }
+    assertTrue(result.isEmpty());
+  }
 
-    @Test
-    void getGroupsReturnsGroupNames() throws NoSuchFieldException, IllegalAccessException {
-        GroupEntry adminGroup = new GroupEntry();
-        adminGroup.setName("admin");
+  @Test
+  void getGroupsReturnsGroupNames() throws NoSuchFieldException, IllegalAccessException {
+    GroupEntry adminGroup = new GroupEntry();
+    adminGroup.setName("admin");
 
-        GroupEntry userGroup = new GroupEntry();
-        userGroup.setName("user");
+    GroupEntry userGroup = new GroupEntry();
+    userGroup.setName("user");
 
-        List<String> result = TabCompleterHelper.getGroups(List.of(adminGroup, userGroup));
+    List<String> result = TabCompleterHelper.getGroups(List.of(adminGroup, userGroup));
 
-        assertEquals(2, result.size());
-        assertTrue(result.contains("admin"));
-        assertTrue(result.contains("user"));
-    }
+    assertEquals(2, result.size());
+    assertTrue(result.contains("admin"));
+    assertTrue(result.contains("user"));
+  }
 
-    @Test
-    void getWarpsReturnsEmptyListWhenNoWarpsExistForWorld() {
-        when(relluEssentials.getWarpRepository()).thenReturn(warpRepository);
-        when(warpRepository.findByWorld(world)).thenReturn(new ArrayList<>());
+  @Test
+  void getWarpsReturnsEmptyListWhenNoWarpsExistForWorld() {
+    when(relluEssentials.getServiceContext().getWarpRepository()).thenReturn(warpRepository);
+    when(warpRepository.findByWorld(world)).thenReturn(new ArrayList<>());
 
     List<String> result = TabCompleterHelper.getWarps(world);
 
@@ -234,7 +235,7 @@ class TabCompleterHelperTest {
     LocationEntry warpEntry = new LocationEntry();
     warpEntry.setLocationName("spawn");
 
-    when(relluEssentials.getWarpRepository()).thenReturn(warpRepository);
+    when(relluEssentials.getServiceContext().getWarpRepository()).thenReturn(warpRepository);
     when(warpRepository.findByWorld(world)).thenReturn(List.of(warpEntry));
 
     List<String> result = TabCompleterHelper.getWarps(world);

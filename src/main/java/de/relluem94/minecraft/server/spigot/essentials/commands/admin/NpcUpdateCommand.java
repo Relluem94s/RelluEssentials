@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -72,9 +71,9 @@ public class NpcUpdateCommand implements SubCommand {
       return;
     }
     String newProfile = args[ARGS_PROFILE_VALUE_INDEX];
-    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
-    NpcOperationResult result = RelluEssentials.getInstance().getNpcService()
+    NpcOperationResult result = serviceContext.getNpcService()
         .updateNPCProfile(npcId, newProfile, playerEntry.getId());
     sendOperationFeedback(player, result, MessageKey.COMMAND_NPC_UPDATED,
         MessageKey.COMMAND_NPC_OPERATION_FAILED);
@@ -100,9 +99,9 @@ public class NpcUpdateCommand implements SubCommand {
       return;
     }
 
-    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
-    NpcOperationResult result = RelluEssentials.getInstance().getNpcService()
+    NpcOperationResult result = serviceContext.getNpcService()
         .updateNPCPosition(npcId, x, y, z, playerEntry.getId());
     sendOperationFeedback(player, result, MessageKey.COMMAND_NPC_UPDATED,
         MessageKey.COMMAND_NPC_OPERATION_FAILED);
