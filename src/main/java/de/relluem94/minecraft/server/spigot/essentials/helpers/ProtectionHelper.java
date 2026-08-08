@@ -47,7 +47,7 @@ public class ProtectionHelper {
     Location l = getLocationFromBlockAlternateForDoor(b);
     PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService()
         .getPlayerEntry(p);
-    ProtectionEntry pre = RelluEssentials.getInstance().getServiceContext().getProtectionRegistry()
+    ProtectionEntry pre = RelluEssentials.getInstance().getServiceContext().getProtectionService()
         .getProtectionEntry(l);
     if (pre != null) {
       return pre.getLocationEntry().getPlayerId() != pe.getId();

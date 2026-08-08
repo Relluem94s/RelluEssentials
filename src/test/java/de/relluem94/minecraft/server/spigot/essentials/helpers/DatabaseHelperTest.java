@@ -10,6 +10,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -18,7 +19,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
-import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
@@ -36,9 +36,8 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupInv
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
-import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Field;
@@ -54,7 +53,8 @@ import javax.sql.DataSource;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -66,31 +66,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class DatabaseHelperTest {
 
     @Mock
-    private DataSource dataSource;
-
-    @Mock
-    private DataSource dataSourceNoSchema;
-
-    @Mock
-    private SqlResourceLoader sqlResourceLoader;
-
-    @Mock
-    private IPatchHelper patchHelper;
-
-    @Mock
-    private Connection connection;
-
-    @Mock
     private Connection connectionNoSchema;
 
     @Mock
-    private PreparedStatement preparedStatement;
-
-    @Mock
     private PreparedStatement preparedStatementLocation;
-
-    @Mock
-    private ResultSet resultSet;
 
     @Mock
     private ResultSet resultSetLocation;
@@ -98,10 +77,25 @@ class DatabaseHelperTest {
     @Mock
     private World world;
 
-    private DatabaseHelper databaseHelper;
+    private static DataSource dataSource;
+    private static DataSource dataSourceNoSchema;
+    private static SqlResourceLoader sqlResourceLoader;
+    private static IPatchHelper patchHelper;
+    private static Connection connection;
+    private static PreparedStatement preparedStatement;
+    private static ResultSet resultSet;
+    private static DatabaseHelper databaseHelper;
 
-    @BeforeEach
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
+    @BeforeAll
+    static void setUp() throws NoSuchFieldException, IllegalAccessException {
+        dataSource = mock(DataSource.class);
+        dataSourceNoSchema = mock(DataSource.class);
+        sqlResourceLoader = mock(SqlResourceLoader.class);
+        patchHelper = mock(IPatchHelper.class);
+        connection = mock(Connection.class);
+        preparedStatement = mock(PreparedStatement.class);
+        resultSet = mock(ResultSet.class);
+
         RelluEssentials fakeInstance = mock(RelluEssentials.class);
 
         Field instanceField = RelluEssentials.class.getDeclaredField("instance");
@@ -117,16 +111,22 @@ class DatabaseHelperTest {
         GroupService groupService = new GroupService(groupRegistry, groupRepository);
         groupService.setPlayerRegistry(new PlayerRegistry());
 
-        when(fakeInstance.getServiceContext().getGroupService()).thenReturn(groupService);
-        when(fakeInstance.getServiceContext().getPlayerService()).thenReturn(mock(PlayerService.class));
-        when(fakeInstance.getServiceContext().getCommandManager()).thenReturn(mock(CommandManager.class));
-        when(fakeInstance.getServiceContext().getBuyBackService()).thenReturn(mock(BuyBackService.class));
-        when(fakeInstance.getServiceContext().getNpcService()).thenReturn(mock(NpcService.class));
-// TODO serviceContext mock
-        databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema, sqlResourceLoader, new ServiceContext());
+        PlayerService playerService = mock(PlayerService.class);
+        WarpRepository warpRepository = mock(WarpRepository.class);
+
+        ServiceContext serviceContext = mock(ServiceContext.class);
+        when(serviceContext.getGroupService()).thenReturn(groupService);
+        when(serviceContext.getPlayerService()).thenReturn(playerService);
+        when(serviceContext.getWarpRepository()).thenReturn(warpRepository);
+
+        databaseHelper = new DatabaseHelper(dataSource, dataSourceNoSchema, sqlResourceLoader, serviceContext);
         databaseHelper.setPatchHelper(patchHelper);
     }
 
+    @AfterEach
+    void resetMocks() {
+        reset(resultSet, preparedStatement, connection);
+    }
 
 
     private void stubBukkitServer() {

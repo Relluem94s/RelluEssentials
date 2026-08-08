@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
@@ -9,9 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Openable;
@@ -28,13 +24,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BetterLock implements ListenerConstruct {
 
-  TranslationService translationService;
-  private GroupService groupService;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.translationService = context.getTranslationService();
-    this.groupService = context.getGroupService();
+    this.serviceContext = context;
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
@@ -44,7 +38,7 @@ public class BetterLock implements ListenerConstruct {
     if (b != null) {
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
       if (ProtectionHelper.isOpenAble(b)) {
-        ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
+        ProtectionEntry protection = serviceContext.getProtectionService()
             .getProtectionEntry(l);
         PlayerEntry pe = serviceContext.getPlayerService()
             .getPlayerEntry(e.getPlayer());
@@ -58,17 +52,17 @@ public class BetterLock implements ListenerConstruct {
                 .equals(PlayerState.PROTECTION_RIGHT_REMOVE))) {
           if (ProtectionHelper.hasRights(protection, pe.getId())) {
             if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
-              e.getPlayer().sendMessage(
-                  translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+              e.getPlayer().sendMessage(serviceContext.getTranslationService().
+                  getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
             } else {
-              if (groupService.isSenderAuthorized(e.getPlayer(), "mod")) {
+              if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
                 e.setCancelled(false);
-                e.getPlayer().sendMessage(translationService.getWithPrefix(
+                e.getPlayer().sendMessage(serviceContext.getTranslationService().getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
               } else {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(
-                    translationService.getWithPrefix(
+                    serviceContext.getTranslationService().getWithPrefix(
                         MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
               }
 
@@ -76,7 +70,8 @@ public class BetterLock implements ListenerConstruct {
           } else {
             // If Notify protection self on
             e.getPlayer().sendMessage(
-                translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
 
             Openable openable = (Openable) b.getBlockData();
 
@@ -93,14 +88,15 @@ public class BetterLock implements ListenerConstruct {
                         door2.setOpen(true);
 
                         if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                          Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                          serviceContext.getSchedulerService().runTaskLater(() -> {
                             door.setOpen(false);
                             door2.setOpen(false);
 
                             b.setBlockData(door);
                             b2.setBlockData(door2);
-                            e.getPlayer().sendMessage(translationService.getWithPrefix(
-                                MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+                            e.getPlayer().sendMessage(
+                                serviceContext.getTranslationService().getWithPrefix(
+                                    MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
                           }, 50);
                         }
                       }
@@ -109,12 +105,13 @@ public class BetterLock implements ListenerConstruct {
                   }
                 } else {
                   if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                    serviceContext.getSchedulerService().runTaskLater(() -> {
                       door.setOpen(false);
 
                       b.setBlockData(door);
-                      e.getPlayer().sendMessage(translationService.getWithPrefix(
-                          MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+                      e.getPlayer().sendMessage(
+                          serviceContext.getTranslationService().getWithPrefix(
+                              MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
                     }, 50);
                   }
                 }
@@ -122,11 +119,11 @@ public class BetterLock implements ListenerConstruct {
               case TrapDoor _ -> {
                 TrapDoor door = (TrapDoor) b.getBlockData();
                 if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                  Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                  serviceContext.getSchedulerService().runTaskLater(() -> {
                     door.setOpen(false);
 
                     b.setBlockData(door);
-                    e.getPlayer().sendMessage(translationService.getWithPrefix(
+                    e.getPlayer().sendMessage(serviceContext.getTranslationService().getWithPrefix(
                         MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
                   }, 50);
                 }
@@ -134,11 +131,11 @@ public class BetterLock implements ListenerConstruct {
               case Gate _ -> {
                 Gate door = (Gate) b.getBlockData();
                 if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                  Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+                  serviceContext.getSchedulerService().runTaskLater(() -> {
                     door.setOpen(false);
 
                     b.setBlockData(door);
-                    e.getPlayer().sendMessage(translationService.getWithPrefix(
+                    e.getPlayer().sendMessage(serviceContext.getTranslationService().getWithPrefix(
                         MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
                   }, 50);
                 }
@@ -149,9 +146,9 @@ public class BetterLock implements ListenerConstruct {
             // ELSE Other Openable Objects (Future Implementations)
           }
         }
-      } else if (RelluEssentials.getInstance().getProtectionRegistry()
+      } else if (serviceContext.getProtectionService()
           .isProtectableMaterial(b.getType())) {
-        ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
+        ProtectionEntry protection = serviceContext.getProtectionService()
             .getProtectionEntry(l);
         PlayerEntry pe = serviceContext.getPlayerService()
             .getPlayerEntry(e.getPlayer());
@@ -159,23 +156,25 @@ public class BetterLock implements ListenerConstruct {
           if (ProtectionHelper.hasRights(protection, pe.getId())) {
             if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
               e.getPlayer().sendMessage(
-                  translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                  serviceContext.getTranslationService()
+                      .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
             } else {
-              if (groupService.isSenderAuthorized(e.getPlayer(), "mod")) {
+              if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
                 e.setCancelled(false);
-                e.getPlayer().sendMessage(translationService.getWithPrefix(
+                e.getPlayer().sendMessage(serviceContext.getTranslationService().getWithPrefix(
                     MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
               } else {
                 e.setCancelled(true);
                 e.getPlayer().sendMessage(
-                    translationService.getWithPrefix(
+                    serviceContext.getTranslationService().getWithPrefix(
                         MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
               }
             }
           } else {
             // If Notify protection self on
             e.getPlayer().sendMessage(
-                translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+                serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
           }
         }
       }

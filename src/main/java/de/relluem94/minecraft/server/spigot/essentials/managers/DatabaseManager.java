@@ -15,12 +15,12 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInforma
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSettingEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.CropRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.DropRuleRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
 import lombok.Getter;
@@ -93,9 +93,12 @@ public class DatabaseManager implements Enable {
 
     BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
     relluEssentialsPlugin.getServiceContext().setBlockDropService(blockDropService);
-    relluEssentialsPlugin.getServiceContext()
-        .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
-            databaseHelper.getProtections()));
+
+    ProtectionService protectionService = new ProtectionService(
+        databaseHelper.getProtectionLocks(),
+        databaseHelper.getProtections(),
+        databaseHelper);
+    relluEssentialsPlugin.getServiceContext().setProtectionService(protectionService);
     relluEssentialsPlugin.getServiceContext().setTraderNpcRegistry(
         new TraderNpcRegistry(relluEssentialsPlugin.getServiceContext().getTranslationService()));
     relluEssentialsPlugin.getServiceContext().getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
@@ -148,11 +151,13 @@ public class DatabaseManager implements Enable {
    * delay to ensure the world is fully available.
    */
   public void afterWorldLoaded(@NonNull RelluEssentials plugin) {
-    plugin.getServiceContext().getSchedulerService().runTaskLater(() -> {
-      plugin.getServiceContext().setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
-              databaseHelper.getProtections()));
-      plugin.getServiceContext().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
-      plugin.getServiceContext().getPlayerService().reloadPlayerHomes();
-    }, 1L);
+//    plugin.getServiceContext().getSchedulerService().runTaskLater(() -> {
+//      plugin.getServiceContext().setProtectionService(new ProtectionService(
+//          databaseHelper.getProtectionLocks(),
+//          databaseHelper.getProtections(),
+//          databaseHelper));
+//      plugin.getServiceContext().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
+//      plugin.getServiceContext().getPlayerService().reloadPlayerHomes();
+//    }, 1L);
   }
 }

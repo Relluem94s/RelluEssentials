@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -8,6 +9,12 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 public class ToggleDamageInfoCommand implements SubCommand {
+
+  private ServiceContext serviceContext;
+
+  public ToggleDamageInfoCommand(ServiceContext context) {
+    serviceContext = context;
+  }
 
   @Override
   public void execute(Player player, String[] args) {

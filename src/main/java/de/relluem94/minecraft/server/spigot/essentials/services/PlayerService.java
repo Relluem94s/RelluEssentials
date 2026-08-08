@@ -222,6 +222,10 @@ public class PlayerService {
     return playerRegistry.getPlayerEntry(uuid);
   }
 
+  public List<PlayerEntry> getAllPlayerEntries() {
+    return playerRegistry.getAllPlayerEntries();
+  }
+
   public void clearPlayerEntries() {
     playerRegistry.clearPlayerEntries();
   }

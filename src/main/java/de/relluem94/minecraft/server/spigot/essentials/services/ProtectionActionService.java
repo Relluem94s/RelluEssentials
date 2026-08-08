@@ -37,9 +37,9 @@ public class ProtectionActionService {
 
   public boolean removeProtectionFromBlock(Player p, Block b) {
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
-    if (serviceContext.getProtectionRegistry().isProtectableMaterial(b.getType())) {
+    if (serviceContext.getProtectionService().isProtectableMaterial(b.getType())) {
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry bpe = serviceContext.getProtectionRegistry().getProtectionEntry(l);
+      ProtectionEntry bpe = serviceContext.getProtectionService().getProtectionEntry(l);
       if (bpe != null) {
         if (bpe.getLocationEntry().getPlayerId() != pe.getId()) {
           p.sendMessage(serviceContext.getTranslationService()
@@ -47,7 +47,7 @@ public class ProtectionActionService {
           return true;
         } else {
           serviceContext.getDatabaseHelper().deleteProtection(bpe);
-          serviceContext.getProtectionRegistry().removeProtectionEntry(b.getLocation());
+          serviceContext.getProtectionService().removeProtectionEntry(b.getLocation());
           p.sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
           return false;
@@ -70,11 +70,11 @@ public class ProtectionActionService {
   private boolean removeProtectionForAttachedBlock(Player p, Block b, BlockFace face,
       PlayerEntry pe) {
     Location l = b.getRelative(face).getLocation();
-    ProtectionEntry bpe = serviceContext.getProtectionRegistry().getProtectionEntry(l);
+    ProtectionEntry bpe = serviceContext.getProtectionService().getProtectionEntry(l);
     if (bpe != null && bpe.getLocationEntry() != null
         && bpe.getLocationEntry().getPlayerId() == pe.getId()) {
       serviceContext.getDatabaseHelper().deleteProtection(bpe);
-      serviceContext.getProtectionRegistry().removeProtectionEntry(b.getLocation());
+      serviceContext.getProtectionService().removeProtectionEntry(b.getLocation());
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
       return false;
@@ -87,11 +87,11 @@ public class ProtectionActionService {
 
   private boolean removeProtectionForBlockAttachedAbove(Player p, Block b, PlayerEntry pe) {
     Location l = b.getRelative(BlockFace.UP).getLocation();
-    ProtectionEntry bpe = serviceContext.getProtectionRegistry().getProtectionEntry(l);
+    ProtectionEntry bpe = serviceContext.getProtectionService().getProtectionEntry(l);
     if (bpe != null && bpe.getLocationEntry() != null
         && bpe.getLocationEntry().getPlayerId() == pe.getId()) {
       serviceContext.getDatabaseHelper().deleteProtection(bpe);
-      serviceContext.getProtectionRegistry().removeProtectionEntry(b.getLocation());
+      serviceContext.getProtectionService().removeProtectionEntry(b.getLocation());
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
       return false;
@@ -106,7 +106,7 @@ public class ProtectionActionService {
   }
 
   public boolean protectBlock(Player p, Block b) {
-    if (!serviceContext.getProtectionRegistry().isProtectableMaterial(b.getType())) {
+    if (!serviceContext.getProtectionService().isProtectableMaterial(b.getType())) {
       return true;
     }
 
@@ -140,7 +140,7 @@ public class ProtectionActionService {
         .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD));
 
     serviceContext.getDatabaseHelper().insertProtection(bpe);
-    serviceContext.getProtectionRegistry().putProtectionEntry(b.getLocation(),
+    serviceContext.getProtectionService().putProtectionEntry(b.getLocation(),
         serviceContext.getDatabaseHelper().getProtectionByLocation(b.getLocation()));
     return true;
   }
@@ -240,8 +240,8 @@ public class ProtectionActionService {
       list.add(id);
       pre.setRights(new JSONObject().put(PLUGIN_EVENT_PROTECT_RIGHTS, list));
       serviceContext.getDatabaseHelper().updateProtectionRight(pre);
-      serviceContext.getProtectionRegistry().removeProtectionEntry(l);
-      serviceContext.getProtectionRegistry().putProtectionEntry(l, pre);
+      serviceContext.getProtectionService().removeProtectionEntry(l);
+      serviceContext.getProtectionService().putProtectionEntry(l, pre);
       if (!silent) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD));
@@ -267,8 +267,8 @@ public class ProtectionActionService {
       list.remove((Object) id);
       pre.setRights(new JSONObject().put(PLUGIN_EVENT_PROTECT_RIGHTS, list));
       serviceContext.getDatabaseHelper().updateProtectionRight(pre);
-      serviceContext.getProtectionRegistry().removeProtectionEntry(l);
-      serviceContext.getProtectionRegistry().putProtectionEntry(l, pre);
+      serviceContext.getProtectionService().removeProtectionEntry(l);
+      serviceContext.getProtectionService().putProtectionEntry(l, pre);
       if (!silent) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE));

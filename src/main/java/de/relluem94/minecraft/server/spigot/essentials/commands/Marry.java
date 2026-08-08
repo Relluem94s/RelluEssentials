@@ -108,12 +108,12 @@ public class Marry implements CommandConstruct {
     firstPlayer.setPartner(playerPartnerEntry);
     secondPlayer.setPartner(playerPartnerEntry);
 
-    serviceContext.getProtectionRegistry()
+    serviceContext.getProtectionService()
         .getProtectionEntriesOwnedBy(firstPlayer.getId())
         .forEach(pre -> serviceContext.getProtectionActionService()
             .addRight(target, pre, secondPlayer.getId(), true));
 
-    serviceContext.getProtectionRegistry()
+    serviceContext.getProtectionService()
         .getProtectionEntriesOwnedBy(secondPlayer.getId())
         .forEach(pre -> serviceContext.getProtectionActionService()
             .addRight(player, pre, firstPlayer.getId(), true));
@@ -154,7 +154,7 @@ public class Marry implements CommandConstruct {
       serviceContext.getDatabaseHelper().deletePlayerPartner(ppe);
 
       Collection<ProtectionEntry> protectionEntryList = new ArrayList<>(
-          serviceContext.getProtectionRegistry().getProtectionEntryList().values());
+          serviceContext.getProtectionService().getAllProtectionEntries().values());
 
       for (ProtectionEntry pre : protectionEntryList) {
         if (pre.getCreatedBy() == pe.getId()) {

@@ -55,7 +55,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_INFO)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = context.getProtectionRegistry()
+      ProtectionEntry pre = context.getProtectionService()
           .getProtectionEntry(l);
       if (pre != null) {
         Player p = e.getPlayer();
@@ -127,7 +127,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_FLAG_REMOVE)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = context.getProtectionRegistry()
+      ProtectionEntry pre = context.getProtectionService()
           .getProtectionEntry(l);
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
@@ -153,8 +153,8 @@ public class PlayerInteractProtect implements ListenerConstruct {
 
         if (update) {
           context.getDatabaseHelper().updateProtectionFlag(pre);
-          context.getProtectionRegistry().removeProtectionEntry(l);
-          context.getProtectionRegistry().putProtectionEntry(l, pre);
+          context.getProtectionService().removeProtectionEntry(l);
+          context.getProtectionService().putProtectionEntry(l, pre);
           e.getPlayer().sendMessage(
               context.getTranslationService()
                   .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE));
@@ -177,7 +177,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_FLAG_ADD)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = context.getProtectionRegistry()
+      ProtectionEntry pre = context.getProtectionService()
           .getProtectionEntry(l);
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
@@ -225,8 +225,8 @@ public class PlayerInteractProtect implements ListenerConstruct {
 
         if (update) {
           context.getDatabaseHelper().updateProtectionFlag(pre);
-          context.getProtectionRegistry().removeProtectionEntry(l);
-          context.getProtectionRegistry().putProtectionEntry(l, pre);
+          context.getProtectionService().removeProtectionEntry(l);
+          context.getProtectionService().putProtectionEntry(l, pre);
           e.getPlayer().sendMessage(
               context.getTranslationService()
                   .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD));
@@ -249,7 +249,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_RIGHT_ADD)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = context.getProtectionRegistry()
+      ProtectionEntry pre = context.getProtectionService()
           .getProtectionEntry(l);
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()
@@ -275,7 +275,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
     } else if (pe.getPlayerState().equals(PlayerState.PROTECTION_RIGHT_REMOVE)) {
       Block b = e.getClickedBlock();
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry pre = context.getProtectionRegistry()
+      ProtectionEntry pre = context.getProtectionService()
           .getProtectionEntry(l);
       if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
         e.getPlayer()

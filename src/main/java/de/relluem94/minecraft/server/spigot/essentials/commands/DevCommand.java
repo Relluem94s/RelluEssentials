@@ -54,7 +54,7 @@ public class DevCommand implements CommandConstruct {
         new AddTelekinesisCommand(),
         new RemoveEnchantsCommand(),
         new CloneWorldCommand(),
-        new ToggleDamageInfoCommand(),
+        new ToggleDamageInfoCommand(context),
         new ShowPlayerStatsCommand(),
         new GiveSkullsCommand()
     ));

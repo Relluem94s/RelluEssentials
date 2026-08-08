@@ -22,7 +22,7 @@ public class ProtectionCleanUpService {
 
   public void cleanUpProtections(@NonNull Player p) {
     HashMap<Location, ProtectionEntry> protectionEntryList = new HashMap<>(
-        serviceContext.getProtectionRegistry().getProtectionEntryList()
+        serviceContext.getProtectionService().getAllProtectionEntries()
     );
 
     p.sendMessage(serviceContext.getTranslationService()
@@ -78,12 +78,12 @@ public class ProtectionCleanUpService {
                   MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP,
                   removeMap.size()));
               for (Location l : removeMap.keySet()) {
-                serviceContext.getProtectionRegistry().removeProtectionEntry(l);
+                serviceContext.getProtectionService().removeProtectionEntry(l);
               }
               p.sendMessage(
                   serviceContext.getTranslationService()
                       .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
-                          serviceContext.getProtectionRegistry().getProtectionEntryList()
+                          serviceContext.getProtectionService().getAllProtectionEntries()
                               .size()));
             }
           }

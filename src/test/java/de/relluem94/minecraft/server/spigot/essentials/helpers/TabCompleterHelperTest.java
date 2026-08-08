@@ -9,12 +9,17 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -26,7 +31,7 @@ import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -36,14 +41,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class TabCompleterHelperTest {
 
-  @Mock
-  private RelluEssentials relluEssentials;
-
-  @Mock
-  private PlayerService playerService;
-
-  @Mock
-  private WarpRepository warpRepository;
+  private static RelluEssentials relluEssentials;
+  private static PlayerService playerService;
+  private static WarpRepository warpRepository;
 
   @Mock
   private Player player;
@@ -51,11 +51,26 @@ class TabCompleterHelperTest {
   @Mock
   private World world;
 
-  @BeforeEach
-  void setUp() throws NoSuchFieldException, IllegalAccessException {
+  @BeforeAll
+  static void setUp() throws NoSuchFieldException, IllegalAccessException {
+    relluEssentials = mock(RelluEssentials.class);
+    playerService = mock(PlayerService.class);
+    warpRepository = mock(WarpRepository.class);
+
     Field instanceField = RelluEssentials.class.getDeclaredField("instance");
     instanceField.setAccessible(true);
     instanceField.set(null, relluEssentials);
+
+    GroupRepository groupRepository = new GroupRepository(List.of());
+    GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
+    GroupService groupService = new GroupService(groupRegistry, groupRepository);
+    groupService.setPlayerRegistry(new PlayerRegistry());
+
+    ServiceContext serviceContext = mock(ServiceContext.class);
+    when(serviceContext.getGroupService()).thenReturn(groupService);
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(serviceContext.getWarpRepository()).thenReturn(warpRepository);
+    when(relluEssentials.getServiceContext()).thenReturn(serviceContext);
   }
 
   @Test
