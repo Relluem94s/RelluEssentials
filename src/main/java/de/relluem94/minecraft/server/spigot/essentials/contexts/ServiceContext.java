@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.contexts;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
@@ -12,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
+import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
@@ -38,7 +38,7 @@ public class ServiceContext {
   private TranslationService translationService;
   private GroupService groupService;
   private PlayerService playerService;
-  private CommandManager commandManager; // TODO SERVICE
+  private CommandService commandService;
   private BuyBackService buyBackService;
   private NpcService npcService;
   private SchedulerService schedulerService;
@@ -58,7 +58,7 @@ public class ServiceContext {
   private TraderNpcRegistry traderNpcRegistry; // TODO SERVICE
   private NpcDialogueService npcDialogueService;
 
-  private BankerNpc bankerNpc;
+  private BankerNpc bankerNpc; // TODO CHANGE THIS
 
   /**
    * Creates a new ServiceContext.

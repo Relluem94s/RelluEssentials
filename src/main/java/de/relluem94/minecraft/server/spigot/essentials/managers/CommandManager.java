@@ -60,8 +60,11 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Vanish;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Warp;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Where;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.registries.CommandRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.wrappers.CommandWrapper;
 import java.util.List;
@@ -136,13 +139,20 @@ public class CommandManager implements Enable {
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    TranslationService translationService = relluEssentialsPlugin.getServiceContext()
-        .getTranslationService();
+    ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
+    TranslationService translationService = serviceContext.getTranslationService();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_COMMANDS));
 
-    getCommandWrapperList().forEach(
-        wrapper -> wrapper.init(relluEssentialsPlugin, relluEssentialsPlugin.getServiceContext()));
+    CommandRegistry commandRegistry = new CommandRegistry();
+
+    commandWrapperList.forEach(wrapper -> {
+      wrapper.init(relluEssentialsPlugin, serviceContext);
+      commandRegistry.register(wrapper);
+    });
+
+    CommandService commandService = new CommandService(commandRegistry);
+    serviceContext.setCommandService(commandService);
 
     int commands = PluginCommandYamlParser.parse(plugin).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,

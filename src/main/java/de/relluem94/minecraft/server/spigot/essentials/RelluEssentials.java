@@ -264,7 +264,6 @@ public class RelluEssentials extends JavaPlugin {
     serviceContext.setProtectionActionService(protectionActionService);
 
     commandManager = new CommandManager();
-    serviceContext.setCommandManager(commandManager);
     commandManager.enable(this);
     signManager = new SignManager();
     signManager.enable(this);

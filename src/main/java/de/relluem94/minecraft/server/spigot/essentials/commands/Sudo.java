@@ -33,7 +33,8 @@ public class Sudo implements CommandConstruct {
 
   private ServiceContext serviceContext;
 
-  public static void exitSudo(@NotNull Player p, TranslationService translationService, PlayerService playerService) {
+  public static void exitSudo(@NotNull Player p, TranslationService translationService,
+      PlayerService playerService) {
     PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
     PlayerEntry pe = playerService.getPlayerEntry(p);
     WorldHelper.saveWorldGroupInventory(p, true);
@@ -157,9 +158,8 @@ public class Sudo implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getPluginCommands(
-          serviceContext.getCommandManager().getCommandWrapperList()));
       tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+      tabList.addAll(serviceContext.getCommandService().getAllCommandNames());
       return tabList;
     }
 

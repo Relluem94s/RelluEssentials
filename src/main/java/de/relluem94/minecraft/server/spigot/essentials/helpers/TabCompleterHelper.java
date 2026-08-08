@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.wrappers.CommandWrapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -100,12 +99,6 @@ public class TabCompleterHelper {
     }
 
     return groups;
-  }
-
-  public static List<String> getPluginCommands(List<CommandWrapper> commandList) {
-    return commandList.stream()
-        .map(CommandWrapper::getCommandName)
-        .collect(Collectors.toList());
   }
 
   public static @NotNull List<String> getWarps(World world) {
