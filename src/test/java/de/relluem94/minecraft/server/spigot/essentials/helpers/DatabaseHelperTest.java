@@ -118,7 +118,6 @@ class DatabaseHelperTest {
         groupService.setPlayerRegistry(new PlayerRegistry());
 
         when(fakeInstance.getGroupService()).thenReturn(groupService);
-        when(fakeInstance.getGroupRegistry()).thenReturn(groupRegistry);
         when(fakeInstance.getPlayerService()).thenReturn(mock(PlayerService.class));
         when(fakeInstance.getCommandManager()).thenReturn(mock(CommandManager.class));
         when(fakeInstance.getBuyBackService()).thenReturn(mock(BuyBackService.class));
