@@ -104,10 +104,10 @@ public class PlayerInfo implements CommandConstruct {
           .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_TO,
               serviceContext.getPlayerService()
 
-                  .getPlayerEntry(pet.getPartner().getFirstPartnerId()).getName(),
+                  .getPlayerEntryByInternalId(pet.getPartner().getFirstPartnerId()).getName(),
               serviceContext.getPlayerService()
 
-                  .getPlayerEntry(pet.getPartner().getSecondPartnerId())));
+                  .getPlayerEntryByInternalId(pet.getPartner().getSecondPartnerId())));
       sender.sendMessage(
           serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_SINCE,

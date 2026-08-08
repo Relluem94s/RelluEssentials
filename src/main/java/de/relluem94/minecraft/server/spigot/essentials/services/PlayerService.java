@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_PLAYERSERVICE_ALREADY_INITIALIZED;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -11,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.PlayerRepository;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -23,10 +25,31 @@ public class PlayerService {
 
   private final PlayerRegistry playerRegistry;
   private final ServiceContext serviceContext;
+  private final PlayerRepository playerRepository;
 
-  public PlayerService(ServiceContext serviceContext, PlayerRegistry playerRegistry) {
+  public PlayerService(ServiceContext serviceContext, PlayerRegistry playerRegistry, PlayerRepository playerRepository) {
     this.serviceContext = serviceContext;
     this.playerRegistry = playerRegistry;
+    this.playerRepository = playerRepository;
+  }
+
+  private boolean initialized = false;
+
+  public void initialize() {
+    if (initialized) {
+      throw new IllegalStateException(PLUGIN_EXCEPTION_PLAYERSERVICE_ALREADY_INITIALIZED);
+    }
+    initialized = true;
+
+    List<PlayerEntry> playerEntries = playerRepository.findAll();
+    playerEntries.forEach(playerEntry ->
+        playerRegistry.putPlayerEntry(UUID.fromString(playerEntry.getUuid()), playerEntry)
+    );
+
+    Bukkit.getOnlinePlayers().forEach(player -> {
+      PlayerEntry playerEntry = playerRegistry.getPlayerEntry(player.getUniqueId());
+      setGroup(player, playerEntry.getGroup());
+    });
   }
 
   public @Nullable PlayerEntry getPlayer(String name) {
@@ -73,12 +96,8 @@ public class PlayerService {
     pe.setHasToBeUpdated(true);
   }
 
-
   public PlayerEntry getPlayerEntry(Player player) {
     return playerRegistry.getPlayerEntry(player);
-  }
-  public PlayerEntry getPlayerEntry(int id) {
-    return playerRegistry.getPlayerEntry(id);
   }
 
   public @Nullable PlayerEntry getPlayerEntryByInternalId(int id) {
@@ -133,18 +152,9 @@ public class PlayerService {
 
   public PlayerPartnerEntry getPartner(PlayerEntry playerEntry) {
     if (playerEntry.getPartner() == null) {
-      return serviceContext.getDatabaseHelper().getPlayerPartner(playerEntry.getId());
+      return playerRepository.findPartnerByPlayerId(playerEntry.getId());
     }
     return playerEntry.getPartner();
-  }
-
-  public void reloadPlayerHomes() {
-    List<PlayerEntry> playerEntries = serviceContext.getDatabaseHelper().getPlayers();
-
-    playerRegistry.clearPlayerEntries();
-
-    playerEntries.forEach(playerEntry ->
-        playerRegistry.putPlayerEntry(UUID.fromString(playerEntry.getUuid()), playerEntry));
   }
 
   /**
@@ -204,13 +214,12 @@ public class PlayerService {
     savePlayer(pe);
   }
 
-  public int savePlayer(@NotNull PlayerEntry pe) {
-    if (pe.isHasToBeUpdated()) {
-      serviceContext.getDatabaseHelper().updatePlayer(pe);
-      pe.setHasToBeUpdated(false);
+  public int savePlayer(@NotNull PlayerEntry playerEntry) {
+    if (playerEntry.isHasToBeUpdated()) {
+      playerRepository.update(playerEntry);
+      playerEntry.setHasToBeUpdated(false);
       return 1;
     }
-
     return 0;
   }
 
