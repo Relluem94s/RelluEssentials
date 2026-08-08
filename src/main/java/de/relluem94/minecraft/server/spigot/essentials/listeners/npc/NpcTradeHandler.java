@@ -165,7 +165,7 @@ public class NpcTradeHandler {
     Optional<BagTypeEntry> bagTypeOptional = serviceContext.getBagService()
         .findBagTypeByPartialName(clickedItem.getItemMeta().getDisplayName());
 
-    if (bagTypeOptional.isPresent()) {
+    if (bagTypeOptional.isEmpty()) {
       player.sendMessage(
           serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND));

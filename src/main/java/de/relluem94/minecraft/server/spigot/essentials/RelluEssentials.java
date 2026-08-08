@@ -105,10 +105,11 @@ public class RelluEssentials extends JavaPlugin {
   public Map<Player,
       DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
 
+  private long start;
+
   /* Services Repos Registries */
   @Getter
   private ServiceContext serviceContext;
-  private long start;
   @Getter
   private DatabaseHelper databaseHelper;
   @Setter
@@ -118,7 +119,6 @@ public class RelluEssentials extends JavaPlugin {
   private boolean isUnitTest = false;
   @Getter
   private NpcDialogueTracker npcDialogueTracker;
-
 
   /* Manager */
   @Getter
