@@ -9,19 +9,10 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.DropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSettingEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.CropRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.DropRuleRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
-import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
-import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
-import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
@@ -45,9 +36,11 @@ public class DatabaseManager implements Enable {
    * @param port     the database port
    * @throws RuntimeException if the database connection fails
    */
-  public DatabaseManager(ServiceContext serviceContext, String host, String user, String password, int port) {
+  public DatabaseManager(ServiceContext serviceContext, String host, String user, String password,
+      int port) {
     try {
-      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password, serviceContext);
+      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password,
+          serviceContext);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -80,30 +73,6 @@ public class DatabaseManager implements Enable {
     databaseHelper.init();
 
     relluEssentialsPlugin.locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
-
-    DropRuleRepository dropRuleRepository = new DropRuleRepository();
-    for (DropEntry de : databaseHelper.getDrops()) {
-      dropRuleRepository.register(de.getMaterial(), new DoubleStore<>(de.getMin(), de.getMax()));
-    }
-
-    CropRepository cropRepository = new CropRepository();
-    for (CropEntry ce : databaseHelper.getCrops()) {
-      cropRepository.register(ce.getSeed(), ce.getPlant());
-    }
-
-    BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
-    relluEssentialsPlugin.getServiceContext().setBlockDropService(blockDropService);
-
-    ProtectionService protectionService = new ProtectionService(
-        databaseHelper.getProtectionLocks(),
-        databaseHelper.getProtections(),
-        databaseHelper);
-    relluEssentialsPlugin.getServiceContext().setProtectionService(protectionService);
-    relluEssentialsPlugin.getServiceContext().setTraderNpcRegistry(
-        new TraderNpcRegistry(relluEssentialsPlugin.getServiceContext().getTranslationService()));
-    relluEssentialsPlugin.getServiceContext().getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
-
-    relluEssentialsPlugin.getServiceContext().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
 
     RelluEssentials.settingEntriesList.addAll(databaseHelper.getAllSettings());
 
