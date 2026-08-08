@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -58,7 +57,7 @@ public class NpcCreateCommand implements SubCommand {
     PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
     String worldName = player.getWorld().getName();
-    NpcOperationResult result = RelluEssentials.getInstance().getNpcService()
+    NpcOperationResult result = serviceContext.getNpcService()
         .createNPC(profileName, x, y, z, worldName, playerEntry.getId());
 
     if (!result.isSuccessful()) {

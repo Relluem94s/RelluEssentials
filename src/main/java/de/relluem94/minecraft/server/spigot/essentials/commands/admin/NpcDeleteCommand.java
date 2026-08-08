@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -48,7 +47,7 @@ public class NpcDeleteCommand implements SubCommand {
     }
     PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
-    NpcOperationResult result = RelluEssentials.getInstance().getNpcService()
+    NpcOperationResult result = serviceContext.getNpcService()
         .deleteNPC(npcId, playerEntry.getId());
 
     if (!result.isSuccessful()) {

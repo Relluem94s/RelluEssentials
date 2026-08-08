@@ -25,11 +25,11 @@ public class InteractNpc implements ListenerConstruct {
   private static final long INTERACTION_COOLDOWN_MS = 750;
   private final Map<UUID, Long> lastInteractionTimestamp = new HashMap<>();
   private NpcDialogueTracker dialogueTracker;
-
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.serviceContext = context;
   }
 
   public NpcDialogueTracker resovleDialogTracker() {
@@ -64,7 +64,7 @@ public class InteractNpc implements ListenerConstruct {
 
     lastInteractionTimestamp.put(playerUUID, now);
 
-    Optional<Npc> matchedNPC = RelluEssentials.getInstance().getNpcService().getNPCs().stream()
+    Optional<Npc> matchedNPC = serviceContext.getNpcService().getNPCs().stream()
         .filter(npc -> clickedMannequin.getUniqueId().equals(npc.getEntityUUID())).findFirst();
 
     if (matchedNPC.isEmpty()) {

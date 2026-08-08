@@ -3,16 +3,14 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_RIGHTS;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -31,36 +29,27 @@ import org.json.JSONObject;
 
 public class ProtectionActionService {
 
-  private final TranslationService translationService;
-  private final DatabaseHelper databaseHelper;
-  private final ProtectionRegistry protectionRegistry;
-  private final PlayerRegistry playerRegistry;
+  private final ServiceContext serviceContext;
 
-  public ProtectionActionService(
-      TranslationService translationService,
-      DatabaseHelper databaseHelper,
-      ProtectionRegistry protectionRegistry,
-      PlayerRegistry playerRegistry
-  ) {
-    this.translationService = translationService;
-    this.databaseHelper = databaseHelper;
-    this.protectionRegistry = protectionRegistry;
-    this.playerRegistry = playerRegistry;
+  public ProtectionActionService(ServiceContext serviceContext) {
+    this.serviceContext = serviceContext;
   }
 
   public boolean removeProtectionFromBlock(Player p, Block b) {
-    PlayerEntry pe = playerRegistry.getPlayerEntry(p);
-    if (protectionRegistry.isProtectableMaterial(b.getType())) {
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
+    if (serviceContext.getProtectionRegistry().isProtectableMaterial(b.getType())) {
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      ProtectionEntry bpe = protectionRegistry.getProtectionEntry(l);
+      ProtectionEntry bpe = serviceContext.getProtectionRegistry().getProtectionEntry(l);
       if (bpe != null) {
         if (bpe.getLocationEntry().getPlayerId() != pe.getId()) {
-          p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+          p.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
           return true;
         } else {
-          databaseHelper.deleteProtection(bpe);
-          protectionRegistry.removeProtectionEntry(b.getLocation());
-          p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
+          serviceContext.getDatabaseHelper().deleteProtection(bpe);
+          serviceContext.getProtectionRegistry().removeProtectionEntry(b.getLocation());
+          p.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
           return false;
         }
       }
@@ -78,33 +67,38 @@ public class ProtectionActionService {
     return false;
   }
 
-  private boolean removeProtectionForAttachedBlock(Player p, Block b, BlockFace face, PlayerEntry pe) {
+  private boolean removeProtectionForAttachedBlock(Player p, Block b, BlockFace face,
+      PlayerEntry pe) {
     Location l = b.getRelative(face).getLocation();
-    ProtectionEntry bpe = protectionRegistry.getProtectionEntry(l);
+    ProtectionEntry bpe = serviceContext.getProtectionRegistry().getProtectionEntry(l);
     if (bpe != null && bpe.getLocationEntry() != null
         && bpe.getLocationEntry().getPlayerId() == pe.getId()) {
-      databaseHelper.deleteProtection(bpe);
-      protectionRegistry.removeProtectionEntry(b.getLocation());
-      p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
+      serviceContext.getDatabaseHelper().deleteProtection(bpe);
+      serviceContext.getProtectionRegistry().removeProtectionEntry(b.getLocation());
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
       return false;
     } else {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
       return true;
     }
   }
 
   private boolean removeProtectionForBlockAttachedAbove(Player p, Block b, PlayerEntry pe) {
     Location l = b.getRelative(BlockFace.UP).getLocation();
-    ProtectionEntry bpe = protectionRegistry.getProtectionEntry(l);
+    ProtectionEntry bpe = serviceContext.getProtectionRegistry().getProtectionEntry(l);
     if (bpe != null && bpe.getLocationEntry() != null
         && bpe.getLocationEntry().getPlayerId() == pe.getId()) {
-      databaseHelper.deleteProtection(bpe);
-      protectionRegistry.removeProtectionEntry(b.getLocation());
-      p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
+      serviceContext.getDatabaseHelper().deleteProtection(bpe);
+      serviceContext.getProtectionRegistry().removeProtectionEntry(b.getLocation());
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
       return false;
     } else {
       if (bpe != null && bpe.getLocationEntry() != null) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
         return true;
       }
     }
@@ -112,13 +106,13 @@ public class ProtectionActionService {
   }
 
   public boolean protectBlock(Player p, Block b) {
-    if (!protectionRegistry.isProtectableMaterial(b.getType())) {
+    if (!serviceContext.getProtectionRegistry().isProtectableMaterial(b.getType())) {
       return true;
     }
 
-    PlayerEntry pe = playerRegistry.getPlayerEntry(p);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
     ProtectionEntry bpe = new ProtectionEntry();
-    LocationEntry l = databaseHelper.getLocation(b.getLocation(), 5);
+    LocationEntry l = serviceContext.getDatabaseHelper().getLocation(b.getLocation(), 5);
 
     boolean playerHasRightsToProtect = true;
 
@@ -131,9 +125,10 @@ public class ProtectionActionService {
     }
 
     l = buildLocationEntry(b, pe);
-    databaseHelper.insertLocation(l);
+    serviceContext.getDatabaseHelper().insertLocation(l);
 
-    LocationEntry persistedLocationEntry = databaseHelper.getLocation(b.getLocation(), 5);
+    LocationEntry persistedLocationEntry = serviceContext.getDatabaseHelper()
+        .getLocation(b.getLocation(), 5);
 
     bpe.setCreatedBy(pe.getId());
     bpe.setMaterialName(b.getType().name());
@@ -141,11 +136,12 @@ public class ProtectionActionService {
     bpe.setRights(buildRightsJson(pe));
     bpe.setFlags(buildFlagsJson(b));
 
-    p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD));
+    p.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD));
 
-    databaseHelper.insertProtection(bpe);
-    protectionRegistry.putProtectionEntry(b.getLocation(),
-        databaseHelper.getProtectionByLocation(b.getLocation()));
+    serviceContext.getDatabaseHelper().insertProtection(bpe);
+    serviceContext.getProtectionRegistry().putProtectionEntry(b.getLocation(),
+        serviceContext.getDatabaseHelper().getProtectionByLocation(b.getLocation()));
     return true;
   }
 
@@ -172,8 +168,10 @@ public class ProtectionActionService {
 
     if (isNeighbourChestProtectedByOther(leftNeighbour, cd, p)
         || isNeighbourChestProtectedByOther(rightNeighbour, cd, p)) {
-      p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-      p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY));
       return false;
     }
     return true;
@@ -241,15 +239,17 @@ public class ProtectionActionService {
     if (!list.contains(id)) {
       list.add(id);
       pre.setRights(new JSONObject().put(PLUGIN_EVENT_PROTECT_RIGHTS, list));
-      databaseHelper.updateProtectionRight(pre);
-      protectionRegistry.removeProtectionEntry(l);
-      protectionRegistry.putProtectionEntry(l, pre);
+      serviceContext.getDatabaseHelper().updateProtectionRight(pre);
+      serviceContext.getProtectionRegistry().removeProtectionEntry(l);
+      serviceContext.getProtectionRegistry().putProtectionEntry(l, pre);
       if (!silent) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD));
       }
     } else {
       if (!silent) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED));
       }
     }
   }
@@ -266,15 +266,17 @@ public class ProtectionActionService {
     if (list.contains(id)) {
       list.remove((Object) id);
       pre.setRights(new JSONObject().put(PLUGIN_EVENT_PROTECT_RIGHTS, list));
-      databaseHelper.updateProtectionRight(pre);
-      protectionRegistry.removeProtectionEntry(l);
-      protectionRegistry.putProtectionEntry(l, pre);
+      serviceContext.getDatabaseHelper().updateProtectionRight(pre);
+      serviceContext.getProtectionRegistry().removeProtectionEntry(l);
+      serviceContext.getProtectionRegistry().putProtectionEntry(l, pre);
       if (!silent) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE));
       }
     } else {
       if (!silent) {
-        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED));
       }
     }
   }

@@ -125,8 +125,6 @@ public class RelluEssentials extends JavaPlugin {
   @Getter
   private TraderNpcRegistry traderNpcRegistry;
   @Getter
-  private NpcService npcService;
-  @Getter
   private NpcDialogueTracker npcDialogueTracker;
 
 
@@ -271,12 +269,7 @@ public class RelluEssentials extends JavaPlugin {
     TeleportService teleportService = new TeleportService(translationService, backService);
     serviceContext.setTeleportService(teleportService);
 
-    ProtectionActionService protectionActionService = new ProtectionActionService(
-        translationService,
-        databaseHelper,
-        protectionRegistry,
-        playerRegistry
-    );
+    ProtectionActionService protectionActionService = new ProtectionActionService(serviceContext);
     serviceContext.setProtectionActionService(protectionActionService);
 
     commandManager = new CommandManager();
@@ -314,16 +307,16 @@ public class RelluEssentials extends JavaPlugin {
     scoreBoardManager = new ScoreBoardManager();
     scoreBoardManager.enable(this);
     databaseManager.afterWorldLoaded(this);
-    getServiceContext().getSchedulerService()
-        .runTaskLater(() -> getNpcService().loadAndSpawnNpcsInLoadedChunks(), 20L);
+    serviceContext.getSchedulerService()
+        .runTaskLater(() -> serviceContext.getNpcService().loadAndSpawnNpcsInLoadedChunks(), 20L);
   }
 
   @Override
   public void onDisable() {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        getServiceContext().getTranslationService().get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
-    if (npcService != null) {
-      npcService.despawnAllNPCs();
+        serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
+    if (serviceContext.getNpcService() != null) {
+      serviceContext.getNpcService().despawnAllNPCs();
     }
     sudoManager = new SudoManager();
     sudoManager.disable(this);
@@ -337,14 +330,14 @@ public class RelluEssentials extends JavaPlugin {
     consoleSendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        getServiceContext().getTranslationService().get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
+        serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
   }
 
   private void stopLoading() {
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        getServiceContext().getTranslationService()
+        serviceContext.getTranslationService()
             .get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE,
                 Calendar.getInstance().getTimeInMillis() - start));
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
