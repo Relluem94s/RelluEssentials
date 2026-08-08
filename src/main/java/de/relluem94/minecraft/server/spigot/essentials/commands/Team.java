@@ -4,7 +4,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SPACER_CHANNEL;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -12,8 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -50,12 +47,11 @@ public class Team implements CommandConstruct {
 
     p.sendMessage(
         serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TEAM_TITLE));
-    for (Map.Entry<UUID, PlayerEntry> e : RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntryMap().entrySet()) {
-      PlayerEntry pe = e.getValue();
-      if (serviceContext.getGroupService().isSenderAuthorized(sender, pe.getGroup().getName())) {
-        p.sendMessage(pe.getGroup().getPrefix() + pe.getCustomName() + PLUGIN_COLOR_MESSAGE
-            + PLUGIN_FORMS_SPACER_CHANNEL + pe.getGroup().getPrefix() + pe.getGroup().getName());
+    for (PlayerEntry e : serviceContext.getPlayerService()
+        .getAllPlayerEntries()) {
+      if (serviceContext.getGroupService().isSenderAuthorized(sender, e.getGroup().getName())) {
+        p.sendMessage(e.getGroup().getPrefix() + e.getCustomName() + PLUGIN_COLOR_MESSAGE
+            + PLUGIN_FORMS_SPACER_CHANNEL + e.getGroup().getPrefix() + e.getGroup().getName());
       }
     }
     return true;

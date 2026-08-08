@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterBlockDrop;
@@ -63,63 +64,69 @@ import org.bukkit.plugin.Plugin;
 
 public class ListenerManager implements Enable {
 
-  private final List<ListenerWrapper> listenerWrapperList = List.of(
-      new ListenerWrapper(new BetterChatFormat()),
-      new ListenerWrapper(new BetterWorlds()),
-      new ListenerWrapper(new BetterPlayerJoin()),
-      new ListenerWrapper(new BetterPlayerQuit()),
-      new ListenerWrapper(new BetterBlockDrop()),
-      new ListenerWrapper(new BetterLights()),
-      new ListenerWrapper(new BlockBreakBags()),
-      new ListenerWrapper(new BlockDropItemBags()),
-      new ListenerWrapper(new InventoryClickBags()),
-      new ListenerWrapper(new EntityPickupItemBags()),
-      new ListenerWrapper(new BlockPlace()),
-      new ListenerWrapper(new BetterMobs()),
-      new ListenerWrapper(new BetterSoil()),
-      new ListenerWrapper(new NpcChunkLoadListener()),
-      new ListenerWrapper(new DamgeNpc()),
-      new ListenerWrapper(new DamgeTraderNpc()),
-      new ListenerWrapper(new InteractNpc()),
-      new ListenerWrapper(new InteractTraderNpc()),
-      new ListenerWrapper(new InventoryClickNpc()),
-      new ListenerWrapper(new PlaceNpc()),
-      new ListenerWrapper(new BetterSafety()),
-      new ListenerWrapper(new BlockPistonProtect()),
-      new ListenerWrapper(new EntityBreakDoorProtect()),
-      new ListenerWrapper(new InventoryMoveItemProtect()),
-      new ListenerWrapper(new EntityExplodeProtect()),
-      new ListenerWrapper(new BlockRedstoneProtect()),
-      new ListenerWrapper(new BlockModifyProtect()),
-      new ListenerWrapper(new PlayerInteractProtect()),
-      new ListenerWrapper(new OpenWorldSelectorEvent()),
-      new ListenerWrapper(new BetterLock()),
-      new ListenerWrapper(new SkullInfo()),
-      new ListenerWrapper(new NoDeathMessage()),
-      new ListenerWrapper(new PlayerMove()),
-      new ListenerWrapper(new MOTD()),
-      new ListenerWrapper(new CloudSailor()),
-      new ListenerWrapper(new CreateSignActions()),
-      new ListenerWrapper(new SignEdit()),
-      new ListenerWrapper(new ToolCrafting()),
-      new ListenerWrapper(new CustomEnchantment()),
-      new ListenerWrapper(new GrapplingHockEvent()),
-      new ListenerWrapper(new PositionAxeListener()),
-      new ListenerWrapper(new PreventCoinManipulation()),
-      new ListenerWrapper(new IntegrationListener()),
-      new ListenerWrapper(new SignInteractListener(RelluEssentials.getInstance())),
-      new ListenerWrapper(new SignUpAction()),
-      new ListenerWrapper(new SignDownAction()),
-      new ListenerWrapper(new SignSpawnAction()),
-      new ListenerWrapper(new SignHomeAction()),
-      new ListenerWrapper(new SignTeleportAction()),
-      new ListenerWrapper(new SignCommandAction())
-  );
+  private List<ListenerWrapper> listenerWrapperList;
+  private ServiceContext serviceContext;
 
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    TranslationService translationService = relluEssentialsPlugin.getTranslationService();
+    this.serviceContext = relluEssentialsPlugin.getServiceContext();
+
+    listenerWrapperList = List.of(
+        new ListenerWrapper(new BetterChatFormat()),
+        new ListenerWrapper(new BetterWorlds()),
+        new ListenerWrapper(new BetterPlayerJoin()),
+        new ListenerWrapper(new BetterPlayerQuit()),
+        new ListenerWrapper(new BetterBlockDrop()),
+        new ListenerWrapper(new BetterLights()),
+        new ListenerWrapper(new BlockBreakBags()),
+        new ListenerWrapper(new BlockDropItemBags()),
+        new ListenerWrapper(new InventoryClickBags()),
+        new ListenerWrapper(new EntityPickupItemBags()),
+        new ListenerWrapper(new BlockPlace()),
+        new ListenerWrapper(new BetterMobs()),
+        new ListenerWrapper(new BetterSoil()),
+        new ListenerWrapper(new NpcChunkLoadListener()),
+        new ListenerWrapper(new DamgeNpc()),
+        new ListenerWrapper(new DamgeTraderNpc()),
+        new ListenerWrapper(new InteractNpc()),
+        new ListenerWrapper(new InteractTraderNpc()),
+        new ListenerWrapper(new InventoryClickNpc()),
+        new ListenerWrapper(new PlaceNpc()),
+        new ListenerWrapper(new BetterSafety()),
+        new ListenerWrapper(new BlockPistonProtect()),
+        new ListenerWrapper(new EntityBreakDoorProtect()),
+        new ListenerWrapper(new InventoryMoveItemProtect()),
+        new ListenerWrapper(new EntityExplodeProtect()),
+        new ListenerWrapper(new BlockRedstoneProtect()),
+        new ListenerWrapper(new BlockModifyProtect()),
+        new ListenerWrapper(new PlayerInteractProtect()),
+        new ListenerWrapper(new OpenWorldSelectorEvent()),
+        new ListenerWrapper(new BetterLock()),
+        new ListenerWrapper(new SkullInfo()),
+        new ListenerWrapper(new NoDeathMessage()),
+        new ListenerWrapper(new PlayerMove()),
+        new ListenerWrapper(new MOTD()),
+        new ListenerWrapper(new CloudSailor()),
+        new ListenerWrapper(new CreateSignActions()),
+        new ListenerWrapper(new SignEdit()),
+        new ListenerWrapper(new ToolCrafting()),
+        new ListenerWrapper(new CustomEnchantment()),
+        new ListenerWrapper(new GrapplingHockEvent()),
+        new ListenerWrapper(new PositionAxeListener()),
+        new ListenerWrapper(new PreventCoinManipulation()),
+        new ListenerWrapper(new IntegrationListener()),
+        new ListenerWrapper(new SignInteractListener(RelluEssentials.getInstance())),
+        new ListenerWrapper(new SignUpAction()),
+        new ListenerWrapper(new SignDownAction()),
+        new ListenerWrapper(new SignSpawnAction()),
+        new ListenerWrapper(new SignHomeAction()),
+        new ListenerWrapper(new SignTeleportAction()),
+        new ListenerWrapper(new SignCommandAction())
+    );
+
+
+    TranslationService translationService = serviceContext.getTranslationService();
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_EVENTS));

@@ -76,7 +76,7 @@ public class BetterMobs implements ListenerConstruct {
     boolean deathLoseCoinsActive = RelluEssentials.getInstance().deathLoseCoins.contains(worldName);
     if (deathLoseCoinsActive) {
       Player p = e.getEntity();
-      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+      PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
 
       double purse = pe.getPurse();
       double losses = purse / 2;
@@ -103,7 +103,7 @@ public class BetterMobs implements ListenerConstruct {
 
       if (coinsPerDeath > 0) {
         Player p = e.getEntity().getKiller();
-        PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+        PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
 
         boolean hasScavengers = p.getInventory().getItemInMainHand().hasItemMeta()
             && scavengers != null
@@ -148,7 +148,7 @@ public class BetterMobs implements ListenerConstruct {
   @EventHandler
   public void onHit(@NotNull EntityDamageByEntityEvent e) {
     if (e.getEntity() instanceof Monster m && e.getDamager() instanceof Player p) {
-      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+      PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
       if (pe.getPlayerState().equals(PlayerState.DAMAGE_INFO)) {
         p.sendMessage(
             serviceContext.getTranslationService()

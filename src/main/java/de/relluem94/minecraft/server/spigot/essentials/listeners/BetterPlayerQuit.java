@@ -36,7 +36,7 @@ public class BetterPlayerQuit implements ListenerConstruct {
     }
 
     serviceContext.getPlayerService().savePlayer(p);
-    RelluEssentials.getInstance().getBuyBackService().clearBuyBackHistory(p);
+    serviceContext.getBuyBackService().clearBuyBackHistory(p);
 
     Bukkit.broadcastMessage(
         serviceContext.getTranslationService()

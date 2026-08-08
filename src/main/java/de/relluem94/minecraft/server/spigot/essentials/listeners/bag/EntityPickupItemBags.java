@@ -40,7 +40,7 @@ public class EntityPickupItemBags implements ListenerConstruct {
   public void onItemCollect(@NotNull EntityPickupItemEvent e) {
     if (e.getEntity() instanceof Player p) {
 
-      PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+      PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
 
       ItemStack is = e.getItem().getItemStack();
       if (coinItem.almostEquals(is)) {

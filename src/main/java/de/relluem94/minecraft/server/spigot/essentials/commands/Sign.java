@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -63,7 +62,7 @@ public class Sign implements CommandConstruct {
       return true;
     }
 
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
 
     if (args[0].equalsIgnoreCase(Commands.EDIT.getName())) {
       pe.setPlayerState(PlayerState.SIGN_EDIT);

@@ -66,7 +66,7 @@ public class ConfigHelper {
 
       String groupName = Objects.requireNonNull(Objects.requireNonNull(player).getString("group"))
           .toLowerCase();
-      int groupFK = RelluEssentials.getInstance().getGroupService().resolveGroupWithFallback(groupName).getId();
+      int groupFK = RelluEssentials.getInstance().getServiceContext().getGroupService().resolveGroupWithFallback(groupName).getId();
       boolean fly = player.getBoolean("fly");
       boolean afk = player.getBoolean("afk");
       String customname = player.getString("customname");
@@ -76,7 +76,7 @@ public class ConfigHelper {
               + " group id:" + groupFK + " group:" + groupName);
 
       PlayerEntry p = new PlayerEntry();
-      p.setGroup(RelluEssentials.getInstance().getGroupService().resolveGroupWithFallback(groupName));
+      p.setGroup(RelluEssentials.getInstance().getServiceContext().getGroupService().resolveGroupWithFallback(groupName));
       p.setAfk(afk);
       p.setFlying(fly);
       p.setCreatedBy(1);

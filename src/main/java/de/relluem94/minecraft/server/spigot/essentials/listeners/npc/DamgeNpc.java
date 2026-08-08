@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import org.bukkit.entity.Mannequin;
@@ -11,9 +10,11 @@ import org.jspecify.annotations.NonNull;
 
 public class DamgeNpc implements ListenerConstruct {
 
+  private ServiceContext serviceContext;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    serviceContext = context;
   }
 
   @EventHandler(priority = EventPriority.HIGHEST)
@@ -22,7 +23,7 @@ public class DamgeNpc implements ListenerConstruct {
       return;
     }
 
-    boolean isTrackedNPC = RelluEssentials.getInstance().getNpcService().getNPCs().stream()
+    boolean isTrackedNPC = serviceContext.getNpcService().getNPCs().stream()
         .anyMatch(npc -> event.getEntity().getUniqueId().equals(npc.getEntityUUID()));
 
     if (isTrackedNPC) {

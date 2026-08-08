@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -20,7 +19,7 @@ public class LightToggleCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(player);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(player);
 
     if (pe.getPlayerState().equals(PlayerState.LIGHT_TOGGLE)) {
       pe.setPlayerState(PlayerState.DEFAULT);

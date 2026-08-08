@@ -83,7 +83,7 @@ class CommandWrapperTest {
         Admin adminConstruct = new Admin();
         CommandWrapper wrapper = new CommandWrapper(adminConstruct);
         String commandName = wrapper.getCommandName();
-        ServiceContext serviceContext = new ServiceContext(javaPlugin);
+        ServiceContext serviceContext = new ServiceContext();
         when(javaPlugin.getCommand(commandName)).thenReturn(pluginCommand);
 
         wrapper.init(javaPlugin, serviceContext);
@@ -104,7 +104,7 @@ class CommandWrapperTest {
         CommandWrapper wrapper = new CommandWrapper(adminConstruct);
         String commandName = wrapper.getCommandName();
 
-        ServiceContext serviceContext = new ServiceContext((RelluEssentials) javaPlugin);
+        ServiceContext serviceContext = new ServiceContext();
         when(javaPlugin.getCommand(commandName)).thenReturn(pluginCommand);
 
         wrapper.init(javaPlugin, serviceContext);
@@ -120,7 +120,7 @@ class CommandWrapperTest {
         CommandWrapper wrapper = new CommandWrapper(adminConstruct);
         String commandName = wrapper.getCommandName();
 
-        ServiceContext serviceContext = new ServiceContext((RelluEssentials) javaPlugin);
+        ServiceContext serviceContext = new ServiceContext();
         when(javaPlugin.getCommand(commandName)).thenReturn(null);
 
         wrapper.init(javaPlugin, serviceContext);

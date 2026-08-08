@@ -26,7 +26,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 public class InventoryMoveItemProtect implements ListenerConstruct {
 
   private static ItemHelper coinItem = null;
+  private ServiceContext serviceContext;
 
   public InventoryMoveItemProtect() {
     InventoryMoveItemProtect.coinItem = ItemRegistry.find(
@@ -42,7 +42,7 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
         .orElseThrow();
   }
 
-  private static boolean sellItem(Inventory inventory, ItemStack is, boolean isSource,
+  private boolean sellItem(Inventory inventory, ItemStack is, boolean isSource,
       @NotNull Location location) {
     BlockState state = location.getBlock().getState();
     if ((state instanceof Nameable)) {
@@ -71,12 +71,7 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
           inventory.addItem(CoinHelper.buildCoinItem(sellPriceItem));
 
           final ItemStack toRemove = is.clone();
-          new BukkitRunnable() {
-            @Override
-            public void run() {
-              inventory.removeItem(toRemove);
-            }
-          }.runTaskLater(RelluEssentials.getInstance(), 1L);
+          serviceContext.getSchedulerService().runTaskLater(() -> inventory.removeItem(toRemove), 1L);
           return false;
         } else {
           return true;
@@ -88,7 +83,7 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.serviceContext = context;
   }
 
   /**
@@ -131,14 +126,14 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
         return false;
       }
 
-      ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
+      ProtectionEntry protection = serviceContext.getProtectionService()
           .getProtectionEntry(location);
 
       if (protection == null) {
         if (locationOtherSide == null) {
           return false;
         } else {
-          protection = RelluEssentials.getInstance().getProtectionRegistry()
+          protection = serviceContext.getProtectionService()
               .getProtectionEntry(locationOtherSide);
         }
 

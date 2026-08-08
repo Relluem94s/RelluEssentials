@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
@@ -59,8 +58,7 @@ public class PlayerService {
   }
 
   public void updateGroup(OfflinePlayer p, GroupEntry g) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
-        .getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = playerRegistry.getPlayerEntry(p.getUniqueId());
 
     if (p.isOnline()) {
       Player player = Bukkit.getPlayer(p.getUniqueId());
@@ -214,5 +212,21 @@ public class PlayerService {
     }
 
     return 0;
+  }
+
+  public void putPlayerEntry(UUID uuid, PlayerEntry playerEntry) {
+    playerRegistry.putPlayerEntry(uuid, playerEntry);
+  }
+
+  public PlayerEntry getPlayerEntry(UUID uuid) {
+    return playerRegistry.getPlayerEntry(uuid);
+  }
+
+  public List<PlayerEntry> getAllPlayerEntries() {
+    return playerRegistry.getAllPlayerEntries();
+  }
+
+  public void clearPlayerEntries() {
+    playerRegistry.clearPlayerEntries();
   }
 }

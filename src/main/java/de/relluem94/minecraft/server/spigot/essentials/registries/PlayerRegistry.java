@@ -1,7 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.registries;
 
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
@@ -34,6 +36,10 @@ public class PlayerRegistry {
 
   public PlayerEntry getPlayerEntry(Player player) {
     return playerEntryMap.get(player.getUniqueId());
+  }
+
+  public List<PlayerEntry> getAllPlayerEntries() {
+    return new ArrayList<>(playerEntryMap.values());
   }
 
   public void clearPlayerEntries() {

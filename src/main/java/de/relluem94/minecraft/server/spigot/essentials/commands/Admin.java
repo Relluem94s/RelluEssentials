@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.commands.admin.AdminToolsGuiCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.admin.CleanUpChatCommand;
@@ -146,7 +145,7 @@ public class Admin implements CommandConstruct {
           }
         } else if ("dialogue".equalsIgnoreCase(strings[1])) {
           resolveNpcFromArg(strings[3]).ifPresent(npc -> {
-            List<NpcDialogueEntry> dialogueEntries = RelluEssentials.getInstance()
+            List<NpcDialogueEntry> dialogueEntries = serviceContext
                 .getDatabaseHelper().getNPCDialogues(npc.getDbid());
             List<Integer> usedPositions = dialogueEntries.stream()
                 .map(NpcDialogueEntry::getListPosition)
@@ -199,7 +198,7 @@ public class Admin implements CommandConstruct {
   }
 
   private Optional<String> resolveNearestNpcId(Player player) {
-    return RelluEssentials.getInstance().getNpcService()
+    return serviceContext.getNpcService()
         .getNearestNPC(player.getLocation().getX(), player.getLocation().getY(),
             player.getLocation().getZ(), player.getWorld().getName())
         .map(npc -> String.valueOf(npc.getId()));
@@ -209,8 +208,8 @@ public class Admin implements CommandConstruct {
     try {
       UUID npcId = UUID.fromString(npcIdArg);
       int listPosition = Integer.parseInt(listPositionArg);
-      return RelluEssentials.getInstance().getNpcService().getNPCById(npcId)
-          .flatMap(npc -> RelluEssentials.getInstance().getDatabaseHelper()
+      return serviceContext.getNpcService().getNPCById(npcId)
+          .flatMap(npc -> serviceContext.getDatabaseHelper()
               .getNPCDialogues(npc.getDbid())
               .stream()
               .filter(entry -> entry.getListPosition() == listPosition)
@@ -225,7 +224,7 @@ public class Admin implements CommandConstruct {
   private Optional<Npc> resolveNpcFromArg(String npcIdArg) {
     try {
       UUID npcId = UUID.fromString(npcIdArg);
-      return RelluEssentials.getInstance().getNpcService().getNPCById(npcId);
+      return serviceContext.getNpcService().getNPCById(npcId);
     } catch (IllegalArgumentException e) {
       return Optional.empty();
     }

@@ -58,7 +58,7 @@ public class NpcTradeHandler {
         .orElseThrow();
 
     this.buyBackSlotResolver = new BuyBackSlotResolver(
-        RelluEssentials.getInstance().getBuyBackService(), this.disabledItem.getCustomItem());
+        serviceContext.getBuyBackService(), this.disabledItem.getCustomItem());
     this.serviceContext = serviceContext;
   }
 
@@ -165,7 +165,7 @@ public class NpcTradeHandler {
     Optional<BagTypeEntry> bagTypeOptional = serviceContext.getBagService()
         .findBagTypeByPartialName(clickedItem.getItemMeta().getDisplayName());
 
-    if (bagTypeOptional.isPresent()) {
+    if (bagTypeOptional.isEmpty()) {
       player.sendMessage(
           serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND));
@@ -192,7 +192,7 @@ public class NpcTradeHandler {
   }
 
   private void purchaseBag(BagTypeEntry bagType, Player player, PlayerEntry playerEntry) {
-    RelluEssentials.getInstance().getBagService().purchaseBag(bagType, player, playerEntry);
+    serviceContext.getBagService().purchaseBag(bagType, player, playerEntry);
     player.sendMessage(serviceContext.getTranslationService()
         .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT,
             bagType.getDisplayName()));
@@ -329,8 +329,8 @@ public class NpcTradeHandler {
     playerEntry.setUpdatedBy(playerEntry.getId());
     playerEntry.setHasToBeUpdated(true);
 
-    if (slot == 49 && RelluEssentials.getInstance().getBuyBackService().hasBuyBackItems(player)) {
-      RelluEssentials.getInstance().getBuyBackService().removeBuyBackItem(player);
+    if (slot == 49 && serviceContext.getBuyBackService().hasBuyBackItems(player)) {
+      serviceContext.getBuyBackService().removeBuyBackItem(player);
       player.getOpenInventory().getTopInventory()
           .setItem(49, buyBackSlotResolver.resolveForPlayer(player));
     }
@@ -433,7 +433,7 @@ public class NpcTradeHandler {
     if (isRightClick) {
       amount = removeAllMatchingItemsFromInventory(player, item);
       totalEarnings = sellPrice * (double) amount;
-      RelluEssentials.getInstance().getBuyBackService().recordSoldItems(player, item, amount);
+      serviceContext.getBuyBackService().recordSoldItems(player, item, amount);
     } else {
       amount = item.getAmount();
       totalEarnings = sellPrice * (double) amount;
@@ -441,7 +441,7 @@ public class NpcTradeHandler {
       if (slotItem == null) {
         return;
       }
-      RelluEssentials.getInstance().getBuyBackService().recordSoldItems(player, slotItem, amount);
+      serviceContext.getBuyBackService().recordSoldItems(player, slotItem, amount);
       slotItem.setAmount(0);
     }
 

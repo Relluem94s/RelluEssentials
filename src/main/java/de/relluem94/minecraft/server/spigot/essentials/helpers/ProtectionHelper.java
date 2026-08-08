@@ -45,8 +45,10 @@ public class ProtectionHelper {
    */
   public static boolean hasPermission(Block b, Player p) {
     Location l = getLocationFromBlockAlternateForDoor(b);
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
-    ProtectionEntry pre = RelluEssentials.getInstance().getProtectionRegistry().getProtectionEntry(l);
+    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService()
+        .getPlayerEntry(p);
+    ProtectionEntry pre = RelluEssentials.getInstance().getServiceContext().getProtectionService()
+        .getProtectionEntry(l);
     if (pre != null) {
       return pre.getLocationEntry().getPlayerId() != pe.getId();
     } else {
@@ -62,7 +64,8 @@ public class ProtectionHelper {
    * @return boolean
    */
   public static boolean hasPermission(ProtectionEntry pre, Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService()
+        .getPlayerEntry(p);
     if (pre != null) {
       return pre.getLocationEntry().getPlayerId() == pe.getId();
     } else {

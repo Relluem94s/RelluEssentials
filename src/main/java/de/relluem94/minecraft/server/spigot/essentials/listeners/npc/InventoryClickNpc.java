@@ -85,13 +85,13 @@ public class InventoryClickNpc implements ListenerConstruct {
       return;
     }
 
-    PlayerEntry playerEntry = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player);
     String title = e.getView().getTitle();
 
     if (title.equals(serviceContext.getBankerNpc().getTitle())) {
       handleBankerInventory(e, player, playerEntry);
-    } else if (RelluEssentials.getInstance().getTraderNpcRegistry().getNPCTraderTitleList()
+    } else if (serviceContext.getTraderNpcRegistry().getNPCTraderTitleList()
         .contains(title)) {
       tradeHandler.handle(e.getCurrentItem(), e.getClickedInventory(), player, playerEntry,
           e.getSlot(), e.isRightClick());
@@ -108,7 +108,7 @@ public class InventoryClickNpc implements ListenerConstruct {
       PlayerEntry playerEntry) {
     e.setCancelled(true);
     ItemStack clickedItem = e.getCurrentItem();
-    BankAccountEntry bankAccount = RelluEssentials.getInstance().getDatabaseHelper()
+    BankAccountEntry bankAccount = serviceContext.getDatabaseHelper()
         .getPlayerBankAccount(playerEntry.getId());
 
     if (clickedItem == null) {
@@ -155,7 +155,7 @@ public class InventoryClickNpc implements ListenerConstruct {
     player.sendMessage(
         serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
-    List<BankTransactionEntry> transactions = RelluEssentials.getInstance().getDatabaseHelper()
+    List<BankTransactionEntry> transactions = serviceContext.getDatabaseHelper()
         .getTransactionsToBankFromPlayer(bankAccount.getId());
     transactions.forEach(transaction -> player.sendMessage(
         serviceContext.getTranslationService().getWithPrefix(

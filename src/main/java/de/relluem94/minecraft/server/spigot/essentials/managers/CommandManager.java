@@ -62,6 +62,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Where;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.wrappers.CommandWrapper;
 import java.util.List;
 import lombok.Getter;
@@ -135,16 +136,16 @@ public class CommandManager implements Enable {
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    TranslationService translationService = relluEssentialsPlugin.getServiceContext()
+        .getTranslationService();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        relluEssentialsPlugin.getTranslationService()
-            .get(MessageKey.PLUGIN_MANAGER_REGISTER_COMMANDS));
+        translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_COMMANDS));
 
     getCommandWrapperList().forEach(
         wrapper -> wrapper.init(relluEssentialsPlugin, relluEssentialsPlugin.getServiceContext()));
 
     int commands = PluginCommandYamlParser.parse(plugin).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        relluEssentialsPlugin.getTranslationService()
-            .get(MessageKey.PLUGIN_MANAGER_COMMANDS_REGISTERED, commands));
+        translationService.get(MessageKey.PLUGIN_MANAGER_COMMANDS_REGISTERED, commands));
   }
 }

@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
@@ -14,14 +15,12 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInforma
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSettingEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.CropRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.DropRuleRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
 import lombok.Getter;
@@ -46,10 +45,9 @@ public class DatabaseManager implements Enable {
    * @param port     the database port
    * @throws RuntimeException if the database connection fails
    */
-  public DatabaseManager(String host, String user, String password, int port) {
+  public DatabaseManager(ServiceContext serviceContext, String host, String user, String password, int port) {
     try {
-      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password,
-          RelluEssentials.getInstance().getPlayerRegistry());
+      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password, serviceContext);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -94,18 +92,18 @@ public class DatabaseManager implements Enable {
     }
 
     BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
-    relluEssentialsPlugin.setBlockDropService(blockDropService);
     relluEssentialsPlugin.getServiceContext().setBlockDropService(blockDropService);
 
-    relluEssentialsPlugin
-        .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
-            databaseHelper.getProtections()));
-    relluEssentialsPlugin.setTraderNpcRegistry(
-        new TraderNpcRegistry(relluEssentialsPlugin.getTranslationService()));
-    relluEssentialsPlugin.getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
-    relluEssentialsPlugin
-        .setBankTierRegistry(new BankTierRegistry(databaseHelper.getBankTiers()));
-    relluEssentialsPlugin.setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
+    ProtectionService protectionService = new ProtectionService(
+        databaseHelper.getProtectionLocks(),
+        databaseHelper.getProtections(),
+        databaseHelper);
+    relluEssentialsPlugin.getServiceContext().setProtectionService(protectionService);
+    relluEssentialsPlugin.getServiceContext().setTraderNpcRegistry(
+        new TraderNpcRegistry(relluEssentialsPlugin.getServiceContext().getTranslationService()));
+    relluEssentialsPlugin.getServiceContext().getTraderNpcRegistry().init(databaseHelper.getTraderNPCs());
+
+    relluEssentialsPlugin.getServiceContext().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
 
     RelluEssentials.settingEntriesList.addAll(databaseHelper.getAllSettings());
 
@@ -138,7 +136,7 @@ public class DatabaseManager implements Enable {
         }
 
         consoleSendMessage(PLUGIN_NAME_CONSOLE,
-            relluEssentialsPlugin.getTranslationService()
+            relluEssentialsPlugin.getServiceContext().getTranslationService()
                 .get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(),
                     we.getName(),
                     wge.getSettings().size()));
@@ -153,17 +151,13 @@ public class DatabaseManager implements Enable {
    * delay to ensure the world is fully available.
    */
   public void afterWorldLoaded(@NonNull RelluEssentials plugin) {
-    plugin.getSchedulerService().runTaskLater(() -> {
-      plugin
-          .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),
-              databaseHelper.getProtections()));
-      plugin
-          .setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
-      plugin.getPlayerService().reloadPlayerHomes();
-    }, 1L);
-  }
-
-  public void setGroupService(GroupService groupService) {
-    databaseHelper.setGroupService(groupService);
+//    plugin.getServiceContext().getSchedulerService().runTaskLater(() -> {
+//      plugin.getServiceContext().setProtectionService(new ProtectionService(
+//          databaseHelper.getProtectionLocks(),
+//          databaseHelper.getProtections(),
+//          databaseHelper));
+//      plugin.getServiceContext().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
+//      plugin.getServiceContext().getPlayerService().reloadPlayerHomes();
+//    }, 1L);
   }
 }

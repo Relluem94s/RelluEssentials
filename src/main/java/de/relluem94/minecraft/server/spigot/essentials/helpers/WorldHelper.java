@@ -232,7 +232,7 @@ public class WorldHelper {
 
 
   public static void loadWorldGroupInventory(Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService().getPlayerEntry(p);
     for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
       if (wge == null) {
         continue;
@@ -241,7 +241,7 @@ public class WorldHelper {
       for (WorldEntry we : RelluEssentials.getInstance().worldsMap.get(wge)) {
         if (we != null && p.getWorld().getName().equals(we.getName())) {
           WorldGroupInventoryEntry worldGroupInventoryEntry = RelluEssentials.getInstance()
-              .getDatabaseHelper().getWorldGroupInventory(pe, wge);
+              .getServiceContext().getDatabaseHelper().getWorldGroupInventory(pe, wge);
           if (worldGroupInventoryEntry != null) {
             InventoryHelper.createInventory(worldGroupInventoryEntry.getInventory().toString(), p);
             p.setFoodLevel(worldGroupInventoryEntry.getFoodLevel());
@@ -257,7 +257,7 @@ public class WorldHelper {
             worldGroupInventoryEntry.setHealth(p.getHealth());
             worldGroupInventoryEntry.setTotalExperience(ExperienceHelper.getTotalExperience(p));
 
-            RelluEssentials.getInstance().getDatabaseHelper()
+            RelluEssentials.getInstance().getServiceContext().getDatabaseHelper()
                 .insertWorldGroupInventory(worldGroupInventoryEntry);
           }
         }
@@ -273,7 +273,8 @@ public class WorldHelper {
 
   public static boolean saveWorldGroupInventory(Player p, World w, boolean clear) {
     boolean entryUpdated = false;
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext()
+        .getPlayerService().getPlayerEntry(p);
     for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
       if (wge == null) {
         continue;
@@ -291,7 +292,8 @@ public class WorldHelper {
   @SuppressWarnings("unused")
   public static boolean hasWorldGroupInventory(Player p, World w) {
     boolean hasInvInWorldGroup = false;
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext()
+        .getPlayerService().getPlayerEntry(p);
     for (WorldGroupEntry wge : RelluEssentials.getInstance().worldsMap.keySet()) {
       if (wge == null) {
         continue;

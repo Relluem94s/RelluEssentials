@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
@@ -25,9 +26,10 @@ public class BankManager implements Enable {
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
 
-    translationService = relluEssentialsPlugin.getTranslationService();
-    schedulerService = relluEssentialsPlugin.getSchedulerService();
-    bankService = relluEssentialsPlugin.getBankService();
+    ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
+    translationService = serviceContext.getTranslationService();
+    schedulerService = serviceContext.getSchedulerService();
+    bankService = serviceContext.getBankService();
 
     if (relluEssentialsPlugin.isUnitTest()) {
       return;

@@ -10,9 +10,10 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +29,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class DatabaseHelperFactoryTest {
 
     @Mock
-    private PlayerRegistry playerRegistry;
+    private ServiceContext serviceContext;
+
+    @Mock
+    private PlayerService playerService;
 
     @Mock
     private RelluEssentials pluginInstance;
@@ -47,7 +51,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForProduction(
-                    null, -1, null, null, playerRegistry
+                    null, -1, null, null, serviceContext
             );
 
             assertNotNull(databaseHelper);
@@ -60,7 +64,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForTest(
-                    null, -1, playerRegistry
+                    null, -1, serviceContext
             );
 
             assertNotNull(databaseHelper);
@@ -74,7 +78,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForProduction(
-                    "localhost", 3306, "root", "", playerRegistry
+                    "localhost", 3306, "root", "", serviceContext
             );
 
             assertAll(
@@ -90,7 +94,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForTest(
-                    "localhost", 3306, playerRegistry
+                    "localhost", 3306, serviceContext
             );
 
             assertAll(

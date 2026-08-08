@@ -28,7 +28,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
   }
 
   private void addPlayer(@NonNull Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getDatabaseHelper()
+    PlayerEntry pe = serviceContext.getDatabaseHelper()
         .getPlayer(p.getUniqueId().toString());
     if (pe == null) {
       pe = new PlayerEntry();
@@ -39,18 +39,17 @@ public class BetterPlayerJoin implements ListenerConstruct {
       pe.setUuid(p.getUniqueId().toString());
       RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
 
-      pe = RelluEssentials.getInstance().getDatabaseHelper().getPlayer(p.getUniqueId().toString());
+      pe = serviceContext.getDatabaseHelper().getPlayer(p.getUniqueId().toString());
       p.sendMessage(serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
     } else {
       if (pe.getName() == null) {
         pe.setName(p.getName());
-        RelluEssentials.getInstance().getDatabaseHelper().updatePlayer(pe);
-        pe = RelluEssentials.getInstance().getDatabaseHelper()
-            .getPlayer(p.getUniqueId().toString());
+        serviceContext.getDatabaseHelper().updatePlayer(pe);
+        pe = serviceContext.getDatabaseHelper().getPlayer(p.getUniqueId().toString());
       }
     }
 
-    RelluEssentials.getInstance().getPlayerRegistry().putPlayerEntry(p.getUniqueId(), pe);
+    serviceContext.getPlayerService().putPlayerEntry(p.getUniqueId(), pe);
   }
 
   @EventHandler

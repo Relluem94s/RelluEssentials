@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
@@ -28,7 +27,7 @@ public class SignEdit implements ListenerConstruct {
 
   @EventHandler
   public void onChangeSignEditSign(@NotNull PlayerInteractEvent e) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry pe = serviceContext.getPlayerService()
         .getPlayerEntry(e.getPlayer().getUniqueId());
     if (!pe.getPlayerState().equals(PlayerState.DEFAULT) && e.getHand() != null && e.getHand()
         .equals(EquipmentSlot.HAND) && !e.getPlayer().isSneaking() && (

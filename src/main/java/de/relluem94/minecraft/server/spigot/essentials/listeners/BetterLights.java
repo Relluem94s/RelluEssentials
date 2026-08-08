@@ -25,7 +25,7 @@ public class BetterLights implements ListenerConstruct {
 
   @EventHandler
   public void onChangeSignCreateActionSign(PlayerInteractEvent e) {
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry pe = serviceContext.getPlayerService()
         .getPlayerEntry(e.getPlayer().getUniqueId());
     Block b = e.getClickedBlock();
     if (pe.getPlayerState().equals(PlayerState.LIGHT_TOGGLE) && b != null && b.getType()

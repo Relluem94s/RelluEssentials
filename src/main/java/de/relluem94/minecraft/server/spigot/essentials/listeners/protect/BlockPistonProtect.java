@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
@@ -14,15 +13,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockPistonProtect implements ListenerConstruct {
 
+  private ServiceContext serviceContext;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.serviceContext = context;
   }
 
   @EventHandler
   public void onBlockPistonExtend(@NotNull BlockPistonExtendEvent e) {
     for (Block b : e.getBlocks()) {
-      ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
+      ProtectionEntry protection = serviceContext.getProtectionService()
           .getProtectionEntry(b.getLocation());
       if (protection != null || isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)) {
         e.setCancelled(!b.getType().equals(Material.WATER));
@@ -34,7 +35,7 @@ public class BlockPistonProtect implements ListenerConstruct {
   @EventHandler
   public void onBlockPistonRetract(@NotNull BlockPistonRetractEvent e) {
     for (Block b : e.getBlocks()) {
-      ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
+      ProtectionEntry protection = serviceContext.getProtectionService()
           .getProtectionEntry(b.getLocation());
       if (protection != null || isProtected(b, BlockFace.UP) || isProtected(b, BlockFace.DOWN)) {
         e.setCancelled(true);
@@ -44,7 +45,7 @@ public class BlockPistonProtect implements ListenerConstruct {
   }
 
   private boolean isProtected(@NotNull Block b, BlockFace bf) {
-    return RelluEssentials.getInstance().getProtectionRegistry()
+    return serviceContext.getProtectionService()
         .getProtectionEntry(b.getRelative(bf).getLocation()) != null;
   }
 }

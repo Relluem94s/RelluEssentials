@@ -40,10 +40,10 @@ public class NpcGuiCommand implements SubCommand {
         disabledItem.getCustomItem()
     );
 
-    for (int i = 0; i < RelluEssentials.getInstance().getTraderNpcRegistry().getNPCs().size();
+    for (int i = 0; i < serviceContext.getTraderNpcRegistry().getNPCs().size();
         i++) {
       inv.setItem(i,
-          RelluEssentials.getInstance().getTraderNpcRegistry().getNPCs().get(i).getItemHelper()
+          serviceContext.getTraderNpcRegistry().getNPCs().get(i).getItemHelper()
               .getCustomItem());
     }
 

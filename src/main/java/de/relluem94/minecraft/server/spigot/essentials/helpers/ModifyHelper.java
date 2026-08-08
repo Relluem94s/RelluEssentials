@@ -164,13 +164,16 @@ public class ModifyHelper {
   }
 
   public static void checkAndRemoveProtection(Block block) {
-    if (RelluEssentials.getInstance().getProtectionRegistry().isProtectableMaterial(block.getType())) {
-      ProtectionEntry protection = RelluEssentials.getInstance().getProtectionRegistry()
+    if (RelluEssentials.getInstance().getServiceContext().getProtectionService()
+        .isProtectableMaterial(block.getType())) {
+      ProtectionEntry protection = RelluEssentials.getInstance().getServiceContext()
+          .getProtectionService()
           .getProtectionEntry(block.getLocation());
 
       if (protection != null) {
         RelluEssentials.getInstance().getDatabaseHelper().deleteProtection(protection);
-        RelluEssentials.getInstance().getProtectionRegistry().removeProtectionEntry(block.getLocation());
+        RelluEssentials.getInstance().getServiceContext().getProtectionService()
+            .removeProtectionEntry(block.getLocation());
       }
     }
   }

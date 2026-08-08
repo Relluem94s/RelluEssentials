@@ -105,14 +105,14 @@ public class Sudo implements CommandConstruct {
       return true;
     }
 
-    if (RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(target.getId()) == null) {
+    if (serviceContext.getPlayerService().getPlayerEntry(target.getId()) == null) {
       p.sendMessage(
           serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, args[0]));
       return true;
     }
 
-    PlayerEntry tpe = RelluEssentials.getInstance().getPlayerRegistry()
+    PlayerEntry tpe = serviceContext.getPlayerService()
         .getPlayerEntry(target.getId());
     SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
     WorldHelper.saveWorldGroupInventory(p, true);
