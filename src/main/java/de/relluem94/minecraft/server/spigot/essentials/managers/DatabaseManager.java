@@ -17,7 +17,10 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSet
 import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.CropRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.DropRuleRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.sql.SQLException;
@@ -80,14 +83,18 @@ public class DatabaseManager implements Enable {
 
     relluEssentialsPlugin.locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
 
+    DropRuleRepository dropRuleRepository = new DropRuleRepository();
     for (DropEntry de : databaseHelper.getDrops()) {
-      relluEssentialsPlugin.dropMap.put(de.getMaterial(),
-          new DoubleStore<>(de.getMin(), de.getMax()));
+      dropRuleRepository.register(de.getMaterial(), new DoubleStore<>(de.getMin(), de.getMax()));
     }
 
+    CropRepository cropRepository = new CropRepository();
     for (CropEntry ce : databaseHelper.getCrops()) {
-      relluEssentialsPlugin.crops.put(ce.getSeed(), ce.getPlant());
+      cropRepository.register(ce.getSeed(), ce.getPlant());
     }
+
+    BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
+    relluEssentialsPlugin.getServiceContext().setBlockDropService(blockDropService);
 
     relluEssentialsPlugin
         .setProtectionRegistry(new ProtectionRegistry(databaseHelper.getProtectionLocks(),

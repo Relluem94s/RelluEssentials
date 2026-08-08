@@ -9,11 +9,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
-import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -27,11 +24,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class BlockDropItemBags implements ListenerConstruct {
 
-  private final Random random = new Random();
   private final EnchantmentHelper autosmelt;
   private final EnchantmentHelper replenishment;
   private final EnchantmentHelper telekinesis;
-  private BagService bagService;
+  private ServiceContext context;
 
   public BlockDropItemBags() {
     this.autosmelt = EnchantmentRegistry.find(
@@ -50,22 +46,19 @@ public class BlockDropItemBags implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-    bagService = context.getBagService();
+    this.context = context;
   }
 
   @EventHandler
   public void onBlockDrop(@NotNull BlockDropItemEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = RelluEssentials.getInstance().getPlayerRegistry().getPlayerEntry(p);
+    PlayerEntry pe = context.getPlayerService().getPlayerEntry(p);
 
     for (Item i : e.getItems()) {
-      if (RelluEssentials.getInstance().dropMap.containsKey(i.getItemStack().getType())) {
-        if (i.getItemStack().getAmount() == 1) {
-          DoubleStore<Integer, Integer> ds = RelluEssentials.getInstance().dropMap.get(
-              i.getItemStack().getType());
-          i.getItemStack().setAmount(random.nextInt(ds.getSecondValue()) + ds.getValue());
-        }
-      }
+      Material type = i.getItemStack().getType();
+      int resolved = context.getBlockDropService()
+          .resolveDropAmount(type, i.getItemStack().getAmount());
+      i.getItemStack().setAmount(resolved);
     }
 
     if (autosmelt != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
@@ -85,10 +78,9 @@ public class BlockDropItemBags implements ListenerConstruct {
         replenishment)) {
       if (EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(), replenishment)) {
         for (int i = 0; i < e.getItems().size(); i++) {
-          if (e.getItems().get(i) != null && RelluEssentials.getInstance().crops.containsKey(
-              e.getItems().get(i).getItemStack().getType())) {
-            e.getBlock().setType(RelluEssentials.getInstance().crops.get(
-                e.getItems().get(i).getItemStack().getType()));
+          Material type = e.getItems().get(i).getItemStack().getType();
+          if (e.getItems().get(i) != null && context.getBlockDropService().isSeed(type)) {
+            e.getBlock().setType(context.getBlockDropService().getPlantForSeed(type));
 
             if (e.getBlock().getBlockData() instanceof Cocoa c) {
               Block cocoa = e.getBlock();
@@ -114,8 +106,8 @@ public class BlockDropItemBags implements ListenerConstruct {
       }
     }
 
-    if (bagService.hasBags(pe.getId())) {
-      List<Item> lis = bagService.collectItems(e.getItems(), e.getPlayer(), pe);
+    if (context.getBagService().hasBags(pe.getId())) {
+      List<Item> lis = context.getBagService().collectItems(e.getItems(), e.getPlayer(), pe);
       e.getItems().removeAll(lis);
     }
 

@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegi
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
+import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
@@ -50,6 +51,7 @@ public class ServiceContext {
   private BackService backService;
   private TeleportService teleportService;
   private ProtectionActionService protectionActionService;
+  private BlockDropService blockDropService;
 
   private BankerNpc bankerNpc;
 

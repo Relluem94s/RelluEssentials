@@ -73,7 +73,6 @@ import de.relluem94.rellulib.stores.DoubleStore;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -82,7 +81,6 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -104,8 +102,6 @@ public class RelluEssentials extends JavaPlugin {
   public final Set<String> oreRespawn = new HashSet<>();
   public final Set<String> scoreboardShow = new HashSet<>();
   public final Map<Player, DoubleStore<Location, Location>> position = new HashMap<>();
-  public final Map<Material, DoubleStore<Integer, Integer>> dropMap = new EnumMap<>(Material.class);
-  public final Map<Material, Material> crops = new EnumMap<>(Material.class);
 
   @Getter
   public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
