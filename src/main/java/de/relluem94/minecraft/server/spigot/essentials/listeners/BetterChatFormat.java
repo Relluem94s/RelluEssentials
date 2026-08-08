@@ -28,9 +28,9 @@ public class BetterChatFormat implements ListenerConstruct {
     if (serviceContext.getGroupService().isSenderAuthorized(p, "vip")) {
       e.setMessage(StringUtils.replaceSymbols(e.getMessage()));
 
-      Optional<GroupEntry> vip = serviceContext.getGroupRegistry().findByName("vip");
-      Optional<GroupEntry> mod = serviceContext.getGroupRegistry().findByName("vip");
-      Optional<GroupEntry> admin = serviceContext.getGroupRegistry().findByName("vip");
+      Optional<GroupEntry> vip = serviceContext.getGroupService().findGroupByName("vip");
+      Optional<GroupEntry> mod = serviceContext.getGroupService().findGroupByName("mod");
+      Optional<GroupEntry> admin = serviceContext.getGroupService().findGroupByName("admin");
       if (e.getMessage().startsWith(VIP_CHANNEL) && vip.isPresent()
           && serviceContext.getGroupService().isSenderAuthorized(p, "vip")) {
         serviceContext.getChatService().sendMessageInChannel(e.getMessage(), p, VIP_CHANNEL, vip.get());

@@ -5,6 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.Setter;
 import org.bukkit.command.CommandSender;
@@ -45,6 +46,19 @@ public class GroupService {
         .or(() -> groupRegistry.findByName("user"))
         .orElse(new GroupEntry(1, "user", "§8"));
   }
+
+  public Optional<GroupEntry> findGroupById(int id) {
+    return groupRegistry.findById(id);
+  }
+
+  public Optional<GroupEntry> findGroupByName(String name) {
+    return groupRegistry.findByName(name);
+  }
+
+  public List<GroupEntry> findAllGroups() {
+    return groupRegistry.getAll();
+  }
+
 
   public Optional<GroupEntry> resolveAuthorizedGroup(Player player, String groupName) {
     Optional<GroupEntry> groupEntry = groupRegistry.findByName(groupName);

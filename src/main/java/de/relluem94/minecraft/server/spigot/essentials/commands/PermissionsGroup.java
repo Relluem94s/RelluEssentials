@@ -110,7 +110,7 @@ public class PermissionsGroup implements CommandConstruct {
       return TabCompleterHelper.getOnlinePlayers();
     }
 
-    return TabCompleterHelper.getGroups(serviceContext.getGroupRegistry().getAll());
+    return TabCompleterHelper.getGroups(serviceContext.getGroupService().findAllGroups());
   }
 
   private void notifySenderAndTarget(@NotNull CommandSender sender, @NotNull GroupEntry g,
