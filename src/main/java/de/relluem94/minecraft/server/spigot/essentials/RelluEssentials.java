@@ -23,6 +23,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.NpcManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.PositionHighlightManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.RecipeManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
+import de.relluem94.minecraft.server.spigot.essentials.managers.ServiceManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SignManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
@@ -34,39 +35,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInforma
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
-import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
-import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.BackLocationRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.BuyBackRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
-import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
-import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
-import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
-import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
-import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
-import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
-import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
-import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
-import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
-import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
-import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.io.File;
 import java.util.ArrayList;
@@ -154,6 +123,8 @@ public class RelluEssentials extends JavaPlugin {
   private DatabaseManager databaseManager;
   @Getter
   private SudoManager sudoManager;
+  @Getter
+  private ServiceManager serviceManager;
 
   /**
    * Default constructor for the RelluEssentials plugin. Used by the Spigot server to instantiate
@@ -190,31 +161,17 @@ public class RelluEssentials extends JavaPlugin {
   public void onEnable() {
     start = Calendar.getInstance().getTimeInMillis();
     serviceContext = new ServiceContext();
-    String lang = getConfig().getString("language", "en_US");
-
-    TranslationService translationService = new TranslationService(this);
-    translationService.loadLanguages();
-    translationService.setDefaultLanguage(lang);
-    serviceContext.setTranslationService(translationService);
-    RelluEssentialsRegistry.initialize(translationService);
-
+    serviceManager = new ServiceManager();
+    serviceManager.preEnable(this);
     startLoading();
-    SchedulerService schedulerService = new SchedulerService(this);
-    serviceContext.setSchedulerService(schedulerService);
-    UndoHistoryRepository undoHistoryRepository = new UndoHistoryRepository();
-    UndoHistoryService undoHistoryService = new UndoHistoryService(undoHistoryRepository);
-    serviceContext.setUndoHistoryService(undoHistoryService);
-    SelectionService selectionService = new SelectionService(translationService);
-    serviceContext.setSelectionService(selectionService);
+    RelluEssentialsRegistry.initialize(serviceContext.getTranslationService());
 
     configManager = new ConfigManager();
     configManager.enable(this);
-
     enchantmentManager = new EnchantmentManager();
     enchantmentManager.enable(this);
     itemManager = new ItemManager();
     itemManager.enable(this);
-
     databaseManager = new DatabaseManager(
         serviceContext,
         getConfig().getString("database.host"),
@@ -225,44 +182,7 @@ public class RelluEssentials extends JavaPlugin {
     databaseManager.enable(this);
     databaseHelper = databaseManager.getDatabaseHelper();
     serviceContext.setDatabaseHelper(databaseHelper);
-
-    GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
-    GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
-    GroupService groupService = new GroupService(groupRegistry, groupRepository);
-    serviceContext.setGroupService(groupService);
-    PlayerRegistry playerRegistry = new PlayerRegistry();
-    PlayerService playerService = new PlayerService(serviceContext, playerRegistry);
-    serviceContext.setPlayerService(playerService);
-    groupService.setPlayerRegistry(playerRegistry);
-
-    BagRepository bagRepository = new BagRepository(databaseHelper.getBags());
-    BagTypeRepository bagTypeRepository = new BagTypeRepository(databaseHelper.getBagTypes());
-    BagTypeRegistry bagTypeRegistry = new BagTypeRegistry(bagTypeRepository);
-    BagRegistry bagRegistry = new BagRegistry(bagRepository);
-    BagService bagService = new BagService(serviceContext, bagRegistry, bagTypeRegistry);
-    serviceContext.setBagService(bagService);
-
-    BuyBackRepository buyBackRepository = new BuyBackRepository();
-    BuyBackService buyBackService = new BuyBackService(buyBackRepository);
-    serviceContext.setBuyBackService(buyBackService);
-    MessageService messageService = new MessageService(translationService);
-    serviceContext.setMessageService(messageService);
-    ReplyRegistry replyRegistry = new ReplyRegistry();
-    ChatService chatService = new ChatService(serviceContext, replyRegistry);
-    serviceContext.setChatService(chatService);
-    BankService bankService = new BankService(databaseHelper, playerRegistry,
-        new BankTierRegistry(databaseHelper.getBankTiers()), translationService, this);
-    serviceContext.setBankService(bankService);
-
-    BackLocationRepository backLocationRepository = new BackLocationRepository();
-    BackService backService = new BackService(backLocationRepository);
-    serviceContext.setBackService(backService);
-    TeleportService teleportService = new TeleportService(translationService, backService);
-    serviceContext.setTeleportService(teleportService);
-
-    ProtectionActionService protectionActionService = new ProtectionActionService(serviceContext);
-    serviceContext.setProtectionActionService(protectionActionService);
-
+    serviceManager.enable(this);
     commandManager = new CommandManager();
     commandManager.enable(this);
     signManager = new SignManager();
@@ -275,22 +195,12 @@ public class RelluEssentials extends JavaPlugin {
     bankManager.enable(this);
     npcManager = new NpcManager();
     npcManager.enable(this);
-
     listenerManager = new ListenerManager();
     listenerManager.enable(this);
     autoSaveManager = new AutoSaveManager();
     autoSaveManager.enable(this);
-
-    NpcRepository npcRepository = new NpcRepository(databaseHelper);
-    NpcSpawner npcSpawner = new NpcSpawner();
-    NpcValidator npcValidator = new NpcValidator();
-    NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
-    serviceContext.setNpcService(npcService);
-
-    NpcDialogueRegistry npcDialogueRegistry = new NpcDialogueRegistry();
-    NpcDialogueService npcDialogueService = new NpcDialogueService(npcDialogueRegistry);
-    serviceContext.setNpcDialogueService(npcDialogueService);
-
+    scoreBoardManager = new ScoreBoardManager();
+    scoreBoardManager.enable(this);
     stopLoading();
     worldManager = new WorldManager();
     worldManager.enable(this);
@@ -298,9 +208,6 @@ public class RelluEssentials extends JavaPlugin {
     groupManager.enable(this);
     positionHighlightManager = new PositionHighlightManager();
     positionHighlightManager.enable(this);
-    scoreBoardManager = new ScoreBoardManager();
-    scoreBoardManager.enable(this);
-    databaseManager.afterWorldLoaded(this);
     serviceContext.getSchedulerService()
         .runTaskLater(() -> serviceContext.getNpcService().loadAndSpawnNpcsInLoadedChunks(), 20L);
   }

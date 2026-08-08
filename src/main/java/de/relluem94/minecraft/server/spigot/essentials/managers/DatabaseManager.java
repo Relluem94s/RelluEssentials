@@ -145,19 +145,4 @@ public class DatabaseManager implements Enable {
 
 
   }
-
-  /**
-   * Initializes registries and repositories after the world has been loaded. Runs with a 1-tick
-   * delay to ensure the world is fully available.
-   */
-  public void afterWorldLoaded(@NonNull RelluEssentials plugin) {
-//    plugin.getServiceContext().getSchedulerService().runTaskLater(() -> {
-//      plugin.getServiceContext().setProtectionService(new ProtectionService(
-//          databaseHelper.getProtectionLocks(),
-//          databaseHelper.getProtections(),
-//          databaseHelper));
-//      plugin.getServiceContext().setWarpRepository(new WarpRepository(databaseHelper.getWarps()));
-//      plugin.getServiceContext().getPlayerService().reloadPlayerHomes();
-//    }, 1L);
-  }
 }
