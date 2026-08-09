@@ -34,7 +34,10 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ServiceContext {
+  /* TEMP DatabaseHelper*/
+  private DatabaseHelper databaseHelper;
 
+  /* Services */
   private TranslationService translationService;
   private GroupService groupService;
   private PlayerService playerService;
@@ -42,7 +45,6 @@ public class ServiceContext {
   private BuyBackService buyBackService;
   private NpcService npcService;
   private SchedulerService schedulerService;
-  private DatabaseHelper databaseHelper;
   private ProtectionService protectionService;
   private UndoHistoryService undoHistoryService;
   private SelectionService selectionService;
