@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -57,7 +56,7 @@ public class Position implements CommandConstruct {
     Player p = (Player) commandSender;
 
     if (strings.length == 0) {
-      if (!RelluEssentials.getInstance().position.containsKey(p)) {
+      if (!serviceContext.getPositionService().hasPositions(p)) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_POSITION_NO_POSITIONS));
         return true;
@@ -66,8 +65,10 @@ public class Position implements CommandConstruct {
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_POSITION_INFO_1));
 
-      Location first = RelluEssentials.getInstance().position.get(p).getValue();
-      Location second = RelluEssentials.getInstance().position.get(p).getSecondValue();
+      DoubleStore<Location, Location> positions = serviceContext.getPositionService()
+          .getPositions(p);
+      Location first = positions.getValue();
+      Location second = positions.getSecondValue();
 
       String notAvailable = serviceContext.getTranslationService()
           .get(MessageKey.COMMAND_POSITION_NO_POSITIONS);
@@ -87,12 +88,7 @@ public class Position implements CommandConstruct {
     }
 
     String cmd = strings[0].toLowerCase();
-
-    if (!RelluEssentials.getInstance().position.containsKey(p)) {
-      RelluEssentials.getInstance().position.put(p, new DoubleStore<>(null, null));
-    }
-
-    DoubleStore<Location, Location> positions = RelluEssentials.getInstance().position.get(p);
+    serviceContext.getPositionService().ensurePositionsExist(p);
 
     if (cmd.equals(Commands.CLEAR.getName())) {
       if (strings.length != 1) {
@@ -100,7 +96,7 @@ public class Position implements CommandConstruct {
             .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
         return true;
       }
-      RelluEssentials.getInstance().position.put(p, new DoubleStore<>(null, null));
+      serviceContext.getPositionService().clearPositions(p);
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_POSITION_CLEAR));
       return true;
@@ -115,12 +111,12 @@ public class Position implements CommandConstruct {
       String sub = strings[1].toLowerCase();
       Location location = PlayerHelper.getLookingLocation(p, 100);
       if (sub.equals(Commands.SET.getSubCommands()[0])) {
-        positions.setValue(location);
+        serviceContext.getPositionService().setFirstPosition(p, location);
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_POSITION_SET_FIRST,
                 serviceContext.getMessageService().locationToString(location)));
       } else if (sub.equals(Commands.SET.getSubCommands()[1])) {
-        positions.setSecondValue(location);
+        serviceContext.getPositionService().setSecondPosition(p, location);
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_POSITION_SET_SECOND,
                 serviceContext.getMessageService().locationToString(location)));
@@ -139,11 +135,11 @@ public class Position implements CommandConstruct {
       }
       String sub = strings[1].toLowerCase();
       if (sub.equals(Commands.REMOVE.getSubCommands()[0])) {
-        positions.setValue(null);
+        serviceContext.getPositionService().removeFirstPosition(p);
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_FIRST));
       } else if (sub.equals(Commands.REMOVE.getSubCommands()[1])) {
-        positions.setSecondValue(null);
+        serviceContext.getPositionService().removeSecondPosition(p);
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_POSITION_REMOVE_SECOND));
       } else {
@@ -169,64 +165,33 @@ public class Position implements CommandConstruct {
     }
 
     Vector direction = getPlayerDirection(p);
-    Location first = positions.getValue();
-    Location second = positions.getSecondValue();
     if (cmd.equals(Commands.SHIFT.getName())) {
-      if (first == null && second == null) {
+      DoubleStore<Location, Location> positions = serviceContext.getPositionService()
+          .getPositions(p);
+      if (positions.getValue() == null && positions.getSecondValue() == null) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_POSITION_NO_POSITIONS));
         return true;
       }
 
-      if (first != null) {
-        Vector offset = direction.clone().multiply(amount);
-        first.setX(Math.round(first.getX() + offset.getX()));
-        first.setY(Math.round(first.getY() + offset.getY()));
-        first.setZ(Math.round(first.getZ() + offset.getZ()));
-        positions.setValue(first);
-      }
-
-      if (second != null) {
-        Vector offset = direction.clone().multiply(amount);
-        second.setX(Math.round(second.getX() + offset.getX()));
-        second.setY(Math.round(second.getY() + offset.getY()));
-        second.setZ(Math.round(second.getZ() + offset.getZ()));
-        positions.setSecondValue(second);
-      }
-
+      serviceContext.getPositionService().shiftPositions(p, direction, amount);
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_POSITION_SHIFT, amount));
       return true;
     }
 
     if (cmd.equals(Commands.EXPAND.getName()) || cmd.equals(Commands.DECREASE.getName())) {
-      if (first == null || second == null) {
+      DoubleStore<Location, Location> positions = serviceContext.getPositionService()
+          .getPositions(p);
+      if (positions.getValue() == null || positions.getSecondValue() == null) {
         p.sendMessage(
             serviceContext.getTranslationService()
                 .getWithPrefix(MessageKey.COMMAND_POSITION_NEED_BOTH_POSITIONS));
         return true;
       }
 
-      Location playerLoc = p.getLocation();
-
-      Vector playerVec = playerLoc.toVector();
-      double projFirst = direction.dot(first.toVector().subtract(playerVec));
-      double projSecond = direction.dot(second.toVector().subtract(playerVec));
-
-      Location farther = projFirst > projSecond ? first : second;
-
-      int multiplier = cmd.equals(Commands.EXPAND.getName()) ? 1 : -1;
-
-      Vector offset = direction.clone().multiply(amount * multiplier);
-      farther.setX(Math.round(farther.getX() + offset.getX()));
-      farther.setY(Math.round(farther.getY() + offset.getY()));
-      farther.setZ(Math.round(farther.getZ() + offset.getZ()));
-
-      if (farther == first) {
-        positions.setValue(farther);
-      } else {
-        positions.setSecondValue(farther);
-      }
+      serviceContext.getPositionService().expandOrDecreasePositions(p, direction, amount,
+          cmd.equals(Commands.EXPAND.getName()));
 
       MessageKey actionKey =
           cmd.equals(Commands.EXPAND.getName()) ? MessageKey.COMMAND_POSITION_EXPAND

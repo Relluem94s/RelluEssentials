@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import org.bukkit.Location;
@@ -9,34 +9,34 @@ import org.jetbrains.annotations.Nullable;
 
 public class SelectionService {
 
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
 
-  public SelectionService(TranslationService translationService) {
-    this.translationService = translationService;
+  public SelectionService(ServiceContext serviceContext) {
+    this.serviceContext = serviceContext;
   }
 
   public @Nullable Selection resolve(Player player) {
-    if (!RelluEssentials.getInstance().position.containsKey(player)) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_NO_POSITIONS));
+    if (!serviceContext.getPositionService().hasPositions(player)) {
+      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_NO_POSITIONS));
       return null;
     }
 
-    Location pos1 = RelluEssentials.getInstance().position.get(player).getValue();
-    Location pos2 = RelluEssentials.getInstance().position.get(player).getSecondValue();
+    Location pos1 = serviceContext.getPositionService().getPositions(player).getValue();
+    Location pos2 = serviceContext.getPositionService().getPositions(player).getSecondValue();
 
     if (pos1 == null) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_POS_1_EMPTY));
+      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_POS_1_EMPTY));
       return null;
     }
 
     if (pos2 == null) {
-      player.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_POS_2_EMPTY));
+      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_POS_2_EMPTY));
       return null;
     }
 
     if (pos1.getWorld() != pos2.getWorld()) {
       player.sendMessage(
-          translationService.getWithPrefix(MessageKey.COMMAND_MODIFY_DIFFERENT_WORLDS));
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_DIFFERENT_WORLDS));
       return null;
     }
 

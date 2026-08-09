@@ -18,7 +18,6 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.DatabaseManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.EnchantmentManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ItemManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ListenerManager;
-import de.relluem94.minecraft.server.spigot.essentials.managers.PositionHighlightManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.RecipeManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.ServiceManager;
@@ -45,7 +44,6 @@ import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -66,7 +64,6 @@ public class RelluEssentials extends JavaPlugin {
   public final Set<String> deathCreateHome = new HashSet<>();
   public final Set<String> oreRespawn = new HashSet<>();
   public final Set<String> scoreboardShow = new HashSet<>();
-  public final Map<Player, DoubleStore<Location, Location>> position = new HashMap<>();
 
   @Getter
   public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
@@ -107,8 +104,6 @@ public class RelluEssentials extends JavaPlugin {
   private EnchantmentManager enchantmentManager;
   @Getter
   private WorldManager worldManager;
-  @Getter
-  private PositionHighlightManager positionHighlightManager;
   @Getter
   private ScoreBoardManager scoreBoardManager;
   @Getter
@@ -196,8 +191,6 @@ public class RelluEssentials extends JavaPlugin {
     stopLoading();
     worldManager = new WorldManager();
     worldManager.enable(this);
-    positionHighlightManager = new PositionHighlightManager();
-    positionHighlightManager.enable(this);
     serviceContext.getSchedulerService()
         .runTaskLater(() -> serviceContext.getNpcService().loadAndSpawnNpcsInLoadedChunks(), 20L);
   }

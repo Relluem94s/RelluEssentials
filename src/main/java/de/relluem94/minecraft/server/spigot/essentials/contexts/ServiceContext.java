@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
@@ -56,6 +57,7 @@ public class ServiceContext {
   private WarpService warpService;
   private NpcDialogueService npcDialogueService;
   private TraderNpcService traderNpcService;
+  private PositionService positionService;
 
   /**
    * Creates a new ServiceContext.
