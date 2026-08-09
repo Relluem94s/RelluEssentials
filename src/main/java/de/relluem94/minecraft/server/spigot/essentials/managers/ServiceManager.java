@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegist
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.PositionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BackLocationRepository;
@@ -42,6 +43,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
@@ -101,8 +103,7 @@ public class ServiceManager implements Enable {
     UndoHistoryRepository undoHistoryRepository = new UndoHistoryRepository();
     UndoHistoryService undoHistoryService = new UndoHistoryService(undoHistoryRepository);
     serviceContext.setUndoHistoryService(undoHistoryService);
-    SelectionService selectionService = new SelectionService(
-        serviceContext.getTranslationService());
+    SelectionService selectionService = new SelectionService(serviceContext);
     serviceContext.setSelectionService(selectionService);
     GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
     GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
@@ -156,6 +157,12 @@ public class ServiceManager implements Enable {
     NpcDialogueService npcDialogueService = new NpcDialogueService(npcDialogueRegistry);
     serviceContext.setNpcDialogueService(npcDialogueService);
 
+    PositionRegistry positionRegistry = new PositionRegistry();
+    PositionService positionService = new PositionService(positionRegistry,
+        serviceContext.getTranslationService());
+    serviceContext.getSchedulerService()
+        .runTaskTimer(() -> positionService.tickHighlights(), 0L, 20L);
+    serviceContext.setPositionService(positionService);
   }
 
   public void preEnable(RelluEssentials relluEssentials) {
