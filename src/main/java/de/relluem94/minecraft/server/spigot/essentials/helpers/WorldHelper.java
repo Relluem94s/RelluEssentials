@@ -302,7 +302,7 @@ public class WorldHelper {
       for (WorldEntry we : RelluEssentials.getInstance().worldsMap.get(wge)) {
         if (we != null && w.getName().equals(we.getName())) {
           WorldGroupInventoryEntry worldGroupInventoryEntry = RelluEssentials.getInstance()
-              .getDatabaseHelper().getWorldGroupInventory(pe, wge);
+              .getServiceContext().getDatabaseHelper().getWorldGroupInventory(pe, wge);
           if (worldGroupInventoryEntry != null) {
             hasInvInWorldGroup = true;
           }
@@ -315,7 +315,7 @@ public class WorldHelper {
   private static boolean savePlayerInv(WorldGroupEntry wge, PlayerEntry pe, Player p,
       boolean clear) {
     WorldGroupInventoryEntry worldGroupInventoryEntry = RelluEssentials.getInstance()
-        .getDatabaseHelper().getWorldGroupInventory(pe, wge);
+        .getServiceContext().getDatabaseHelper().getWorldGroupInventory(pe, wge);
     if (worldGroupInventoryEntry == null) {
       worldGroupInventoryEntry = new WorldGroupInventoryEntry();
       worldGroupInventoryEntry.setCreatedBy(pe.getId());
@@ -335,7 +335,7 @@ public class WorldHelper {
         p.getInventory().clear();
       }
 
-      RelluEssentials.getInstance().getDatabaseHelper()
+      RelluEssentials.getInstance().getServiceContext().getDatabaseHelper()
           .insertWorldGroupInventory(worldGroupInventoryEntry);
       return false;
     }
@@ -355,7 +355,7 @@ public class WorldHelper {
       p.getInventory().clear();
     }
 
-    RelluEssentials.getInstance().getDatabaseHelper()
+    RelluEssentials.getInstance().getServiceContext().getDatabaseHelper()
         .updateWorldGroupInventory(worldGroupInventoryEntry);
     return true;
   }

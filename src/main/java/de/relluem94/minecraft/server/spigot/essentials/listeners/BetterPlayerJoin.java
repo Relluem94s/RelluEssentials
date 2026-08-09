@@ -37,10 +37,11 @@ public class BetterPlayerJoin implements ListenerConstruct {
       pe.setCustomName(p.getDisplayName());
       pe.setGroup(serviceContext.getGroupService().resolveGroupWithFallback("user"));
       pe.setUuid(p.getUniqueId().toString());
-      RelluEssentials.getInstance().getDatabaseHelper().insertPlayer(pe);
+      serviceContext.getDatabaseHelper().insertPlayer(pe);
 
       pe = serviceContext.getDatabaseHelper().getPlayer(p.getUniqueId().toString());
-      p.sendMessage(serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
+      p.sendMessage(
+          serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
     } else {
       if (pe.getName() == null) {
         pe.setName(p.getName());
@@ -69,7 +70,8 @@ public class BetterPlayerJoin implements ListenerConstruct {
     serviceContext.getPlayerService().setFlying(p);
     serviceContext.getPlayerService().setAFK(p, true);
     Bukkit.broadcastMessage(
-        serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
+        serviceContext.getTranslationService()
+            .get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
 
     WorldHelper.loadWorldGroupInventory(p);
 
@@ -79,8 +81,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
       PlayerHelper.setLobbyItems(p);
     }
 
-    Bukkit.getScheduler().runTaskLater(
-        RelluEssentials.getInstance(),
+    serviceContext.getSchedulerService().runTaskLater(
         () -> ScoreBoardManager.applyToPlayer(e.getPlayer()),
         10L
     );
@@ -93,7 +94,8 @@ public class BetterPlayerJoin implements ListenerConstruct {
 
     if (onlinePlayers >= maxPlayers) {
       e.disallow(PlayerLoginEvent.Result.KICK_FULL,
-          serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN));
+          serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN));
     }
   }
 

@@ -75,8 +75,6 @@ public class RelluEssentials extends JavaPlugin {
   @Getter
   private ServiceContext serviceContext;
 
-  @Getter
-  private DatabaseHelper databaseHelper;
   @Setter
   @Getter
   private PluginInformationEntry pluginInformation;
@@ -169,7 +167,7 @@ public class RelluEssentials extends JavaPlugin {
         (getConfig().getInt("database.port"))
     );
     databaseManager.enable(this);
-    databaseHelper = databaseManager.getDatabaseHelper();
+    DatabaseHelper databaseHelper = databaseManager.getDatabaseHelper();
     serviceContext.setDatabaseHelper(databaseHelper);
     serviceManager.enable(this);
     commandManager = new CommandManager();

@@ -54,7 +54,7 @@ public class Home implements CommandConstruct {
     }
 
     PlayerEntry pe = serviceContext.getPlayerService()
-.getPlayerEntry(p);
+        .getPlayerEntry(p);
 
     switch (args.length) {
       case 0:
@@ -103,7 +103,7 @@ public class Home implements CommandConstruct {
                 serviceContext.getTranslationService()
                     .getWithPrefix(MessageKey.COMMAND_HOME_EXISTS, args[1]));
           } else if (!args[1].startsWith("death_")) {
-            RelluEssentials.getInstance().getDatabaseHelper().insertLocation(le);
+            serviceContext.getDatabaseHelper().insertLocation(le);
             pe.getHomes().add(le);
             p.sendMessage(serviceContext.getTranslationService()
                 .getWithPrefix(MessageKey.COMMAND_HOME_SET, args[1]));
@@ -125,7 +125,7 @@ public class Home implements CommandConstruct {
               return true;
             }
 
-            RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
+            serviceContext.getDatabaseHelper().deleteLocation(le);
             return true;
           } else if (deathExists(pe, le)) {
             le = getLocationEntry(pe, le);
@@ -138,7 +138,7 @@ public class Home implements CommandConstruct {
               return true;
             }
 
-            RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(le);
+            serviceContext.getDatabaseHelper().deleteLocation(le);
             return true;
           } else if (le.getLocationName().startsWith("death_") && le.getLocationName()
               .contains("*")) {
@@ -146,7 +146,7 @@ public class Home implements CommandConstruct {
               p.sendMessage(serviceContext.getTranslationService()
                   .getWithPrefix(MessageKey.COMMAND_HOME_DEATH_DELETE,
                       dle.getLocationName()));
-              RelluEssentials.getInstance().getDatabaseHelper().deleteLocation(dle);
+              serviceContext.getDatabaseHelper().deleteLocation(dle);
             }
             pe.getDeaths().clear();
             return true;
