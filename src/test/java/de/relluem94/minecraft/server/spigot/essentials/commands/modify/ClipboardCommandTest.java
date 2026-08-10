@@ -14,7 +14,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
-import java.util.HashMap;
 import java.util.List;
 import org.bukkit.entity.Player;
 import org.junit.jupiter.api.AfterEach;
@@ -55,7 +54,6 @@ class ClipboardCommandTest {
 
   @Test
   void execute_withNoClipboardEntry_sendsNoClipboardMessage() {
-    relluEssentialsMock.clipboard = new HashMap<>();
 
     clipboardCommand.execute(player, new String[]{"clipboard", "rotate"});
 
@@ -64,9 +62,8 @@ class ClipboardCommandTest {
 
   @Test
   void execute_withNullClipboardList_sendsNoClipboardMessage() {
-    relluEssentialsMock.clipboard = new HashMap<>();
     Selection selectionMock = mock(Selection.class);
-    relluEssentialsMock.clipboard.put(player, new DoubleStore<>(selectionMock, null));
+    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, null));
 
     clipboardCommand.execute(player, new String[]{"clipboard", "rotate"});
 
@@ -75,9 +72,8 @@ class ClipboardCommandTest {
 
   @Test
   void execute_withEmptyClipboardList_sendsNoClipboardMessage() {
-    relluEssentialsMock.clipboard = new HashMap<>();
     Selection selectionMock = mock(Selection.class);
-    relluEssentialsMock.clipboard.put(player, new DoubleStore<>(selectionMock, List.of()));
+    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, List.of()));
 
     clipboardCommand.execute(player, new String[]{"clipboard", "rotate"});
 
@@ -86,11 +82,10 @@ class ClipboardCommandTest {
 
   @Test
   void execute_withValidClipboard_rotatesAndUpdatesClipboard() {
-    relluEssentialsMock.clipboard = new HashMap<>();
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
     List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
-    relluEssentialsMock.clipboard.put(player, new DoubleStore<>(selectionMock, clipboardList));
+    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, clipboardList));
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {

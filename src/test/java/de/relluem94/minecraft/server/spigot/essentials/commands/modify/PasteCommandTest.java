@@ -26,8 +26,9 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -87,8 +88,6 @@ class PasteCommandTest {
     relluEssentialsMock = mock(RelluEssentials.class);
     TranslationService translationServiceMock = mock(TranslationService.class);
 
-    relluEssentialsMock.clipboard = new ConcurrentHashMap<>();
-
     mockedRelluEssentials = mockStatic(RelluEssentials.class);
     mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
 
@@ -98,6 +97,9 @@ class PasteCommandTest {
     schedulerMock = mock(BukkitScheduler.class);
     Server serverMock = mock(Server.class);
     when(serverMock.getScheduler()).thenReturn(schedulerMock);
+
+    Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
+    when(relluEssentialsMock.getClipboard()).thenReturn(clipboard);
 
     doAnswer(invocation -> {
       Runnable task = invocation.getArgument(1);
@@ -140,7 +142,7 @@ class PasteCommandTest {
   void execute_withClipboardStoreHavingNullEntries_sendsNoClipboardMessage() {
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock(DoubleStore.class);
     when(clipboardStore.getSecondValue()).thenReturn(null);
-    relluEssentialsMock.clipboard.put(player, clipboardStore);
+    relluEssentialsMock.getClipboard().put(player, clipboardStore);
 
     pasteCommand.execute(player, new String[]{"paste"});
 
@@ -152,7 +154,7 @@ class PasteCommandTest {
   void execute_withEmptyClipboard_sendsNoClipboardMessage() {
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock(DoubleStore.class);
     when(clipboardStore.getSecondValue()).thenReturn(Collections.emptyList());
-    relluEssentialsMock.clipboard.put(player, clipboardStore);
+    relluEssentialsMock.getClipboard().put(player, clipboardStore);
 
     pasteCommand.execute(player, new String[]{"paste"});
 
@@ -165,7 +167,7 @@ class PasteCommandTest {
     ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
-    relluEssentialsMock.clipboard.put(player, clipboardStore);
+    relluEssentialsMock.getClipboard().put(player, clipboardStore);
 
     Block targetBlock = buildBlock(Material.AIR, 0, 64, 0);
 
@@ -191,7 +193,7 @@ class PasteCommandTest {
 
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore =
         buildClipboardStore(List.of(firstEntry, secondEntry, thirdEntry));
-    relluEssentialsMock.clipboard.put(player, clipboardStore);
+    relluEssentialsMock.getClipboard().put(player, clipboardStore);
 
     Block firstBlock = buildBlock(Material.AIR, 0, 64, 0);
     Block secondBlock = buildBlock(Material.AIR, 1, 64, 0);
@@ -218,7 +220,7 @@ class PasteCommandTest {
     ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
-    relluEssentialsMock.clipboard.put(player, clipboardStore);
+    relluEssentialsMock.getClipboard().put(player, clipboardStore);
 
     Material originalMaterial = Material.DIRT;
     Block targetBlock = buildBlock(originalMaterial, 0, 64, 0);
@@ -244,7 +246,7 @@ class PasteCommandTest {
     ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
-    relluEssentialsMock.clipboard.put(player, clipboardStore);
+    relluEssentialsMock.getClipboard().put(player, clipboardStore);
 
     Block targetBlock = buildBlock(Material.AIR, 0, 64, 0);
 
@@ -271,7 +273,7 @@ class PasteCommandTest {
 
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore =
         buildClipboardStore(List.of(firstEntry, secondEntry, thirdEntry));
-    relluEssentialsMock.clipboard.put(player, clipboardStore);
+    relluEssentialsMock.getClipboard().put(player, clipboardStore);
 
     Block firstBlock = buildBlock(Material.AIR, 0, 64, 0);
     Block secondBlock = buildBlock(Material.AIR, 1, 64, 0);

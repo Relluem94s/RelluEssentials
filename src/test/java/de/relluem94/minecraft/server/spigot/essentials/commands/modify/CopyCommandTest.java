@@ -22,7 +22,6 @@ import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 import org.bukkit.Bukkit;
@@ -130,11 +129,10 @@ class CopyCommandTest {
   @Test
   void execute_copy_withValidSelection_storesClipboardAndSendsMessage() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
-    relluEssentialsMock.clipboard = new HashMap<>();
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
     List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
-    relluEssentialsMock.clipboard.put(player, new DoubleStore<>(selectionMock, clipboardList));
+    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, clipboardList));
 
     Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
     when(selectionService.resolve(player)).thenReturn(selection);
@@ -167,11 +165,10 @@ class CopyCommandTest {
   @Test
   void execute_cut_withValidSelection_clearsBlocksAndAddsHistory() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
-    relluEssentialsMock.clipboard = new HashMap<>();
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
     List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
-    relluEssentialsMock.clipboard.put(player, new DoubleStore<>(selectionMock, clipboardList));
+    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, clipboardList));
 
     Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
     when(selectionService.resolve(player)).thenReturn(selection);

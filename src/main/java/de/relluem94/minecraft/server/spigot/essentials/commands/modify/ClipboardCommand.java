@@ -25,7 +25,7 @@ public class ClipboardCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardEntry = RelluEssentials.getInstance().clipboard.get(
+    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardEntry = RelluEssentials.getInstance().getClipboard().get(
         player);
     if (clipboardEntry == null || clipboardEntry.getSecondValue() == null
         || clipboardEntry.getSecondValue().isEmpty()) {
@@ -33,7 +33,7 @@ public class ClipboardCommand implements SubCommand {
       return;
     }
 
-    RelluEssentials.getInstance().clipboard.put(player,
+    RelluEssentials.getInstance().getClipboard().put(player,
         rotate(clipboardEntry.getSecondValue(), clipboardEntry.getValue()));
     player.sendMessage(
         serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS));

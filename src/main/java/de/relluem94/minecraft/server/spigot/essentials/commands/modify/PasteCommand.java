@@ -32,7 +32,7 @@ public class PasteCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = RelluEssentials.getInstance().clipboard.get(
+    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = RelluEssentials.getInstance().getClipboard().get(
         player);
     if (clipboardStore == null || clipboardStore.getSecondValue() == null
         || clipboardStore.getSecondValue().isEmpty()) {

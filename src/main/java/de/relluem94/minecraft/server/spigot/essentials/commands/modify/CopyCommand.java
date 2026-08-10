@@ -73,7 +73,7 @@ public class CopyCommand implements SubCommand {
       serviceContext.getUndoHistoryService().addHistory(player, history);
     }
 
-    RelluEssentials.getInstance().clipboard.put(player,
+    RelluEssentials.getInstance().getClipboard().put(player,
         new DoubleStore<>(newSelection, clipboardList));
     player.sendMessage(
         isCut
