@@ -25,8 +25,8 @@ public class BetterWorlds implements ListenerConstruct {
   public void onWorldChange(@NonNull PlayerChangedWorldEvent e) {
     Player p = e.getPlayer();
 
-    WorldHelper.saveWorldGroupInventory(p, e.getFrom(), true);
-    WorldHelper.loadWorldGroupInventory(p);
+    serviceContext.getWorldGroupService().saveWorldGroupInventoryForPlayerInWorld(p, e.getFrom(), true);
+    serviceContext.getWorldGroupService().loadWorldGroupInventoryForPlayer(p);
 
     String newWorld = p.getWorld().getName();
     ScoreBoardManager.setScoreboardVisible(p, serviceContext.getWorldGroupService()

@@ -4,7 +4,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
+import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
@@ -20,9 +22,11 @@ import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.plugin.Plugin;
 
+
 public class WorldManager implements Enable, Disable {
 
   private final Random r = new Random();
+  private ServiceContext serviceContext;
 
   @Override
   public void enable(Plugin plugin) {
@@ -30,14 +34,17 @@ public class WorldManager implements Enable, Disable {
     if (relluEssentialsPlugin.isUnitTest()) {
       return;
     }
+    serviceContext = relluEssentialsPlugin.getServiceContext();
 
+    Multimap<WorldGroupEntry, WorldEntry> worldsMap = serviceContext.getWorldGroupService().getWorldsMap();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        PLUGIN_COLOR_COMMAND + "Worlds Size: " + relluEssentialsPlugin.worldsMap.size());
-    for (WorldGroupEntry wge : relluEssentialsPlugin.worldsMap.keySet()) {
+        PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
+
+    for (WorldGroupEntry wge : worldsMap.keySet()) {
       if (wge == null) {
         continue;
       }
-      for (WorldEntry we : RelluEssentials.getInstance().worldsMap.get(wge)) {
+      for (WorldEntry we : worldsMap.get(wge)) {
         if (we != null && !WorldHelper.worldExists(we.getName())) {
           createWorld(we);
           continue;
@@ -59,12 +66,14 @@ public class WorldManager implements Enable, Disable {
     if (relluEssentialsPlugin.isUnitTest()) {
       return;
     }
-    for (WorldGroupEntry wge : relluEssentialsPlugin.worldsMap.keySet()) {
+
+    Multimap<WorldGroupEntry, WorldEntry> worldsMap = serviceContext.getWorldGroupService().getWorldsMap();
+    for (WorldGroupEntry wge : worldsMap.keySet()) {
       if (wge == null) {
         continue;
       }
 
-      for (WorldEntry we : relluEssentialsPlugin.worldsMap.get(wge)) {
+      for (WorldEntry we : worldsMap.get(wge)) {
         try {
           if (we == null) {
             return;

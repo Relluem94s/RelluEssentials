@@ -5,8 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
@@ -29,19 +27,14 @@ import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -55,10 +48,7 @@ import org.bukkit.plugin.java.JavaPluginLoader;
  */
 public class RelluEssentials extends JavaPlugin {
 
-  public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
   private static RelluEssentials instance;
-  public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
-  public final Set<String> scoreboardShow = new HashSet<>();
 
   @Getter
   public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();

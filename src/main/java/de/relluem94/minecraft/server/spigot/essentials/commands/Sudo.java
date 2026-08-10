@@ -8,14 +8,11 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +30,10 @@ public class Sudo implements CommandConstruct {
 
   private ServiceContext serviceContext;
 
-  public static void exitSudo(@NotNull Player p, TranslationService translationService,
-      PlayerService playerService) {
+  public static void exitSudo(@NotNull Player p, ServiceContext serviceContext) {
     PlayerEntry tpe = SudoManager.sudoers.get(p.getUniqueId());
-    PlayerEntry pe = playerService.getPlayerEntry(p);
-    WorldHelper.saveWorldGroupInventory(p, true);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
+    serviceContext.getWorldGroupService().saveWorldGroupInventoryForPlayer(p, true);
     pe.setId(tpe.getId());
     pe.setCustomName(tpe.getCustomName());
     pe.setGroup(tpe.getGroup());
@@ -47,9 +43,9 @@ public class Sudo implements CommandConstruct {
     if (tpe.getCustomName() != null) {
       p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
     }
-    WorldHelper.loadWorldGroupInventory(p);
+    serviceContext.getWorldGroupService().loadWorldGroupInventoryForPlayer(p);
     SudoManager.sudoers.remove(p.getUniqueId());
-    p.sendMessage(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_DEACTIVATED));
+    p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_SUDO_DEACTIVATED));
   }
 
   @Override
@@ -92,7 +88,7 @@ public class Sudo implements CommandConstruct {
     }
 
     if (SudoManager.sudoers.containsKey(p.getUniqueId())) {
-      exitSudo(p, serviceContext.getTranslationService(), serviceContext.getPlayerService());
+      exitSudo(p, serviceContext);
       return true;
     }
 
@@ -116,7 +112,7 @@ public class Sudo implements CommandConstruct {
     PlayerEntry tpe = serviceContext.getPlayerService()
         .getPlayerEntry(target.getId());
     SudoManager.sudoers.put(p.getUniqueId(), new PlayerEntry(pe));
-    WorldHelper.saveWorldGroupInventory(p, true);
+    serviceContext.getWorldGroupService().saveWorldGroupInventoryForPlayer(p, true);
     pe.setId(tpe.getId());
     pe.setCustomName(tpe.getCustomName());
     pe.setGroup(tpe.getGroup());
@@ -126,7 +122,7 @@ public class Sudo implements CommandConstruct {
     if (tpe.getCustomName() != null) {
       p.setCustomName(tpe.getGroup().getPrefix() + tpe.getCustomName());
     }
-    WorldHelper.loadWorldGroupInventory(p);
+    serviceContext.getWorldGroupService().loadWorldGroupInventoryForPlayer(p);
     p.sendMessage(
         serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_SUDO_ACTIVATED,
             tpe.getGroup().getPrefix() + target.getName()));

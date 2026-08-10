@@ -73,7 +73,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
         serviceContext.getTranslationService()
             .get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
 
-    WorldHelper.loadWorldGroupInventory(p);
+    serviceContext.getWorldGroupService().loadWorldGroupInventoryForPlayer(p);
 
     serviceContext.getBankService().payInterestToPlayer(e.getPlayer());
 
