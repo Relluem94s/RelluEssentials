@@ -6,7 +6,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Exceptio
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -194,7 +193,7 @@ public class PlayerService {
     int updatedPlayers = 0;
 
     for (Player p : Bukkit.getOnlinePlayers()) {
-      updatedPlayers += WorldHelper.saveWorldGroupInventory(p, false) ? 1 : 0;
+      updatedPlayers += serviceContext.getWorldGroupService().saveWorldGroupInventoryForPlayer(p, false) ? 1 : 0;
     }
 
     if (updatedPlayers != 0) {

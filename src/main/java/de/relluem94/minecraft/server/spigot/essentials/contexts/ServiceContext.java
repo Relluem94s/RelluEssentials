@@ -19,11 +19,13 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionAction
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -60,6 +62,8 @@ public class ServiceContext {
   private NpcDialogueService npcDialogueService;
   private TraderNpcService traderNpcService;
   private PositionService positionService;
+  private SettingService settingService;
+  private WorldGroupService worldGroupService;
 
   /**
    * Creates a new ServiceContext.

@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -14,21 +14,23 @@ import org.jspecify.annotations.NonNull;
 
 public class BetterWorlds implements ListenerConstruct {
 
+  private ServiceContext serviceContext;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.serviceContext = context;
   }
 
   @EventHandler
   public void onWorldChange(@NonNull PlayerChangedWorldEvent e) {
     Player p = e.getPlayer();
 
-    WorldHelper.saveWorldGroupInventory(p, e.getFrom(), true);
-    WorldHelper.loadWorldGroupInventory(p);
+    serviceContext.getWorldGroupService().saveWorldGroupInventoryForPlayerInWorld(p, e.getFrom(), true);
+    serviceContext.getWorldGroupService().loadWorldGroupInventoryForPlayer(p);
 
     String newWorld = p.getWorld().getName();
-    ScoreBoardManager.setScoreboardVisible(p,
-        RelluEssentials.getInstance().scoreboardShow.contains(newWorld));
+    ScoreBoardManager.setScoreboardVisible(p, serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.SCOREBOARD_SHOW, newWorld), serviceContext.getWorldGroupService());
 
     if (WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)) {
       PlayerHelper.setLobbyItems(p);

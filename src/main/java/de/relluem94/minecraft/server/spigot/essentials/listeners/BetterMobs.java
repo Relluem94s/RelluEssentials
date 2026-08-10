@@ -9,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.EntityCoins;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
+import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -36,7 +37,7 @@ public class BetterMobs implements ListenerConstruct {
   private final EnchantmentHelper thunderstrike;
   private final EnchantmentHelper scavengers;
   private final EnchantmentHelper lifesteal;
-  ServiceContext serviceContext;
+  private ServiceContext serviceContext;
 
   public BetterMobs() {
     this.telekinesis = EnchantmentRegistry.find(
@@ -73,7 +74,8 @@ public class BetterMobs implements ListenerConstruct {
   @EventHandler
   public void onKill(@NonNull PlayerDeathEvent e) {
     String worldName = e.getEntity().getWorld().getName();
-    boolean deathLoseCoinsActive = RelluEssentials.getInstance().deathLoseCoins.contains(worldName);
+    boolean deathLoseCoinsActive = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.DEATH_LOSE_COINS, worldName);
     if (deathLoseCoinsActive) {
       Player p = e.getEntity();
       PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);

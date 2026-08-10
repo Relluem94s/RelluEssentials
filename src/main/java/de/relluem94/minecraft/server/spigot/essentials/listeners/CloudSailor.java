@@ -3,10 +3,9 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.areBlocksMaterial;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
@@ -41,9 +40,11 @@ public class CloudSailor implements ListenerConstruct {
   private final ItemHelper cloudBoots = ItemRegistry.find(
       RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow();
 
+  private ServiceContext serviceContext;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -81,7 +82,9 @@ public class CloudSailor implements ListenerConstruct {
   @EventHandler(priority = EventPriority.HIGH)
   public void onFallDamage(@NonNull EntityDamageEvent e) {
     if (e.getEntity() instanceof Player p) {
-      if (isInWorld(p, RelluEssentials.getInstance().useCloudsailorWorlds.stream().toList())) {
+      boolean useCloudSailor = serviceContext.getWorldGroupService()
+          .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
+      if (useCloudSailor) {
         if (e.getCause().equals(DamageCause.FALL)) {
           if (p.getInventory().getBoots() != null && p.getInventory().getBoots()
               .equals(cloudBoots.getCustomItem())) {
@@ -97,7 +100,9 @@ public class CloudSailor implements ListenerConstruct {
   @EventHandler
   public void onSail(@NonNull PlayerMoveEvent e) {
     Player p = e.getPlayer();
-    if (isInWorld(p, RelluEssentials.getInstance().useCloudsailorWorlds.stream().toList())) {
+    boolean useCloudSailor = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
+    if (useCloudSailor) {
       if (e.getTo() != null && !e.getFrom().getBlock().getLocation()
           .equals(e.getTo().getBlock().getLocation())) {
         if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.getCustomItem())

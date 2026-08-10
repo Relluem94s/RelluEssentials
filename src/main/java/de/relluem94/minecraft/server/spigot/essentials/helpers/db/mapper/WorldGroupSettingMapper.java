@@ -9,10 +9,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_VALUE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_WORLD_GORUP_FK;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSettingEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
@@ -24,8 +24,8 @@ public class WorldGroupSettingMapper {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
-  public static @NonNull WorldGroupSettingEntry mapWorldGroupSetting(@NonNull ResultSet rs)
-      throws SQLException {
+  public static @NonNull WorldGroupSettingEntry mapWorldGroupSetting(@NonNull ResultSet rs,
+      @NonNull SettingService settingService) throws SQLException {
     WorldGroupSettingEntry wgse = new WorldGroupSettingEntry();
 
     wgse.setId(rs.getInt(FIELD_ID));
@@ -35,12 +35,11 @@ public class WorldGroupSettingMapper {
     wgse.setUpdatedBy(rs.getInt(FIELD_UPDATEDBY));
     wgse.setValue(rs.getBoolean(FIELD_VALUE));
     wgse.setWorldGroupEntryFk(rs.getInt(FIELD_WORLD_GORUP_FK));
+
     int settingFk = rs.getInt(FIELD_SETTING_FK);
     wgse.setSettingEntryFk(settingFk);
 
-    Optional<SettingEntry> settingEntry = RelluEssentials.settingEntriesList.stream()
-        .filter(se -> se.getId() == settingFk)
-        .findFirst();
+    Optional<SettingEntry> settingEntry = settingService.findById(settingFk);
     settingEntry.ifPresent(wgse::setSettingEntry);
 
     return wgse;

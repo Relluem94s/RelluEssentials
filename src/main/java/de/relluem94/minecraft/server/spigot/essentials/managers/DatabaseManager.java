@@ -12,11 +12,15 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enabl
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSettingEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.SettingRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.WorldGroupSettingRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.SettingRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.WorldGroupSettingRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
 import java.sql.SQLException;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Manages database access and initializes all registries and plugin data on startup.
@@ -56,62 +60,39 @@ public class DatabaseManager implements Enable {
     this.databaseHelper = databaseHelper;
   }
 
-  private static boolean getWorldNameBySetting(@NonNull WorldGroupEntry wge, String setting) {
-    return wge.getSettings().stream()
-        .filter(s -> setting.equals(s.getSettingEntry().getName()))
-        .findFirst()
-        .map(WorldGroupSettingEntry::isValue)
-        .orElse(false);
-  }
-
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
 
     PluginInformationEntry pie = databaseHelper.getPluginInformation();
     relluEssentialsPlugin.setPluginInformation(pie);
     databaseHelper.init();
 
+    SettingRepository settingRepository = new SettingRepository(databaseHelper);
+    SettingRegistry settingRegistry = new SettingRegistry();
+    SettingService settingService = new SettingService(settingRegistry, settingRepository);
+    settingService.loadAll();
+    serviceContext.setSettingService(settingService);
+
     relluEssentialsPlugin.locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
 
-    RelluEssentials.settingEntriesList.addAll(databaseHelper.getAllSettings());
+    WorldGroupSettingRegistry worldGroupSettingRegistry = new WorldGroupSettingRegistry();
+    WorldGroupSettingRepository worldGroupSettingRepository = new WorldGroupSettingRepository(
+        databaseHelper);
+    WorldGroupService worldGroupService = new WorldGroupService(worldGroupSettingRegistry,
+        worldGroupSettingRepository);
+    worldGroupService.loadAll();
+    serviceContext.setWorldGroupService(worldGroupService);
 
-    for (WorldGroupEntry wge : databaseHelper.getWorldGroups()) {
-      for (WorldEntry we : databaseHelper.getWorldByGroup(wge)) {
-        relluEssentialsPlugin.worldsMap.put(wge, we);
-
-        if (getWorldNameBySetting(wge, "COLLECT_BAG")) {
-          relluEssentialsPlugin.collectBagWorlds.add(we.getName());
-        }
-
-        if (getWorldNameBySetting(wge, "USE_CLOUDSAILOR")) {
-          relluEssentialsPlugin.useCloudsailorWorlds.add(we.getName());
-        }
-
-        if (getWorldNameBySetting(wge, "DEATH_LOSE_COINS")) {
-          relluEssentialsPlugin.deathLoseCoins.add(we.getName());
-        }
-
-        if (getWorldNameBySetting(wge, "ORE_RESPAWN")) {
-          relluEssentialsPlugin.oreRespawn.add(we.getName());
-        }
-
-        if (getWorldNameBySetting(wge, "DEATH_CREATE_HOME")) {
-          relluEssentialsPlugin.deathCreateHome.add(we.getName());
-        }
-
-        if (getWorldNameBySetting(wge, "SCOREBOARD_SHOW")) {
-          relluEssentialsPlugin.scoreboardShow.add(we.getName());
-        }
-
-        consoleSendMessage(PLUGIN_NAME_CONSOLE,
-            relluEssentialsPlugin.getServiceContext().getTranslationService()
-                .get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, wge.getName(),
-                    we.getName(),
-                    wge.getSettings().size()));
-      }
-    }
-
-
+    worldGroupService.getWorldsMap().entries().forEach(entry -> {
+      WorldGroupEntry worldGroupEntry = entry.getKey();
+      WorldEntry worldEntry = entry.getValue();
+      consoleSendMessage(PLUGIN_NAME_CONSOLE,
+          serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_DATABASE_ADDING_WORLD, worldGroupEntry.getName(),
+                  worldEntry.getName(),
+                  worldGroupEntry.getSettings().size()));
+    });
   }
 }
