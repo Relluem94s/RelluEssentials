@@ -26,7 +26,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,10 +47,6 @@ class LocationMapperTest {
         Field instanceField = RelluEssentials.class.getDeclaredField("instance");
         instanceField.setAccessible(true);
         instanceField.set(null, relluEssentials);
-
-        Field locationTypeEntryListField = RelluEssentials.class.getDeclaredField("locationTypeEntryList");
-        locationTypeEntryListField.setAccessible(true);
-        locationTypeEntryListField.set(relluEssentials, new ArrayList<>());
     }
 
     @Test
@@ -72,10 +67,7 @@ class LocationMapperTest {
         nonMatchingLocationType.setId(99);
         nonMatchingLocationType.setType("WARP");
 
-        Field locationTypeEntryListField = RelluEssentials.class.getDeclaredField("locationTypeEntryList");
-        locationTypeEntryListField.setAccessible(true);
-        locationTypeEntryListField.set(relluEssentials, List.of(nonMatchingLocationType, matchingLocationType));
-
+        when(relluEssentials.getLocationTypeEntryList()).thenReturn(List.of(nonMatchingLocationType, matchingLocationType));
 
         when(resultSet.getInt(FIELD_ID)).thenReturn(1);
         when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
@@ -123,7 +115,6 @@ class LocationMapperTest {
         when(resultSet.getFloat(FIELD_POS_Z)).thenReturn(-30.25f);
         when(resultSet.getFloat(FIELD_PITCH)).thenReturn(0.5f);
         when(resultSet.getFloat(FIELD_YAW)).thenReturn(180.0f);
-        when(resultSet.getInt(FIELD_LOCATION_TYPE_FK)).thenReturn(3);
 
         LocationEntry result = LocationMapper.mapLocation(resultSet);
 

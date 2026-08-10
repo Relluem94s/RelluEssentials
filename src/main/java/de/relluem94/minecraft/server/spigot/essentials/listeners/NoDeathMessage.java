@@ -79,7 +79,7 @@ public class NoDeathMessage implements ListenerConstruct {
       LocationEntry le = new LocationEntry();
       le.setLocation(location);
       le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(994)));
-      LocationTypeEntry locationType = RelluEssentials.getInstance().locationTypeEntryList.get(1);
+      LocationTypeEntry locationType = RelluEssentials.getInstance().getLocationTypeEntryList().get(1);
       le.setLocationType(locationType);
       le.setPlayerId(pe.getId());
 

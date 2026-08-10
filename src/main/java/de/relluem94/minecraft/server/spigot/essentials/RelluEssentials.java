@@ -51,8 +51,9 @@ public class RelluEssentials extends JavaPlugin {
   private static RelluEssentials instance;
 
   @Getter
-  public final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
-  public Map<Player,
+  private final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
+  @Getter
+  private Map<Player,
       DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
 
   private long start;

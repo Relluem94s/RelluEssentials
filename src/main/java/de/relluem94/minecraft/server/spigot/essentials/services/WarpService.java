@@ -51,7 +51,7 @@ public class WarpService {
     LocationEntry le = new LocationEntry();
     le.setLocation(player.getLocation());
     le.setLocationName(name);
-    le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.get(typeId - 1));
+    le.setLocationType(RelluEssentials.getInstance().getLocationTypeEntryList().get(typeId - 1));
     le.setPlayerId(playerId);
     databaseHelper.insertLocation(le);
 

@@ -75,7 +75,7 @@ public class DatabaseManager implements Enable {
     settingService.loadAll();
     serviceContext.setSettingService(settingService);
 
-    relluEssentialsPlugin.locationTypeEntryList.addAll(databaseHelper.getLocationTypes());
+    relluEssentialsPlugin.getLocationTypeEntryList().addAll(databaseHelper.getLocationTypes());
 
     WorldGroupSettingRegistry worldGroupSettingRegistry = new WorldGroupSettingRegistry();
     WorldGroupSettingRepository worldGroupSettingRepository = new WorldGroupSettingRepository(

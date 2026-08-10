@@ -94,7 +94,7 @@ public class Home implements CommandConstruct {
         LocationEntry le = new LocationEntry();
         le.setLocation(p.getLocation());
         le.setLocationName(args[1]);
-        le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.getFirst());
+        le.setLocationType(RelluEssentials.getInstance().getLocationTypeEntryList().getFirst());
         le.setPlayerId(pe.getId());
 
         if (args[0].equalsIgnoreCase(Commands.SET.getName())) {
@@ -158,7 +158,7 @@ public class Home implements CommandConstruct {
           }
         } else if (args[0].equalsIgnoreCase(Commands.TP.getName())) {
           le.setLocationName(args[1]);
-          le.setLocationType(RelluEssentials.getInstance().locationTypeEntryList.getFirst());
+          le.setLocationType(RelluEssentials.getInstance().getLocationTypeEntryList().getFirst());
           le.setPlayerId(pe.getId());
 
           if (homeExists(pe, le) || deathExists(pe, le)) {

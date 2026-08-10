@@ -39,7 +39,7 @@ public class LocationMapper {
     locationEntry.setPitch(rs.getFloat(FIELD_PITCH));
     locationEntry.setYaw(rs.getFloat(FIELD_YAW));
 
-    for (LocationTypeEntry lte : RelluEssentials.getInstance().locationTypeEntryList) {
+    for (LocationTypeEntry lte : RelluEssentials.getInstance().getLocationTypeEntryList()) {
       if (lte.getId() == rs.getInt(FIELD_LOCATION_TYPE_FK)) {
         locationEntry.setLocationType(lte);
       }
