@@ -6,11 +6,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_RELLU;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -35,13 +38,15 @@ public class ScoreBoardManager implements Enable {
   private static final Set<UUID> hiddenBoards = new HashSet<>(); // NEU
   private static TranslationService translationService;
 
-  public static void applyToPlayer(Player player) {
+  public static void applyToPlayer(Player player, WorldGroupService worldGroupService) {
     if (sm == null) {
       return;
     }
 
     String currentWorld = player.getWorld().getName();
-    if (!RelluEssentials.getInstance().scoreboardShow.contains(currentWorld)) {
+    boolean settingActiveForWorld = worldGroupService
+        .isSettingActiveForWorld(WorldSetting.SCOREBOARD_SHOW, currentWorld);
+    if (!settingActiveForWorld) {
       hiddenBoards.add(player.getUniqueId());
       player.setScoreboard(sm.getMainScoreboard());
       return;
@@ -60,10 +65,11 @@ public class ScoreBoardManager implements Enable {
     updatePlayer(player);
   }
 
-  public static void setScoreboardVisible(Player player, boolean visible) {
+  public static void setScoreboardVisible(Player player, boolean visible,
+      WorldGroupService worldGroupService) {
     if (visible) {
       hiddenBoards.remove(player.getUniqueId());
-      applyToPlayer(player);
+      applyToPlayer(player, worldGroupService);
     } else {
       hiddenBoards.add(player.getUniqueId());
       if (sm != null) {
@@ -127,13 +133,16 @@ public class ScoreBoardManager implements Enable {
   public void enable(Plugin plugin) {
 
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
+    ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
+    translationService = serviceContext.getTranslationService();
 
-    Bukkit.getOnlinePlayers().forEach(ScoreBoardManager::applyToPlayer);
+    Bukkit.getOnlinePlayers().forEach(
+        (player) -> ScoreBoardManager.applyToPlayer(player, serviceContext.getWorldGroupService()));
 
-    relluEssentialsPlugin.getServiceContext().getSchedulerService().runTaskTimer(ScoreBoardManager::updateAll,
-        20L,
-        20L
-    );
+    serviceContext.getSchedulerService()
+        .runTaskTimer(ScoreBoardManager::updateAll,
+            20L,
+            20L
+        );
   }
 }

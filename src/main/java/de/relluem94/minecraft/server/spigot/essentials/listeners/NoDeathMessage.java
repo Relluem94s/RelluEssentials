@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
@@ -54,9 +55,10 @@ public class NoDeathMessage implements ListenerConstruct {
     Location ploc = p.getLocation();
 
     String worldName = Objects.requireNonNull(ploc.getWorld()).getName();
-    boolean deathLoseCoinsActive = RelluEssentials.getInstance().deathLoseCoins.contains(worldName);
-    boolean deathCreateHomeActive = RelluEssentials.getInstance().deathCreateHome.contains(
-        worldName);
+    boolean deathLoseCoinsActive = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.DEATH_LOSE_COINS, worldName);
+    boolean deathCreateHomeActive = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.DEATH_CREATE_HOME, worldName);
 
     if (deathLoseCoinsActive) {
       ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))

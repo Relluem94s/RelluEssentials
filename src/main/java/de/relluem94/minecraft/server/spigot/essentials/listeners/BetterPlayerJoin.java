@@ -82,7 +82,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
     }
 
     serviceContext.getSchedulerService().runTaskLater(
-        () -> ScoreBoardManager.applyToPlayer(e.getPlayer()),
+        () -> ScoreBoardManager.applyToPlayer(e.getPlayer(), serviceContext.getWorldGroupService()),
         10L
     );
   }

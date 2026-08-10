@@ -274,8 +274,10 @@ public class DatabaseHelper {
   }
 
   public List<WorldGroupSettingEntry> getAllWorldGroupSettings() {
-    return queryList("getAllWorldGroupSettings.sql", _ -> {
-    }, WorldGroupSettingMapper::mapWorldGroupSetting);
+    return queryList("getAllWorldGroupSettings.sql",
+        ps -> {},
+        rs -> WorldGroupSettingMapper.mapWorldGroupSetting(rs, serviceContext.getSettingService())
+    );
   }
 
   public List<LocationTypeEntry> getLocationTypes() {

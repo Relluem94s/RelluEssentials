@@ -58,11 +58,6 @@ public class RelluEssentials extends JavaPlugin {
   public static final List<SettingEntry> settingEntriesList = new ArrayList<>();
   private static RelluEssentials instance;
   public final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
-  public final Set<String> collectBagWorlds = new HashSet<>();
-  public final Set<String> useCloudsailorWorlds = new HashSet<>();
-  public final Set<String> deathLoseCoins = new HashSet<>();
-  public final Set<String> deathCreateHome = new HashSet<>();
-  public final Set<String> oreRespawn = new HashSet<>();
   public final Set<String> scoreboardShow = new HashSet<>();
 
   @Getter

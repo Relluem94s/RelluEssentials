@@ -2,8 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -17,9 +17,11 @@ public class BetterBlockDrop implements ListenerConstruct {
       Material.DEEPSLATE_COPPER_ORE, Material.GOLD_ORE, Material.EMERALD_ORE,
       Material.NETHER_GOLD_ORE, Material.NETHER_QUARTZ_ORE};
 
+  ServiceContext serviceContext;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.serviceContext = context;
   }
 
   public void runLater(Runnable r, long d) {
@@ -35,8 +37,9 @@ public class BetterBlockDrop implements ListenerConstruct {
 
     Material m = e.getBlock().getBlockData().getMaterial();
     for (Material ore : ores) {
-
-      if (m == ore && Objects.equals(RelluEssentials.getInstance().oreRespawn, world.getName())) {
+      boolean oreRespawnActive = serviceContext.getWorldGroupService()
+          .isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, world.getName());
+      if (m == ore && oreRespawnActive) {
         runLater(() -> e.getBlock().setType(m), 10000L);
         break;
       }
