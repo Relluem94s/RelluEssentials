@@ -12,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.List;
@@ -25,6 +26,7 @@ class ClipboardCommandTest {
 
   private Player player;
   private ClipboardCommand clipboardCommand;
+  private ClipboardService clipboardService;
   private RelluEssentials relluEssentialsMock;
 
   private MockedStatic<RelluEssentials> mockedRelluEssentials;
@@ -32,7 +34,7 @@ class ClipboardCommandTest {
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
-
+    clipboardService = new ClipboardService();
     relluEssentialsMock = mock(RelluEssentials.class);
 
     mockedRelluEssentials = mockStatic(RelluEssentials.class);
@@ -43,6 +45,7 @@ class ClipboardCommandTest {
 
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+    when(serviceContext.getClipboardService()).thenReturn(clipboardService);
 
     clipboardCommand = new ClipboardCommand(serviceContext);
   }
@@ -54,7 +57,6 @@ class ClipboardCommandTest {
 
   @Test
   void execute_withNoClipboardEntry_sendsNoClipboardMessage() {
-
     clipboardCommand.execute(player, new String[]{"clipboard", "rotate"});
 
     verify(player).sendMessage(anyString());
@@ -63,7 +65,7 @@ class ClipboardCommandTest {
   @Test
   void execute_withNullClipboardList_sendsNoClipboardMessage() {
     Selection selectionMock = mock(Selection.class);
-    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, null));
+    clipboardService.setClipboard(player, new DoubleStore<>(selectionMock, null));
 
     clipboardCommand.execute(player, new String[]{"clipboard", "rotate"});
 
@@ -73,7 +75,7 @@ class ClipboardCommandTest {
   @Test
   void execute_withEmptyClipboardList_sendsNoClipboardMessage() {
     Selection selectionMock = mock(Selection.class);
-    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, List.of()));
+    clipboardService.setClipboard(player, new DoubleStore<>(selectionMock, List.of()));
 
     clipboardCommand.execute(player, new String[]{"clipboard", "rotate"});
 
@@ -85,7 +87,7 @@ class ClipboardCommandTest {
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
     List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
-    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, clipboardList));
+    clipboardService.setClipboard(player, new DoubleStore<>(selectionMock, clipboardList));
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {

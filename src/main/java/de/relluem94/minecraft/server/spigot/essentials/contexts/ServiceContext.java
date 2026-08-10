@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
@@ -64,6 +65,7 @@ public class ServiceContext {
   private PositionService positionService;
   private SettingService settingService;
   private WorldGroupService worldGroupService;
+  private ClipboardService clipboardService;
 
   /**
    * Creates a new ServiceContext.

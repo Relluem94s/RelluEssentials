@@ -32,10 +32,10 @@ public class PasteCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = RelluEssentials.getInstance().getClipboard().get(
-        player);
-    if (clipboardStore == null || clipboardStore.getSecondValue() == null
-        || clipboardStore.getSecondValue().isEmpty()) {
+    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardEntry =
+        serviceContext.getClipboardService().getClipboard(player);
+    if (clipboardEntry == null || clipboardEntry.getSecondValue() == null
+        || clipboardEntry.getSecondValue().isEmpty()) {
       player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
       return;
     }
@@ -51,7 +51,7 @@ public class PasteCommand implements SubCommand {
 
     float yaw = normalizeYaw(player.getLocation().getYaw());
 
-    for (ModifyClipboardEntry entry : clipboardStore.getSecondValue()) {
+    for (ModifyClipboardEntry entry : clipboardEntry.getSecondValue()) {
       Block block = getBlock(entry, yaw, playerTargetLoc);
 
       history.add(
@@ -75,7 +75,7 @@ public class PasteCommand implements SubCommand {
 
     serviceContext.getUndoHistoryService().addHistory(player, history);
     player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED,
-        clipboardStore.getSecondValue().size()));
+        clipboardEntry.getSecondValue().size()));
   }
 
   @Override
