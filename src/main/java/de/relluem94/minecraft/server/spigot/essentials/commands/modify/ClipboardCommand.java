@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.rotate;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -25,15 +24,15 @@ public class ClipboardCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardEntry = RelluEssentials.getInstance().getClipboard().get(
-        player);
+    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardEntry =
+        serviceContext.getClipboardService().getClipboard(player);
     if (clipboardEntry == null || clipboardEntry.getSecondValue() == null
         || clipboardEntry.getSecondValue().isEmpty()) {
       player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
       return;
     }
 
-    RelluEssentials.getInstance().getClipboard().put(player,
+    serviceContext.getClipboardService().setClipboard(player,
         rotate(clipboardEntry.getSecondValue(), clipboardEntry.getValue()));
     player.sendMessage(
         serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_CLIPBOARD_ROTATE_SUCCESS));

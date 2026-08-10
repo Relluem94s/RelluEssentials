@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
@@ -44,6 +45,7 @@ class CopyCommandTest {
   private Player player;
   private SelectionService selectionService;
   private UndoHistoryService undoHistoryService;
+  private ClipboardService clipboardService;
   private ServiceContext serviceContext;
 
   private MockedStatic<RelluEssentials> mockedRelluEssentials;
@@ -77,6 +79,7 @@ class CopyCommandTest {
     player = mock(Player.class);
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
+    clipboardService = new ClipboardService();
 
     relluEssentialsMock = mock(RelluEssentials.class);
 
@@ -91,6 +94,7 @@ class CopyCommandTest {
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+    when(serviceContext.getClipboardService()).thenReturn(clipboardService);
 
     Location playerLocation = mock(Location.class);
     Location clonedLocation = mock(Location.class);
@@ -132,7 +136,7 @@ class CopyCommandTest {
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
     List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
-    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, clipboardList));
+    clipboardService.setClipboard(player, new DoubleStore<>(selectionMock, clipboardList));
 
     Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
     when(selectionService.resolve(player)).thenReturn(selection);
@@ -168,7 +172,7 @@ class CopyCommandTest {
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
     List<ModifyClipboardEntry> clipboardList = List.of(entryMock);
-    relluEssentialsMock.getClipboard().put(player, new DoubleStore<>(selectionMock, clipboardList));
+    clipboardService.setClipboard(player, new DoubleStore<>(selectionMock, clipboardList));
 
     Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
     when(selectionService.resolve(player)).thenReturn(selection);

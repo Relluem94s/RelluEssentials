@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelp
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getModifyClipboardEntry;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getRelativeCopySelection;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
@@ -73,7 +72,7 @@ public class CopyCommand implements SubCommand {
       serviceContext.getUndoHistoryService().addHistory(player, history);
     }
 
-    RelluEssentials.getInstance().getClipboard().put(player,
+    serviceContext.getClipboardService().setClipboard(player,
         new DoubleStore<>(newSelection, clipboardList));
     player.sendMessage(
         isCut

@@ -22,13 +22,12 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -51,8 +50,8 @@ class PasteCommandTest {
 
   private Player player;
   private UndoHistoryService undoHistoryService;
+  private ClipboardService clipboardService;
   private PasteCommand pasteCommand;
-  private RelluEssentials relluEssentialsMock;
   private MockedStatic<RelluEssentials> mockedRelluEssentials;
   private BukkitScheduler schedulerMock;
   private MockedStatic<Bukkit> mockedBukkit;
@@ -85,8 +84,9 @@ class PasteCommandTest {
     player = mock(Player.class);
     undoHistoryService = mock(UndoHistoryService.class);
 
-    relluEssentialsMock = mock(RelluEssentials.class);
+    RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
     TranslationService translationServiceMock = mock(TranslationService.class);
+    clipboardService = new ClipboardService();
 
     mockedRelluEssentials = mockStatic(RelluEssentials.class);
     mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
@@ -97,9 +97,6 @@ class PasteCommandTest {
     schedulerMock = mock(BukkitScheduler.class);
     Server serverMock = mock(Server.class);
     when(serverMock.getScheduler()).thenReturn(schedulerMock);
-
-    Map<Player, DoubleStore<Selection, List<ModifyClipboardEntry>>> clipboard = new HashMap<>();
-    when(relluEssentialsMock.getClipboard()).thenReturn(clipboard);
 
     doAnswer(invocation -> {
       Runnable task = invocation.getArgument(1);
@@ -120,6 +117,7 @@ class PasteCommandTest {
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+    when(serviceContext.getClipboardService()).thenReturn(clipboardService);
 
     pasteCommand = new PasteCommand(serviceContext, 2);
   }
@@ -142,7 +140,7 @@ class PasteCommandTest {
   void execute_withClipboardStoreHavingNullEntries_sendsNoClipboardMessage() {
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock(DoubleStore.class);
     when(clipboardStore.getSecondValue()).thenReturn(null);
-    relluEssentialsMock.getClipboard().put(player, clipboardStore);
+    clipboardService.setClipboard(player, clipboardStore);
 
     pasteCommand.execute(player, new String[]{"paste"});
 
@@ -154,7 +152,7 @@ class PasteCommandTest {
   void execute_withEmptyClipboard_sendsNoClipboardMessage() {
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock(DoubleStore.class);
     when(clipboardStore.getSecondValue()).thenReturn(Collections.emptyList());
-    relluEssentialsMock.getClipboard().put(player, clipboardStore);
+    clipboardService.setClipboard(player, clipboardStore);
 
     pasteCommand.execute(player, new String[]{"paste"});
 
@@ -167,7 +165,7 @@ class PasteCommandTest {
     ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
-    relluEssentialsMock.getClipboard().put(player, clipboardStore);
+    clipboardService.setClipboard(player, clipboardStore);
 
     Block targetBlock = buildBlock(Material.AIR, 0, 64, 0);
 
@@ -193,7 +191,7 @@ class PasteCommandTest {
 
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore =
         buildClipboardStore(List.of(firstEntry, secondEntry, thirdEntry));
-    relluEssentialsMock.getClipboard().put(player, clipboardStore);
+    clipboardService.setClipboard(player, clipboardStore);
 
     Block firstBlock = buildBlock(Material.AIR, 0, 64, 0);
     Block secondBlock = buildBlock(Material.AIR, 1, 64, 0);
@@ -220,7 +218,7 @@ class PasteCommandTest {
     ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
-    relluEssentialsMock.getClipboard().put(player, clipboardStore);
+    clipboardService.setClipboard(player, clipboardStore);
 
     Material originalMaterial = Material.DIRT;
     Block targetBlock = buildBlock(originalMaterial, 0, 64, 0);
@@ -246,7 +244,7 @@ class PasteCommandTest {
     ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0, 0, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
-    relluEssentialsMock.getClipboard().put(player, clipboardStore);
+    clipboardService.setClipboard(player, clipboardStore);
 
     Block targetBlock = buildBlock(Material.AIR, 0, 64, 0);
 
@@ -273,7 +271,7 @@ class PasteCommandTest {
 
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore =
         buildClipboardStore(List.of(firstEntry, secondEntry, thirdEntry));
-    relluEssentialsMock.getClipboard().put(player, clipboardStore);
+    clipboardService.setClipboard(player, clipboardStore);
 
     Block firstBlock = buildBlock(Material.AIR, 0, 64, 0);
     Block secondBlock = buildBlock(Material.AIR, 1, 64, 0);
