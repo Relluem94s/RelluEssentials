@@ -59,36 +59,9 @@ public class RelluEssentials extends JavaPlugin {
   private boolean isUnitTest = false;
 
   /* Manager */
-  @Getter
-  private ListenerManager listenerManager;
-  @Getter
-  private SkillManager skillManager;
-  @Getter
-  private RecipeManager recipeManager;
-  @Getter
   private AutoSaveManager autoSaveManager;
-  @Getter
-  private BankManager bankManager;
-  @Getter
   private ConfigManager configManager;
-  @Getter
-  private CommandManager commandManager;
-  @Getter
-  private ItemManager itemManager;
-  @Getter
-  private EnchantmentManager enchantmentManager;
-  @Getter
   private WorldManager worldManager;
-  @Getter
-  private ScoreBoardManager scoreBoardManager;
-  @Getter
-  private SignManager signManager;
-  @Getter
-  private DatabaseManager databaseManager;
-  @Getter
-  private SudoManager sudoManager;
-  @Getter
-  private ServiceManager serviceManager;
 
   /**
    * Default constructor for the RelluEssentials plugin. Used by the Spigot server to instantiate
@@ -125,18 +98,18 @@ public class RelluEssentials extends JavaPlugin {
   public void onEnable() {
     start = Calendar.getInstance().getTimeInMillis();
     serviceContext = new ServiceContext();
-    serviceManager = new ServiceManager();
+    ServiceManager serviceManager = new ServiceManager();
     serviceManager.preEnable(this);
     startLoading();
     RelluEssentialsRegistry.initialize(serviceContext.getTranslationService());
 
     configManager = new ConfigManager();
     configManager.enable(this);
-    enchantmentManager = new EnchantmentManager();
+    EnchantmentManager enchantmentManager = new EnchantmentManager();
     enchantmentManager.enable(this);
-    itemManager = new ItemManager();
+    ItemManager itemManager = new ItemManager();
     itemManager.enable(this);
-    databaseManager = new DatabaseManager(
+    DatabaseManager databaseManager = new DatabaseManager(
         serviceContext,
         getConfig().getString("database.host"),
         getConfig().getString("database.user"),
@@ -147,21 +120,21 @@ public class RelluEssentials extends JavaPlugin {
     DatabaseHelper databaseHelper = databaseManager.getDatabaseHelper();
     serviceContext.setDatabaseHelper(databaseHelper);
     serviceManager.enable(this);
-    commandManager = new CommandManager();
+    CommandManager commandManager = new CommandManager();
     commandManager.enable(this);
-    signManager = new SignManager();
+    SignManager signManager = new SignManager();
     signManager.enable(this);
-    skillManager = new SkillManager();
+    SkillManager skillManager = new SkillManager();
     skillManager.enable(this);
-    recipeManager = new RecipeManager();
+    RecipeManager recipeManager = new RecipeManager();
     recipeManager.enable(this);
-    bankManager = new BankManager();
+    BankManager bankManager = new BankManager();
     bankManager.enable(this);
-    listenerManager = new ListenerManager();
+    ListenerManager listenerManager = new ListenerManager();
     listenerManager.enable(this);
     autoSaveManager = new AutoSaveManager();
     autoSaveManager.enable(this);
-    scoreBoardManager = new ScoreBoardManager();
+    ScoreBoardManager scoreBoardManager = new ScoreBoardManager();
     scoreBoardManager.enable(this);
     stopLoading();
     worldManager = new WorldManager();
@@ -177,7 +150,7 @@ public class RelluEssentials extends JavaPlugin {
     if (serviceContext.getNpcService() != null) {
       serviceContext.getNpcService().despawnAllNPCs();
     }
-    sudoManager = new SudoManager();
+    SudoManager sudoManager = new SudoManager();
     sudoManager.disable(this);
     autoSaveManager.disable(this);
     worldManager.disable(this);
