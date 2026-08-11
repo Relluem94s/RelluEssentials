@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
@@ -66,6 +67,7 @@ public class ServiceContext {
   private SettingService settingService;
   private WorldGroupService worldGroupService;
   private ClipboardService clipboardService;
+  private PluginInformationService pluginInformationService;
 
   /**
    * Creates a new ServiceContext.

@@ -24,14 +24,12 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -52,9 +50,6 @@ public class RelluEssentials extends JavaPlugin {
   @Getter
   private ServiceContext serviceContext;
 
-  @Setter
-  @Getter
-  private PluginInformationEntry pluginInformation;
   @Getter
   private boolean isUnitTest = false;
 
