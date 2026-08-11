@@ -9,13 +9,14 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SettingRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.WorldGroupSettingRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.PluginInformationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.SettingRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WorldGroupSettingRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
 import java.sql.SQLException;
@@ -65,8 +66,13 @@ public class DatabaseManager implements Enable {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
     ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
 
-    PluginInformationEntry pie = databaseHelper.getPluginInformation();
-    relluEssentialsPlugin.setPluginInformation(pie);
+    PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(
+        databaseHelper);
+    PluginInformationService pluginInformationService = new PluginInformationService(
+        pluginInformationRepository);
+    pluginInformationService.load();
+    serviceContext.setPluginInformationService(pluginInformationService);
+
     databaseHelper.init();
 
     SettingRepository settingRepository = new SettingRepository(databaseHelper);

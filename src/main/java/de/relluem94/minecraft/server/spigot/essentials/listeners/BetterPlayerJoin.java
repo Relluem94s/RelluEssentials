@@ -63,7 +63,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
     Player p = e.getPlayer();
     addPlayer(p);
 
-    PluginInformationEntry pie = RelluEssentials.getInstance().getPluginInformation();
+    PluginInformationEntry pie = serviceContext.getPluginInformationService().getPluginInformation();
     p.setPlayerListHeader(pie.getTabHeader());
     p.setPlayerListFooter(pie.getTabFooter());
 

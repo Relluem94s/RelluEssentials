@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers.db;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseConstants.PLUGIN_DATABASE_NAME;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
@@ -12,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.ClasspathSqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformationService;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
@@ -33,7 +33,12 @@ public class DatabaseHelperFactory {
     IPatchHelper patchHelper = new PatchHelper(
         databaseHelper,
         serviceContext.getPlayerService(),
-        RelluEssentials.getInstance()::setPluginInformation,
+        patchedInformation -> {
+          PluginInformationService service = serviceContext.getPluginInformationService();
+          if (service != null) {
+            service.applyPatchedInformation(patchedInformation);
+          }
+        },
         new ConfigHelper("players")
     );
 
