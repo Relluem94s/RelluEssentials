@@ -1,15 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_LOCATION_TYPE_NOT_FOUND;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,10 +93,14 @@ public class Home implements CommandConstruct {
         }
         return true;
       case 2:
+        LocationTypeEntry homeType = serviceContext.getLocationTypeService()
+            .findByName(LocationType.HOME)
+            .orElseThrow(() -> new IllegalStateException(PLUGIN_EXCEPTION_LOCATION_TYPE_NOT_FOUND));
+
         LocationEntry le = new LocationEntry();
         le.setLocation(p.getLocation());
         le.setLocationName(args[1]);
-        le.setLocationType(RelluEssentials.getInstance().getLocationTypeEntryList().getFirst());
+        le.setLocationType(homeType);
         le.setPlayerId(pe.getId());
 
         if (args[0].equalsIgnoreCase(Commands.SET.getName())) {
@@ -158,7 +164,7 @@ public class Home implements CommandConstruct {
           }
         } else if (args[0].equalsIgnoreCase(Commands.TP.getName())) {
           le.setLocationName(args[1]);
-          le.setLocationType(RelluEssentials.getInstance().getLocationTypeEntryList().getFirst());
+          le.setLocationType(homeType);
           le.setPlayerId(pe.getId());
 
           if (homeExists(pe, le) || deathExists(pe, le)) {

@@ -18,11 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.LocationTypeRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,14 +39,26 @@ class LocationMapperTest {
     @Mock
     private ResultSet resultSet;
 
-    @Mock
-    private RelluEssentials relluEssentials;
+    private LocationTypeService locationTypeService;
+
+    private LocationTypeEntry matchingLocationType;
+    private LocationTypeEntry nonMatchingLocationType;
 
     @BeforeEach
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
-        Field instanceField = RelluEssentials.class.getDeclaredField("instance");
-        instanceField.setAccessible(true);
-        instanceField.set(null, relluEssentials);
+    void setUp() {
+        matchingLocationType = new LocationTypeEntry();
+        matchingLocationType.setId(3);
+        matchingLocationType.setType("HOME");
+
+        nonMatchingLocationType = new LocationTypeEntry();
+        nonMatchingLocationType.setId(99);
+        nonMatchingLocationType.setType("WARP");
+    }
+
+    private LocationTypeService buildServiceWith(List<LocationTypeEntry> types) {
+        LocationTypeRegistry registry = new LocationTypeRegistry();
+        registry.initialize(types);
+        return new LocationTypeService(registry);
     }
 
     @Test
@@ -58,16 +70,8 @@ class LocationMapperTest {
     }
 
     @Test
-    void mapLocationMapsAllFieldsCorrectly() throws SQLException, NoSuchFieldException, IllegalAccessException {
-        LocationTypeEntry matchingLocationType = new LocationTypeEntry();
-        matchingLocationType.setId(3);
-        matchingLocationType.setType("HOME");
-
-        LocationTypeEntry nonMatchingLocationType = new LocationTypeEntry();
-        nonMatchingLocationType.setId(99);
-        nonMatchingLocationType.setType("WARP");
-
-        when(relluEssentials.getLocationTypeEntryList()).thenReturn(List.of(nonMatchingLocationType, matchingLocationType));
+    void mapLocationMapsAllFieldsCorrectly() throws SQLException {
+        locationTypeService = buildServiceWith(List.of(nonMatchingLocationType, matchingLocationType));
 
         when(resultSet.getInt(FIELD_ID)).thenReturn(1);
         when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
@@ -80,31 +84,25 @@ class LocationMapperTest {
         when(resultSet.getFloat(FIELD_YAW)).thenReturn(180.0f);
         when(resultSet.getInt(FIELD_LOCATION_TYPE_FK)).thenReturn(3);
 
-        LocationEntry result = LocationMapper.mapLocation(resultSet);
+        LocationEntry result = LocationMapper.mapLocation(resultSet, locationTypeService);
 
         assertAll(
-                () -> assertEquals(1, result.getId()),
-                () -> assertEquals(42, result.getPlayerId()),
-                () -> assertEquals("MyHome", result.getLocationName()),
-                () -> assertEquals("world", result.getWorld()),
-                () -> assertEquals(10.5f, result.getX()),
-                () -> assertEquals(64.0f, result.getY()),
-                () -> assertEquals(-30.25f, result.getZ()),
-                () -> assertEquals(0.5f, result.getPitch()),
-                () -> assertEquals(180.0f, result.getYaw()),
-                () -> assertEquals(matchingLocationType, result.getLocationType())
+            () -> assertEquals(1, result.getId()),
+            () -> assertEquals(42, result.getPlayerId()),
+            () -> assertEquals("MyHome", result.getLocationName()),
+            () -> assertEquals("world", result.getWorld()),
+            () -> assertEquals(10.5f, result.getX()),
+            () -> assertEquals(64.0f, result.getY()),
+            () -> assertEquals(-30.25f, result.getZ()),
+            () -> assertEquals(0.5f, result.getPitch()),
+            () -> assertEquals(180.0f, result.getYaw()),
+            () -> assertEquals(matchingLocationType, result.getLocationType())
         );
     }
 
     @Test
-    void mapLocationSetsNoLocationTypeWhenNoMatchFound() throws SQLException, NoSuchFieldException, IllegalAccessException {
-        LocationTypeEntry nonMatchingLocationType = new LocationTypeEntry();
-        nonMatchingLocationType.setId(99);
-        nonMatchingLocationType.setType("WARP");
-
-        Field locationTypeEntryListField = RelluEssentials.class.getDeclaredField("locationTypeEntryList");
-        locationTypeEntryListField.setAccessible(true);
-        locationTypeEntryListField.set(relluEssentials, List.of(nonMatchingLocationType));
+    void mapLocationSetsNoLocationTypeWhenNoMatchFound() throws SQLException {
+        locationTypeService = buildServiceWith(List.of(nonMatchingLocationType));
 
         when(resultSet.getInt(FIELD_ID)).thenReturn(1);
         when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
@@ -115,16 +113,18 @@ class LocationMapperTest {
         when(resultSet.getFloat(FIELD_POS_Z)).thenReturn(-30.25f);
         when(resultSet.getFloat(FIELD_PITCH)).thenReturn(0.5f);
         when(resultSet.getFloat(FIELD_YAW)).thenReturn(180.0f);
+        when(resultSet.getInt(FIELD_LOCATION_TYPE_FK)).thenReturn(1);
 
-        LocationEntry result = LocationMapper.mapLocation(resultSet);
+        LocationEntry result = LocationMapper.mapLocation(resultSet, locationTypeService);
 
         assertNull(result.getLocationType());
     }
 
     @Test
     void mapLocationPropagatesSQLException() throws SQLException {
+        locationTypeService = buildServiceWith(List.of());
         when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
-        assertThrows(SQLException.class, () -> LocationMapper.mapLocation(resultSet));
+        assertThrows(SQLException.class, () -> LocationMapper.mapLocation(resultSet, locationTypeService));
     }
 
     @Test
@@ -135,8 +135,8 @@ class LocationMapperTest {
         LocationTypeEntry result = LocationMapper.mapLocationType(resultSet);
 
         assertAll(
-                () -> assertEquals(5, result.getId()),
-                () -> assertEquals("WARP", result.getType())
+            () -> assertEquals(5, result.getId()),
+            () -> assertEquals("WARP", result.getType())
         );
     }
 
