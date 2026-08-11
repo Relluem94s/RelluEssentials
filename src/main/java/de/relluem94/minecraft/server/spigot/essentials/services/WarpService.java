@@ -1,8 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_LOCATION_TYPE_NOT_FOUND;
+
+import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +17,13 @@ public class WarpService {
 
   private final WarpRepository warpRepository;
   private final DatabaseHelper databaseHelper;
+  private final LocationTypeService locationTypeService;
 
-  public WarpService(WarpRepository warpRepository, DatabaseHelper databaseHelper) {
+  public WarpService(WarpRepository warpRepository, DatabaseHelper databaseHelper,
+      LocationTypeService locationTypeService) {
     this.warpRepository = warpRepository;
     this.databaseHelper = databaseHelper;
+    this.locationTypeService = locationTypeService;
   }
 
   public Optional<LocationEntry> findWarpByName(String name) {
@@ -47,21 +53,21 @@ public class WarpService {
       return false;
     }
 
-    int typeId = 3;
+    LocationTypeEntry warpType = locationTypeService.findByName(LocationType.WARP)
+        .orElseThrow(() -> new IllegalStateException(PLUGIN_EXCEPTION_LOCATION_TYPE_NOT_FOUND));
+
     LocationEntry le = new LocationEntry();
     le.setLocation(player.getLocation());
     le.setLocationName(name);
-    le.setLocationType(RelluEssentials.getInstance().getLocationTypeEntryList().get(typeId - 1));
+    le.setLocationType(warpType);
     le.setPlayerId(playerId);
+
     databaseHelper.insertLocation(le);
 
-    LocationEntry persisted = databaseHelper.getLocation(player.getLocation(), typeId);
-    if (persisted != null) {
-      le = persisted;
-    }
+    LocationEntry persisted = databaseHelper.getLocation(player.getLocation(), warpType.getId());
+    warpRepository.save(persisted != null ? persisted : le);
 
-    warpRepository.save(le);
-    return true;
+     return true;
   }
 
   public boolean removeWarp(String name) {
