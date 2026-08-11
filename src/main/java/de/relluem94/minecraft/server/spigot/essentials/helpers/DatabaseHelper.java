@@ -10,8 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BagMapp
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BankMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.MiscMapper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.NpcDialogueMapper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.NpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.PlayerMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.ProtectionMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.SettingMapper;
@@ -30,8 +28,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.DropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
@@ -53,7 +49,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
@@ -663,89 +658,6 @@ public class DatabaseHelper {
     });
   }
 
-  public List<NpcDialogueEntry> getNPCDialogues(int npcId) {
-    return queryList("getCustomNPCDialoguesByNpcId.sql", ps -> ps.setInt(1, npcId),
-        NpcDialogueMapper::mapNPCDialogue);
-  }
-
-  public List<NpcEntry> getNPCs() {
-    return queryList("getCustomNPCs.sql", _ -> {
-    }, NpcMapper::mapNPC);
-  }
-
-  public NpcEntry getNPC(UUID uuid) {
-    return querySingle("getCustomNPCByUuid.sql", ps -> ps.setString(1, uuid.toString()),
-        NpcMapper::mapNPC);
-  }
-
-  public int insertNPC(NpcEntry npcEntry) {
-    return executeInsertWithGeneratedKey("insertCustomNPC.sql", ps -> {
-      ps.setString(1, npcEntry.getUuid().toString());
-      ps.setString(2, npcEntry.getProfileName());
-      ps.setString(3, npcEntry.getInventory() != null ? npcEntry.getInventory().toString() : null);
-      ps.setString(4, npcEntry.getWorld());
-      ps.setDouble(5, npcEntry.getX());
-      ps.setDouble(6, npcEntry.getY());
-      ps.setDouble(7, npcEntry.getZ());
-      ps.setInt(8, npcEntry.getCreatedBy());
-    });
-  }
-
-  public void updateNPC(NpcEntry npcEntry) {
-    executeUpdate("updateCustomNPC.sql", ps -> {
-      ps.setString(1,
-          npcEntry.getEntityUuid() != null ? npcEntry.getEntityUuid().toString() : null);
-      ps.setString(2, npcEntry.getProfileName());
-      ps.setString(3, npcEntry.getInventory() != null ? npcEntry.getInventory().toString() : null);
-      ps.setString(4, npcEntry.getWorld());
-      ps.setDouble(5, npcEntry.getX());
-      ps.setDouble(6, npcEntry.getY());
-      ps.setDouble(7, npcEntry.getZ());
-      ps.setInt(8, npcEntry.getUpdatedBy());
-      ps.setInt(9, npcEntry.getId());
-    });
-  }
-
-  public void deleteNPC(UUID npcUuid, int deletedByPlayerId) {
-    executeUpdate("deleteCustomNPC.sql", ps -> {
-      ps.setInt(1, deletedByPlayerId);
-      ps.setString(2, npcUuid.toString());
-    });
-  }
-
-  public void insertNPCDialogue(NpcDialogueEntry entry) {
-    executeUpdate("insertCustomNPCDialogue.sql", ps -> {
-      ps.setInt(1, entry.getCreatedBy());
-      ps.setInt(2, entry.getListPosition());
-      ps.setString(3, entry.getText());
-      ps.setInt(4, entry.getNpcFk());
-    });
-  }
-
-  public boolean updateNPCDialogue(NpcDialogueEntry entry, UUID uuid) {
-    int affectedRows = executeUpdateWithCount("updateCustomNPCDialogue.sql", ps -> {
-      ps.setInt(1, entry.getUpdatedBy());
-      ps.setString(2, entry.getText());
-      ps.setString(3, uuid.toString());
-      ps.setInt(4, entry.getListPosition());
-    });
-    return affectedRows > 0;
-  }
-
-  public void deleteNPCDialogueById(UUID npcUuid, int listPosition, int deletedByPlayerId) {
-    executeUpdate("deleteCustomNPCDialogueById.sql", ps -> {
-      ps.setInt(1, deletedByPlayerId);
-      ps.setString(2, npcUuid.toString());
-      ps.setInt(3, listPosition);
-    });
-  }
-
-  public void deleteNPCDialogueByNpcId(UUID npcUuid, int deletedByPlayerId) {
-    executeUpdate("deleteCustomNPCDialogueByNpcId.sql", ps -> {
-      ps.setInt(1, deletedByPlayerId);
-      ps.setString(2, npcUuid.toString());
-    });
-  }
 
   public int cleanupLocations() {
     return executeUpdateWithCount("cleanupLocations.sql");

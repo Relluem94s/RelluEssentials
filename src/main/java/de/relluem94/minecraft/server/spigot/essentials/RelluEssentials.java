@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
@@ -43,6 +44,9 @@ public class RelluEssentials extends JavaPlugin {
 
   @Getter
   private ServiceContext serviceContext;
+
+  @Getter
+  private PersistenceContext persistenceContext;
 
   @Getter
   private boolean isUnitTest = false;
@@ -86,6 +90,7 @@ public class RelluEssentials extends JavaPlugin {
   @Override
   public void onEnable() {
     start = Calendar.getInstance().getTimeInMillis();
+    persistenceContext = new PersistenceContext();
     serviceContext = new ServiceContext();
     ServiceManager serviceManager = new ServiceManager();
     serviceManager.preEnable(this);

@@ -13,7 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
-import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
+import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformationService;
@@ -30,6 +30,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryServi
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -38,6 +39,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
+@NoArgsConstructor
 public class ServiceContext {
   /* TEMP DatabaseHelper*/
   private DatabaseHelper databaseHelper;
@@ -62,7 +64,7 @@ public class ServiceContext {
   private ProtectionActionService protectionActionService;
   private BlockDropService blockDropService;
   private WarpService warpService;
-  private NpcDialogueService npcDialogueService;
+  private NpcDialogueProgressService npcDialogueProgressService;
   private TraderNpcService traderNpcService;
   private PositionService positionService;
   private SettingService settingService;
@@ -70,10 +72,4 @@ public class ServiceContext {
   private ClipboardService clipboardService;
   private PluginInformationService pluginInformationService;
   private LocationTypeService locationTypeService;
-
-  /**
-   * Creates a new ServiceContext.
-   *
-   */
-  public ServiceContext() {}
 }

@@ -67,7 +67,15 @@ public class DatabaseHelperFactory {
     return databaseHelper;
   }
 
-  private static MysqlDataSource buildDataSource(String host, int port, String user,
+  public static MysqlDataSource buildDataSource(String host, int port, String user, String password) {
+    try {
+      return buildDataSource(host, port, user, password, null);
+    } catch (SQLException e) {
+      throw new IllegalStateException("Failed to build data source", e);
+    }
+  }
+
+  public static MysqlDataSource buildDataSource(String host, int port, String user,
       String password, String schema) throws SQLException {
     MysqlDataSource ds = new MysqlDataSource();
     ds.setServerName(host);
