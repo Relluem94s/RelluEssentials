@@ -41,6 +41,6 @@ public class BetterPlayerQuit implements ListenerConstruct {
             .get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
     serviceContext.getTeleportService().teleportWorld(p, Constants.PLUGIN_WORLD_LOBBY, true);
     ScoreBoardManager.removePlayer(e.getPlayer().getUniqueId());
-    serviceContext.getNpcDialogueService().resetPlayerProgress(e.getPlayer().getUniqueId());
+    serviceContext.getNpcDialogueProgressService().resetPlayerProgress(e.getPlayer().getUniqueId());
   }
 }

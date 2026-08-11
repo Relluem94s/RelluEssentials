@@ -41,7 +41,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
-import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueService;
+import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
@@ -149,15 +149,15 @@ public class ServiceManager implements Enable {
     ProtectionActionService protectionActionService = new ProtectionActionService(serviceContext);
     serviceContext.setProtectionActionService(protectionActionService);
 
-    NpcRepository npcRepository = new NpcRepository(databaseHelper);
+    NpcRepository npcRepository = new NpcRepository(relluEssentials.getPersistenceContext().getNpcDao());
     NpcSpawner npcSpawner = new NpcSpawner();
     NpcValidator npcValidator = new NpcValidator();
     NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
     serviceContext.setNpcService(npcService);
 
     NpcDialogueRegistry npcDialogueRegistry = new NpcDialogueRegistry();
-    NpcDialogueService npcDialogueService = new NpcDialogueService(npcDialogueRegistry);
-    serviceContext.setNpcDialogueService(npcDialogueService);
+    NpcDialogueProgressService npcDialogueProgressService = new NpcDialogueProgressService(npcDialogueRegistry);
+    serviceContext.setNpcDialogueProgressService(npcDialogueProgressService);
 
     PositionRegistry positionRegistry = new PositionRegistry();
     PositionService positionService = new PositionService(positionRegistry,

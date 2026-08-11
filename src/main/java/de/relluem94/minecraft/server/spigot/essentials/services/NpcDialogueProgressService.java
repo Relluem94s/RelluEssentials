@@ -4,11 +4,11 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueReg
 import java.util.Map;
 import java.util.UUID;
 
-public class NpcDialogueService {
+public class NpcDialogueProgressService {
 
   private final NpcDialogueRegistry npcDialogueRegistry;
 
-  public NpcDialogueService(NpcDialogueRegistry npcDialogueRegistry) {
+  public NpcDialogueProgressService(NpcDialogueRegistry npcDialogueRegistry) {
     this.npcDialogueRegistry = npcDialogueRegistry;
   }
 

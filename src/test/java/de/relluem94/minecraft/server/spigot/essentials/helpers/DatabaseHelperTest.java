@@ -423,16 +423,6 @@ class DatabaseHelperTest {
     }
 
     @Test
-    void getNPCsReturnsEmptyListWhenNoneExist() throws SQLException, FileNotFoundException {
-        stubConnectionWithResultSet();
-        when(resultSet.next()).thenReturn(false);
-
-        var result = databaseHelper.getNPCs();
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
     void getProtectionLocksReturnsEmptyListWhenNoneExist() throws SQLException, FileNotFoundException {
         stubConnectionWithResultSet();
         when(resultSet.next()).thenReturn(false);

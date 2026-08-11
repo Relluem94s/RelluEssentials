@@ -146,7 +146,7 @@ public class Admin implements CommandConstruct {
         } else if ("dialogue".equalsIgnoreCase(strings[1])) {
           resolveNpcFromArg(strings[3]).ifPresent(npc -> {
             List<NpcDialogueEntry> dialogueEntries = serviceContext
-                .getDatabaseHelper().getNPCDialogues(npc.getDbid());
+                .getNpcService().getNPCDialogues(npc.getDbid());
             List<Integer> usedPositions = dialogueEntries.stream()
                 .map(NpcDialogueEntry::getListPosition)
                 .sorted()
@@ -209,7 +209,7 @@ public class Admin implements CommandConstruct {
       UUID npcId = UUID.fromString(npcIdArg);
       int listPosition = Integer.parseInt(listPositionArg);
       return serviceContext.getNpcService().getNPCById(npcId)
-          .flatMap(npc -> serviceContext.getDatabaseHelper()
+          .flatMap(npc -> serviceContext.getNpcService()
               .getNPCDialogues(npc.getDbid())
               .stream()
               .filter(entry -> entry.getListPosition() == listPosition)

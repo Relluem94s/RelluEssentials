@@ -72,8 +72,7 @@ public class NpcDialogueUpdateCommand implements SubCommand {
       entry.setText(StringHelper.replaceColor(text));
       entry.setUpdatedBy(playerEntry.getId());
 
-      boolean updated = serviceContext.getDatabaseHelper()
-          .updateNPCDialogue(entry, foundNpc.getId());
+      boolean updated = serviceContext.getNpcService().updateNPCDialogue(entry, foundNpc.getId());
 
       if (!updated) {
         player.sendMessage(

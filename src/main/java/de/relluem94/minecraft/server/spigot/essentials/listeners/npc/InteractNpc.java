@@ -64,7 +64,7 @@ public class InteractNpc implements ListenerConstruct {
       return;
     }
 
-    int lineIndex = serviceContext.getNpcDialogueService().getNextLineIndexAndAdvance(npc.getId(),
+    int lineIndex = serviceContext.getNpcDialogueProgressService().getNextLineIndexAndAdvance(npc.getId(),
         player.getUniqueId(), dialogueLines.size());
     player.sendMessage(
         "§e" + npc.getProfileName() + PLUGIN_FORMS_MSG_SPACER_IN + dialogueLines.get(lineIndex)
