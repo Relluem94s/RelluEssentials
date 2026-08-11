@@ -98,7 +98,7 @@ public class ServiceManager implements Enable {
     serviceContext.setTraderNpcService(traderNpcService);
 
     WarpRepository warpRepository = new WarpRepository(databaseHelper.getWarps());
-    serviceContext.setWarpService(new WarpService(warpRepository, databaseHelper));
+    serviceContext.setWarpService(new WarpService(warpRepository, databaseHelper, serviceContext.getLocationTypeService()));
 
     SchedulerService schedulerService = new SchedulerService(relluEssentials);
     serviceContext.setSchedulerService(schedulerService);

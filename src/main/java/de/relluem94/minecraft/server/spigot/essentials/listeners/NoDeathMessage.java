@@ -1,12 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NO_DEATH_MESSAGE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_LOCATION_TYPE_NOT_FOUND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
@@ -75,12 +76,15 @@ public class NoDeathMessage implements ListenerConstruct {
       Location location = new Location(ploc.getWorld(), ploc.getBlockX(), ploc.getBlockY(),
           ploc.getBlockZ(), ploc.getYaw(), ploc.getPitch());
 
+      LocationTypeEntry deathType = serviceContext.getLocationTypeService()
+          .findByName(LocationType.DEATH)
+          .orElseThrow(() -> new IllegalStateException(PLUGIN_EXCEPTION_LOCATION_TYPE_NOT_FOUND));
+
       PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
       LocationEntry le = new LocationEntry();
       le.setLocation(location);
       le.setLocationName(String.format(PLUGIN_EVENT_NO_DEATH_MESSAGE, random.nextInt(994)));
-      LocationTypeEntry locationType = RelluEssentials.getInstance().getLocationTypeEntryList().get(1);
-      le.setLocationType(locationType);
+      le.setLocationType(deathType);
       le.setPlayerId(pe.getId());
 
       TextComponent message = new TextComponent(
@@ -91,15 +95,15 @@ public class NoDeathMessage implements ListenerConstruct {
       p.spigot().sendMessage(message);
 
       serviceContext.getDatabaseHelper().insertLocation(le);
-      le = serviceContext.getDatabaseHelper().getLocation(location, locationType.getId());
-
-      World world = le.getLocation().getWorld();
-      String locationName = le.getLocationName();
-      Location leLocation = le.getLocation();
+      le = serviceContext.getDatabaseHelper().getLocation(location, deathType.getId());
 
       if (le != null) {
         pe.getHomes().add(le);
       }
+
+      World world = le.getLocation().getWorld();
+      String locationName = le.getLocationName();
+      Location leLocation = le.getLocation();
 
       if (world == null) {
         return;

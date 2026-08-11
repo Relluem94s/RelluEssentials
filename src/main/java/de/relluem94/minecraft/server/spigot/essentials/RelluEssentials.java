@@ -23,12 +23,9 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SignManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import lombok.Getter;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,9 +38,6 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 public class RelluEssentials extends JavaPlugin {
 
   private static RelluEssentials instance;
-
-  @Getter
-  private final List<LocationTypeEntry> locationTypeEntryList = new ArrayList<>();
 
   private long start;
 

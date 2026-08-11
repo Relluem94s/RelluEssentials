@@ -11,11 +11,13 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelper
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.LocationTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SettingRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.WorldGroupSettingRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.PluginInformationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.SettingRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WorldGroupSettingRepository;
+import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
@@ -81,7 +83,10 @@ public class DatabaseManager implements Enable {
     settingService.loadAll();
     serviceContext.setSettingService(settingService);
 
-    relluEssentialsPlugin.getLocationTypeEntryList().addAll(databaseHelper.getLocationTypes());
+    LocationTypeRegistry locationTypeRegistry = new LocationTypeRegistry();
+    locationTypeRegistry.initialize(databaseHelper.getLocationTypes());
+    LocationTypeService locationTypeService = new LocationTypeService(locationTypeRegistry);
+    serviceContext.setLocationTypeService(locationTypeService);
 
     WorldGroupSettingRegistry worldGroupSettingRegistry = new WorldGroupSettingRegistry();
     WorldGroupSettingRepository worldGroupSettingRepository = new WorldGroupSettingRepository(
