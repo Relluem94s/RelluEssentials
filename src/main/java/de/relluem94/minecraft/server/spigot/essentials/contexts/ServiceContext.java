@@ -29,6 +29,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -72,4 +73,5 @@ public class ServiceContext {
   private ClipboardService clipboardService;
   private PluginInformationService pluginInformationService;
   private LocationTypeService locationTypeService;
+  private LocationCleanUpService locationCleanUpService;
 }

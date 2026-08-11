@@ -5,20 +5,16 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 public class CleanUpLocationsCommand implements SubCommand {
 
   private final ServiceContext serviceContext;
-  private final LocationCleanUpService locationCleanUpService;
 
 
   public CleanUpLocationsCommand(ServiceContext context) {
     serviceContext = context;
-    locationCleanUpService = new LocationCleanUpService(serviceContext.getTranslationService(),
-        context.getDatabaseHelper());
   }
 
   @Override
@@ -27,7 +23,7 @@ public class CleanUpLocationsCommand implements SubCommand {
       player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
-    locationCleanUpService.cleanUpLocations(player);
+    serviceContext.getLocationCleanUpService().cleanUpLocations(player);
   }
 
   @Override
