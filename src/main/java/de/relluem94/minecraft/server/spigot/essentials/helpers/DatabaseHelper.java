@@ -658,11 +658,6 @@ public class DatabaseHelper {
     });
   }
 
-
-  public int cleanupLocations() {
-    return executeUpdateWithCount("cleanupLocations.sql");
-  }
-
   public int cleanupProtections() {
     return executeUpdateWithCount("cleanupProtections.sql");
   }

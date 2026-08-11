@@ -28,6 +28,7 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.BuyBackRepos
 import de.relluem94.minecraft.server.spigot.essentials.repositories.CropRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.DropRuleRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.LocationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.PlayerRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
@@ -54,6 +55,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
+import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.plugin.Plugin;
 
@@ -165,6 +167,14 @@ public class ServiceManager implements Enable {
     serviceContext.getSchedulerService()
         .runTaskTimer(() -> positionService.tickHighlights(), 0L, 20L);
     serviceContext.setPositionService(positionService);
+
+    LocationRepository locationRepository = new LocationRepository(relluEssentials.getPersistenceContext().getLocationDao());
+
+    LocationCleanUpService locationCleanUpService = new LocationCleanUpService(
+        serviceContext.getTranslationService(),
+        locationRepository
+        );
+    serviceContext.setLocationCleanUpService(locationCleanUpService);
   }
 
   public void preEnable(RelluEssentials relluEssentials) {

@@ -13,6 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.Classpa
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.registries.LocationTypeRegistry;
@@ -75,6 +76,7 @@ public class DatabaseManager implements Enable {
     QueryExecutor queryExecutor = new QueryExecutor(dataSource, sqlResourceLoader);
     relluEssentialsPlugin.getPersistenceContext().setQueryExecutor(queryExecutor);
     relluEssentialsPlugin.getPersistenceContext().setNpcDao(new NpcDao(queryExecutor));
+    relluEssentialsPlugin.getPersistenceContext().setLocationDao(new LocationDao(queryExecutor));
 
     databaseHelper.init();
 

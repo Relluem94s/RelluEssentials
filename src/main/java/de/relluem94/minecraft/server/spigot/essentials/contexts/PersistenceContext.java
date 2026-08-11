@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.contexts;
 
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import lombok.Getter;
@@ -13,5 +14,6 @@ public class PersistenceContext {
 
   private QueryExecutor queryExecutor;
   private NpcDao npcDao;
+  private LocationDao locationDao;
 
 }

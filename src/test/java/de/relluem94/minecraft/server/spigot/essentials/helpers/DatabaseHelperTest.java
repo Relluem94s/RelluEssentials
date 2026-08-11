@@ -488,28 +488,6 @@ class DatabaseHelperTest {
     }
 
     @Test
-    void deleteLocationExecutesPreparedStatement() throws SQLException, FileNotFoundException {
-        stubConnectionForExecution();
-        LocationEntry locationEntry = new LocationEntry();
-        locationEntry.setId(1);
-        locationEntry.setPlayerId(1);
-
-        databaseHelper.deleteLocation(locationEntry);
-
-        verify(preparedStatement).execute();
-    }
-
-    @Test
-    void cleanupLocationsReturnsAffectedRowCount() throws SQLException, FileNotFoundException {
-        stubConnectionForExecution();
-        when(preparedStatement.executeUpdate()).thenReturn(3);
-
-        int result = databaseHelper.cleanupLocations();
-
-        assertEquals(3, result);
-    }
-
-    @Test
     void cleanupProtectionsReturnsAffectedRowCount() throws SQLException, FileNotFoundException {
         stubConnectionForExecution();
         when(preparedStatement.executeUpdate()).thenReturn(2);
@@ -517,24 +495,6 @@ class DatabaseHelperTest {
         int result = databaseHelper.cleanupProtections();
 
         assertEquals(2, result);
-    }
-
-    @Test
-    void cleanupLocationsReturnsZeroOnSqlException() throws SQLException, FileNotFoundException {
-        stubConnectionForExecution();
-        when(preparedStatement.executeUpdate()).thenThrow(new SQLException("Error"));
-
-
-        Logger databaseHelperLogger = Logger.getLogger(DatabaseHelper.class.getName());
-        Level originalLevel = databaseHelperLogger.getLevel();
-        databaseHelperLogger.setLevel(Level.OFF);
-
-        try {
-            int result = databaseHelper.cleanupLocations();
-            assertEquals(0, result);
-        } finally {
-            databaseHelperLogger.setLevel(originalLevel);
-        }
     }
 
     @Test
