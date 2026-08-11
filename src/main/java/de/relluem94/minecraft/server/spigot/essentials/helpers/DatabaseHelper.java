@@ -72,7 +72,7 @@ public class DatabaseHelper {
   private final DataSource dataSource;
   private final DataSource dataSourceNoSchema;
   private final SqlResourceLoader sqlResourceLoader;
-  private ServiceContext serviceContext;
+  private final ServiceContext serviceContext;
   @Setter
   private IPatchHelper patchHelper;
 
@@ -236,7 +236,7 @@ public class DatabaseHelper {
       ps.setFloat(2, (float) l.getY());
       ps.setFloat(3, (float) l.getZ());
       ps.setInt(4, type);
-    }, LocationMapper::mapLocation);
+    }, rs -> LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService()));
   }
 
   public PlayerPartnerEntry getPlayerPartner(int playerFK) {
@@ -275,7 +275,8 @@ public class DatabaseHelper {
 
   public List<WorldGroupSettingEntry> getAllWorldGroupSettings() {
     return queryList("getAllWorldGroupSettings.sql",
-        ps -> {},
+        ps -> {
+        },
         rs -> WorldGroupSettingMapper.mapWorldGroupSetting(rs, serviceContext.getSettingService())
     );
   }
@@ -287,7 +288,7 @@ public class DatabaseHelper {
 
   public List<LocationEntry> getWarps() {
     return queryList("getWarps.sql", _ -> {
-    }, LocationMapper::mapLocation);
+    }, rs -> LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService()));
   }
 
   public List<GroupEntry> getGroups() {
@@ -325,7 +326,8 @@ public class DatabaseHelper {
   }
 
   public LocationEntry getLocation(int id) {
-    return querySingle("getLocationById.sql", ps -> ps.setInt(1, id), LocationMapper::mapLocation);
+    return querySingle("getLocationById.sql", ps -> ps.setInt(1, id),
+        rs -> LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService()));
   }
 
   public void insertPlayerPartner(@NotNull PlayerPartnerEntry ppe) {
@@ -506,8 +508,9 @@ public class DatabaseHelper {
       if (type != rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK)) {
         return null;
       }
-      return LocationMapper.mapLocation(rs);
-    }).stream().filter(Objects::nonNull).collect(java.util.stream.Collectors.toCollection(ArrayList::new));
+      return LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService());
+    }).stream().filter(Objects::nonNull)
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
   }
 
   public PlayerEntry getPlayer(String uuid) {

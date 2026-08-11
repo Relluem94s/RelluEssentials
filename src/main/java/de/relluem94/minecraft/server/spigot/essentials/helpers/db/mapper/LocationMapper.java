@@ -12,10 +12,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_WORLD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_YAW;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jspecify.annotations.NonNull;
@@ -26,7 +26,10 @@ public class LocationMapper {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
-  public static @NonNull LocationEntry mapLocation(@NonNull ResultSet rs) throws SQLException {
+  public static @NonNull LocationEntry mapLocation(
+      @NonNull ResultSet rs,
+      @NonNull LocationTypeService locationTypeService
+  ) throws SQLException {
     LocationEntry locationEntry = new LocationEntry();
     locationEntry.setId(rs.getInt(FIELD_ID));
     locationEntry.setPlayerId(rs.getInt(FIELD_PLAYER_FK));
@@ -39,11 +42,8 @@ public class LocationMapper {
     locationEntry.setPitch(rs.getFloat(FIELD_PITCH));
     locationEntry.setYaw(rs.getFloat(FIELD_YAW));
 
-    for (LocationTypeEntry lte : RelluEssentials.getInstance().getLocationTypeEntryList()) {
-      if (lte.getId() == rs.getInt(FIELD_LOCATION_TYPE_FK)) {
-        locationEntry.setLocationType(lte);
-      }
-    }
+    locationTypeService.findById(rs.getInt(FIELD_LOCATION_TYPE_FK))
+        .ifPresent(locationEntry::setLocationType);
     return locationEntry;
   }
 

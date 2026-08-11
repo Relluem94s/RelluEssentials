@@ -37,6 +37,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import java.io.FileNotFoundException;
@@ -45,7 +46,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,10 +102,6 @@ class DatabaseHelperTest {
         instanceField.setAccessible(true);
         instanceField.set(null, fakeInstance);
 
-        Field locationTypeEntryField = RelluEssentials.class.getDeclaredField("locationTypeEntryList");
-        locationTypeEntryField.setAccessible(true);
-        locationTypeEntryField.set(fakeInstance, new ArrayList<>());
-
         GroupRepository groupRepository = new GroupRepository(List.of());
         GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
         GroupService groupService = new GroupService(groupRegistry, groupRepository);
@@ -113,8 +109,10 @@ class DatabaseHelperTest {
 
         PlayerService playerService = mock(PlayerService.class);
         WarpService warpService = mock(WarpService.class);
+        LocationTypeService locationTypeService = mock(LocationTypeService.class);
 
         ServiceContext serviceContext = mock(ServiceContext.class);
+        when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
         when(serviceContext.getGroupService()).thenReturn(groupService);
         when(serviceContext.getPlayerService()).thenReturn(playerService);
         when(serviceContext.getWarpService()).thenReturn(warpService);
