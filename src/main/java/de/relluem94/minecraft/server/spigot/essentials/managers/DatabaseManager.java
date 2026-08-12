@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.ProtectionDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.registries.LocationTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SettingRegistry;
@@ -53,8 +54,10 @@ public class DatabaseManager implements Enable {
   public DatabaseManager(ServiceContext serviceContext, String host, String user, String password,
       int port) {
     try {
-      dataSource = DatabaseHelperFactory.buildDataSource(host, port, user, password, PLUGIN_DATABASE_NAME);
-      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password, serviceContext);
+      dataSource = DatabaseHelperFactory.buildDataSource(host, port, user, password,
+          PLUGIN_DATABASE_NAME);
+      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password,
+          serviceContext);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -74,9 +77,18 @@ public class DatabaseManager implements Enable {
 
     ClasspathSqlResourceLoader sqlResourceLoader = new ClasspathSqlResourceLoader();
     QueryExecutor queryExecutor = new QueryExecutor(dataSource, sqlResourceLoader);
+
+    LocationTypeRegistry locationTypeRegistry = new LocationTypeRegistry();
+    locationTypeRegistry.initialize(databaseHelper.getLocationTypes());
+    LocationTypeService locationTypeService = new LocationTypeService(locationTypeRegistry);
+    serviceContext.setLocationTypeService(locationTypeService);
+
     relluEssentialsPlugin.getPersistenceContext().setQueryExecutor(queryExecutor);
     relluEssentialsPlugin.getPersistenceContext().setNpcDao(new NpcDao(queryExecutor));
-    relluEssentialsPlugin.getPersistenceContext().setLocationDao(new LocationDao(queryExecutor));
+    relluEssentialsPlugin.getPersistenceContext()
+        .setLocationDao(new LocationDao(queryExecutor, serviceContext));
+    relluEssentialsPlugin.getPersistenceContext()
+        .setProtectionDao(new ProtectionDao(queryExecutor));
 
     databaseHelper.init();
 
@@ -86,10 +98,7 @@ public class DatabaseManager implements Enable {
     settingService.loadAll();
     serviceContext.setSettingService(settingService);
 
-    LocationTypeRegistry locationTypeRegistry = new LocationTypeRegistry();
-    locationTypeRegistry.initialize(databaseHelper.getLocationTypes());
-    LocationTypeService locationTypeService = new LocationTypeService(locationTypeRegistry);
-    serviceContext.setLocationTypeService(locationTypeService);
+
 
     WorldGroupSettingRegistry worldGroupSettingRegistry = new WorldGroupSettingRegistry();
     WorldGroupSettingRepository worldGroupSettingRepository = new WorldGroupSettingRepository(

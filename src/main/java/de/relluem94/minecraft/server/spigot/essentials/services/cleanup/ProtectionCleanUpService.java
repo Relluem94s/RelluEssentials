@@ -15,7 +15,6 @@ public class ProtectionCleanUpService {
 
   private final ServiceContext serviceContext;
 
-
   public ProtectionCleanUpService(ServiceContext serviceContext) {
     this.serviceContext = serviceContext;
   }
@@ -53,7 +52,7 @@ public class ProtectionCleanUpService {
                   serviceContext.getTranslationService()
                       .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS,
                           pe.getId(), pe.getMaterialName(), l.getBlock().getType().name()));
-              serviceContext.getDatabaseHelper().deleteProtection(pe);
+              serviceContext.getProtectionService().deleteProtectionAndRemoveFromRegistry(pe);
             }
 
             index[0]++;
@@ -92,7 +91,8 @@ public class ProtectionCleanUpService {
         300L
     );
 
-    int deleted = serviceContext.getDatabaseHelper().cleanupProtections();
+    int deleted = serviceContext.getProtectionService()
+        .removeOutdatedProtectionsFromDatabaseAndRegistry();
     p.sendMessage(
         serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END,

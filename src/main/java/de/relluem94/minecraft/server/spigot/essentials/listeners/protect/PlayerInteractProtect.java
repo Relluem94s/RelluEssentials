@@ -152,9 +152,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
         }
 
         if (update) {
-          context.getDatabaseHelper().updateProtectionFlag(pre);
-          context.getProtectionService().removeProtectionEntry(l);
-          context.getProtectionService().putProtectionEntry(l, pre);
+          context.getProtectionService().updateProtectionFlags(pre);
           e.getPlayer().sendMessage(
               context.getTranslationService()
                   .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_REMOVE));
@@ -224,9 +222,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
         }
 
         if (update) {
-          context.getDatabaseHelper().updateProtectionFlag(pre);
-          context.getProtectionService().removeProtectionEntry(l);
-          context.getProtectionService().putProtectionEntry(l, pre);
+          context.getProtectionService().updateProtectionFlags(pre);
           e.getPlayer().sendMessage(
               context.getTranslationService()
                   .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_FLAG_ADD));

@@ -29,7 +29,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeE
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupInventoryEntry;
@@ -252,16 +251,6 @@ class DatabaseHelperTest {
     }
 
     @Test
-    void getProtectionsReturnsEmptyMapWhenNoProtectionsExist() throws SQLException, FileNotFoundException {
-        stubConnectionWithResultSet();
-        when(resultSet.next()).thenReturn(false);
-
-        var result = databaseHelper.getProtections();
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
     void getLocationByIdReturnsNullWhenNotFound() throws SQLException, FileNotFoundException {
         stubConnectionWithResultSet();
         when(resultSet.next()).thenReturn(false);
@@ -423,16 +412,6 @@ class DatabaseHelperTest {
     }
 
     @Test
-    void getProtectionLocksReturnsEmptyListWhenNoneExist() throws SQLException, FileNotFoundException {
-        stubConnectionWithResultSet();
-        when(resultSet.next()).thenReturn(false);
-
-        var result = databaseHelper.getProtectionLocks();
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
     void insertPlayerExecutesPreparedStatement() throws SQLException, FileNotFoundException {
         stubConnectionForExecution();
         GroupEntry group = new GroupEntry();
@@ -485,16 +464,6 @@ class DatabaseHelperTest {
         databaseHelper.insertBankAccount(bankAccount);
 
         verify(preparedStatement).execute();
-    }
-
-    @Test
-    void cleanupProtectionsReturnsAffectedRowCount() throws SQLException, FileNotFoundException {
-        stubConnectionForExecution();
-        when(preparedStatement.executeUpdate()).thenReturn(2);
-
-        int result = databaseHelper.cleanupProtections();
-
-        assertEquals(2, result);
     }
 
     @Test
@@ -570,34 +539,6 @@ class DatabaseHelperTest {
         databaseHelper.insertGroup(groupEntry);
 
         verify(preparedStatement).execute();
-    }
-
-    @Test
-    void deleteProtectionExecutesPreparedStatement() throws SQLException, FileNotFoundException {
-        stubConnectionForExecution();
-        LocationEntry locationEntry = new LocationEntry();
-        locationEntry.setId(1);
-        locationEntry.setPlayerId(1);
-
-        ProtectionEntry protectionEntry = new ProtectionEntry();
-        protectionEntry.setId(1);
-        protectionEntry.setLocationEntry(locationEntry);
-
-        databaseHelper.deleteProtection(protectionEntry);
-
-        verify(preparedStatement, times(2)).execute();
-    }
-
-    @Test
-    void getProtectionByLocationReturnsNullWhenNotFound() throws SQLException, FileNotFoundException {
-        stubConnectionWithResultSet();
-        when(resultSet.next()).thenReturn(false);
-        when(world.getName()).thenReturn("world");
-        Location location = new Location(world, 1.0, 64.0, 1.0);
-
-        ProtectionEntry result = databaseHelper.getProtectionByLocation(location);
-
-        assertNull(result);
     }
 
     @Test
@@ -742,59 +683,6 @@ class DatabaseHelperTest {
     }
 
     @Test
-    void updateProtectionRightExecutesPreparedStatement() throws SQLException, FileNotFoundException {
-        stubConnectionForExecution();
-
-        LocationEntry locationEntry = new LocationEntry();
-        locationEntry.setPlayerId(1);
-
-        ProtectionEntry protectionEntry = new ProtectionEntry();
-        protectionEntry.setId(1);
-        protectionEntry.setLocationEntry(locationEntry);
-        protectionEntry.setRights(new org.json.JSONObject());
-
-        databaseHelper.updateProtectionRight(protectionEntry);
-
-        verify(preparedStatement).execute();
-    }
-
-    @Test
-    void updateProtectionFlagExecutesPreparedStatement() throws SQLException, FileNotFoundException {
-        stubConnectionForExecution();
-
-        LocationEntry locationEntry = new LocationEntry();
-        locationEntry.setPlayerId(1);
-
-        ProtectionEntry protectionEntry = new ProtectionEntry();
-        protectionEntry.setId(1);
-        protectionEntry.setLocationEntry(locationEntry);
-        protectionEntry.setFlags(new org.json.JSONObject());
-
-        databaseHelper.updateProtectionFlag(protectionEntry);
-
-        verify(preparedStatement).execute();
-    }
-
-    @Test
-    void insertProtectionExecutesPreparedStatement() throws SQLException, FileNotFoundException {
-        stubConnectionForExecution();
-
-        LocationEntry locationEntry = new LocationEntry();
-        locationEntry.setId(1);
-        locationEntry.setPlayerId(1);
-
-        ProtectionEntry protectionEntry = new ProtectionEntry();
-        protectionEntry.setLocationEntry(locationEntry);
-        protectionEntry.setMaterialName("CHEST");
-        protectionEntry.setRights(new org.json.JSONObject());
-        protectionEntry.setFlags(new org.json.JSONObject());
-
-        databaseHelper.insertProtection(protectionEntry);
-
-        verify(preparedStatement).execute();
-    }
-
-    @Test
     void insertLocationExecutesPreparedStatement() throws SQLException, FileNotFoundException, NoSuchFieldException, IllegalAccessException {
         stubConnectionForExecution();
         stubBukkitServer();
@@ -907,90 +795,5 @@ class DatabaseHelperTest {
         assertEquals(1, result.size());
         assertEquals("test-uuid", result.getFirst().getUuid());
         assertEquals("TestPlayer", result.getFirst().getName());
-    }
-
-    @Test
-    void getProtectionByLocationReturnsMappedProtectionWhenFound() throws SQLException, FileNotFoundException {
-        stubConnectionWithResultSet();
-        when(resultSet.next()).thenReturn(true, false, false);
-        when(world.getName()).thenReturn("world");
-
-        when(resultSet.getInt("id")).thenReturn(1);
-        when(resultSet.getString("material_name")).thenReturn("CHEST");
-        when(resultSet.getString("flags")).thenReturn("{}");
-        when(resultSet.getString("rights")).thenReturn("{}");
-        when(resultSet.getString("created")).thenReturn("2024-01-01 00:00:00");
-        when(resultSet.getInt("createdby")).thenReturn(1);
-        when(resultSet.getString("updated")).thenReturn("2024-01-01 00:00:00");
-        when(resultSet.getInt("updatedby")).thenReturn(1);
-        when(resultSet.getString("deleted")).thenReturn(null);
-        when(resultSet.getInt("deletedby")).thenReturn(0);
-
-        Location location = new Location(world, 1.0, 64.0, 1.0);
-
-        ProtectionEntry result = databaseHelper.getProtectionByLocation(location);
-
-        assertNotNull(result);
-        assertEquals(1, result.getId());
-        assertEquals("CHEST", result.getMaterialName());
-    }
-
-
-
-    @Test
-    void getProtectionsReturnsMappedProtectionWhenLocationExists() throws SQLException, FileNotFoundException, NoSuchFieldException, IllegalAccessException {
-        stubBukkitServer();
-        when(dataSource.getConnection()).thenReturn(connection);
-        when(sqlResourceLoader.load(anyString())).thenReturn("SELECT 1");
-
-        when(connection.prepareStatement(anyString()))
-                .thenReturn(preparedStatement)
-                .thenReturn(preparedStatementLocation);
-
-        when(preparedStatement.getResultSet()).thenReturn(resultSet);
-        when(preparedStatementLocation.getResultSet()).thenReturn(resultSetLocation);
-
-        when(resultSet.next()).thenReturn(true, false);
-        when(resultSet.getInt("location_fk")).thenReturn(1);
-        when(resultSet.getInt("id")).thenReturn(1);
-        when(resultSet.getString("material_name")).thenReturn("CHEST");
-        when(resultSet.getString("flags")).thenReturn("{}");
-        when(resultSet.getString("rights")).thenReturn("{}");
-        when(resultSet.getString("created")).thenReturn("2024-01-01 00:00:00");
-        when(resultSet.getInt("createdby")).thenReturn(1);
-        when(resultSet.getString("updated")).thenReturn("2024-01-01 00:00:00");
-        when(resultSet.getInt("updatedby")).thenReturn(1);
-        when(resultSet.getString("deleted")).thenReturn(null);
-        when(resultSet.getInt("deletedby")).thenReturn(0);
-
-        when(resultSetLocation.next()).thenReturn(true, false);
-        when(resultSetLocation.getFloat("x")).thenReturn(1.0f);
-        when(resultSetLocation.getFloat("y")).thenReturn(64.0f);
-        when(resultSetLocation.getFloat("z")).thenReturn(1.0f);
-        when(resultSetLocation.getFloat("yaw")).thenReturn(0.0f);
-        when(resultSetLocation.getFloat("pitch")).thenReturn(0.0f);
-        when(resultSetLocation.getString("world")).thenReturn("world");
-        when(resultSetLocation.getString("location_name")).thenReturn("home");
-        when(resultSetLocation.getInt("player_fk")).thenReturn(1);
-        when(resultSetLocation.getInt("id")).thenReturn(1);
-
-        var result = databaseHelper.getProtections();
-
-        assertFalse(result.isEmpty());
-        assertEquals(1, result.size());
-        tearDownBukkitServer();
-    }
-
-    @Test
-    void getProtectionsLogsErrorWhenLocationEntryIsMissing() throws SQLException, FileNotFoundException {
-        stubConnectionWithResultSet();
-
-        when(resultSet.next()).thenReturn(true, false, false);
-        when(resultSet.getInt("location_fk")).thenReturn(999);
-        when(resultSet.getInt("id")).thenReturn(42);
-
-        var result = databaseHelper.getProtections();
-
-        assertTrue(result.isEmpty());
     }
 }

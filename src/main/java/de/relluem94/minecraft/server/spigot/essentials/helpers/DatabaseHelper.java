@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BankMap
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.PlayerMapper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.ProtectionMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.SettingMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.TraderNpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.WorldGroupSettingMapper;
@@ -31,8 +30,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeE
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionLockEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
@@ -45,9 +42,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,6 +57,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rellu
  */
+@Deprecated
 public class DatabaseHelper {
 
   private final DataSource dataSource;
@@ -225,6 +221,7 @@ public class DatabaseHelper {
     executeUpdateNoSchema(script);
   }
 
+  @Deprecated
   public LocationEntry getLocation(@NotNull Location l, int type) {
     return querySingle("getLocationByLocation.sql", ps -> {
       ps.setFloat(1, (float) l.getX());
@@ -297,11 +294,6 @@ public class DatabaseHelper {
         key -> Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(key))));
   }
 
-  public List<ProtectionLockEntry> getProtectionLocks() {
-    return queryList("getProtectionLocks.sql", _ -> {
-    }, ProtectionMapper::mapProtectionLock);
-  }
-
   public List<BankTierEntry> getBankTiers() {
     return queryList("getBankTiers.sql", _ -> {
     }, BankMapper::mapBankTier);
@@ -320,6 +312,7 @@ public class DatabaseHelper {
     return querySingle("getBankTier.sql", ps -> ps.setInt(1, id), BankMapper::mapBankTier);
   }
 
+  @Deprecated
   public LocationEntry getLocation(int id) {
     return querySingle("getLocationById.sql", ps -> ps.setInt(1, id),
         rs -> LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService()));
@@ -364,6 +357,7 @@ public class DatabaseHelper {
     });
   }
 
+  @Deprecated
   public void insertLocation(@NotNull LocationEntry le) {
     executeUpdate("insertLocation.sql", ps -> {
       Location l = le.getLocation();
@@ -380,36 +374,11 @@ public class DatabaseHelper {
     });
   }
 
+  @Deprecated
   public void deleteLocation(@NotNull LocationEntry le) {
     executeUpdate("deleteLocation.sql", ps -> {
       ps.setInt(1, le.getPlayerId());
       ps.setInt(2, le.getId());
-    });
-  }
-
-  public void insertProtection(@NotNull ProtectionEntry pe) {
-    executeUpdate("insertProtection.sql", ps -> {
-      ps.setInt(1, pe.getLocationEntry().getPlayerId());
-      ps.setInt(2, pe.getLocationEntry().getId());
-      ps.setString(3, pe.getMaterialName());
-      ps.setString(4, pe.getFlags().toString());
-      ps.setString(5, pe.getRights().toString());
-    });
-  }
-
-  public void updateProtectionFlag(@NotNull ProtectionEntry pe) {
-    executeUpdate("updateProtectionFlags.sql", ps -> {
-      ps.setInt(1, pe.getLocationEntry().getPlayerId());
-      ps.setString(2, pe.getFlags().toString());
-      ps.setInt(3, pe.getId());
-    });
-  }
-
-  public void updateProtectionRight(@NotNull ProtectionEntry pe) {
-    executeUpdate("updateProtectionRights.sql", ps -> {
-      ps.setInt(1, pe.getLocationEntry().getPlayerId());
-      ps.setString(2, pe.getRights().toString());
-      ps.setInt(3, pe.getId());
     });
   }
 
@@ -498,6 +467,7 @@ public class DatabaseHelper {
         rs -> WorldMapper.mapWorldGroup(rs, getAllWorldGroupSettings()));
   }
 
+  @Deprecated
   public List<LocationEntry> getLocations(int id, int type) {
     return queryList("getLocationsByPlayer.sql", ps -> ps.setInt(1, id), rs -> {
       if (type != rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK)) {
@@ -561,45 +531,6 @@ public class DatabaseHelper {
         BankMapper::mapBankTransaction);
   }
 
-  public ProtectionEntry getProtectionByLocation(@NotNull Location l) {
-    return querySingle("getProtectionByLocation.sql", ps -> {
-      ps.setFloat(1, (float) l.getX());
-      ps.setFloat(2, (float) l.getY());
-      ps.setFloat(3, (float) l.getZ());
-      ps.setString(4, Objects.requireNonNull(l.getWorld()).getName());
-    }, rs -> {
-      ProtectionEntry pe = ProtectionMapper.mapProtection(rs);
-      pe.setLocationEntry(getLocation(l, 5));
-      return pe;
-    });
-  }
-
-  public void deleteProtection(@NotNull ProtectionEntry pe) {
-    deleteLocation(pe.getLocationEntry());
-    executeUpdate("deleteProtection.sql", ps -> {
-      ps.setInt(1, pe.getLocationEntry().getPlayerId());
-      ps.setInt(2, pe.getId());
-    });
-  }
-
-  public Map<Location, ProtectionEntry> getProtections() {
-    Map<Location, ProtectionEntry> protectionsByLocation = new HashMap<>();
-    queryForEach("getProtections.sql", _ -> {
-    }, rs -> {
-      LocationEntry loc = getLocation(rs.getInt(DatabaseMappings.FIELD_LOCATION_FK));
-      if (loc != null) {
-        ProtectionEntry pe = ProtectionMapper.mapProtection(rs);
-        pe.setLocationEntry(loc);
-        protectionsByLocation.put(loc.getLocation(), pe);
-      } else {
-        Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE,
-            "Protection Entry ({0}) without LocationEntry found, this should be due a bug.",
-            rs.getInt(DatabaseMappings.FIELD_ID));
-      }
-    });
-    return protectionsByLocation;
-  }
-
   public List<PlayerEntry> getPlayers() {
     return queryList("getPlayers.sql", _ -> {
     }, rs -> {
@@ -656,10 +587,6 @@ public class DatabaseHelper {
       }
       ps.setInt(BagHelper.BAG_SIZE + 2, be.getId());
     });
-  }
-
-  public int cleanupProtections() {
-    return executeUpdateWithCount("cleanupProtections.sql");
   }
 
   @FunctionalInterface

@@ -30,6 +30,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryServi
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
+import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -74,4 +75,5 @@ public class ServiceContext {
   private PluginInformationService pluginInformationService;
   private LocationTypeService locationTypeService;
   private LocationCleanUpService locationCleanUpService;
+  private ProtectionCleanUpService protectionCleanUpService;
 }

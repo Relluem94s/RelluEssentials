@@ -32,7 +32,7 @@ public class QueryExecutor {
     this.sqlResourceLoader = sqlResourceLoader;
   }
 
-  private void queryForEach(String sqlFile, StatementConfigurer configurer, RowConsumer consumer) {
+  public void queryForEach(String sqlFile, StatementConfigurer configurer, RowConsumer consumer) {
     try (Connection connection = dataSource.getConnection();
         PreparedStatement ps = connection.prepareStatement(
             sqlResourceLoader.load("sqls/" + sqlFile))) {
@@ -188,7 +188,7 @@ public class QueryExecutor {
   }
 
   @FunctionalInterface
-  private interface RowConsumer {
+  public interface RowConsumer {
 
     void consume(ResultSet rs) throws SQLException;
   }

@@ -135,6 +135,9 @@ public class RelluEssentials extends JavaPlugin {
     worldManager.enable(this);
     serviceContext.getSchedulerService()
         .runTaskLater(() -> serviceContext.getNpcService().loadAndSpawnNpcsInLoadedChunks(), 20L);
+    System.out.println("TEST22: " + serviceContext.getProtectionService().getAllProtectionEntries().size());
+    serviceContext.getProtectionService().getAllProtectionEntries()
+        .forEach((location, protectionEntry) -> System.out.println(location + " -> " + protectionEntry));
   }
 
   @Override
