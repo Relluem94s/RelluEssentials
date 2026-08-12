@@ -94,8 +94,8 @@ public class NoDeathMessage implements ListenerConstruct {
           "/home " + Home.Commands.TP.getName() + " " + le.getLocationName()));
       p.spigot().sendMessage(message);
 
-      serviceContext.getDatabaseHelper().insertLocation(le);
-      le = serviceContext.getDatabaseHelper().getLocation(location, deathType.getId());
+      serviceContext.getLocationService().save(le);
+      le = serviceContext.getLocationService().findByLocationAndType(location, LocationType.DEATH);
 
       if (le != null) {
         pe.getHomes().add(le);
