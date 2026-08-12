@@ -19,6 +19,7 @@ public class ProtectionEntry {
   private int updatedBy;
   private String deleted;
   private int deletedBy;
+  private int locationFk;
   private LocationEntry locationEntry;
   private String materialName;
   private JSONObject flags;

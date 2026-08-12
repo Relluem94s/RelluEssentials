@@ -6,6 +6,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_DELETEDBY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_FLAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_ID;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_LOCATION_FK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_MATERIAL_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_RIGHTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UPDATED;
@@ -36,6 +37,7 @@ public class ProtectionMapper {
     pe.setUpdatedBy(rs.getInt(FIELD_UPDATEDBY));
     pe.setDeleted(rs.getString(FIELD_DELETED));
     pe.setDeletedBy(rs.getInt(FIELD_DELETEDBY));
+    pe.setLocationFk(rs.getInt(FIELD_LOCATION_FK));
     String flagsJson = rs.getString(FIELD_FLAGS);
     pe.setFlags(flagsJson != null ? new JSONObject(flagsJson) : new JSONObject());
     String rightsJson = rs.getString(FIELD_RIGHTS);

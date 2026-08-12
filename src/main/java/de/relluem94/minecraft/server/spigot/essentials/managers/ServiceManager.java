@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
@@ -31,6 +32,7 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupReposit
 import de.relluem94.minecraft.server.spigot.essentials.repositories.LocationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.PlayerRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.ProtectionRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
@@ -56,6 +58,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
+import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.plugin.Plugin;
 
@@ -82,10 +85,15 @@ public class ServiceManager implements Enable {
     BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
     serviceContext.setBlockDropService(blockDropService);
 
+    PersistenceContext persistenceContext = relluEssentials.getPersistenceContext();
+
+    ProtectionRepository protectionRepository = new ProtectionRepository(
+        persistenceContext.getProtectionDao(), persistenceContext.getLocationDao());
+
     ProtectionService protectionService = new ProtectionService(
-        databaseHelper.getProtectionLocks(),
-        databaseHelper.getProtections(),
-        databaseHelper);
+        protectionRepository.loadAllLocks(),
+        protectionRepository.loadAll(),
+        protectionRepository);
     serviceContext.setProtectionService(protectionService);
 
     TraderNpcRegistry traderNpcRegistry = new TraderNpcRegistry(
@@ -100,7 +108,8 @@ public class ServiceManager implements Enable {
     serviceContext.setTraderNpcService(traderNpcService);
 
     WarpRepository warpRepository = new WarpRepository(databaseHelper.getWarps());
-    serviceContext.setWarpService(new WarpService(warpRepository, databaseHelper, serviceContext.getLocationTypeService()));
+    serviceContext.setWarpService(
+        new WarpService(warpRepository, databaseHelper, serviceContext.getLocationTypeService()));
 
     SchedulerService schedulerService = new SchedulerService(relluEssentials);
     serviceContext.setSchedulerService(schedulerService);
@@ -151,14 +160,16 @@ public class ServiceManager implements Enable {
     ProtectionActionService protectionActionService = new ProtectionActionService(serviceContext);
     serviceContext.setProtectionActionService(protectionActionService);
 
-    NpcRepository npcRepository = new NpcRepository(relluEssentials.getPersistenceContext().getNpcDao());
+    NpcRepository npcRepository = new NpcRepository(
+        relluEssentials.getPersistenceContext().getNpcDao());
     NpcSpawner npcSpawner = new NpcSpawner();
     NpcValidator npcValidator = new NpcValidator();
     NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
     serviceContext.setNpcService(npcService);
 
     NpcDialogueRegistry npcDialogueRegistry = new NpcDialogueRegistry();
-    NpcDialogueProgressService npcDialogueProgressService = new NpcDialogueProgressService(npcDialogueRegistry);
+    NpcDialogueProgressService npcDialogueProgressService = new NpcDialogueProgressService(
+        npcDialogueRegistry);
     serviceContext.setNpcDialogueProgressService(npcDialogueProgressService);
 
     PositionRegistry positionRegistry = new PositionRegistry();
@@ -168,13 +179,18 @@ public class ServiceManager implements Enable {
         .runTaskTimer(() -> positionService.tickHighlights(), 0L, 20L);
     serviceContext.setPositionService(positionService);
 
-    LocationRepository locationRepository = new LocationRepository(relluEssentials.getPersistenceContext().getLocationDao());
+    LocationRepository locationRepository = new LocationRepository(
+        persistenceContext.getLocationDao());
 
     LocationCleanUpService locationCleanUpService = new LocationCleanUpService(
         serviceContext.getTranslationService(),
         locationRepository
-        );
+    );
     serviceContext.setLocationCleanUpService(locationCleanUpService);
+
+    ProtectionCleanUpService protectionCleanUpService = new ProtectionCleanUpService(
+        serviceContext);
+    serviceContext.setProtectionCleanUpService(protectionCleanUpService);
   }
 
   public void preEnable(RelluEssentials relluEssentials) {

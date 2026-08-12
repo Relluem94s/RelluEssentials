@@ -171,7 +171,8 @@ public class ModifyHelper {
           .getProtectionEntry(block.getLocation());
 
       if (protection != null) {
-        RelluEssentials.getInstance().getServiceContext().getDatabaseHelper().deleteProtection(protection);
+        RelluEssentials.getInstance().getServiceContext().getProtectionService()
+            .deleteProtectionAndRemoveFromRegistry(protection);
         RelluEssentials.getInstance().getServiceContext().getProtectionService()
             .removeProtectionEntry(block.getLocation());
       }

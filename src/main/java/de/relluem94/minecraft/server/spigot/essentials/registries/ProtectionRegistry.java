@@ -39,16 +39,15 @@ public class ProtectionRegistry {
    * @return the {@link ProtectionEntry} at the given location, or {@code null} if none exists
    */
   public ProtectionEntry getProtectionEntry(Location l) {
-    return protectionEntryMap.get(l);
+    return protectionEntryMap.get(normalizeLocation(l));
   }
-
   /**
    * Removes the {@link ProtectionEntry} associated with the given {@link Location}.
    *
    * @param l the location whose protection entry should be removed
    */
   public void removeProtectionEntry(Location l) {
-    protectionEntryMap.remove(l);
+    protectionEntryMap.remove(normalizeLocation(l));
   }
 
   /**
@@ -59,7 +58,7 @@ public class ProtectionRegistry {
    * @param pe the {@link ProtectionEntry} to associate with the location
    */
   public void putProtectionEntry(Location l, ProtectionEntry pe) {
-    protectionEntryMap.put(l, pe);
+    protectionEntryMap.put(normalizeLocation(l), pe);
   }
 
   /**
@@ -91,5 +90,16 @@ public class ProtectionRegistry {
 
   public boolean isProtectableMaterial(Material material) {
     return protectionLocksList.contains(material);
+  }
+
+  public void removeProtectionEntriesByIds(List<Long> protectionIds) {
+    protectionEntryMap.entrySet().removeIf(
+        entry -> protectionIds.contains((long) entry.getValue().getId())
+    );
+  }
+
+
+  private static Location normalizeLocation(Location location) {
+    return new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());
   }
 }
