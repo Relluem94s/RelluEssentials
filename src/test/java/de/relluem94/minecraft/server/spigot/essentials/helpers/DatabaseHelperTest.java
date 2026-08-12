@@ -251,27 +251,6 @@ class DatabaseHelperTest {
     }
 
     @Test
-    void getLocationByIdReturnsNullWhenNotFound() throws SQLException, FileNotFoundException {
-        stubConnectionWithResultSet();
-        when(resultSet.next()).thenReturn(false);
-
-        LocationEntry result = databaseHelper.getLocation(99);
-
-        assertNull(result);
-    }
-
-    @Test
-    void getLocationByLocationReturnsNullWhenNotFound() throws SQLException, FileNotFoundException {
-        stubConnectionWithResultSet();
-        when(resultSet.next()).thenReturn(false);
-        Location location = new Location(world, 1.0, 64.0, 1.0);
-
-        LocationEntry result = databaseHelper.getLocation(location, 1);
-
-        assertNull(result);
-    }
-
-    @Test
     void getBankTierReturnsNullWhenNotFound() throws SQLException, FileNotFoundException {
         stubConnectionWithResultSet();
         when(resultSet.next()).thenReturn(false);

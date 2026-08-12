@@ -109,7 +109,7 @@ public class Home implements CommandConstruct {
                 serviceContext.getTranslationService()
                     .getWithPrefix(MessageKey.COMMAND_HOME_EXISTS, args[1]));
           } else if (!args[1].startsWith("death_")) {
-            serviceContext.getDatabaseHelper().insertLocation(le);
+            serviceContext.getLocationService().save(le);
             pe.getHomes().add(le);
             p.sendMessage(serviceContext.getTranslationService()
                 .getWithPrefix(MessageKey.COMMAND_HOME_SET, args[1]));
@@ -131,7 +131,7 @@ public class Home implements CommandConstruct {
               return true;
             }
 
-            serviceContext.getDatabaseHelper().deleteLocation(le);
+            serviceContext.getLocationService().delete(le);
             return true;
           } else if (deathExists(pe, le)) {
             le = getLocationEntry(pe, le);
@@ -144,7 +144,7 @@ public class Home implements CommandConstruct {
               return true;
             }
 
-            serviceContext.getDatabaseHelper().deleteLocation(le);
+            serviceContext.getLocationService().delete(le);
             return true;
           } else if (le.getLocationName().startsWith("death_") && le.getLocationName()
               .contains("*")) {
@@ -152,7 +152,7 @@ public class Home implements CommandConstruct {
               p.sendMessage(serviceContext.getTranslationService()
                   .getWithPrefix(MessageKey.COMMAND_HOME_DEATH_DELETE,
                       dle.getLocationName()));
-              serviceContext.getDatabaseHelper().deleteLocation(dle);
+              serviceContext.getLocationService().delete(dle);
             }
             pe.getDeaths().clear();
             return true;

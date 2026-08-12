@@ -221,16 +221,6 @@ public class DatabaseHelper {
     executeUpdateNoSchema(script);
   }
 
-  @Deprecated
-  public LocationEntry getLocation(@NotNull Location l, int type) {
-    return querySingle("getLocationByLocation.sql", ps -> {
-      ps.setFloat(1, (float) l.getX());
-      ps.setFloat(2, (float) l.getY());
-      ps.setFloat(3, (float) l.getZ());
-      ps.setInt(4, type);
-    }, rs -> LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService()));
-  }
-
   public PlayerPartnerEntry getPlayerPartner(int playerFK) {
     return querySingle("getPlayerPartner.sql", ps -> {
       ps.setInt(1, playerFK);
@@ -312,12 +302,6 @@ public class DatabaseHelper {
     return querySingle("getBankTier.sql", ps -> ps.setInt(1, id), BankMapper::mapBankTier);
   }
 
-  @Deprecated
-  public LocationEntry getLocation(int id) {
-    return querySingle("getLocationById.sql", ps -> ps.setInt(1, id),
-        rs -> LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService()));
-  }
-
   public void insertPlayerPartner(@NotNull PlayerPartnerEntry ppe) {
     executeUpdate("insertPlayerPartner.sql", ps -> {
       ps.setInt(1, ppe.getCreatedBy());
@@ -371,14 +355,6 @@ public class DatabaseHelper {
       ps.setString(8, le.getLocationName());
       ps.setInt(9, le.getLocationType().getId());
       ps.setInt(10, le.getPlayerId());
-    });
-  }
-
-  @Deprecated
-  public void deleteLocation(@NotNull LocationEntry le) {
-    executeUpdate("deleteLocation.sql", ps -> {
-      ps.setInt(1, le.getPlayerId());
-      ps.setInt(2, le.getId());
     });
   }
 

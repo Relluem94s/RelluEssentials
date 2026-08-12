@@ -43,6 +43,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
@@ -109,7 +110,7 @@ public class ServiceManager implements Enable {
 
     WarpRepository warpRepository = new WarpRepository(databaseHelper.getWarps());
     serviceContext.setWarpService(
-        new WarpService(warpRepository, databaseHelper, serviceContext.getLocationTypeService()));
+        new WarpService(warpRepository, serviceContext.getLocationService()));
 
     SchedulerService schedulerService = new SchedulerService(relluEssentials);
     serviceContext.setSchedulerService(schedulerService);
@@ -181,6 +182,9 @@ public class ServiceManager implements Enable {
 
     LocationRepository locationRepository = new LocationRepository(
         persistenceContext.getLocationDao());
+
+    serviceContext.setLocationService(
+        new LocationService(locationRepository, serviceContext.getLocationTypeService()));
 
     LocationCleanUpService locationCleanUpService = new LocationCleanUpService(
         serviceContext.getTranslationService(),

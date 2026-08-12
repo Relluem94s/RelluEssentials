@@ -11,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
@@ -73,6 +74,7 @@ public class ServiceContext {
   private WorldGroupService worldGroupService;
   private ClipboardService clipboardService;
   private PluginInformationService pluginInformationService;
+  private LocationService locationService;
   private LocationTypeService locationTypeService;
   private LocationCleanUpService locationCleanUpService;
   private ProtectionCleanUpService protectionCleanUpService;

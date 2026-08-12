@@ -87,6 +87,7 @@ public class DatabaseManager implements Enable {
     relluEssentialsPlugin.getPersistenceContext().setNpcDao(new NpcDao(queryExecutor));
     relluEssentialsPlugin.getPersistenceContext()
         .setLocationDao(new LocationDao(queryExecutor, serviceContext));
+
     relluEssentialsPlugin.getPersistenceContext()
         .setProtectionDao(new ProtectionDao(queryExecutor));
 

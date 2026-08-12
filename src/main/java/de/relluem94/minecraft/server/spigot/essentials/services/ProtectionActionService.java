@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_RIGHTS;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
@@ -109,7 +110,8 @@ public class ProtectionActionService {
 
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
     ProtectionEntry bpe = new ProtectionEntry();
-    LocationEntry l = serviceContext.getDatabaseHelper().getLocation(b.getLocation(), 5);
+    LocationEntry l = serviceContext.getLocationService()
+        .findByLocationAndType(b.getLocation(), LocationType.PROTECTION);
 
     boolean playerHasRightsToProtect = true;
 
@@ -124,8 +126,8 @@ public class ProtectionActionService {
     l = buildLocationEntry(b, pe);
     serviceContext.getDatabaseHelper().insertLocation(l);
 
-    LocationEntry persistedLocationEntry = serviceContext.getDatabaseHelper()
-        .getLocation(b.getLocation(), 5);
+    LocationEntry persistedLocationEntry = serviceContext.getLocationService()
+        .findByLocationAndType(b.getLocation(), LocationType.PROTECTION);
 
     bpe.setCreatedBy(pe.getId());
     bpe.setMaterialName(b.getType().name());
