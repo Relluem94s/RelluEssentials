@@ -10,7 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BankMap
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.PlayerMapper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.SettingMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.TraderNpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.WorldGroupSettingMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.WorldMapper;
@@ -26,7 +25,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
@@ -169,11 +167,6 @@ public class DatabaseHelper {
       fallback.setDbVersion(-1);
       return fallback;
     }
-  }
-
-  public List<SettingEntry> getAllSettings() {
-    return queryList("getAllSettings.sql", _ -> {
-    }, SettingMapper::mapSetting);
   }
 
   public List<WorldGroupSettingEntry> getAllWorldGroupSettings() {

@@ -20,6 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationD
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.ProtectionDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.SettingDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.registries.LocationTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SettingRegistry;
@@ -97,13 +98,11 @@ public class DatabaseManager implements Enable {
 
     databaseHelper.init();
 
-    SettingRepository settingRepository = new SettingRepository(databaseHelper);
+    SettingRepository settingRepository = new SettingRepository(new SettingDao(queryExecutor));
     SettingRegistry settingRegistry = new SettingRegistry();
     SettingService settingService = new SettingService(settingRegistry, settingRepository);
     settingService.loadAll();
     serviceContext.setSettingService(settingService);
-
-
 
     WorldGroupSettingRegistry worldGroupSettingRegistry = new WorldGroupSettingRegistry();
     WorldGroupSettingRepository worldGroupSettingRepository = new WorldGroupSettingRepository(
