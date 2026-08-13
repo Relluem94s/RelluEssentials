@@ -51,10 +51,21 @@ public class PlayerService {
     });
   }
 
-  public @Nullable PlayerEntry getPlayer(String name) {
+  public @Nullable PlayerEntry getPlayerByName(String name) {
     for (PlayerEntry pe : playerRegistry.getPlayerEntryMap()
         .values()) {
       if (pe.getName().equals(name)) {
+        return pe;
+      }
+    }
+
+    return null;
+  }
+
+  public @Nullable PlayerEntry getPlayerByUuid(String uuid) {
+    for (PlayerEntry pe : playerRegistry.getPlayerEntryMap()
+        .values()) {
+      if (pe.getUuid().equals(uuid)) {
         return pe;
       }
     }

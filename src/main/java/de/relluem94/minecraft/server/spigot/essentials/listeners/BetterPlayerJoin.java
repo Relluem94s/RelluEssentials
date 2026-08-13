@@ -28,7 +28,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
   }
 
   private void addPlayer(@NonNull Player p) {
-    PlayerEntry pe = serviceContext.getPlayerService().getPlayer(p.getUniqueId().toString());
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerByUuid(p.getUniqueId().toString());
     if (pe == null) {
       pe = new PlayerEntry();
       pe.setCreatedBy(1);
@@ -38,14 +38,14 @@ public class BetterPlayerJoin implements ListenerConstruct {
       pe.setUuid(p.getUniqueId().toString());
       serviceContext.getPlayerService().registerNewPlayer(pe);
 
-      pe = serviceContext.getPlayerService().getPlayer(p.getUniqueId().toString());
+      pe = serviceContext.getPlayerService().getPlayerByUuid(p.getUniqueId().toString());
       p.sendMessage(
           serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
     } else {
       if (pe.getName() == null) {
         pe.setName(p.getName());
         serviceContext.getPlayerService().savePlayer(pe);
-        pe = serviceContext.getPlayerService().getPlayer(p.getUniqueId().toString());
+        pe = serviceContext.getPlayerService().getPlayerByUuid(p.getUniqueId().toString());
       }
     }
 
