@@ -6,7 +6,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.DropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BagSalesmanNpc;
@@ -60,7 +59,6 @@ import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryServi
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
-import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.plugin.Plugin;
 
 public class ServiceManager implements Enable {
@@ -69,14 +67,12 @@ public class ServiceManager implements Enable {
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentials = (RelluEssentials) plugin;
     ServiceContext serviceContext = relluEssentials.getServiceContext();
+    PersistenceContext persistenceContext = relluEssentials.getPersistenceContext();
     DatabaseHelper databaseHelper = serviceContext.getDatabaseHelper();
 
     /* Services */
     serviceContext.setClipboardService(new ClipboardService());
-    DropRuleRepository dropRuleRepository = new DropRuleRepository();
-    for (DropEntry de : databaseHelper.getDrops()) {
-      dropRuleRepository.register(de.getMaterial(), new DoubleStore<>(de.getMin(), de.getMax()));
-    }
+    DropRuleRepository dropRuleRepository = new DropRuleRepository(persistenceContext.getDropDao());
 
     CropRepository cropRepository = new CropRepository();
     for (CropEntry ce : databaseHelper.getCrops()) {
@@ -86,7 +82,6 @@ public class ServiceManager implements Enable {
     BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
     serviceContext.setBlockDropService(blockDropService);
 
-    PersistenceContext persistenceContext = relluEssentials.getPersistenceContext();
 
     ProtectionRepository protectionRepository = new ProtectionRepository(
         persistenceContext.getProtectionDao(), persistenceContext.getLocationDao());

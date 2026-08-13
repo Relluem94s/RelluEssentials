@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.Classpa
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.DropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao;
@@ -86,7 +87,7 @@ public class DatabaseManager implements Enable {
     LocationTypeService locationTypeService = new LocationTypeService(locationTypeRegistry);
     serviceContext.setLocationTypeService(locationTypeService);
 
-
+    persistenceContext.setDropDao(new DropDao(queryExecutor));
     persistenceContext.setNpcDao(new NpcDao(queryExecutor));
     persistenceContext.setPlayerDao(new PlayerDao(queryExecutor, serviceContext));
     persistenceContext.setLocationDao(new LocationDao(queryExecutor, serviceContext));
