@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
@@ -15,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.ProtectionDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.registries.LocationTypeRegistry;
@@ -51,13 +53,13 @@ public class DatabaseManager implements Enable {
    * @param port     the database port
    * @throws RuntimeException if the database connection fails
    */
-  public DatabaseManager(ServiceContext serviceContext, String host, String user, String password,
+  public DatabaseManager(PersistenceContext persistenceContext, ServiceContext serviceContext, String host, String user, String password,
       int port) {
     try {
       dataSource = DatabaseHelperFactory.buildDataSource(host, port, user, password,
           PLUGIN_DATABASE_NAME);
       databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password,
-          serviceContext);
+          serviceContext, persistenceContext);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -67,6 +69,7 @@ public class DatabaseManager implements Enable {
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
     ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
+    PersistenceContext persistenceContext = relluEssentialsPlugin.getPersistenceContext();
 
     PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(
         databaseHelper);
@@ -83,13 +86,11 @@ public class DatabaseManager implements Enable {
     LocationTypeService locationTypeService = new LocationTypeService(locationTypeRegistry);
     serviceContext.setLocationTypeService(locationTypeService);
 
-    relluEssentialsPlugin.getPersistenceContext().setQueryExecutor(queryExecutor);
-    relluEssentialsPlugin.getPersistenceContext().setNpcDao(new NpcDao(queryExecutor));
-    relluEssentialsPlugin.getPersistenceContext()
-        .setLocationDao(new LocationDao(queryExecutor, serviceContext));
 
-    relluEssentialsPlugin.getPersistenceContext()
-        .setProtectionDao(new ProtectionDao(queryExecutor));
+    persistenceContext.setNpcDao(new NpcDao(queryExecutor));
+    persistenceContext.setPlayerDao(new PlayerDao(queryExecutor, serviceContext));
+    persistenceContext.setLocationDao(new LocationDao(queryExecutor, serviceContext));
+    persistenceContext.setProtectionDao(new ProtectionDao(queryExecutor));
 
     databaseHelper.init();
 

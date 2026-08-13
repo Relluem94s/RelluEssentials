@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 
 import com.mysql.cj.jdbc.MysqlDataSource;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
@@ -22,7 +23,7 @@ public class DatabaseHelperFactory {
   }
 
   public static DatabaseHelper createForProduction(String host, int port, String user,
-      String password, ServiceContext serviceContext) throws SQLException {
+      String password, ServiceContext serviceContext, PersistenceContext persistenceContext) throws SQLException {
     MysqlDataSource dataSource = buildDataSource(host, port, user, password, PLUGIN_DATABASE_NAME);
     MysqlDataSource dataSourceNoSchema = buildDataSource(host, port, user, password, null);
     ClasspathSqlResourceLoader sqlResourceLoader = new ClasspathSqlResourceLoader();
@@ -31,6 +32,7 @@ public class DatabaseHelperFactory {
         sqlResourceLoader, serviceContext);
 
     IPatchHelper patchHelper = new PatchHelper(
+        persistenceContext,
         databaseHelper,
         serviceContext.getPlayerService(),
         patchedInformation -> {
@@ -47,7 +49,7 @@ public class DatabaseHelperFactory {
   }
 
   @SuppressWarnings("unused")
-  public static DatabaseHelper createForTest(String host, int port, ServiceContext serviceContext)
+  public static DatabaseHelper createForTest(String host, int port, ServiceContext serviceContext, PersistenceContext persistenceContext)
       throws SQLException {
     MysqlDataSource dataSource = buildDataSource(host, port, "root", "", PLUGIN_DATABASE_NAME);
     MysqlDataSource dataSourceNoSchema = buildDataSource(host, port, "root", "", null);
@@ -57,6 +59,7 @@ public class DatabaseHelperFactory {
         sqlResourceLoader, new ServiceContext());
 
     IPatchHelper patchHelper = new PatchHelper(
+        persistenceContext,
         databaseHelper,
         serviceContext.getPlayerService(),
         noOpPluginInfoConsumer(),

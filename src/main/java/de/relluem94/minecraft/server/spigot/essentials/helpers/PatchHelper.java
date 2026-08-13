@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -20,18 +21,20 @@ public class PatchHelper implements IPatchHelper {
   private final PlayerService playerService;
   private final Consumer<PluginInformationEntry> onPatchingFinished;
   private final ConfigHelper configHelper;
+  private final PersistenceContext persistenceContext;
 
 
-  public PatchHelper(DatabaseHelper databaseHelper, PlayerService playerService,
+  public PatchHelper(PersistenceContext persistenceContext, DatabaseHelper databaseHelper, PlayerService playerService,
       Consumer<PluginInformationEntry> onPatchingFinished, ConfigHelper configHelper) {
     this.databaseHelper = databaseHelper;
     this.playerService = playerService;
     this.onPatchingFinished = onPatchingFinished;
     this.configHelper = configHelper;
+    this.persistenceContext = persistenceContext;
   }
 
   private void finishPatching() {
-    List<PlayerEntry> players = databaseHelper.getPlayers();
+    List<PlayerEntry> players = persistenceContext.getPlayerDao().findAll();
     players.forEach(p -> playerService.putPlayerEntry(UUID.fromString(p.getUuid()), p));
 
     PluginInformationEntry pluginInformation = databaseHelper.getPluginInformation();
@@ -55,7 +58,7 @@ public class PatchHelper implements IPatchHelper {
 
     if (configHelper.isConfigFound()) {
       List<PlayerEntry> pe = configHelper.getPlayers();
-      pe.forEach(databaseHelper::insertPlayer);
+      pe.forEach(persistenceContext.getPlayerDao()::insert);
 
       for (PlayerEntry p : pe) {
         PlayerEntry pu = playerService
@@ -64,10 +67,10 @@ public class PatchHelper implements IPatchHelper {
         pu.setFlying(p.isFlying());
         pu.setCustomName(p.getCustomName());
         pu.setUpdatedBy(1);
-        databaseHelper.updatePlayer(pu);
+        persistenceContext.getPlayerDao().update(pu);
 
         List<LocationEntry> lel = configHelper.getHomes(pu);
-        lel.forEach(databaseHelper::insertLocation);
+        lel.forEach(persistenceContext.getLocationDao()::insertLocation);
       }
     }
   }

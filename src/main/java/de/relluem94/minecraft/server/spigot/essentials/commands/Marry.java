@@ -102,7 +102,7 @@ public class Marry implements CommandConstruct {
     playerPartnerEntry.setFirstPartnerId(firstPlayer.getId());
     playerPartnerEntry.setSecondPartnerId(secondPlayer.getId());
 
-    serviceContext.getDatabaseHelper().insertPlayerPartner(playerPartnerEntry);
+    serviceContext.getPlayerService().savePartner(playerPartnerEntry);
     playerPartnerEntry = serviceContext.getPlayerService().getPartner(firstPlayer);
 
     firstPlayer.setPartner(playerPartnerEntry);
@@ -151,7 +151,7 @@ public class Marry implements CommandConstruct {
       pe.setPartner(null);
       secondPlayerEntry.setPartner(null);
 
-      serviceContext.getDatabaseHelper().deletePlayerPartner(ppe);
+      serviceContext.getPlayerService().deletePartner(ppe);
 
       Collection<ProtectionEntry> protectionEntryList = new ArrayList<>(
           serviceContext.getProtectionService().getAllProtectionEntries().values());

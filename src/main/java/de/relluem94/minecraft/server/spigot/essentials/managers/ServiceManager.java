@@ -123,8 +123,16 @@ public class ServiceManager implements Enable {
     GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
     GroupService groupService = new GroupService(groupRegistry, groupRepository);
     serviceContext.setGroupService(groupService);
+
+    LocationRepository locationRepository = new LocationRepository(
+        persistenceContext.getLocationDao());
+
+    serviceContext.setLocationService(
+        new LocationService(locationRepository, serviceContext.getLocationTypeService()));
+
+
     PlayerRegistry playerRegistry = new PlayerRegistry();
-    PlayerRepository playerRepository = new PlayerRepository(serviceContext.getDatabaseHelper());
+    PlayerRepository playerRepository = new PlayerRepository(persistenceContext.getPlayerDao());
     PlayerService playerService = new PlayerService(serviceContext, playerRegistry,
         playerRepository);
     playerService.initialize();
@@ -177,14 +185,8 @@ public class ServiceManager implements Enable {
     PositionService positionService = new PositionService(positionRegistry,
         serviceContext.getTranslationService());
     serviceContext.getSchedulerService()
-        .runTaskTimer(() -> positionService.tickHighlights(), 0L, 20L);
+        .runTaskTimer(positionService::tickHighlights, 0L, 20L);
     serviceContext.setPositionService(positionService);
-
-    LocationRepository locationRepository = new LocationRepository(
-        persistenceContext.getLocationDao());
-
-    serviceContext.setLocationService(
-        new LocationService(locationRepository, serviceContext.getLocationTypeService()));
 
     LocationCleanUpService locationCleanUpService = new LocationCleanUpService(
         serviceContext.getTranslationService(),

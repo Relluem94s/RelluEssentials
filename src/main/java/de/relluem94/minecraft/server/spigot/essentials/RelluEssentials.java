@@ -104,6 +104,7 @@ public class RelluEssentials extends JavaPlugin {
     ItemManager itemManager = new ItemManager();
     itemManager.enable(this);
     DatabaseManager databaseManager = new DatabaseManager(
+        persistenceContext,
         serviceContext,
         getConfig().getString("database.host"),
         getConfig().getString("database.user"),

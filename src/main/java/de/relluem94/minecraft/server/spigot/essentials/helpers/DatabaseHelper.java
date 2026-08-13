@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BagMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BankMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.LocationMapper;
@@ -28,7 +27,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
@@ -43,12 +41,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
 import lombok.Setter;
-import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
@@ -77,22 +73,6 @@ public class DatabaseHelper {
 
   public void init() {
     patchHelper.applyPatch(getPluginInformation().getDbVersion());
-  }
-
-  private void queryForEach(String sqlFile, StatementConfigurer configurer, RowConsumer consumer) {
-    try (Connection connection = dataSource.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile))) {
-      configurer.configure(ps);
-      ps.execute();
-      try (ResultSet rs = ps.getResultSet()) {
-        while (rs.next()) {
-          consumer.consume(rs);
-        }
-      }
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-    }
   }
 
   private <T> List<T> queryList(String sqlFile, StatementConfigurer configurer,
@@ -161,29 +141,6 @@ public class DatabaseHelper {
     }
   }
 
-  private int executeUpdateWithCount(String sqlFile) {
-    try (Connection connection = dataSource.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile))) {
-      return ps.executeUpdate();
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-      return 0;
-    }
-  }
-
-  private int executeUpdateWithCount(String sqlFile, StatementConfigurer configurer) {
-    try (Connection connection = dataSource.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile))) {
-      configurer.configure(ps);
-      return ps.executeUpdate();
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-      return 0;
-    }
-  }
-
   private void executeUpdateNoSchema(String sqlFile) {
     try (Connection connection = dataSourceNoSchema.getConnection();
         PreparedStatement ps = connection.prepareStatement(
@@ -194,24 +151,6 @@ public class DatabaseHelper {
     }
   }
 
-  private int executeInsertWithGeneratedKey(String sqlFile, StatementConfigurer configurer) {
-    try (Connection connection = dataSource.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile),
-            PreparedStatement.RETURN_GENERATED_KEYS)) {
-      configurer.configure(ps);
-      ps.executeUpdate();
-      try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-        if (generatedKeys.next()) {
-          return generatedKeys.getInt(1);
-        }
-      }
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-    }
-    return -1;
-  }
-
   void executeScript(String script) {
     executeUpdate(script, _ -> {
     });
@@ -219,13 +158,6 @@ public class DatabaseHelper {
 
   void executeScriptNoSchema(String script) {
     executeUpdateNoSchema(script);
-  }
-
-  public PlayerPartnerEntry getPlayerPartner(int playerFK) {
-    return querySingle("getPlayerPartner.sql", ps -> {
-      ps.setInt(1, playerFK);
-      ps.setInt(2, playerFK);
-    }, PlayerMapper::mapPlayerPartner);
   }
 
   public PluginInformationEntry getPluginInformation() {
@@ -300,71 +232,6 @@ public class DatabaseHelper {
 
   public BankTierEntry getBankTier(int id) {
     return querySingle("getBankTier.sql", ps -> ps.setInt(1, id), BankMapper::mapBankTier);
-  }
-
-  public void insertPlayerPartner(@NotNull PlayerPartnerEntry ppe) {
-    executeUpdate("insertPlayerPartner.sql", ps -> {
-      ps.setInt(1, ppe.getCreatedBy());
-      ps.setInt(2, ppe.getFirstPartnerId());
-      ps.setInt(3, ppe.getSecondPartnerId());
-      ps.setBoolean(4, ppe.isShareProtections());
-    });
-  }
-
-  public void deletePlayerPartner(@NotNull PlayerPartnerEntry ppe) {
-    executeUpdate("deletePlayerPartner.sql", ps -> {
-      ps.setInt(1, ppe.getDeletedBy());
-      ps.setInt(2, ppe.getId());
-    });
-  }
-
-  public void insertPlayer(@NotNull PlayerEntry pe) {
-    executeUpdate("insertPlayer.sql", ps -> {
-      ps.setInt(1, pe.getCreatedBy());
-      ps.setString(2, pe.getUuid());
-      ps.setString(3, pe.getName());
-      ps.setString(4, pe.getCustomName());
-      ps.setInt(5, pe.getGroup().getId());
-    });
-  }
-
-  public void updatePlayer(@NotNull PlayerEntry pe) {
-    executeUpdate("updatePlayer.sql", ps -> {
-      ps.setInt(1, pe.getId());
-      ps.setInt(2, pe.getGroup().getId());
-      ps.setBoolean(3, pe.isAfk());
-      ps.setBoolean(4, pe.isFlying());
-      ps.setString(5, pe.getName());
-      ps.setString(6, pe.getCustomName());
-      ps.setDouble(7, pe.getPurse());
-      ps.setString(8, pe.getUuid());
-    });
-  }
-
-  @Deprecated
-  public void insertLocation(@NotNull LocationEntry le) {
-    executeUpdate("insertLocation.sql", ps -> {
-      Location l = le.getLocation();
-      ps.setInt(1, le.getPlayerId());
-      ps.setFloat(2, (float) l.getX());
-      ps.setFloat(3, (float) l.getY());
-      ps.setFloat(4, (float) l.getZ());
-      ps.setFloat(5, l.getYaw());
-      ps.setFloat(6, l.getPitch());
-      ps.setString(7, Objects.requireNonNull(l.getWorld()).getName());
-      ps.setString(8, le.getLocationName());
-      ps.setInt(9, le.getLocationType().getId());
-      ps.setInt(10, le.getPlayerId());
-    });
-  }
-
-  @SuppressWarnings("unused")
-  public void updatePlayerPartner(@NotNull PlayerPartnerEntry ppe) {
-    executeUpdate("updatePlayerPartner.sql", ps -> {
-      ps.setInt(1, ppe.getUpdatedBy());
-      ps.setBoolean(2, ppe.isShareProtections());
-      ps.setInt(3, ppe.getId());
-    });
   }
 
   public List<WorldGroupEntry> getWorldGroups() {
@@ -443,28 +310,6 @@ public class DatabaseHelper {
         rs -> WorldMapper.mapWorldGroup(rs, getAllWorldGroupSettings()));
   }
 
-  @Deprecated
-  public List<LocationEntry> getLocations(int id, int type) {
-    return queryList("getLocationsByPlayer.sql", ps -> ps.setInt(1, id), rs -> {
-      if (type != rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK)) {
-        return null;
-      }
-      return LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService());
-    }).stream().filter(Objects::nonNull)
-        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
-  }
-
-  public PlayerEntry getPlayer(String uuid) {
-    return querySingle("getPlayer.sql", ps -> ps.setString(1, uuid), rs -> {
-      PlayerEntry p = PlayerMapper.mapPlayer(rs, serviceContext.getGroupService());
-      p.setHomes(getLocations(p.getId(), 1));
-      p.setDeaths(getLocations(p.getId(), 2));
-      p.setPartner(getPlayerPartner(p.getId()));
-      p.setPlayerState(PlayerState.DEFAULT);
-      return p;
-    });
-  }
-
   public BankAccountEntry getPlayerBankAccount(int playerFK) {
     return querySingle("getBankAccountByPlayer.sql", ps -> ps.setInt(1, playerFK), rs -> {
       BankAccountEntry bae = BankMapper.mapBankAccount(rs);
@@ -505,18 +350,6 @@ public class DatabaseHelper {
   public List<BankTransactionEntry> getTransactionsToBankFromPlayer(int bankAccountFK) {
     return queryList("getBankAccountTransactionsByPlayer.sql", ps -> ps.setInt(1, bankAccountFK),
         BankMapper::mapBankTransaction);
-  }
-
-  public List<PlayerEntry> getPlayers() {
-    return queryList("getPlayers.sql", _ -> {
-    }, rs -> {
-      PlayerEntry p = PlayerMapper.mapPlayer(rs, serviceContext.getGroupService());
-      p.setHomes(getLocations(p.getId(), 1));
-      p.setDeaths(getLocations(p.getId(), 2));
-      p.setPartner(getPlayerPartner(p.getId()));
-      p.setPlayerState(PlayerState.DEFAULT);
-      return p;
-    });
   }
 
   public void insertGroup(@NotNull GroupEntry ge) {
@@ -575,11 +408,5 @@ public class DatabaseHelper {
   private interface RowMapper<T> {
 
     T map(ResultSet rs) throws SQLException;
-  }
-
-  @FunctionalInterface
-  private interface RowConsumer {
-
-    void consume(ResultSet rs) throws SQLException;
   }
 }

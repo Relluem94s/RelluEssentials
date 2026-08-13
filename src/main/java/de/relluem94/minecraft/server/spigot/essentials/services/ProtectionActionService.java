@@ -9,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import java.util.List;
@@ -109,7 +108,6 @@ public class ProtectionActionService {
     }
 
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
-    ProtectionEntry bpe = new ProtectionEntry();
     LocationEntry l = serviceContext.getLocationService()
         .findByLocationAndType(b.getLocation(), LocationType.PROTECTION);
 
@@ -123,12 +121,13 @@ public class ProtectionActionService {
       return false;
     }
 
-    l = buildLocationEntry(b, pe);
-    serviceContext.getDatabaseHelper().insertLocation(l);
+    serviceContext.getLocationService().save(serviceContext.getLocationService()
+        .buildLocationEntry(p, null, LocationType.PROTECTION, pe.getId()));
 
     LocationEntry persistedLocationEntry = serviceContext.getLocationService()
         .findByLocationAndType(b.getLocation(), LocationType.PROTECTION);
 
+    ProtectionEntry bpe = new ProtectionEntry();
     bpe.setCreatedBy(pe.getId());
     bpe.setMaterialName(b.getType().name());
     bpe.setLocationEntry(persistedLocationEntry);
@@ -181,16 +180,6 @@ public class ProtectionActionService {
       }
     }
     return false;
-  }
-
-  private LocationEntry buildLocationEntry(Block b, PlayerEntry pe) {
-    LocationEntry l = new LocationEntry();
-    l.setLocation(b.getLocation());
-    LocationTypeEntry lt = new LocationTypeEntry();
-    lt.setId(5);
-    l.setLocationType(lt);
-    l.setPlayerId(pe.getId());
-    return l;
   }
 
   private JSONObject buildRightsJson(PlayerEntry pe) {

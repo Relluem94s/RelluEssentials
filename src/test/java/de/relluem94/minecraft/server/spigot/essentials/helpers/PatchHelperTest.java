@@ -7,8 +7,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.util.Collections;
 import java.util.List;
@@ -33,15 +35,21 @@ class PatchHelperTest {
     private PlayerService playerService;
     @Mock
     private ConfigHelper configHelperMock;
+    @Mock
+    private PlayerDao playerDao;
 
     private PatchHelper patchHelper;
+
+    @Mock
+    private PersistenceContext persistenceContext;
 
     private MockedStatic<ChatHelper> chatHelperMock;
 
     @BeforeEach
     void setUp() {
+        when(persistenceContext.getPlayerDao()).thenReturn(playerDao);
         chatHelperMock = mockStatic(ChatHelper.class);
-        patchHelper = new PatchHelper(databaseHelper, playerService, _ -> {}, configHelperMock);
+        patchHelper = new PatchHelper(persistenceContext, databaseHelper, playerService, _ -> {}, configHelperMock);
     }
 
     @AfterEach
@@ -51,12 +59,12 @@ class PatchHelperTest {
 
     @Test
     void applyPatch_whenVersionIsMinusOne_appliesAllPatchesInOrder() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(-1);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch1Scripts(inOrder);
         verifyPatch2Scripts(inOrder);
         verifyPatch3Scripts(inOrder);
@@ -67,18 +75,18 @@ class PatchHelperTest {
         verifyPatch8Scripts(inOrder);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIsZero_appliesAllPatchesInOrder() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(0);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch1Scripts(inOrder);
         verifyPatch2Scripts(inOrder);
         verifyPatch3Scripts(inOrder);
@@ -89,19 +97,19 @@ class PatchHelperTest {
         verifyPatch8Scripts(inOrder);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs1_appliesPatchesFrom2To10() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(1);
 
         verify(databaseHelper, never()).executeScriptNoSchema(anyString());
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch2Scripts(inOrder);
         verifyPatch3Scripts(inOrder);
         verifyPatch4Scripts(inOrder);
@@ -111,18 +119,18 @@ class PatchHelperTest {
         verifyPatch8Scripts(inOrder);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs2_appliesPatchesFrom3To10() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(2);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch3Scripts(inOrder);
         verifyPatch4Scripts(inOrder);
         verifyPatch5Scripts(inOrder);
@@ -131,18 +139,18 @@ class PatchHelperTest {
         verifyPatch8Scripts(inOrder);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs3_appliesPatchesFrom4To10() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(3);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch4Scripts(inOrder);
         verifyPatch5Scripts(inOrder);
         verifyPatch6Scripts(inOrder);
@@ -150,100 +158,100 @@ class PatchHelperTest {
         verifyPatch8Scripts(inOrder);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs4_appliesPatchesFrom5To10() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(4);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch5Scripts(inOrder);
         verifyPatch6Scripts(inOrder);
         verifyPatch7Scripts(inOrder);
         verifyPatch8Scripts(inOrder);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs5_appliesPatchesFrom6To10() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(5);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch6Scripts(inOrder);
         verifyPatch7Scripts(inOrder);
         verifyPatch8Scripts(inOrder);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs6_appliesPatchesFrom7To10() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(6);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch7Scripts(inOrder);
         verifyPatch8Scripts(inOrder);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs7_appliesPatchesFrom8To10() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(7);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch8Scripts(inOrder);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs8_appliesPatchesFrom9To10() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(8);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch9Scripts(inOrder);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs9_appliesOnlyPatch10() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(9);
 
-        InOrder inOrder = inOrder(databaseHelper);
+        InOrder inOrder = inOrder(databaseHelper, playerDao);
         verifyPatch10Scripts(inOrder);
-        inOrder.verify(databaseHelper).getPlayers();
+        inOrder.verify(persistenceContext.getPlayerDao()).findAll();
         inOrder.verify(databaseHelper).getPluginInformation();
     }
 
@@ -254,13 +262,13 @@ class PatchHelperTest {
 
         verify(databaseHelper, never()).executeScript(anyString());
         verify(databaseHelper, never()).executeScriptNoSchema(anyString());
-        verify(databaseHelper, never()).getPlayers();
+        verify(persistenceContext.getPlayerDao(), never()).findAll();
         verify(databaseHelper, never()).getPluginInformation();
     }
 
     @Test
     void applyPatch_whenVersionIs1_doesNotApplyPatch1Scripts() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(1);
@@ -273,23 +281,23 @@ class PatchHelperTest {
     void finishPatching_whenPlayersExist_putsEachPlayerIntoPlayerAPI() {
         PlayerEntry playerEntryOne = buildPlayerEntryWithUuid(UUID.randomUUID());
         PlayerEntry playerEntryTwo = buildPlayerEntryWithUuid(UUID.randomUUID());
-        when(databaseHelper.getPlayers()).thenReturn(List.of(playerEntryOne, playerEntryTwo));
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(List.of(playerEntryOne, playerEntryTwo));
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(9);
 
-        verify(databaseHelper).getPlayers();
+        verify(persistenceContext.getPlayerDao()).findAll();
         verify(databaseHelper).getPluginInformation();
     }
 
     @Test
     void finishPatching_whenNoPlayersExist_completesWithoutError() {
-        when(databaseHelper.getPlayers()).thenReturn(Collections.emptyList());
+        when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
         when(databaseHelper.getPluginInformation()).thenReturn(new PluginInformationEntry());
 
         patchHelper.applyPatch(9);
 
-        verify(databaseHelper).getPlayers();
+        verify(persistenceContext.getPlayerDao()).findAll();
         verify(databaseHelper).getPluginInformation();
     }
 

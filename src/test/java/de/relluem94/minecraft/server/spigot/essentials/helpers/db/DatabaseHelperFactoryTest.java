@@ -10,6 +10,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
@@ -32,6 +33,9 @@ class DatabaseHelperFactoryTest {
     private ServiceContext serviceContext;
 
     @Mock
+    PersistenceContext persistenceContext;
+
+    @Mock
     private PlayerService playerService;
 
     @Mock
@@ -51,7 +55,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForProduction(
-                    null, -1, null, null, serviceContext
+                    null, -1, null, null, serviceContext, persistenceContext
             );
 
             assertNotNull(databaseHelper);
@@ -64,7 +68,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForTest(
-                    null, -1, serviceContext
+                    null, -1, serviceContext, persistenceContext
             );
 
             assertNotNull(databaseHelper);
@@ -78,7 +82,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForProduction(
-                    "localhost", 3306, "root", "", serviceContext
+                    "localhost", 3306, "root", "", serviceContext, persistenceContext
             );
 
             assertAll(
@@ -94,7 +98,7 @@ class DatabaseHelperFactoryTest {
             mockedStatic.when(RelluEssentials::getInstance).thenReturn(pluginInstance);
 
             DatabaseHelper databaseHelper = DatabaseHelperFactory.createForTest(
-                    "localhost", 3306, serviceContext
+                    "localhost", 3306, serviceContext, persistenceContext
             );
 
             assertAll(
