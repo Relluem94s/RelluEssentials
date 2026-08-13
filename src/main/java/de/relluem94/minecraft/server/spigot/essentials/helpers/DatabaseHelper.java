@@ -21,8 +21,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.CropEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.DropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
@@ -50,6 +48,7 @@ import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * Legacy DatabaseHelper will be removed.
  *
  * @author rellu
  */
@@ -170,16 +169,6 @@ public class DatabaseHelper {
       fallback.setDbVersion(-1);
       return fallback;
     }
-  }
-
-  public List<CropEntry> getCrops() {
-    return queryList("getCrops.sql", _ -> {
-    }, MiscMapper::mapCrop);
-  }
-
-  public List<DropEntry> getDrops() {
-    return queryList("getDrops.sql", _ -> {
-    }, MiscMapper::mapDrop);
   }
 
   public List<SettingEntry> getAllSettings() {
