@@ -16,6 +16,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformatio
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
+@Deprecated
 public class DatabaseHelperFactory {
 
   private DatabaseHelperFactory() {

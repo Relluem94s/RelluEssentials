@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -44,7 +43,7 @@ public class QueryExecutor {
         }
       }
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
     }
   }
 
@@ -62,7 +61,7 @@ public class QueryExecutor {
         }
       }
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
     }
     return results;
   }
@@ -79,7 +78,7 @@ public class QueryExecutor {
         }
       }
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
     }
     return null;
   }
@@ -97,7 +96,7 @@ public class QueryExecutor {
         }
       }
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
       throw new RuntimeException(ex);
     }
     return null;
@@ -110,7 +109,7 @@ public class QueryExecutor {
       configurer.configure(ps);
       ps.execute();
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
     }
   }
 
@@ -120,7 +119,7 @@ public class QueryExecutor {
             sqlResourceLoader.load("sqls/" + sqlFile))) {
       return ps.executeUpdate();
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
       return 0;
     }
   }
@@ -132,7 +131,7 @@ public class QueryExecutor {
       configurer.configure(ps);
       return ps.executeUpdate();
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
       return 0;
     }
   }
@@ -143,7 +142,7 @@ public class QueryExecutor {
             sqlResourceLoader.load("sqls/" + sqlFile))) {
       ps.execute();
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
     }
   }
 
@@ -160,7 +159,7 @@ public class QueryExecutor {
         }
       }
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
     }
     return -1;
   }
