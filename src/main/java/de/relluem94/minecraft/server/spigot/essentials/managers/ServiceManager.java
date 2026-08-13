@@ -5,7 +5,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceConte
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.CropEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BagSalesmanNpc;
@@ -73,12 +72,7 @@ public class ServiceManager implements Enable {
     /* Services */
     serviceContext.setClipboardService(new ClipboardService());
     DropRuleRepository dropRuleRepository = new DropRuleRepository(persistenceContext.getDropDao());
-
-    CropRepository cropRepository = new CropRepository();
-    for (CropEntry ce : databaseHelper.getCrops()) {
-      cropRepository.register(ce.getSeed(), ce.getPlant());
-    }
-
+    CropRepository cropRepository = new CropRepository(persistenceContext.getCropDao());
     BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
     serviceContext.setBlockDropService(blockDropService);
 
