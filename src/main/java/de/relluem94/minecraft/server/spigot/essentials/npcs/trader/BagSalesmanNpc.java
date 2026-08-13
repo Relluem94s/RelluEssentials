@@ -8,17 +8,16 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
 public class BagSalesmanNpc extends TraderNpc {
 
-  private final BagService bagService;
+  private final ServiceContext serviceContext;
 
   public BagSalesmanNpc(ServiceContext serviceContext) {
     super(ItemConstants.PLUGIN_ITEM_NPC_BAGSALESMAN, Profession.LEATHERWORKER, Type.TRADER);
-    this.bagService = serviceContext.getBagService();
+    this.serviceContext = serviceContext;
   }
 
   private ItemHelper resolveCloseItem() {
@@ -29,7 +28,7 @@ public class BagSalesmanNpc extends TraderNpc {
 
   @Override
   public Inventory getMainGUI() {
-    Inventory inv = bagService.getBagsInventory(true, getTitle());
+    Inventory inv = serviceContext.getBagService().getBagsInventory(true, getTitle());
     inv.setItem(53, resolveCloseItem().getCustomItem());
 
     return inv;
