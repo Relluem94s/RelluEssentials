@@ -13,7 +13,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.ClasspathSqlResourceLoader;
-import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
@@ -140,7 +139,7 @@ public class DatabaseManager implements Enable {
   }
 
   private void patch(PersistenceContext persistenceContext, ServiceContext serviceContext, QueryExecutor queryExecutor) {
-    IPatchHelper patchHelper = new PatchHelper(
+    PatchHelper patchHelper = new PatchHelper(
         persistenceContext,
         queryExecutor,
         serviceContext.getPlayerService(),

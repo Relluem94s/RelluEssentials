@@ -9,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.PlayerM
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.TraderNpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.WorldGroupSettingMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.WorldMapper;
-import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
@@ -34,7 +33,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
-import lombok.Setter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
@@ -50,8 +48,6 @@ public class DatabaseHelper {
   private final DataSource dataSource;
   private final SqlResourceLoader sqlResourceLoader;
   private final ServiceContext serviceContext;
-  @Setter
-  private IPatchHelper patchHelper;
 
   public DatabaseHelper(DataSource dataSource,
       SqlResourceLoader sqlResourceLoader, ServiceContext serviceContext) {

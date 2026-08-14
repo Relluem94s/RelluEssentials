@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.MiscMapper;
-import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
@@ -15,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class PatchHelper implements IPatchHelper {
+public class PatchHelper {
 
   private static final String INSERT_NEW_DB_VERSION = "insertNewDBVersion.sql";
   private static final String UPDATE_OLD_PLUGIN_INFORMATION = "updateOldPluginInformation.sql";
@@ -36,7 +35,6 @@ public class PatchHelper implements IPatchHelper {
     this.persistenceContext = persistenceContext;
   }
 
-  @Override
   public PluginInformationEntry loadPluginInformation() {
     PluginInformationEntry fallback = new PluginInformationEntry();
     try {
