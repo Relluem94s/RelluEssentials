@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgr
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformationService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginManagerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
@@ -78,4 +79,5 @@ public class ServiceContext {
   private LocationTypeService locationTypeService;
   private LocationCleanUpService locationCleanUpService;
   private ProtectionCleanUpService protectionCleanUpService;
+  private PluginManagerService pluginManagerService;
 }

@@ -46,6 +46,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginManagerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
@@ -70,6 +71,7 @@ public class ServiceManager implements Enable {
     DatabaseHelper databaseHelper = serviceContext.getDatabaseHelper();
 
     /* Services */
+    serviceContext.setPluginManagerService(new PluginManagerService(plugin));
     serviceContext.setClipboardService(new ClipboardService());
     DropRuleRepository dropRuleRepository = new DropRuleRepository(persistenceContext.getDropDao());
     CropRepository cropRepository = new CropRepository(persistenceContext.getCropDao());
