@@ -4,10 +4,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.util.List;
 import java.util.UUID;
@@ -17,52 +19,69 @@ public class PatchHelper implements IPatchHelper {
 
   private static final String INSERT_NEW_DB_VERSION = "insertNewDBVersion.sql";
   private static final String UPDATE_OLD_PLUGIN_INFORMATION = "updateOldPluginInformation.sql";
-  private final DatabaseHelper databaseHelper;
+
+  private final QueryExecutor queryExecutor;
   private final PlayerService playerService;
   private final Consumer<PluginInformationEntry> onPatchingFinished;
   private final ConfigHelper configHelper;
   private final PersistenceContext persistenceContext;
 
-
-  public PatchHelper(PersistenceContext persistenceContext, DatabaseHelper databaseHelper, PlayerService playerService,
-      Consumer<PluginInformationEntry> onPatchingFinished, ConfigHelper configHelper) {
-    this.databaseHelper = databaseHelper;
+  public PatchHelper(PersistenceContext persistenceContext, QueryExecutor queryExecutor,
+      PlayerService playerService, Consumer<PluginInformationEntry> onPatchingFinished,
+      ConfigHelper configHelper) {
+    this.queryExecutor = queryExecutor;
     this.playerService = playerService;
     this.onPatchingFinished = onPatchingFinished;
     this.configHelper = configHelper;
     this.persistenceContext = persistenceContext;
   }
 
+  @Override
+  public PluginInformationEntry loadPluginInformation() {
+    PluginInformationEntry fallback = new PluginInformationEntry();
+    try {
+      PluginInformationEntry result = queryExecutor.querySingle(
+          "getPluginInformation.sql", _ -> {}, MiscMapper::mapPluginInformation);
+      return result != null ? result : fallback;
+    } catch (Exception ex) {
+      consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "Init Database..");
+      fallback.setDbVersion(-1);
+      return fallback;
+    }
+  }
+
   private void finishPatching() {
     List<PlayerEntry> players = persistenceContext.getPlayerDao().findAll();
     players.forEach(p -> playerService.putPlayerEntry(UUID.fromString(p.getUuid()), p));
 
-    PluginInformationEntry pluginInformation = databaseHelper.getPluginInformation();
+    PluginInformationEntry pluginInformation = loadPluginInformation();
     onPatchingFinished.accept(pluginInformation);
+  }
+
+  private void executeScript(String script) {
+    queryExecutor.executeScript(script);
   }
 
   private void patch1() {
     String v = "patches/v1/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScriptNoSchema(v + "createSchema.sql");
-    databaseHelper.executeScript(v + "createGroup.sql");
-    databaseHelper.executeScript(v + "createPlayer.sql");
-    databaseHelper.executeScript(v + "createLocationType.sql");
-    databaseHelper.executeScript(v + "createLocation.sql");
-    databaseHelper.executeScript(v + "createBlockHistory.sql");
-    databaseHelper.executeScript(v + "createPluginInformation.sql");
-    databaseHelper.executeScript(v + "insertGroups.sql");
-    databaseHelper.executeScript(v + "insertPlayers.sql");
-    databaseHelper.executeScript(v + "insertLocationTypes.sql");
-    databaseHelper.executeScript(v + "insertPluginInformation.sql");
+    executeScript(v + "createGroup.sql");
+    executeScript(v + "createPlayer.sql");
+    executeScript(v + "createLocationType.sql");
+    executeScript(v + "createLocation.sql");
+    executeScript(v + "createBlockHistory.sql");
+    executeScript(v + "createPluginInformation.sql");
+    executeScript(v + "insertGroups.sql");
+    executeScript(v + "insertPlayers.sql");
+    executeScript(v + "insertLocationTypes.sql");
+    executeScript(v + "insertPluginInformation.sql");
 
     if (configHelper.isConfigFound()) {
       List<PlayerEntry> pe = configHelper.getPlayers();
       pe.forEach(persistenceContext.getPlayerDao()::insert);
 
       for (PlayerEntry p : pe) {
-        PlayerEntry pu = playerService
-            .getPlayerEntry(UUID.fromString(p.getUuid()));
+        PlayerEntry pu = playerService.getPlayerEntry(UUID.fromString(p.getUuid()));
         pu.setAfk(p.isAfk());
         pu.setFlying(p.isFlying());
         pu.setCustomName(p.getCustomName());
@@ -78,151 +97,151 @@ public class PatchHelper implements IPatchHelper {
   private void patch2() {
     String v = "patches/v2/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScript(v + "dropBlockHistory.sql");
-    databaseHelper.executeScript(v + "createBlockHistory.sql");
-    databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
-    databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    executeScript(v + "dropBlockHistory.sql");
+    executeScript(v + "createBlockHistory.sql");
+    executeScript(v + INSERT_NEW_DB_VERSION);
+    executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
   private void patch3() {
     String v = "patches/v3/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScript(v + "dropPlayerConstraint.sql");
-    databaseHelper.executeScript(v + "updateAdminGroup.sql"); // changed id of Admin
-    databaseHelper.executeScript(v + "updateModGroup.sql"); // changed id of Mod
-    databaseHelper.executeScript(v + "updateVipGroup.sql"); // changed id of Vip
-    databaseHelper.executeScript(v + "updateAdminGroupPlayer.sql"); // changed id of Admin
-    databaseHelper.executeScript(v + "updateModGroupPlayer.sql"); // changed id of Mod
-    databaseHelper.executeScript(v + "updateVipGroupPlayer.sql"); // changed id of Vip
-    databaseHelper.executeScript(v + "addPlayerConstraint.sql");
-    databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
-    databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    executeScript(v + "dropPlayerConstraint.sql");
+    executeScript(v + "updateAdminGroup.sql");
+    executeScript(v + "updateModGroup.sql");
+    executeScript(v + "updateVipGroup.sql");
+    executeScript(v + "updateAdminGroupPlayer.sql");
+    executeScript(v + "updateModGroupPlayer.sql");
+    executeScript(v + "updateVipGroupPlayer.sql");
+    executeScript(v + "addPlayerConstraint.sql");
+    executeScript(v + INSERT_NEW_DB_VERSION);
+    executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
   private void patch4() {
     String v = "patches/v4/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScript(v + "addBankTier.sql");
-    databaseHelper.executeScript(v + "addBankAccount.sql");
-    databaseHelper.executeScript(v + "addBagType.sql");
-    databaseHelper.executeScript(v + "addBag.sql");
-    databaseHelper.executeScript(v + "addBankTransaction.sql");
-    databaseHelper.executeScript(v + "addPermission.sql");
-    databaseHelper.executeScript(v + "addPermissionGroup.sql");
-    databaseHelper.executeScript(v + "addPermissionPlayer.sql");
-    databaseHelper.executeScript(v + "addProtections.sql");
-    databaseHelper.executeScript(v + "addSkills.sql");
-    databaseHelper.executeScript(v + "addSkillsPlayer.sql");
-    databaseHelper.executeScript(v + "addNPC.sql");
-    databaseHelper.executeScript(v + "addProtectionLocks.sql");
-    databaseHelper.executeScript(v + "updatePlayer.sql");
-    databaseHelper.executeScript(v + "insertProtectionLocks.sql");
-    databaseHelper.executeScript(v + "insertNPC.sql");
-    databaseHelper.executeScript(v + "insertSkills.sql");
-    databaseHelper.executeScript(v + "insertBankTier.sql");
-    databaseHelper.executeScript(v + "insertBagType.sql");
-    databaseHelper.executeScript(v + "insertLocationTypes.sql");
-    databaseHelper.executeScript(v + "alterPlayer.sql");
-    databaseHelper.executeScript(v + "alterBankAccount.sql");
-    databaseHelper.executeScript(v + "alterBankTier.sql");
-    databaseHelper.executeScript(v + "alterBankTransaction.sql");
-    databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
-    databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    executeScript(v + "addBankTier.sql");
+    executeScript(v + "addBankAccount.sql");
+    executeScript(v + "addBagType.sql");
+    executeScript(v + "addBag.sql");
+    executeScript(v + "addBankTransaction.sql");
+    executeScript(v + "addPermission.sql");
+    executeScript(v + "addPermissionGroup.sql");
+    executeScript(v + "addPermissionPlayer.sql");
+    executeScript(v + "addProtections.sql");
+    executeScript(v + "addSkills.sql");
+    executeScript(v + "addSkillsPlayer.sql");
+    executeScript(v + "addNPC.sql");
+    executeScript(v + "addProtectionLocks.sql");
+    executeScript(v + "updatePlayer.sql");
+    executeScript(v + "insertProtectionLocks.sql");
+    executeScript(v + "insertNPC.sql");
+    executeScript(v + "insertSkills.sql");
+    executeScript(v + "insertBankTier.sql");
+    executeScript(v + "insertBagType.sql");
+    executeScript(v + "insertLocationTypes.sql");
+    executeScript(v + "alterPlayer.sql");
+    executeScript(v + "alterBankAccount.sql");
+    executeScript(v + "alterBankTier.sql");
+    executeScript(v + "alterBankTransaction.sql");
+    executeScript(v + INSERT_NEW_DB_VERSION);
+    executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
   private void patch5() {
     String v = "patches/v5/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScript(v + "addSetting.sql");
-    databaseHelper.executeScript(v + "addPluginSetting.sql");
-    databaseHelper.executeScript(v + "addSettingPlayer.sql");
-    databaseHelper.executeScript(v + "addWorldGroup.sql");
-    databaseHelper.executeScript(v + "addWorld.sql");
-    databaseHelper.executeScript(v + "addWorldGroupInventory.sql");
-    databaseHelper.executeScript(v + "addWorldGroupSetting.sql");
-    databaseHelper.executeScript(v + "addCrops.sql");
-    databaseHelper.executeScript(v + "addDrops.sql");
-    databaseHelper.executeScript(v + "addPlayerPartner.sql");
-    databaseHelper.executeScript(v + "insertSkills.sql");
-    databaseHelper.executeScript(v + "insertSettings.sql");
-    databaseHelper.executeScript(v + "insertWorldGroup.sql");
-    databaseHelper.executeScript(v + "insertWorlds.sql");
-    databaseHelper.executeScript(v + "insertWorldGroupSetting.sql");
-    databaseHelper.executeScript(v + "insertBagType.sql");
-    databaseHelper.executeScript(v + "insertCrops.sql");
-    databaseHelper.executeScript(v + "insertDrops.sql");
-    databaseHelper.executeScript(v + "addPlayerName.sql");
-    databaseHelper.executeScript(v + "changePlayerCustomName.sql");
-    databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
-    databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    executeScript(v + "addSetting.sql");
+    executeScript(v + "addPluginSetting.sql");
+    executeScript(v + "addSettingPlayer.sql");
+    executeScript(v + "addWorldGroup.sql");
+    executeScript(v + "addWorld.sql");
+    executeScript(v + "addWorldGroupInventory.sql");
+    executeScript(v + "addWorldGroupSetting.sql");
+    executeScript(v + "addCrops.sql");
+    executeScript(v + "addDrops.sql");
+    executeScript(v + "addPlayerPartner.sql");
+    executeScript(v + "insertSkills.sql");
+    executeScript(v + "insertSettings.sql");
+    executeScript(v + "insertWorldGroup.sql");
+    executeScript(v + "insertWorlds.sql");
+    executeScript(v + "insertWorldGroupSetting.sql");
+    executeScript(v + "insertBagType.sql");
+    executeScript(v + "insertCrops.sql");
+    executeScript(v + "insertDrops.sql");
+    executeScript(v + "addPlayerName.sql");
+    executeScript(v + "changePlayerCustomName.sql");
+    executeScript(v + INSERT_NEW_DB_VERSION);
+    executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
   private void patch6() {
     String v = "patches/v6/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScript(v + "updateNPCStick.sql");
-    databaseHelper.executeScript(v + "updateNPCRedSand.sql");
-    databaseHelper.executeScript(v + "updateNPCBambooBlock.sql");
-    databaseHelper.executeScript(v + "updateNPCBamboo.sql");
-    databaseHelper.executeScript(v + "alterBagType.sql");
-    databaseHelper.executeScript(v + "alterBag.sql");
-    databaseHelper.executeScript(v + "alterLumberjackBag.sql");
-    databaseHelper.executeScript(v + "insertNetherBagType.sql");
-    databaseHelper.executeScript(v + "alterLumberjackNPC.sql");
-    databaseHelper.executeScript(v + "alterFarmingBag.sql");
-    databaseHelper.executeScript(v + "alterMiningBag.sql");
-    databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
-    databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    executeScript(v + "updateNPCStick.sql");
+    executeScript(v + "updateNPCRedSand.sql");
+    executeScript(v + "updateNPCBambooBlock.sql");
+    executeScript(v + "updateNPCBamboo.sql");
+    executeScript(v + "alterBagType.sql");
+    executeScript(v + "alterBag.sql");
+    executeScript(v + "alterLumberjackBag.sql");
+    executeScript(v + "insertNetherBagType.sql");
+    executeScript(v + "alterLumberjackNPC.sql");
+    executeScript(v + "alterFarmingBag.sql");
+    executeScript(v + "alterMiningBag.sql");
+    executeScript(v + INSERT_NEW_DB_VERSION);
+    executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
   private void patch7() {
     String v = "patches/v7/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScript(v + "alterFarmingBag.sql");
-    databaseHelper.executeScript(v + "alterFarmingBagType.sql");
-    databaseHelper.executeScript(v + "alterMiningBagType.sql");
-    databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
-    databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    executeScript(v + "alterFarmingBag.sql");
+    executeScript(v + "alterFarmingBagType.sql");
+    executeScript(v + "alterMiningBagType.sql");
+    executeScript(v + INSERT_NEW_DB_VERSION);
+    executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
   private void patch8() {
     String v = "patches/v8/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScript(v + "insertProtectionLocks.sql");
-    databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
-    databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    executeScript(v + "insertProtectionLocks.sql");
+    executeScript(v + INSERT_NEW_DB_VERSION);
+    executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
   private void patch9() {
     String v = "patches/v9/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScript(v + "updateProtections.sql");
-    databaseHelper.executeScript(v + "fixProtections.sql");
-    databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
-    databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    executeScript(v + "updateProtections.sql");
+    executeScript(v + "fixProtections.sql");
+    executeScript(v + INSERT_NEW_DB_VERSION);
+    executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
   private void patch10() {
     String v = "patches/v10/";
     consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "applying " + v);
-    databaseHelper.executeScript(v + "RE-266_fixDeletedLocationsFromProtections.sql");
-    databaseHelper.executeScript(v + "alterMonsterBag.sql");
-    databaseHelper.executeScript(v + "insertProtectionLocks.sql");
-    databaseHelper.executeScript(v + "insertAnimalBagType.sql");
-    databaseHelper.executeScript(v + "insertSettings.sql");
-    databaseHelper.executeScript(v + "insertWorldGroupSettingsCloudsailor.sql");
-    databaseHelper.executeScript(v + "insertWorldGroupSettingsCoinsLose.sql");
-    databaseHelper.executeScript(v + "insertWorldGroupSettingsDeathPoint.sql");
-    databaseHelper.executeScript(v + "insertWorldGroupSettingsScoreBoardShow.sql");
-    databaseHelper.executeScript(v + "updateFischerNPCTurtleScute.sql");
-    databaseHelper.executeScript(v + "updateFloristNPCShortGrass.sql");
-    databaseHelper.executeScript(v + "updateWorldGroupSettings_newColumn.sql");
-    databaseHelper.executeScript(v + "updateWorldGroupSettings_moveValues.sql");
-    databaseHelper.executeScript(v + "updateWorldGroupSettings_removeColumnAndRename.sql");
-    databaseHelper.executeScript(v + "createCustomNPC.sql");
-    databaseHelper.executeScript(v + "createCustomNPCDialogue.sql");
-    databaseHelper.executeScript(v + INSERT_NEW_DB_VERSION);
-    databaseHelper.executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
+    executeScript(v + "RE-266_fixDeletedLocationsFromProtections.sql");
+    executeScript(v + "alterMonsterBag.sql");
+    executeScript(v + "insertProtectionLocks.sql");
+    executeScript(v + "insertAnimalBagType.sql");
+    executeScript(v + "insertSettings.sql");
+    executeScript(v + "insertWorldGroupSettingsCloudsailor.sql");
+    executeScript(v + "insertWorldGroupSettingsCoinsLose.sql");
+    executeScript(v + "insertWorldGroupSettingsDeathPoint.sql");
+    executeScript(v + "insertWorldGroupSettingsScoreBoardShow.sql");
+    executeScript(v + "updateFischerNPCTurtleScute.sql");
+    executeScript(v + "updateFloristNPCShortGrass.sql");
+    executeScript(v + "updateWorldGroupSettings_newColumn.sql");
+    executeScript(v + "updateWorldGroupSettings_moveValues.sql");
+    executeScript(v + "updateWorldGroupSettings_removeColumnAndRename.sql");
+    executeScript(v + "createCustomNPC.sql");
+    executeScript(v + "createCustomNPCDialogue.sql");
+    executeScript(v + INSERT_NEW_DB_VERSION);
+    executeScript(v + UPDATE_OLD_PLUGIN_INFORMATION);
   }
 
   public void applyPatch(int version) {

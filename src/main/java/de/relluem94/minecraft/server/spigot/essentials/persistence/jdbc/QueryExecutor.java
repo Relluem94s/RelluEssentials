@@ -15,19 +15,16 @@ import javax.sql.DataSource;
 public class QueryExecutor {
 
   private final DataSource dataSource;
-  private final DataSource dataSourceNoSchema;
   private final SqlResourceLoader sqlResourceLoader;
 
   public QueryExecutor(DataSource dataSource, SqlResourceLoader sqlResourceLoader) {
     this.dataSource = dataSource;
-    this.dataSourceNoSchema = null;
     this.sqlResourceLoader = sqlResourceLoader;
   }
 
   public QueryExecutor(DataSource dataSource, DataSource dataSourceNoSchema,
       SqlResourceLoader sqlResourceLoader) {
     this.dataSource = dataSource;
-    this.dataSourceNoSchema = dataSourceNoSchema;
     this.sqlResourceLoader = sqlResourceLoader;
   }
 
@@ -83,25 +80,6 @@ public class QueryExecutor {
     return null;
   }
 
-  private <T> T querySingleNoSchema(String sqlFile, StatementConfigurer configurer,
-      RowMapper<T> mapper) {
-    try (Connection connection = dataSourceNoSchema.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile))) {
-      configurer.configure(ps);
-      ps.execute();
-      try (ResultSet rs = ps.getResultSet()) {
-        if (rs.next()) {
-          return mapper.map(rs);
-        }
-      }
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-      throw new RuntimeException(ex);
-    }
-    return null;
-  }
-
   public void executeUpdate(String sqlFile, StatementConfigurer configurer) {
     try (Connection connection = dataSource.getConnection();
         PreparedStatement ps = connection.prepareStatement(
@@ -136,16 +114,6 @@ public class QueryExecutor {
     }
   }
 
-  private void executeUpdateNoSchema(String sqlFile) {
-    try (Connection connection = dataSourceNoSchema.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile))) {
-      ps.execute();
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-    }
-  }
-
   public int executeInsertWithGeneratedKey(String sqlFile, StatementConfigurer configurer) {
     try (Connection connection = dataSource.getConnection();
         PreparedStatement ps = connection.prepareStatement(
@@ -164,13 +132,9 @@ public class QueryExecutor {
     return -1;
   }
 
-  void executeScript(String script) {
+  public void executeScript(String script) {
     executeUpdate(script, _ -> {
     });
-  }
-
-  void executeScriptNoSchema(String script) {
-    executeUpdateNoSchema(script);
   }
 
 
