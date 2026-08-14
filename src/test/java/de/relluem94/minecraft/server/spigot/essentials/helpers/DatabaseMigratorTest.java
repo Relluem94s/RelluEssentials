@@ -13,6 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceConte
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.migration.DatabaseMigrator;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class PatchHelperTest {
+class DatabaseMigratorTest {
 
     @Mock
     private PlayerService playerService;
@@ -38,7 +39,7 @@ class PatchHelperTest {
     @Mock
     private PlayerDao playerDao;
 
-    private PatchHelper patchHelper;
+    private DatabaseMigrator databaseMigrator;
 
     @Mock
     private PersistenceContext persistenceContext;
@@ -52,7 +53,7 @@ class PatchHelperTest {
     void setUp() {
         lenient().when(persistenceContext.getPlayerDao()).thenReturn(playerDao);
         chatHelperMock = mockStatic(ChatHelper.class);
-        patchHelper = new PatchHelper(persistenceContext, queryExecutor, playerService, _ -> {}, configHelperMock);
+        databaseMigrator = new DatabaseMigrator(persistenceContext, queryExecutor, playerService, _ -> {}, configHelperMock);
     }
 
     @AfterEach
@@ -64,7 +65,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIsMinusOne_appliesAllPatchesInOrder() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(-1);
+        databaseMigrator.applyPatch(-1);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch1Scripts(inOrder);
@@ -84,7 +85,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIsZero_appliesAllPatchesInOrder() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(0);
+        databaseMigrator.applyPatch(0);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch1Scripts(inOrder);
@@ -105,7 +106,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs1_appliesPatchesFrom2To10() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(1);
+        databaseMigrator.applyPatch(1);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch2Scripts(inOrder);
@@ -125,7 +126,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs2_appliesPatchesFrom3To10() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(2);
+        databaseMigrator.applyPatch(2);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch3Scripts(inOrder);
@@ -143,7 +144,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs3_appliesPatchesFrom4To10() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(3);
+        databaseMigrator.applyPatch(3);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch4Scripts(inOrder);
@@ -160,7 +161,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs4_appliesPatchesFrom5To10() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(4);
+        databaseMigrator.applyPatch(4);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch5Scripts(inOrder);
@@ -176,7 +177,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs5_appliesPatchesFrom6To10() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(5);
+        databaseMigrator.applyPatch(5);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch6Scripts(inOrder);
@@ -191,7 +192,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs6_appliesPatchesFrom7To10() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(6);
+        databaseMigrator.applyPatch(6);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch7Scripts(inOrder);
@@ -205,7 +206,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs7_appliesPatchesFrom8To10() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(7);
+        databaseMigrator.applyPatch(7);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch8Scripts(inOrder);
@@ -218,7 +219,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs8_appliesPatchesFrom9To10() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(8);
+        databaseMigrator.applyPatch(8);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch9Scripts(inOrder);
@@ -230,7 +231,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs9_appliesOnlyPatch10() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(9);
+        databaseMigrator.applyPatch(9);
 
         InOrder inOrder = inOrder(queryExecutor, playerDao);
         verifyPatch10Scripts(inOrder);
@@ -240,7 +241,7 @@ class PatchHelperTest {
     @ParameterizedTest
     @ValueSource(ints = {10, 11, 99, Integer.MAX_VALUE})
     void applyPatch_whenVersionIsCurrentOrHigher_appliesNoPatchesAndDoesNotCallFinishPatching(int upToDateVersion) {
-        patchHelper.applyPatch(upToDateVersion);
+        databaseMigrator.applyPatch(upToDateVersion);
 
         verify(queryExecutor, never()).executeScript(anyString());
         verify(queryExecutor, never()).executeScript(anyString());
@@ -251,7 +252,7 @@ class PatchHelperTest {
     void applyPatch_whenVersionIs1_doesNotApplyPatch1Scripts() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(1);
+        databaseMigrator.applyPatch(1);
 
         verify(queryExecutor, never()).executeScript("patches/v1/createGroup.sql");
     }
@@ -262,7 +263,7 @@ class PatchHelperTest {
         PlayerEntry playerEntryTwo = buildPlayerEntryWithUuid(UUID.randomUUID());
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(List.of(playerEntryOne, playerEntryTwo));
 
-        patchHelper.applyPatch(9);
+        databaseMigrator.applyPatch(9);
 
         verify(playerDao).findAll();
         verify(playerService).putPlayerEntry(UUID.fromString(playerEntryOne.getUuid()), playerEntryOne);
@@ -273,7 +274,7 @@ class PatchHelperTest {
     void finishPatching_whenNoPlayersExist_completesWithoutError() {
         when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
-        patchHelper.applyPatch(9);
+        databaseMigrator.applyPatch(9);
 
         verify(playerDao).findAll();
         verify(playerService, never()).putPlayerEntry(any(), any());

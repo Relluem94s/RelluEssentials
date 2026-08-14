@@ -1,9 +1,10 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.persistence.migration;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class PatchHelper {
+public class DatabaseMigrator {
 
   private static final String INSERT_NEW_DB_VERSION = "insertNewDBVersion.sql";
   private static final String UPDATE_OLD_PLUGIN_INFORMATION = "updateOldPluginInformation.sql";
@@ -25,7 +26,7 @@ public class PatchHelper {
   private final ConfigHelper configHelper;
   private final PersistenceContext persistenceContext;
 
-  public PatchHelper(PersistenceContext persistenceContext, QueryExecutor queryExecutor,
+  public DatabaseMigrator(PersistenceContext persistenceContext, QueryExecutor queryExecutor,
       PlayerService playerService, Consumer<PluginInformationEntry> onPatchingFinished,
       ConfigHelper configHelper) {
     this.queryExecutor = queryExecutor;
