@@ -4,13 +4,16 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseConstants.PLUGIN_DATABASE_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.DatabaseHelperFactory;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.ClasspathSqlResourceLoader;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IPatchHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
@@ -19,9 +22,11 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.DropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PluginInformationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.ProtectionDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.SettingDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.SchemaBootstrap;
 import de.relluem94.minecraft.server.spigot.essentials.registries.LocationTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SettingRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.WorldGroupSettingRegistry;
@@ -44,7 +49,7 @@ import org.bukkit.plugin.Plugin;
 public class DatabaseManager implements Enable {
 
   @Getter
-  private final DatabaseHelper databaseHelper;
+  private DatabaseHelper databaseHelper;
   private final DataSource dataSource;
 
   /**
@@ -56,13 +61,19 @@ public class DatabaseManager implements Enable {
    * @param port     the database port
    * @throws RuntimeException if the database connection fails
    */
-  public DatabaseManager(PersistenceContext persistenceContext, ServiceContext serviceContext, String host, String user, String password,
+  public DatabaseManager(String host, String user, String password,
       int port) {
     try {
-      dataSource = DatabaseHelperFactory.buildDataSource(host, port, user, password,
-          PLUGIN_DATABASE_NAME);
-      databaseHelper = DatabaseHelperFactory.createForProduction(host, port, user, password,
-          serviceContext, persistenceContext);
+      SchemaBootstrap bootstrap = new SchemaBootstrap(
+          "jdbc:mysql://" + host + ":" + port,
+          user,
+          password,
+          "rellu_essentials"
+      );
+      bootstrap.ensureSchemaExists();
+
+
+      dataSource = buildDataSource(host, port, user, password);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -74,15 +85,19 @@ public class DatabaseManager implements Enable {
     ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
     PersistenceContext persistenceContext = relluEssentialsPlugin.getPersistenceContext();
 
-    PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(
-        databaseHelper);
-    PluginInformationService pluginInformationService = new PluginInformationService(
-        pluginInformationRepository);
+    ClasspathSqlResourceLoader sqlResourceLoader = new ClasspathSqlResourceLoader();
+    QueryExecutor queryExecutor = new QueryExecutor(dataSource, sqlResourceLoader);
+
+    databaseHelper = new DatabaseHelper(dataSource,
+        sqlResourceLoader, serviceContext);
+
+    PluginInformationDao pluginInformationDao = new PluginInformationDao(queryExecutor);
+    PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(pluginInformationDao);
+    PluginInformationService pluginInformationService = new PluginInformationService(pluginInformationRepository);
+
     pluginInformationService.load();
     serviceContext.setPluginInformationService(pluginInformationService);
 
-    ClasspathSqlResourceLoader sqlResourceLoader = new ClasspathSqlResourceLoader();
-    QueryExecutor queryExecutor = new QueryExecutor(dataSource, sqlResourceLoader);
 
     LocationTypeRegistry locationTypeRegistry = new LocationTypeRegistry();
     locationTypeRegistry.initialize(databaseHelper.getLocationTypes());
@@ -96,7 +111,7 @@ public class DatabaseManager implements Enable {
     persistenceContext.setLocationDao(new LocationDao(queryExecutor, serviceContext));
     persistenceContext.setProtectionDao(new ProtectionDao(queryExecutor));
 
-    databaseHelper.init();
+    patch(persistenceContext, serviceContext, queryExecutor);
 
     SettingRepository settingRepository = new SettingRepository(new SettingDao(queryExecutor));
     SettingRegistry settingRegistry = new SettingRegistry();
@@ -121,5 +136,35 @@ public class DatabaseManager implements Enable {
                   worldEntry.getName(),
                   worldGroupEntry.getSettings().size()));
     });
+  }
+
+  private void patch(PersistenceContext persistenceContext, ServiceContext serviceContext, QueryExecutor queryExecutor) {
+    IPatchHelper patchHelper = new PatchHelper(
+        persistenceContext,
+        queryExecutor,
+        serviceContext.getPlayerService(),
+        patchedInformation -> {
+          PluginInformationService service = serviceContext.getPluginInformationService();
+          if (service != null) {
+            service.applyPatchedInformation(patchedInformation);
+          }
+        },
+        new ConfigHelper("players")
+    );
+
+    patchHelper.applyPatch(patchHelper.loadPluginInformation().getDbVersion());
+  }
+
+  private MysqlDataSource buildDataSource(String host, int port, String user,
+      String password) throws SQLException {
+    MysqlDataSource ds = new MysqlDataSource();
+    ds.setServerName(host);
+    ds.setPort(port);
+    ds.setUser(user);
+    ds.setPassword(password);
+    ds.setUseSSL(false);
+    ds.setDatabaseName(PLUGIN_DATABASE_NAME);
+    ds.setAllowPublicKeyRetrieval(true);
+    return ds;
   }
 }

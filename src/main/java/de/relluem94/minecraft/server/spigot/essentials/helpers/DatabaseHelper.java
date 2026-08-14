@@ -1,14 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
-
 import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BagMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.BankMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.LocationMapper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.PlayerMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.TraderNpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.WorldGroupSettingMapper;
@@ -24,7 +20,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
@@ -54,22 +49,16 @@ import org.jetbrains.annotations.NotNull;
 public class DatabaseHelper {
 
   private final DataSource dataSource;
-  private final DataSource dataSourceNoSchema;
   private final SqlResourceLoader sqlResourceLoader;
   private final ServiceContext serviceContext;
   @Setter
   private IPatchHelper patchHelper;
 
-  public DatabaseHelper(DataSource dataSource, DataSource dataSourceNoSchema,
+  public DatabaseHelper(DataSource dataSource,
       SqlResourceLoader sqlResourceLoader, ServiceContext serviceContext) {
     this.dataSource = dataSource;
-    this.dataSourceNoSchema = dataSourceNoSchema;
     this.sqlResourceLoader = sqlResourceLoader;
     this.serviceContext = serviceContext;
-  }
-
-  public void init() {
-    patchHelper.applyPatch(getPluginInformation().getDbVersion());
   }
 
   private <T> List<T> queryList(String sqlFile, StatementConfigurer configurer,
@@ -108,25 +97,6 @@ public class DatabaseHelper {
     return null;
   }
 
-  private <T> T querySingleNoSchema(String sqlFile, StatementConfigurer configurer,
-      RowMapper<T> mapper) {
-    try (Connection connection = dataSourceNoSchema.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile))) {
-      configurer.configure(ps);
-      ps.execute();
-      try (ResultSet rs = ps.getResultSet()) {
-        if (rs.next()) {
-          return mapper.map(rs);
-        }
-      }
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-      throw new RuntimeException(ex);
-    }
-    return null;
-  }
-
   private void executeUpdate(String sqlFile, StatementConfigurer configurer) {
     try (Connection connection = dataSource.getConnection();
         PreparedStatement ps = connection.prepareStatement(
@@ -135,37 +105,6 @@ public class DatabaseHelper {
       ps.execute();
     } catch (SQLException | FileNotFoundException ex) {
       Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-    }
-  }
-
-  private void executeUpdateNoSchema(String sqlFile) {
-    try (Connection connection = dataSourceNoSchema.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile))) {
-      ps.execute();
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-    }
-  }
-
-  void executeScript(String script) {
-    executeUpdate(script, _ -> {
-    });
-  }
-
-  void executeScriptNoSchema(String script) {
-    executeUpdateNoSchema(script);
-  }
-
-  public PluginInformationEntry getPluginInformation() {
-    PluginInformationEntry fallback = new PluginInformationEntry();
-    try {
-      return querySingleNoSchema("getPluginInformation.sql", _ -> {
-      }, MiscMapper::mapPluginInformation);
-    } catch (Exception ex) {
-      consoleSendMessage(PLUGIN_NAME_CONSOLE, "Init Database..");
-      fallback.setDbVersion(-1);
-      return fallback;
     }
   }
 
