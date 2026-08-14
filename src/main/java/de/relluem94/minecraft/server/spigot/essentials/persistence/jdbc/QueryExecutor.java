@@ -130,23 +130,4 @@ public class QueryExecutor {
     executeUpdate(script, _ -> {
     });
   }
-
-
-  @FunctionalInterface
-  public interface StatementConfigurer {
-
-    void configure(PreparedStatement ps) throws SQLException;
-  }
-
-  @FunctionalInterface
-  public interface RowMapper<T> {
-
-    T map(ResultSet rs) throws SQLException;
-  }
-
-  @FunctionalInterface
-  public interface RowConsumer {
-
-    void consume(ResultSet rs) throws SQLException;
-  }
 }
