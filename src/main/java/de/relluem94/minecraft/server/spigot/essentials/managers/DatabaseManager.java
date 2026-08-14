@@ -20,6 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEnt
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.CropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.DropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationTypeDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PluginInformationDao;
@@ -98,8 +99,9 @@ public class DatabaseManager implements Enable {
     serviceContext.setPluginInformationService(pluginInformationService);
 
 
+    LocationTypeDao locationTypeDao = new LocationTypeDao(queryExecutor);
     LocationTypeRegistry locationTypeRegistry = new LocationTypeRegistry();
-    locationTypeRegistry.initialize(databaseHelper.getLocationTypes());
+    locationTypeRegistry.initialize(locationTypeDao.findAll());
     LocationTypeService locationTypeService = new LocationTypeService(locationTypeRegistry);
     serviceContext.setLocationTypeService(locationTypeService);
 

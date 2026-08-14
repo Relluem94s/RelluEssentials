@@ -18,7 +18,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
@@ -114,11 +113,6 @@ public class DatabaseHelper {
         },
         rs -> WorldGroupSettingMapper.mapWorldGroupSetting(rs, serviceContext.getSettingService())
     );
-  }
-
-  public List<LocationTypeEntry> getLocationTypes() {
-    return queryList("getLocationTypes.sql", _ -> {
-    }, LocationMapper::mapLocationType);
   }
 
   public List<LocationEntry> getWarps() {
