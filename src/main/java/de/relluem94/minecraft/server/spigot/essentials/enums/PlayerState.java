@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.enums;
 
-public enum PlayerState implements
-        de.relluem94.minecraft.server.spigot.essentials.interfaces.PlayerState {
+public enum PlayerState {
   PROTECTION_INFO,
   PROTECTION_ADD,
   PROTECTION_REMOVE,
