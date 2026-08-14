@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
@@ -13,7 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-
+@ListenerName("BetterLights")
 public class BetterLights implements ListenerConstruct {
 
   private ServiceContext serviceContext;

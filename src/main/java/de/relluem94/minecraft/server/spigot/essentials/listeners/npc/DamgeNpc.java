@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import org.bukkit.entity.Mannequin;
@@ -8,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jspecify.annotations.NonNull;
 
+@ListenerName("DamgeNpc")
 public class DamgeNpc implements ListenerConstruct {
 
   private ServiceContext serviceContext;

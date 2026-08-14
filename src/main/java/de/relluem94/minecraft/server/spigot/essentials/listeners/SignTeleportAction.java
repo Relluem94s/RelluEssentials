@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.SignConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsSignInteractEvent;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.jspecify.annotations.NonNull;
 
+@ListenerName("SignTeleportAction")
 public class SignTeleportAction implements ListenerConstruct {
 
 

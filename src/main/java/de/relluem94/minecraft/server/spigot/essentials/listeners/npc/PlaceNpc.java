@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
@@ -11,7 +12,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
 
-
+@ListenerName("PlaceNpc")
 public class PlaceNpc implements ListenerConstruct {
 
   private ServiceContext serviceContext;

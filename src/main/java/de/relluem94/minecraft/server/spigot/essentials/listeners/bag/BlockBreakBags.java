@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
@@ -37,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
  * bamboo to be sent directly to the player's inventory by firing a synthetic
  * {@link EntityPickupItemEvent} immediately after the block is removed.</p>
  */
+@ListenerName("BlockBreakBags")
 public class BlockBreakBags implements ListenerConstruct {
 
   private final Set<Block> processingBlocks = new HashSet<>();

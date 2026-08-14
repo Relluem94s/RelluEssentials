@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@ListenerName("PreventCoinManipulation")
 public class PreventCoinManipulation implements ListenerConstruct {
 
 

@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Spawn;
 import de.relluem94.minecraft.server.spigot.essentials.constants.SignConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.jspecify.annotations.NonNull;
 
+@ListenerName("SignSpawnAction")
 public class SignSpawnAction implements ListenerConstruct {
 
   private final RegistryKey signAction;

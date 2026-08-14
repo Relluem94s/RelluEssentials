@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.areBlocksMaterial;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
@@ -31,6 +32,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jspecify.annotations.NonNull;
 
+@ListenerName("CloudSailor")
 public class CloudSailor implements ListenerConstruct {
 
 

@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -13,12 +14,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
 
-public class OpenWorldSelectorEvent implements ListenerConstruct {
+@ListenerName("OpenWorldSelector")
+public class OpenWorldSelector implements ListenerConstruct {
 
 
   private final RegistryKey worldSelectorKey;
 
-  public OpenWorldSelectorEvent() {
+  public OpenWorldSelector() {
     this.worldSelectorKey = RegistryKey.of(PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR);
   }
 

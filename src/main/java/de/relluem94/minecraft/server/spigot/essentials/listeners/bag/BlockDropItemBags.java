@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
@@ -22,6 +23,7 @@ import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@ListenerName("BlockDropItemBags")
 public class BlockDropItemBags implements ListenerConstruct {
 
   private final EnchantmentHelper autosmelt;

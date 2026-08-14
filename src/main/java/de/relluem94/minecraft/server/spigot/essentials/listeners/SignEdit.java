@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
@@ -16,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
 
+@ListenerName("SignEdit")
 public class SignEdit implements ListenerConstruct {
 
   private ServiceContext serviceContext;

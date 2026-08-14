@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_MSG_SPACER_IN;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
@@ -18,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jspecify.annotations.NonNull;
 
+@ListenerName("InteractNpc")
 public class InteractNpc implements ListenerConstruct {
 
   private static final long INTERACTION_COOLDOWN_MS = 750;

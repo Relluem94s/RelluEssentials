@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import org.bukkit.block.Block;
@@ -9,6 +10,7 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.jetbrains.annotations.NotNull;
 
+@ListenerName("BlockModifyProtect")
 public class BlockModifyProtect implements ListenerConstruct {
 
   private ServiceContext serviceContext;

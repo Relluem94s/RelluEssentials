@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
@@ -25,6 +26,7 @@ import org.jspecify.annotations.NonNull;
  *
  * @author rellu
  */
+@ListenerName("CustomEnchantment")
 public class CustomEnchantment implements ListenerConstruct {
 
 

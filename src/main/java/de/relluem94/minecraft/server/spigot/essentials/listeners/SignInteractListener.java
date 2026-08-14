@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsSignInteractEvent;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
@@ -17,21 +18,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 
+@ListenerName("SignInteractListener")
 public class SignInteractListener implements ListenerConstruct {
 
-  private final Plugin plugin;
-
-
-  public SignInteractListener(Plugin plugin) {
-    this.plugin = plugin;
-  }
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    serviceContext = context;
   }
 
   @EventHandler(priority = EventPriority.HIGH)
@@ -56,8 +52,15 @@ public class SignInteractListener implements ListenerConstruct {
     String customInput = sign.getSide(Side.FRONT).getLine(2);
     Player player = event.getPlayer();
 
-    plugin.getServer().getPluginManager()
-        .callEvent(new RelluEssentialsSignInteractEvent(player, clickedBlock, actionKey, signAction,
-            customInput));
+    serviceContext.getPluginManagerService()
+        .callEvent(
+            new RelluEssentialsSignInteractEvent(
+                player,
+                clickedBlock,
+                actionKey,
+                signAction,
+                customInput
+            )
+        );
   }
 }

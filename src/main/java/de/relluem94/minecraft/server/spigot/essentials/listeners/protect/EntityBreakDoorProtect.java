@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.jetbrains.annotations.NotNull;
 
+@ListenerName("EntityBreakDoorProtect")
 public class EntityBreakDoorProtect implements ListenerConstruct {
 
   private ServiceContext serviceContext;

@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
@@ -22,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author rellu
  */
+@ListenerName("BetterLock")
 public class BetterLock implements ListenerConstruct {
 
   private ServiceContext serviceContext;

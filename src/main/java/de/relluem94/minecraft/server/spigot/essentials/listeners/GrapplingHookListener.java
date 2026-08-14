@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -23,7 +24,8 @@ import org.jspecify.annotations.NonNull;
 /**
  * Handles grappling hook mechanics for players in the lobby world.
  */
-public class GrapplingHockEvent implements ListenerConstruct {
+@ListenerName("GrapplingHookListener")
+public class GrapplingHookListener implements ListenerConstruct {
 
 
   protected static final List<Player> COOL_DOWN = new ArrayList<>();

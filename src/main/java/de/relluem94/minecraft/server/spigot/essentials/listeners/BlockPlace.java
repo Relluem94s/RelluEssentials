@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -12,6 +13,7 @@ import org.jspecify.annotations.NonNull;
  *
  * @author rellu
  */
+@ListenerName("BlockPlace")
 public class BlockPlace implements ListenerConstruct {
 
   private ServiceContext serviceContext;

@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.RelluEssentialsIntegration;
@@ -9,6 +10,7 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.jspecify.annotations.NonNull;
 
+@ListenerName("IntegrationListener")
 public class IntegrationListener implements ListenerConstruct {
 
 

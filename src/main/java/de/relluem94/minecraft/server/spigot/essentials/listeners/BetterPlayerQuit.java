@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Sudo;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
@@ -14,7 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jspecify.annotations.NonNull;
 
-
+@ListenerName("BetterPlayerQuit")
 public class BetterPlayerQuit implements ListenerConstruct {
 
   private ServiceContext serviceContext;
