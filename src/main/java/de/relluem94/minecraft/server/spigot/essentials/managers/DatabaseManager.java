@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader.ClasspathSqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
@@ -26,6 +25,7 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.Protectio
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.SettingDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.SchemaBootstrap;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.ClasspathSqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.migration.DatabaseMigrator;
 import de.relluem94.minecraft.server.spigot.essentials.registries.LocationTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SettingRegistry;

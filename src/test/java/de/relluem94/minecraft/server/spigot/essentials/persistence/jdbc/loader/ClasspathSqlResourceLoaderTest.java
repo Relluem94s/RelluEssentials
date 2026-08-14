@@ -1,14 +1,17 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader;
+package de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import java.io.FileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.io.FileNotFoundException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class ClasspathSqlResourceLoaderTest {

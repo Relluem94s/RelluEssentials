@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
@@ -23,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.Pl
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.TraderNpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.WorldGroupSettingMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.WorldMapper;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.SqlResourceLoader;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

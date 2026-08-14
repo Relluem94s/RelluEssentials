@@ -1,7 +1,6 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.db.loader;
+package de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.db.loader.SqlResourceLoader;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
