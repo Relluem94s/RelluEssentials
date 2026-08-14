@@ -22,12 +22,6 @@ public class QueryExecutor {
     this.sqlResourceLoader = sqlResourceLoader;
   }
 
-  public QueryExecutor(DataSource dataSource, DataSource dataSourceNoSchema,
-      SqlResourceLoader sqlResourceLoader) {
-    this.dataSource = dataSource;
-    this.sqlResourceLoader = sqlResourceLoader;
-  }
-
   public void queryForEach(String sqlFile, StatementConfigurer configurer, RowConsumer consumer) {
     try (Connection connection = dataSource.getConnection();
         PreparedStatement ps = connection.prepareStatement(
