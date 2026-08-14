@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
+package de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;

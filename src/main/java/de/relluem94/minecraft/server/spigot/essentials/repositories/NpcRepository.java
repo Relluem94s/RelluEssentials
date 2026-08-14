@@ -1,10 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.repositories;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.NpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.NpcMapper;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

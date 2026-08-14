@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.dao;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import java.util.List;
 import lombok.AllArgsConstructor;

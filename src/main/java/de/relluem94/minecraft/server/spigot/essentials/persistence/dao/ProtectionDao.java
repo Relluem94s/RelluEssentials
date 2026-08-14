@@ -1,8 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.dao;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.ProtectionMapper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionLockEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.ProtectionMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import java.util.List;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
+package de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_BAG_TYPE_FK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_COST;

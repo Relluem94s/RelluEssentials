@@ -5,10 +5,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.util.List;

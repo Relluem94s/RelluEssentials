@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.dao;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 
 public class PluginInformationDao {

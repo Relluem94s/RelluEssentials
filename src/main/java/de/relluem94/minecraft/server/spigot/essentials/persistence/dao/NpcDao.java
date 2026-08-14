@@ -1,9 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.dao;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.NpcDialogueMapper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.NpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.NpcDialogueMapper;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.NpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import java.util.List;
 import java.util.UUID;

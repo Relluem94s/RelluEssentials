@@ -2,8 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.persistence.dao;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import java.util.ArrayList;
 import java.util.List;

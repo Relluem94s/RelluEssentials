@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper;
+package de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;

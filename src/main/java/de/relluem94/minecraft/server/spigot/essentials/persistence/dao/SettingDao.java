@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.dao;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.db.mapper.SettingMapper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.SettingMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import java.util.List;
 
