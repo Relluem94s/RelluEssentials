@@ -45,7 +45,6 @@ import org.bukkit.plugin.Plugin;
 /**
  * Manages database access and initializes all registries and plugin data on startup.
  */
-@SuppressWarnings("ClassCanBeRecord")
 public class DatabaseManager implements Enable {
 
   @Getter

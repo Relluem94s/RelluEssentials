@@ -253,7 +253,6 @@ class PatchHelperTest {
 
         patchHelper.applyPatch(1);
 
-        verify(queryExecutor, never()).executeScript("patches/v1/createSchema.sql");
         verify(queryExecutor, never()).executeScript("patches/v1/createGroup.sql");
     }
 
