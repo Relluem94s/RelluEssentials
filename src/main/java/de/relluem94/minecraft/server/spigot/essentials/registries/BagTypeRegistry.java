@@ -1,25 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.registries;
 
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Registry for managing {@link BagTypeEntry} instances in memory at runtime.
+ * In-memory registry for managing {@link BagTypeEntry} instances at runtime.
  */
 public class BagTypeRegistry {
 
-  private final BagTypeRepository bagTypeRepository;
-
-  /**
-   * Creates a new {@link BagTypeRegistry} backed by the given repository.
-   *
-   * @param bagTypeRepository the repository used to persist and retrieve entries
-   */
-  public BagTypeRegistry(BagTypeRepository bagTypeRepository) {
-    this.bagTypeRepository = bagTypeRepository;
-  }
+  private final List<BagTypeEntry> bagTypeEntries = new ArrayList<>();
 
   /**
    * Registers a single {@link BagTypeEntry} if it is not already registered.
@@ -27,12 +18,20 @@ public class BagTypeRegistry {
    * @param bagTypeEntry the {@link BagTypeEntry} to register
    * @throws IllegalArgumentException if the entry is already registered
    */
-  @SuppressWarnings("unused")
   public void register(BagTypeEntry bagTypeEntry) {
     if (contains(bagTypeEntry)) {
       throw new IllegalArgumentException("BagTypeEntry is already registered: " + bagTypeEntry);
     }
-    bagTypeRepository.save(bagTypeEntry);
+    bagTypeEntries.add(bagTypeEntry);
+  }
+
+  /**
+   * Registers all given {@link BagTypeEntry} instances.
+   *
+   * @param entries the list of {@link BagTypeEntry} instances to register
+   */
+  public void registerAll(List<BagTypeEntry> entries) {
+    entries.forEach(this::register);
   }
 
   /**
@@ -41,12 +40,11 @@ public class BagTypeRegistry {
    * @param bagTypeEntry the {@link BagTypeEntry} to unregister
    * @throws IllegalArgumentException if the entry is not registered
    */
-  @SuppressWarnings("unused")
   public void unregister(BagTypeEntry bagTypeEntry) {
     if (!contains(bagTypeEntry)) {
       throw new IllegalArgumentException("BagTypeEntry is not registered: " + bagTypeEntry);
     }
-    bagTypeRepository.delete(bagTypeEntry);
+    bagTypeEntries.remove(bagTypeEntry);
   }
 
   /**
@@ -56,7 +54,7 @@ public class BagTypeRegistry {
    * @return {@code true} if the entry is registered, {@code false} otherwise
    */
   public boolean contains(BagTypeEntry bagTypeEntry) {
-    return bagTypeRepository.findAll().contains(bagTypeEntry);
+    return bagTypeEntries.contains(bagTypeEntry);
   }
 
   /**
@@ -65,7 +63,7 @@ public class BagTypeRegistry {
    * @return an unmodifiable {@link List} of all registered {@link BagTypeEntry} instances
    */
   public List<BagTypeEntry> getAll() {
-    return bagTypeRepository.findAll();
+    return List.copyOf(bagTypeEntries);
   }
 
   /**
@@ -75,28 +73,36 @@ public class BagTypeRegistry {
    * @return an {@link Optional} containing the entry, or empty if not found
    */
   public Optional<BagTypeEntry> findById(int id) {
-    return bagTypeRepository.findById(id);
+    return bagTypeEntries.stream()
+        .filter(entry -> entry.getId() == id)
+        .findFirst();
   }
 
   /**
-   * Finds a {@link BagTypeEntry} by its name.
+   * Finds a {@link BagTypeEntry} by its exact name.
    *
    * @param name the name to search for
    * @return an {@link Optional} containing the entry, or empty if not found
    */
-  @SuppressWarnings("unused")
   public Optional<BagTypeEntry> findByName(String name) {
-    return bagTypeRepository.findByName(name);
-  }
-
-  public Optional<BagTypeEntry> findByPartialName(String name) {
-    return bagTypeRepository.findAll().stream()
-        .filter(bte -> name.contains(bte.getDisplayName())
-            || name.contains(bte.getName().toLowerCase())
-            || bte.getDisplayName().contains(name)
-            || bte.getName().toLowerCase().contains(name))
+    return bagTypeEntries.stream()
+        .filter(entry -> entry.getName().equals(name))
         .findFirst();
   }
 
-
+  /**
+   * Finds a {@link BagTypeEntry} by a partial name match against display name or internal name.
+   *
+   * @param partialName the partial name to search for
+   * @return an {@link Optional} containing the first matching entry, or empty if not found
+   */
+  public Optional<BagTypeEntry> findByPartialName(String partialName) {
+    return bagTypeEntries.stream()
+        .filter(entry ->
+            partialName.contains(entry.getDisplayName())
+                || partialName.contains(entry.getName().toLowerCase())
+                || entry.getDisplayName().contains(partialName)
+                || entry.getName().toLowerCase().contains(partialName))
+        .findFirst();
+  }
 }
