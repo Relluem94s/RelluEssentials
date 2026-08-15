@@ -3,10 +3,8 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.PlayerMapper;
-import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.TraderNpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.RowMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.StatementConfigurer;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.SqlResourceLoader;
@@ -18,8 +16,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -83,11 +79,5 @@ public class DatabaseHelper {
       ps.setString(2, ge.getName());
       ps.setString(3, ge.getPrefix());
     });
-  }
-
-  public List<TraderNPCEntry> getTraderNPCs() {
-    return queryList("getNPCs.sql", _ -> {
-    }, rs -> TraderNpcMapper.mapNPC(rs,
-        key -> Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(key))));
   }
 }

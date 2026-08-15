@@ -32,6 +32,7 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.LocationRepo
 import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.PlayerRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.ProtectionRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.TraderNpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
@@ -89,15 +90,17 @@ public class ServiceManager implements Enable {
         protectionRepository);
     serviceContext.setProtectionService(protectionService);
 
+    TraderNpcRepository traderNpcRepository = new TraderNpcRepository(
+        persistenceContext.getTraderNpcDao());
     TraderNpcRegistry traderNpcRegistry = new TraderNpcRegistry(
         serviceContext.getTranslationService());
-    traderNpcRegistry.init(databaseHelper.getTraderNPCs());
     BankerNpc bankerNpc = new BankerNpc(serviceContext);
     traderNpcRegistry.addNPC(new BagSalesmanNpc(serviceContext));
     traderNpcRegistry.addNPC(bankerNpc);
     traderNpcRegistry.addNPC(new BeekeeperNpc(serviceContext));
     traderNpcRegistry.addNPC(new EnchanterNpc(serviceContext));
-    TraderNpcService traderNpcService = new TraderNpcService(traderNpcRegistry, bankerNpc);
+    TraderNpcService traderNpcService = new TraderNpcService(traderNpcRegistry, traderNpcRepository, bankerNpc);
+    traderNpcService.loadAndInitialiseNpcs();
     serviceContext.setTraderNpcService(traderNpcService);
 
     WarpRepository warpRepository = new WarpRepository(databaseHelper.getWarps());
