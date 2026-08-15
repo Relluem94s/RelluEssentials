@@ -12,6 +12,8 @@ public class SchemaBootstrap {
   private final String password;
   private final String schemaName;
 
+  private static final String CONNECTION_PARAMS = "?useSSL=false&allowPublicKeyRetrieval=true";
+
   public SchemaBootstrap(String jdbcBaseUrl, String username, String password, String schemaName) {
     this.jdbcBaseUrl = jdbcBaseUrl;
     this.username = username;
@@ -20,7 +22,7 @@ public class SchemaBootstrap {
   }
 
   public boolean schemaExists() {
-    try (Connection connection = DriverManager.getConnection(jdbcBaseUrl, username, password);
+    try (Connection connection = DriverManager.getConnection(jdbcBaseUrl + CONNECTION_PARAMS, username, password);
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(
             "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" + schemaName + "'")) {
