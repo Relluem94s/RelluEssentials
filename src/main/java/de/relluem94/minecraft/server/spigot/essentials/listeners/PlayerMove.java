@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -17,6 +18,8 @@ import org.bukkit.util.Vector;
  *
  * @author rellu
  */
+
+@ListenerName("PlayerMove")
 public class PlayerMove implements ListenerConstruct {
 
 

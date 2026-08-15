@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -18,6 +19,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.jspecify.annotations.NonNull;
 
+@ListenerName("BetterPlayerJoin")
 public class BetterPlayerJoin implements ListenerConstruct {
 
   private ServiceContext serviceContext;
@@ -28,8 +30,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
   }
 
   private void addPlayer(@NonNull Player p) {
-    PlayerEntry pe = serviceContext.getDatabaseHelper()
-        .getPlayer(p.getUniqueId().toString());
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerByUuid(p.getUniqueId().toString());
     if (pe == null) {
       pe = new PlayerEntry();
       pe.setCreatedBy(1);
@@ -37,16 +38,16 @@ public class BetterPlayerJoin implements ListenerConstruct {
       pe.setCustomName(p.getDisplayName());
       pe.setGroup(serviceContext.getGroupService().resolveGroupWithFallback("user"));
       pe.setUuid(p.getUniqueId().toString());
-      serviceContext.getDatabaseHelper().insertPlayer(pe);
+      serviceContext.getPlayerService().registerNewPlayer(pe);
 
-      pe = serviceContext.getDatabaseHelper().getPlayer(p.getUniqueId().toString());
+      pe = serviceContext.getPlayerService().getPlayerByUuid(p.getUniqueId().toString());
       p.sendMessage(
           serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_FIRST_JOIN_MESSAGE));
     } else {
       if (pe.getName() == null) {
         pe.setName(p.getName());
-        serviceContext.getDatabaseHelper().updatePlayer(pe);
-        pe = serviceContext.getDatabaseHelper().getPlayer(p.getUniqueId().toString());
+        serviceContext.getPlayerService().savePlayer(pe);
+        pe = serviceContext.getPlayerService().getPlayerByUuid(p.getUniqueId().toString());
       }
     }
 

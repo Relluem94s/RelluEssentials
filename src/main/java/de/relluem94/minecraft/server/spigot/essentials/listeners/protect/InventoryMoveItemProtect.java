@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
@@ -31,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Handles item movement between inventories and enforces hopper protection and auto-sell logic.
  */
+@ListenerName("InventoryMoveItemProtect")
 public class InventoryMoveItemProtect implements ListenerConstruct {
 
   private static ItemHelper coinItem = null;

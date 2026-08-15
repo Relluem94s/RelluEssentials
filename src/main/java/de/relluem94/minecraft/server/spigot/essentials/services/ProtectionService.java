@@ -1,9 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionLockEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.ProtectionRepository;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.Location;
@@ -13,23 +13,18 @@ import org.bukkit.block.Block;
 public class ProtectionService {
 
   private final ProtectionRegistry protectionRegistry;
-  private final DatabaseHelper databaseHelper;
+  private final ProtectionRepository protectionRepository;
 
   public ProtectionService(List<ProtectionLockEntry> protectionLocksEntryList,
-      Map<Location, ProtectionEntry> protectionEntryMap, DatabaseHelper databaseHelper) {
+      Map<Location, ProtectionEntry> protectionEntryMap, ProtectionRepository protectionRepository) {
     this.protectionRegistry = new ProtectionRegistry(protectionLocksEntryList, protectionEntryMap);
-    this.databaseHelper = databaseHelper;
-  }
-
-  public void deleteProtectionAndRemoveFromRegistry(ProtectionEntry protection) {
-    databaseHelper.deleteProtection(protection);
-    protectionRegistry.removeProtectionEntry(protection.getLocationEntry().getLocation());
+    this.protectionRepository = protectionRepository;
   }
 
   public boolean removeExplodedBlockProtectionOrCancelExplosion(Block block) {
     ProtectionEntry protection = protectionRegistry.getProtectionEntry(block.getLocation());
     if (protection != null) {
-      databaseHelper.deleteProtection(protection);
+      protectionRepository.remove(protection);
       protectionRegistry.removeProtectionEntry(block.getLocation());
       return true;
     }
@@ -58,5 +53,38 @@ public class ProtectionService {
 
   public boolean isProtectableMaterial(Material material) {
     return protectionRegistry.isProtectableMaterial(material);
+  }
+
+  public void saveProtectionAndAddToRegistry(Location location, ProtectionEntry protectionEntry) {
+    protectionRepository.save(protectionEntry);
+    ProtectionEntry savedProtectionEntry = protectionRepository.findByLocation(location);
+    if (savedProtectionEntry != null) {
+      protectionRegistry.putProtectionEntry(location, savedProtectionEntry);
+    }
+  }
+
+  public void updateProtectionFlags(ProtectionEntry protectionEntry) {
+    protectionRepository.updateFlags(protectionEntry);
+    protectionRegistry.putProtectionEntry(protectionEntry.getLocationEntry().getLocation(), protectionEntry);
+  }
+
+  public void updateProtectionRights(ProtectionEntry protectionEntry) {
+    protectionRepository.updateRights(protectionEntry);
+    protectionRegistry.putProtectionEntry(protectionEntry.getLocationEntry().getLocation(), protectionEntry);
+  }
+
+  public ProtectionEntry findProtectionByLocation(Location location) {
+    return protectionRepository.findByLocation(location);
+  }
+
+  public void deleteProtectionAndRemoveFromRegistry(ProtectionEntry protection) {
+    protectionRepository.remove(protection);
+    protectionRegistry.removeProtectionEntry(protection.getLocationEntry().getLocation());
+  }
+
+  public int removeOutdatedProtectionsFromDatabaseAndRegistry() {
+    List<Long> deletedIds = protectionRepository.removeOutdatedProtections();
+    protectionRegistry.removeProtectionEntriesByIds(deletedIds);
+    return deletedIds.size();
   }
 }

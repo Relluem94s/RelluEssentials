@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcEquipmentInventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcOperationResult;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
@@ -223,5 +224,25 @@ public class NpcService {
         spawnNpc(npc);
       }
     });
+  }
+
+  public List<NpcDialogueEntry> getNPCDialogues(int npcDbId) {
+    return npcRepository.loadDialoguesByNpcDbId(npcDbId);
+  }
+
+  public void addNPCDialogue(NpcDialogueEntry entry) {
+    npcRepository.addDialogue(entry);
+  }
+
+  public boolean updateNPCDialogue(NpcDialogueEntry entry, UUID dialogueUuid) {
+    return npcRepository.updateDialogue(entry, dialogueUuid);
+  }
+
+  public void deleteNPCDialogueByPosition(UUID npcId, int listPosition, int deletedByPlayerId) {
+    Npc npc = loadedNPCs.get(npcId);
+    if (npc == null) {
+      return;
+    }
+    npcRepository.deleteDialogueByPosition(npcId, listPosition, deletedByPlayerId);
   }
 }

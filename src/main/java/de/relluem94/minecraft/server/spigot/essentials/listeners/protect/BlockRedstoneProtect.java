@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
@@ -14,6 +15,7 @@ import org.bukkit.event.block.BlockRedstoneEvent;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+@ListenerName("BlockRedstoneProtect")
 public class BlockRedstoneProtect implements ListenerConstruct {
 
   private ServiceContext serviceContext;

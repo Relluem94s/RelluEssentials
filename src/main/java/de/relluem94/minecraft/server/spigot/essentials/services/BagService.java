@@ -22,6 +22,8 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,51 +47,133 @@ import org.jspecify.annotations.NonNull;
 public class BagService {
 
   private final BagRegistry bagRegistry;
+  private final BagRepository bagRepository;
+  private final BagTypeRegistry bagTypeRegistry;
+  private final BagTypeRepository bagTypeRepository;
   private final ServiceContext serviceContext;
   private final List<ItemStack> bagBlocks2collect = new ArrayList<>();
-  private final BagTypeRegistry bagTypeRegistry;
 
   public BagService(
       ServiceContext serviceContext,
       BagRegistry bagRegistry,
-      BagTypeRegistry bagTypeRegistry
+      BagRepository bagRepository,
+      BagTypeRegistry bagTypeRegistry,
+      BagTypeRepository bagTypeRepository
   ) {
-    this.bagRegistry = bagRegistry;
     this.serviceContext = serviceContext;
+    this.bagRegistry = bagRegistry;
+    this.bagRepository = bagRepository;
     this.bagTypeRegistry = bagTypeRegistry;
+    this.bagTypeRepository = bagTypeRepository;
     for (BagTypeEntry bagTypeEntry : this.bagTypeRegistry.getAll()) {
       Collections.addAll(this.bagBlocks2collect, getItemStacks(bagTypeEntry));
     }
   }
 
+  /**
+   * Finds a {@link BagEntry} by player id and bag type id from the in-memory registry.
+   *
+   * @param playerId  the player id to search for
+   * @param bagTypeId the bag type id to search for
+   * @return an {@link Optional} containing the matching entry, or empty if not found
+   */
   public Optional<BagEntry> findBag(int playerId, int bagTypeId) {
     return bagRegistry.findByPlayerIdAndBagTypeId(playerId, bagTypeId);
   }
 
+  /**
+   * Returns all {@link BagEntry} instances for the given player id from the in-memory registry.
+   *
+   * @param playerId the player id to look up
+   * @return a {@link Collection} of {@link BagEntry} instances
+   */
   public Collection<BagEntry> findBags(int playerId) {
     return bagRegistry.findAllByPlayerId(playerId);
   }
 
+  /**
+   * Finds a {@link BagTypeEntry} by a partial name match.
+   *
+   * @param displayName the partial name to search for
+   * @return an {@link Optional} containing the matching entry, or empty if not found
+   */
   public Optional<BagTypeEntry> findBagTypeByPartialName(String displayName) {
     return bagTypeRegistry.findByPartialName(displayName);
   }
 
+  /**
+   * Finds a {@link BagTypeEntry} by its unique id.
+   *
+   * @param id the unique id to search for
+   * @return an {@link Optional} containing the matching entry, or empty if not found
+   */
   public Optional<BagTypeEntry> findBagTypeById(int id) {
     return bagTypeRegistry.findById(id);
   }
 
+  /**
+   * Checks whether the given player owns a bag of the given type.
+   *
+   * @param playerId  the player id to check
+   * @param bagTypeId the bag type id to check
+   * @return {@code true} if the player owns a bag of this type, {@code false} otherwise
+   */
   public boolean hasBag(int playerId, int bagTypeId) {
     return bagRegistry.existsByPlayerIdAndBagTypeId(playerId, bagTypeId);
   }
 
+  /**
+   * Checks whether the given player owns a bag of the given type.
+   *
+   * @param bagTypeId   the bag type id to check
+   * @param playerEntry the {@link PlayerEntry} to check
+   * @return {@code true} if the player owns a bag of this type, {@code false} otherwise
+   */
   public boolean hasBag(int bagTypeId, @NotNull PlayerEntry playerEntry) {
     return hasBag(playerEntry.getId(), bagTypeId);
   }
 
+  /**
+   * Checks whether the given player owns any bags.
+   *
+   * @param playerId the player id to check
+   * @return {@code true} if the player owns at least one bag, {@code false} otherwise
+   */
   public boolean hasBags(int playerId) {
     return bagRegistry.existsByPlayerId(playerId);
   }
 
+  /**
+   * Inserts a new bag for the given player and bag type, persists it to the database,
+   * and registers it in the in-memory registry.
+   *
+   * @param playerId  the player id to insert for
+   * @param bagTypeId the bag type id to insert
+   * @return the newly created and registered {@link BagEntry}
+   */
+  public BagEntry insertBag(int playerId, int bagTypeId) {
+    BagEntry newBagEntry = bagRepository.insert(playerId, bagTypeId);
+    bagRegistry.register(newBagEntry);
+    return newBagEntry;
+  }
+
+  /**
+   * Persists the current state of the given {@link BagEntry} to the database.
+   *
+   * @param bagEntry the {@link BagEntry} to update
+   */
+  public void updateBag(BagEntry bagEntry) {
+    bagRepository.update(bagEntry);
+  }
+
+  /**
+   * Returns the inventory slot index for the given {@link ItemStack} within the given
+   * {@link BagEntry}, or {@code -1} if the item is not part of this bag type.
+   *
+   * @param bagEntry  the {@link BagEntry} to search in
+   * @param itemStack the {@link ItemStack} to find the slot for
+   * @return the slot index, or {@code -1} if not found
+   */
   public int getSlotByItemStack(@NotNull BagEntry bagEntry, ItemStack itemStack) {
     List<ItemStack> slotItemStacks = Arrays.asList(getItemStacks(bagEntry.getBagType()));
     ItemStack itemStackWithoutAmount = ItemHelper.getCleanItemStack(itemStack);
@@ -107,6 +191,14 @@ public class BagService {
     return -1;
   }
 
+  /**
+   * Collects all matching dropped {@link Item} entities into the player's bags.
+   *
+   * @param droppedItems the list of dropped {@link Item} entities to check
+   * @param player       the {@link Player} collecting the items
+   * @param playerEntry  the {@link PlayerEntry} of the collecting player
+   * @return a {@link List} of {@link Item} entities that were collected
+   */
   public @NotNull List<Item> collectItems(
       @NotNull List<Item> droppedItems,
       Player player,
@@ -145,6 +237,14 @@ public class BagService {
     return collectedItems;
   }
 
+  /**
+   * Collects all matching {@link ItemStack} instances into the player's bags.
+   *
+   * @param itemStacks  the list of {@link ItemStack} instances to check
+   * @param player      the {@link Player} collecting the items
+   * @param playerEntry the {@link PlayerEntry} of the collecting player
+   * @return a {@link List} of {@link ItemStack} instances that were collected
+   */
   public @NotNull List<ItemStack> collectItemStacks(
       @NotNull List<ItemStack> itemStacks,
       Player player,
@@ -183,6 +283,14 @@ public class BagService {
     return collectedStacks;
   }
 
+  /**
+   * Collects a single dropped {@link Item} into the player's bags if it matches any bag slot.
+   *
+   * @param droppedItem the dropped {@link Item} to collect
+   * @param player      the {@link Player} collecting the item
+   * @param playerEntry the {@link PlayerEntry} of the collecting player
+   * @return {@code true} if the item was collected, {@code false} otherwise
+   */
   public boolean collectItem(
       @NotNull Item droppedItem,
       Player player,
@@ -216,6 +324,11 @@ public class BagService {
     return false;
   }
 
+  /**
+   * Flushes all pending bag updates to the database and notifies the admin group.
+   *
+   * @param adminGroup the {@link GroupEntry} representing the admin group to notify
+   */
   public void savePendingBagUpdates(GroupEntry adminGroup) {
     int updatedBagCount = 0;
 
@@ -224,7 +337,7 @@ public class BagService {
         continue;
       }
 
-      serviceContext.getDatabaseHelper().updateBagEntry(bagEntry);
+      bagRepository.update(bagEntry);
       bagEntry.setHasToBeUpdated(false);
       updatedBagCount++;
     }
@@ -239,20 +352,33 @@ public class BagService {
     }
   }
 
-  public Collection<BagEntry> getBags(int playerFK) {
-    return bagRegistry.findAllByPlayerId(playerFK);
+  /**
+   * Returns all {@link BagEntry} instances for the given player id.
+   *
+   * @param playerId the player id to look up
+   * @return a {@link Collection} of {@link BagEntry} instances
+   */
+  public Collection<BagEntry> getBags(int playerId) {
+    return bagRegistry.findAllByPlayerId(playerId);
   }
 
-  public Inventory getBagsInventory(PlayerEntry pe) {
-    String MAIN_GUI = serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_GUI_TITLE);
-    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, MAIN_GUI),
-        resolveDisabledItem());
+  /**
+   * Builds and returns the bag overview {@link Inventory} for the given player,
+   * showing only bags the player owns.
+   *
+   * @param playerEntry the {@link PlayerEntry} of the player
+   * @return the populated bag overview {@link Inventory}
+   */
+  public Inventory getBagsInventory(PlayerEntry playerEntry) {
+    String title = serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_GUI_TITLE);
+    Inventory inv = InventoryHelper.fillInventory(
+        InventoryHelper.createInventory(54, title), resolveDisabledItem());
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = bagTypeRegistry.getAll().listIterator();
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
       slot = InventoryHelper.getNextSlot(slot);
       BagTypeEntry bte = bagTypeEntryListIterator.next();
-      if (hasBag(pe.getId(), bte.getId())) {
+      if (hasBag(playerEntry.getId(), bte.getId())) {
         inv.setItem(slot, getItem(bte, false).getCustomItem());
         slot++;
       }
@@ -260,12 +386,18 @@ public class BagService {
     return inv;
   }
 
+  /**
+   * Builds and returns a bag overview {@link Inventory} showing all bag types,
+   * optionally in NPC context.
+   *
+   * @param npc   {@code true} if displayed in NPC context, {@code false} otherwise
+   * @param title the title of the inventory
+   * @return the populated bag overview {@link Inventory}
+   */
   public Inventory getBagsInventory(boolean npc, String title) {
-    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title),
-        resolveDisabledItem());
-
+    Inventory inv = InventoryHelper.fillInventory(
+        InventoryHelper.createInventory(54, title), resolveDisabledItem());
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = bagTypeRegistry.getAll().listIterator();
-
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
       slot = InventoryHelper.getNextSlot(slot);
@@ -276,9 +408,16 @@ public class BagService {
     return inv;
   }
 
-
-  public @Nullable Inventory getBagInventory(int type, @NotNull PlayerEntry pe) {
-    Optional<BagEntry> optionalBagEntry = findBag(pe.getId(), type);
+  /**
+   * Builds and returns the detailed bag {@link Inventory} for the given player and bag type,
+   * showing all slot contents with their amounts.
+   *
+   * @param bagTypeId   the bag type id to open
+   * @param playerEntry the {@link PlayerEntry} of the player
+   * @return the populated bag {@link Inventory}, or {@code null} if the player does not own this bag
+   */
+  public @Nullable Inventory getBagInventory(int bagTypeId, @NotNull PlayerEntry playerEntry) {
+    Optional<BagEntry> optionalBagEntry = findBag(playerEntry.getId(), bagTypeId);
 
     if (!optionalBagEntry.isPresent()) {
       return null;
@@ -324,21 +463,28 @@ public class BagService {
     return inv;
   }
 
-  public void purchaseBag(@NonNull BagTypeEntry bagType, @NonNull Player player,
-      @NonNull PlayerEntry playerEntry) {
+  /**
+   * Purchases a bag of the given type for the given player, deducting the cost,
+   * persisting the new bag to the database, and registering it in the in-memory registry.
+   *
+   * @param bagType     the {@link BagTypeEntry} to purchase
+   * @param player      the {@link Player} purchasing the bag
+   * @param playerEntry the {@link PlayerEntry} of the purchasing player
+   */
+  public void purchaseBag(
+      @NonNull BagTypeEntry bagType,
+      @NonNull Player player,
+      @NonNull PlayerEntry playerEntry
+  ) {
     playerEntry.setPurse(playerEntry.getPurse() - bagType.getCost());
     playerEntry.setUpdatedBy(playerEntry.getId());
     playerEntry.setHasToBeUpdated(true);
-    serviceContext.getDatabaseHelper().insertBag(bagType.getId(), playerEntry.getId());
-    BagEntry newBagEntry = serviceContext.getDatabaseHelper()
-        .getBag(bagType.getId(), playerEntry.getId());
+    BagEntry newBagEntry = bagRepository.insert(bagType.getId(), playerEntry.getId());
     bagRegistry.register(newBagEntry);
 
     player.sendMessage(serviceContext.getTranslationService()
-        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT,
-            bagType.getDisplayName()));
+        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bagType.getDisplayName()));
   }
-
 
   private ItemStack resolveDisabledItem() {
     return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
@@ -363,6 +509,13 @@ public class BagService {
         Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore));
   }
 
+  /**
+   * Returns an array of {@link ItemStack} instances representing all slots of the given
+   * {@link BagTypeEntry}.
+   *
+   * @param bte the {@link BagTypeEntry} to build item stacks for
+   * @return an array of {@link ItemStack} instances with one entry per bag slot
+   */
   public ItemStack @NotNull [] getItemStacks(BagTypeEntry bte) {
     ItemStack[] isa = new ItemStack[BAG_SIZE];
     for (int i = 0; i < BAG_SIZE; i++) {
@@ -386,7 +539,6 @@ public class BagService {
 
     return new ItemStack(mat, 1);
   }
-
 
   private ItemStack getItemStack(@NotNull BagEntry be, int slot) {
     String name = be.getBagType().getSlotName(slot);

@@ -71,7 +71,7 @@ public class NpcDialogueAddCommand implements SubCommand {
           entry.setText(StringHelper.replaceColor(text));
           entry.setCreatedBy(playerEntry.getId());
 
-          serviceContext.getDatabaseHelper().insertNPCDialogue(entry);
+          serviceContext.getNpcService().addNPCDialogue(entry);
           serviceContext.getNpcService().reloadNPCDialogue(npc1.getId());
           player.sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_ADDED));

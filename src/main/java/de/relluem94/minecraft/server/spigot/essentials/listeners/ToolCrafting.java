@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author rellu
  */
+@ListenerName("ToolCrafting")
 public class ToolCrafting implements ListenerConstruct {
 
   @Override

@@ -5,9 +5,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.AutoSaveManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.BankManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
@@ -43,6 +43,9 @@ public class RelluEssentials extends JavaPlugin {
 
   @Getter
   private ServiceContext serviceContext;
+
+  @Getter
+  private PersistenceContext persistenceContext;
 
   @Getter
   private boolean isUnitTest = false;
@@ -86,6 +89,7 @@ public class RelluEssentials extends JavaPlugin {
   @Override
   public void onEnable() {
     start = Calendar.getInstance().getTimeInMillis();
+    persistenceContext = new PersistenceContext();
     serviceContext = new ServiceContext();
     ServiceManager serviceManager = new ServiceManager();
     serviceManager.preEnable(this);
@@ -99,15 +103,12 @@ public class RelluEssentials extends JavaPlugin {
     ItemManager itemManager = new ItemManager();
     itemManager.enable(this);
     DatabaseManager databaseManager = new DatabaseManager(
-        serviceContext,
         getConfig().getString("database.host"),
         getConfig().getString("database.user"),
         getConfig().getString("database.password"),
-        (getConfig().getInt("database.port"))
+        getConfig().getInt("database.port")
     );
     databaseManager.enable(this);
-    DatabaseHelper databaseHelper = databaseManager.getDatabaseHelper();
-    serviceContext.setDatabaseHelper(databaseHelper);
     serviceManager.enable(this);
     CommandManager commandManager = new CommandManager();
     commandManager.enable(this);

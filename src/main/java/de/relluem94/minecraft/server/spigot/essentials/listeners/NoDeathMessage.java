@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Exceptio
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Home;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
@@ -34,8 +35,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
+@ListenerName("NoDeathMessage")
 public class NoDeathMessage implements ListenerConstruct {
-
 
   private final Random random = new Random();
 
@@ -94,8 +95,8 @@ public class NoDeathMessage implements ListenerConstruct {
           "/home " + Home.Commands.TP.getName() + " " + le.getLocationName()));
       p.spigot().sendMessage(message);
 
-      serviceContext.getDatabaseHelper().insertLocation(le);
-      le = serviceContext.getDatabaseHelper().getLocation(location, deathType.getId());
+      serviceContext.getLocationService().save(le);
+      le = serviceContext.getLocationService().findByLocationAndType(location, LocationType.DEATH);
 
       if (le != null) {
         pe.getHomes().add(le);
