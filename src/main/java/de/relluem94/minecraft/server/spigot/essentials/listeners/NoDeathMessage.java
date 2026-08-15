@@ -99,7 +99,7 @@ public class NoDeathMessage implements ListenerConstruct {
       le = serviceContext.getLocationService().findByLocationAndType(location, LocationType.DEATH);
 
       if (le != null) {
-        pe.getHomes().add(le);
+        pe.getDeaths().add(le);
       }
 
       World world = le.getLocation().getWorld();
