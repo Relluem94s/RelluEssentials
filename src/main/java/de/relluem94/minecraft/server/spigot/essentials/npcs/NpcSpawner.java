@@ -29,7 +29,7 @@ public class NpcSpawner {
       return Optional.empty();
     }
 
-    Location spawnLocation = new Location(world, npc.getX(), npc.getY(), npc.getZ());
+    Location spawnLocation = new Location(world, npc.getX() + 0.5, npc.getY(), npc.getZ() + 0.5, npc.getYaw(), npc.getPitch());
 
     Optional<UUID> existingMannequin = findExistingMannequinByNpcId(world, npc.getId().toString());
     if (existingMannequin.isPresent()) {

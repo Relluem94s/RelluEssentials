@@ -4,6 +4,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_ENTITY_UUID;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_ID;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_INVENTORY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_PITCH;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_POS_X;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_POS_Y;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_POS_Z;
@@ -12,6 +13,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UPDATEDBY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UUID;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_WORLD;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_YAW;
 
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
@@ -38,6 +40,8 @@ public class NpcMapper {
     entry.setX(rs.getDouble(FIELD_POS_X));
     entry.setY(rs.getDouble(FIELD_POS_Y));
     entry.setZ(rs.getDouble(FIELD_POS_Z));
+    entry.setYaw(rs.getFloat(FIELD_YAW));
+    entry.setPitch(rs.getFloat(FIELD_PITCH));
     entry.setCreatedBy(rs.getInt(FIELD_CREATEDBY));
 
     String entityUuid = rs.getString(FIELD_ENTITY_UUID);
@@ -62,6 +66,8 @@ public class NpcMapper {
     entry.setX(npc.getX());
     entry.setY(npc.getY());
     entry.setZ(npc.getZ());
+    entry.setYaw(npc.getYaw());
+    entry.setPitch(npc.getPitch());
     entry.setCreatedBy(actorPlayerId);
     entry.setUpdatedBy(actorPlayerId);
     if (npc.getEntityUUID() != null) {
@@ -72,7 +78,7 @@ public class NpcMapper {
 
   public static Npc toDomain(NpcEntry entry) {
     Npc npc = new Npc(entry.getId(), entry.getUuid(), entry.getProfileName(), entry.getX(),
-        entry.getY(), entry.getZ(), entry.getWorld());
+        entry.getY(), entry.getZ(), entry.getYaw(), entry.getPitch(), entry.getWorld());
     npc.setEntityUUID(entry.getEntityUuid());
     npc.setInventory(entry.getInventory());
     return npc;

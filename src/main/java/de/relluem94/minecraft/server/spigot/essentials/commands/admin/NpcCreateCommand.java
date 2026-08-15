@@ -17,7 +17,9 @@ public class NpcCreateCommand implements SubCommand {
   private static final int ARGS_X_INDEX = 3;
   private static final int ARGS_Y_INDEX = 4;
   private static final int ARGS_Z_INDEX = 5;
-  private static final int REQUIRED_ARGS_LENGTH = 6;
+  private static final int ARGS_YAW_INDEX = 6;
+  private static final int ARGS_PITCH_INDEX = 7;
+  private static final int REQUIRED_ARGS_LENGTH = 8;
 
   private final ServiceContext serviceContext;
 
@@ -43,11 +45,15 @@ public class NpcCreateCommand implements SubCommand {
     double x;
     double y;
     double z;
+    float yaw;
+    float pitch;
 
     try {
       x = Double.parseDouble(args[ARGS_X_INDEX]);
       y = Double.parseDouble(args[ARGS_Y_INDEX]);
       z = Double.parseDouble(args[ARGS_Z_INDEX]);
+      yaw = Float.parseFloat(args[ARGS_YAW_INDEX]);
+      pitch = Float.parseFloat(args[ARGS_PITCH_INDEX]);
     } catch (NumberFormatException e) {
       player.sendMessage(
           serviceContext.getTranslationService()
@@ -58,7 +64,7 @@ public class NpcCreateCommand implements SubCommand {
         .getPlayerEntry(player.getUniqueId());
     String worldName = player.getWorld().getName();
     NpcOperationResult result = serviceContext.getNpcService()
-        .createNPC(profileName, x, y, z, worldName, playerEntry.getId());
+        .createNPC(profileName, x, y, z, yaw, pitch, worldName, playerEntry.getId());
 
     if (!result.isSuccessful()) {
       player.sendMessage(

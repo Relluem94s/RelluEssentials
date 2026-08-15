@@ -48,7 +48,9 @@ public class NpcDao {
       ps.setDouble(5, npcEntry.getX());
       ps.setDouble(6, npcEntry.getY());
       ps.setDouble(7, npcEntry.getZ());
-      ps.setInt(8, npcEntry.getCreatedBy());
+      ps.setFloat(8, npcEntry.getYaw());
+      ps.setFloat(9, npcEntry.getPitch());
+      ps.setInt(10, npcEntry.getCreatedBy());
     });
   }
 
@@ -62,8 +64,10 @@ public class NpcDao {
       ps.setDouble(5, npcEntry.getX());
       ps.setDouble(6, npcEntry.getY());
       ps.setDouble(7, npcEntry.getZ());
-      ps.setInt(8, npcEntry.getUpdatedBy());
-      ps.setInt(9, npcEntry.getId());
+      ps.setFloat(8, npcEntry.getYaw());
+      ps.setFloat(9, npcEntry.getPitch());
+      ps.setInt(10, npcEntry.getUpdatedBy());
+      ps.setInt(11, npcEntry.getId());
     });
   }
 

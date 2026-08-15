@@ -20,8 +20,10 @@ public class NpcUpdateCommand implements SubCommand {
   private static final int ARGS_X_INDEX = 4;
   private static final int ARGS_Y_INDEX = 5;
   private static final int ARGS_Z_INDEX = 6;
+  private static final int ARGS_YAW_INDEX = 7;
+  private static final int ARGS_PITCH_INDEX = 8;
   private static final int REQUIRED_ARGS_PROFILE_LENGTH = 5;
-  private static final int REQUIRED_ARGS_POSITION_LENGTH = 7;
+  private static final int REQUIRED_ARGS_POSITION_LENGTH = 9;
 
   private final ServiceContext serviceContext;
 
@@ -88,10 +90,14 @@ public class NpcUpdateCommand implements SubCommand {
     double x;
     double y;
     double z;
+    float yaw;
+    float pitch;
     try {
       x = Double.parseDouble(args[ARGS_X_INDEX]);
       y = Double.parseDouble(args[ARGS_Y_INDEX]);
       z = Double.parseDouble(args[ARGS_Z_INDEX]);
+      yaw = Float.parseFloat(args[ARGS_YAW_INDEX]);
+      pitch = Float.parseFloat(args[ARGS_PITCH_INDEX]);
     } catch (NumberFormatException e) {
       player.sendMessage(
           serviceContext.getTranslationService()
@@ -102,7 +108,7 @@ public class NpcUpdateCommand implements SubCommand {
     PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
     NpcOperationResult result = serviceContext.getNpcService()
-        .updateNPCPosition(npcId, x, y, z, playerEntry.getId());
+        .updateNPCPosition(npcId, x, y, z, yaw, pitch, playerEntry.getId());
     sendOperationFeedback(player, result, MessageKey.COMMAND_NPC_UPDATED,
         MessageKey.COMMAND_NPC_OPERATION_FAILED);
   }

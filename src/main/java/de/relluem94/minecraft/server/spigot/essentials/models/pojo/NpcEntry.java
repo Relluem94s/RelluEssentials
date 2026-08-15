@@ -16,6 +16,8 @@ public class NpcEntry {
   private double x;
   private double y;
   private double z;
+  private float yaw;
+  private float pitch;
   private int createdBy;
   private Integer updatedBy;
 }
