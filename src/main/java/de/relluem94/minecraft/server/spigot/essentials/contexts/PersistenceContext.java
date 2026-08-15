@@ -11,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PluginInformationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.ProtectionDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.SettingDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.TraderNpcDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.WorldGroupDao;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,4 +34,5 @@ public class PersistenceContext {
   private WorldGroupDao worldGroupDao;
   private BagDao bagDao;
   private BankDao bankDao;
+  private TraderNpcDao traderNpcDao;
 }

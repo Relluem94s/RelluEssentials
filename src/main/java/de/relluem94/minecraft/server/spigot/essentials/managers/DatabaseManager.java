@@ -25,6 +25,7 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PluginInformationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.ProtectionDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.SettingDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.TraderNpcDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.WorldGroupDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.SchemaBootstrap;
@@ -103,6 +104,7 @@ public class DatabaseManager implements Enable {
     persistenceContext.setSettingDao(new SettingDao(queryExecutor));
     persistenceContext.setBagDao(new BagDao(queryExecutor));
     persistenceContext.setBankDao(new BankDao(queryExecutor));
+    persistenceContext.setTraderNpcDao(new TraderNpcDao(dataSource, sqlResourceLoader));
 
     PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(
         persistenceContext.getPluginInformationDao());
