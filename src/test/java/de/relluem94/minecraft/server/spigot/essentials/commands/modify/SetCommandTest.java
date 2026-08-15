@@ -2,9 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -12,20 +14,17 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -37,57 +36,32 @@ class SetCommandTest {
   private UndoHistoryService undoHistoryService;
   private SetCommand setCommand;
 
-  private MockedStatic<RelluEssentials> mockedRelluEssentials;
-
-  @BeforeAll
-  static void setUpServer() {
-    if (Bukkit.getServer() != null) {
-      return;
-    }
-
-    org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
-    org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(
-        org.bukkit.scheduler.BukkitScheduler.class);
-    java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
-    silentLogger.setUseParentHandlers(false);
-    silentLogger.setLevel(java.util.logging.Level.OFF);
-    when(serverMock.getScheduler()).thenReturn(schedulerMock);
-    when(serverMock.getLogger()).thenReturn(silentLogger);
-    org.bukkit.Bukkit.setServer(serverMock);
-  }
-
-  @AfterAll
-  static void tearDownServer() throws Exception {
-    java.lang.reflect.Field serverField = org.bukkit.Bukkit.class.getDeclaredField("server");
-    serverField.setAccessible(true);
-    serverField.set(null, null);
-  }
-
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
+    ProtectionService protectionService = mock(ProtectionService.class);
+    SchedulerService schedulerService = mock(SchedulerService.class);
 
-    RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
-    TranslationService translationServiceMock = mock(TranslationService.class);
-
-    mockedRelluEssentials = mockStatic(RelluEssentials.class);
-    mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-
-    when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
-    when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+    TranslationService translationService = mock(TranslationService.class);
+    when(translationService.getWithPrefix(any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
 
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
-    when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
-    setCommand = new SetCommand(serviceContext, 2);
-  }
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
-  @AfterEach
-  void tearDown() {
-    mockedRelluEssentials.close();
+    doAnswer(invocation -> {
+      Runnable task = invocation.getArgument(0);
+      task.run();
+      return null;
+    }).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
+
+    setCommand = new SetCommand(serviceContext, 2);
   }
 
   @Test
@@ -142,7 +116,6 @@ class SetCommandTest {
       verify(player).sendMessage((String) null);
     }
   }
-
 
   @Test
   void execute_skipsBlocksAlreadyMatchingTargetMaterial() {

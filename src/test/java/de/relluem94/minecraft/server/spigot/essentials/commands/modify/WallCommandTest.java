@@ -1,9 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockConstruction;
@@ -12,25 +11,22 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.List;
-import org.bukkit.Bukkit;
+import java.util.function.Consumer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -42,63 +38,28 @@ class WallCommandTest {
   private Player player;
   private SelectionService selectionService;
   private UndoHistoryService undoHistoryService;
+  private ProtectionService protectionService;
   private WallCommand wallCommand;
-  private MockedStatic<RelluEssentials> mockedRelluEssentials;
-  private MockedStatic<Bukkit> mockedBukkit;
-
-  @BeforeAll
-  static void setUpServer() {
-    if (Bukkit.getServer() != null) {
-      return;
-    }
-    org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
-    org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(
-        org.bukkit.scheduler.BukkitScheduler.class);
-    java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
-    silentLogger.setUseParentHandlers(false);
-    silentLogger.setLevel(java.util.logging.Level.OFF);
-    when(serverMock.getScheduler()).thenReturn(schedulerMock);
-    when(serverMock.getLogger()).thenReturn(silentLogger);
-    Bukkit.setServer(serverMock);
-  }
-
-  @AfterAll
-  static void tearDownServer() throws Exception {
-    java.lang.reflect.Field serverField = Bukkit.class.getDeclaredField("server");
-    serverField.setAccessible(true);
-    serverField.set(null, null);
-  }
 
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
+    protectionService = mock(ProtectionService.class);
 
-    RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
-    TranslationService translationServiceMock = mock(TranslationService.class);
-
-    mockedRelluEssentials = mockStatic(RelluEssentials.class);
-    mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-
-    when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
-    when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
-    when(translationServiceMock.getWithPrefix(any(), any(), any())).thenReturn("msg");
-
-    mockedBukkit = mockStatic(Bukkit.class);
+    TranslationService translationService = mock(TranslationService.class);
+    when(translationService.getWithPrefix(any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any(), any(), any())).thenReturn("msg");
 
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
-    when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
 
     wallCommand = new WallCommand(serviceContext, 2);
-  }
-
-  @AfterEach
-  void tearDown() {
-    mockedRelluEssentials.close();
-    mockedBukkit.close();
   }
 
   @Test
@@ -130,16 +91,16 @@ class WallCommandTest {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
         MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
-        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
-            BlockProcessor.class)) {
+        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
-      modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
-        java.util.function.Consumer<Block> consumer = invocation.getArgument(1);
-        consumer.accept(wallBlock);
-        consumer.accept(innerBlock);
-        return null;
-      });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
+          .thenAnswer(invocation -> {
+            Consumer<Block> consumer = invocation.getArgument(1);
+            consumer.accept(wallBlock);
+            consumer.accept(innerBlock);
+            return null;
+          });
 
       wallCommand.execute(player, new String[]{"wall", "STONE"});
 
@@ -160,15 +121,15 @@ class WallCommandTest {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
         MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
-        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
-            BlockProcessor.class)) {
+        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
-      modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
-        java.util.function.Consumer<Block> consumer = invocation.getArgument(1);
-        consumer.accept(wallBlock);
-        return null;
-      });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
+          .thenAnswer(invocation -> {
+            Consumer<Block> consumer = invocation.getArgument(1);
+            consumer.accept(wallBlock);
+            return null;
+          });
 
       wallCommand.execute(player, new String[]{"wall", "STONE"});
 
@@ -191,23 +152,21 @@ class WallCommandTest {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
         MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
-        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
-            BlockProcessor.class)) {
+        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
-      modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
-        java.util.function.Consumer<Block> consumer = invocation.getArgument(1);
-        consumer.accept(firstWallBlock);
-        consumer.accept(secondWallBlock);
-        consumer.accept(thirdWallBlock);
-        return null;
-      });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
+          .thenAnswer(invocation -> {
+            Consumer<Block> consumer = invocation.getArgument(1);
+            consumer.accept(firstWallBlock);
+            consumer.accept(secondWallBlock);
+            consumer.accept(thirdWallBlock);
+            return null;
+          });
 
       wallCommand.execute(player, new String[]{"wall", "STONE"});
 
-      ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-      verify(undoHistoryService).addHistory(eq(player), historyCaptor.capture());
-      assert historyCaptor.getValue().size() == 3;
+      verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 3));
     }
   }
 
@@ -219,11 +178,11 @@ class WallCommandTest {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
         MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
-        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
-            BlockProcessor.class)) {
+        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
-      modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(_ -> null);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
+          .thenAnswer(_ -> null);
 
       wallCommand.execute(player, new String[]{"wall", "STONE"});
 
@@ -241,21 +200,19 @@ class WallCommandTest {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
         MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
-        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
-            BlockProcessor.class)) {
+        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
-      modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
-        java.util.function.Consumer<Block> consumer = invocation.getArgument(1);
-        consumer.accept(innerBlock);
-        return null;
-      });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
+          .thenAnswer(invocation -> {
+            Consumer<Block> consumer = invocation.getArgument(1);
+            consumer.accept(innerBlock);
+            return null;
+          });
 
       wallCommand.execute(player, new String[]{"wall", "STONE"});
 
-      ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-      verify(undoHistoryService).addHistory(eq(player), historyCaptor.capture());
-      assert historyCaptor.getValue().isEmpty();
+      verify(undoHistoryService).addHistory(eq(player), argThat(List::isEmpty));
     }
   }
 
@@ -269,21 +226,19 @@ class WallCommandTest {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
         MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
-        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
-            BlockProcessor.class)) {
+        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
-      modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
-        java.util.function.Consumer<Block> consumer = invocation.getArgument(1);
-        consumer.accept(minZWallBlock);
-        return null;
-      });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
+          .thenAnswer(invocation -> {
+            Consumer<Block> consumer = invocation.getArgument(1);
+            consumer.accept(minZWallBlock);
+            return null;
+          });
 
       wallCommand.execute(player, new String[]{"wall", "STONE"});
 
-      ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-      verify(undoHistoryService).addHistory(eq(player), historyCaptor.capture());
-      assert historyCaptor.getValue().size() == 1;
+      verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
     }
   }
 
@@ -297,21 +252,19 @@ class WallCommandTest {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
         MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
-        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
-            BlockProcessor.class)) {
+        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
-      modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
-        java.util.function.Consumer<Block> consumer = invocation.getArgument(1);
-        consumer.accept(maxZWallBlock);
-        return null;
-      });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
+          .thenAnswer(invocation -> {
+            Consumer<Block> consumer = invocation.getArgument(1);
+            consumer.accept(maxZWallBlock);
+            return null;
+          });
 
       wallCommand.execute(player, new String[]{"wall", "STONE"});
 
-      ArgumentCaptor<List<ModifyHistoryEntry>> historyCaptor = ArgumentCaptor.captor();
-      verify(undoHistoryService).addHistory(eq(player), historyCaptor.capture());
-      assert historyCaptor.getValue().size() == 1;
+      verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
     }
   }
 

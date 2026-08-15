@@ -101,4 +101,15 @@ public class ProtectionService {
     }
     return true;
   }
+
+  public void removeBlockProtectionIfExists(Block block) {
+    if (!isProtectableMaterial(block.getType())) {
+      return;
+    }
+    ProtectionEntry protection = getProtectionEntry(block.getLocation());
+    if (protection != null) {
+      deleteProtectionAndRemoveFromRegistry(protection);
+    }
+  }
+
 }

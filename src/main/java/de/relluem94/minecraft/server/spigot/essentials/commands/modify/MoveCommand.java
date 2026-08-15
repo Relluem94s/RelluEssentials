@@ -1,11 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isInt;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -18,7 +16,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 public class MoveCommand implements SubCommand {
@@ -61,17 +58,14 @@ public class MoveCommand implements SubCommand {
       history.add(new ModifyHistoryEntry(targetBlock.getLocation(), targetBlock.getType(),
           targetBlock.getBlockData()));
 
-      checkAndRemoveProtection(block);
-      checkAndRemoveProtection(targetBlock);
+      serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
+      serviceContext.getProtectionService().removeBlockProtectionIfExists(targetBlock);
 
-      new BukkitRunnable() {
-        @Override
-        public void run() {
+      serviceContext.getSchedulerService().runTaskLater(() -> {
           targetBlock.setType(block.getType());
           targetBlock.setBlockData(block.getBlockData());
           block.setType(Material.AIR);
-        }
-      }.runTaskLater(RelluEssentials.getInstance(), currentDelay[0]);
+        }, currentDelay[0]);
 
       counter[0]++;
       if (counter[0] >= blocksPerTick) {

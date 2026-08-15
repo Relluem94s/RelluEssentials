@@ -1,8 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.anyString;
@@ -10,111 +7,64 @@ import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.function.Consumer;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 
 class MoveCommandTest {
 
   private Player player;
   private SelectionService selectionService;
   private UndoHistoryService undoHistoryService;
+  private ProtectionService protectionService;
+  private SchedulerService schedulerService;
   private MoveCommand moveCommand;
-  private BukkitScheduler schedulerMock;
-
-  private MockedStatic<RelluEssentials> mockedRelluEssentials;
-  private MockedStatic<Bukkit> mockedBukkit;
-
-  @BeforeAll
-  static void setUpServer() {
-    if (Bukkit.getServer() != null) {
-      return;
-    }
-    org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
-    org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(
-        org.bukkit.scheduler.BukkitScheduler.class);
-    java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
-    silentLogger.setUseParentHandlers(false);
-    silentLogger.setLevel(java.util.logging.Level.OFF);
-    when(serverMock.getScheduler()).thenReturn(schedulerMock);
-    when(serverMock.getLogger()).thenReturn(silentLogger);
-    Bukkit.setServer(serverMock);
-  }
-
-  @AfterAll
-  static void tearDownServer() throws Exception {
-    java.lang.reflect.Field serverField = Bukkit.class.getDeclaredField("server");
-    serverField.setAccessible(true);
-    serverField.set(null, null);
-  }
 
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
+    protectionService = mock(ProtectionService.class);
+    schedulerService = mock(SchedulerService.class);
 
-    RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
-    TranslationService translationServiceMock = mock(TranslationService.class);
-    when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
-    when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+    TranslationService translationService = mock(TranslationService.class);
+    when(translationService.getWithPrefix(any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
 
     ServiceContext serviceContext = mock(ServiceContext.class);
-    when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
-
-    mockedRelluEssentials = mockStatic(RelluEssentials.class);
-    mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-
-    schedulerMock = mock(BukkitScheduler.class);
-    Server serverMock = mock(Server.class);
-    when(serverMock.getScheduler()).thenReturn(schedulerMock);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
+    when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     doAnswer(invocation -> {
-      Runnable task = invocation.getArgument(1);
+      Runnable task = invocation.getArgument(0);
       task.run();
       return null;
-    }).when(schedulerMock).runTaskLater(any(Plugin.class), any(Runnable.class), anyLong());
-
-    mockedBukkit = mockStatic(Bukkit.class);
-    mockedBukkit.when(Bukkit::getServer).thenReturn(serverMock);
-    mockedBukkit.when(Bukkit::getScheduler).thenReturn(schedulerMock);
+    }).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
 
     moveCommand = new MoveCommand(serviceContext, 2);
-  }
-
-  @AfterEach
-  void tearDown() {
-    mockedRelluEssentials.close();
-    mockedBukkit.close();
   }
 
   @Test
@@ -141,41 +91,36 @@ class MoveCommandTest {
 
     Block sourceBlock = buildBlock(Material.STONE, 1, 1, 1);
     Block targetBlock = buildBlock(Material.AIR, 2, 1, 1);
+    wireTargetBlock(sourceBlock, targetBlock);
 
-    Location sourceLocation = sourceBlock.getLocation();
-    Location targetLocation = mock(Location.class);
-    when(sourceLocation.clone()).thenReturn(sourceLocation);
-    when(sourceLocation.add(any(Vector.class))).thenReturn(targetLocation);
-    when(targetLocation.getBlock()).thenReturn(targetBlock);
+    try (var modifyHelper = org.mockito.Mockito.mockStatic(
+        de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+        var playerHelper = org.mockito.Mockito.mockStatic(
+            de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
 
-    try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-        mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper> playerHelper =
-            mockStatic(
-                de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
+      playerHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection(player))
+          .thenReturn(new Vector(1, 0, 0));
 
-      playerHelper.when(() -> getPlayerDirection(player)).thenReturn(new Vector(1, 0, 0));
-
-      modifyHelper.when(() -> forEachBlock(eq(selection), any()))
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
           .thenAnswer(invocation -> {
             Consumer<Block> consumer = invocation.getArgument(1);
             consumer.accept(sourceBlock);
             return null;
           });
 
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
-
       moveCommand.execute(player, new String[]{"move", "1"});
 
-      modifyHelper.verify(() -> checkAndRemoveProtection(sourceBlock));
-      modifyHelper.verify(() -> checkAndRemoveProtection(targetBlock));
+      verify(protectionService).removeBlockProtectionIfExists(sourceBlock);
+      verify(protectionService).removeBlockProtectionIfExists(targetBlock);
       verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 2));
       verify(player).sendMessage((String) null);
     }
   }
 
   @Test
-  void execute_withMultipleBlocksExceedingBlocksPerTick_incrementsDelay() {
+  void execute_withMultipleBlocksExceedingBlocksPerTick_savesHistoryForAllBlocks() {
     Selection selection = buildSelection(0, 0, 0, 4, 4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -187,19 +132,21 @@ class MoveCommandTest {
     Block secondTarget = buildBlock(Material.AIR, 3, 1, 1);
     Block thirdTarget = buildBlock(Material.AIR, 4, 1, 1);
 
-    wireTargetBlock(firstBlock, firstTarget, new Vector(1, 0, 0));
-    wireTargetBlock(secondBlock, secondTarget, new Vector(1, 0, 0));
-    wireTargetBlock(thirdBlock, thirdTarget, new Vector(1, 0, 0));
+    wireTargetBlock(firstBlock, firstTarget);
+    wireTargetBlock(secondBlock, secondTarget);
+    wireTargetBlock(thirdBlock, thirdTarget);
 
-    try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-        mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper> playerHelper =
-            mockStatic(
-                de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
+    try (var modifyHelper = org.mockito.Mockito.mockStatic(
+        de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+        var playerHelper = org.mockito.Mockito.mockStatic(
+            de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
 
-      playerHelper.when(() -> getPlayerDirection(player)).thenReturn(new Vector(1, 0, 0));
+      playerHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection(player))
+          .thenReturn(new Vector(1, 0, 0));
 
-      modifyHelper.when(() -> forEachBlock(eq(selection), any()))
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
           .thenAnswer(invocation -> {
             Consumer<Block> consumer = invocation.getArgument(1);
             consumer.accept(firstBlock);
@@ -207,8 +154,6 @@ class MoveCommandTest {
             consumer.accept(thirdBlock);
             return null;
           });
-
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       moveCommand.execute(player, new String[]{"move", "1"});
 
@@ -224,31 +169,28 @@ class MoveCommandTest {
 
     Block sourceBlock = buildBlock(Material.STONE, 1, 1, 1);
     Block targetBlock = buildBlock(Material.AIR, 2, 1, 1);
+    wireTargetBlock(sourceBlock, targetBlock);
 
-    wireTargetBlock(sourceBlock, targetBlock, new Vector(1, 0, 0));
+    try (var modifyHelper = org.mockito.Mockito.mockStatic(
+        de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+        var playerHelper = org.mockito.Mockito.mockStatic(
+            de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
 
-    try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-        mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper> playerHelper =
-            mockStatic(
-                de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
+      playerHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection(player))
+          .thenReturn(new Vector(1, 0, 0));
 
-      playerHelper.when(() -> getPlayerDirection(player)).thenReturn(new Vector(1, 0, 0));
-
-      modifyHelper.when(() -> forEachBlock(eq(selection), any()))
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
           .thenAnswer(invocation -> {
             Consumer<Block> consumer = invocation.getArgument(1);
             consumer.accept(sourceBlock);
             return null;
           });
 
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
-
       moveCommand.execute(player, new String[]{"move", "1"});
 
-      verify(schedulerMock, times(1)).runTaskLater(
-          any(Plugin.class), any(Runnable.class), anyLong()
-      );
+      verify(schedulerService, times(1)).runTaskLater(any(Runnable.class), anyLong());
     }
   }
 
@@ -265,19 +207,21 @@ class MoveCommandTest {
     Block secondTarget = buildBlock(Material.AIR, 3, 1, 1);
     Block thirdTarget = buildBlock(Material.AIR, 4, 1, 1);
 
-    wireTargetBlock(firstBlock, firstTarget, new Vector(1, 0, 0));
-    wireTargetBlock(secondBlock, secondTarget, new Vector(1, 0, 0));
-    wireTargetBlock(thirdBlock, thirdTarget, new Vector(1, 0, 0));
+    wireTargetBlock(firstBlock, firstTarget);
+    wireTargetBlock(secondBlock, secondTarget);
+    wireTargetBlock(thirdBlock, thirdTarget);
 
-    try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-        mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper> playerHelper =
-            mockStatic(
-                de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
+    try (var modifyHelper = org.mockito.Mockito.mockStatic(
+        de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+        var playerHelper = org.mockito.Mockito.mockStatic(
+            de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.class)) {
 
-      playerHelper.when(() -> getPlayerDirection(player)).thenReturn(new Vector(1, 0, 0));
+      playerHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper.getPlayerDirection(player))
+          .thenReturn(new Vector(1, 0, 0));
 
-      modifyHelper.when(() -> forEachBlock(eq(selection), any()))
+      modifyHelper.when(() ->
+              de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock(eq(selection), any()))
           .thenAnswer(invocation -> {
             Consumer<Block> consumer = invocation.getArgument(1);
             consumer.accept(firstBlock);
@@ -286,16 +230,11 @@ class MoveCommandTest {
             return null;
           });
 
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
-
       moveCommand.execute(player, new String[]{"move", "1"});
 
-      verify(schedulerMock, times(3)).runTaskLater(
-          any(Plugin.class), any(Runnable.class), anyLong()
-      );
+      verify(schedulerService, times(3)).runTaskLater(any(Runnable.class), anyLong());
     }
   }
-
 
   @Test
   void matches_withCorrectArgs_returnsTrue() {
@@ -345,7 +284,7 @@ class MoveCommandTest {
     return block;
   }
 
-  private void wireTargetBlock(Block sourceBlock, Block targetBlock, Vector direction) {
+  private void wireTargetBlock(Block sourceBlock, Block targetBlock) {
     Location sourceLocation = sourceBlock.getLocation();
     Location clonedLocation = mock(Location.class);
     when(sourceLocation.clone()).thenReturn(clonedLocation);

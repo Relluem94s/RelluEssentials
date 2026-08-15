@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
@@ -68,7 +67,7 @@ public class CylinderCommand implements SubCommand {
         return;
       }
 
-      checkAndRemoveProtection(block);
+      serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
       history.add(
           new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData()));
       blockProcessor.process(block, blockHelper);

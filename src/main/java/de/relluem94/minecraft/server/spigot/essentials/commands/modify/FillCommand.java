@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isInt;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
@@ -102,7 +101,7 @@ public class FillCommand implements SubCommand {
         continue;
       }
 
-      checkAndRemoveProtection(block);
+      serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
       history.add(
           new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData()));
       blockHelper.addLocation(block.getLocation(), currentDelay[0]);

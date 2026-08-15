@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getModifyClipboardEntry;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getRelativeCopySelection;
@@ -62,7 +61,7 @@ public class CopyCommand implements SubCommand {
 
       if (isCut) {
         history.add(historyEntry);
-        checkAndRemoveProtection(block);
+        serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
         blockProcessor.process(block, blockHelper);
       }
     });

@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.isPlantMaterial;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
@@ -16,11 +15,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
@@ -30,7 +29,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -43,38 +41,25 @@ class PlantCommandTest {
   private SelectionService selectionService;
   private UndoHistoryService undoHistoryService;
   private PlantCommand plantCommand;
-  private MockedStatic<RelluEssentials> mockedRelluEssentials;
 
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
+    ProtectionService protectionService = mock(ProtectionService.class);
+    TranslationService translationService = mock(TranslationService.class);
 
-    de.relluem94.minecraft.server.spigot.essentials.RelluEssentials relluEssentialsMock =
-        mock(de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
-    TranslationService translationServiceMock = mock(TranslationService.class);
-
-    mockedRelluEssentials = mockStatic(
-        de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
-    mockedRelluEssentials.when(
-            de.relluem94.minecraft.server.spigot.essentials.RelluEssentials::getInstance)
-        .thenReturn(relluEssentialsMock);
-
-    when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
-    when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any())).thenReturn("msg");
 
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
-    when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
 
     plantCommand = new PlantCommand(serviceContext, 2);
-  }
-
-  @AfterEach
-  void tearDown() {
-    mockedRelluEssentials.close();
   }
 
   @Test
@@ -106,7 +91,6 @@ class PlantCommandTest {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
       modifyHelper.when(() -> forEachBlock(any(), any())).thenAnswer(_ -> null);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       when(selectionService.resolve(player)).thenReturn(null);
 
@@ -129,7 +113,6 @@ class PlantCommandTest {
         MockedConstruction<BlockHelper> mockedBlockHelper = mockConstruction(BlockHelper.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
         Consumer<Block> consumer = invocation.getArgument(1);
         consumer.accept(block);
@@ -158,7 +141,6 @@ class PlantCommandTest {
         MockedConstruction<BlockHelper> ignored = mockConstruction(BlockHelper.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
         Consumer<Block> consumer = invocation.getArgument(1);
         consumer.accept(block);
@@ -186,7 +168,6 @@ class PlantCommandTest {
         MockedConstruction<BlockHelper> ignored = mockConstruction(BlockHelper.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
         Consumer<Block> consumer = invocation.getArgument(1);
         consumer.accept(block);
@@ -214,7 +195,6 @@ class PlantCommandTest {
         MockedConstruction<BlockHelper> ignored = mockConstruction(BlockHelper.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
         Consumer<Block> consumer = invocation.getArgument(1);
         consumer.accept(block);
@@ -240,7 +220,6 @@ class PlantCommandTest {
         MockedConstruction<BlockHelper> ignored = mockConstruction(BlockHelper.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
         Consumer<Block> consumer = invocation.getArgument(1);
         consumer.accept(block);
@@ -270,7 +249,6 @@ class PlantCommandTest {
         MockedConstruction<BlockHelper> mockedBlockHelper = mockConstruction(BlockHelper.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
         Consumer<Block> consumer = invocation.getArgument(1);
         consumer.accept(firstBlock);
@@ -299,7 +277,6 @@ class PlantCommandTest {
         MockedConstruction<BlockHelper> mockedBlockHelper = mockConstruction(BlockHelper.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(_ -> null);
 
       plantCommand.execute(player, new String[]{"plant", "DANDELION"});

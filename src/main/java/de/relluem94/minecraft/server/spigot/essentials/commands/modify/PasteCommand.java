@@ -1,10 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.normalizeYaw;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -18,7 +16,6 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class PasteCommand implements SubCommand {
 
@@ -36,7 +33,8 @@ public class PasteCommand implements SubCommand {
         serviceContext.getClipboardService().getClipboard(player);
     if (clipboardEntry == null || clipboardEntry.getSecondValue() == null
         || clipboardEntry.getSecondValue().isEmpty()) {
-      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
       return;
     }
 
@@ -56,15 +54,12 @@ public class PasteCommand implements SubCommand {
 
       history.add(
           new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData()));
-      checkAndRemoveProtection(block);
+      serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
 
-      new BukkitRunnable() {
-        @Override
-        public void run() {
+      serviceContext.getSchedulerService().runTaskLater(() -> {
           block.setType(entry.getMaterial());
           block.setBlockData(entry.getData());
-        }
-      }.runTaskLater(RelluEssentials.getInstance(), currentDelay[0]);
+        }, currentDelay[0]);
 
       counter[0]++;
       if (counter[0] >= blocksPerTick) {
@@ -74,8 +69,9 @@ public class PasteCommand implements SubCommand {
     }
 
     serviceContext.getUndoHistoryService().addHistory(player, history);
-    player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED,
-        clipboardEntry.getSecondValue().size()));
+    player.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED,
+            clipboardEntry.getSecondValue().size()));
   }
 
   @Override
