@@ -47,9 +47,9 @@ import org.bukkit.plugin.Plugin;
  */
 public class DatabaseManager implements Enable {
 
+  private final DataSource dataSource;
   @Getter
   private DatabaseHelper databaseHelper;
-  private final DataSource dataSource;
 
   /**
    * Creates a new DatabaseManager and establishes a database connection.
@@ -71,7 +71,6 @@ public class DatabaseManager implements Enable {
       );
       bootstrap.ensureSchemaExists();
 
-
       dataSource = buildDataSource(host, port, user, password);
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -90,30 +89,32 @@ public class DatabaseManager implements Enable {
     databaseHelper = new DatabaseHelper(dataSource,
         sqlResourceLoader, serviceContext);
 
-    PluginInformationDao pluginInformationDao = new PluginInformationDao(queryExecutor);
-    PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(pluginInformationDao);
-    PluginInformationService pluginInformationService = new PluginInformationService(pluginInformationRepository);
+    persistenceContext.setCropDao(new CropDao(queryExecutor));
+    persistenceContext.setDropDao(new DropDao(queryExecutor));
+    persistenceContext.setLocationDao(new LocationDao(queryExecutor, serviceContext));
+    persistenceContext.setLocationTypeDao(new LocationTypeDao(queryExecutor));
+    persistenceContext.setNpcDao(new NpcDao(queryExecutor));
+    persistenceContext.setPlayerDao(new PlayerDao(queryExecutor, serviceContext));
+    persistenceContext.setPluginInformationDao(new PluginInformationDao(queryExecutor));
+    persistenceContext.setProtectionDao(new ProtectionDao(queryExecutor));
+    persistenceContext.setSettingDao(new SettingDao(queryExecutor));
+
+    PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(
+        persistenceContext.getPluginInformationDao());
+    PluginInformationService pluginInformationService = new PluginInformationService(
+        pluginInformationRepository);
 
     pluginInformationService.load();
     serviceContext.setPluginInformationService(pluginInformationService);
 
-
-    LocationTypeDao locationTypeDao = new LocationTypeDao(queryExecutor);
     LocationTypeRegistry locationTypeRegistry = new LocationTypeRegistry();
-    locationTypeRegistry.initialize(locationTypeDao.findAll());
+    locationTypeRegistry.initialize(persistenceContext.getLocationTypeDao().findAll());
     LocationTypeService locationTypeService = new LocationTypeService(locationTypeRegistry);
     serviceContext.setLocationTypeService(locationTypeService);
 
-    persistenceContext.setDropDao(new DropDao(queryExecutor));
-    persistenceContext.setCropDao(new CropDao(queryExecutor));
-    persistenceContext.setNpcDao(new NpcDao(queryExecutor));
-    persistenceContext.setPlayerDao(new PlayerDao(queryExecutor, serviceContext));
-    persistenceContext.setLocationDao(new LocationDao(queryExecutor, serviceContext));
-    persistenceContext.setProtectionDao(new ProtectionDao(queryExecutor));
-
     patch(persistenceContext, serviceContext, queryExecutor);
 
-    SettingRepository settingRepository = new SettingRepository(new SettingDao(queryExecutor));
+    SettingRepository settingRepository = new SettingRepository(persistenceContext.getSettingDao());
     SettingRegistry settingRegistry = new SettingRegistry();
     SettingService settingService = new SettingService(settingRegistry, settingRepository);
     settingService.loadAll();
@@ -138,7 +139,8 @@ public class DatabaseManager implements Enable {
     });
   }
 
-  private void patch(PersistenceContext persistenceContext, ServiceContext serviceContext, QueryExecutor queryExecutor) {
+  private void patch(PersistenceContext persistenceContext, ServiceContext serviceContext,
+      QueryExecutor queryExecutor) {
     DatabaseMigrator databaseMigrator = new DatabaseMigrator(
         persistenceContext,
         queryExecutor,

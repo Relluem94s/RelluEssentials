@@ -3,9 +3,12 @@ package de.relluem94.minecraft.server.spigot.essentials.contexts;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.CropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.DropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationTypeDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PluginInformationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.ProtectionDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.SettingDao;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,11 +18,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PersistenceContext {
 
-  private NpcDao npcDao;
-  private LocationDao locationDao;
-  private ProtectionDao protectionDao;
-  private PlayerDao playerDao;
-  private DropDao dropDao;
   private CropDao cropDao;
-
+  private DropDao dropDao;
+  private LocationDao locationDao;
+  private LocationTypeDao locationTypeDao;
+  private NpcDao npcDao;
+  private PlayerDao playerDao;
+  private PluginInformationDao pluginInformationDao;
+  private ProtectionDao protectionDao;
+  private SettingDao settingDao;
 }
