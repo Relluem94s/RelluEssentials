@@ -4,6 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.BagDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.BankDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.CropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.DropDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.GroupDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationTypeDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.NpcDao;
@@ -17,6 +18,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Context holding all DAO instances used for database access throughout the application.
+ *
+ * @author rellu
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,6 +30,7 @@ public class PersistenceContext {
 
   private CropDao cropDao;
   private DropDao dropDao;
+  private GroupDao groupDao;
   private LocationDao locationDao;
   private LocationTypeDao locationTypeDao;
   private NpcDao npcDao;

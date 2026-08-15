@@ -114,7 +114,7 @@ public class ServiceManager implements Enable {
     serviceContext.setUndoHistoryService(undoHistoryService);
     SelectionService selectionService = new SelectionService(serviceContext);
     serviceContext.setSelectionService(selectionService);
-    GroupRepository groupRepository = new GroupRepository(databaseHelper.getGroups());
+    GroupRepository groupRepository = new GroupRepository(persistenceContext.getGroupDao());
     GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
     GroupService groupService = new GroupService(groupRegistry, groupRepository);
     serviceContext.setGroupService(groupService);
