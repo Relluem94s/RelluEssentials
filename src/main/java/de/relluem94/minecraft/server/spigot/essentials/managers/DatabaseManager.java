@@ -10,7 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceConte
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
@@ -44,7 +43,6 @@ import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
 import java.sql.SQLException;
 import javax.sql.DataSource;
-import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -53,8 +51,6 @@ import org.bukkit.plugin.Plugin;
 public class DatabaseManager implements Enable {
 
   private final DataSource dataSource;
-  @Getter
-  private DatabaseHelper databaseHelper;
 
   /**
    * Creates a new DatabaseManager and establishes a database connection.
@@ -90,9 +86,6 @@ public class DatabaseManager implements Enable {
 
     ClasspathSqlResourceLoader sqlResourceLoader = new ClasspathSqlResourceLoader();
     QueryExecutor queryExecutor = new QueryExecutor(dataSource, sqlResourceLoader);
-
-    databaseHelper = new DatabaseHelper(dataSource,
-        sqlResourceLoader, serviceContext);
 
     persistenceContext.setCropDao(new CropDao(queryExecutor));
     persistenceContext.setDropDao(new DropDao(queryExecutor));

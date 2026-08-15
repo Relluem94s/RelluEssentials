@@ -74,4 +74,9 @@ public class LocationService {
     locationEntry.setPlayerId(playerId);
     return locationEntry;
   }
+
+  public List<LocationEntry> findByType(LocationType type) {
+    LocationTypeEntry typeEntry = resolveType(type);
+    return locationRepository.findByType(typeEntry.getId());
+  }
 }

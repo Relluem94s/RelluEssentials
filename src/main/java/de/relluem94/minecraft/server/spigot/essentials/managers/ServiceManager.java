@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
@@ -34,7 +33,6 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.PlayerReposi
 import de.relluem94.minecraft.server.spigot.essentials.repositories.ProtectionRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.TraderNpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
@@ -70,7 +68,6 @@ public class ServiceManager implements Enable {
     RelluEssentials relluEssentials = (RelluEssentials) plugin;
     ServiceContext serviceContext = relluEssentials.getServiceContext();
     PersistenceContext persistenceContext = relluEssentials.getPersistenceContext();
-    DatabaseHelper databaseHelper = serviceContext.getDatabaseHelper();
 
     /* Services */
     serviceContext.setPluginManagerService(new PluginManagerService(plugin));
@@ -103,9 +100,7 @@ public class ServiceManager implements Enable {
     traderNpcService.loadAndInitialiseNpcs();
     serviceContext.setTraderNpcService(traderNpcService);
 
-    WarpRepository warpRepository = new WarpRepository(databaseHelper.getWarps());
-    serviceContext.setWarpService(
-        new WarpService(warpRepository, serviceContext.getLocationService()));
+    serviceContext.setWarpService(new WarpService(serviceContext.getLocationService()));
 
     SchedulerService schedulerService = new SchedulerService(relluEssentials);
     serviceContext.setSchedulerService(schedulerService);

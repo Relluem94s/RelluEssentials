@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.WarpRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,24 +10,33 @@ import org.bukkit.entity.Player;
 
 public class WarpService {
 
-  private final WarpRepository warpRepository;
   private final LocationService locationService;
 
-  public WarpService(WarpRepository warpRepository, LocationService locationService) {
-    this.warpRepository = warpRepository;
+  public WarpService(LocationService locationService) {
     this.locationService = locationService;
   }
 
   public Optional<LocationEntry> findWarpByName(String name) {
-    return warpRepository.findByName(name);
+    return locationService.findByType(LocationType.WARP).stream()
+        .filter(le -> le.getLocationName().equals(name))
+        .findFirst();
   }
 
   public Optional<LocationEntry> findWarpByNameAndWorld(String name, World world) {
-    return warpRepository.findByNameAndWorld(name, world);
+    return locationService.findByType(LocationType.WARP).stream()
+        .filter(le -> le.getLocation() != null
+            && le.getLocation().getWorld() != null
+            && le.getLocationName().equals(name)
+            && le.getLocation().getWorld().equals(world))
+        .findFirst();
   }
 
   public List<LocationEntry> findWarpsByWorld(World world) {
-    return warpRepository.findByWorld(world);
+    return locationService.findByType(LocationType.WARP).stream()
+        .filter(le -> le.getLocation() != null
+            && le.getLocation().getWorld() != null
+            && le.getLocation().getWorld().equals(world))
+        .collect(Collectors.toList());
   }
 
   public List<String> getWarpNamesByWorld(World world) {
@@ -38,25 +46,22 @@ public class WarpService {
   }
 
   public boolean warpExists(String name) {
-    return warpRepository.findByName(name).isPresent();
+    return findWarpByName(name).isPresent();
   }
 
   public boolean addWarp(String name, Player player, int playerId) {
     if (warpExists(name)) {
       return false;
     }
-    LocationEntry locationEntry = locationService.buildLocationEntry(player, name, LocationType.WARP,
-        playerId);
-    LocationEntry persisted = locationService.saveAndFetch(locationEntry);
-    warpRepository.save(persisted);
+    locationService.saveAndFetch(
+        locationService.buildLocationEntry(player, name, LocationType.WARP, playerId));
     return true;
   }
 
   public boolean removeWarp(String name) {
-    return warpRepository.findByName(name)
+    return findWarpByName(name)
         .map(locationEntry -> {
           locationService.delete(locationEntry);
-          warpRepository.delete(locationEntry);
           return true;
         })
         .orElse(false);
