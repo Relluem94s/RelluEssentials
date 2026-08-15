@@ -6,30 +6,30 @@ import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 
 class FillCommandTest {
 
     private Player player;
     private UndoHistoryService undoHistoryService;
+    private ProtectionService protectionService;
+    private SchedulerService schedulerService;
     private FillCommand fillCommand;
     private FillCommand fillrCommand;
 
@@ -41,29 +41,12 @@ class FillCommandTest {
     void setUp() {
         player = mock(Player.class);
         undoHistoryService = mock(UndoHistoryService.class);
-
-        if (Bukkit.getServer() == null) {
-            org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
-            org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(org.bukkit.scheduler.BukkitScheduler.class);
-            java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
-            silentLogger.setUseParentHandlers(false);
-            silentLogger.setLevel(java.util.logging.Level.OFF);
-            when(serverMock.getScheduler()).thenReturn(schedulerMock);
-            when(serverMock.getLogger()).thenReturn(silentLogger);
-            org.bukkit.Bukkit.setServer(serverMock);
-        }
+        protectionService = mock(ProtectionService.class);
+        schedulerService = mock(SchedulerService.class);
 
         fillCommand = new FillCommand(buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
         fillrCommand = new FillCommand(buildServiceContext(), true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
     }
-
-    @AfterAll
-    static void tearDownServer() throws Exception {
-        java.lang.reflect.Field serverField = org.bukkit.Bukkit.class.getDeclaredField("server");
-        serverField.setAccessible(true);
-        serverField.set(null, null);
-    }
-
 
     private ServiceContext buildServiceContext() {
         TranslationService translationServiceMock = mock(TranslationService.class);
@@ -73,9 +56,10 @@ class FillCommandTest {
         ServiceContext serviceContext = mock(ServiceContext.class);
         when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
         when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
+        when(serviceContext.getProtectionService()).thenReturn(protectionService);
+        when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
         return serviceContext;
     }
-
 
     @Test
     void execute_fill_withInvalidMaterial_sendsWrongMaterialMessage() {
@@ -150,17 +134,9 @@ class FillCommandTest {
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
-        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+        fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
-                    .checkAndRemoveProtection(any()))
-                .thenAnswer(_ -> null);
-
-            fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
-
-            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-        }
+        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
     }
 
     @Test
@@ -178,17 +154,9 @@ class FillCommandTest {
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
-        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+        fillrCommand.execute(player, new String[]{"fillr", "STONE", "5"});
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
-                    .checkAndRemoveProtection(any()))
-                .thenAnswer(_ -> null);
-
-            fillrCommand.execute(player, new String[]{"fillr", "STONE", "5"});
-
-            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 2));
-        }
+        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 2));
     }
 
     @Test
@@ -241,17 +209,9 @@ class FillCommandTest {
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
-        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+        limitedFillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
-                    .checkAndRemoveProtection(any()))
-                .thenAnswer(_ -> null);
-
-            limitedFillCommand.execute(player, new String[]{"fill", "STONE", "5"});
-
-            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() < 3));
-        }
+        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() < 3));
     }
 
     @Test
@@ -269,17 +229,9 @@ class FillCommandTest {
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
-        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+        fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
-                    .checkAndRemoveProtection(any()))
-                .thenAnswer(_ -> null);
-
-            fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
-
-            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-        }
+        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
     }
 
     @Test
@@ -300,17 +252,9 @@ class FillCommandTest {
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
 
-        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+        fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
-                    .checkAndRemoveProtection(any()))
-                .thenAnswer(_ -> null);
-
-            fillCommand.execute(player, new String[]{"fill", "STONE", "5"});
-
-            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 4));
-        }
+        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 4));
     }
 
     @Test
@@ -345,19 +289,10 @@ class FillCommandTest {
         when(startLocation.clone()).thenReturn(startLocation);
         when(startLocation.getBlock()).thenReturn(startBlock);
 
-        try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-            mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+        fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
 
-            modifyHelper.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper
-                    .checkAndRemoveProtection(any()))
-                .thenAnswer(_ -> null);
-
-            fillCommand.execute(player, new String[]{"fill", "STONE", "1"});
-
-            verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-        }
+        verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
     }
-
 
     private Location buildLocation(World world, int x, int y, int z) {
         Location location = mock(Location.class);

@@ -14,27 +14,24 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.List;
 import java.util.function.Consumer;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -48,31 +45,7 @@ class CopyCommandTest {
   private ClipboardService clipboardService;
   private ServiceContext serviceContext;
 
-  private MockedStatic<RelluEssentials> mockedRelluEssentials;
-  private RelluEssentials relluEssentialsMock;
 
-  @BeforeAll
-  static void setUpServer() throws Exception {
-    if (Bukkit.getServer() != null) {
-      tearDownServer();
-    }
-    org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
-    org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(
-        org.bukkit.scheduler.BukkitScheduler.class);
-    java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
-    silentLogger.setUseParentHandlers(false);
-    silentLogger.setLevel(java.util.logging.Level.OFF);
-    when(serverMock.getScheduler()).thenReturn(schedulerMock);
-    when(serverMock.getLogger()).thenReturn(silentLogger);
-    org.bukkit.Bukkit.setServer(serverMock);
-  }
-
-  @AfterAll
-  static void tearDownServer() throws Exception {
-    java.lang.reflect.Field serverField = org.bukkit.Bukkit.class.getDeclaredField("server");
-    serverField.setAccessible(true);
-    serverField.set(null, null);
-  }
 
   @BeforeEach
   void setUp() {
@@ -80,11 +53,9 @@ class CopyCommandTest {
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
     clipboardService = new ClipboardService();
+    SchedulerService schedulerService = mock(SchedulerService.class);
 
-    relluEssentialsMock = mock(RelluEssentials.class);
-
-    mockedRelluEssentials = mockStatic(RelluEssentials.class);
-    mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
+    ProtectionService protectionServiceMock = mock(ProtectionService.class);
 
     TranslationService translationServiceMock = mock(TranslationService.class);
     when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
@@ -95,6 +66,9 @@ class CopyCommandTest {
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
     when(serviceContext.getClipboardService()).thenReturn(clipboardService);
+    when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionServiceMock);
+
 
     Location playerLocation = mock(Location.class);
     Location clonedLocation = mock(Location.class);
@@ -103,11 +77,6 @@ class CopyCommandTest {
     when(clonedLocation.getBlockX()).thenReturn(0);
     when(clonedLocation.getBlockY()).thenReturn(0);
     when(clonedLocation.getBlockZ()).thenReturn(0);
-  }
-
-  @AfterEach
-  void tearDown() {
-    mockedRelluEssentials.close();
   }
 
   @Test
