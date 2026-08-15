@@ -41,4 +41,9 @@ public class LocationRepository {
   public List<LocationEntry> findByPlayerAndType(int playerId, int typeId) {
     return locationDao.getLocations(playerId, typeId);
   }
+
+  public List<LocationEntry> findByType(int typeId) {
+    return locationDao.getLocationsByType(typeId);
+  }
+
 }

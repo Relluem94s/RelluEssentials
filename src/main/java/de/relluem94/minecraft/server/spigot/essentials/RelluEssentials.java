@@ -8,7 +8,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.managers.AutoSaveManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.BankManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.CommandManager;
@@ -110,8 +109,6 @@ public class RelluEssentials extends JavaPlugin {
         getConfig().getInt("database.port")
     );
     databaseManager.enable(this);
-    DatabaseHelper databaseHelper = databaseManager.getDatabaseHelper();
-    serviceContext.setDatabaseHelper(databaseHelper);
     serviceManager.enable(this);
     CommandManager commandManager = new CommandManager();
     commandManager.enable(this);

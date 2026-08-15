@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.contexts;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BagService;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
@@ -38,15 +37,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Holds references to some active services and managers used across the plugin.
- * Constructed from a {@link RelluEssentials} plugin instance.
+ * Holds references to some active services and managers used across the plugin. Constructed from a
+ * {@link RelluEssentials} plugin instance.
  */
 @Setter
 @Getter
 @NoArgsConstructor
 public class ServiceContext {
-  /* TEMP DatabaseHelper*/
-  private DatabaseHelper databaseHelper;
 
   /* Services */
   private TranslationService translationService;

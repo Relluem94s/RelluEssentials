@@ -73,5 +73,16 @@ public class LocationDao {
         .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
   }
 
+  public List<LocationEntry> getLocationsByType(int type) {
+    return queryExecutor.queryList("getLocationsByType.sql", _ -> {}, rs -> {
+          if (type != rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK)) {
+            return null;
+          }
+          return LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService());
+        }).stream().filter(Objects::nonNull)
+        .collect(java.util.stream.Collectors.toCollection(ArrayList::new));
+  }
+
+
 
 }

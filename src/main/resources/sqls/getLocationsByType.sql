@@ -1,6 +1,6 @@
 /**
  * Author:  rellu
- * Created: 06.03.2023
+ * Created: 15.08.2026
  */
 
 SELECT 
@@ -13,4 +13,4 @@ INNER JOIN
 ON 
     l.location_type_fk = lt.id
 WHERE 
-    deletedby is null and location_type_fk = 3;
+    deletedby is null and location_type_fk = ?;
