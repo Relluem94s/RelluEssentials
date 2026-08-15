@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -27,16 +28,11 @@ public class ClassDiscoveryHelper {
       return List.of();
     }
 
-    if (resource.getProtocol().equals("jar")) {
-      return scanJar(resource, packagePath, annotation, targetType, classLoader);
-    }
-
-    try {
-      return scanDirectory(new java.io.File(resource.toURI()), packageName, annotation, targetType,
-          classLoader);
-    } catch (URISyntaxException e) {
-      return List.of();
-    }
+    return switch (resource.getProtocol()) {
+      case "jar" -> scanJar(resource, packagePath, annotation, targetType, classLoader);
+      case "file" -> scanDirectory(resource, packageName, annotation, targetType, classLoader);
+      default -> List.of();
+    };
   }
 
   private static <T> List<Class<? extends T>> scanJar(
@@ -46,54 +42,72 @@ public class ClassDiscoveryHelper {
       Class<T> targetType,
       ClassLoader classLoader
   ) {
-    List<Class<? extends T>> result = new ArrayList<>();
-
     String jarUrlString = jarResource.toString();
     String jarFilePath = jarUrlString.substring("jar:".length(), jarUrlString.indexOf("!/"));
 
     try (InputStream inputStream = URI.create(jarFilePath).toURL().openStream();
         JarInputStream jarInputStream = new JarInputStream(inputStream)) {
 
-      JarEntry entry;
-      while ((entry = jarInputStream.getNextJarEntry()) != null) {
-        String entryName = entry.getName();
-        if (entryName.startsWith(packagePath) && entryName.endsWith(".class")
-            && !entry.isDirectory()) {
-          String className = entryName.replace('/', '.').replace(".class", "");
-          resolveAnnotatedClass(className, annotation, targetType, classLoader)
-              .ifPresent(result::add);
-        }
-      }
+      return collectAnnotatedClassesFromJar(jarInputStream, packagePath, annotation, targetType, classLoader);
     } catch (IOException e) {
       return List.of();
+    }
+  }
+
+  private static <T> List<Class<? extends T>> collectAnnotatedClassesFromJar(
+      JarInputStream jarInputStream,
+      String packagePath,
+      Class<? extends Annotation> annotation,
+      Class<T> targetType,
+      ClassLoader classLoader
+  ) throws IOException {
+    List<Class<? extends T>> result = new ArrayList<>();
+    JarEntry entry;
+
+    while ((entry = jarInputStream.getNextJarEntry()) != null) {
+      String entryName = entry.getName();
+      if (entryName.startsWith(packagePath) && entryName.endsWith(".class") && !entry.isDirectory()) {
+        String className = entryName.replace('/', '.').replace(".class", "");
+        resolveAnnotatedClass(className, annotation, targetType, classLoader).ifPresent(result::add);
+      }
     }
 
     return result;
   }
 
   private static <T> List<Class<? extends T>> scanDirectory(
-      java.io.File directory,
+      URL resource,
       String packageName,
       Class<? extends Annotation> annotation,
       Class<T> targetType,
       ClassLoader classLoader
   ) {
-    List<Class<? extends T>> result = new ArrayList<>();
+    try {
+      return scanDirectoryRecursive(new File(resource.toURI()), packageName, annotation, targetType, classLoader);
+    } catch (URISyntaxException e) {
+      return List.of();
+    }
+  }
 
-    java.io.File[] files = directory.listFiles();
+  private static <T> List<Class<? extends T>> scanDirectoryRecursive(
+      File directory,
+      String packageName,
+      Class<? extends Annotation> annotation,
+      Class<T> targetType,
+      ClassLoader classLoader
+  ) {
+    File[] files = directory.listFiles();
     if (files == null) {
-      return result;
+      return List.of();
     }
 
-    for (java.io.File file : files) {
+    List<Class<? extends T>> result = new ArrayList<>();
+    for (File file : files) {
       if (file.isDirectory()) {
-        result.addAll(
-            scanDirectory(file, packageName + "." + file.getName(), annotation, targetType,
-                classLoader));
+        result.addAll(scanDirectoryRecursive(file, packageName + "." + file.getName(), annotation, targetType, classLoader));
       } else if (file.getName().endsWith(".class")) {
         String className = packageName + "." + file.getName().replace(".class", "");
-        resolveAnnotatedClass(className, annotation, targetType, classLoader)
-            .ifPresent(result::add);
+        resolveAnnotatedClass(className, annotation, targetType, classLoader).ifPresent(result::add);
       }
     }
 
