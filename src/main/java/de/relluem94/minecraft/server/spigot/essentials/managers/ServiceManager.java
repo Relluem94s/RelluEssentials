@@ -23,6 +23,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegis
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BackLocationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BankRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BuyBackRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.CropRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.DropRuleRepository;
@@ -155,9 +156,10 @@ public class ServiceManager implements Enable {
     ReplyRegistry replyRegistry = new ReplyRegistry();
     ChatService chatService = new ChatService(serviceContext, replyRegistry);
     serviceContext.setChatService(chatService);
-    BankService bankService = new BankService(databaseHelper, playerRegistry,
-        new BankTierRegistry(databaseHelper.getBankTiers()), serviceContext.getTranslationService(),
-        relluEssentials);
+
+    BankTierRegistry bankTierRegistry = new BankTierRegistry(persistenceContext.getBankDao().findAllBankTiers());
+    BankRepository bankRepository = new BankRepository(persistenceContext.getBankDao());
+    BankService bankService = new BankService(serviceContext, bankTierRegistry, bankRepository, relluEssentials);
     serviceContext.setBankService(bankService);
 
     BackLocationRepository backLocationRepository = new BackLocationRepository();

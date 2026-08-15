@@ -1,17 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.BankMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.PlayerMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.TraderNpcMapper;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.RowMapper;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.StatementConfigurer;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.SqlResourceLoader;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -20,8 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.DataSource;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -59,27 +54,8 @@ public class DatabaseHelper {
           results.add(mapper.map(rs));
         }
       }
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-    }
+    } catch (SQLException | FileNotFoundException ex) {}
     return results;
-  }
-
-  private <T> T querySingle(String sqlFile, StatementConfigurer configurer, RowMapper<T> mapper) {
-    try (Connection connection = dataSource.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile))) {
-      configurer.configure(ps);
-      ps.execute();
-      try (ResultSet rs = ps.getResultSet()) {
-        if (rs.next()) {
-          return mapper.map(rs);
-        }
-      }
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-    }
-    return null;
   }
 
   private void executeUpdate(String sqlFile, StatementConfigurer configurer) {
@@ -88,9 +64,7 @@ public class DatabaseHelper {
             sqlResourceLoader.load("sqls/" + sqlFile))) {
       configurer.configure(ps);
       ps.execute();
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(DatabaseHelper.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-    }
+    } catch (SQLException | FileNotFoundException ex) {}
   }
 
   public List<LocationEntry> getWarps() {
@@ -103,63 +77,6 @@ public class DatabaseHelper {
     }, PlayerMapper::mapGroup);
   }
 
-  public List<TraderNPCEntry> getTraderNPCs() {
-    return queryList("getNPCs.sql", _ -> {
-    }, rs -> TraderNpcMapper.mapNPC(rs,
-        key -> Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(key))));
-  }
-
-  public List<BankTierEntry> getBankTiers() {
-    return queryList("getBankTiers.sql", _ -> {
-    }, BankMapper::mapBankTier);
-  }
-
-  public BankTierEntry getBankTier(int id) {
-    return querySingle("getBankTier.sql", ps -> ps.setInt(1, id), BankMapper::mapBankTier);
-  }
-
-  public BankAccountEntry getPlayerBankAccount(int playerFK) {
-    return querySingle("getBankAccountByPlayer.sql", ps -> ps.setInt(1, playerFK), rs -> {
-      BankAccountEntry bae = BankMapper.mapBankAccount(rs);
-      bae.setTier(getBankTier(rs.getInt(DatabaseMappings.FIELD_BANK_TIER_FK)));
-      return bae;
-    });
-  }
-
-  public void insertBankAccount(@NotNull BankAccountEntry bae) {
-    executeUpdate("insertBankAccount.sql", ps -> {
-      ps.setInt(1, 1);
-      ps.setInt(2, bae.getPlayerId());
-      ps.setDouble(3, bae.getValue());
-      ps.setInt(4, bae.getTier().getId());
-    });
-  }
-
-  public void addTransactionToBank(int playerFK, int bankAccountFK, double transactionValue,
-      double bankaccountTotal, int tier) {
-    executeUpdate("insertBankTransaction.sql", ps -> {
-      ps.setInt(1, playerFK);
-      ps.setInt(2, bankAccountFK);
-      ps.setDouble(3, transactionValue);
-    });
-    updateBankAccount(playerFK, transactionValue, bankaccountTotal, tier);
-  }
-
-  public void updateBankAccount(int playerFK, double transactionValue, double bankaccountTotal,
-      int tier) {
-    executeUpdate("updateBankAccount.sql", ps -> {
-      ps.setInt(1, playerFK);
-      ps.setDouble(2, bankaccountTotal + transactionValue);
-      ps.setInt(3, tier);
-      ps.setInt(4, playerFK);
-    });
-  }
-
-  public List<BankTransactionEntry> getTransactionsToBankFromPlayer(int bankAccountFK) {
-    return queryList("getBankAccountTransactionsByPlayer.sql", ps -> ps.setInt(1, bankAccountFK),
-        BankMapper::mapBankTransaction);
-  }
-
   public void insertGroup(@NotNull GroupEntry ge) {
     executeUpdate("insertGroup.sql", ps -> {
       ps.setInt(1, ge.getId());
@@ -168,15 +85,9 @@ public class DatabaseHelper {
     });
   }
 
-  @FunctionalInterface
-  private interface StatementConfigurer {
-
-    void configure(PreparedStatement ps) throws SQLException;
-  }
-
-  @FunctionalInterface
-  private interface RowMapper<T> {
-
-    T map(ResultSet rs) throws SQLException;
+  public List<TraderNPCEntry> getTraderNPCs() {
+    return queryList("getNPCs.sql", _ -> {
+    }, rs -> TraderNpcMapper.mapNPC(rs,
+        key -> Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(key))));
   }
 }
