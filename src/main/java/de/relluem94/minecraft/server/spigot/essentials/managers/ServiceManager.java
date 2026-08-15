@@ -130,13 +130,23 @@ public class ServiceManager implements Enable {
     serviceContext.setPlayerService(playerService);
     groupService.setPlayerRegistry(playerRegistry);
 
-    BagRepository bagRepository = new BagRepository(databaseHelper.getBags());
-    BagTypeRepository bagTypeRepository = new BagTypeRepository(databaseHelper.getBagTypes());
-    BagTypeRegistry bagTypeRegistry = new BagTypeRegistry(bagTypeRepository);
-    BagRegistry bagRegistry = new BagRegistry(bagRepository);
-    BagService bagService = new BagService(serviceContext, bagRegistry, bagTypeRegistry);
-    serviceContext.setBagService(bagService);
+    BagRepository bagRepository = new BagRepository(persistenceContext.getBagDao());
+    BagTypeRepository bagTypeRepository = new BagTypeRepository(persistenceContext.getBagDao());
 
+    BagTypeRegistry bagTypeRegistry = new BagTypeRegistry();
+    bagTypeRegistry.registerAll(bagTypeRepository.findAll());
+
+    BagRegistry bagRegistry = new BagRegistry();
+    bagRegistry.registerAll(bagRepository.findAll());
+
+    BagService bagService = new BagService(
+        serviceContext,
+        bagRegistry,
+        bagRepository,
+        bagTypeRegistry,
+        bagTypeRepository
+    );
+    serviceContext.setBagService(bagService);
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     BuyBackService buyBackService = new BuyBackService(buyBackRepository);
     serviceContext.setBuyBackService(buyBackService);

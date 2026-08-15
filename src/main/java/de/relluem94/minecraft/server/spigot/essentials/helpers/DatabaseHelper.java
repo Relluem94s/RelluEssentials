@@ -2,24 +2,16 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSettingEntry;
-import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.BagMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.BankMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.LocationMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.PlayerMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.TraderNpcMapper;
-import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.WorldGroupSettingMapper;
-import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.WorldMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.SqlResourceLoader;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -101,14 +93,6 @@ public class DatabaseHelper {
     }
   }
 
-  public List<WorldGroupSettingEntry> getAllWorldGroupSettings() {
-    return queryList("getAllWorldGroupSettings.sql",
-        ps -> {
-        },
-        rs -> WorldGroupSettingMapper.mapWorldGroupSetting(rs, serviceContext.getSettingService())
-    );
-  }
-
   public List<LocationEntry> getWarps() {
     return queryList("getWarps.sql", _ -> {
     }, rs -> LocationMapper.mapLocation(rs, serviceContext.getLocationTypeService()));
@@ -130,31 +114,8 @@ public class DatabaseHelper {
     }, BankMapper::mapBankTier);
   }
 
-  public List<BagTypeEntry> getBagTypes() {
-    return queryList("getBagTypes.sql", _ -> {
-    }, BagMapper::mapBagType);
-  }
-
-  public BagTypeEntry getBagType(int type) {
-    return querySingle("getBagTypeById.sql", ps -> ps.setInt(1, type), BagMapper::mapBagType);
-  }
-
   public BankTierEntry getBankTier(int id) {
     return querySingle("getBankTier.sql", ps -> ps.setInt(1, id), BankMapper::mapBankTier);
-  }
-
-  public List<WorldGroupEntry> getWorldGroups() {
-    List<WorldGroupSettingEntry> allWorldGroupSettings = getAllWorldGroupSettings();
-    return queryList("getWorldGroups.sql", _ -> {
-    }, rs -> WorldMapper.mapWorldGroup(rs, allWorldGroupSettings));
-  }
-
-  public List<WorldEntry> getWorldByGroup(@NotNull WorldGroupEntry wge) {
-    return queryList("getWorldByGroup.sql", ps -> ps.setInt(1, wge.getId()), rs -> {
-      WorldEntry we = WorldMapper.mapWorld(rs);
-      we.setWorldGroupEntry(wge);
-      return we;
-    });
   }
 
   public BankAccountEntry getPlayerBankAccount(int playerFK) {
@@ -204,44 +165,6 @@ public class DatabaseHelper {
       ps.setInt(1, ge.getId());
       ps.setString(2, ge.getName());
       ps.setString(3, ge.getPrefix());
-    });
-  }
-
-  public BagEntry getBag(int type, int playerFK) {
-    return querySingle("getBagByPlayerAndType.sql", ps -> {
-      ps.setInt(1, type);
-      ps.setInt(2, playerFK);
-    }, rs -> {
-      BagEntry be = BagMapper.mapBag(rs);
-      be.setBagType(getBagType(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK)));
-      return be;
-    });
-  }
-
-  public void insertBag(int type, int id) {
-    executeUpdate("insertBag.sql", ps -> {
-      ps.setInt(1, id);
-      ps.setInt(2, id);
-      ps.setInt(3, type);
-    });
-  }
-
-  public List<BagEntry> getBags() {
-    return queryList("getBags.sql", _ -> {
-    }, rs -> {
-      BagEntry be = BagMapper.mapBag(rs);
-      be.setBagType(getBagType(rs.getInt(DatabaseMappings.FIELD_BAG_TYPE_FK)));
-      return be;
-    });
-  }
-
-  public void updateBagEntry(@NotNull BagEntry be) {
-    executeUpdate("updateBag.sql", ps -> {
-      ps.setInt(1, be.getPlayerId());
-      for (int i = 0; i < BagHelper.BAG_SIZE; i++) {
-        ps.setInt(i + 2, be.getSlotValue(i));
-      }
-      ps.setInt(BagHelper.BAG_SIZE + 2, be.getId());
     });
   }
 

@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.contexts;
 
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.BagDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.CropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.DropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
@@ -29,4 +30,5 @@ public class PersistenceContext {
   private ProtectionDao protectionDao;
   private SettingDao settingDao;
   private WorldGroupDao worldGroupDao;
+  private BagDao bagDao;
 }
