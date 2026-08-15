@@ -24,12 +24,16 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.GroupDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
@@ -77,7 +81,12 @@ class PlayerMapperTest {
         when(resultSet.getBoolean(FIELD_AFK)).thenReturn(false);
         when(resultSet.getInt(FIELD_GROUP_FK)).thenReturn(1);
 
-        GroupRepository groupRepository = new GroupRepository(List.of(expectedGroup));
+        QueryExecutor queryExecutor = mock(QueryExecutor.class);
+
+        when(queryExecutor.queryList(any(), any(), any())).thenReturn(List.of(expectedGroup));
+
+        GroupDao groupDao = new GroupDao(queryExecutor);
+        GroupRepository groupRepository = new GroupRepository(groupDao);
         GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
 
         GroupService groupService = new GroupService(groupRegistry, groupRepository);
@@ -105,7 +114,12 @@ class PlayerMapperTest {
 
     @Test
     void mapPlayerPropagatesSQLException() throws SQLException {
-        GroupRepository groupRepository = new GroupRepository(List.of());
+        QueryExecutor queryExecutor = mock(QueryExecutor.class);
+
+        when(queryExecutor.queryList(any(), any(), any())).thenReturn(List.of());
+
+        GroupDao groupDao = new GroupDao(queryExecutor);
+        GroupRepository groupRepository = new GroupRepository(groupDao);
         GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
 
         GroupService groupService = new GroupService(groupRegistry, groupRepository);

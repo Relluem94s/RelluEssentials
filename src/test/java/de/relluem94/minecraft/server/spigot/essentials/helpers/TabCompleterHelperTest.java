@@ -15,6 +15,8 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.GroupDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.GroupRepository;
@@ -51,17 +53,22 @@ class TabCompleterHelperTest {
   @Mock
   private World world;
 
+  @Mock
+  private static QueryExecutor queryExecutor;
+
   @BeforeAll
   static void setUp() throws NoSuchFieldException, IllegalAccessException {
     relluEssentials = mock(RelluEssentials.class);
     playerService = mock(PlayerService.class);
     warpService = mock(WarpService.class);
+    queryExecutor = mock(QueryExecutor.class);
 
     Field instanceField = RelluEssentials.class.getDeclaredField("instance");
     instanceField.setAccessible(true);
     instanceField.set(null, relluEssentials);
 
-    GroupRepository groupRepository = new GroupRepository(List.of());
+    GroupDao groupDao = new GroupDao(queryExecutor);
+    GroupRepository groupRepository = new GroupRepository(groupDao);
     GroupRegistry groupRegistry = new GroupRegistry(groupRepository);
     GroupService groupService = new GroupService(groupRegistry, groupRepository);
     groupService.setPlayerRegistry(new PlayerRegistry());
