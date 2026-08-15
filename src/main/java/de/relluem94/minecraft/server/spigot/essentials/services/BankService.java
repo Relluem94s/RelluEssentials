@@ -20,8 +20,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.DatabaseHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
@@ -31,7 +31,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEn
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.BankRepository;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -56,6 +56,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+/**
+ * Service handling all bank-related business logic including deposits, withdrawals, account
+ * upgrades and interest calculations.
+ */
 public class BankService {
 
   public static final ItemHelper npc_portable_bank = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1,
@@ -106,22 +110,33 @@ public class BankService {
       PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS, Type.NPC_GUI, Rarity.NONE);
   public static final Material UPGRADE_MATERIAL = Material.AMETHYST_SHARD;
 
-  private final DatabaseHelper databaseHelper;
-  private final PlayerRegistry playerRegistry;
+  private final ServiceContext serviceContext;
   private final BankTierRegistry bankTierRegistry;
-  private final TranslationService translationService;
+  private final BankRepository bankRepository;
   private final Map<UUID, BankAccountEntry> bankInterestMap = new HashMap<>();
   private final JavaPlugin plugin;
 
-  public BankService(DatabaseHelper databaseHelper, PlayerRegistry playerRegistry,
-      BankTierRegistry bankTierRegistry, TranslationService translationService, JavaPlugin plugin) {
-    this.databaseHelper = databaseHelper;
-    this.playerRegistry = playerRegistry;
+  /**
+   * @param serviceContext   the shared service context
+   * @param bankTierRegistry the in-memory registry of all bank tiers
+   * @param bankRepository   the repository for bank persistence operations
+   * @param plugin           the owning plugin instance
+   */
+  public BankService(ServiceContext serviceContext, BankTierRegistry bankTierRegistry,
+      BankRepository bankRepository, JavaPlugin plugin) {
+    this.serviceContext = serviceContext;
     this.bankTierRegistry = bankTierRegistry;
-    this.translationService = translationService;
+    this.bankRepository = bankRepository;
     this.plugin = plugin;
   }
 
+  /**
+   * Appends or replaces the second lore line of the given item stack.
+   *
+   * @param is   the item stack to modify
+   * @param line the lore line to set
+   * @return the modified item stack
+   */
   public @NotNull ItemStack addLoreLine(@NotNull ItemStack is, String line) {
     ItemMeta im = is.getItemMeta();
     if (im == null) {
@@ -140,15 +155,20 @@ public class BankService {
     return is;
   }
 
+  /**
+   * Builds the list of upgrade item helpers from all registered bank tiers.
+   *
+   * @return list of {@link ItemHelper} representing each available bank tier upgrade
+   */
   public @NonNull List<ItemHelper> getBankTiers() {
     List<ItemHelper> bankTierItems = new ArrayList<>();
     for (BankTierEntry bte : bankTierRegistry.getBankTiers()) {
-      String lore1 = translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_COST_LORE,
-          bte.getCost());
-      String lore2 = translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST_LORE,
-          bte.getInterest());
-      String lore3 = translationService.get(MessageKey.PLUGIN_EVENT_NPC_BANKER_LIMIT_LORE,
-          bte.getLimit());
+      String lore1 = serviceContext.getTranslationService().get(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_COST_LORE, bte.getCost());
+      String lore2 = serviceContext.getTranslationService().get(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST_LORE, bte.getInterest());
+      String lore3 = serviceContext.getTranslationService().get(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_LIMIT_LORE, bte.getLimit());
 
       ItemHelper itemHelper = new ItemHelper(new ItemStack(UPGRADE_MATERIAL, 1), bte.getName(),
           Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore1, lore2, lore3));
@@ -158,6 +178,14 @@ public class BankService {
     return bankTierItems;
   }
 
+  /**
+   * Deposits a percentage of the player's purse into their bank account.
+   *
+   * @param pe         the player entry holding purse data
+   * @param p          the online player
+   * @param bae        the player's bank account
+   * @param percentage the percentage of the purse to deposit (use 100 for all)
+   */
   public void deposit(@NonNull PlayerEntry pe, Player p, BankAccountEntry bae, float percentage) {
     double purse = pe.getPurse();
     if (purse >= 1) {
@@ -171,50 +199,60 @@ public class BankService {
           pe.setPurse(purse - transactionValue);
         }
 
-        databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), transactionValue,
+        bankRepository.addTransactionToBank(pe.getId(), bae.getId(), transactionValue,
             bae.getValue(), bae.getTier().getId());
 
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
 
         p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-        p.sendMessage(translationService.getWithPrefix(
+        p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
             MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
             StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
-        p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
+        p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+            MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
             StringHelper.formatDouble(bae.getValue() + transactionValue), PLUGIN_NAME_MONEY));
       } else {
         transactionValue = bae.getTier().getLimit() - bae.getValue();
         if (transactionValue > 0) {
           pe.setPurse(purse - transactionValue);
 
-          databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), transactionValue,
+          bankRepository.addTransactionToBank(pe.getId(), bae.getId(), transactionValue,
               bae.getValue(), bae.getTier().getId());
 
           pe.setUpdatedBy(pe.getId());
           pe.setHasToBeUpdated(true);
 
           p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-          p.sendMessage(translationService.getWithPrefix(
+          p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
               MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
               StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
-          p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
+          p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+              MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
               StringHelper.formatDouble(bae.getValue() + transactionValue), PLUGIN_NAME_MONEY));
         }
 
-        p.sendMessage(translationService.getWithPrefix(
+        p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
             MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LIMIT_MESSAGE));
       }
 
       InventoryHelper.closeInventory(p);
     } else {
-      p.sendMessage(translationService.getWithPrefix(
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
           MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_NO_COINS_MESSAGE, PLUGIN_NAME_MONEY));
       p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
       InventoryHelper.closeInventory(p);
     }
   }
 
+  /**
+   * Withdraws a percentage of the player's bank balance into their purse.
+   *
+   * @param pe         the player entry holding purse data
+   * @param p          the online player
+   * @param bae        the player's bank account
+   * @param percentage the percentage of the bank balance to withdraw (use 100 for all)
+   */
   public void withdraw(@NonNull PlayerEntry pe, Player p, @NonNull BankAccountEntry bae,
       float percentage) {
     double bank = bae.getValue();
@@ -227,27 +265,37 @@ public class BankService {
       }
 
       pe.setPurse(purse + transactionValue);
-      databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), transactionValue * -1,
+      bankRepository.addTransactionToBank(pe.getId(), bae.getId(), transactionValue * -1,
           bae.getValue(), bae.getTier().getId());
 
       pe.setUpdatedBy(pe.getId());
       pe.setHasToBeUpdated(true);
 
       p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
-      p.sendMessage(String.format(translationService.getWithPrefix(
+      p.sendMessage(String.format(serviceContext.getTranslationService().getWithPrefix(
           MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE,
           StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY)));
-      p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+          MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
           StringHelper.formatDouble(bae.getValue() - transactionValue), PLUGIN_NAME_MONEY));
       InventoryHelper.closeInventory(p);
     } else {
-      p.sendMessage(translationService.getWithPrefix(
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
           MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS, PLUGIN_NAME_MONEY));
       p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
       InventoryHelper.closeInventory(p);
     }
   }
 
+  /**
+   * Processes a bank account tier upgrade purchase for the player. Payment is taken from the purse
+   * first, then the bank, then both combined.
+   *
+   * @param itemStack the clicked upgrade item
+   * @param p         the online player
+   * @param pe        the player entry
+   * @param bae       the player's current bank account
+   */
   public void upgradeAccount(ItemStack itemStack, Player p, PlayerEntry pe, BankAccountEntry bae) {
     for (ItemHelper ih : getBankTiers()) {
       if (!ih.getCustomItem().equals(itemStack)) {
@@ -270,8 +318,8 @@ public class BankService {
         pe.setPurse(purse - costs);
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
-        databaseHelper.updateBankAccount(pe.getId(), 0f, bae.getValue(), bt.getId());
-        p.sendMessage(translationService.getWithPrefix(
+        bankRepository.updateBankAccount(pe.getId(), 0f, bae.getValue(), bt.getId());
+        p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
             MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE));
         p.closeInventory();
         return;
@@ -279,9 +327,9 @@ public class BankService {
 
       double account = bae.getValue();
       if (account >= costs) {
-        databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), -costs, bae.getValue(),
+        bankRepository.addTransactionToBank(pe.getId(), bae.getId(), -costs, bae.getValue(),
             bt.getId());
-        p.sendMessage(translationService.getWithPrefix(
+        p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
             MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK));
         p.closeInventory();
         return;
@@ -291,19 +339,22 @@ public class BankService {
         pe.setPurse(0);
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
-        databaseHelper.addTransactionToBank(pe.getId(), bae.getId(), -(costs - purse),
+        bankRepository.addTransactionToBank(pe.getId(), bae.getId(), -(costs - purse),
             bae.getValue(), bt.getId());
-        p.sendMessage(translationService.getWithPrefix(
+        p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
             MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH));
         p.closeInventory();
         return;
       }
 
-      p.sendMessage(translationService.getWithPrefix(
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
           MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS, PLUGIN_NAME_MONEY));
     }
   }
 
+  /**
+   * Triggers interest calculation and payment for all currently online players.
+   */
   public void triggerInterestForAllOnlinePlayers() {
     if (!Bukkit.getOnlinePlayers().isEmpty()) {
       for (Player p : Bukkit.getOnlinePlayers()) {
@@ -313,6 +364,11 @@ public class BankService {
     }
   }
 
+  /**
+   * Pays out any pending interest to the given player and removes them from the interest queue.
+   *
+   * @param p the online player to receive interest
+   */
   public void payInterestToPlayer(@NonNull Player p) {
     if (!bankInterestMap.containsKey(p.getUniqueId())) {
       return;
@@ -321,14 +377,22 @@ public class BankService {
     BankAccountEntry bae = bankInterestMap.get(p.getUniqueId());
     double interest = (bae.getValue() / 100) * bae.getTier().getInterest();
 
-    p.sendMessage(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST,
+    p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+        MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST,
         StringHelper.formatDouble(interest), PLUGIN_NAME_MONEY));
 
-    databaseHelper.addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(),
+    bankRepository.addTransactionToBank(bae.getPlayerId(), bae.getId(), interest, bae.getValue(),
         bae.getTier().getId());
     bankInterestMap.remove(p.getUniqueId());
   }
 
+  /**
+   * Checks whether a player is eligible for interest and queues it if so.
+   *
+   * @param uuid     the UUID of the player to check
+   * @param midnight {@code true} if called at midnight (always queues interest), {@code false} to
+   *                 check based on last played date
+   */
   public void checkInterest(UUID uuid, boolean midnight) {
     OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
 
@@ -336,12 +400,12 @@ public class BankService {
       return;
     }
 
-    PlayerEntry pe = playerRegistry.getPlayerEntry(uuid);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(uuid);
     if (pe == null) {
       return;
     }
 
-    BankAccountEntry bae = databaseHelper.getPlayerBankAccount(pe.getId());
+    BankAccountEntry bae = bankRepository.findBankAccountByPlayerId(pe.getId());
     if (bae == null) {
       return;
     }
@@ -364,6 +428,12 @@ public class BankService {
     }
   }
 
+  /**
+   * Finds a bank tier entry by its cost value.
+   *
+   * @param costs the cost of the tier to look up
+   * @return the matching {@link BankTierEntry}, or {@code null} if none found
+   */
   public @Nullable BankTierEntry getBankTierEntryByCost(long costs) {
     for (BankTierEntry bte : bankTierRegistry.getBankTiers()) {
       if (bte.getCost() == costs) {
@@ -373,29 +443,69 @@ public class BankService {
     return null;
   }
 
+  /**
+   * Retrieves the bank account for the given player id from the repository.
+   *
+   * @param playerId the internal player id
+   * @return the {@link BankAccountEntry}, or {@code null} if not found
+   */
+  public @Nullable BankAccountEntry findBankAccountByPlayerId(int playerId) {
+    return bankRepository.findBankAccountByPlayerId(playerId);
+  }
+
+  /**
+   * Inserts a new bank account via the repository.
+   *
+   * @param bae the bank account to insert
+   */
+  public void insertBankAccount(@NonNull BankAccountEntry bae) {
+    bankRepository.insertBankAccount(bae);
+  }
+
+  /**
+   * Retrieves all transactions for the given bank account.
+   *
+   * @param bankAccountId the bank account id
+   * @return list of transaction entries
+   */
+  public List<de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry> findTransactionsByBankAccountId(
+      int bankAccountId) {
+    return bankRepository.findTransactionsByBankAccountId(bankAccountId);
+  }
+
   private boolean isValidUpgrade(Player p, BankAccountEntry bae, BankTierEntry bt, long costs) {
     if (bt == null) {
       return false;
     }
 
     if (bae.getTier().getCost() == costs) {
-      p.sendMessage(translationService.getWithPrefix(
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
           MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT));
       return false;
     }
 
     if (bt.getId() == bae.getTier().getId()) {
-      p.sendMessage(translationService.getWithPrefix(
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
           MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT));
       return false;
     }
 
     if (bae.getTier().getCost() > costs) {
-      p.sendMessage(translationService.getWithPrefix(
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
           MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT));
       return false;
     }
 
     return true;
+  }
+
+  /**
+   * Finds a bank tier entry by its unique id.
+   *
+   * @param id the primary key of the bank tier to look up
+   * @return the matching {@link BankTierEntry}, or {@code null} if none found
+   */
+  public @Nullable BankTierEntry getBankTierEntryById(int id) {
+    return bankTierRegistry.getBankTierById(id);
   }
 }

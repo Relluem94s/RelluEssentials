@@ -48,13 +48,12 @@ public class InteractTraderNpc implements ListenerConstruct {
               .equals(customName)) {
             if (customName.equals(serviceContext.getTraderNpcService().getBankerNpc().getName())) {
               PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
-              BankAccountEntry bae = serviceContext.getDatabaseHelper()
-                  .getPlayerBankAccount(pe.getId());
+              BankAccountEntry bae = serviceContext.getBankService()
+                  .findBankAccountByPlayerId(pe.getId());
               if (bae != null) {
                 InventoryHelper.openInventory(p, serviceContext.getTraderNpcService().getBankerNpc().getMainGUI());
               } else {
-                BankTierEntry bte = serviceContext.getDatabaseHelper()
-                    .getBankTier(1);
+                BankTierEntry bte = serviceContext.getBankService().getBankTierEntryById(1);
                 if (pe.getPurse() > bte.getCost()) {
                   pe.setPurse(pe.getPurse() - bte.getCost());
                   pe.setUpdatedBy(pe.getId());
@@ -65,7 +64,7 @@ public class InteractTraderNpc implements ListenerConstruct {
                   bae.setTier(bte);
                   bae.setPlayerId(pe.getId());
 
-                  serviceContext.getDatabaseHelper().insertBankAccount(bae);
+                  serviceContext.getBankService().insertBankAccount(bae);
                   p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
                       MessageKey.PLUGIN_EVENT_NPC_BANKER_OPEN_ACCOUNT));
                 } else {

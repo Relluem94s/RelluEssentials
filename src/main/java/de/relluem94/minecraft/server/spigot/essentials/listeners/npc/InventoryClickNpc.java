@@ -110,8 +110,8 @@ public class InventoryClickNpc implements ListenerConstruct {
       PlayerEntry playerEntry) {
     e.setCancelled(true);
     ItemStack clickedItem = e.getCurrentItem();
-    BankAccountEntry bankAccount = serviceContext.getDatabaseHelper()
-        .getPlayerBankAccount(playerEntry.getId());
+    BankAccountEntry bankAccount = serviceContext.getBankService()
+        .findBankAccountByPlayerId(playerEntry.getId());
 
     if (clickedItem == null) {
       return;
@@ -161,8 +161,8 @@ public class InventoryClickNpc implements ListenerConstruct {
     player.sendMessage(
         serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
-    List<BankTransactionEntry> transactions = serviceContext.getDatabaseHelper()
-        .getTransactionsToBankFromPlayer(bankAccount.getId());
+    List<BankTransactionEntry> transactions = serviceContext.getBankService()
+        .findTransactionsByBankAccountId(bankAccount.getId());
     transactions.forEach(transaction -> player.sendMessage(
         serviceContext.getTranslationService().getWithPrefix(
             MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST,

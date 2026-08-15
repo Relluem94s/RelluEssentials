@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enabl
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.BagDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.BankDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.CropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.DropDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.LocationDao;
@@ -101,6 +102,7 @@ public class DatabaseManager implements Enable {
     persistenceContext.setProtectionDao(new ProtectionDao(queryExecutor));
     persistenceContext.setSettingDao(new SettingDao(queryExecutor));
     persistenceContext.setBagDao(new BagDao(queryExecutor));
+    persistenceContext.setBankDao(new BankDao(queryExecutor));
 
     PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(
         persistenceContext.getPluginInformationDao());
