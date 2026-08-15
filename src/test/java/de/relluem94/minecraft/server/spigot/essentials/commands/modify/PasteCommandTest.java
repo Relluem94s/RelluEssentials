@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.normalizeYaw;
 import static org.mockito.Mockito.any;
@@ -17,30 +16,25 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.Collections;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -51,65 +45,27 @@ class PasteCommandTest {
   private Player player;
   private UndoHistoryService undoHistoryService;
   private ClipboardService clipboardService;
+  private SchedulerService schedulerService;
+  private ProtectionService protectionService;
   private PasteCommand pasteCommand;
-  private MockedStatic<RelluEssentials> mockedRelluEssentials;
-  private BukkitScheduler schedulerMock;
-  private MockedStatic<Bukkit> mockedBukkit;
-
-  @BeforeAll
-  static void setUpServer() {
-    if (Bukkit.getServer() != null) {
-      return;
-    }
-    org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
-    org.bukkit.scheduler.BukkitScheduler schedulerMock = mock(
-        org.bukkit.scheduler.BukkitScheduler.class);
-    java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
-    silentLogger.setUseParentHandlers(false);
-    silentLogger.setLevel(java.util.logging.Level.OFF);
-    when(serverMock.getScheduler()).thenReturn(schedulerMock);
-    when(serverMock.getLogger()).thenReturn(silentLogger);
-    org.bukkit.Bukkit.setServer(serverMock);
-  }
-
-  @AfterAll
-  static void tearDownServer() throws Exception {
-    java.lang.reflect.Field serverField = org.bukkit.Bukkit.class.getDeclaredField("server");
-    serverField.setAccessible(true);
-    serverField.set(null, null);
-  }
 
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
     undoHistoryService = mock(UndoHistoryService.class);
-
-    RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
-    TranslationService translationServiceMock = mock(TranslationService.class);
     clipboardService = new ClipboardService();
+    schedulerService = mock(SchedulerService.class);
+    protectionService = mock(ProtectionService.class);
 
-    mockedRelluEssentials = mockStatic(RelluEssentials.class);
-    mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
-
+    TranslationService translationServiceMock = mock(TranslationService.class);
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
     when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
-
-    schedulerMock = mock(BukkitScheduler.class);
-    Server serverMock = mock(Server.class);
-    when(serverMock.getScheduler()).thenReturn(schedulerMock);
 
     doAnswer(invocation -> {
-      Runnable task = invocation.getArgument(1);
+      Runnable task = invocation.getArgument(0);
       task.run();
       return null;
-    }).when(schedulerMock).runTaskLater(any(Plugin.class), any(Runnable.class), anyLong());
-
-    mockedBukkit = mockStatic(Bukkit.class);
-    mockedBukkit.when(Bukkit::getServer).thenReturn(serverMock);
-    mockedBukkit.when(Bukkit::getScheduler).thenReturn(schedulerMock);
-
-    when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
-    when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+    }).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
 
     Location defaultPlayerLocation = buildPlayerLocation(0, 64, 0, 0f);
     when(player.getLocation()).thenReturn(defaultPlayerLocation);
@@ -118,14 +74,14 @@ class PasteCommandTest {
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
     when(serviceContext.getClipboardService()).thenReturn(clipboardService);
+    when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
 
     pasteCommand = new PasteCommand(serviceContext, 2);
   }
 
   @AfterEach
   void tearDown() {
-    mockedRelluEssentials.close();
-    mockedBukkit.close();
   }
 
   @Test
@@ -174,7 +130,6 @@ class PasteCommandTest {
 
       modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
       modifyHelper.when(() -> getBlock(eq(entry), anyFloat(), any())).thenReturn(targetBlock);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       pasteCommand.execute(player, new String[]{"paste"});
 
@@ -204,7 +159,6 @@ class PasteCommandTest {
       modifyHelper.when(() -> getBlock(eq(firstEntry), anyFloat(), any())).thenReturn(firstBlock);
       modifyHelper.when(() -> getBlock(eq(secondEntry), anyFloat(), any())).thenReturn(secondBlock);
       modifyHelper.when(() -> getBlock(eq(thirdEntry), anyFloat(), any())).thenReturn(thirdBlock);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       pasteCommand.execute(player, new String[]{"paste"});
 
@@ -228,7 +182,6 @@ class PasteCommandTest {
 
       modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
       modifyHelper.when(() -> getBlock(eq(entry), anyFloat(), any())).thenReturn(targetBlock);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       pasteCommand.execute(player, new String[]{"paste"});
 
@@ -253,13 +206,10 @@ class PasteCommandTest {
 
       modifyHelper.when(() -> normalizeYaw(anyFloat())).thenReturn(0f);
       modifyHelper.when(() -> getBlock(eq(entry), anyFloat(), any())).thenReturn(targetBlock);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       pasteCommand.execute(player, new String[]{"paste"});
 
-      verify(schedulerMock, times(1)).runTaskLater(
-          any(Plugin.class), any(Runnable.class), anyLong()
-      );
+      verify(schedulerService, times(1)).runTaskLater(any(Runnable.class), anyLong());
     }
   }
 
@@ -284,13 +234,10 @@ class PasteCommandTest {
       modifyHelper.when(() -> getBlock(eq(firstEntry), anyFloat(), any())).thenReturn(firstBlock);
       modifyHelper.when(() -> getBlock(eq(secondEntry), anyFloat(), any())).thenReturn(secondBlock);
       modifyHelper.when(() -> getBlock(eq(thirdEntry), anyFloat(), any())).thenReturn(thirdBlock);
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       pasteCommand.execute(player, new String[]{"paste"});
 
-      verify(schedulerMock, times(3)).runTaskLater(
-          any(Plugin.class), any(Runnable.class), anyLong()
-      );
+      verify(schedulerService, times(3)).runTaskLater(any(Runnable.class), anyLong());
     }
   }
 

@@ -16,13 +16,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockService;
 import java.util.List;
 import java.util.function.Consumer;
 import org.bukkit.Material;
@@ -49,6 +50,7 @@ class PlantCommandTest {
     undoHistoryService = mock(UndoHistoryService.class);
     ProtectionService protectionService = mock(ProtectionService.class);
     TranslationService translationService = mock(TranslationService.class);
+    SchedulerService schedulerService = mock(SchedulerService.class);
 
     when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationService.getWithPrefix(any())).thenReturn("msg");
@@ -58,6 +60,7 @@ class PlantCommandTest {
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(serviceContext.getProtectionService()).thenReturn(protectionService);
+    when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     plantCommand = new PlantCommand(serviceContext, 2);
   }
@@ -87,7 +90,8 @@ class PlantCommandTest {
   @Test
   void execute_withValidPlantMaterialAndNullSelection_doesNotAddHistory() {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-        mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
+        mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+        MockedConstruction<BlockService> ignored = mockConstruction(BlockService.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
       modifyHelper.when(() -> forEachBlock(any(), any())).thenAnswer(_ -> null);
@@ -110,7 +114,7 @@ class PlantCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> mockedBlockHelper = mockConstruction(BlockHelper.class)) {
+        MockedConstruction<BlockService> ignored = mockConstruction(BlockService.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
@@ -122,7 +126,7 @@ class PlantCommandTest {
       plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
       verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-      verify(player).sendMessage((String)null);
+      verify(player).sendMessage((String) null);
     }
   }
 
@@ -138,7 +142,7 @@ class PlantCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignored = mockConstruction(BlockHelper.class)) {
+        MockedConstruction<BlockService> ignored = mockConstruction(BlockService.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
@@ -165,7 +169,7 @@ class PlantCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignored = mockConstruction(BlockHelper.class)) {
+        MockedConstruction<BlockService> ignored = mockConstruction(BlockService.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
@@ -192,7 +196,7 @@ class PlantCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignored = mockConstruction(BlockHelper.class)) {
+        MockedConstruction<BlockService> ignored = mockConstruction(BlockService.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
@@ -217,7 +221,7 @@ class PlantCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignored = mockConstruction(BlockHelper.class)) {
+        MockedConstruction<BlockService> ignored = mockConstruction(BlockService.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
@@ -246,7 +250,7 @@ class PlantCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> mockedBlockHelper = mockConstruction(BlockHelper.class)) {
+        MockedConstruction<BlockService> mockedBlockService = mockConstruction(BlockService.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
@@ -261,28 +265,28 @@ class PlantCommandTest {
 
       verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 3));
 
-      BlockHelper capturedBlockHelper = mockedBlockHelper.constructed().getFirst();
-      verify(capturedBlockHelper, times(2)).addLocation(any(), eq(0L));
-      verify(capturedBlockHelper).addLocation(any(), eq(1L));
+      BlockService capturedBlockService = mockedBlockService.constructed().getFirst();
+      verify(capturedBlockService, times(2)).addLocation(any(), eq(0L));
+      verify(capturedBlockService).addLocation(any(), eq(1L));
     }
   }
 
   @Test
-  void execute_withValidSelection_callsSetBlocksOnBlockHelper() {
+  void execute_withValidSelection_callsApplyBlocksOnBlockService() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> mockedBlockHelper = mockConstruction(BlockHelper.class)) {
+        MockedConstruction<BlockService> mockedBlockService = mockConstruction(BlockService.class)) {
 
       modifyHelper.when(() -> isPlantMaterial(Material.DANDELION)).thenReturn(true);
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(_ -> null);
 
       plantCommand.execute(player, new String[]{"plant", "DANDELION"});
 
-      BlockHelper capturedBlockHelper = mockedBlockHelper.constructed().getFirst();
-      verify(capturedBlockHelper).setBlocks(0);
+      BlockService capturedBlockService = mockedBlockService.constructed().getFirst();
+      verify(capturedBlockService).applyBlocks(0);
     }
   }
 
