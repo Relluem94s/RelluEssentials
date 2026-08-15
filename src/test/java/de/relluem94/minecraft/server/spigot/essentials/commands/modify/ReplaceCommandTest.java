@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -15,9 +14,10 @@ import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
@@ -28,7 +28,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -41,7 +40,6 @@ class ReplaceCommandTest {
   private SelectionService selectionService;
   private UndoHistoryService undoHistoryService;
   private ReplaceCommand replaceCommand;
-  private MockedStatic<de.relluem94.minecraft.server.spigot.essentials.RelluEssentials> mockedRelluEssentials;
 
   @BeforeEach
   void setUp() {
@@ -49,15 +47,9 @@ class ReplaceCommandTest {
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
 
-    de.relluem94.minecraft.server.spigot.essentials.RelluEssentials relluEssentialsMock =
-        mock(de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
+    SchedulerService schedulerService = mock(SchedulerService.class);
     TranslationService translationServiceMock = mock(TranslationService.class);
-
-    mockedRelluEssentials = mockStatic(
-        de.relluem94.minecraft.server.spigot.essentials.RelluEssentials.class);
-    mockedRelluEssentials.when(
-            de.relluem94.minecraft.server.spigot.essentials.RelluEssentials::getInstance)
-        .thenReturn(relluEssentialsMock);
+    ProtectionService protectionServiceMock = mock(ProtectionService.class);
 
     when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
@@ -65,14 +57,11 @@ class ReplaceCommandTest {
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
+    when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+    when(serviceContext.getProtectionService()).thenReturn(protectionServiceMock);
 
     replaceCommand = new ReplaceCommand(serviceContext, 2);
-  }
-
-  @AfterEach
-  void tearDown() {
-    mockedRelluEssentials.close();
   }
 
   @Test
@@ -116,22 +105,18 @@ class ReplaceCommandTest {
     Block matchingBlock = buildBlock(Material.DIRT, 0, 64, 0);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
-        mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
-        MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
-            BlockProcessor.class)) {
+        mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
 
       modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
         Consumer<Block> consumer = invocation.getArgument(1);
         consumer.accept(matchingBlock);
         return null;
       });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
       verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
-      verify(player).sendMessage((String)null);
+      verify(player).sendMessage((String) null);
     }
   }
 
@@ -144,7 +129,6 @@ class ReplaceCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
             BlockProcessor.class)) {
 
@@ -153,7 +137,6 @@ class ReplaceCommandTest {
         consumer.accept(alreadyToMaterialBlock);
         return null;
       });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
@@ -170,7 +153,6 @@ class ReplaceCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
             BlockProcessor.class)) {
 
@@ -179,7 +161,6 @@ class ReplaceCommandTest {
         consumer.accept(nonMatchingBlock);
         return null;
       });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
@@ -198,7 +179,6 @@ class ReplaceCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
             BlockProcessor.class)) {
 
@@ -208,7 +188,6 @@ class ReplaceCommandTest {
         consumer.accept(secondBlock);
         return null;
       });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
@@ -232,7 +211,6 @@ class ReplaceCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(
             BlockProcessor.class)) {
 
@@ -243,7 +221,6 @@ class ReplaceCommandTest {
         consumer.accept(alreadyTargetBlock);
         return null;
       });
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
 
