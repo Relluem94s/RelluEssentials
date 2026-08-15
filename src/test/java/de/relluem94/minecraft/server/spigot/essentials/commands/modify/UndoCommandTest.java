@@ -11,89 +11,52 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 class UndoCommandTest {
 
   private Player player;
   private UndoHistoryService undoHistoryService;
+  private SchedulerService schedulerService;
   private UndoCommand undoCommand;
 
-  private MockedStatic<RelluEssentials> mockedRelluEssentials;
   private MockedStatic<ModifyHelper> mockedModifyHelper;
-
-  private BukkitScheduler schedulerMock;
-
-  @BeforeAll
-  static void setUpServer() throws Exception {
-    if (Bukkit.getServer() != null) {
-      tearDownServer();
-    }
-    org.bukkit.Server serverMock = mock(org.bukkit.Server.class);
-    BukkitScheduler schedulerMock = mock(BukkitScheduler.class);
-    java.util.logging.Logger silentLogger = java.util.logging.Logger.getLogger("test");
-    silentLogger.setUseParentHandlers(false);
-    silentLogger.setLevel(java.util.logging.Level.OFF);
-    when(serverMock.getScheduler()).thenReturn(schedulerMock);
-    when(serverMock.getLogger()).thenReturn(silentLogger);
-    Bukkit.setServer(serverMock);
-  }
-
-  @AfterAll
-  static void tearDownServer() throws Exception {
-    java.lang.reflect.Field serverField = Bukkit.class.getDeclaredField("server");
-    serverField.setAccessible(true);
-    serverField.set(null, null);
-  }
-
 
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
     undoHistoryService = mock(UndoHistoryService.class);
-    schedulerMock = Bukkit.getScheduler();
-    Mockito.reset(schedulerMock);
-
-    RelluEssentials relluEssentialsMock = mock(RelluEssentials.class);
-    TranslationService translationServiceMock = mock(TranslationService.class);
-
-    mockedRelluEssentials = mockStatic(RelluEssentials.class);
-    mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
+    schedulerService = mock(SchedulerService.class);
     mockedModifyHelper = mockStatic(ModifyHelper.class);
 
+    TranslationService translationServiceMock = mock(TranslationService.class);
     when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
 
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+    when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
 
     undoCommand = new UndoCommand(serviceContext, 2);
   }
 
   @AfterEach
   void tearDown() {
-    mockedRelluEssentials.close();
     mockedModifyHelper.close();
   }
 
@@ -104,7 +67,7 @@ class UndoCommandTest {
     undoCommand.execute(player, new String[]{"undo"});
 
     verify(player).sendMessage(anyString());
-    verifyNoInteractions(schedulerMock);
+    verifyNoInteractions(schedulerService);
   }
 
   @Test
@@ -114,7 +77,7 @@ class UndoCommandTest {
     undoCommand.execute(player, new String[]{"undo"});
 
     verify(player).sendMessage(anyString());
-    verifyNoInteractions(schedulerMock);
+    verifyNoInteractions(schedulerService);
   }
 
   @Test
@@ -128,9 +91,7 @@ class UndoCommandTest {
 
     undoCommand.execute(player, new String[]{"undo"});
 
-    verify(schedulerMock, times(3)).scheduleSyncDelayedTask(
-        any(Plugin.class), any(Runnable.class), anyLong()
-    );
+    verify(schedulerService, times(3)).scheduleSyncDelayedTask(any(Runnable.class), anyLong());
     verify(player).sendMessage(anyString());
   }
 
@@ -146,9 +107,7 @@ class UndoCommandTest {
 
     undoCommand.execute(player, new String[]{"undo"});
 
-    verify(schedulerMock, times(4)).scheduleSyncDelayedTask(
-        any(Plugin.class), any(Runnable.class), anyLong()
-    );
+    verify(schedulerService, times(4)).scheduleSyncDelayedTask(any(Runnable.class), anyLong());
   }
 
   @Test
@@ -158,11 +117,10 @@ class UndoCommandTest {
     when(undoHistoryService.popLastHistory(player)).thenReturn(history);
 
     doAnswer(invocation -> {
-      Runnable task = invocation.getArgument(1);
+      Runnable task = invocation.getArgument(0);
       task.run();
       return 0;
-    }).when(schedulerMock)
-        .scheduleSyncDelayedTask(any(Plugin.class), any(Runnable.class), anyLong());
+    }).when(schedulerService).scheduleSyncDelayedTask(any(Runnable.class), anyLong());
 
     undoCommand.execute(player, new String[]{"undo"});
 

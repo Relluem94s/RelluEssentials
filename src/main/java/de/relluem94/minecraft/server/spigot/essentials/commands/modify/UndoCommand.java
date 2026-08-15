@@ -2,14 +2,12 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.undo;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
@@ -39,9 +37,8 @@ public class UndoCommand implements SubCommand {
     int counter = 0;
     for (ModifyHistoryEntry entry : lastHistory) {
       long finalDelay = currentDelay;
-      Bukkit.getServer().getScheduler()
-          .scheduleSyncDelayedTask(RelluEssentials.getInstance(), () -> undo(entry),
-              Math.abs(finalDelay));
+      serviceContext.getSchedulerService()
+          .scheduleSyncDelayedTask(() -> undo(entry), Math.abs(finalDelay));
       counter++;
       if (counter >= blocksPerTick) {
         currentDelay++;
