@@ -74,7 +74,7 @@ public class LocationDao {
   }
 
   public List<LocationEntry> getLocationsByType(int type) {
-    return queryExecutor.queryList("getLocationsByType.sql", _ -> {}, rs -> {
+    return queryExecutor.queryList("getLocationsByType.sql", ps -> ps.setInt(1, type), rs -> {
           if (type != rs.getInt(DatabaseMappings.FIELD_LOCATION_TYPE_FK)) {
             return null;
           }

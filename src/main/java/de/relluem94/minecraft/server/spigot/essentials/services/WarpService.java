@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import java.util.List;
@@ -10,20 +11,20 @@ import org.bukkit.entity.Player;
 
 public class WarpService {
 
-  private final LocationService locationService;
+  private final ServiceContext serviceContext;
 
-  public WarpService(LocationService locationService) {
-    this.locationService = locationService;
+  public WarpService(ServiceContext serviceContext) {
+    this.serviceContext = serviceContext;
   }
 
   public Optional<LocationEntry> findWarpByName(String name) {
-    return locationService.findByType(LocationType.WARP).stream()
+    return serviceContext.getLocationService().findByType(LocationType.WARP).stream()
         .filter(le -> le.getLocationName().equals(name))
         .findFirst();
   }
 
   public Optional<LocationEntry> findWarpByNameAndWorld(String name, World world) {
-    return locationService.findByType(LocationType.WARP).stream()
+    return serviceContext.getLocationService().findByType(LocationType.WARP).stream()
         .filter(le -> le.getLocation() != null
             && le.getLocation().getWorld() != null
             && le.getLocationName().equals(name)
@@ -32,7 +33,7 @@ public class WarpService {
   }
 
   public List<LocationEntry> findWarpsByWorld(World world) {
-    return locationService.findByType(LocationType.WARP).stream()
+    return serviceContext.getLocationService().findByType(LocationType.WARP).stream()
         .filter(le -> le.getLocation() != null
             && le.getLocation().getWorld() != null
             && le.getLocation().getWorld().equals(world))
@@ -53,15 +54,15 @@ public class WarpService {
     if (warpExists(name)) {
       return false;
     }
-    locationService.saveAndFetch(
-        locationService.buildLocationEntry(player, name, LocationType.WARP, playerId));
+    serviceContext.getLocationService().saveAndFetch(
+        serviceContext.getLocationService().buildLocationEntry(player, name, LocationType.WARP, playerId));
     return true;
   }
 
   public boolean removeWarp(String name) {
     return findWarpByName(name)
         .map(locationEntry -> {
-          locationService.delete(locationEntry);
+          serviceContext.getLocationService().delete(locationEntry);
           return true;
         })
         .orElse(false);

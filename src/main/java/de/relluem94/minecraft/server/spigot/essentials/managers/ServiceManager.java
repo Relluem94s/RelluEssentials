@@ -100,7 +100,7 @@ public class ServiceManager implements Enable {
     traderNpcService.loadAndInitialiseNpcs();
     serviceContext.setTraderNpcService(traderNpcService);
 
-    serviceContext.setWarpService(new WarpService(serviceContext.getLocationService()));
+    serviceContext.setWarpService(new WarpService(serviceContext));
 
     SchedulerService schedulerService = new SchedulerService(relluEssentials);
     serviceContext.setSchedulerService(schedulerService);
