@@ -6,10 +6,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelp
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -42,7 +42,7 @@ public class PlantCommand implements SubCommand {
       return;
     }
 
-    BlockHelper blockHelper = new BlockHelper(material);
+    BlockService blockService = new BlockService(serviceContext.getSchedulerService(), material);
     List<ModifyHistoryEntry> history = new ArrayList<>();
 
     final long[] currentDelay = {0};
@@ -63,7 +63,7 @@ public class PlantCommand implements SubCommand {
       serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
       history.add(
           new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData()));
-      blockHelper.addLocation(block.getLocation(), currentDelay[0]);
+      blockService.addLocation(block.getLocation(), currentDelay[0]);
       counter[0]++;
       if (counter[0] >= blocksPerTick) {
         currentDelay[0]++;
@@ -71,7 +71,7 @@ public class PlantCommand implements SubCommand {
       }
     });
 
-    blockHelper.setBlocks(0);
+    blockService.applyBlocks(0);
     serviceContext.getUndoHistoryService().addHistory(player, history);
 
     player.sendMessage(

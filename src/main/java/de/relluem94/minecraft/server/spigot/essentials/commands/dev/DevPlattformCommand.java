@@ -2,11 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
+import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -85,10 +85,11 @@ public class DevPlattformCommand implements SubCommand {
     int originZ = base.getBlockZ();
 
     List<ModifyHistoryEntry> undoList = new ArrayList<>();
-    BlockHelper frame = new BlockHelper(Material.OCHRE_FROGLIGHT);
-    BlockHelper inner = new BlockHelper(Material.BIRCH_PLANKS);
-    BlockHelper redstone = new BlockHelper(Material.REDSTONE_BLOCK);
-    BlockHelper air = new BlockHelper(Material.AIR);
+
+    BlockService frame = new BlockService(serviceContext.getSchedulerService(), Material.OCHRE_FROGLIGHT);
+    BlockService inner = new BlockService(serviceContext.getSchedulerService(), Material.BIRCH_PLANKS);
+    BlockService redstone = new BlockService(serviceContext.getSchedulerService(), Material.REDSTONE_BLOCK);
+    BlockService air = new BlockService(serviceContext.getSchedulerService(), Material.AIR);
 
     List<TraderNpc> traderNpcs = serviceContext.getTraderNpcService().getAllNpcs();
 
@@ -220,10 +221,10 @@ public class DevPlattformCommand implements SubCommand {
       }
     }
 
-    air.setBlocks();
-    frame.setBlocks(5);
-    inner.setBlocks(10);
-    redstone.setBlocks(15);
+    air.applyBlocks();
+    frame.applyBlocks(5);
+    inner.applyBlocks(10);
+    redstone.applyBlocks(15);
 
     serviceContext.getUndoHistoryService().addHistory(player, undoList);
   }

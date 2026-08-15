@@ -8,11 +8,11 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class CopyCommand implements SubCommand {
     List<ModifyClipboardEntry> clipboardList = new ArrayList<>();
     List<ModifyHistoryEntry> history = new ArrayList<>();
 
-    BlockHelper blockHelper = new BlockHelper(Material.AIR);
+    BlockService blockService = new BlockService(serviceContext.getSchedulerService(), Material.AIR);
     BlockProcessor blockProcessor = new BlockProcessor(blocksPerTick);
 
     Location playerTargetLoc = player.getLocation().clone();
@@ -62,12 +62,12 @@ public class CopyCommand implements SubCommand {
       if (isCut) {
         history.add(historyEntry);
         serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
-        blockProcessor.process(block, blockHelper);
+        blockProcessor.process(block, blockService);
       }
     });
 
     if (isCut) {
-      blockHelper.setBlocks(0);
+      blockService.applyBlocks(0);
       serviceContext.getUndoHistoryService().addHistory(player, history);
     }
 

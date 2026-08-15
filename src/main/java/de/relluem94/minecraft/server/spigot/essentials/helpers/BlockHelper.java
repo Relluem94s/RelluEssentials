@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Relluem94
  */
+@Deprecated
 public class BlockHelper {
 
   private final HashMap<Location, Long> locations = new HashMap<>();

@@ -5,9 +5,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockService;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -72,7 +72,7 @@ public class FillCommand implements SubCommand {
                   maxRadius));
     }
 
-    BlockHelper blockHelper = new BlockHelper(material);
+    BlockService blockService = new BlockService(serviceContext.getSchedulerService(), material);
     List<ModifyHistoryEntry> history = new ArrayList<>();
     final long[] currentDelay = {0};
     final int[] counter = {0};
@@ -104,7 +104,7 @@ public class FillCommand implements SubCommand {
       serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
       history.add(
           new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData()));
-      blockHelper.addLocation(block.getLocation(), currentDelay[0]);
+      blockService.addLocation(block.getLocation(), currentDelay[0]);
       counter[0]++;
       if (counter[0] >= blocksPerTick) {
         currentDelay[0]++;
@@ -128,7 +128,7 @@ public class FillCommand implements SubCommand {
       }
     }
 
-    blockHelper.setBlocks(0);
+    blockService.applyBlocks(0);
     serviceContext.getUndoHistoryService().addHistory(player, history);
 
     player.sendMessage(

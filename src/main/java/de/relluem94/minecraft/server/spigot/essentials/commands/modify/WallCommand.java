@@ -6,10 +6,10 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -41,7 +41,7 @@ public class WallCommand implements SubCommand {
       return;
     }
 
-    BlockHelper blockHelper = new BlockHelper(material);
+    BlockService blockService = new BlockService(serviceContext.getSchedulerService(), material);
     BlockProcessor blockProcessor = new BlockProcessor(blocksPerTick);
     List<ModifyHistoryEntry> history = new ArrayList<>();
 
@@ -57,10 +57,10 @@ public class WallCommand implements SubCommand {
       serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
       history.add(
           new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData()));
-      blockProcessor.process(block, blockHelper);
+      blockProcessor.process(block, blockService);
     });
 
-    blockHelper.setBlocks(0);
+    blockService.applyBlocks(0);
     serviceContext.getUndoHistoryService().addHistory(player, history);
     player.sendMessage(
         serviceContext.getTranslationService()
