@@ -55,7 +55,7 @@ public class Warp implements CommandConstruct {
         if (!serviceContext.getGroupService().isSenderAuthorized(p, "admin")) {
           return tabList;
         }
-        if (Commands.ADD.getName().equalsIgnoreCase(strings[1])) {
+        if (!Commands.REMOVE.getName().equalsIgnoreCase(strings[0])) {
           return tabList;
         }
         tabList.addAll(serviceContext.getWarpService().getWarpNamesByWorld(p.getWorld()));
