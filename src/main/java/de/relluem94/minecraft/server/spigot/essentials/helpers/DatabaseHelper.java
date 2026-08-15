@@ -9,11 +9,9 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupInventoryEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupSettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.BagMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.BankMapper;
@@ -157,68 +155,6 @@ public class DatabaseHelper {
       we.setWorldGroupEntry(wge);
       return we;
     });
-  }
-
-  public void insertWorldGroupInventory(
-      @NotNull WorldGroupInventoryEntry worldGroupInventoryEntry) {
-    executeUpdate("insertWorldInventoryByGroupAndPlayer.sql", ps -> {
-      ps.setInt(1, worldGroupInventoryEntry.getPlayerId());
-      ps.setInt(2, worldGroupInventoryEntry.getPlayerId());
-      ps.setInt(3, worldGroupInventoryEntry.getWorldGroupEntry().getId());
-      ps.setString(4, worldGroupInventoryEntry.getInventory().toString());
-      ps.setDouble(5, worldGroupInventoryEntry.getHealth());
-      ps.setInt(6, worldGroupInventoryEntry.getFoodLevel());
-      ps.setInt(7, worldGroupInventoryEntry.getTotalExperience());
-    });
-  }
-
-  public void updateWorldGroupInventory(
-      @NotNull WorldGroupInventoryEntry worldGroupInventoryEntry) {
-    executeUpdate("updateWorldInventoryByGroupAndPlayer.sql", ps -> {
-      ps.setInt(1, worldGroupInventoryEntry.getUpdatedBy());
-      ps.setString(2, worldGroupInventoryEntry.getInventory().toString());
-      ps.setDouble(3, worldGroupInventoryEntry.getHealth());
-      ps.setInt(4, worldGroupInventoryEntry.getFoodLevel());
-      ps.setInt(5, worldGroupInventoryEntry.getTotalExperience());
-      ps.setInt(6, worldGroupInventoryEntry.getPlayerId());
-      ps.setInt(7, worldGroupInventoryEntry.getWorldGroupEntry().getId());
-    });
-  }
-
-  public WorldGroupInventoryEntry getWorldGroupInventory(@NotNull PlayerEntry pe,
-      @NotNull WorldGroupEntry wge) {
-    return querySingle("getWorldInventoryByGroupAndPlayer.sql", ps -> {
-      ps.setInt(1, wge.getId());
-      ps.setInt(2, pe.getId());
-    }, rs -> {
-      WorldGroupInventoryEntry worldGroupInventoryEntry = WorldMapper.mapWorldGroupInventory(rs);
-      worldGroupInventoryEntry.setWorldGroupEntry(wge);
-      return worldGroupInventoryEntry;
-    });
-  }
-
-  @SuppressWarnings("unused")
-  public void insertWorld(@NotNull WorldEntry we) {
-    executeUpdate("insertWorld.sql", ps -> {
-      ps.setInt(1, we.getCreatedBy());
-      ps.setString(2, we.getName());
-      ps.setInt(3, we.getWorldGroupEntry().getId());
-      ps.setInt(4, we.getGroupEntry().getId());
-    });
-  }
-
-  @SuppressWarnings("unused")
-  public void insertWorldGroup(@NotNull WorldGroupEntry wge) {
-    executeUpdate("insertWorldGroup.sql", ps -> {
-      ps.setInt(1, wge.getCreatedBy());
-      ps.setString(2, wge.getName());
-    });
-  }
-
-  @SuppressWarnings("unused")
-  public WorldGroupEntry getWorldGroup(String name) {
-    return querySingle("getWorldGroupByName.sql", ps -> ps.setString(1, name),
-        rs -> WorldMapper.mapWorldGroup(rs, getAllWorldGroupSettings()));
   }
 
   public BankAccountEntry getPlayerBankAccount(int playerFK) {

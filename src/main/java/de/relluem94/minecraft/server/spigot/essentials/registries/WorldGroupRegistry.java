@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class WorldGroupSettingRegistry {
+public class WorldGroupRegistry {
 
   private final Map<WorldSetting, Set<String>> worldNamesByActiveSetting =
       new EnumMap<>(WorldSetting.class);
@@ -25,5 +25,21 @@ public class WorldGroupSettingRegistry {
   public Set<String> getWorldsWithActiveSetting(WorldSetting worldSetting) {
     return Collections.unmodifiableSet(
         worldNamesByActiveSetting.getOrDefault(worldSetting, Collections.emptySet()));
+  }
+
+  public void addWorldToSetting(WorldSetting worldSetting, String worldName) {
+    worldNamesByActiveSetting
+        .computeIfAbsent(worldSetting, _ -> new HashSet<>())
+        .add(worldName);
+  }
+
+  public void removeWorldFromSetting(WorldSetting worldSetting, String worldName) {
+    worldNamesByActiveSetting
+        .getOrDefault(worldSetting, Collections.emptySet())
+        .remove(worldName);
+  }
+
+  public void removeWorldFromAllSettings(String worldName) {
+    worldNamesByActiveSetting.values().forEach(worldNames -> worldNames.remove(worldName));
   }
 }
