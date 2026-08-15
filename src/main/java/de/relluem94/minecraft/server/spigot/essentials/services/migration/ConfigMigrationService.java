@@ -1,9 +1,9 @@
-package de.relluem94.minecraft.server.spigot.essentials.helpers;
+package de.relluem94.minecraft.server.spigot.essentials.services.migration;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -20,63 +20,35 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Helper class for configuration migration.
- *
- * <p><b>Legacy Notice:</b> This class is deprecated since version 4.3.3 and will
- * no longer receive further development. It is only kept for legacy purposes, mainly to assist in
- * migrating old plugin versions from config files to the database.</p>
- *
- * <p>In normal operation with newer versions, this class is irrelevant and
- * should not be used.</p>
- *
- * @author rellu
- */
-
-@SuppressWarnings("SpellCheckingInspection")
 @ApiStatus.Internal
-@Getter
-public class ConfigHelper {
+@RequiredArgsConstructor
+public class ConfigMigrationService {
 
-  private final File file;
-  private YamlConfiguration config;
-  private boolean configFound = true;
+  private final File dataFolder;
+  private final ServiceContext serviceContext;
 
-  public ConfigHelper(String name) {
-
-    file = new File(RelluEssentials.getInstance().getDataFolder(), name + ".yml");
-    if (file.exists()) {
-      config = YamlConfiguration.loadConfiguration(file);
-    } else {
-      configFound = false;
-    }
+  public boolean legacyConfigExists(String name) {
+    return resolveLegacyConfigFile(name).exists();
   }
 
-  /**
-   *
-   * @return Returns List of all Players from config file
-   */
-
-  public List<PlayerEntry> getPlayers() {
+  public List<PlayerEntry> getPlayers(String name) {
+    YamlConfiguration config = loadConfig(name);
     List<PlayerEntry> list = new ArrayList<>();
     ConfigurationSection cs = config.getConfigurationSection("player");
 
     for (String uuid : Objects.requireNonNull(cs).getKeys(false)) {
       ConfigurationSection player = cs.getConfigurationSection(uuid);
 
-      String groupName = Objects.requireNonNull(Objects.requireNonNull(player).getString("group"))
-          .toLowerCase();
-      int groupFK = RelluEssentials.getInstance().getServiceContext().getGroupService().resolveGroupWithFallback(groupName).getId();
+      String groupName = Objects.requireNonNull(Objects.requireNonNull(player).getString("group")).toLowerCase();
       boolean fly = player.getBoolean("fly");
       boolean afk = player.getBoolean("afk");
       String customname = player.getString("customname");
 
       consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly
-              + " group id:" + groupFK + " group:" + groupName);
+          "Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly + " group:" + groupName);
 
       PlayerEntry p = new PlayerEntry();
-      p.setGroup(RelluEssentials.getInstance().getServiceContext().getGroupService().resolveGroupWithFallback(groupName));
+      p.setGroup(serviceContext.getGroupService().resolveGroupWithFallback(groupName));
       p.setAfk(afk);
       p.setFlying(fly);
       p.setCreatedBy(1);
@@ -88,39 +60,28 @@ public class ConfigHelper {
     return list;
   }
 
-  /**
-   *
-   * @param p Player
-   * @return List of Homes as LocationEntry
-   */
-
-  public List<LocationEntry> getHomes(@NotNull PlayerEntry p) {
+  public List<LocationEntry> getHomes(String name, @NotNull PlayerEntry p) {
+    YamlConfiguration config = loadConfig(name);
     List<LocationEntry> list = new ArrayList<>();
     ConfigurationSection homes = config.getConfigurationSection("player." + p.getUuid() + ".home");
+
     for (String home : Objects.requireNonNull(homes).getKeys(false)) {
       ConfigurationSection h = homes.getConfigurationSection(home);
       if (h == null) {
         continue;
       }
 
-      float x;
-      float y;
-      float z;
-      float yaw;
-      float pitch;
-      x = (float) h.getDouble("x");
-      y = (float) h.getDouble("y");
-      z = (float) h.getDouble("z");
-      yaw = (float) h.getDouble("yaw");
-      pitch = (float) h.getDouble("pitch");
+      float x = (float) h.getDouble("x");
+      float y = (float) h.getDouble("y");
+      float z = (float) h.getDouble("z");
+      float yaw = (float) h.getDouble("yaw");
+      float pitch = (float) h.getDouble("pitch");
       int type = home.equals("death") ? 2 : 1;
       String worldName = h.getString("world");
-
       World world = Bukkit.getServer().getWorld(Objects.requireNonNull(worldName));
 
       consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Found Home: " + home + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:"
-              + pitch + " world:" + world);
+          "Found Home: " + home + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
 
       LocationEntry l = new LocationEntry();
       l.setLocation(new Location(world, x, y, z, yaw, pitch));
@@ -133,5 +94,13 @@ public class ConfigHelper {
       list.add(l);
     }
     return list;
+  }
+
+  private File resolveLegacyConfigFile(String name) {
+    return new File(dataFolder, name + ".yml");
+  }
+
+  private YamlConfiguration loadConfig(String name) {
+    return YamlConfiguration.loadConfiguration(resolveLegacyConfigFile(name));
   }
 }

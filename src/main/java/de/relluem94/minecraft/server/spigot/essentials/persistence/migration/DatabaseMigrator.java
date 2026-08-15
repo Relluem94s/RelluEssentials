@@ -4,13 +4,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PluginInformationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.MiscMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.migration.ConfigMigrationService;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -23,16 +23,16 @@ public class DatabaseMigrator {
   private final QueryExecutor queryExecutor;
   private final PlayerService playerService;
   private final Consumer<PluginInformationEntry> onPatchingFinished;
-  private final ConfigHelper configHelper;
+  private final ConfigMigrationService configMigrationService;
   private final PersistenceContext persistenceContext;
 
   public DatabaseMigrator(PersistenceContext persistenceContext, QueryExecutor queryExecutor,
       PlayerService playerService, Consumer<PluginInformationEntry> onPatchingFinished,
-      ConfigHelper configHelper) {
+      ConfigMigrationService configMigrationService) {
     this.queryExecutor = queryExecutor;
     this.playerService = playerService;
     this.onPatchingFinished = onPatchingFinished;
-    this.configHelper = configHelper;
+    this.configMigrationService = configMigrationService;
     this.persistenceContext = persistenceContext;
   }
 
@@ -40,7 +40,8 @@ public class DatabaseMigrator {
     PluginInformationEntry fallback = new PluginInformationEntry();
     try {
       PluginInformationEntry result = queryExecutor.querySingle(
-          "getPluginInformation.sql", _ -> {}, MiscMapper::mapPluginInformation);
+          "getPluginInformation.sql", _ -> {
+          }, MiscMapper::mapPluginInformation);
       return result != null ? result : fallback;
     } catch (Exception ex) {
       consoleSendMessage(Constants.PLUGIN_NAME_CONSOLE, "Init Database..");
@@ -75,8 +76,8 @@ public class DatabaseMigrator {
     executeScript(v + "insertLocationTypes.sql");
     executeScript(v + "insertPluginInformation.sql");
 
-    if (configHelper.isConfigFound()) {
-      List<PlayerEntry> pe = configHelper.getPlayers();
+    if (configMigrationService.legacyConfigExists("players")) {
+      List<PlayerEntry> pe = configMigrationService.getPlayers("players");
       pe.forEach(persistenceContext.getPlayerDao()::insert);
 
       for (PlayerEntry p : pe) {
@@ -87,7 +88,7 @@ public class DatabaseMigrator {
         pu.setUpdatedBy(1);
         persistenceContext.getPlayerDao().update(pu);
 
-        List<LocationEntry> lel = configHelper.getHomes(pu);
+        List<LocationEntry> lel = configMigrationService.getHomes("players", pu);
         lel.forEach(persistenceContext.getLocationDao()::insertLocation);
       }
     }

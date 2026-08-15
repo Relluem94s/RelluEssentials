@@ -9,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ConfigHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
@@ -41,6 +40,8 @@ import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeServ
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.migration.ConfigMigrationService;
+import java.io.File;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.bukkit.plugin.Plugin;
@@ -68,7 +69,7 @@ public class DatabaseManager implements Enable {
           "jdbc:mysql://" + host + ":" + port,
           user,
           password,
-          "rellu_essentials"
+          PLUGIN_DATABASE_NAME
       );
       bootstrap.ensureSchemaExists();
 
@@ -101,7 +102,6 @@ public class DatabaseManager implements Enable {
     persistenceContext.setTraderNpcDao(new TraderNpcDao(dataSource, sqlResourceLoader));
     persistenceContext.setGroupDao(new GroupDao(queryExecutor));
 
-
     PluginInformationRepository pluginInformationRepository = new PluginInformationRepository(
         persistenceContext.getPluginInformationDao());
     PluginInformationService pluginInformationService = new PluginInformationService(
@@ -115,7 +115,7 @@ public class DatabaseManager implements Enable {
     LocationTypeService locationTypeService = new LocationTypeService(locationTypeRegistry);
     serviceContext.setLocationTypeService(locationTypeService);
 
-    patch(persistenceContext, serviceContext, queryExecutor);
+    patch(persistenceContext, serviceContext, queryExecutor, relluEssentialsPlugin.getDataFolder());
 
     SettingRepository settingRepository = new SettingRepository(persistenceContext.getSettingDao());
     SettingRegistry settingRegistry = new SettingRegistry();
@@ -125,7 +125,7 @@ public class DatabaseManager implements Enable {
 
     persistenceContext.setWorldGroupDao(new WorldGroupDao(queryExecutor, serviceContext));
 
-        WorldGroupRegistry worldGroupRegistry = new WorldGroupRegistry();
+    WorldGroupRegistry worldGroupRegistry = new WorldGroupRegistry();
     WorldGroupRepository worldGroupRepository = new WorldGroupRepository(
         persistenceContext.getWorldGroupDao());
     WorldGroupService worldGroupService = new WorldGroupService(worldGroupRegistry,
@@ -145,7 +145,7 @@ public class DatabaseManager implements Enable {
   }
 
   private void patch(PersistenceContext persistenceContext, ServiceContext serviceContext,
-      QueryExecutor queryExecutor) {
+      QueryExecutor queryExecutor, File dataFolder) {
     DatabaseMigrator databaseMigrator = new DatabaseMigrator(
         persistenceContext,
         queryExecutor,
@@ -156,7 +156,7 @@ public class DatabaseManager implements Enable {
             service.applyPatchedInformation(patchedInformation);
           }
         },
-        new ConfigHelper("players")
+        new ConfigMigrationService(dataFolder, serviceContext)
     );
 
     databaseMigrator.applyPatch(databaseMigrator.loadPluginInformation().getDbVersion());

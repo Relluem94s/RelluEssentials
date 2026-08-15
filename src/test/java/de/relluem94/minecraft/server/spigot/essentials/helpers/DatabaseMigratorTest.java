@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.migration.DatabaseMigrator;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.migration.ConfigMigrationService;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +36,7 @@ class DatabaseMigratorTest {
     @Mock
     private PlayerService playerService;
     @Mock
-    private ConfigHelper configHelperMock;
+    private ConfigMigrationService configHelperMock;
     @Mock
     private PlayerDao playerDao;
 
