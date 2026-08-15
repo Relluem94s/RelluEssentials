@@ -4,13 +4,14 @@
  */
 
 UPDATE custom_npc
-SET entity_uuid  = ?,
-    profile_name = ?,
-    inventory    = ?,
-    world        = ?,
-    x            = ?,
-    y            = ?,
-    z            = ?,
-    updatedby   = ?
-WHERE id = ?
-  AND deleted IS NULL;
+SET entity_uuid   = ?,
+    profile_name  = ?,
+    inventory     = ?,
+    world         = ?,
+    x             = ?,
+    y             = ?,
+    z             = ?,
+    yaw           = ?,
+    pitch         = ?,
+    updatedby     = ?
+WHERE id = ?;

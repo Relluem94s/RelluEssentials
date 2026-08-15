@@ -41,7 +41,7 @@ public class NpcService {
 
 
   public NpcOperationResult createNPC(String profileName, double x, double y, double z,
-      String worldName, int actorPlayerId) {
+      float yaw, float pitch, String worldName, int actorPlayerId) {
     NpcValidator.ValidationResult profileValidation = npcValidator.validateProfileName(profileName);
     if (!profileValidation.valid()) {
       return NpcOperationResult.failure(profileValidation.errorMessage());
@@ -52,7 +52,7 @@ public class NpcService {
       return NpcOperationResult.failure(coordinateValidation.errorMessage());
     }
 
-    Npc npc = new Npc(-1, UUID.randomUUID(), profileName, x, y, z, worldName);
+    Npc npc = new Npc(-1, UUID.randomUUID(), profileName, x, y, z, yaw, pitch, worldName);
     npcRepository.save(npc, actorPlayerId);
     loadedNPCs.put(npc.getId(), npc);
 
@@ -93,7 +93,7 @@ public class NpcService {
   }
 
   public NpcOperationResult updateNPCPosition(UUID npcId, double x, double y, double z,
-      int actorPlayerId) {
+      float yaw, float pitch, int actorPlayerId) {
     Npc npc = loadedNPCs.get(npcId);
     if (npc == null) {
       return NpcOperationResult.failure("NPC with ID " + npcId + " not found.");
@@ -111,6 +111,8 @@ public class NpcService {
     npc.setX(x);
     npc.setY(y);
     npc.setZ(z);
+    npc.setYaw(yaw);
+    npc.setPitch(pitch);
     npcRepository.save(npc, actorPlayerId);
 
     npcSpawner.spawnMannequin(npc).ifPresent(uuid -> {

@@ -186,13 +186,33 @@ public class Admin implements CommandConstruct {
       }
       return tabList;
     }
+
     if (strings.length == 7) {
+      if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
+        if ("create".equalsIgnoreCase(strings[1])) {
+          tabList.add(resolvePlayerCoordinate(player, "yaw"));
+        } else if ("update".equalsIgnoreCase(strings[1]) && "position".equalsIgnoreCase(strings[3])) {
+          tabList.add(resolvePlayerCoordinate(player, "z"));
+        }
+      }
+    }
+    if (strings.length == 8) {
+      if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
+        if ("create".equalsIgnoreCase(strings[1])) {
+          tabList.add(resolvePlayerCoordinate(player, "pitch"));
+        } else if ("update".equalsIgnoreCase(strings[1]) && "position".equalsIgnoreCase(strings[3])) {
+          tabList.add(resolvePlayerCoordinate(player, "yaw"));
+        }
+      }
+    }
+    if (strings.length == 9) {
       if (Commands.NPC.getName().equalsIgnoreCase(strings[0])
           && "update".equalsIgnoreCase(strings[1])
           && "position".equalsIgnoreCase(strings[3])) {
-        tabList.add(resolvePlayerCoordinate(player, "z"));
+        tabList.add(resolvePlayerCoordinate(player, "pitch"));
       }
     }
+
 
     return tabList;
   }
@@ -235,6 +255,8 @@ public class Admin implements CommandConstruct {
       case "x" -> String.valueOf((int) player.getLocation().getX());
       case "y" -> String.valueOf((int) player.getLocation().getY());
       case "z" -> String.valueOf((int) player.getLocation().getZ());
+      case "yaw" -> String.valueOf((int) player.getLocation().getYaw());
+      case "pitch" -> String.valueOf((int) player.getLocation().getPitch());
       default -> "<" + axis + ">";
     };
   }
