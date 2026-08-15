@@ -23,16 +23,17 @@ import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PlayerDao
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.PluginInformationDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.ProtectionDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.SettingDao;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.WorldGroupDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.SchemaBootstrap;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.ClasspathSqlResourceLoader;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.migration.DatabaseMigrator;
 import de.relluem94.minecraft.server.spigot.essentials.registries.LocationTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SettingRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.WorldGroupSettingRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.WorldGroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.PluginInformationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.SettingRepository;
-import de.relluem94.minecraft.server.spigot.essentials.repositories.WorldGroupSettingRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.WorldGroupRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
@@ -120,11 +121,13 @@ public class DatabaseManager implements Enable {
     settingService.loadAll();
     serviceContext.setSettingService(settingService);
 
-    WorldGroupSettingRegistry worldGroupSettingRegistry = new WorldGroupSettingRegistry();
-    WorldGroupSettingRepository worldGroupSettingRepository = new WorldGroupSettingRepository(
-        databaseHelper);
-    WorldGroupService worldGroupService = new WorldGroupService(worldGroupSettingRegistry,
-        worldGroupSettingRepository);
+    persistenceContext.setWorldGroupDao(new WorldGroupDao(queryExecutor, serviceContext));
+
+        WorldGroupRegistry worldGroupRegistry = new WorldGroupRegistry();
+    WorldGroupRepository worldGroupRepository = new WorldGroupRepository(
+        persistenceContext.getWorldGroupDao());
+    WorldGroupService worldGroupService = new WorldGroupService(worldGroupRegistry,
+        worldGroupRepository);
     worldGroupService.loadAll();
     serviceContext.setWorldGroupService(worldGroupService);
 
