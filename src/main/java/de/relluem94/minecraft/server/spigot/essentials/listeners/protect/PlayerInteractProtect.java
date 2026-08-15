@@ -131,7 +131,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
       ProtectionEntry pre = context.getProtectionService()
           .getProtectionEntry(l);
-      if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
+      if (pre != null && context.getProtectionService().playerOwnsProtection(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(
                 context.getTranslationService()
@@ -179,7 +179,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
       ProtectionEntry pre = context.getProtectionService()
           .getProtectionEntry(l);
-      if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
+      if (pre != null && context.getProtectionService().playerOwnsProtection(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(
                 context.getTranslationService()
@@ -249,7 +249,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
       ProtectionEntry pre = context.getProtectionService()
           .getProtectionEntry(l);
-      if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
+      if (pre != null && context.getProtectionService().playerOwnsProtection(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(
                 context.getTranslationService()
@@ -275,7 +275,7 @@ public class PlayerInteractProtect implements ListenerConstruct {
       Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
       ProtectionEntry pre = context.getProtectionService()
           .getProtectionEntry(l);
-      if (pre != null && ProtectionHelper.hasPermission(pre, e.getPlayer())) {
+      if (pre != null && context.getProtectionService().playerOwnsProtection(pre, e.getPlayer())) {
         e.getPlayer()
             .sendMessage(
                 context.getTranslationService()

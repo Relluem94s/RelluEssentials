@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionLockEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ProtectionRegistry;
@@ -9,16 +11,20 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 public class ProtectionService {
 
   private final ProtectionRegistry protectionRegistry;
   private final ProtectionRepository protectionRepository;
+  private final ServiceContext serviceContext;
 
   public ProtectionService(List<ProtectionLockEntry> protectionLocksEntryList,
-      Map<Location, ProtectionEntry> protectionEntryMap, ProtectionRepository protectionRepository) {
+      Map<Location, ProtectionEntry> protectionEntryMap, ProtectionRepository protectionRepository,
+      ServiceContext serviceContext) {
     this.protectionRegistry = new ProtectionRegistry(protectionLocksEntryList, protectionEntryMap);
     this.protectionRepository = protectionRepository;
+    this.serviceContext = serviceContext;
   }
 
   public boolean removeExplodedBlockProtectionOrCancelExplosion(Block block) {
@@ -86,5 +92,13 @@ public class ProtectionService {
     List<Long> deletedIds = protectionRepository.removeOutdatedProtections();
     protectionRegistry.removeProtectionEntriesByIds(deletedIds);
     return deletedIds.size();
+  }
+
+  public boolean playerOwnsProtection(ProtectionEntry protectionEntry, Player player) {
+    PlayerEntry playerEntry = serviceContext.getPlayerService().getPlayerEntry(player);
+    if (protectionEntry != null) {
+      return protectionEntry.getLocationEntry().getPlayerId() == playerEntry.getId();
+    }
+    return true;
   }
 }

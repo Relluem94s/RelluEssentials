@@ -25,7 +25,6 @@ public class ProtectionHelper {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
-
   /**
    * Use this Method to check if a Block is an instance of OpenAble.
    *
@@ -57,23 +56,6 @@ public class ProtectionHelper {
   }
 
   /**
-   * Use this Method to check if Player has Permission for that ProtectionEntry
-   *
-   * @param pre ProtectionEntry
-   * @param p   Player
-   * @return boolean
-   */
-  public static boolean hasPermission(ProtectionEntry pre, Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService()
-        .getPlayerEntry(p);
-    if (pre != null) {
-      return pre.getLocationEntry().getPlayerId() == pe.getId();
-    } else {
-      return true;
-    }
-  }
-
-  /**
    * Use this with an ProtectionEntry to check ifa Protection has a Specific Flag
    *
    * @param protection ProtectionEntry
@@ -92,7 +74,7 @@ public class ProtectionHelper {
   }
 
   /**
-   * Use this Method to check if Player has Rights to the ProtectionEntry
+   * Use this Method to check if Player has Rights to the ProtectionEntry.
    *
    * @param protection ProtectionEntry
    * @param playerId   int
@@ -170,6 +152,4 @@ public class ProtectionHelper {
     }
     return location;
   }
-
-
 }

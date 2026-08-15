@@ -84,7 +84,8 @@ public class ServiceManager implements Enable {
     ProtectionService protectionService = new ProtectionService(
         protectionRepository.loadAllLocks(),
         protectionRepository.loadAll(),
-        protectionRepository);
+        protectionRepository,
+        serviceContext);
     serviceContext.setProtectionService(protectionService);
 
     TraderNpcRepository traderNpcRepository = new TraderNpcRepository(
