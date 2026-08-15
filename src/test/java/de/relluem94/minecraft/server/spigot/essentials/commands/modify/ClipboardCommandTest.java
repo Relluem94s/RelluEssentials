@@ -8,7 +8,6 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
@@ -17,7 +16,6 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.List;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -27,18 +25,12 @@ class ClipboardCommandTest {
   private Player player;
   private ClipboardCommand clipboardCommand;
   private ClipboardService clipboardService;
-  private RelluEssentials relluEssentialsMock;
 
-  private MockedStatic<RelluEssentials> mockedRelluEssentials;
 
   @BeforeEach
   void setUp() {
     player = mock(Player.class);
     clipboardService = new ClipboardService();
-    relluEssentialsMock = mock(RelluEssentials.class);
-
-    mockedRelluEssentials = mockStatic(RelluEssentials.class);
-    mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentialsMock);
 
     TranslationService translationServiceMock = mock(TranslationService.class);
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
@@ -48,11 +40,6 @@ class ClipboardCommandTest {
     when(serviceContext.getClipboardService()).thenReturn(clipboardService);
 
     clipboardCommand = new ClipboardCommand(serviceContext);
-  }
-
-  @AfterEach
-  void tearDown() {
-    mockedRelluEssentials.close();
   }
 
   @Test
