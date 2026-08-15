@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -574,4 +575,12 @@ public class BagService {
 
     return is;
   }
+
+  public List<String> getBagTypeNamesForPlayer(int playerId) {
+    return findBags(playerId)
+        .stream()
+        .map(bag -> bag.getBagType().getName().toLowerCase())
+        .collect(Collectors.toList());
+  }
+
 }

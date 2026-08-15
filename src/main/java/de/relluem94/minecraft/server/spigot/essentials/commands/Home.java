@@ -233,7 +233,7 @@ public class Home implements CommandConstruct {
       if (Commands.LIST.getName().equalsIgnoreCase(strings[0])) {
         return tabList;
       }
-      tabList.addAll(TabCompleterHelper.getHomes((Player) commandSender));
+      tabList.addAll(serviceContext.getPlayerService().getHomeAndDeathLocationNames((Player) commandSender));
       return tabList;
     }
 

@@ -1,15 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
@@ -57,15 +53,6 @@ public class TabCompleterHelper {
     return commands;
   }
 
-  public static @NotNull List<String> getBags(Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService().getPlayerEntry(p);
-
-    return RelluEssentials.getInstance().getServiceContext().getBagService().getBags(pe.getId())
-        .stream()
-        .map(bag -> bag.getBagType().getName().toLowerCase())
-        .collect(Collectors.toList());
-  }
-
   public static @NotNull List<String> getWorlds() {
     List<String> worldNames = new ArrayList<>();
 
@@ -74,21 +61,6 @@ public class TabCompleterHelper {
     }
 
     return worldNames;
-  }
-
-  public static @NotNull List<String> getHomes(Player p) {
-    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService().getPlayerEntry(p);
-    List<String> homes = new ArrayList<>();
-
-    for (LocationEntry le : pe.getHomes()) {
-      homes.add(le.getLocationName());
-    }
-
-    for (LocationEntry le : pe.getDeaths()) {
-      homes.add(le.getLocationName());
-    }
-
-    return homes;
   }
 
   public static @NotNull List<String> getGroups(List<GroupEntry> groupEntryList) {

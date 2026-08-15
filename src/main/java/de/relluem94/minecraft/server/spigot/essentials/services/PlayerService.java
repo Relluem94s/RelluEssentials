@@ -8,10 +8,12 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.PlayerRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -267,5 +269,20 @@ public class PlayerService {
   public void registerNewPlayer(@NotNull PlayerEntry playerEntry) {
     playerRepository.save(playerEntry);
     playerRegistry.putPlayerEntry(UUID.fromString(playerEntry.getUuid()), playerEntry);
+  }
+
+  public List<String> getHomeAndDeathLocationNames(Player player) {
+    PlayerEntry playerEntry = playerRegistry.getPlayerEntry(player.getUniqueId());
+    List<String> locationNames = new ArrayList<>();
+
+    for (LocationEntry locationEntry : playerEntry.getHomes()) {
+      locationNames.add(locationEntry.getLocationName());
+    }
+
+    for (LocationEntry locationEntry : playerEntry.getDeaths()) {
+      locationNames.add(locationEntry.getLocationName());
+    }
+
+    return locationNames;
   }
 }

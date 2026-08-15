@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
@@ -49,7 +48,8 @@ public class Bags implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getBags((Player) commandSender));
+    PlayerEntry playerEntry = serviceContext.getPlayerService().getPlayerEntry((Player)commandSender);
+    tabList.addAll(serviceContext.getBagService().getBagTypeNamesForPlayer(playerEntry.getId()));
 
     return tabList;
   }

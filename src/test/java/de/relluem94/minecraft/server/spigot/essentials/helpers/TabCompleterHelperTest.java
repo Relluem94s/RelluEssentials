@@ -13,8 +13,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.GroupDao;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
@@ -181,42 +179,6 @@ class TabCompleterHelperTest {
       assertTrue(result.contains("world"));
       assertTrue(result.contains("world_nether"));
     }
-  }
-
-  @Test
-  void getHomesReturnsEmptyListWhenPlayerHasNoHomesOrDeaths() {
-    PlayerEntry playerEntry = new PlayerEntry();
-    playerEntry.setHomes(new ArrayList<>());
-    playerEntry.setDeaths(new ArrayList<>());
-
-    when(relluEssentials.getServiceContext().getPlayerService()).thenReturn(playerService);
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    List<String> result = TabCompleterHelper.getHomes(player);
-
-    assertTrue(result.isEmpty());
-  }
-
-  @Test
-  void getHomesReturnsHomeAndDeathLocationNames() {
-    LocationEntry homeEntry = new LocationEntry();
-    homeEntry.setLocationName("myHome");
-
-    LocationEntry deathEntry = new LocationEntry();
-    deathEntry.setLocationName("death_1");
-
-    PlayerEntry playerEntry = new PlayerEntry();
-    playerEntry.setHomes(List.of(homeEntry));
-    playerEntry.setDeaths(List.of(deathEntry));
-
-    when(relluEssentials.getServiceContext().getPlayerService()).thenReturn(playerService);
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    List<String> result = TabCompleterHelper.getHomes(player);
-
-    assertEquals(2, result.size());
-    assertTrue(result.contains("myHome"));
-    assertTrue(result.contains("death_1"));
   }
 
   @Test
