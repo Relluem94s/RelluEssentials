@@ -178,7 +178,7 @@ public class ServiceManager implements Enable {
 
     NpcRepository npcRepository = new NpcRepository(
         relluEssentials.getPersistenceContext().getNpcDao());
-    NpcSpawner npcSpawner = new NpcSpawner(serviceContext);
+    NpcSpawner npcSpawner = new NpcSpawner(relluEssentials.getServer(), serviceContext);
     NpcValidator npcValidator = new NpcValidator();
     NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
     serviceContext.setNpcService(npcService);
