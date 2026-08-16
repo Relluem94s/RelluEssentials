@@ -561,6 +561,203 @@ class NpcServiceTest {
     verify(npcRepository, never()).deleteDialogueByPosition(any(), anyInt(), anyInt());
   }
 
+  @Test
+  void deleteNPCDoesNotDespawnWhenEntityUUIDIsNull() {
+    UUID npcId = UUID.randomUUID();
+    Npc npc = buildNpc(npcId, null);
+    loadNpcIntoService(npcId, npc);
+
+    NpcOperationResult result = npcService.deleteNPC(npcId, 1);
+
+    assertTrue(result.isSuccessful());
+    verify(npcSpawner, never()).despawnMannequin(any());
+  }
+
+  @Test
+  void restoreNPCEquipmentDoesNothingWhenInventoryIsNull() {
+    UUID npcId = UUID.randomUUID();
+    UUID oldEntityUUID = UUID.randomUUID();
+    UUID newEntityUUID = UUID.randomUUID();
+
+    Npc npc = buildNpc(npcId, oldEntityUUID);
+    loadNpcIntoService(npcId, npc);
+
+    when(npcValidator.validateProfileName("NewProfile"))
+        .thenReturn(new NpcValidator.ValidationResult(true, null));
+    when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
+
+    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+
+    assertTrue(result.isSuccessful());
+    verify(npcSpawner, never()).despawnMannequin(newEntityUUID);
+  }
+
+  @Test
+  void despawnAllNPCsSkipsNpcsWithNullEntityUUID() {
+    UUID npcId1 = UUID.randomUUID();
+    UUID entityUUID1 = UUID.randomUUID();
+    UUID npcId2 = UUID.randomUUID();
+
+    loadNpcIntoService(npcId1, buildNpc(npcId1, entityUUID1));
+    loadNpcIntoService(npcId2, buildNpc(npcId2, null));
+
+    npcService.despawnAllNPCs();
+
+    verify(npcSpawner).despawnMannequin(entityUUID1);
+    verify(npcSpawner, never()).despawnMannequin(null);
+    assertTrue(npcService.getNPCs().isEmpty());
+  }
+
+  @Test
+  void despawnNpcDoesNothingWhenEntityUUIDIsNull() {
+    UUID npcId = UUID.randomUUID();
+    Npc npc = buildNpc(npcId, null);
+    loadNpcIntoService(npcId, npc);
+
+    npcService.despawnNpc(npcId);
+
+    verify(npcSpawner, never()).despawnMannequin(any());
+  }
+
+  @Test
+  void updateNPCPositionDoesNotDespawnWhenEntityUUIDIsNull() {
+    UUID npcId = UUID.randomUUID();
+    Npc npc = buildNpc(npcId, null);
+    loadNpcIntoService(npcId, npc);
+
+    UUID newEntityUUID = UUID.randomUUID();
+
+    when(npcValidator.validateCoordinates(10.0, 65.0, 10.0))
+        .thenReturn(new NpcValidator.ValidationResult(true, null));
+    when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
+
+    NpcOperationResult result = npcService.updateNPCPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
+
+    assertTrue(result.isSuccessful());
+    verify(npcSpawner, never()).despawnMannequin(any());
+  }
+
+  @Test
+  void restoreNPCEquipmentDoesNothingWhenEntityUUIDIsNullAfterRespawn() {
+    UUID npcId = UUID.randomUUID();
+    UUID oldEntityUUID = UUID.randomUUID();
+
+    Npc npc = buildNpc(npcId, oldEntityUUID);
+    npc.setInventory(new JSONObject("{\"items\":[]}"));
+    loadNpcIntoService(npcId, npc);
+
+    when(npcValidator.validateProfileName("NewProfile"))
+        .thenReturn(new NpcValidator.ValidationResult(true, null));
+    when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.empty());
+
+    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+
+    assertTrue(result.isSuccessful());
+    verify(npcSpawner).despawnMannequin(oldEntityUUID);
+  }
+
+  @Test
+  void restoreNPCEquipmentDoesNothingWhenInventoryIsNullOnPositionUpdate() {
+    UUID npcId = UUID.randomUUID();
+    UUID oldEntityUUID = UUID.randomUUID();
+    UUID newEntityUUID = UUID.randomUUID();
+
+    Npc npc = buildNpc(npcId, oldEntityUUID);
+    loadNpcIntoService(npcId, npc);
+
+    when(npcValidator.validateCoordinates(10.0, 65.0, 10.0))
+        .thenReturn(new NpcValidator.ValidationResult(true, null));
+    when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
+
+    NpcOperationResult result = npcService.updateNPCPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
+
+    assertTrue(result.isSuccessful());
+    verify(npcSpawner).despawnMannequin(oldEntityUUID);
+    assertEquals(newEntityUUID, result.getNpc().getEntityUUID());
+  }
+
+  @Test
+  void updateNPCProfileDoesNotDespawnWhenEntityUUIDIsNull() {
+    UUID npcId = UUID.randomUUID();
+    UUID newEntityUUID = UUID.randomUUID();
+
+    Npc npc = buildNpc(npcId, null);
+    loadNpcIntoService(npcId, npc);
+
+    when(npcValidator.validateProfileName("NewProfile"))
+        .thenReturn(new NpcValidator.ValidationResult(true, null));
+    when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
+
+    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+
+    assertTrue(result.isSuccessful());
+    verify(npcSpawner, never()).despawnMannequin(any());
+  }
+
+  @Test
+  void restoreNPCEquipmentDoesNothingWhenInventorySetButEntityUUIDNullAfterRespawn() {
+    UUID npcId = UUID.randomUUID();
+    UUID oldEntityUUID = UUID.randomUUID();
+
+    Npc npc = buildNpc(npcId, null);
+    npc.setInventory(null);
+
+    loadNpcIntoService(npcId, npc);
+    npc.setEntityUUID(oldEntityUUID);
+
+    when(npcValidator.validateProfileName("NewProfile"))
+        .thenReturn(new NpcValidator.ValidationResult(true, null));
+    when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.empty());
+
+    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+
+    assertTrue(result.isSuccessful());
+    verify(npcSpawner).despawnMannequin(oldEntityUUID);
+    assertEquals(oldEntityUUID, npc.getEntityUUID());
+    assertNull(npc.getInventory());
+  }
+
+  @Test
+  void restoreNPCEquipmentDoesNothingWhenInventorySetButInventoryIsNullAfterRespawn() {
+    UUID npcId = UUID.randomUUID();
+
+    Npc npc = buildNpc(npcId, null);
+    npc.setInventory(null);
+    loadNpcIntoService(npcId, npc);
+    npc.setEntityUUID(null);
+
+    when(npcValidator.validateProfileName("NewProfile"))
+        .thenReturn(new NpcValidator.ValidationResult(true, null));
+    when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.empty());
+
+    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+
+    assertTrue(result.isSuccessful());
+    verify(npcSpawner, never()).despawnMannequin(any());
+    assertNull(npc.getEntityUUID());
+  }
+
+
+  @Test
+  void restoreNPCEquipmentDoesNothingWhenInventoryNullButEntityUUIDSet() {
+    UUID npcId = UUID.randomUUID();
+    UUID oldEntityUUID = UUID.randomUUID();
+    UUID newEntityUUID = UUID.randomUUID();
+
+    Npc npc = buildNpc(npcId, oldEntityUUID);
+    loadNpcIntoService(npcId, npc);
+
+    when(npcValidator.validateProfileName("NewProfile"))
+        .thenReturn(new NpcValidator.ValidationResult(true, null));
+    when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
+
+    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+
+    assertTrue(result.isSuccessful());
+    assertEquals(newEntityUUID, result.getNpc().getEntityUUID());
+    verify(npcSpawner).despawnMannequin(oldEntityUUID);
+  }
+
   private void loadNpcIntoService(UUID npcId, Npc npc) {
     when(npcRepository.loadAll()).thenReturn(List.of(npc));
 
