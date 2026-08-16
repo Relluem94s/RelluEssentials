@@ -18,6 +18,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueReg
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PositionRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.SettingPlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.TraderNpcRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BackLocationRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepository;
@@ -31,6 +32,7 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.LocationRepo
 import de.relluem94.minecraft.server.spigot.essentials.repositories.NpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.PlayerRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.ProtectionRepository;
+import de.relluem94.minecraft.server.spigot.essentials.repositories.SettingPlayerRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.TraderNpcRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.UndoHistoryRepository;
 import de.relluem94.minecraft.server.spigot.essentials.services.BackService;
@@ -53,6 +55,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionAction
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SettingPlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
@@ -78,7 +81,6 @@ public class ServiceManager implements Enable {
     BlockDropService blockDropService = new BlockDropService(dropRuleRepository, cropRepository);
     serviceContext.setBlockDropService(blockDropService);
 
-
     ProtectionRepository protectionRepository = new ProtectionRepository(
         persistenceContext.getProtectionDao(), persistenceContext.getLocationDao());
 
@@ -98,7 +100,8 @@ public class ServiceManager implements Enable {
     traderNpcRegistry.addNPC(bankerNpc);
     traderNpcRegistry.addNPC(new BeekeeperNpc(serviceContext));
     traderNpcRegistry.addNPC(new EnchanterNpc(serviceContext));
-    TraderNpcService traderNpcService = new TraderNpcService(traderNpcRegistry, traderNpcRepository, bankerNpc);
+    TraderNpcService traderNpcService = new TraderNpcService(traderNpcRegistry, traderNpcRepository,
+        bankerNpc);
     traderNpcService.loadAndInitialiseNpcs();
     serviceContext.setTraderNpcService(traderNpcService);
 
@@ -121,7 +124,6 @@ public class ServiceManager implements Enable {
 
     serviceContext.setLocationService(
         new LocationService(locationRepository, serviceContext.getLocationTypeService()));
-
 
     PlayerRegistry playerRegistry = new PlayerRegistry();
     PlayerRepository playerRepository = new PlayerRepository(persistenceContext.getPlayerDao());
@@ -157,9 +159,11 @@ public class ServiceManager implements Enable {
     ChatService chatService = new ChatService(serviceContext, replyRegistry);
     serviceContext.setChatService(chatService);
 
-    BankTierRegistry bankTierRegistry = new BankTierRegistry(persistenceContext.getBankDao().findAllBankTiers());
+    BankTierRegistry bankTierRegistry = new BankTierRegistry(
+        persistenceContext.getBankDao().findAllBankTiers());
     BankRepository bankRepository = new BankRepository(persistenceContext.getBankDao());
-    BankService bankService = new BankService(serviceContext, bankTierRegistry, bankRepository, relluEssentials);
+    BankService bankService = new BankService(serviceContext, bankTierRegistry, bankRepository,
+        relluEssentials);
     serviceContext.setBankService(bankService);
 
     BackLocationRepository backLocationRepository = new BackLocationRepository();
@@ -201,6 +205,12 @@ public class ServiceManager implements Enable {
         serviceContext);
     serviceContext.setProtectionCleanUpService(protectionCleanUpService);
     serviceContext.setDeathChestService(new DeathChestService(serviceContext));
+
+    SettingPlayerRegistry settingPlayerRegistry = new SettingPlayerRegistry();
+    SettingPlayerRepository settingPlayerRepository = new SettingPlayerRepository(
+        persistenceContext.getSettingPlayerDao());
+    serviceContext.setSettingPlayerService(
+        new SettingPlayerService(settingPlayerRegistry, settingPlayerRepository));
   }
 
   public void preEnable(RelluEssentials relluEssentials) {

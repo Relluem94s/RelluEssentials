@@ -24,6 +24,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionAction
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SettingPlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService;
@@ -79,4 +80,5 @@ public class ServiceContext {
   private ProtectionCleanUpService protectionCleanUpService;
   private PluginManagerService pluginManagerService;
   private DeathChestService deathChestService;
+  private SettingPlayerService settingPlayerService;
 }
