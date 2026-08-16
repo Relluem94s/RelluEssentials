@@ -29,21 +29,23 @@ import org.bukkit.persistence.PersistentDataType;
 public class BeekeeperNpc extends TraderNpc {
 
   private final TranslationService translationService;
+  private final RelluEssentials relluEssentials;
 
-  public BeekeeperNpc(ServiceContext serviceContext) {
+  public BeekeeperNpc(ServiceContext serviceContext, RelluEssentials relluEssentials) {
     super("§dBeekeeper", Profession.NONE, Type.BEEKEEPER);
     translationService = serviceContext.getTranslationService();
+    this.relluEssentials = relluEssentials;
   }
 
   private ItemHelper resolveDisabledItem() {
     return ItemRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+            RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
   }
 
   private ItemHelper resolveCloseItem() {
     return ItemRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+            RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
   }
 

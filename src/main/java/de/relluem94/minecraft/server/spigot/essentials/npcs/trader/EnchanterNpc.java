@@ -37,6 +37,7 @@ import org.jspecify.annotations.NonNull;
 public class EnchanterNpc extends TraderNpc {
 
   private final TranslationService translationService;
+  private final RelluEssentials relluEssentials;
 
   private record ItemCostData(int cost, List<String> lore) {}
 
@@ -44,9 +45,10 @@ public class EnchanterNpc extends TraderNpc {
    * Creates a new EnchanterNpc with a predefined display name,
    * librarian profession and the enchanter trader type.
    */
-  public EnchanterNpc(ServiceContext serviceContext) {
+  public EnchanterNpc(ServiceContext serviceContext, RelluEssentials relluEssentials) {
     super("§dEnchanter", Profession.LIBRARIAN, Type.ENCHANTER);
     translationService = serviceContext.getTranslationService();
+    this.relluEssentials = relluEssentials;
   }
 
   private @NonNull @Unmodifiable List<EnchantmentHelper> resolveRegisteredEnchantments() {
@@ -54,12 +56,12 @@ public class EnchanterNpc extends TraderNpc {
   }
 
   private @NonNull ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+    return ItemRegistry.find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
   }
 
   private @NonNull ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
+    return ItemRegistry.find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
   }
 
   /**

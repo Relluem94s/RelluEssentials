@@ -98,10 +98,10 @@ public class ServiceManager implements Enable {
     TraderNpcRegistry traderNpcRegistry = new TraderNpcRegistry(
         serviceContext.getTranslationService());
     BankerNpc bankerNpc = new BankerNpc(serviceContext);
-    traderNpcRegistry.addNPC(new BagSalesmanNpc(serviceContext));
+    traderNpcRegistry.addNPC(new BagSalesmanNpc(serviceContext, relluEssentials));
     traderNpcRegistry.addNPC(bankerNpc);
-    traderNpcRegistry.addNPC(new BeekeeperNpc(serviceContext));
-    traderNpcRegistry.addNPC(new EnchanterNpc(serviceContext));
+    traderNpcRegistry.addNPC(new BeekeeperNpc(serviceContext, relluEssentials));
+    traderNpcRegistry.addNPC(new EnchanterNpc(serviceContext, relluEssentials));
     TraderNpcService traderNpcService = new TraderNpcService(traderNpcRegistry, traderNpcRepository,
         bankerNpc);
     traderNpcService.loadAndInitialiseNpcs();
