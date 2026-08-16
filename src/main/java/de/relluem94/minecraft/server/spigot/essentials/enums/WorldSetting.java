@@ -1,10 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.enums;
 
 public enum WorldSetting {
+  ORE_RESPAWN,
+  NPC_BANKER,
+  NPC_BAGSALESMAN,
+  NPC_BEEKEEPER,
+  NPC_ENCHANTER,
   COLLECT_BAG,
+  ENTITIES_DROP_COINS,
   USE_CLOUDSAILOR,
   DEATH_LOSE_COINS,
-  ORE_RESPAWN,
   DEATH_CREATE_HOME,
-  SCOREBOARD_SHOW
+  SCOREBOARD_SHOW,
+  DEATH_CHEST_SPAWN
 }

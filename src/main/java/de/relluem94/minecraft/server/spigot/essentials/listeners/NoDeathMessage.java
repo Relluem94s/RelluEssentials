@@ -61,6 +61,8 @@ public class NoDeathMessage implements ListenerConstruct {
         .isSettingActiveForWorld(WorldSetting.DEATH_LOSE_COINS, worldName);
     boolean deathCreateHomeActive = serviceContext.getWorldGroupService()
         .isSettingActiveForWorld(WorldSetting.DEATH_CREATE_HOME, worldName);
+    boolean deathChestSpawnActiveForWorld = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN, worldName);
 
     if (deathLoseCoinsActive) {
       ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
@@ -71,6 +73,11 @@ public class NoDeathMessage implements ListenerConstruct {
           p.getInventory().remove(is);
         }
       }
+    }
+
+    if(deathChestSpawnActiveForWorld){
+      serviceContext.getDeathChestService().spawnDeathChestForPlayer(p);
+      e.getDrops().clear();
     }
 
     if (deathCreateHomeActive) {

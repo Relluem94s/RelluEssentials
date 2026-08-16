@@ -9,6 +9,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
+import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
@@ -77,4 +78,5 @@ public class ServiceContext {
   private LocationCleanUpService locationCleanUpService;
   private ProtectionCleanUpService protectionCleanUpService;
   private PluginManagerService pluginManagerService;
+  private DeathChestService deathChestService;
 }
