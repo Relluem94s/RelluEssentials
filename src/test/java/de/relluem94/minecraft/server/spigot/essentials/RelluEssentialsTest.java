@@ -27,6 +27,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import java.io.File;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
@@ -48,10 +49,14 @@ class RelluEssentialsTest {
 
   @BeforeEach
   void setUp() {
-    Logger.getLogger("org.bukkit.plugin.java.JavaPluginLoader")
-        .setLevel(Level.OFF);
+    Logger logger = Logger.getLogger("org.bukkit.plugin.java.JavaPluginLoader");
+    logger.setUseParentHandlers(false);
+    logger.setLevel(Level.OFF);
+    for (Handler handler : logger.getHandlers()) {
+      handler.setLevel(Level.OFF);
+    }
+
     Server server = Mockito.mock(Server.class);
-    Logger logger = Logger.getLogger("Minecraft");
 
     Mockito.when(server.getLogger()).thenReturn(logger);
 
