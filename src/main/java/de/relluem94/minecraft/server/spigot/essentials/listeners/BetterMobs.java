@@ -19,6 +19,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -68,8 +69,16 @@ public class BetterMobs implements ListenerConstruct {
   @EventHandler
   public void onSpawn(@NotNull CreatureSpawnEvent e) {
     EntityType et = e.getEntity().getType();
+
     if (et == EntityType.PHANTOM) {
-      e.setCancelled(true);
+      World world = e.getLocation().getWorld();
+      if (world == null) {
+        return;
+      }
+
+      boolean isPhantomSpawnDisabled = serviceContext.getWorldGroupService()
+          .isSettingActiveForWorld(WorldSetting.ENTITIES_SPAWN_PHANTOM, world.getName());
+      e.setCancelled(isPhantomSpawnDisabled);
     }
   }
 

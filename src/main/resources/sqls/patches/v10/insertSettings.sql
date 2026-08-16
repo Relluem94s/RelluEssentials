@@ -12,4 +12,5 @@ INSERT INTO `rellu_essentials`.`setting` (`ID`, `CREATED`, `CREATEDBY`, `name`) 
 (10, now(),1,'DEATH_CREATE_HOME'),
 (11, now(),1,'SCOREBOARD_SHOW'),
 (12, now(), 1, 'DEATH_CHEST_SPAWN'),
-(13, now(), 1, 'PROTECTION_NOTIFY_SELF');
+(13, now(), 1, 'PROTECTION_NOTIFY_SELF'),
+(14, now(), 1, 'ENTITIES_SPAWN_PHANTOM');
