@@ -1,3 +1,3 @@
 UPDATE rellu_essentials.setting_player
-SET UPDATED = ?, UPDATEDBY = ?, value = ?
+SET UPDATED = now(), UPDATEDBY = ?, value = ?
 WHERE ID = ?;

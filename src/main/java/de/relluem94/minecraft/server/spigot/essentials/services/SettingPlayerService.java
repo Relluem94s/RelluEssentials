@@ -1,20 +1,29 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerSetting;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingPlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SettingPlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.SettingPlayerRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.bukkit.entity.Player;
 
 public class SettingPlayerService {
 
   private final SettingPlayerRegistry settingPlayerRegistry;
   private final SettingPlayerRepository settingPlayerRepository;
+  private final ServiceContext serviceContext;
 
-  public SettingPlayerService(SettingPlayerRegistry settingPlayerRegistry, SettingPlayerRepository settingPlayerRepository) {
+  public SettingPlayerService(
+      SettingPlayerRegistry settingPlayerRegistry,
+      SettingPlayerRepository settingPlayerRepository,
+      ServiceContext serviceContext
+  ) {
     this.settingPlayerRegistry = settingPlayerRegistry;
     this.settingPlayerRepository = settingPlayerRepository;
+    this.serviceContext = serviceContext;
   }
 
   public void loadAllForPlayer(int playerId) {
@@ -53,13 +62,11 @@ public class SettingPlayerService {
   }
 
   public void insert(SettingPlayerEntry entry) {
-    entry.setCreated(LocalDateTime.now());
     settingPlayerRepository.insert(entry);
     settingPlayerRegistry.put(entry);
   }
 
   public void update(SettingPlayerEntry entry) {
-    entry.setUpdated(LocalDateTime.now());
     settingPlayerRepository.update(entry);
     settingPlayerRegistry.put(entry);
   }
@@ -67,5 +74,14 @@ public class SettingPlayerService {
   public void delete(int id, int deletedBy) {
     settingPlayerRepository.softDelete(id, deletedBy);
     settingPlayerRegistry.remove(id);
+  }
+
+  public boolean isSettingActiveForPlayer(Player player, PlayerSetting playerSetting) {
+    PlayerEntry playerEntry = serviceContext.getPlayerService().getPlayerEntry(player);
+    return findAllByPlayerId(playerEntry.getId()).stream()
+        .filter(entry -> playerSetting.name().equals(entry.getSettingEntry().getName()))
+        .findFirst()
+        .map(SettingPlayerEntry::isValue)
+        .orElse(false);
   }
 }

@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerSetting;
 import de.relluem94.minecraft.server.spigot.essentials.enums.PlayerState;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
@@ -70,10 +71,13 @@ public class BetterLock implements ListenerConstruct {
 
             }
           } else {
-            // If Notify protection self on
-            e.getPlayer().sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+            boolean isNotifySelfSettingActive = serviceContext.getSettingPlayerService()
+                .isSettingActiveForPlayer(e.getPlayer(), PlayerSetting.PROTECTION_NOTIFY_SELF);
+            if (isNotifySelfSettingActive) {
+              e.getPlayer().sendMessage(
+                  serviceContext.getTranslationService()
+                      .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+            }
 
             Openable openable = (Openable) b.getBlockData();
 
@@ -173,10 +177,13 @@ public class BetterLock implements ListenerConstruct {
               }
             }
           } else {
-            // If Notify protection self on
-            e.getPlayer().sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+            boolean isNotifySelfSettingActive = serviceContext.getSettingPlayerService()
+                .isSettingActiveForPlayer(e.getPlayer(), PlayerSetting.PROTECTION_NOTIFY_SELF);
+            if (isNotifySelfSettingActive) {
+              e.getPlayer().sendMessage(
+                  serviceContext.getTranslationService()
+                      .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+            }
           }
         }
       }
