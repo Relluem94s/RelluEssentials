@@ -32,11 +32,7 @@ public class ProtectionDao {
     }, ProtectionMapper::mapProtectionLock);
   }
 
-  public void deleteProtection(@NotNull ProtectionEntry pe) {
-    deleteById(pe.getLocationEntry().getPlayerId(), pe.getId());
-  }
-
-  public void deleteById(int playerId, int id) {
+  public void deleteById(int id, int playerId) {
     queryExecutor.executeUpdate("deleteProtection.sql", ps -> {
       ps.setInt(1, playerId);
       ps.setInt(2, id);
