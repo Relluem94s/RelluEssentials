@@ -61,7 +61,12 @@ class ReplaceCommandTest {
     when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
     when(serviceContext.getProtectionService()).thenReturn(protectionServiceMock);
 
-    replaceCommand = new ReplaceCommand(serviceContext, 2);
+    replaceCommand = new ReplaceCommand(serviceContext, 2){
+      @Override
+      protected boolean shareBlockDataType(Material fromMaterial, Material toMaterial) {
+        return false;
+      }
+    };
   }
 
   @Test

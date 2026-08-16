@@ -42,9 +42,6 @@ public class ReplaceCommand implements SubCommand {
       return;
     }
 
-    boolean sameBlockDataType = fromMaterial.createBlockData().getClass()
-        .equals(toMaterial.createBlockData().getClass());
-
     BlockService blockService = new BlockService(serviceContext.getSchedulerService(), toMaterial);
     BlockProcessor blockProcessor = new BlockProcessor(blocksPerTick);
     List<ModifyHistoryEntry> history = new ArrayList<>();
@@ -63,7 +60,7 @@ public class ReplaceCommand implements SubCommand {
       blockProcessor.process(block, blockService);
     });
 
-    if (sameBlockDataType) {
+    if (shareBlockDataType(fromMaterial, toMaterial)) {
       blockService.applyMaterial(0);
     } else {
       blockService.applyBlocks(0);
@@ -74,6 +71,11 @@ public class ReplaceCommand implements SubCommand {
         serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_MODIFY_REPLACE_STARTED, history.size(),
                 fromMaterial.name(), toMaterial.name()));
+  }
+
+  protected boolean shareBlockDataType(Material fromMaterial, Material toMaterial) {
+    return fromMaterial.createBlockData().getClass()
+        .equals(toMaterial.createBlockData().getClass());
   }
 
   @Override
