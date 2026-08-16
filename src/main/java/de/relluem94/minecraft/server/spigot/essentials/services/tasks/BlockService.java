@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.services.tasks;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import java.util.HashMap;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
@@ -74,6 +75,26 @@ public class BlockService {
     locations.forEach((location, delay) ->
         schedulerService.scheduleSyncDelayedTask(
             () -> location.getBlock().setType(targetMaterial),
+            Math.abs(delay + additionalDelay)
+        )
+    );
+  }
+
+  public void applyMaterial(long additionalDelay) {
+    locations.forEach((location, delay) ->
+        schedulerService.scheduleSyncDelayedTask(
+            () -> {
+              String existingDataString = location.getBlock().getBlockData().getAsString();
+              String newDataString = existingDataString.replace(
+                  location.getBlock().getType().getKey().toString(),
+                  targetMaterial.getKey().toString()
+              );
+              try {
+                location.getBlock().setBlockData(Bukkit.createBlockData(newDataString));
+              } catch (IllegalArgumentException e) {
+                location.getBlock().setType(targetMaterial);
+              }
+            },
             Math.abs(delay + additionalDelay)
         )
     );

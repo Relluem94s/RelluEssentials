@@ -42,6 +42,9 @@ public class ReplaceCommand implements SubCommand {
       return;
     }
 
+    boolean sameBlockDataType = fromMaterial.createBlockData().getClass()
+        .equals(toMaterial.createBlockData().getClass());
+
     BlockService blockService = new BlockService(serviceContext.getSchedulerService(), toMaterial);
     BlockProcessor blockProcessor = new BlockProcessor(blocksPerTick);
     List<ModifyHistoryEntry> history = new ArrayList<>();
@@ -60,7 +63,12 @@ public class ReplaceCommand implements SubCommand {
       blockProcessor.process(block, blockService);
     });
 
-    blockService.applyBlocks(0);
+    if (sameBlockDataType) {
+      blockService.applyMaterial(0);
+    } else {
+      blockService.applyBlocks(0);
+    }
+
     serviceContext.getUndoHistoryService().addHistory(player, history);
     player.sendMessage(
         serviceContext.getTranslationService()
