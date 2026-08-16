@@ -42,6 +42,12 @@ public class ProtectionCleanUpService {
             Location l = locations.get(index[0]);
             ProtectionEntry pe = protectionEntryList.get(l);
 
+            if (l.getWorld() == null) {
+              index[0]++;
+              processed++;
+              continue;
+            }
+
             if (!l.getChunk().isLoaded()) {
               l.getChunk().load();
             }
@@ -84,6 +90,10 @@ public class ProtectionCleanUpService {
                       .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_END,
                           serviceContext.getProtectionService().getAllProtectionEntries()
                               .size()));
+              p.sendMessage(
+                  serviceContext.getTranslationService()
+                      .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END,
+                          removeMap.size()));
             }
           }
         },
@@ -91,11 +101,6 @@ public class ProtectionCleanUpService {
         300L
     );
 
-    int deleted = serviceContext.getProtectionService()
-        .removeOutdatedProtectionsFromDatabaseAndRegistry();
-    p.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END,
-                deleted));
+    serviceContext.getProtectionService().removeOutdatedProtectionsFromDatabaseAndRegistry();
   }
 }

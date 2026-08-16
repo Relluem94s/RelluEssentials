@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -168,12 +169,17 @@ public class SchedulerService {
   }
 
   public BukkitTask runTaskTimer(Consumer<BukkitTask> task, long delay, long period) {
-    return scheduler().runTaskTimer(plugin, (Runnable) task, delay, period);
+    AtomicReference<BukkitTask> taskReference = new AtomicReference<>();
+    BukkitTask bukkitTask = scheduler().runTaskTimer(plugin, () -> task.accept(taskReference.get()), delay, period);
+    taskReference.set(bukkitTask);
+    return bukkitTask;
   }
 
-
   public BukkitTask runTaskTimerAsynchronously(Consumer<BukkitTask> task, long delay, long period) {
-    return scheduler().runTaskTimerAsynchronously(plugin, (Runnable) task, delay, period);
+    AtomicReference<BukkitTask> taskReference = new AtomicReference<>();
+    BukkitTask bukkitTask = scheduler().runTaskTimerAsynchronously(plugin, () -> task.accept(taskReference.get()), delay, period);
+    taskReference.set(bukkitTask);
+    return bukkitTask;
   }
 
   /**
