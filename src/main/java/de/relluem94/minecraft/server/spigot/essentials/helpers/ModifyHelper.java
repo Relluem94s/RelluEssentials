@@ -14,6 +14,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -34,10 +36,10 @@ public class ModifyHelper {
   public static int @NonNull [] worldToLocal(int dx, int dz, float yaw) {
     int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
     return switch (roundedYaw) {
-      case 90 -> new int[]{-dz, dx};
+      case 90  -> new int[]{ dz, -dx};
       case 180 -> new int[]{-dx, -dz};
-      case 270 -> new int[]{dz, -dx};
-      default -> new int[]{dx, dz};
+      case 270 -> new int[]{-dz,  dx};
+      default  -> new int[]{ dx,  dz};
     };
   }
 
@@ -45,11 +47,23 @@ public class ModifyHelper {
   public static int @NonNull [] relativeToWorld(int relX, int relZ, float yaw) {
     int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
     return switch (roundedYaw) {
-      case 90 -> new int[]{-relZ, relX};
+      case 90  -> new int[]{-relZ,  relX};
       case 180 -> new int[]{-relX, -relZ};
-      case 270 -> new int[]{relZ, -relX};
-      default -> new int[]{relX, relZ};
+      case 270 -> new int[]{ relZ, -relX};
+      default  -> new int[]{ relX,  relZ};
     };
+  }
+
+  public static BlockData rotateBlockData(BlockData original, float yaw) {
+    int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
+    BlockData rotated = original.clone();
+    switch (roundedYaw) {
+      case 90  -> rotated.rotate(StructureRotation.CLOCKWISE_90);
+      case 180 -> rotated.rotate(StructureRotation.CLOCKWISE_180);
+      case 270 -> rotated.rotate(StructureRotation.COUNTERCLOCKWISE_90);
+      default  -> {}
+    }
+    return rotated;
   }
 
   public static @NonNull Block getBlock(@NonNull ModifyClipboardEntry entry, float yaw,

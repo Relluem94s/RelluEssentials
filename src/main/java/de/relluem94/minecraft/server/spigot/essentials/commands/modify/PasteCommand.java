@@ -6,6 +6,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelp
 import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 
 public class PasteCommand implements SubCommand {
@@ -38,7 +40,6 @@ public class PasteCommand implements SubCommand {
       return;
     }
 
-    List<ModifyHistoryEntry> history = new ArrayList<>();
     final long[] currentDelay = {0};
     final int[] counter = {0};
 
@@ -49,6 +50,7 @@ public class PasteCommand implements SubCommand {
 
     float yaw = normalizeYaw(player.getLocation().getYaw());
 
+    List<ModifyHistoryEntry> history = new ArrayList<>();
     for (ModifyClipboardEntry entry : clipboardEntry.getSecondValue()) {
       Block block = getBlock(entry, yaw, playerTargetLoc);
 
@@ -56,10 +58,13 @@ public class PasteCommand implements SubCommand {
           new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData()));
       serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
 
+      BlockData rotatedData = ModifyHelper.rotateBlockData(entry.getData(), yaw);
+
       serviceContext.getSchedulerService().runTaskLater(() -> {
-          block.setType(entry.getMaterial());
-          block.setBlockData(entry.getData());
-        }, currentDelay[0]);
+        block.setType(entry.getMaterial());
+        block.setBlockData(rotatedData);
+      }, currentDelay[0]);
+
 
       counter[0]++;
       if (counter[0] >= blocksPerTick) {
