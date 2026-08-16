@@ -50,7 +50,7 @@ public class ProtectionDao {
 
   public void insertProtection(@NotNull ProtectionEntry pe) {
     queryExecutor.executeUpdate("insertProtection.sql", ps -> {
-      ps.setInt(1, pe.getLocationEntry().getPlayerId());
+      ps.setInt(1, pe.getCreatedBy());
       ps.setInt(2, pe.getLocationEntry().getId());
       ps.setString(3, pe.getMaterialName());
       ps.setString(4, pe.getFlags().toString());

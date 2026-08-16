@@ -12,6 +12,8 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -104,7 +106,7 @@ public class ProtectionActionService {
 
   public boolean protectBlock(Player p, Block b) {
     if (!serviceContext.getProtectionService().isProtectableMaterial(b.getType())) {
-      return true;
+      return false;
     }
 
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
@@ -122,10 +124,16 @@ public class ProtectionActionService {
     }
 
     serviceContext.getLocationService().save(serviceContext.getLocationService()
-        .buildLocationEntry(p, null, LocationType.PROTECTION, pe.getId()));
+        .buildLocationEntry(b.getLocation(), null, LocationType.PROTECTION, pe.getId()));
 
     LocationEntry persistedLocationEntry = serviceContext.getLocationService()
         .findByLocationAndType(b.getLocation(), LocationType.PROTECTION);
+
+    if (persistedLocationEntry == null) {
+      Logger.getLogger(ProtectionActionService.class.getName()).log(Level.INFO, "ERROR: {0}", b.getType().name());
+
+      return false;
+    }
 
     ProtectionEntry bpe = new ProtectionEntry();
     bpe.setCreatedBy(pe.getId());

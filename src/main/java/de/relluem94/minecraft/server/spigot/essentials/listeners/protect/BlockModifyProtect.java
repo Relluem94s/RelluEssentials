@@ -22,8 +22,14 @@ public class BlockModifyProtect implements ListenerConstruct {
 
   @EventHandler
   public void placeBlocks(@NotNull BlockPlaceEvent e) {
-    e.setCancelled(
-        !serviceContext.getProtectionActionService().protectBlock(e.getPlayer(), e.getBlock()));
+    boolean isProtectable = serviceContext.getProtectionService()
+        .isProtectableMaterial(e.getBlock().getType());
+    boolean protectionSucceeded = serviceContext.getProtectionActionService()
+        .protectBlock(e.getPlayer(), e.getBlock());
+
+    if (isProtectable && !protectionSucceeded) {
+      e.setCancelled(true);
+    }
   }
 
   @EventHandler

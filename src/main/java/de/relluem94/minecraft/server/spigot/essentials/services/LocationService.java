@@ -64,15 +64,20 @@ public class LocationService {
         .orElseThrow(() -> new IllegalStateException(PLUGIN_EXCEPTION_LOCATION_TYPE_NOT_FOUND));
   }
 
-  public LocationEntry buildLocationEntry(@NotNull Player player, String name, LocationType type,
+  public LocationEntry buildLocationEntry(@NotNull Location location, String name, LocationType type,
       int playerId) {
     LocationTypeEntry typeEntry = resolveType(type);
     LocationEntry locationEntry = new LocationEntry();
-    locationEntry.setLocation(player.getLocation());
+    locationEntry.setLocation(location);
     locationEntry.setLocationName(name);
     locationEntry.setLocationType(typeEntry);
     locationEntry.setPlayerId(playerId);
     return locationEntry;
+  }
+
+  public LocationEntry buildLocationEntry(@NotNull Player player, String name, LocationType type,
+      int playerId) {
+    return buildLocationEntry(player.getLocation(), name, type, playerId);
   }
 
   public List<LocationEntry> findByType(LocationType type) {
