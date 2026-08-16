@@ -40,6 +40,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
+import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
@@ -199,6 +200,7 @@ public class ServiceManager implements Enable {
     ProtectionCleanUpService protectionCleanUpService = new ProtectionCleanUpService(
         serviceContext);
     serviceContext.setProtectionCleanUpService(protectionCleanUpService);
+    serviceContext.setDeathChestService(new DeathChestService(serviceContext));
   }
 
   public void preEnable(RelluEssentials relluEssentials) {
