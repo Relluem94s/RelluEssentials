@@ -1,15 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.npcs;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import org.bukkit.Bukkit;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import org.bukkit.entity.Mannequin;
 
 public class NpcMannequinAttributeApplier {
 
-  private NpcMannequinAttributeApplier() {}
+  private final ServiceContext serviceContext;
 
-  public static void applyAttributes(Mannequin mannequin) {
-    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), () -> {
+  public NpcMannequinAttributeApplier(ServiceContext serviceContext) {
+    this.serviceContext = serviceContext;
+  }
+
+  public void applyAttributes(Mannequin mannequin) {
+    serviceContext.getSchedulerService().runTaskLater(() -> {
       mannequin.setInvulnerable(true);
       mannequin.setCollidable(false);
       mannequin.setCanPickupItems(false);

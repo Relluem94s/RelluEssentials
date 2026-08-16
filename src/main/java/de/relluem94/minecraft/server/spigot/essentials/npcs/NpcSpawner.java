@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.npcs;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,9 +19,13 @@ import org.jspecify.annotations.NonNull;
 public class NpcSpawner {
 
   private final NamespacedKey npcIdKey;
+  private final ServiceContext serviceContext;
+  private final NpcMannequinAttributeApplier npcMannequinAttributeApplier;
 
-  public NpcSpawner() {
+  public NpcSpawner(ServiceContext serviceContext) {
     this.npcIdKey = new NamespacedKey(RelluEssentials.getInstance(), "npc_id");
+    this.serviceContext = serviceContext;
+    npcMannequinAttributeApplier = new NpcMannequinAttributeApplier(serviceContext);
   }
 
   public Optional<UUID> spawnMannequin(@NonNull Npc npc) {
@@ -46,7 +51,7 @@ public class NpcSpawner {
       PlayerProfile profile = Bukkit.createPlayerProfile(npc.getProfileName());
       mannequin.setPlayerProfile(profile);
       mannequin.getPersistentDataContainer().set(npcIdKey, PersistentDataType.STRING, npc.getId().toString());
-      NpcMannequinAttributeApplier.applyAttributes(mannequin);
+      npcMannequinAttributeApplier.applyAttributes(mannequin);
       return Optional.of(mannequin.getUniqueId());
     }
 
@@ -56,7 +61,7 @@ public class NpcSpawner {
   private UUID applyMannequinAttributes(UUID entityUUID) {
     Entity entity = Bukkit.getEntity(entityUUID);
     if (entity instanceof Mannequin mannequin) {
-      NpcMannequinAttributeApplier.applyAttributes(mannequin);
+      npcMannequinAttributeApplier.applyAttributes(mannequin);
     }
     return entityUUID;
   }
