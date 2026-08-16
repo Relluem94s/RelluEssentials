@@ -94,7 +94,7 @@ public class RelluEssentials extends JavaPlugin {
     ServiceManager serviceManager = new ServiceManager();
     serviceManager.preEnable(this);
     startLoading();
-    RelluEssentialsRegistry.initialize(serviceContext.getTranslationService());
+    RelluEssentialsRegistry.initialize(getServiceContext().getTranslationService());
 
     configManager = new ConfigManager();
     configManager.enable(this);
@@ -129,16 +129,19 @@ public class RelluEssentials extends JavaPlugin {
     stopLoading();
     worldManager = new WorldManager();
     worldManager.enable(this);
-    serviceContext.getSchedulerService()
-        .runTaskLater(() -> serviceContext.getNpcService().loadAndSpawnNpcsInLoadedChunks(), 20L);
+    if (isUnitTest) {
+      return;
+    }
+    getServiceContext().getSchedulerService()
+        .runTaskLater(() -> getServiceContext().getNpcService().loadAndSpawnNpcsInLoadedChunks(), 20L);
   }
 
   @Override
   public void onDisable() {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
-    if (serviceContext.getNpcService() != null) {
-      serviceContext.getNpcService().despawnAllNPCs();
+        getServiceContext().getTranslationService().get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
+    if (getServiceContext().getNpcService() != null) {
+      getServiceContext().getNpcService().despawnAllNPCs();
     }
     SudoManager sudoManager = new SudoManager();
     sudoManager.disable(this);
@@ -149,6 +152,9 @@ public class RelluEssentials extends JavaPlugin {
 
   private void startLoading() {
     setInstance(this);
+    if (isUnitTest) {
+      return;
+    }
     consoleSendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
@@ -157,6 +163,9 @@ public class RelluEssentials extends JavaPlugin {
   }
 
   private void stopLoading() {
+    if (isUnitTest) {
+      return;
+    }
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         serviceContext.getTranslationService()

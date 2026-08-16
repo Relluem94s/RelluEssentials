@@ -33,7 +33,7 @@ import org.jspecify.annotations.NonNull;
 
 public class ScoreBoardManager implements Enable {
 
-  public static final ScoreboardManager sm = Bukkit.getServer().getScoreboardManager();
+  private static ScoreboardManager sm;
   private static final Map<UUID, Scoreboard> playerBoards = new HashMap<>();
   private static final Set<UUID> hiddenBoards = new HashSet<>(); // NEU
   private static TranslationService translationService;
@@ -131,10 +131,11 @@ public class ScoreBoardManager implements Enable {
 
   @Override
   public void enable(Plugin plugin) {
-
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
     ServiceContext serviceContext = relluEssentialsPlugin.getServiceContext();
     translationService = serviceContext.getTranslationService();
+
+    sm = plugin.getServer().getScoreboardManager();
 
     Bukkit.getOnlinePlayers().forEach(
         (player) -> ScoreBoardManager.applyToPlayer(player, serviceContext.getWorldGroupService()));
