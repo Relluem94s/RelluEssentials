@@ -40,8 +40,6 @@ import org.jspecify.annotations.Nullable;
  */
 public class ItemHelper implements IItemHelper {
 
-  private static final String COST_KEY_NAME = "item_cost";
-
   @Getter
   private final ItemStack is;
 
@@ -65,6 +63,7 @@ public class ItemHelper implements IItemHelper {
   private Integer cost;
 
   /**
+   * Constructs a new ItemHelper.
    *
    * @param material    Bukkit Material
    * @param amount      Integer
@@ -84,6 +83,7 @@ public class ItemHelper implements IItemHelper {
   }
 
   /**
+   * Constructs a new ItemHelper.
    *
    * @param material    Bukkit Material
    * @param amount      Integer
@@ -114,6 +114,7 @@ public class ItemHelper implements IItemHelper {
   }
 
   /**
+   * Constructs a new ItemHelper.
    *
    * @param is          ItemStack
    * @param displayName String
@@ -131,6 +132,7 @@ public class ItemHelper implements IItemHelper {
   }
 
   /**
+   * Constructs a new ItemHelper.
    *
    * @param is          ItemStack
    * @param displayName String

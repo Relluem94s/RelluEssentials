@@ -14,15 +14,17 @@ import org.bukkit.inventory.Inventory;
 public class BagSalesmanNpc extends TraderNpc {
 
   private final ServiceContext serviceContext;
+  private final RelluEssentials relluEssentials;
 
-  public BagSalesmanNpc(ServiceContext serviceContext) {
+  public BagSalesmanNpc(ServiceContext serviceContext, RelluEssentials relluEssentials) {
     super(ItemConstants.PLUGIN_ITEM_NPC_BAGSALESMAN, Profession.LEATHERWORKER, Type.TRADER);
     this.serviceContext = serviceContext;
+    this.relluEssentials = relluEssentials;
   }
 
   private ItemHelper resolveCloseItem() {
     return ItemRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+            RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
   }
 

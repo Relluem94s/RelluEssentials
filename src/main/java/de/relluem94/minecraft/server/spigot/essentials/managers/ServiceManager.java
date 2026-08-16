@@ -4,6 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcMannequinAttributeApplier;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BagSalesmanNpc;
@@ -44,6 +45,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ItemRegistryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
@@ -63,6 +65,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryServi
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
+import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 
 public class ServiceManager implements Enable {
@@ -96,10 +99,10 @@ public class ServiceManager implements Enable {
     TraderNpcRegistry traderNpcRegistry = new TraderNpcRegistry(
         serviceContext.getTranslationService());
     BankerNpc bankerNpc = new BankerNpc(serviceContext);
-    traderNpcRegistry.addNPC(new BagSalesmanNpc(serviceContext));
+    traderNpcRegistry.addNPC(new BagSalesmanNpc(serviceContext, relluEssentials));
     traderNpcRegistry.addNPC(bankerNpc);
-    traderNpcRegistry.addNPC(new BeekeeperNpc(serviceContext));
-    traderNpcRegistry.addNPC(new EnchanterNpc(serviceContext));
+    traderNpcRegistry.addNPC(new BeekeeperNpc(serviceContext, relluEssentials));
+    traderNpcRegistry.addNPC(new EnchanterNpc(serviceContext, relluEssentials));
     TraderNpcService traderNpcService = new TraderNpcService(traderNpcRegistry, traderNpcRepository,
         bankerNpc);
     traderNpcService.loadAndInitialiseNpcs();
@@ -178,7 +181,8 @@ public class ServiceManager implements Enable {
 
     NpcRepository npcRepository = new NpcRepository(
         relluEssentials.getPersistenceContext().getNpcDao());
-    NpcSpawner npcSpawner = new NpcSpawner();
+    NpcSpawner npcSpawner = new NpcSpawner(relluEssentials.getServer(),
+        new NamespacedKey(relluEssentials, "npc_id"), new NpcMannequinAttributeApplier(serviceContext));
     NpcValidator npcValidator = new NpcValidator();
     NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
     serviceContext.setNpcService(npcService);
@@ -211,6 +215,8 @@ public class ServiceManager implements Enable {
         persistenceContext.getSettingPlayerDao());
     serviceContext.setSettingPlayerService(
         new SettingPlayerService(settingPlayerRegistry, settingPlayerRepository, serviceContext));
+
+    serviceContext.setItemRegistryService(new ItemRegistryService(relluEssentials));
   }
 
   public void preEnable(RelluEssentials relluEssentials) {
