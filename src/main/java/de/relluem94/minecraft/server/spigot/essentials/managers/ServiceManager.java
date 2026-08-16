@@ -210,7 +210,7 @@ public class ServiceManager implements Enable {
     SettingPlayerRepository settingPlayerRepository = new SettingPlayerRepository(
         persistenceContext.getSettingPlayerDao());
     serviceContext.setSettingPlayerService(
-        new SettingPlayerService(settingPlayerRegistry, settingPlayerRepository));
+        new SettingPlayerService(settingPlayerRegistry, settingPlayerRepository, serviceContext));
   }
 
   public void preEnable(RelluEssentials relluEssentials) {

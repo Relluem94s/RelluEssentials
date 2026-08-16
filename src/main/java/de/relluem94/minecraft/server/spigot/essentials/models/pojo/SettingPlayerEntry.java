@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.pojo;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +12,14 @@ import lombok.Setter;
 public class SettingPlayerEntry {
 
   private int id;
-  private LocalDateTime created;
+  private String created;
   private int createdBy;
-  private LocalDateTime updated;
+  private String updated;
   private Integer updatedBy;
-  private LocalDateTime deleted;
+  private String deleted;
   private Integer deletedBy;
   private int playerFk;
   private int settingFk;
-  private String value;
+  private SettingEntry settingEntry;
+  private boolean value;
 }

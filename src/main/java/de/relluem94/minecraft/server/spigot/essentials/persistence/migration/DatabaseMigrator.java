@@ -238,6 +238,11 @@ public class DatabaseMigrator {
     executeScript(v + "updateWorldGroupSettings_newColumn.sql");
     executeScript(v + "updateWorldGroupSettings_moveValues.sql");
     executeScript(v + "updateWorldGroupSettings_removeColumnAndRename.sql");
+    executeScript(v + "updatePlayerSettings_newColumn.sql");
+    executeScript(v + "updatePlayerSettings_moveValues.sql");
+    executeScript(v + "updatePlayerSettings_removeColumnAndRename.sql");
+    executeScript(v + "updatePluginSetting_newColumn.sql");
+    executeScript(v + "updatePluginSetting_removeColumnAndRename.sql");
     executeScript(v + "createCustomNPC.sql");
     executeScript(v + "createCustomNPCDialogue.sql");
     executeScript(v + INSERT_NEW_DB_VERSION);

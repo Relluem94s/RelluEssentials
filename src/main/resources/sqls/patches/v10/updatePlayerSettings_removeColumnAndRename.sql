@@ -1,8 +1,8 @@
 /**
  * Author:  rellu
- * Created: 15.07.2026
+ * Created: 16.08.2026
  */
 
-ALTER TABLE `rellu_essentials`.`world_group_setting`
+ALTER TABLE `rellu_essentials`.`setting_player`
 DROP COLUMN `value`,
 RENAME COLUMN `value_new` TO `value`;

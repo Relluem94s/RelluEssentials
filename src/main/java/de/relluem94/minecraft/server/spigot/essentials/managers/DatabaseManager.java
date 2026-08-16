@@ -98,7 +98,7 @@ public class DatabaseManager implements Enable {
     persistenceContext.setPluginInformationDao(new PluginInformationDao(queryExecutor));
     persistenceContext.setProtectionDao(new ProtectionDao(queryExecutor));
     persistenceContext.setSettingDao(new SettingDao(queryExecutor));
-    persistenceContext.setSettingPlayerDao(new SettingPlayerDao(queryExecutor));
+    persistenceContext.setSettingPlayerDao(new SettingPlayerDao(queryExecutor, serviceContext));
     persistenceContext.setBagDao(new BagDao(queryExecutor));
     persistenceContext.setBankDao(new BankDao(queryExecutor));
     persistenceContext.setTraderNpcDao(new TraderNpcDao(dataSource, sqlResourceLoader));
