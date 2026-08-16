@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
@@ -71,6 +72,14 @@ public class Bags implements CommandConstruct {
     Player p = (Player) commandSender;
 
     if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "user")) {
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      return true;
+    }
+
+    boolean bagsEnabled = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.COLLECT_BAG, p.getWorld().getName());
+
+    if(!bagsEnabled){
       p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
