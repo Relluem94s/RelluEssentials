@@ -45,6 +45,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ItemRegistryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
@@ -214,6 +215,8 @@ public class ServiceManager implements Enable {
         persistenceContext.getSettingPlayerDao());
     serviceContext.setSettingPlayerService(
         new SettingPlayerService(settingPlayerRegistry, settingPlayerRepository, serviceContext));
+
+    serviceContext.setItemRegistryService(new ItemRegistryService(relluEssentials));
   }
 
   public void preEnable(RelluEssentials relluEssentials) {

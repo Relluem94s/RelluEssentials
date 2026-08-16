@@ -4,10 +4,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
@@ -16,11 +14,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import java.util.List;
 import java.util.Map;
@@ -67,18 +63,6 @@ public class InventoryClickNpc implements ListenerConstruct {
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
     tradeHandler = new NpcTradeHandler(context);
-  }
-
-  private ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow();
-  }
-
-  private ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
-        .orElseThrow();
   }
 
   @EventHandler
@@ -146,7 +130,8 @@ public class InventoryClickNpc implements ListenerConstruct {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
           serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGUI());
-    } else if (resolveCloseItem().equalsExact(clickedItem)) {
+    } else if (serviceContext.getItemRegistryService()
+        .findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {
       bankerDepositActions.entrySet().stream()
@@ -189,7 +174,9 @@ public class InventoryClickNpc implements ListenerConstruct {
       return;
     }
 
-    if (!resolveDisabledItem().getCustomItem().equals(e.getCurrentItem())) {
+    if (!serviceContext.getItemRegistryService()
+        .findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).getCustomItem()
+        .equals(e.getCurrentItem())) {
       player.getInventory().addItem(e.getCurrentItem().clone());
     }
   }
@@ -199,7 +186,9 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (e.getCurrentItem() == null) {
       return;
     }
-    if (resolveDisabledItem().getCustomItem().equals(e.getCurrentItem())) {
+    if (serviceContext.getItemRegistryService()
+        .findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).getCustomItem()
+        .equals(e.getCurrentItem())) {
       return;
     }
     if (e.getCurrentItem().getItemMeta() == null) {

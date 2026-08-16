@@ -7,7 +7,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
@@ -15,7 +14,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BuyBackSlotResolver;
@@ -27,7 +25,6 @@ import java.util.Optional;
 import java.util.UUID;
 import lombok.NonNull;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -47,15 +44,9 @@ public class NpcTradeHandler {
   private final ServiceContext serviceContext;
 
   public NpcTradeHandler(ServiceContext serviceContext) {
-    this.disabledItem = ItemRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow();
-    this.closeItem = ItemRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
-        .orElseThrow();
-    this.coinsItem = ItemRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
-        .orElseThrow();
+    this.disabledItem = serviceContext.getItemRegistryService().findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED);
+    this.closeItem = serviceContext.getItemRegistryService().findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE);
+    this.coinsItem = serviceContext.getItemRegistryService().findByNamespace(PLUGIN_ITEM_NAMESPACE_COINS);
 
     this.buyBackSlotResolver = new BuyBackSlotResolver(
         serviceContext.getBuyBackService(), this.disabledItem.getCustomItem());
@@ -71,7 +62,7 @@ public class NpcTradeHandler {
     }
 
     if (disabledItem.equalsExact(clickedItem)) {
-      player.playSound(player.getLocation(), Sound.ENTITY_CHICKEN_STEP, 1f, 1f);
+      player.playSound(player.getLocation(), "ENTITY_CHICKEN_STEP", 1f, 1f);
       return;
     }
 
@@ -340,7 +331,7 @@ public class NpcTradeHandler {
             .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY, itemDisplayName,
                 StringHelper.formatDouble(totalCost), PLUGIN_NAME_MONEY,
                 StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
-    player.playSound(player, Sound.ENTITY_WANDERING_TRADER_YES, SoundCategory.MASTER, 1f, 1f);
+    player.playSound(player, "ENTITY_WANDERING_TRADER_YES", SoundCategory.MASTER, 1f, 1f);
   }
 
   private ItemStack resolveCleanPurchasedItem(ItemStack guiItem, int amount) {
@@ -456,7 +447,7 @@ public class NpcTradeHandler {
             .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL, itemDisplayName,
                 StringHelper.formatDouble(totalEarnings), PLUGIN_NAME_MONEY,
                 StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
-    player.playSound(player, Sound.ENTITY_WANDERING_TRADER_NO, SoundCategory.MASTER, 1f, 1f);
+    player.playSound(player, "ENTITY_WANDERING_TRADER_NO", SoundCategory.MASTER, 1f, 1f);
   }
 
   private int removeAllMatchingItemsFromInventory(@NonNull Player player, ItemStack targetItem) {
