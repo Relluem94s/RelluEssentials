@@ -1,7 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.npcs;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,10 +20,11 @@ public class NpcSpawner {
   private final NamespacedKey npcIdKey;
   private final NpcMannequinAttributeApplier npcMannequinAttributeApplier;
 
-  public NpcSpawner(Server server, ServiceContext serviceContext) {
+  public NpcSpawner(Server server, NamespacedKey npcIdKey,
+      NpcMannequinAttributeApplier npcMannequinAttributeApplier) {
     this.server = server;
-    this.npcIdKey = new NamespacedKey(RelluEssentials.getInstance(), "npc_id");
-    npcMannequinAttributeApplier = new NpcMannequinAttributeApplier(serviceContext);
+    this.npcIdKey = npcIdKey;
+    this.npcMannequinAttributeApplier = npcMannequinAttributeApplier;
   }
 
   public Optional<UUID> spawnMannequin(@NonNull Npc npc) {

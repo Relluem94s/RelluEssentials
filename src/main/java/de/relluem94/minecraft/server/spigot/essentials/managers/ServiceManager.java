@@ -4,6 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcMannequinAttributeApplier;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcSpawner;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.NpcValidator;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BagSalesmanNpc;
@@ -63,6 +64,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryServi
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
+import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 
 public class ServiceManager implements Enable {
@@ -178,7 +180,8 @@ public class ServiceManager implements Enable {
 
     NpcRepository npcRepository = new NpcRepository(
         relluEssentials.getPersistenceContext().getNpcDao());
-    NpcSpawner npcSpawner = new NpcSpawner(relluEssentials.getServer(), serviceContext);
+    NpcSpawner npcSpawner = new NpcSpawner(relluEssentials.getServer(),
+        new NamespacedKey(relluEssentials, "npc_id"), new NpcMannequinAttributeApplier(serviceContext));
     NpcValidator npcValidator = new NpcValidator();
     NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
     serviceContext.setNpcService(npcService);
