@@ -144,8 +144,9 @@ public class BetterMobs implements ListenerConstruct {
             )
         );
       }
-
-      if (serviceContext.getBagService().hasBags(pe.getId())) {
+      boolean collectBagEnabled = serviceContext.getWorldGroupService()
+          .isSettingActiveForWorld(WorldSetting.COLLECT_BAG, world.getName());
+      if (serviceContext.getBagService().hasBags(pe.getId()) && collectBagEnabled) {
         List<ItemStack> li = new ArrayList<>(e.getDrops());
         e.getDrops().removeAll(serviceContext.getBagService().collectItemStacks(li, p, pe));
       }

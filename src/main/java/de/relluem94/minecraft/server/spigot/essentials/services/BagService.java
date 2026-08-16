@@ -50,7 +50,6 @@ public class BagService {
   private final BagRegistry bagRegistry;
   private final BagRepository bagRepository;
   private final BagTypeRegistry bagTypeRegistry;
-  private final BagTypeRepository bagTypeRepository;
   private final ServiceContext serviceContext;
   private final List<ItemStack> bagBlocks2collect = new ArrayList<>();
 
@@ -65,7 +64,6 @@ public class BagService {
     this.bagRegistry = bagRegistry;
     this.bagRepository = bagRepository;
     this.bagTypeRegistry = bagTypeRegistry;
-    this.bagTypeRepository = bagTypeRepository;
     for (BagTypeEntry bagTypeEntry : this.bagTypeRegistry.getAll()) {
       Collections.addAll(this.bagBlocks2collect, getItemStacks(bagTypeEntry));
     }
