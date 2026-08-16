@@ -15,6 +15,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_WORLD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_YAW;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcDialogueEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.NpcEntry;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 public class NpcMapper {
 
   private NpcMapper() {
+    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
   public static NpcEntry mapNPC(ResultSet rs) throws SQLException {
