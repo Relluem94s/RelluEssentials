@@ -16,10 +16,16 @@ public class QueryExecutor {
 
   private final DataSource dataSource;
   private final SqlResourceLoader sqlResourceLoader;
+  private final Logger logger;
 
   public QueryExecutor(DataSource dataSource, SqlResourceLoader sqlResourceLoader) {
+    this(dataSource, sqlResourceLoader, Logger.getLogger(QueryExecutor.class.getName()));
+  }
+
+  QueryExecutor(DataSource dataSource, SqlResourceLoader sqlResourceLoader, Logger logger) {
     this.dataSource = dataSource;
     this.sqlResourceLoader = sqlResourceLoader;
+    this.logger = logger;
   }
 
   public void queryForEach(String sqlFile, StatementConfigurer configurer, RowConsumer consumer) {
@@ -34,7 +40,7 @@ public class QueryExecutor {
         }
       }
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
     }
   }
 
@@ -52,7 +58,7 @@ public class QueryExecutor {
         }
       }
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
     }
     return results;
   }
@@ -69,7 +75,7 @@ public class QueryExecutor {
         }
       }
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
     }
     return null;
   }
@@ -81,18 +87,7 @@ public class QueryExecutor {
       configurer.configure(ps);
       ps.execute();
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-    }
-  }
-
-  private int executeUpdateWithCount(String sqlFile) {
-    try (Connection connection = dataSource.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/" + sqlFile))) {
-      return ps.executeUpdate();
-    } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-      return 0;
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
     }
   }
 
@@ -103,7 +98,7 @@ public class QueryExecutor {
       configurer.configure(ps);
       return ps.executeUpdate();
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
       return 0;
     }
   }
@@ -121,7 +116,7 @@ public class QueryExecutor {
         }
       }
     } catch (SQLException | FileNotFoundException ex) {
-      Logger.getLogger(QueryExecutor.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
     }
     return -1;
   }
