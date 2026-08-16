@@ -114,10 +114,16 @@ public class BetterMobs implements ListenerConstruct {
       EntityCoins entityCoins = EntityCoins.from(e.getEntity().getType());
       int coinsPerDeath = entityCoins.getCoins();
 
-      if (coinsPerDeath > 0) {
-        Player p = e.getEntity().getKiller();
-        PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
+      World world = e.getEntity().getWorld();
+      if (world == null) {
+        return;
+      }
 
+      boolean isEntitiesDropCoinsActive = serviceContext.getWorldGroupService()
+          .isSettingActiveForWorld(WorldSetting.ENTITIES_DROP_COINS, world.getName());
+      Player p = e.getEntity().getKiller();
+      PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
+      if (coinsPerDeath > 0 && isEntitiesDropCoinsActive) {
         boolean hasScavengers = p.getInventory().getItemInMainHand().hasItemMeta()
             && scavengers != null
             && hasEnchant(p.getInventory().getItemInMainHand(), scavengers);
@@ -137,23 +143,23 @@ public class BetterMobs implements ListenerConstruct {
                 PLUGIN_NAME_MONEY
             )
         );
+      }
 
-        if (serviceContext.getBagService().hasBags(pe.getId())) {
-          List<ItemStack> li = new ArrayList<>(e.getDrops());
-          e.getDrops().removeAll(serviceContext.getBagService().collectItemStacks(li, p, pe));
-        }
+      if (serviceContext.getBagService().hasBags(pe.getId())) {
+        List<ItemStack> li = new ArrayList<>(e.getDrops());
+        e.getDrops().removeAll(serviceContext.getBagService().collectItemStacks(li, p, pe));
+      }
 
-        if (p.getInventory().getItemInMainHand().hasItemMeta() && telekinesis != null
-            && hasEnchant(p.getInventory().getItemInMainHand(), telekinesis)) {
-          List<ItemStack> lis = new ArrayList<>();
-          for (ItemStack is : e.getDrops()) {
-            if (p.getInventory().firstEmpty() != -1) {
-              p.getInventory().addItem(is);
-              lis.add(is);
-            }
+      if (p.getInventory().getItemInMainHand().hasItemMeta() && telekinesis != null
+          && hasEnchant(p.getInventory().getItemInMainHand(), telekinesis)) {
+        List<ItemStack> lis = new ArrayList<>();
+        for (ItemStack is : e.getDrops()) {
+          if (p.getInventory().firstEmpty() != -1) {
+            p.getInventory().addItem(is);
+            lis.add(is);
           }
-          e.getDrops().removeAll(lis);
         }
+        e.getDrops().removeAll(lis);
       }
     }
   }

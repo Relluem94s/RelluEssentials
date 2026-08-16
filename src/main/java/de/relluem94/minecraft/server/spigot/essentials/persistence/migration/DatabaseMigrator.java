@@ -231,8 +231,10 @@ public class DatabaseMigrator {
     executeScript(v + "insertSettings.sql");
     executeScript(v + "insertWorldGroupSettingsCloudsailor.sql");
     executeScript(v + "insertWorldGroupSettingsCoinsLose.sql");
+    executeScript(v + "insertWorldGroupSettingsEntityDropsCoins.sql");
     executeScript(v + "insertWorldGroupSettingsDeathPoint.sql");
     executeScript(v + "insertWorldGroupSettingsScoreBoardShow.sql");
+    executeScript(v + "insertWorldGroupSettingsDisablePhantomSpawning.sql");
     executeScript(v + "updateFischerNPCTurtleScute.sql");
     executeScript(v + "updateFloristNPCShortGrass.sql");
     executeScript(v + "updateWorldGroupSettings_newColumn.sql");
