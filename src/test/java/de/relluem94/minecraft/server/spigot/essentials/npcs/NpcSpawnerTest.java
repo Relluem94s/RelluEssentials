@@ -79,6 +79,7 @@ class NpcSpawnerTest {
 
   @Test
   void spawnMannequin_whenWorldDoesNotExist_returnsEmptyOptional() {
+    when(npc.getWorldName()).thenReturn(WORLD_NAME);
     when(server.getWorld(WORLD_NAME)).thenReturn(null);
 
     Optional<UUID> result = npcSpawner.spawnMannequin(npc);
@@ -88,6 +89,11 @@ class NpcSpawnerTest {
 
   @Test
   void spawnMannequin_whenMannequinAlreadyExists_returnsExistingMannequinUuid() {
+    when(npc.getId()).thenReturn(NPC_UUID);
+    when(npc.getWorldName()).thenReturn(WORLD_NAME);
+    when(mannequin.getType()).thenReturn(EntityType.MANNEQUIN);
+    when(mannequin.getUniqueId()).thenReturn(MANNEQUIN_UUID);
+    when(mannequin.getPersistentDataContainer()).thenReturn(persistentDataContainer);
     when(server.getWorld(WORLD_NAME)).thenReturn(world);
     when(world.getEntities()).thenReturn(List.of(mannequin));
     when(persistentDataContainer.get(any(NamespacedKey.class), eq(PersistentDataType.STRING)))
@@ -102,6 +108,11 @@ class NpcSpawnerTest {
 
   @Test
   void spawnMannequin_whenMannequinAlreadyExists_appliesAttributesToExistingMannequin() {
+    when(npc.getId()).thenReturn(NPC_UUID);
+    when(npc.getWorldName()).thenReturn(WORLD_NAME);
+    when(mannequin.getType()).thenReturn(EntityType.MANNEQUIN);
+    when(mannequin.getUniqueId()).thenReturn(MANNEQUIN_UUID);
+    when(mannequin.getPersistentDataContainer()).thenReturn(persistentDataContainer);
     when(server.getWorld(WORLD_NAME)).thenReturn(world);
     when(world.getEntities()).thenReturn(List.of(mannequin));
     when(persistentDataContainer.get(any(NamespacedKey.class), eq(PersistentDataType.STRING)))
@@ -113,15 +124,18 @@ class NpcSpawnerTest {
     verify(npcMannequinAttributeApplier).applyAttributes(mannequin);
   }
 
-
   @Test
   void spawnMannequin_whenNoExistingMannequin_spawnsNewMannequinAndReturnsUuid() {
+    when(npc.getId()).thenReturn(NPC_UUID);
+    when(npc.getWorldName()).thenReturn(WORLD_NAME);
     when(npc.getX()).thenReturn(NPC_X);
     when(npc.getY()).thenReturn(NPC_Y);
     when(npc.getZ()).thenReturn(NPC_Z);
     when(npc.getYaw()).thenReturn(NPC_YAW);
     when(npc.getPitch()).thenReturn(NPC_PITCH);
     when(npc.getProfileName()).thenReturn(NPC_PROFILE_NAME);
+    when(mannequin.getUniqueId()).thenReturn(MANNEQUIN_UUID);
+    when(mannequin.getPersistentDataContainer()).thenReturn(persistentDataContainer);
     when(server.getWorld(WORLD_NAME)).thenReturn(world);
     when(world.getEntities()).thenReturn(Collections.emptyList());
     when(world.spawnEntity(any(Location.class), eq(EntityType.MANNEQUIN))).thenReturn(mannequin);
@@ -135,6 +149,16 @@ class NpcSpawnerTest {
 
   @Test
   void spawnMannequin_whenNoExistingMannequin_tagsNewMannequinWithNpcId() {
+    when(npc.getId()).thenReturn(NPC_UUID);
+    when(npc.getWorldName()).thenReturn(WORLD_NAME);
+    when(npc.getX()).thenReturn(NPC_X);
+    when(npc.getY()).thenReturn(NPC_Y);
+    when(npc.getZ()).thenReturn(NPC_Z);
+    when(npc.getYaw()).thenReturn(NPC_YAW);
+    when(npc.getPitch()).thenReturn(NPC_PITCH);
+    when(npc.getProfileName()).thenReturn(NPC_PROFILE_NAME);
+    when(mannequin.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+    when(mannequin.getUniqueId()).thenReturn(MANNEQUIN_UUID);
     when(server.getWorld(WORLD_NAME)).thenReturn(world);
     when(world.getEntities()).thenReturn(Collections.emptyList());
     when(world.spawnEntity(any(Location.class), eq(EntityType.MANNEQUIN))).thenReturn(mannequin);
@@ -148,6 +172,16 @@ class NpcSpawnerTest {
 
   @Test
   void spawnMannequin_whenNoExistingMannequin_setsPlayerProfileOnMannequin() {
+    when(npc.getId()).thenReturn(NPC_UUID);
+    when(npc.getWorldName()).thenReturn(WORLD_NAME);
+    when(npc.getX()).thenReturn(NPC_X);
+    when(npc.getY()).thenReturn(NPC_Y);
+    when(npc.getZ()).thenReturn(NPC_Z);
+    when(npc.getYaw()).thenReturn(NPC_YAW);
+    when(npc.getPitch()).thenReturn(NPC_PITCH);
+    when(npc.getProfileName()).thenReturn(NPC_PROFILE_NAME);
+    when(mannequin.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+    when(mannequin.getUniqueId()).thenReturn(MANNEQUIN_UUID);
     when(server.getWorld(WORLD_NAME)).thenReturn(world);
     when(world.getEntities()).thenReturn(Collections.emptyList());
     when(world.spawnEntity(any(Location.class), eq(EntityType.MANNEQUIN))).thenReturn(mannequin);
@@ -160,6 +194,16 @@ class NpcSpawnerTest {
 
   @Test
   void spawnMannequin_whenNoExistingMannequin_appliesAttributesToNewMannequin() {
+    when(npc.getId()).thenReturn(NPC_UUID);
+    when(npc.getWorldName()).thenReturn(WORLD_NAME);
+    when(npc.getX()).thenReturn(NPC_X);
+    when(npc.getY()).thenReturn(NPC_Y);
+    when(npc.getZ()).thenReturn(NPC_Z);
+    when(npc.getYaw()).thenReturn(NPC_YAW);
+    when(npc.getPitch()).thenReturn(NPC_PITCH);
+    when(npc.getProfileName()).thenReturn(NPC_PROFILE_NAME);
+    when(mannequin.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+    when(mannequin.getUniqueId()).thenReturn(MANNEQUIN_UUID);
     when(server.getWorld(WORLD_NAME)).thenReturn(world);
     when(world.getEntities()).thenReturn(Collections.emptyList());
     when(world.spawnEntity(any(Location.class), eq(EntityType.MANNEQUIN))).thenReturn(mannequin);
@@ -173,6 +217,13 @@ class NpcSpawnerTest {
   @Test
   void spawnMannequin_whenSpawnedEntityIsNotMannequin_returnsEmptyOptional() {
     Entity nonMannequinEntity = mock(Entity.class);
+    when(npc.getId()).thenReturn(NPC_UUID);
+    when(npc.getWorldName()).thenReturn(WORLD_NAME);
+    when(npc.getX()).thenReturn(NPC_X);
+    when(npc.getY()).thenReturn(NPC_Y);
+    when(npc.getZ()).thenReturn(NPC_Z);
+    when(npc.getYaw()).thenReturn(NPC_YAW);
+    when(npc.getPitch()).thenReturn(NPC_PITCH);
     when(server.getWorld(WORLD_NAME)).thenReturn(world);
     when(world.getEntities()).thenReturn(Collections.emptyList());
     when(world.spawnEntity(any(Location.class), eq(EntityType.MANNEQUIN)))
