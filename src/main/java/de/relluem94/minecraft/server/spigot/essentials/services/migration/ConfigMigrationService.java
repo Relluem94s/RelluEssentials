@@ -65,33 +65,43 @@ public class ConfigMigrationService {
     List<LocationEntry> list = new ArrayList<>();
     ConfigurationSection homes = config.getConfigurationSection("player." + p.getUuid() + ".home");
 
-    for (String home : Objects.requireNonNull(homes).getKeys(false)) {
-      ConfigurationSection h = homes.getConfigurationSection(home);
-      if (h == null) {
+    if (homes == null) {
+      return list;
+    }
+
+    for (String homeName : homes.getKeys(false)) {
+      ConfigurationSection homeSection = homes.getConfigurationSection(homeName);
+      if (homeSection == null) {
         continue;
       }
 
-      float x = (float) h.getDouble("x");
-      float y = (float) h.getDouble("y");
-      float z = (float) h.getDouble("z");
-      float yaw = (float) h.getDouble("yaw");
-      float pitch = (float) h.getDouble("pitch");
-      int type = home.equals("death") ? 2 : 1;
-      String worldName = h.getString("world");
-      World world = Bukkit.getServer().getWorld(Objects.requireNonNull(worldName));
+      String worldName = homeSection.getString("world");
+      World world = worldName != null ? Bukkit.getServer().getWorld(worldName) : null;
+
+      if (world == null) {
+        continue;
+      }
+
+      float x = (float) homeSection.getDouble("x");
+      float y = (float) homeSection.getDouble("y");
+      float z = (float) homeSection.getDouble("z");
+      float yaw = (float) homeSection.getDouble("yaw");
+      float pitch = (float) homeSection.getDouble("pitch");
+      int typeId = homeName.equals("death") ? 2 : 1;
 
       consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Found Home: " + home + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
+          "Found Home: " + homeName + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
 
-      LocationEntry l = new LocationEntry();
-      l.setLocation(new Location(world, x, y, z, yaw, pitch));
-      l.setLocationName(home);
-      l.setPlayerId(p.getId());
-      LocationTypeEntry lt = new LocationTypeEntry();
-      lt.setId(type);
-      l.setLocationType(lt);
+      LocationEntry locationEntry = new LocationEntry();
+      locationEntry.setLocation(new Location(world, x, y, z, yaw, pitch));
+      locationEntry.setLocationName(homeName);
+      locationEntry.setPlayerId(p.getId());
 
-      list.add(l);
+      LocationTypeEntry typeEntry = new LocationTypeEntry();
+      typeEntry.setId(typeId);
+      locationEntry.setLocationType(typeEntry);
+
+      list.add(locationEntry);
     }
     return list;
   }
