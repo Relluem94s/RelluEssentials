@@ -27,6 +27,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,9 +78,13 @@ class RelluEssentialsTest {
   }
 
   @AfterEach
-  void tearDown() {
+  void tearDown() throws Exception {
     plugin = null;
+    Field instanceField = RelluEssentials.class.getDeclaredField("instance");
+    instanceField.setAccessible(true);
+    instanceField.set(null, null);
   }
+
 
   @Test
   void constructorShouldSetUnitTestFlag() {
