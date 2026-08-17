@@ -11,6 +11,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UPDATEDBY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_VALUE;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.SettingPlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
@@ -21,6 +22,7 @@ import java.util.Optional;
 public class SettingPlayerMapper {
 
   private SettingPlayerMapper() {
+    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
   public static SettingPlayerEntry mapSettingPlayer(ResultSet resultSet, SettingService settingService) throws SQLException {
