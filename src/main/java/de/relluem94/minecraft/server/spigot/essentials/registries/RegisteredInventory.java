@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NonNull;
 
 public class RegisteredInventory {
 
@@ -25,7 +25,7 @@ public class RegisteredInventory {
   private final List<ItemHelper> fixedItems;
 
   RegisteredInventory(@NonNull RegistryKey registryKey, @NonNull String title, int size,
-      @NonNull ItemHelper.Type itemFilter) {
+      ItemHelper.@NonNull Type itemFilter) {
     this.registryKey = registryKey;
     this.title = title;
     this.size = size;

@@ -60,7 +60,7 @@ public class BagRegistry {
    */
   public Optional<BagEntry> findByPlayerIdAndBagTypeId(int playerId, int bagTypeId) {
     return bagsByPlayerId.get(playerId).stream()
-        .filter(entry -> entry.getBagType().getId() == bagTypeId)
+        .filter(entry -> entry.getBagType() != null && entry.getBagType().getId() == bagTypeId)
         .findFirst();
   }
 

@@ -63,6 +63,13 @@ public class EnchantmentRegistry {
         .findFirst();
   }
 
+  /**
+   * Clears all registered enchantments.
+   */
+  public static void clear() {
+    registry.clear();
+  }
+
   public static int count() {
     return registry.size();
   }

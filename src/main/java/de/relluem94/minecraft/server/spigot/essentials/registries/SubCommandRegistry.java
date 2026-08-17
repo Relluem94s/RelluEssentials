@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.registries;
 
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import java.util.List;
-import lombok.NonNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Registry that holds and resolves {@link SubCommand} implementations.
