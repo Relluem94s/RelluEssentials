@@ -21,13 +21,28 @@ import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
+import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockService;
 import java.util.List;
 import java.util.function.Consumer;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
+import org.bukkit.SoundGroup;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.BlockSupport;
+import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.structure.Mirror;
+import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -38,6 +53,7 @@ class ReplaceCommandTest {
 
   private Player player;
   private SelectionService selectionService;
+  private ServiceContext serviceContext;
   private UndoHistoryService undoHistoryService;
   private ReplaceCommand replaceCommand;
 
@@ -54,7 +70,7 @@ class ReplaceCommandTest {
     when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
 
-    ServiceContext serviceContext = mock(ServiceContext.class);
+    serviceContext = mock(ServiceContext.class);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
@@ -232,6 +248,301 @@ class ReplaceCommandTest {
       verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
     }
   }
+
+
+  @Test
+  void execute_whenBlockDataTypeIsShared_callsApplyMaterial() {
+    Selection selection = mock(Selection.class);
+    when(selectionService.resolve(player)).thenReturn(selection);
+
+    Block matchingBlock = buildBlock(Material.DIRT, 0, 64, 0);
+
+    try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
+        mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
+        MockedConstruction<BlockService> blockServiceConstruction = mockConstruction(BlockService.class)) {
+
+      modifyHelper.when(() -> forEachBlock(eq(selection), any())).thenAnswer(invocation -> {
+        Consumer<Block> consumer = invocation.getArgument(1);
+        consumer.accept(matchingBlock);
+        return null;
+      });
+
+      ReplaceCommand commandWithSharedData = new ReplaceCommand(serviceContext, 2) {
+        @Override
+        protected boolean shareBlockDataType(Material fromMaterial, Material toMaterial) {
+          return true;
+        }
+      };
+
+      commandWithSharedData.execute(player, new String[]{"replace", "DIRT", "STONE"});
+
+      BlockService capturedBlockService = blockServiceConstruction.constructed().get(0);
+      verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
+      verify(capturedBlockService).applyMaterial(0);
+    }
+  }
+
+  @Test
+  void shareBlockDataType_returnsTrueForSameBlockDataTypeClasses() {
+    ReplaceCommand command = new ReplaceCommand(serviceContext, 1) {
+      @Override
+      protected boolean shareBlockDataType(Material fromMaterial, Material toMaterial) {
+        return super.shareBlockDataType(fromMaterial, toMaterial);
+      }
+    };
+
+    BlockData sharedData = mock(BlockData.class);
+    Server mockServer = mock(Server.class);
+
+    try (MockedStatic<Bukkit> mockedBukkit = mockStatic(Bukkit.class)) {
+      mockedBukkit.when(Bukkit::getServer).thenReturn(mockServer);
+      mockedBukkit.when(() -> Bukkit.createBlockData(any(Material.class))).thenReturn(sharedData);
+
+      assert command.shareBlockDataType(Material.STONE, Material.COBBLESTONE);
+    }
+  }
+
+
+  @Test
+  void shareBlockDataType_returnsFalseForDifferentBlockDataTypeClasses() {
+    ReplaceCommand command = new ReplaceCommand(serviceContext, 1) {
+      @Override
+      protected boolean shareBlockDataType(Material fromMaterial, Material toMaterial) {
+        return super.shareBlockDataType(fromMaterial, toMaterial);
+      }
+    };
+
+    BlockData data1 = new BlockData() {
+
+      @Override
+      public @NonNull Material getMaterial() {
+        return null;
+      }
+
+      @Override
+      public @NonNull String getAsString() {
+        return "";
+      }
+
+      @Override
+      public @NonNull String getAsString(boolean hideUnspecified) {
+        return "";
+      }
+
+      @Override
+      public @NonNull BlockData merge(@NonNull BlockData data) {
+        return null;
+      }
+
+      @Override
+      public boolean matches(@Nullable BlockData data) {
+        return false;
+      }
+
+      @Override
+      public @NonNull BlockData clone() {
+        return null;
+      }
+
+      @Override
+      public @NonNull SoundGroup getSoundGroup() {
+        return null;
+      }
+
+      @Override
+      public int getLightEmission() {
+        return 0;
+      }
+
+      @Override
+      public boolean isOccluding() {
+        return false;
+      }
+
+      @Override
+      public boolean requiresCorrectToolForDrops() {
+        return false;
+      }
+
+      @Override
+      public boolean isPreferredTool(@NonNull ItemStack tool) {
+        return false;
+      }
+
+      @Override
+      public @NonNull PistonMoveReaction getPistonMoveReaction() {
+        return null;
+      }
+
+      @Override
+      public boolean isSupported(@NonNull Block block) {
+        return false;
+      }
+
+      @Override
+      public boolean isSupported(@NonNull Location location) {
+        return false;
+      }
+
+      @Override
+      public boolean isFaceSturdy(@NonNull BlockFace face, @NonNull BlockSupport support) {
+        return false;
+      }
+
+      @Override
+      public @NonNull Color getMapColor() {
+        return null;
+      }
+
+      @Override
+      public @NonNull Material getPlacementMaterial() {
+        return null;
+      }
+
+      @Override
+      public void rotate(@NonNull StructureRotation rotation) {
+
+      }
+
+      @Override
+      public void mirror(@NonNull Mirror mirror) {
+
+      }
+
+      @Override
+      public void copyTo(@NonNull BlockData other) {
+
+      }
+
+      @Override
+      public @NonNull BlockState createBlockState() {
+        return null;
+      }
+    };
+
+    BlockData data2 = new BlockData() {
+      @Override
+      public @NonNull Material getMaterial() {
+        return null;
+      }
+
+      @Override
+      public @NonNull String getAsString() {
+        return "";
+      }
+
+      @Override
+      public @NonNull String getAsString(boolean hideUnspecified) {
+        return "";
+      }
+
+      @Override
+      public @NonNull BlockData merge(@NonNull BlockData data) {
+        return null;
+      }
+
+      @Override
+      public boolean matches(@Nullable BlockData data) {
+        return false;
+      }
+
+      @Override
+      public @NonNull BlockData clone() {
+        return null;
+      }
+
+      @Override
+      public @NonNull SoundGroup getSoundGroup() {
+        return null;
+      }
+
+      @Override
+      public int getLightEmission() {
+        return 0;
+      }
+
+      @Override
+      public boolean isOccluding() {
+        return false;
+      }
+
+      @Override
+      public boolean requiresCorrectToolForDrops() {
+        return false;
+      }
+
+      @Override
+      public boolean isPreferredTool(@NonNull ItemStack tool) {
+        return false;
+      }
+
+      @Override
+      public @NonNull PistonMoveReaction getPistonMoveReaction() {
+        return null;
+      }
+
+      @Override
+      public boolean isSupported(@NonNull Block block) {
+        return false;
+      }
+
+      @Override
+      public boolean isSupported(@NonNull Location location) {
+        return false;
+      }
+
+      @Override
+      public boolean isFaceSturdy(@NonNull BlockFace face, @NonNull BlockSupport support) {
+        return false;
+      }
+
+      @Override
+      public @NonNull Color getMapColor() {
+        return null;
+      }
+
+      @Override
+      public @NonNull Material getPlacementMaterial() {
+        return null;
+      }
+
+      @Override
+      public void rotate(@NonNull StructureRotation rotation) {
+
+      }
+
+      @Override
+      public void mirror(@NonNull Mirror mirror) {
+
+      }
+
+      @Override
+      public void copyTo(@NonNull BlockData other) {
+
+      }
+
+      @Override
+      public @NonNull BlockState createBlockState() {
+        return null;
+      }
+    };
+
+    Server mockServer = mock(Server.class);
+
+    try (MockedStatic<Bukkit> mockedBukkit = mockStatic(Bukkit.class)) {
+      mockedBukkit.when(Bukkit::getServer).thenReturn(mockServer);
+
+      mockedBukkit.when(() -> Bukkit.createBlockData(Material.STONE)).thenReturn(data1);
+      mockedBukkit.when(() -> Bukkit.createBlockData(Material.DIRT)).thenReturn(data2);
+
+      boolean result = command.shareBlockDataType(Material.STONE, Material.DIRT);
+
+      if (result) {
+        throw new AssertionError("Expected false because data1 and data2 have different classes, but got true");
+      }
+    }
+  }
+
 
   @Test
   void matches_withCorrectArgs_returnsTrue() {
