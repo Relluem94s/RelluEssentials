@@ -1,0 +1,26 @@
+player:
+  550e8400-e29b-41d4-a716-446655440000:
+    home:
+      spawn:
+        x: 100.0
+        y: 64.0
+        z: 100.0
+        yaw: 0.0
+        pitch: 0.0
+        world: world
+      death:
+        x: 200.0
+        y: 70.0
+        z: 200.0
+        yaw: 90.0
+        pitch: 0.0
+        world: world
+      test: # INCOMPLETE
+        x: 100
+      broken_home: "EMPTY"
+  550e8400-e29b-41d4-a716-446655440001:
+    group: admin
+    fly: true
+    afk: false
+    customname: TestPlayer
+    home: {}
