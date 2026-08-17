@@ -49,7 +49,9 @@ class RelluEssentialsTest {
 
 
   @BeforeEach
-  void setUp() {
+  void setUp() throws Exception {
+    resetStaticInstance();
+
     Logger logger = Logger.getLogger("org.bukkit.plugin.java.JavaPluginLoader");
     logger.setUseParentHandlers(false);
     logger.setLevel(Level.OFF);
@@ -80,11 +82,14 @@ class RelluEssentialsTest {
   @AfterEach
   void tearDown() throws Exception {
     plugin = null;
+    resetStaticInstance();
+  }
+
+  private void resetStaticInstance() throws Exception {
     Field instanceField = RelluEssentials.class.getDeclaredField("instance");
     instanceField.setAccessible(true);
     instanceField.set(null, null);
   }
-
 
   @Test
   void constructorShouldSetUnitTestFlag() {
