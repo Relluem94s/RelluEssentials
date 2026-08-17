@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -84,13 +85,14 @@ public class BlockService {
     locations.forEach((location, delay) ->
         schedulerService.scheduleSyncDelayedTask(
             () -> {
-              String existingDataString = location.getBlock().getBlockData().getAsString();
-              String newDataString = existingDataString.replace(
-                  location.getBlock().getType().getKey().toString(),
-                  targetMaterial.getKey().toString()
-              );
               try {
-                location.getBlock().setBlockData(Bukkit.createBlockData(newDataString));
+                Block block = location.getBlock();
+                String existingDataString = block.getBlockData().getAsString();
+                String newDataString = existingDataString.replace(
+                    block.getType().getKey().toString(),
+                    targetMaterial.getKey().toString()
+                );
+                block.setBlockData(Bukkit.createBlockData(newDataString));
               } catch (IllegalArgumentException e) {
                 location.getBlock().setType(targetMaterial);
               }
