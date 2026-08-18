@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
@@ -30,7 +29,7 @@ public class NpcGuiCommand implements SubCommand {
       return;
     }
 
-    ItemHelper disabledItem = ItemRegistry.find(
+    ItemHelper disabledItem = serviceContext.getItemService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
 

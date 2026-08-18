@@ -7,6 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Namespac
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
@@ -37,14 +38,14 @@ public class TraderNpcRegistry {
   private final ItemHelper closeItem;
   private final TranslationService translationService;
 
-  public TraderNpcRegistry(TranslationService translationService) {
-    this.disabledItem = ItemRegistry.find(
+  public TraderNpcRegistry(ServiceContext serviceContext) {
+    this.disabledItem = serviceContext.getItemService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
-    this.closeItem = ItemRegistry.find(
+    this.closeItem = serviceContext.getItemService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
-    this.translationService = translationService;
+    this.translationService = serviceContext.getTranslationService();
   }
 
   public void init(List<TraderNPCEntry> traderNpcEntryList) {

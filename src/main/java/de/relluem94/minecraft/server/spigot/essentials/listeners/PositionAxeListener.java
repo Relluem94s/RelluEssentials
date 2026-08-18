@@ -8,7 +8,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,15 +21,15 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("PositionAxeListener")
 public class PositionAxeListener implements ListenerConstruct {
 
-
-  private final ItemHelper positionAxeItem = ItemRegistry.find(
-      RegistryKey.of(PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow();
+  private ItemHelper positionAxeItem;
 
   private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
+    positionAxeItem = context.getItemService().find(
+        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow();
   }
 
   @EventHandler

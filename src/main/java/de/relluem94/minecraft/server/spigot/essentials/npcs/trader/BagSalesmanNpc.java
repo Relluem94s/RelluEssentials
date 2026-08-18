@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
@@ -23,7 +22,7 @@ public class BagSalesmanNpc extends TraderNpc {
   }
 
   private ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(
+    return serviceContext.getItemService().find(
             RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
   }

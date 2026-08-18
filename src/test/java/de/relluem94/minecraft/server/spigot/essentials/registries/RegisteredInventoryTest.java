@@ -8,10 +8,14 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import java.util.Collections;
 import java.util.List;
 import org.bukkit.entity.Player;
@@ -24,11 +28,22 @@ class RegisteredInventoryTest {
 
   private Player mockPlayer;
   private RegistryKey registryKey;
+  private RelluEssentials mockPlugin;
+  private ServiceContext mockServiceContext;
+  private ItemService mockItemService;
 
   @BeforeEach
   void setUp() {
     mockPlayer = mock(Player.class);
     registryKey = new RegistryKey("test", "key");
+
+    mockPlugin = mock(RelluEssentials.class);
+    mockServiceContext = mock(ServiceContext.class);
+    mockItemService = mock(ItemService.class);
+
+    try (MockedStatic<RelluEssentials> mockedPlugin = mockStatic(RelluEssentials.class)) {
+      mockedPlugin.when(RelluEssentials::getInstance).thenReturn(mockPlugin);
+    }
   }
 
   @Test
@@ -74,6 +89,7 @@ class RegisteredInventoryTest {
     }
   }
 
+
   @Test
   void testOpenForWithTypeFilterLogicFlow() {
     RegisteredInventory registeredInventory = new RegisteredInventory(
@@ -83,10 +99,12 @@ class RegisteredInventoryTest {
     Inventory mockInventory = mock(Inventory.class);
 
     try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class);
-        MockedStatic<ItemRegistry> mockedItemRegistry = mockStatic(ItemRegistry.class)) {
+        MockedStatic<RelluEssentials> mockedRellu = mockStatic(RelluEssentials.class)) {
 
-      mockedItemRegistry.when(() -> ItemRegistry.getAllByType(any(ItemHelper.Type.class)))
-          .thenReturn(Collections.emptyList());
+      mockedRellu.when(RelluEssentials::getInstance).thenReturn(mockPlugin);
+      when(mockPlugin.getServiceContext()).thenReturn(mockServiceContext);
+      when(mockServiceContext.getItemService()).thenReturn(mockItemService);
+      when(mockItemService.getAllByType(ItemHelper.Type.TOOL)).thenReturn(Collections.emptyList());
 
       mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class), any(ItemHelper.Type.class)))
           .thenReturn(mockInventory);
@@ -96,6 +114,7 @@ class RegisteredInventoryTest {
       mockedInventoryHelper.verify(() -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
     }
   }
+
 
   @Test
   void testConstructorSetsFields() {
@@ -136,10 +155,12 @@ class RegisteredInventoryTest {
     Inventory mockInventory = mock(Inventory.class);
 
     try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class);
-        MockedStatic<ItemRegistry> mockedItemRegistry = mockStatic(ItemRegistry.class)) {
+        MockedStatic<RelluEssentials> mockedRellu = mockStatic(RelluEssentials.class)) {
 
-      mockedItemRegistry.when(() -> ItemRegistry.getAllByType(any(ItemHelper.Type.class)))
-          .thenReturn(Collections.emptyList());
+      mockedRellu.when(RelluEssentials::getInstance).thenReturn(mockPlugin);
+      when(mockPlugin.getServiceContext()).thenReturn(mockServiceContext);
+      when(mockServiceContext.getItemService()).thenReturn(mockItemService);
+      when(mockItemService.getAllByType(ItemHelper.Type.TOOL)).thenReturn(Collections.emptyList());
 
       mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class), any(ItemHelper.Type.class)))
           .thenReturn(mockInventory);

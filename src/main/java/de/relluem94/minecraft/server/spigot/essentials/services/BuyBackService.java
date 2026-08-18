@@ -1,20 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BuyBackRepository;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+@AllArgsConstructor
 public class BuyBackService {
 
   private final BuyBackRepository buyBackRepository;
-
-  public BuyBackService(BuyBackRepository buyBackRepository) {
-    this.buyBackRepository = buyBackRepository;
-  }
+  private final ServiceContext serviceContext;
 
   public void recordSoldItems(Player player, ItemStack item, int totalAmount) {
     ItemStack resolvedItem = resolveCanonicalItem(item);
@@ -42,8 +42,8 @@ public class BuyBackService {
   private ItemStack resolveCanonicalItem(ItemStack item) {
     return EnchantmentRegistry.findByBookItemStack(item)
         .map(enchantment -> enchantment.getBook().getCustomItem())
-        .orElseGet(() -> ItemRegistry.findByItemStack(item)
-            .map(itemHelper -> itemHelper.getCustomItem())
+        .orElseGet(() -> serviceContext.getItemService().findByItemStack(item)
+            .map(ItemHelper::getCustomItem)
             .orElse(item));
   }
 

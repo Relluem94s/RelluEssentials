@@ -14,7 +14,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEn
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BuyBackSlotResolver;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -30,7 +29,7 @@ public class InteractTraderNpc implements ListenerConstruct {
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
     this.buyBackSlotResolver = new BuyBackSlotResolver(
-        serviceContext.getBuyBackService(), ItemRegistry.find(
+        serviceContext.getBuyBackService(), serviceContext.getItemService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow().getCustomItem());
   }

@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.registries;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory;
@@ -49,7 +50,9 @@ public class RegisteredInventory {
   }
 
   public void openForWithTypeFilter(@NonNull Player player, ItemHelper... extraItems) {
-    List<ItemHelper> items = new ArrayList<>(ItemRegistry.getAllByType(itemFilter));
+    List<ItemHelper> items = new ArrayList<>(
+        RelluEssentials.getInstance().getServiceContext().getItemService()
+            .getAllByType(itemFilter));
     items.addAll(fixedItems);
     items.addAll(Arrays.asList(extraItems));
 

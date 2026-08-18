@@ -14,7 +14,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -28,15 +27,16 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("EntityPickupItemBags")
 public class EntityPickupItemBags implements ListenerConstruct {
 
-  private final ItemHelper coinItem = ItemRegistry.find(
-          RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
-      .orElseThrow();
+  private ItemHelper coinItem;
 
   private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
     serviceContext = context;
+    coinItem = serviceContext.getItemService().find(
+            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
+        .orElseThrow();
   }
 
   @EventHandler

@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PositionRegistry;
@@ -45,7 +46,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.ItemRegistryService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
@@ -77,6 +78,7 @@ public class ServiceManager implements Enable {
     PersistenceContext persistenceContext = relluEssentials.getPersistenceContext();
 
     /* Services */
+    serviceContext.setItemService(new ItemService(new ItemRegistry(relluEssentials)));
     serviceContext.setPluginManagerService(new PluginManagerService(plugin));
     serviceContext.setClipboardService(new ClipboardService());
     DropRuleRepository dropRuleRepository = new DropRuleRepository(persistenceContext.getDropDao());
@@ -97,7 +99,7 @@ public class ServiceManager implements Enable {
     TraderNpcRepository traderNpcRepository = new TraderNpcRepository(
         persistenceContext.getTraderNpcDao());
     TraderNpcRegistry traderNpcRegistry = new TraderNpcRegistry(
-        serviceContext.getTranslationService());
+        serviceContext);
     BankerNpc bankerNpc = new BankerNpc(serviceContext);
     traderNpcRegistry.addNPC(new BagSalesmanNpc(serviceContext, relluEssentials));
     traderNpcRegistry.addNPC(bankerNpc);
@@ -154,7 +156,7 @@ public class ServiceManager implements Enable {
     );
     serviceContext.setBagService(bagService);
     BuyBackRepository buyBackRepository = new BuyBackRepository();
-    BuyBackService buyBackService = new BuyBackService(buyBackRepository);
+    BuyBackService buyBackService = new BuyBackService(buyBackRepository, serviceContext);
     serviceContext.setBuyBackService(buyBackService);
     MessageService messageService = new MessageService(serviceContext.getTranslationService());
     serviceContext.setMessageService(messageService);
@@ -216,7 +218,6 @@ public class ServiceManager implements Enable {
     serviceContext.setSettingPlayerService(
         new SettingPlayerService(settingPlayerRegistry, settingPlayerRepository, serviceContext));
 
-    serviceContext.setItemRegistryService(new ItemRegistryService(relluEssentials));
   }
 
   public void preEnable(RelluEssentials relluEssentials) {

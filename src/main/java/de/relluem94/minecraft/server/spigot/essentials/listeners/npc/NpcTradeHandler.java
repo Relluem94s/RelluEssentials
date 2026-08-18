@@ -18,7 +18,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BuyBackSlotResolver;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -44,9 +43,12 @@ public class NpcTradeHandler {
   private final ServiceContext serviceContext;
 
   public NpcTradeHandler(ServiceContext serviceContext) {
-    this.disabledItem = serviceContext.getItemRegistryService().findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED);
-    this.closeItem = serviceContext.getItemRegistryService().findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE);
-    this.coinsItem = serviceContext.getItemRegistryService().findByNamespace(PLUGIN_ITEM_NAMESPACE_COINS);
+    this.disabledItem = serviceContext.getItemService()
+        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).orElseThrow();
+    this.closeItem = serviceContext.getItemService()
+        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE).orElseThrow();
+    this.coinsItem = serviceContext.getItemService()
+        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_COINS).orElseThrow();
 
     this.buyBackSlotResolver = new BuyBackSlotResolver(
         serviceContext.getBuyBackService(), this.disabledItem.getCustomItem());
@@ -90,10 +92,10 @@ public class NpcTradeHandler {
     if (skullMeta.getOwnerProfile() == null) {
       return false;
     }
-    UUID profileUUID = skullMeta.getOwnerProfile().getUniqueId();
+    UUID profileUuid = skullMeta.getOwnerProfile().getUniqueId();
     return Arrays.stream(CustomHeads.values())
         .filter(ch -> !ch.equals(CustomHeads.BAG))
-        .anyMatch(ch -> ch.getUUID().equals(profileUUID));
+        .anyMatch(ch -> ch.getUUID().equals(profileUuid));
   }
 
   private void handleCustomHeadTrade(@NonNull ItemStack clickedItem, Inventory clickedInventory,
@@ -224,7 +226,7 @@ public class NpcTradeHandler {
       return enchantmentName.get();
     }
 
-    Optional<String> registeredItemName = ItemRegistry.findByItemStack(item)
+    Optional<String> registeredItemName = serviceContext.getItemService().findByItemStack(item)
         .map(itemHelper -> itemHelper.getCustomItem().getItemMeta())
         .filter(meta -> meta != null && meta.hasDisplayName())
         .map(ItemMeta::getDisplayName);
@@ -252,13 +254,10 @@ public class NpcTradeHandler {
       return enchantmentBuyPrice.get();
     }
 
-    Optional<Integer> registeredItemBuyPrice = ItemRegistry.findByItemStack(item)
-        .map(itemHelper -> itemHelper.getCost());
-    if (registeredItemBuyPrice.isPresent()) {
-      return registeredItemBuyPrice.get();
-    }
+    Optional<Integer> registeredItemBuyPrice = serviceContext.getItemService().findByItemStack(item)
+        .map(ItemHelper::getCost);
+    return registeredItemBuyPrice.orElseGet(() -> ItemPrice.from(item.getType()).getBuyPrice());
 
-    return ItemPrice.from(item.getType()).getBuyPrice();
   }
 
 
@@ -273,7 +272,8 @@ public class NpcTradeHandler {
       return enchantmentSellPrice.get();
     }
 
-    Optional<Integer> registeredItemSellPrice = ItemRegistry.findByItemStack(item)
+    Optional<Integer> registeredItemSellPrice = serviceContext.getItemService()
+        .findByItemStack(item)
         .map(itemHelper -> itemHelper.getCost());
     if (registeredItemSellPrice.isPresent()) {
       return registeredItemSellPrice.get();
@@ -337,7 +337,7 @@ public class NpcTradeHandler {
   private ItemStack resolveCleanPurchasedItem(ItemStack guiItem, int amount) {
     ItemStack purchasedItem = EnchantmentRegistry.findByBookItemStack(guiItem)
         .map(enchantment -> enchantment.getBook().getCustomItem().clone())
-        .orElseGet(() -> ItemRegistry.findByItemStack(guiItem)
+        .orElseGet(() -> serviceContext.getItemService().findByItemStack(guiItem)
             .map(itemHelper -> itemHelper.getCustomItem().clone())
             .orElseGet(guiItem::clone));
 
@@ -381,7 +381,7 @@ public class NpcTradeHandler {
       return;
     }
 
-    boolean isRegisteredItem = ItemRegistry.findByItemStack(item).isPresent()
+    boolean isRegisteredItem = serviceContext.getItemService().findByItemStack(item).isPresent()
         || EnchantmentRegistry.findByBookItemStack(item).isPresent();
 
     if (!isRegisteredItem) {

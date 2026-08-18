@@ -17,8 +17,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.Objects;
 import org.bukkit.entity.Villager.Profession;
@@ -36,7 +34,7 @@ import org.jspecify.annotations.NonNull;
  */
 public class EnchanterNpc extends TraderNpc {
 
-  private final TranslationService translationService;
+  private final ServiceContext serviceContext;
   private final RelluEssentials relluEssentials;
 
   private record ItemCostData(int cost, List<String> lore) {}
@@ -47,7 +45,7 @@ public class EnchanterNpc extends TraderNpc {
    */
   public EnchanterNpc(ServiceContext serviceContext, RelluEssentials relluEssentials) {
     super("§dEnchanter", Profession.LIBRARIAN, Type.ENCHANTER);
-    translationService = serviceContext.getTranslationService();
+    this.serviceContext = serviceContext;
     this.relluEssentials = relluEssentials;
   }
 
@@ -56,12 +54,12 @@ public class EnchanterNpc extends TraderNpc {
   }
 
   private @NonNull ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+    return serviceContext.getItemService().find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
   }
 
   private @NonNull ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
+    return serviceContext.getItemService().find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
   }
 
   /**
@@ -90,7 +88,7 @@ public class EnchanterNpc extends TraderNpc {
 
 
     int magicWaterSlot = InventoryHelper.getNextSlot(slot);
-    ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET))
+    serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET))
         .ifPresent(item -> {
           ItemStack magicWater = item.getCustomItem().clone();
           applyAdditionalLoreToItemStack(magicWater, buildCostData(magicWater));
@@ -98,7 +96,7 @@ public class EnchanterNpc extends TraderNpc {
         });
 
     int autoSellSlot = InventoryHelper.getNextSlot(magicWaterSlot + 1);
-    ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER))
+    serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER))
         .ifPresent(item -> {
           ItemStack hopper = item.getCustomItem().clone();
           applyAdditionalLoreToItemStack(hopper, buildCostData(hopper));
@@ -138,12 +136,12 @@ public class EnchanterNpc extends TraderNpc {
 
   private ItemCostData buildCostDataFromCost(int cost) {
     return new ItemCostData(cost, List.of(
-        translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+        serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
             PLUGIN_NAME_MONEY,
             String.valueOf(cost),
             PLUGIN_NAME_MONEY,
             String.valueOf(cost * 64)),
-        translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+        serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
             PLUGIN_NAME_MONEY,
             String.valueOf(cost),
             PLUGIN_NAME_MONEY,
