@@ -11,7 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService
 import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.ItemRegistryService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationTypeService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
@@ -82,5 +82,5 @@ public class ServiceContext {
   private PluginManagerService pluginManagerService;
   private DeathChestService deathChestService;
   private SettingPlayerService settingPlayerService;
-  private ItemRegistryService itemRegistryService;
+  private ItemService itemService;
 }

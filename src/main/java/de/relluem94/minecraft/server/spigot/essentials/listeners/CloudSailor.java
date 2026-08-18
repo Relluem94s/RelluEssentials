@@ -10,7 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -35,18 +34,19 @@ import org.jspecify.annotations.NonNull;
 @ListenerName("CloudSailor")
 public class CloudSailor implements ListenerConstruct {
 
-
   private final Random random = new Random();
-  private final ItemHelper cloudSailorItem = ItemRegistry.find(
-      RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
-  private final ItemHelper cloudBoots = ItemRegistry.find(
-      RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow();
+  private ItemHelper cloudSailorItem = null;
+  private ItemHelper cloudBoots = null;
 
   private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
+    cloudSailorItem = serviceContext.getItemService().find(
+        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
+    cloudBoots = serviceContext.getItemService().find(
+        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow();
   }
 
   @EventHandler

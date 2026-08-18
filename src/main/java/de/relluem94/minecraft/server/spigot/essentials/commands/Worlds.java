@@ -19,7 +19,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,11 +45,11 @@ public class Worlds implements CommandConstruct {
 
   private ServiceContext serviceContext;
 
-  public static void openWorldMenu(Player p) {
+  public static void openWorldMenu(Player p, ItemService itemService) {
     org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
         InventoryHelper.createInventory(18,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds"),
-        ItemRegistry.find(
+        itemService.find(
                 RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
             .orElseThrow()
             .getCustomItem()
@@ -121,7 +121,7 @@ public class Worlds implements CommandConstruct {
               Commands.UNLOAD_NO_SAVE.getName(),
               Commands.CREATE.getName()
           ));
-      openWorldMenu(p);
+      openWorldMenu(p, serviceContext.getItemService());
       return true;
     }
 

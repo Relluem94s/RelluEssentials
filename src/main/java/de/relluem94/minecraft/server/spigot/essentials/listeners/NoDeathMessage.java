@@ -17,7 +17,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.Objects;
 import java.util.Random;
 import net.md_5.bungee.api.ChatColor;
@@ -65,7 +64,7 @@ public class NoDeathMessage implements ListenerConstruct {
         .isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN, worldName);
 
     if (deathLoseCoinsActive) {
-      ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
+      ItemHelper coinItem = serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
           .orElseThrow();
       for (ItemStack is : p.getInventory().getContents()) {
         if (is != null && is.getItemMeta() != null && coinItem.almostEquals(is) && is.getItemMeta()

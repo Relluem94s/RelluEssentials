@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -19,13 +18,12 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("PreventCoinManipulation")
 public class PreventCoinManipulation implements ListenerConstruct {
 
-
-  private final ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
-      .orElseThrow();
+  private ItemHelper coinItem = null;
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    coinItem = context.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
+        .orElseThrow();
   }
 
   @EventHandler

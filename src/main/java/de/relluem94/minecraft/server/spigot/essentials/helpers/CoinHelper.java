@@ -1,11 +1,8 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.Collections;
 import java.util.Objects;
 import org.bukkit.inventory.ItemStack;
@@ -21,11 +18,10 @@ public class CoinHelper {
    * Builds a coin {@link ItemStack} with the given amount stored in its lore and persistent data.
    *
    * @param coins the coin value to assign to the item
+   * @param coinItem ItemHelper of CustomItem Coin
    * @return a configured coin {@link ItemStack}
    */
-  public static ItemStack buildCoinItem(int coins) {
-    ItemHelper coinItem = ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
-        .orElseThrow();
+  public static ItemStack buildCoinItem(int coins, ItemHelper coinItem) {
     ItemStack coin = coinItem.getCustomItem();
     ItemMeta im = Objects.requireNonNull(coin.getItemMeta());
     im.setLore(Collections.singletonList(

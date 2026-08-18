@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -24,9 +23,11 @@ public class OpenWorldSelector implements ListenerConstruct {
     this.worldSelectorKey = RegistryKey.of(PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR);
   }
 
+  private ServiceContext serviceContext;
+
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.serviceContext = context;
   }
 
   @EventHandler
@@ -42,9 +43,9 @@ public class OpenWorldSelector implements ListenerConstruct {
       return;
     }
 
-    ItemRegistry.find(worldSelectorKey).ifPresent(worldSelectorItem -> {
+    serviceContext.getItemService().find(worldSelectorKey).ifPresent(worldSelectorItem -> {
       if (worldSelectorItem.equalsName(event.getItem())) {
-        Worlds.openWorldMenu(event.getPlayer());
+        Worlds.openWorldMenu(event.getPlayer(), serviceContext.getItemService());
         event.setCancelled(true);
       }
     });

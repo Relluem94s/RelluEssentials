@@ -10,7 +10,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -53,8 +52,8 @@ public class BetterSoil implements ListenerConstruct {
       ItemStack itemInHand = e.getPlayer().getInventory().getItemInMainHand();
       RegistryKey magicWaterBucketKey = RegistryKey.of(PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET);
 
-      if (ItemRegistry.identifyFromItemStack(itemInHand).filter(magicWaterBucketKey::equals)
-          .isPresent()) {
+      if (serviceContext.getItemService().find(magicWaterBucketKey)
+          .map(itemHelper -> itemHelper.almostEquals(itemInHand)).orElse(false)) {
         e.setCancelled(true);
         b = e.getClickedBlock().getRelative(e.getBlockFace());
         if (b.getType().equals(Material.AIR)) {
@@ -78,7 +77,8 @@ public class BetterSoil implements ListenerConstruct {
     PlayerEntry pe = serviceContext.getPlayerService()
         .getPlayerEntry(p.getUniqueId());
 
-    List<ItemStack> lis = serviceContext.getBagService().collectItemStacks(e.getItemsHarvested(), e.getPlayer(), pe);
+    List<ItemStack> lis = serviceContext.getBagService()
+        .collectItemStacks(e.getItemsHarvested(), e.getPlayer(), pe);
     e.getItemsHarvested().removeAll(lis);
 
     EnchantmentRegistry.find(RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))

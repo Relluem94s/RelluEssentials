@@ -20,6 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
@@ -97,9 +98,22 @@ public class InventoryClickNpc implements ListenerConstruct {
     BankAccountEntry bankAccount = serviceContext.getBankService()
         .findBankAccountByPlayerId(playerEntry.getId());
 
+    Optional<ItemHelper> optionalDisabledItemHelper = serviceContext.getItemService()
+        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED);
+
     if (clickedItem == null) {
       return;
     }
+
+    if (bankAccount == null) {
+      return;
+    }
+
+    if (optionalDisabledItemHelper.isEmpty()) {
+      return;
+    }
+
+    ItemHelper disabledItemHelper = optionalDisabledItemHelper.get();
 
     if (BankService.npc_gui_deposit.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
@@ -130,8 +144,7 @@ public class InventoryClickNpc implements ListenerConstruct {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
           serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGUI());
-    } else if (serviceContext.getItemRegistryService()
-        .findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).equalsExact(clickedItem)) {
+    } else if (disabledItemHelper.equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {
       bankerDepositActions.entrySet().stream()
@@ -174,9 +187,15 @@ public class InventoryClickNpc implements ListenerConstruct {
       return;
     }
 
-    if (!serviceContext.getItemRegistryService()
-        .findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).getCustomItem()
-        .equals(e.getCurrentItem())) {
+    Optional<ItemHelper> optionalItemHelper = serviceContext.getItemService()
+        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED);
+    if (optionalItemHelper.isEmpty()) {
+      return;
+    }
+
+    ItemHelper disabledItemHelper = optionalItemHelper.get();
+
+    if (!disabledItemHelper.getCustomItem().equals(e.getCurrentItem())) {
       player.getInventory().addItem(e.getCurrentItem().clone());
     }
   }
@@ -186,9 +205,8 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (e.getCurrentItem() == null) {
       return;
     }
-    if (serviceContext.getItemRegistryService()
-        .findByNamespace(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).getCustomItem()
-        .equals(e.getCurrentItem())) {
+    if (serviceContext.getItemService()
+        .isItemStack(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED, e.getCurrentItem())) {
       return;
     }
     if (e.getCurrentItem().getItemMeta() == null) {

@@ -8,33 +8,43 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_RELLU_SWORD;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
+import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
+@AllArgsConstructor
 public class GiveRelluGearCommand implements SubCommand {
+
+  private final ServiceContext serviceContext;
 
   @Override
   public void execute(Player player, String[] args) {
     player.getInventory().addItem(
-        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_HELMET)).orElseThrow()
+        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_HELMET))
+            .orElseThrow()
             .getCustomItem());
     player.getInventory().addItem(
-        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE)).orElseThrow()
+        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE))
+            .orElseThrow()
             .getCustomItem());
     player.getInventory().addItem(
-        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS)).orElseThrow()
+        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS))
+            .orElseThrow()
             .getCustomItem());
     player.getInventory().addItem(
-        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS)).orElseThrow()
+        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS))
+            .orElseThrow()
             .getCustomItem());
     player.getInventory().addItem(
-        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD)).orElseThrow()
+        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD))
+            .orElseThrow()
             .getCustomItem());
     player.getInventory().addItem(
-        ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_SWORD)).orElseThrow()
+        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_SWORD))
+            .orElseThrow()
             .getCustomItem());
   }
 

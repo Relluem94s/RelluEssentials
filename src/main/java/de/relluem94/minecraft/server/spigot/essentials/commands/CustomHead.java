@@ -13,7 +13,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
@@ -55,7 +54,7 @@ public class CustomHead implements CommandConstruct {
 
     org.bukkit.inventory.Inventory inv = InventoryHelper.createInventory(54,
         serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE));
-    InventoryHelper.fillInventory(inv, ItemRegistry.find(
+    InventoryHelper.fillInventory(inv, serviceContext.getItemService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow().getCustomItem());
 

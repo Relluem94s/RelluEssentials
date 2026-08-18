@@ -15,8 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -28,24 +26,24 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class BeekeeperNpc extends TraderNpc {
 
-  private final TranslationService translationService;
   private final RelluEssentials relluEssentials;
+  private final ServiceContext serviceContext;
 
   public BeekeeperNpc(ServiceContext serviceContext, RelluEssentials relluEssentials) {
     super("§dBeekeeper", Profession.NONE, Type.BEEKEEPER);
-    translationService = serviceContext.getTranslationService();
     this.relluEssentials = relluEssentials;
+    this.serviceContext = serviceContext;
   }
 
   private ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(
-            RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+    return serviceContext.getItemService()
+        .find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
   }
 
   private ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(
-            RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
+    return serviceContext.getItemService()
+        .find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
   }
 
@@ -61,7 +59,7 @@ public class BeekeeperNpc extends TraderNpc {
     inv.setItem(14, createTradableItem(Material.HONEY_BOTTLE));
     inv.setItem(15, createTradableItem(Material.CANDLE));
 
-    inv.setItem(28, createTradableCustomHead(CustomHeads.WHITE_CANDLE, 300, 300));
+    inv.setItem(28, createTradableCustomHead(CustomHeads.WHITE_CANDLE, 200, 200));
     inv.setItem(29, createTradableCustomHead(CustomHeads.CYAN_CANDLE, 300, 300));
     inv.setItem(30, createTradableCustomHead(CustomHeads.RED_CANDLE, 300, 300));
     inv.setItem(31, createTradableCustomHead(CustomHeads.BLUE_CANDLE, 300, 300));
@@ -90,12 +88,12 @@ public class BeekeeperNpc extends TraderNpc {
     }
 
     List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
-    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice),
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice * 64)));
-    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(sellPrice),
         PLUGIN_NAME_MONEY,
@@ -109,7 +107,6 @@ public class BeekeeperNpc extends TraderNpc {
     return item;
   }
 
-
   private ItemStack createTradableItem(Material material) {
     ItemStack item = new ItemStack(material, 1);
     ItemMeta meta = item.getItemMeta();
@@ -122,12 +119,12 @@ public class BeekeeperNpc extends TraderNpc {
     int sellPrice = price.getSellPrice();
 
     List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
-    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
+    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice),
         PLUGIN_NAME_MONEY,
         String.valueOf(buyPrice * 64)));
-    lore.add(translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
+    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
         PLUGIN_NAME_MONEY,
         String.valueOf(sellPrice),
         PLUGIN_NAME_MONEY,

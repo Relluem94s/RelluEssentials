@@ -21,7 +21,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
 import java.util.ArrayList;
@@ -486,7 +485,7 @@ public class BagService {
   }
 
   private ItemStack resolveDisabledItem() {
-    return ItemRegistry.find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+    return serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow()
         .getCustomItem();
   }

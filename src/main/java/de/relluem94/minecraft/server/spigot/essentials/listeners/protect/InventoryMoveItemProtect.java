@@ -14,7 +14,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.Objects;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,7 +38,7 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
   private ServiceContext serviceContext;
 
   public InventoryMoveItemProtect() {
-    InventoryMoveItemProtect.coinItem = ItemRegistry.find(
+    InventoryMoveItemProtect.coinItem = serviceContext.getItemService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
         .orElseThrow();
   }
@@ -70,7 +69,9 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
         }
 
         if (!isSource && (inventory.firstEmpty() != -1 && size < 4)) {
-          inventory.addItem(CoinHelper.buildCoinItem(sellPriceItem));
+          ItemHelper coinItem = serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
+              .orElseThrow();
+          inventory.addItem(CoinHelper.buildCoinItem(sellPriceItem, coinItem));
 
           final ItemStack toRemove = is.clone();
           serviceContext.getSchedulerService().runTaskLater(() -> inventory.removeItem(toRemove), 1L);

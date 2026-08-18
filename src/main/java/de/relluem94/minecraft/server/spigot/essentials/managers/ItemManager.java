@@ -49,6 +49,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
@@ -57,7 +58,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enabl
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import org.bukkit.Color;
@@ -78,26 +79,26 @@ public class ItemManager implements Enable {
 
   @Override
   public void enable(Plugin plugin) {
+    RelluEssentials relluEssentials = (RelluEssentials) plugin;
+    ServiceContext serviceContext = relluEssentials.getServiceContext();
+    ItemService itemService = serviceContext.getItemService();
 
-
-    ItemRegistry.initialize(plugin);
-
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_POSITION_AXE,
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_POSITION_AXE),
         new ItemHelper(Material.COPPER_AXE, 1, PLUGIN_ITEM_POSITION_AXE,
             ItemHelper.Type.ADMIN_TOOL, ItemHelper.Rarity.LEGENDARY,
             List.of(PLUGIN_ITEM_POSITION_AXE_LORE1, PLUGIN_ITEM_POSITION_AXE_LORE2)));
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET,
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET),
         new ItemHelper(Material.WATER_BUCKET, 1, PLUGIN_ITEM_MAGIC_WATER_BUCKET,
             ItemHelper.Type.GADGET, ItemHelper.Rarity.EPIC,
             List.of(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE), 5000));
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_COINS,
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_COINS),
         new ItemHelper(Material.GOLD_NUGGET, 1, PLUGIN_ITEM_COINS,
             ItemHelper.Type.MONEY, ItemHelper.Rarity.COMMON,
             List.of(PLUGIN_ITEM_COINS_LORE)));
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR,
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR),
         new ItemHelper(Material.FEATHER, 1, PLUGIN_ITEM_CLOUDSAILOR,
             ItemHelper.Type.GADGET, ItemHelper.Rarity.EPIC,
             List.of(PLUGIN_ITEM_CLOUDSAILOR_LORE1, PLUGIN_ITEM_CLOUDSAILOR_LORE2), 10000));
@@ -115,21 +116,21 @@ public class ItemManager implements Enable {
       }
     };
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS, cloudBootsItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS), cloudBootsItem);
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED,
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED),
         new ItemHelper(Material.BLACK_STAINED_GLASS_PANE, 1, PLUGIN_ITEM_NPC_GUI_DISABLED_NAME,
             ItemHelper.Type.NPC_GUI, ItemHelper.Rarity.NONE));
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE,
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE),
         new ItemHelper(Material.BARRIER, 1, PLUGIN_ITEM_NPC_GUI_CLOSE_NAME,
             ItemHelper.Type.NPC_GUI, ItemHelper.Rarity.NONE));
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK,
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK),
         new ItemHelper(Material.FISHING_ROD, 1, PLUGIN_ITEM_GRAPPLINGHOCK,
             ItemHelper.Type.GADGET, ItemHelper.Rarity.UNCOMMON));
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER,
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER),
         new ItemHelper(Material.HOPPER, 1, PLUGIN_ITEM_AUTOSELLHOPER,
             ItemHelper.Type.TOOL, ItemHelper.Rarity.LEGENDARY, 50000));
 
@@ -147,7 +148,7 @@ public class ItemManager implements Enable {
       }
     };
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS, relluBootsItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS), relluBootsItem);
 
     ItemHelper relluChestplateItem = new ItemHelper(Material.LEATHER_CHESTPLATE, 1,
         PLUGIN_ITEM_RELLU_CHESTPLATE,
@@ -164,7 +165,7 @@ public class ItemManager implements Enable {
       }
     };
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE, relluChestplateItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE), relluChestplateItem);
 
     ItemHelper relluHelmetItem = new ItemHelper(Material.LEATHER_HELMET, 1,
         PLUGIN_ITEM_RELLU_HELMET,
@@ -181,7 +182,7 @@ public class ItemManager implements Enable {
       }
     };
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_HELMET, relluHelmetItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_HELMET), relluHelmetItem);
 
     ItemHelper relluLeggingsItem = new ItemHelper(Material.LEATHER_LEGGINGS, 1,
         PLUGIN_ITEM_RELLU_LEGGINGS,
@@ -198,7 +199,7 @@ public class ItemManager implements Enable {
       }
     };
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS, relluLeggingsItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS), relluLeggingsItem);
 
     ItemHelper relluShieldItem = new ItemHelper(Material.SHIELD, 1, PLUGIN_ITEM_RELLU_SHIELD,
         ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
@@ -218,14 +219,13 @@ public class ItemManager implements Enable {
       }
     };
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD, relluShieldItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD), relluShieldItem);
 
     ItemHelper relluPickaxeItem = new ItemHelper(Material.NETHERITE_PICKAXE, 1,
         PLUGIN_ITEM_RELLU_PICKAXE,
         ItemHelper.Type.TOOL, ItemHelper.Rarity.LEGENDARY) {
       @Override
       public void init() {
-        getItemMeta().addEnchant(Enchantment.LOOTING, 94, true);
         ItemMeta relluPickaxeMeta = getItemMeta();
         relluPickaxeMeta.addEnchant(Enchantment.LOOTING, 94, true);
         relluPickaxeMeta.addEnchant(Enchantment.EFFICIENCY, 94, true);
@@ -242,7 +242,7 @@ public class ItemManager implements Enable {
       }
     };
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE, relluPickaxeItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE), relluPickaxeItem);
 
     ItemHelper relluSwordItem = new ItemHelper(Material.NETHERITE_SWORD, 1, PLUGIN_ITEM_RELLU_SWORD,
         ItemHelper.Type.WEAPON, ItemHelper.Rarity.LEGENDARY) {
@@ -269,9 +269,9 @@ public class ItemManager implements Enable {
       }
     };
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SWORD, relluSwordItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SWORD), relluSwordItem);
 
-    ItemRegistry.register(plugin, PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR,
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR),
         new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE),
             PLUGIN_ITEM_WORLDSELECTOR,
             ItemHelper.Type.GADGET, ItemHelper.Rarity.RARE));
@@ -283,21 +283,20 @@ public class ItemManager implements Enable {
             9,
             ItemHelper.Type.NONE
         ).withFixedItem(
-            ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_POSITION_AXE))
+            itemService.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_POSITION_AXE))
                 .orElseThrow())
         .withFixedItem(
-            ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET))
+            itemService.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET))
                 .orElseThrow())
-        .withFixedItem(ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR))
+        .withFixedItem(itemService.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR))
             .orElseThrow())
-        .withFixedItem(ItemRegistry.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
+        .withFixedItem(itemService.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
             .orElseThrow());
 
 
-    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    TranslationService translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
+    TranslationService translationService = serviceContext.getTranslationService();
 
-    int itemCount = ItemRegistry.getAll().size();
+    int itemCount = itemService.getAll().size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
 

@@ -79,7 +79,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
     serviceContext.getBankService().payInterestToPlayer(e.getPlayer());
 
     if (WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)) {
-      PlayerHelper.setLobbyItems(p);
+      PlayerHelper.setLobbyItems(p, serviceContext.getItemService());
     }
 
     serviceContext.getSchedulerService().runTaskLater(

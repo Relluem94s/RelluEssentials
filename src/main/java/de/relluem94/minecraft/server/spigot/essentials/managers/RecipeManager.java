@@ -6,13 +6,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.RecipeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.recipe.Shaped;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Map;
 import org.bukkit.Bukkit;
@@ -36,9 +36,10 @@ public class RecipeManager implements Enable {
   }
 
   private @NonNull RecipeHelper buildCloudBootsRecipe(RelluEssentials plugin) {
-    ItemHelper cloudSailorItem = ItemRegistry.find(
+    ServiceContext serviceContext = plugin.getServiceContext();
+    ItemHelper cloudSailorItem = serviceContext.getItemService().find(
         RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
-    ItemHelper cloudBootsItem = ItemRegistry.find(
+    ItemHelper cloudBootsItem = serviceContext.getItemService().find(
             RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
         .orElseThrow();
 

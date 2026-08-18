@@ -35,7 +35,7 @@ public class BetterWorlds implements ListenerConstruct {
         .isSettingActiveForWorld(WorldSetting.SCOREBOARD_SHOW, newWorld), serviceContext.getWorldGroupService());
 
     if (WorldHelper.isInWorld(p, Constants.PLUGIN_WORLD_LOBBY)) {
-      PlayerHelper.setLobbyItems(p);
+      PlayerHelper.setLobbyItems(p, serviceContext.getItemService());
     }
   }
 }

@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.npc.BankerGui;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import java.util.List;
 import org.bukkit.entity.Villager.Profession;
@@ -27,13 +26,13 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   private ItemHelper resolveDisabledItem() {
-    return ItemRegistry.find(
+    return serviceContext.getItemService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
   }
 
   private ItemHelper resolveCloseItem() {
-    return ItemRegistry.find(
+    return serviceContext.getItemService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
         .orElseThrow();
   }

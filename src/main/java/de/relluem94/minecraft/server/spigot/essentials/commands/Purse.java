@@ -1,15 +1,18 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.CoinHelper;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.List;
 import lombok.NonNull;
@@ -89,7 +92,10 @@ public class Purse implements CommandConstruct {
       pe.setHasToBeUpdated(true);
       pe.setUpdatedBy(pe.getId());
 
-      p.getInventory().addItem(CoinHelper.buildCoinItem(coins));
+      ItemHelper coinItem = serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
+          .orElseThrow();
+
+      p.getInventory().addItem(CoinHelper.buildCoinItem(coins, coinItem));
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM,
               StringHelper.formatInt(coins)));

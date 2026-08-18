@@ -7,7 +7,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.rellulib.utils.NetworkUtils;
 import java.util.Properties;
 import java.util.UUID;
@@ -100,12 +100,12 @@ public class PlayerHelper {
     return nearestPlayer;
   }
 
-  public static void setLobbyItems(@NotNull Player p) {
-    ItemHelper grapplingHookItem = ItemRegistry.find(
+  public static void setLobbyItems(@NotNull Player p, ItemService itemService) {
+    ItemHelper grapplingHookItem = itemService.find(
         RegistryKey.of(PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK)).orElseThrow();
-    ItemHelper worldSelectorItem = ItemRegistry.find(
+    ItemHelper worldSelectorItem = itemService.find(
         RegistryKey.of(PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR)).orElseThrow();
-    ItemHelper cloudSailorItem = ItemRegistry.find(
+    ItemHelper cloudSailorItem = itemService.find(
         RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
 
     for (ItemStack i : p.getInventory().getContents()) {
