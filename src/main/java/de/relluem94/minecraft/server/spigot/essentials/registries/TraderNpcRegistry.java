@@ -21,6 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -35,6 +36,10 @@ public class TraderNpcRegistry {
   private final List<ItemStack> npcItemStack = new ArrayList<>();
   private final List<String> npcName = new ArrayList<>();
   private final List<String> npcTraderTitle = new ArrayList<>();
+  /**
+   *  Retrieves the list of registered NPCs.
+   */
+  @Getter
   private final List<TraderNpc> npcs = new ArrayList<>();
   private final ItemHelper disabledItem;
   private final ItemHelper closeItem;
@@ -106,17 +111,8 @@ public class TraderNpcRegistry {
           return inv;
         }
       };
-      addNPC(traderNpc);
+      addNpc(traderNpc);
     }
-  }
-
-  /**
-   * Retrieves the list of registered NPCs.
-   *
-   * @return a list of {@link TraderNpc}
-   */
-  public List<TraderNpc> getNPCs() {
-    return npcs;
   }
 
   /**
@@ -124,7 +120,7 @@ public class TraderNpcRegistry {
    *
    * @param traderNpc the NPC to add
    */
-  public void addNPC(TraderNpc traderNpc) {
+  public void addNpc(TraderNpc traderNpc) {
     npcs.add(traderNpc);
     npcItemStack.add(traderNpc.getItemHelper().getCustomItem());
     npcName.add(traderNpc.getName());
@@ -140,7 +136,7 @@ public class TraderNpcRegistry {
    *
    * @return a list of {@link ItemStack}
    */
-  public List<ItemStack> getNPCItemStackList() {
+  public List<ItemStack> getNpcItemStackList() {
     return npcItemStack;
   }
 
@@ -149,7 +145,7 @@ public class TraderNpcRegistry {
    *
    * @return a list of NPC names
    */
-  public List<String> getNPCNameList() {
+  public List<String> getNpcNameList() {
     return npcName;
   }
 
@@ -158,7 +154,7 @@ public class TraderNpcRegistry {
    *
    * @return a list of NPC trader titles
    */
-  public List<String> getNPCTraderTitleList() {
+  public List<String> getNpcTraderTitleList() {
     return npcTraderTitle;
   }
 
@@ -168,7 +164,7 @@ public class TraderNpcRegistry {
    * @param index the index of the NPC to retrieve
    * @return the {@link TraderNpc} at the specified index
    */
-  public TraderNpc getNPC(int index) {
+  public TraderNpc getNpc(int index) {
     return npcs.get(index);
   }
 }

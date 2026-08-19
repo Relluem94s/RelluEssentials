@@ -42,7 +42,7 @@ public class TraderNpcService {
    * @return list of all {@link TraderNpc} instances
    */
   public List<TraderNpc> getAllNpcs() {
-    return traderNpcRegistry.getNPCs();
+    return traderNpcRegistry.getNpcs();
   }
 
   /**
@@ -52,7 +52,7 @@ public class TraderNpcService {
    * @return the {@link TraderNpc} at the specified index
    */
   public TraderNpc getNpc(int index) {
-    return traderNpcRegistry.getNPC(index);
+    return traderNpcRegistry.getNpc(index);
   }
 
   /**
@@ -61,7 +61,7 @@ public class TraderNpcService {
    * @return list of spawn-egg item stacks
    */
   public List<ItemStack> getNpcSpawnEggs() {
-    return traderNpcRegistry.getNPCItemStackList();
+    return traderNpcRegistry.getNpcItemStackList();
   }
 
   /**
@@ -70,7 +70,7 @@ public class TraderNpcService {
    * @return list of NPC names
    */
   public List<String> getNpcNames() {
-    return traderNpcRegistry.getNPCNameList();
+    return traderNpcRegistry.getNpcNameList();
   }
 
   /**
@@ -80,6 +80,6 @@ public class TraderNpcService {
    * @return list of trader NPC GUI titles
    */
   public List<String> getTraderNpcTitles() {
-    return traderNpcRegistry.getNPCTraderTitleList();
+    return traderNpcRegistry.getNpcTraderTitleList();
   }
 }
