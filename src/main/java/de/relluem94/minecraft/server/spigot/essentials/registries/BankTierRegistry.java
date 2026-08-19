@@ -7,12 +7,16 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * In-memory registry holding all available bank tiers loaded at startup.
+ * This registry provides methods to retrieve the full list of tiers or
+ * look up a specific tier by its unique identifier.
  */
 public class BankTierRegistry {
 
   private final List<BankTierEntry> bankTiersList = new ArrayList<>();
 
   /**
+   * Constructs a new BankTierRegistry with the provided list of bank tier entries.
+   *
    * @param bankTierEntries the list of bank tiers to register
    */
   public BankTierRegistry(List<BankTierEntry> bankTierEntries) {
@@ -22,7 +26,7 @@ public class BankTierRegistry {
   /**
    * Returns all registered bank tiers.
    *
-   * @return list of {@link BankTierEntry}
+   * @return a list containing all {@link BankTierEntry} objects currently in the registry
    */
   public List<BankTierEntry> getBankTiers() {
     return bankTiersList;
@@ -32,7 +36,7 @@ public class BankTierRegistry {
    * Returns the bank tier with the given id.
    *
    * @param id the primary key of the bank tier to look up
-   * @return the matching {@link BankTierEntry}, or {@code null} if none found
+   * @return the matching {@link BankTierEntry}, or {@code null} if no tier with the given id exists
    */
   public @Nullable BankTierEntry getBankTierById(int id) {
     return bankTiersList.stream()
