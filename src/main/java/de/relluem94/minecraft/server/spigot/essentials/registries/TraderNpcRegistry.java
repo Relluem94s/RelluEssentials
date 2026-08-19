@@ -27,7 +27,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-
+/**
+ * Registry responsible for managing and initializing Trader NPCs.
+ */
 public class TraderNpcRegistry {
 
   private final List<ItemStack> npcItemStack = new ArrayList<>();
@@ -38,6 +40,11 @@ public class TraderNpcRegistry {
   private final ItemHelper closeItem;
   private final TranslationService translationService;
 
+  /**
+   * Constructs a new TraderNpcRegistry.
+   *
+   * @param serviceContext the service context containing necessary services
+   */
   public TraderNpcRegistry(ServiceContext serviceContext) {
     this.disabledItem = serviceContext.getItemService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
@@ -48,6 +55,11 @@ public class TraderNpcRegistry {
     this.translationService = serviceContext.getTranslationService();
   }
 
+  /**
+   * Initializes the registry with a list of Trader NPC entries.
+   *
+   * @param traderNpcEntryList the list of entries used to create NPCs
+   */
   public void init(List<TraderNPCEntry> traderNpcEntryList) {
     for (TraderNPCEntry ne : traderNpcEntryList) {
       TraderNpc traderNpc = new TraderNpc(ne) {
@@ -99,18 +111,18 @@ public class TraderNpcRegistry {
   }
 
   /**
-   * Gives back a List of NPCs
+   * Retrieves the list of registered NPCs.
    *
-   * @return List of NPC
+   * @return a list of {@link TraderNpc}
    */
   public List<TraderNpc> getNPCs() {
     return npcs;
   }
 
   /**
-   * Adds a NPC.
+   * Adds a new NPC to the registry and updates associated lists.
    *
-   * @param traderNpc NPC
+   * @param traderNpc the NPC to add
    */
   public void addNPC(TraderNpc traderNpc) {
     npcs.add(traderNpc);
@@ -124,37 +136,37 @@ public class TraderNpcRegistry {
   }
 
   /**
-   * Gives back a List of ItemStacks (Spawn Eggs).
+   * Retrieves the list of ItemStacks used to spawn the NPCs.
    *
-   * @return List of ItemStack
+   * @return a list of {@link ItemStack}
    */
   public List<ItemStack> getNPCItemStackList() {
     return npcItemStack;
   }
 
   /**
-   * Gives back a List of Strings with NPC Names.
+   * Retrieves the list of names of the registered NPCs.
    *
-   * @return List of Strings
+   * @return a list of NPC names
    */
   public List<String> getNPCNameList() {
     return npcName;
   }
 
   /**
-   * Gives back a List of Strings with Trader NPC GUI Titles.
+   * Retrieves the list of titles for Trader-type NPCs.
    *
-   * @return List of Strings
+   * @return a list of NPC trader titles
    */
   public List<String> getNPCTraderTitleList() {
     return npcTraderTitle;
   }
 
   /**
-   * Gives back a NPC from index.
+   * Retrieves a specific NPC by its index in the registry.
    *
-   * @param index int
-   * @return NPC
+   * @param index the index of the NPC to retrieve
+   * @return the {@link TraderNpc} at the specified index
    */
   public TraderNpc getNPC(int index) {
     return npcs.get(index);
