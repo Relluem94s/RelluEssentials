@@ -10,18 +10,22 @@ public final class NamespacedKeyConstants {
   }
 
   public static NamespacedKey itemCoins() {
-    return new NamespacedKey(RelluEssentials.getInstance(), "coins");
+    return createKey("coins");
   }
 
   public static NamespacedKey itemSellPrice() {
-    return new NamespacedKey(RelluEssentials.getInstance(), "itemSellPrice");
+    return createKey("itemSellPrice");
   }
 
   public static NamespacedKey itemBuyPrice() {
-    return new NamespacedKey(RelluEssentials.getInstance(), "itemBuyPrice");
+    return createKey("itemBuyPrice");
   }
 
   public static NamespacedKey itemCost() {
-    return new NamespacedKey(RelluEssentials.getInstance(), "item_cost");
+    return createKey("item_cost");
+  }
+
+  private static NamespacedKey createKey(String key) {
+    return new NamespacedKey(RelluEssentials.getInstance(), key);
   }
 }
