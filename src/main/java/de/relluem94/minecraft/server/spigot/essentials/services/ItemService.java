@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.NonNull;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Service for managing and accessing registered items.
@@ -35,6 +36,17 @@ public class ItemService {
    */
   public void register(@NonNull RegistryKey key, @NonNull ItemHelper item) {
     itemRegistry.register(key, item);
+  }
+
+  /**
+   * Registers a new {@link ItemHelper} using a specific {@link Plugin} for the namespace.
+   *
+   * @param plugin the plugin to use for the namespace
+   * @param key    the key to register the item under
+   * @param item   the item helper instance
+   */
+  public void register(@NonNull Plugin plugin, @NonNull String key, @NonNull ItemHelper item) {
+    register(RegistryKey.of(plugin, key), item);
   }
 
   /**
