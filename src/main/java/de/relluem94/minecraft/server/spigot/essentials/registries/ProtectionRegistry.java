@@ -10,14 +10,18 @@ import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 
+/**
+ * Registry responsible for managing protection entries and protectable materials. It handles the
+ * storage and retrieval of {@link ProtectionEntry} objects mapped to specific locations.
+ */
 public class ProtectionRegistry {
 
   private final List<Material> protectionLocksList = new ArrayList<>();
   private final HashMap<Location, ProtectionEntry> protectionEntryMap = new HashMap<>();
 
   /**
-   * Creates a new ProtectionAPI instance and populates the internal protection locks list and
-   * protection entry map with the provided data.
+   * Creates a new {@link ProtectionRegistry} instance and populates the internal protection locks
+   * list and protection entry map with the provided data.
    *
    * @param protectionLocksEntryList list of {@link ProtectionLockEntry} whose materials will be
    *                                 registered as protectable
@@ -32,6 +36,10 @@ public class ProtectionRegistry {
     this.protectionEntryMap.putAll(protectionEntryMap);
   }
 
+  private static Location normalizeLocation(Location location) {
+    return new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());
+  }
+
   /**
    * Returns the {@link ProtectionEntry} associated with the given {@link Location}.
    *
@@ -41,6 +49,7 @@ public class ProtectionRegistry {
   public ProtectionEntry getProtectionEntry(Location l) {
     return protectionEntryMap.get(normalizeLocation(l));
   }
+
   /**
    * Removes the {@link ProtectionEntry} associated with the given {@link Location}.
    *
@@ -70,36 +79,46 @@ public class ProtectionRegistry {
     protectionLocksList.add(m);
   }
 
-
+  /**
+   * Retrieves all protection entries that were created by a specific player.
+   *
+   * @param playerId the unique identifier of the player
+   * @return a {@link List} of {@link ProtectionEntry} objects owned by the given player
+   */
   public List<ProtectionEntry> getProtectionEntriesOwnedBy(long playerId) {
     return protectionEntryMap.values().stream()
         .filter(entry -> entry.getCreatedBy() == playerId)
         .toList();
   }
 
-
   /**
    * Returns the map of all current protection entries.
    *
-   * @return a {@link Map} mapping each protected {@link Location} to its corresponding
-   * {@link ProtectionEntry}
+   * @return an unmodifiable {@link Map} mapping each protected {@link Location} to its
+   *     corresponding {@link ProtectionEntry}
    */
   public Map<Location, ProtectionEntry> getProtectionEntryList() {
     return Collections.unmodifiableMap(protectionEntryMap);
   }
 
+  /**
+   * Checks if a specific material is registered as a protectable material.
+   *
+   * @param material the material to check
+   * @return {@code true} if the material is protectable, {@code false} otherwise
+   */
   public boolean isProtectableMaterial(Material material) {
     return protectionLocksList.contains(material);
   }
 
+  /**
+   * Removes all protection entries that match the provided list of protection IDs.
+   *
+   * @param protectionIds a {@link List} of IDs representing the entries to be removed
+   */
   public void removeProtectionEntriesByIds(List<Long> protectionIds) {
     protectionEntryMap.entrySet().removeIf(
         entry -> protectionIds.contains((long) entry.getValue().getId())
     );
-  }
-
-
-  private static Location normalizeLocation(Location location) {
-    return new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());
   }
 }
