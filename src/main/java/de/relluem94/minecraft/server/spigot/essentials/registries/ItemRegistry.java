@@ -9,10 +9,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Internal registry for managing {@link ItemHelper} instances.
@@ -98,7 +98,7 @@ public class ItemRegistry {
    * @param type the type to filter by
    * @return a list of items matching the type
    */
-  public List<ItemHelper> getAllByType(@NonNull ItemHelper.Type type) {
+  public List<ItemHelper> getAllByType(ItemHelper.Type type) {
     return registeredItems.values().stream()
         .filter(item -> item.getItemType() == type)
         .toList();
