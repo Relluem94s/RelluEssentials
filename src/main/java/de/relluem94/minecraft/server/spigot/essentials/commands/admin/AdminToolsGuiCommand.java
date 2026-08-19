@@ -8,14 +8,21 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for opening the Admin Tools GUI.
+ */
 public class AdminToolsGuiCommand implements SubCommand {
 
   private final ServiceContext serviceContext;
 
+  /**
+   * Constructs a new AdminToolsGuiCommand.
+   *
+   * @param context the service context to use for dependencies
+   */
   public AdminToolsGuiCommand(ServiceContext context) {
     this.serviceContext = context;
   }
@@ -27,7 +34,7 @@ public class AdminToolsGuiCommand implements SubCommand {
           .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
-    InventoryRegistry.find(
+    serviceContext.getInventoryService().find(
             RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_INVENTORY_ADMIN_TOOLS))
         .ifPresent(registeredInventory -> registeredInventory.openFor(player));
   }

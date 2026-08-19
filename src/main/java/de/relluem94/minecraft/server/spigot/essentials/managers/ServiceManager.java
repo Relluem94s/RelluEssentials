@@ -15,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.NpcDialogueRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.PlayerRegistry;
@@ -46,6 +47,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.InventoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.LocationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.MessageService;
@@ -69,6 +71,11 @@ import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.Protecti
 import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * Manages the lifecycle and initialization of all services within the plugin. This class is
+ * responsible for instantiating repositories, registries, and services, and wiring them together
+ * into the {@link ServiceContext}.
+ */
 public class ServiceManager implements Enable {
 
   @Override
@@ -79,6 +86,7 @@ public class ServiceManager implements Enable {
 
     /* Services */
     serviceContext.setItemService(new ItemService(new ItemRegistry(relluEssentials)));
+    serviceContext.setInventoryService(new InventoryService(new InventoryRegistry()));
     serviceContext.setPluginManagerService(new PluginManagerService(plugin));
     serviceContext.setClipboardService(new ClipboardService());
     DropRuleRepository dropRuleRepository = new DropRuleRepository(persistenceContext.getDropDao());
@@ -184,7 +192,8 @@ public class ServiceManager implements Enable {
     NpcRepository npcRepository = new NpcRepository(
         relluEssentials.getPersistenceContext().getNpcDao());
     NpcSpawner npcSpawner = new NpcSpawner(relluEssentials.getServer(),
-        new NamespacedKey(relluEssentials, "npc_id"), new NpcMannequinAttributeApplier(serviceContext));
+        new NamespacedKey(relluEssentials, "npc_id"),
+        new NpcMannequinAttributeApplier(serviceContext));
     NpcValidator npcValidator = new NpcValidator();
     NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
     serviceContext.setNpcService(npcService);
@@ -220,6 +229,13 @@ public class ServiceManager implements Enable {
 
   }
 
+  /**
+   * Performs early initialization of services that are required before the main service setup.
+   * Specifically handles the setup of the {@link TranslationService} based on the plugin
+   * configuration.
+   *
+   * @param relluEssentials The main plugin instance.
+   */
   public void preEnable(RelluEssentials relluEssentials) {
 
     String lang = relluEssentials.getConfig().getString("language", "en_US");

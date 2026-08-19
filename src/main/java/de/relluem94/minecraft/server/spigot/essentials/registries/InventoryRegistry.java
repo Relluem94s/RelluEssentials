@@ -4,35 +4,33 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Exceptio
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registries.model.RegisteredInventory;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.NonNull;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Unmodifiable;
 
+/**
+ * Registry responsible for the storage and retrieval of registered inventories.
+ */
 public class InventoryRegistry {
 
-  private static final Map<String, RegisteredInventory> registeredInventories = new LinkedHashMap<>();
+  private final Map<String, RegisteredInventory> registeredInventories = new LinkedHashMap<>();
 
-  private InventoryRegistry() {
-  }
-
-  public static @NonNull RegisteredInventory create(@NonNull Plugin plugin,
-      @NonNull String inventoryId, @NonNull String title, int size,
-      @NonNull ItemHelper.Type itemFilter) {
-    RegistryKey key = RegistryKey.of(plugin, inventoryId);
-    return createWithKey(key, title, size, itemFilter);
-  }
-
-  public static @NonNull RegisteredInventory create(@NonNull RegistryKey key, @NonNull String title,
+  /**
+   * Registers a new inventory into the storage.
+   *
+   * @param key        The unique registry key.
+   * @param title      The display title.
+   * @param size       The inventory size.
+   * @param itemFilter The item filter type.
+   * @return The registered {@link RegisteredInventory}.
+   * @throws IllegalArgumentException if the key is already registered.
+   */
+  public @NonNull RegisteredInventory register(@NonNull RegistryKey key, @NonNull String title,
       int size, @NonNull ItemHelper.Type itemFilter) {
-    return createWithKey(key, title, size, itemFilter);
-  }
-
-  private static @NonNull RegisteredInventory createWithKey(@NonNull RegistryKey key,
-      @NonNull String title, int size, @NonNull ItemHelper.Type itemFilter) {
     if (registeredInventories.containsKey(key.toString())) {
       throw new IllegalArgumentException(String.format(PLUGIN_EXCEPTION_INVENTORY_REGISTRY, key));
     }
@@ -41,11 +39,23 @@ public class InventoryRegistry {
     return inventory;
   }
 
-  public static @NonNull Optional<RegisteredInventory> find(@NonNull RegistryKey key) {
+  /**
+   * Finds an inventory by its key.
+   *
+   * @param key The key to search for.
+   * @return An {@link Optional} containing the inventory.
+   */
+  public @NonNull Optional<RegisteredInventory> find(@NonNull RegistryKey key) {
     return Optional.ofNullable(registeredInventories.get(key.toString()));
   }
 
-  public static @NonNull @Unmodifiable List<RegisteredInventory> getAllByNamespace(
+  /**
+   * Finds all inventories belonging to a namespace.
+   *
+   * @param namespace The namespace to filter by.
+   * @return An unmodifiable list of inventories.
+   */
+  public @NonNull @Unmodifiable List<RegisteredInventory> findAllByNamespace(
       @NonNull String namespace) {
     return registeredInventories.entrySet().stream()
         .filter(entry -> entry.getKey().startsWith(namespace.toLowerCase() + ":"))
