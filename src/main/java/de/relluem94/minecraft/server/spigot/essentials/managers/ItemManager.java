@@ -57,7 +57,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
@@ -165,7 +164,8 @@ public class ItemManager implements Enable {
       }
     };
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE), relluChestplateItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE),
+        relluChestplateItem);
 
     ItemHelper relluHelmetItem = new ItemHelper(Material.LEATHER_HELMET, 1,
         PLUGIN_ITEM_RELLU_HELMET,
@@ -182,7 +182,8 @@ public class ItemManager implements Enable {
       }
     };
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_HELMET), relluHelmetItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_HELMET),
+        relluHelmetItem);
 
     ItemHelper relluLeggingsItem = new ItemHelper(Material.LEATHER_LEGGINGS, 1,
         PLUGIN_ITEM_RELLU_LEGGINGS,
@@ -199,7 +200,8 @@ public class ItemManager implements Enable {
       }
     };
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS), relluLeggingsItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS),
+        relluLeggingsItem);
 
     ItemHelper relluShieldItem = new ItemHelper(Material.SHIELD, 1, PLUGIN_ITEM_RELLU_SHIELD,
         ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
@@ -219,7 +221,8 @@ public class ItemManager implements Enable {
       }
     };
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD), relluShieldItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD),
+        relluShieldItem);
 
     ItemHelper relluPickaxeItem = new ItemHelper(Material.NETHERITE_PICKAXE, 1,
         PLUGIN_ITEM_RELLU_PICKAXE,
@@ -242,7 +245,8 @@ public class ItemManager implements Enable {
       }
     };
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE), relluPickaxeItem);
+    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE),
+        relluPickaxeItem);
 
     ItemHelper relluSwordItem = new ItemHelper(Material.NETHERITE_SWORD, 1, PLUGIN_ITEM_RELLU_SWORD,
         ItemHelper.Type.WEAPON, ItemHelper.Rarity.LEGENDARY) {
@@ -276,7 +280,7 @@ public class ItemManager implements Enable {
             PLUGIN_ITEM_WORLDSELECTOR,
             ItemHelper.Type.GADGET, ItemHelper.Rarity.RARE));
 
-    InventoryRegistry.create(
+    serviceContext.getInventoryService().create(
             plugin,
             PLUGIN_INVENTORY_ADMIN_TOOLS,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dAdmin Tools",
@@ -293,14 +297,14 @@ public class ItemManager implements Enable {
         .withFixedItem(itemService.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
             .orElseThrow());
 
-
     TranslationService translationService = serviceContext.getTranslationService();
 
     int itemCount = itemService.getAll().size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_ITEMS_REGISTERED, itemCount));
 
-    int inventoryCount = InventoryRegistry.getAllByNamespace(plugin.getName()).size();
+    int inventoryCount = serviceContext.getInventoryService().getAllByNamespace(plugin.getName())
+        .size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
   }

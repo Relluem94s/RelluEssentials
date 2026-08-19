@@ -10,11 +10,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.registries.model.RegisteredInventory;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import java.util.Collections;
 import java.util.List;
@@ -28,22 +27,13 @@ class RegisteredInventoryTest {
 
   private Player mockPlayer;
   private RegistryKey registryKey;
-  private RelluEssentials mockPlugin;
-  private ServiceContext mockServiceContext;
   private ItemService mockItemService;
 
   @BeforeEach
   void setUp() {
     mockPlayer = mock(Player.class);
     registryKey = new RegistryKey("test", "key");
-
-    mockPlugin = mock(RelluEssentials.class);
-    mockServiceContext = mock(ServiceContext.class);
     mockItemService = mock(ItemService.class);
-
-    try (MockedStatic<RelluEssentials> mockedPlugin = mockStatic(RelluEssentials.class)) {
-      mockedPlugin.when(RelluEssentials::getInstance).thenReturn(mockPlugin);
-    }
   }
 
   @Test
@@ -52,11 +42,9 @@ class RegisteredInventoryTest {
         registryKey, "Test GUI", 9, ItemHelper.Type.TOOL);
 
     ItemHelper item = mock(ItemHelper.class);
-
     registeredInventory.withFixedItem(item);
-
     assertEquals(1, registeredInventory.getFixedItems().size());
-    assertEquals(item, registeredInventory.getFixedItems().get(0));
+    assertEquals(item, registeredInventory.getFixedItems().getFirst());
   }
 
   @Test
@@ -80,12 +68,14 @@ class RegisteredInventoryTest {
     Inventory mockInventory = mock(Inventory.class);
 
     try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
-      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class)))
+      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(
+              any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class)))
           .thenReturn(mockInventory);
 
       assertDoesNotThrow(() -> registeredInventory.openFor(mockPlayer, extraItem));
 
-      mockedInventoryHelper.verify(() -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
+      mockedInventoryHelper.verify(
+          () -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
     }
   }
 
@@ -98,20 +88,17 @@ class RegisteredInventoryTest {
     ItemHelper extraItem = mock(ItemHelper.class);
     Inventory mockInventory = mock(Inventory.class);
 
-    try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class);
-        MockedStatic<RelluEssentials> mockedRellu = mockStatic(RelluEssentials.class)) {
-
-      mockedRellu.when(RelluEssentials::getInstance).thenReturn(mockPlugin);
-      when(mockPlugin.getServiceContext()).thenReturn(mockServiceContext);
-      when(mockServiceContext.getItemService()).thenReturn(mockItemService);
+    try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
       when(mockItemService.getAllByType(ItemHelper.Type.TOOL)).thenReturn(Collections.emptyList());
-
-      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class), any(ItemHelper.Type.class)))
+      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(
+              any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class),
+              any(ItemHelper.Type.class)))
           .thenReturn(mockInventory);
 
-      assertDoesNotThrow(() -> registeredInventory.openForWithTypeFilter(mockPlayer, extraItem));
-
-      mockedInventoryHelper.verify(() -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
+      assertDoesNotThrow(
+          () -> registeredInventory.openForWithTypeFilter(mockItemService, mockPlayer, extraItem));
+      mockedInventoryHelper.verify(
+          () -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
     }
   }
 
@@ -122,7 +109,8 @@ class RegisteredInventoryTest {
     int size = 27;
     ItemHelper.Type type = ItemHelper.Type.GADGET;
 
-    RegisteredInventory registeredInventory = new RegisteredInventory(registryKey, title, size, type);
+    RegisteredInventory registeredInventory = new RegisteredInventory(registryKey, title, size,
+        type);
 
     assertEquals(registryKey, registeredInventory.getRegistryKey());
     assertEquals(title, registeredInventory.getTitle());
@@ -139,12 +127,14 @@ class RegisteredInventoryTest {
     Inventory mockInventory = mock(Inventory.class);
 
     try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
-      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class)))
+      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(
+              any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class)))
           .thenReturn(mockInventory);
 
       assertDoesNotThrow(() -> registeredInventory.openFor(mockPlayer));
 
-      mockedInventoryHelper.verify(() -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
+      mockedInventoryHelper.verify(
+          () -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
     }
   }
 
@@ -154,20 +144,16 @@ class RegisteredInventoryTest {
         registryKey, "Test GUI", 9, ItemHelper.Type.TOOL);
     Inventory mockInventory = mock(Inventory.class);
 
-    try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class);
-        MockedStatic<RelluEssentials> mockedRellu = mockStatic(RelluEssentials.class)) {
-
-      mockedRellu.when(RelluEssentials::getInstance).thenReturn(mockPlugin);
-      when(mockPlugin.getServiceContext()).thenReturn(mockServiceContext);
-      when(mockServiceContext.getItemService()).thenReturn(mockItemService);
+    try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
       when(mockItemService.getAllByType(ItemHelper.Type.TOOL)).thenReturn(Collections.emptyList());
-
-      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class), any(ItemHelper.Type.class)))
+      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(
+              any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class),
+              any(ItemHelper.Type.class)))
           .thenReturn(mockInventory);
-
-      assertDoesNotThrow(() -> registeredInventory.openForWithTypeFilter(mockPlayer));
-
-      mockedInventoryHelper.verify(() -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
+      assertDoesNotThrow(
+          () -> registeredInventory.openForWithTypeFilter(mockItemService, mockPlayer));
+      mockedInventoryHelper.verify(
+          () -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
     }
   }
 }
