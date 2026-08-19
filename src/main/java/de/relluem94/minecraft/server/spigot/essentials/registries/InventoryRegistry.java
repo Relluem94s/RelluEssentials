@@ -9,8 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.NonNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Registry responsible for the storage and retrieval of registered inventories.
@@ -30,7 +30,7 @@ public class InventoryRegistry {
    * @throws IllegalArgumentException if the key is already registered.
    */
   public @NonNull RegisteredInventory register(@NonNull RegistryKey key, @NonNull String title,
-      int size, @NonNull ItemHelper.Type itemFilter) {
+      int size, ItemHelper.Type itemFilter) {
     if (registeredInventories.containsKey(key.toString())) {
       throw new IllegalArgumentException(String.format(PLUGIN_EXCEPTION_INVENTORY_REGISTRY, key));
     }
