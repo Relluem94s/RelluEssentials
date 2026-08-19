@@ -54,7 +54,7 @@ class ItemRegistryTest {
 
     mockedRegistryKeyStatic = Mockito.mockStatic(RegistryKey.class);
     mockedRegistryKeyStatic.when(() -> RegistryKey.initializeInternalPlugin(any(Plugin.class)))
-        .thenAnswer(invocation -> null);
+        .thenAnswer(_ -> null);
 
     itemRegistry = new ItemRegistry(mockPlugin);
 
@@ -87,9 +87,8 @@ class ItemRegistryTest {
   void register_ShouldThrowException_WhenKeyAlreadyExists() {
     itemRegistry.register(mockRegistryKey, mockItemHelper);
 
-    assertThrows(IllegalArgumentException.class, () -> {
-      itemRegistry.register(mockRegistryKey, mockItemHelper);
-    });
+    assertThrows(IllegalArgumentException.class,
+        () -> itemRegistry.register(mockRegistryKey, mockItemHelper));
   }
 
   @Test
@@ -138,7 +137,7 @@ class ItemRegistryTest {
     var results = itemRegistry.getAllByType(ItemHelper.Type.GADGET);
 
     assertEquals(1, results.size());
-    assertEquals(typeAItem, results.get(0));
+    assertEquals(typeAItem, results.getFirst());
   }
 
   @Test
