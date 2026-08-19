@@ -6,8 +6,8 @@ import org.jspecify.annotations.NonNull;
 
 /**
  * Registry that holds and resolves {@link SubCommand} implementations.
- * <p>
- * Given a list of sub-commands, this registry finds the first one whose
+ *
+ * <p>Given a list of sub-commands, this registry finds the first one whose
  * {@link SubCommand#matches(String[])} method returns {@code true} for the provided arguments.
  * </p>
  *
