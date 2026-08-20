@@ -110,8 +110,6 @@ public class RelluEssentials extends JavaPlugin {
     );
     databaseManager.enable(this);
     serviceManager.enable(this);
-    CommandManager commandManager = new CommandManager();
-    commandManager.enable(this);
     SignManager signManager = new SignManager();
     signManager.enable(this);
     SkillManager skillManager = new SkillManager();
@@ -120,6 +118,8 @@ public class RelluEssentials extends JavaPlugin {
     recipeManager.enable(this);
     BankManager bankManager = new BankManager();
     bankManager.enable(this);
+    CommandManager commandManager = new CommandManager();
+    commandManager.enable(this);
     ListenerManager listenerManager = new ListenerManager();
     listenerManager.enable(this);
     autoSaveManager = new AutoSaveManager();

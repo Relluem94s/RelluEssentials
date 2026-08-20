@@ -85,8 +85,6 @@ public class ServiceManager implements Enable {
     PersistenceContext persistenceContext = relluEssentials.getPersistenceContext();
 
     /* Services */
-    serviceContext.setItemService(new ItemService(new ItemRegistry(relluEssentials)));
-    serviceContext.setInventoryService(new InventoryService(new InventoryRegistry()));
     serviceContext.setPluginManagerService(new PluginManagerService(plugin));
     serviceContext.setClipboardService(new ClipboardService());
     DropRuleRepository dropRuleRepository = new DropRuleRepository(persistenceContext.getDropDao());
@@ -237,12 +235,15 @@ public class ServiceManager implements Enable {
    * @param relluEssentials The main plugin instance.
    */
   public void preEnable(RelluEssentials relluEssentials) {
+    ServiceContext serviceContext = relluEssentials.getServiceContext();
 
     String lang = relluEssentials.getConfig().getString("language", "en_US");
 
     TranslationService translationService = new TranslationService(relluEssentials);
     translationService.loadLanguages();
     translationService.setDefaultLanguage(lang);
-    relluEssentials.getServiceContext().setTranslationService(translationService);
+    serviceContext.setTranslationService(translationService);
+    serviceContext.setItemService(new ItemService(new ItemRegistry(relluEssentials)));
+    serviceContext.setInventoryService(new InventoryService(new InventoryRegistry()));
   }
 }
