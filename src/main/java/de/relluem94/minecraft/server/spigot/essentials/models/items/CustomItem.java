@@ -35,7 +35,7 @@ public record CustomItem(
     Rarity rarity,
     Integer cost,
     List<EnchantmentData> enchantments,
-    Map<String, String> persistentData,
+    Map<String, Object> persistentData,
     RelluEssentialsNamespacedKey relluEssentialsNamespacedKey
 ) {
 
@@ -101,10 +101,19 @@ public record CustomItem(
         }
       }
 
-      for (Map.Entry<String, String> entry : persistentData.entrySet()) {
+      for (Map.Entry<String, Object> entry : persistentData.entrySet()) {
         NamespacedKey dataKey = NamespacedKey.fromString(entry.getKey());
         if (dataKey != null) {
-          meta.getPersistentDataContainer().set(dataKey, PersistentDataType.STRING, entry.getValue());
+          Object value = entry.getValue();
+          if (value instanceof String stringValue) {
+            meta.getPersistentDataContainer().set(dataKey, PersistentDataType.STRING, stringValue);
+          } else if (value instanceof Integer integerValue) {
+            meta.getPersistentDataContainer().set(dataKey, PersistentDataType.INTEGER, integerValue);
+          } else if (value instanceof Boolean booleanValue) {
+            meta.getPersistentDataContainer().set(dataKey, PersistentDataType.BYTE, (byte) (booleanValue ? 1 : 0));
+          } else if (value instanceof Double doubleValue) {
+            meta.getPersistentDataContainer().set(dataKey, PersistentDataType.DOUBLE, doubleValue);
+          }
         }
       }
 

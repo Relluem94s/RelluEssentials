@@ -23,7 +23,7 @@ public class CustomItemBuilder {
   private CustomItem.Rarity rarity = CustomItem.Rarity.NONE;
   private Integer cost = null;
   private List<CustomItem.EnchantmentData> enchantments = new ArrayList<>();
-  private Map<String, String> persistentData = new HashMap<>();
+  private Map<String, Object> persistentData = new HashMap<>();
 
   public CustomItemBuilder(RelluEssentialsNamespacedKey relluEssentialsNamespacedKey, Material material) {
     this.relluEssentialsNamespacedKey = relluEssentialsNamespacedKey;
@@ -65,8 +65,13 @@ public class CustomItemBuilder {
     return this;
   }
 
-  public CustomItemBuilder persistentData(Map<String, String> persistentData) {
+  public CustomItemBuilder persistentData(Map<String, Object> persistentData) {
     this.persistentData = new HashMap<>(persistentData);
+    return this;
+  }
+
+  public CustomItemBuilder addPersistentData(String key, Object value) {
+    this.persistentData.put(key, value);
     return this;
   }
 
