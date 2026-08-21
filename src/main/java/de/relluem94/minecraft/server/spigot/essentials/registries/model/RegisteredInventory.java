@@ -1,9 +1,9 @@
 package de.relluem94.minecraft.server.spigot.essentials.registries.model;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,23 +19,23 @@ import org.jspecify.annotations.NonNull;
 @Getter
 public class RegisteredInventory {
 
-  private final RegistryKey registryKey;
+  private final RelluEssentialsNamespacedKey relluEssentialsNamespacedKey;
   private final String title;
   private final int size;
-  private final ItemHelper.Type itemFilter;
-  private final List<ItemHelper> fixedItems;
+  private final CustomItem.Type itemFilter;
+  private final List<CustomItem> fixedItems;
 
   /**
    * Creates a new RegisteredInventory instance.
    *
-   * @param registryKey the unique registry key for this inventory
+   * @param relluEssentialsNamespacedKey the unique registry key for this inventory
    * @param title       the title displayed in the inventory
    * @param size        the number of slots in the inventory
    * @param itemFilter  the type of items allowed in this inventory
    */
-  public RegisteredInventory(@NonNull RegistryKey registryKey, @NonNull String title, int size,
-      ItemHelper.@NonNull Type itemFilter) {
-    this.registryKey = registryKey;
+  public RegisteredInventory(@NonNull RelluEssentialsNamespacedKey relluEssentialsNamespacedKey, @NonNull String title, int size,
+      CustomItem.@NonNull Type itemFilter) {
+    this.relluEssentialsNamespacedKey = relluEssentialsNamespacedKey;
     this.title = title;
     this.size = size;
     this.itemFilter = itemFilter;
@@ -48,7 +48,7 @@ public class RegisteredInventory {
    * @param item the item to be added as a fixed item
    * @return this instance for method chaining
    */
-  public RegisteredInventory withFixedItem(@NonNull ItemHelper item) {
+  public RegisteredInventory withFixedItem(@NonNull CustomItem item) {
     fixedItems.add(item);
     return this;
   }
@@ -59,8 +59,8 @@ public class RegisteredInventory {
    * @param player     the player to open the inventory for
    * @param extraItems additional items to include in the inventory
    */
-  public void openFor(@NonNull Player player, ItemHelper... extraItems) {
-    List<ItemHelper> items = new ArrayList<>(fixedItems);
+  public void openFor(@NonNull Player player, CustomItem... extraItems) {
+    List<CustomItem> items = new ArrayList<>(fixedItems);
     items.addAll(Arrays.asList(extraItems));
 
     CustomInventory customInventory = new CustomInventory(itemFilter, size, title);
@@ -78,8 +78,8 @@ public class RegisteredInventory {
    * @param extraItems  additional items to include in the inventory
    */
   public void openForWithTypeFilter(@NonNull ItemService itemService, @NonNull Player player,
-      ItemHelper... extraItems) {
-    List<ItemHelper> items = new ArrayList<>(itemService.getAllByType(itemFilter));
+      CustomItem... extraItems) {
+    List<CustomItem> items = new ArrayList<>(itemService.getAllByType(itemFilter));
     items.addAll(fixedItems);
     items.addAll(Arrays.asList(extraItems));
 
@@ -95,7 +95,7 @@ public class RegisteredInventory {
    *
    * @return a list containing the fixed items
    */
-  public List<ItemHelper> getFixedItems() {
+  public List<CustomItem> getFixedItems() {
     return Collections.unmodifiableList(fixedItems);
   }
 }

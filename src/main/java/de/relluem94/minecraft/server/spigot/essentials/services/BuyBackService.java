@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BuyBackRepository;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class BuyBackService {
     return EnchantmentRegistry.findByBookItemStack(item)
         .map(enchantment -> enchantment.getBook().getCustomItem())
         .orElseGet(() -> serviceContext.getItemService().findByItemStack(item)
-            .map(ItemHelper::getCustomItem)
+            .map(CustomItem::toItemStack)
             .orElse(item));
   }
 

@@ -326,7 +326,7 @@ public class ItemManager implements Enable {
     serviceContext.getInventoryService().create(plugin, PLUGIN_INVENTORY_ADMIN_TOOLS,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dAdmin Tools", 9,
             ItemHelper.Type.NONE).withFixedItem(
-            itemService.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow())
+            itemService.find(new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow())
         .withFixedItem(
             itemService.find(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET))
                 .orElseThrow()).withFixedItem(

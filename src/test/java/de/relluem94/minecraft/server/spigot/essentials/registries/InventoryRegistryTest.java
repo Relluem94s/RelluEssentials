@@ -32,7 +32,7 @@ class InventoryRegistryTest {
 
     RegisteredInventory registeredInventory = inventoryRegistry.register(key, title, size, filter);
 
-    assertEquals(key, registeredInventory.getRegistryKey());
+    assertEquals(key, registeredInventory.getRelluEssentialsNamespacedKey());
     assertEquals(title, registeredInventory.getTitle());
     assertEquals(size, registeredInventory.getSize());
     assertEquals(filter, registeredInventory.getItemFilter());
@@ -56,7 +56,7 @@ class InventoryRegistryTest {
     Optional<RegisteredInventory> result = inventoryRegistry.find(key);
 
     assertTrue(result.isPresent());
-    assertEquals(key, result.get().getRegistryKey());
+    assertEquals(key, result.get().getRelluEssentialsNamespacedKey());
   }
 
   @Test

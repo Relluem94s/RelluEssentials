@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.models;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,7 @@ class CustomInventoryTest {
 
     @BeforeEach
     void setUp() {
-        customInventory = new CustomInventory(ItemHelper.Type.BUILDING, 9, "BUILD_BLOCKS_TITLE");
+        customInventory = new CustomInventory(CustomItem.Type.BUILDING, 9, "BUILD_BLOCKS_TITLE");
     }
 
     @AfterEach
@@ -23,8 +23,8 @@ class CustomInventoryTest {
 
     @Test
     void getType() {
-        Assertions.assertEquals(ItemHelper.Type.BUILDING, customInventory.getType());
-        Assertions.assertNotEquals(ItemHelper.Type.DECORATION, customInventory.getType());
+        Assertions.assertEquals(CustomItem.Type.BUILDING, customInventory.getType());
+        Assertions.assertNotEquals(CustomItem.Type.DECORATION, customInventory.getType());
     }
 
     @Test
@@ -39,9 +39,9 @@ class CustomInventoryTest {
 
     @Test
     void setType() {
-        Assertions.assertEquals(ItemHelper.Type.BUILDING, customInventory.getType());
-        customInventory.setType(ItemHelper.Type.DECORATION);
-        Assertions.assertEquals(ItemHelper.Type.DECORATION, customInventory.getType());
+        Assertions.assertEquals(CustomItem.Type.BUILDING, customInventory.getType());
+        customInventory.setType(CustomItem.Type.DECORATION);
+        Assertions.assertEquals(CustomItem.Type.DECORATION, customInventory.getType());
     }
 
     @Test
@@ -54,7 +54,7 @@ class CustomInventoryTest {
     @Test
     void setTitleGUI() {
         Assertions.assertEquals("BUILD_BLOCKS_TITLE", customInventory.getTitleGUI());
-        customInventory.setTitleGUI("DECORATION_BLOCKS_TITLE");
+        customInventory.setTitleGui("DECORATION_BLOCKS_TITLE");
         Assertions.assertEquals("DECORATION_BLOCKS_TITLE", customInventory.getTitleGUI());
     }
 }

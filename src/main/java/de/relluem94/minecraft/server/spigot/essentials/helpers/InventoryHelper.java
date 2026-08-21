@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -181,19 +182,13 @@ public class InventoryHelper {
   }
 
   public static @NotNull Inventory getCustomItemInventory(@NotNull CustomInventory ci,
-      ItemHelper.Type itemType) {
-    Inventory inv = Bukkit.createInventory(null, ci.getSize(), ci.getTitleGUI());
-    for (ItemHelper itemHelper : ci.getCustomItems()) {
-      if (itemType == null || itemType.equals(itemHelper.getItemType())) {
-        inv.addItem(itemHelper.getCustomItem());
+      CustomItem.Type itemType) {
+    Inventory inv = Bukkit.createInventory(null, ci.getSize(), ci.getTitleGui());
+    for (CustomItem itemHelper : ci.getCustomItems()) {
+      if (itemType == null || itemType.equals(itemHelper.type())) {
+        inv.addItem(itemHelper.toItemStack());
       }
     }
     return inv;
-  }
-
-  @SuppressWarnings("unused")
-  public static boolean isCustomItemInMainHand(@NotNull Player player,
-      @NotNull ItemHelper customItem) {
-    return player.getInventory().getItemInMainHand().equals(customItem.getCustomItem());
   }
 }
