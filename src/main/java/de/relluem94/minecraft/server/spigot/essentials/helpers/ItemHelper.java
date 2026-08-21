@@ -22,7 +22,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -235,18 +234,6 @@ public class ItemHelper implements IItemHelper {
   @SuppressWarnings("unused")
   public static @NotNull ItemStack getCleanItemStackWithAmount(@NotNull ItemStack is) {
     return new ItemStack(is.getType(), is.getAmount());
-  }
-
-  @Contract("_, _ -> param1")
-  public static @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item,
-      EnchantmentHelper enchantment) {
-    if (item.getItemMeta() instanceof EnchantmentStorageMeta meta) {
-      meta.getPersistentDataContainer()
-          .set(enchantment.getKey(), PersistentDataType.INTEGER, enchantment.getStartLevel());
-      item.setItemMeta(meta);
-    }
-
-    return item;
   }
 
   public static String getItemName(@NotNull ItemStack is) {
