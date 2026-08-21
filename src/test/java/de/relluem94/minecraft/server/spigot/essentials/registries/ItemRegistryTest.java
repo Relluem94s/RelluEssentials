@@ -3,15 +3,14 @@ package de.relluem94.minecraft.server.spigot.essentials.registries;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.util.Optional;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +36,6 @@ class ItemRegistryTest {
 
   private ItemRegistry itemRegistry;
 
-  private MockedStatic<RegistryKey> mockedRegistryKeyStatic;
   private MockedStatic<RelluEssentials> mockedRelluEssentialsStatic;
 
   @BeforeEach
@@ -49,10 +47,6 @@ class ItemRegistryTest {
     mockedRelluEssentialsStatic = Mockito.mockStatic(RelluEssentials.class);
     mockedRelluEssentialsStatic.when(RelluEssentials::getInstance).thenReturn(mockRelluEssentials);
 
-    mockedRegistryKeyStatic = Mockito.mockStatic(RegistryKey.class);
-    mockedRegistryKeyStatic.when(() -> RegistryKey.initializeInternalPlugin(any(Plugin.class)))
-        .thenAnswer(_ -> null);
-
     itemRegistry = new ItemRegistry(mockPlugin);
 
     when(mockRegistryKey.toString()).thenReturn("test_key");
@@ -60,9 +54,6 @@ class ItemRegistryTest {
 
   @AfterEach
   void tearDown() {
-    if (mockedRegistryKeyStatic != null) {
-      mockedRegistryKeyStatic.close();
-    }
     if (mockedRelluEssentialsStatic != null) {
       mockedRelluEssentialsStatic.close();
     }
@@ -137,10 +128,13 @@ class ItemRegistryTest {
 
   @Test
   void findByItemStack_ShouldReturnItem_WhenMatchFound() {
-    org.bukkit.inventory.ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
+    ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
+    ItemStack itemStackFromCustomItem = mock(org.bukkit.inventory.ItemStack.class);
+
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
-    when(mockCustomItem.toItemStack().isSimilar(mockItemStack)).thenReturn(true);
+    when(mockCustomItem.toItemStack()).thenReturn(itemStackFromCustomItem);
+    when(itemStackFromCustomItem.isSimilar(mockItemStack)).thenReturn(true);
 
     Optional<CustomItem> result = itemRegistry.findByItemStack(mockItemStack);
 
@@ -151,9 +145,12 @@ class ItemRegistryTest {
   @Test
   void findByItemStack_ShouldReturnEmpty_WhenNoMatchFound() {
     org.bukkit.inventory.ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
+    org.bukkit.inventory.ItemStack itemStackFromCustomItem = mock(org.bukkit.inventory.ItemStack.class);
+
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
-    when(mockCustomItem.toItemStack().isSimilar(mockItemStack)).thenReturn(false);
+    when(mockCustomItem.toItemStack()).thenReturn(itemStackFromCustomItem);
+    when(itemStackFromCustomItem.isSimilar(mockItemStack)).thenReturn(false);
 
     Optional<CustomItem> result = itemRegistry.findByItemStack(mockItemStack);
 
