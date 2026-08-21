@@ -86,7 +86,7 @@ public class ItemManager implements Enable {
 
     itemService.register(new CustomItemBuilder(
         new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
-            PLUGIN_ITEM_POSITION_AXE), Material.COPPER_AXE).rarity(Rarity.LEGENDARY)
+            PLUGIN_ITEM_NAMESPACE_POSITION_AXE), Material.COPPER_AXE).rarity(Rarity.LEGENDARY)
         .displayName(PLUGIN_ITEM_POSITION_AXE).amount(1).type(Type.ADMIN_TOOL)
         .lore(List.of(PLUGIN_ITEM_POSITION_AXE_LORE1, PLUGIN_ITEM_POSITION_AXE_LORE2)).build());
 
