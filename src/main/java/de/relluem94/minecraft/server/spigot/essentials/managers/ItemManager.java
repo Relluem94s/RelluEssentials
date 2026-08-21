@@ -87,24 +87,29 @@ public class ItemManager implements Enable {
     ServiceContext serviceContext = relluEssentials.getServiceContext();
     ItemService itemService = serviceContext.getItemService();
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_POSITION_AXE),
-        new ItemHelper(Material.COPPER_AXE, 1, PLUGIN_ITEM_POSITION_AXE, ItemHelper.Type.ADMIN_TOOL,
-            ItemHelper.Rarity.LEGENDARY,
-            List.of(PLUGIN_ITEM_POSITION_AXE_LORE1, PLUGIN_ITEM_POSITION_AXE_LORE2)));
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_POSITION_AXE),
+        Material.COPPER_AXE).rarity(Rarity.LEGENDARY).displayName(PLUGIN_ITEM_POSITION_AXE)
+        .amount(1).type(Type.ADMIN_TOOL)
+        .lore(List.of(PLUGIN_ITEM_POSITION_AXE_LORE1, PLUGIN_ITEM_POSITION_AXE_LORE2)).build());
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET),
-        new ItemHelper(Material.WATER_BUCKET, 1, PLUGIN_ITEM_MAGIC_WATER_BUCKET,
-            ItemHelper.Type.GADGET, ItemHelper.Rarity.EPIC,
-            List.of(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE), 5000));
+    itemService.register(new CustomItemBuilder(new RelluEssentialsNamespacedKey(plugin.getName(),
+        PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET), Material.WATER_BUCKET).amount(1)
+        .displayName(PLUGIN_ITEM_MAGIC_WATER_BUCKET).type(CustomItem.Type.GADGET)
+        .rarity(CustomItem.Rarity.EPIC).lore(List.of(PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE))
+        .cost(5000).build());
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_COINS),
-        new ItemHelper(Material.GOLD_NUGGET, 1, PLUGIN_ITEM_COINS, ItemHelper.Type.MONEY,
-            ItemHelper.Rarity.COMMON, List.of(PLUGIN_ITEM_COINS_LORE)));
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_COINS),
+        Material.GOLD_NUGGET).amount(1).displayName(PLUGIN_ITEM_COINS).type(Type.MONEY)
+        .rarity(Rarity.COMMON).lore(List.of(PLUGIN_ITEM_COINS_LORE)).build());
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR),
-        new ItemHelper(Material.FEATHER, 1, PLUGIN_ITEM_CLOUDSAILOR, ItemHelper.Type.GADGET,
-            ItemHelper.Rarity.EPIC,
-            List.of(PLUGIN_ITEM_CLOUDSAILOR_LORE1, PLUGIN_ITEM_CLOUDSAILOR_LORE2), 10000));
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR),
+        Material.FEATHER).amount(1).displayName(PLUGIN_ITEM_CLOUDSAILOR).type(Type.GADGET)
+        .rarity(Rarity.EPIC)
+        .lore(List.of(PLUGIN_ITEM_CLOUDSAILOR_LORE1, PLUGIN_ITEM_CLOUDSAILOR_LORE2)).cost(10000)
+        .build());
 
     ItemHelper cloudBootsItem = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_CLOUDBOOTS,
         ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY,
@@ -302,9 +307,8 @@ public class ItemManager implements Enable {
         translationService.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
 
     CustomItem customItem = new CustomItemBuilder(new RelluEssentialsNamespacedKey("test", "test"),
-        Material.DIRT).amount(1).cost(30).displayName("None").lore(List.of("Nope", "§6Nope")).rarity(
-        Rarity.EPIC).type(Type.GADGET).build();
-
+        Material.DIRT).amount(1).cost(30).displayName("None").lore(List.of("Nope", "§6Nope"))
+        .rarity(Rarity.EPIC).type(Type.GADGET).build();
 
     Object o = serviceContext.getItemService()
         .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).orElseThrow();
