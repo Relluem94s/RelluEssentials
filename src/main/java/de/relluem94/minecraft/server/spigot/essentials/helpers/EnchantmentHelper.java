@@ -155,6 +155,8 @@ public class EnchantmentHelper extends CustomEnchantment {
     if (book.getItemMeta() instanceof EnchantmentStorageMeta meta) {
       meta.getPersistentDataContainer()
           .set(getKey(), PersistentDataType.INTEGER, getStartLevel());
+      meta.setDisplayName(getDisplayName());
+      meta.setLore(List.of(getLore()));
       book.setItemMeta(meta);
     }
     return book;
