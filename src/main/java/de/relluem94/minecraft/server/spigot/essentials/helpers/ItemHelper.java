@@ -5,7 +5,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Exceptio
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_DECODE_CLASS_TYPE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_ITEMHELPER_UNABLE_TO_SAVE_ITEMSTACK;
 
-import de.relluem94.minecraft.server.spigot.essentials.interfaces.helpers.IItemHelper;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,7 +13,6 @@ import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -29,7 +27,6 @@ import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 /**
  * A utility class for creating and managing custom Minecraft ItemStack objects with extended
@@ -37,7 +34,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author rellu
  */
-public class ItemHelper implements IItemHelper {
+public class ItemHelper {
 
   @Getter
   private final ItemStack is;
@@ -177,35 +174,6 @@ public class ItemHelper implements IItemHelper {
     is.setItemMeta(itemMeta);
   }
 
-  public static Optional<Integer> resolveCostFromItemStack(@NonNull ItemStack itemStack, @NonNull NamespacedKey pluginNamespacedKey) {
-    ItemMeta meta = itemStack.getItemMeta();
-    if (meta == null) {
-      return Optional.empty();
-    }
-    return Optional.ofNullable(
-        meta.getPersistentDataContainer().get(pluginNamespacedKey, PersistentDataType.INTEGER)
-    );
-  }
-
-
-  @SuppressWarnings("unused")
-  public static @Nullable Object getData(@NonNull ItemStack is, NamespacedKey key) {
-    ItemMeta itemMeta = is.getItemMeta();
-      if (itemMeta == null) {
-          return null;
-      }
-    return itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
-  }
-
-  @SuppressWarnings("unused")
-  public static boolean hasData(@NonNull ItemStack is, NamespacedKey key) {
-    ItemMeta itemMeta = is.getItemMeta();
-      if (itemMeta == null) {
-          return false;
-      }
-    return itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING);
-  }
-
   public static List<String> remove(List<String> locLore) {
     locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
     locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
@@ -215,26 +183,11 @@ public class ItemHelper implements IItemHelper {
     return locLore;
   }
 
-  @SuppressWarnings("unused")
-  public static ItemStack setDisplayName(ItemStack is, String displayName) {
-    ItemMeta im = is.getItemMeta();
-
-    Objects.requireNonNull(im).setDisplayName(displayName);
-
-    is.setItemMeta(im);
-    return is;
-  }
-
   @Contract("_ -> new")
   public static @NotNull ItemStack getCleanItemStack(@NotNull ItemStack is) {
     return new ItemStack(is.getType(), 1);
   }
 
-  @Contract("_ -> new")
-  @SuppressWarnings("unused")
-  public static @NotNull ItemStack getCleanItemStackWithAmount(@NotNull ItemStack is) {
-    return new ItemStack(is.getType(), is.getAmount());
-  }
 
   public static String getItemName(@NotNull ItemStack is) {
     String name = "";
@@ -310,9 +263,8 @@ public class ItemHelper implements IItemHelper {
    * @return ItemStack of ItemHelper
    */
   public ItemStack getCustomItem() {
-    init();
     addItemRarity();
-    return postInit(is);
+    return is;
   }
 
   /**
@@ -356,16 +308,6 @@ public class ItemHelper implements IItemHelper {
     return itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING);
   }
 
-  @SuppressWarnings("unused")
-  public void removeData(NamespacedKey key) {
-    ItemMeta itemMeta = is.getItemMeta();
-      if (itemMeta == null) {
-          return;
-      }
-    itemMeta.getPersistentDataContainer().remove(key);
-    is.setItemMeta(itemMeta);
-  }
-
   /**
    *
    * @param compare ItemStack
@@ -406,35 +348,6 @@ public class ItemHelper implements IItemHelper {
     }
 
     return itemMeta.getDisplayName().equals(compareMeta.getDisplayName());
-  }
-
-  /**
-   *
-   * @param compare ItemStack
-   * @return boolean
-   */
-  public boolean almostEquals(ItemStack compare) {
-    ItemStack item = this.getCustomItem();
-    if (item == null || compare == null) {
-      return false;
-    }
-
-    if (item.getType() != compare.getType()) {
-      return false;
-    }
-
-    return item.hasItemMeta() == compare.hasItemMeta();
-  }
-
-  @Override
-  public void init() {
-    // has to be overwritten
-  }
-
-  @Override
-  public ItemStack postInit(ItemStack is) {
-    // has to be overwritten
-    return is;
   }
 
   private void addItemRarity() {
@@ -483,7 +396,6 @@ public class ItemHelper implements IItemHelper {
       this.prefix = prefix;
       this.level = level;
     }
-
   }
 
   public enum Type {
@@ -502,5 +414,4 @@ public class ItemHelper implements IItemHelper {
     ADMIN_TOOL,
     NONE
   }
-
 }
