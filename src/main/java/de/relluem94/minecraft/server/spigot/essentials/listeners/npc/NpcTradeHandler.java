@@ -365,7 +365,8 @@ public class NpcTradeHandler {
     }
 
     boolean isRegisteredItem = serviceContext.getItemService().findByItemStack(item).isPresent()
-        || EnchantmentRegistry.findByBookItemStack(item).isPresent();
+        || EnchantmentRegistry.findByBookItemStack(item).isPresent()
+        || (meta != null && meta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER));
 
     if (!isRegisteredItem) {
       if (meta == null) {
