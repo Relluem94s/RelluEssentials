@@ -111,6 +111,76 @@ public class ItemManager implements Enable {
         .lore(List.of(PLUGIN_ITEM_CLOUDSAILOR_LORE1, PLUGIN_ITEM_CLOUDSAILOR_LORE2)).cost(10000)
         .build());
 
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(
+            plugin.getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED
+        ),
+        Material.BLACK_STAINED_GLASS_PANE
+    )
+        .amount(1)
+        .displayName(PLUGIN_ITEM_NPC_GUI_DISABLED_NAME)
+        .type(Type.NPC_GUI)
+        .rarity(Rarity.NONE)
+        .build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(
+            plugin.getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE
+        ),
+        Material.BARRIER
+    )
+        .amount(1)
+        .displayName(PLUGIN_ITEM_NPC_GUI_CLOSE_NAME)
+        .type(Type.NPC_GUI)
+        .rarity(Rarity.NONE)
+        .build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(
+            plugin.getName(),
+            PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK
+        ),
+        Material.FISHING_ROD
+    )
+        .amount(1)
+        .displayName(PLUGIN_ITEM_GRAPPLINGHOCK)
+        .type(Type.GADGET)
+        .rarity(Rarity.UNCOMMON)
+        .build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(
+            plugin.getName(),
+            PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER
+        ),
+        Material.HOPPER
+    )
+        .amount(1)
+        .displayName(PLUGIN_ITEM_AUTOSELLHOPER)
+        .type(Type.TOOL)
+        .rarity(Rarity.LEGENDARY)
+        .cost(50000)
+        .build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(
+            plugin.getName(),
+            PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR
+        ),
+        Material.PLAYER_HEAD
+    )
+            .metaModifier(
+                PlayerHeadHelper.customHeadModifier(CustomHeads.GLOBE)
+            )
+        .amount(1)
+        .displayName(PLUGIN_ITEM_WORLDSELECTOR)
+        .type(Type.GADGET)
+        .rarity(Rarity.RARE)
+        .build());
+
+
     ItemHelper cloudBootsItem = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_CLOUDBOOTS,
         ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY,
         List.of(PLUGIN_ITEM_CLOUDBOOTS_LORE1, PLUGIN_ITEM_CLOUDBOOTS_LORE2)) {
@@ -125,22 +195,6 @@ public class ItemManager implements Enable {
     };
 
     itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS), cloudBootsItem);
-
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED),
-        new ItemHelper(Material.BLACK_STAINED_GLASS_PANE, 1, PLUGIN_ITEM_NPC_GUI_DISABLED_NAME,
-            ItemHelper.Type.NPC_GUI, ItemHelper.Rarity.NONE));
-
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE),
-        new ItemHelper(Material.BARRIER, 1, PLUGIN_ITEM_NPC_GUI_CLOSE_NAME, ItemHelper.Type.NPC_GUI,
-            ItemHelper.Rarity.NONE));
-
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK),
-        new ItemHelper(Material.FISHING_ROD, 1, PLUGIN_ITEM_GRAPPLINGHOCK, ItemHelper.Type.GADGET,
-            ItemHelper.Rarity.UNCOMMON));
-
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER),
-        new ItemHelper(Material.HOPPER, 1, PLUGIN_ITEM_AUTOSELLHOPER, ItemHelper.Type.TOOL,
-            ItemHelper.Rarity.LEGENDARY, 50000));
 
     ItemHelper relluBootsItem = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_RELLU_BOOTS,
         ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
@@ -280,10 +334,6 @@ public class ItemManager implements Enable {
 
     itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SWORD), relluSwordItem);
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR),
-        new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE),
-            PLUGIN_ITEM_WORLDSELECTOR, ItemHelper.Type.GADGET, ItemHelper.Rarity.RARE));
-
     serviceContext.getInventoryService().create(plugin, PLUGIN_INVENTORY_ADMIN_TOOLS,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dAdmin Tools", 9,
             ItemHelper.Type.NONE).withFixedItem(
@@ -306,9 +356,7 @@ public class ItemManager implements Enable {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
 
-    CustomItem customItem = new CustomItemBuilder(new RelluEssentialsNamespacedKey("test", "test"),
-        Material.DIRT).amount(1).cost(30).displayName("None").lore(List.of("Nope", "§6Nope"))
-        .rarity(Rarity.EPIC).type(Type.GADGET).build();
+
 
     Object o = serviceContext.getItemService()
         .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).orElseThrow();
