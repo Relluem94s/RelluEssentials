@@ -8,8 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
 import com.google.common.collect.Multimap;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.CustomEnchantment;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.lang.reflect.Field;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -102,9 +102,9 @@ class CustomEnchantmentTest {
     void getRarityReturnsAssignedRarity() throws Exception {
         Field rarityField = CustomEnchantment.class.getDeclaredField("rarity");
         rarityField.setAccessible(true);
-        rarityField.set(customEnchantment, ItemHelper.Rarity.COMMON);
+        rarityField.set(customEnchantment, CustomItem.Rarity.COMMON);
 
-        assertEquals(ItemHelper.Rarity.COMMON, customEnchantment.getRarity());
+        assertEquals(CustomItem.Rarity.COMMON, customEnchantment.getRarity());
     }
 
     @Test
