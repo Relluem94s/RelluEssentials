@@ -59,6 +59,7 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enabl
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.EnchantmentData;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Type;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
@@ -180,21 +181,23 @@ public class ItemManager implements Enable {
         .rarity(Rarity.RARE)
         .build());
 
-
-    ItemHelper cloudBootsItem = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_CLOUDBOOTS,
-        ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY,
-        List.of(PLUGIN_ITEM_CLOUDBOOTS_LORE1, PLUGIN_ITEM_CLOUDBOOTS_LORE2)) {
-      @Override
-      public void init() {
-        LeatherArmorMeta cloudBootsMeta = (LeatherArmorMeta) getItemMeta();
-        cloudBootsMeta.setColor(Color.SILVER);
-        cloudBootsMeta.setUnbreakable(true);
-        cloudBootsMeta.addEnchant(Enchantment.PROTECTION, 3, true);
-        setItemMeta(cloudBootsMeta);
-      }
-    };
-
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS), cloudBootsItem);
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS),
+        Material.LEATHER_BOOTS
+    )
+        .amount(1)
+        .displayName(PLUGIN_ITEM_CLOUDBOOTS)
+        .type(Type.ARMOR)
+        .rarity(Rarity.LEGENDARY)
+        .lore(List.of(PLUGIN_ITEM_CLOUDBOOTS_LORE1, PLUGIN_ITEM_CLOUDBOOTS_LORE2))
+        .metaModifier(meta -> {
+          LeatherArmorMeta leatherMeta = (LeatherArmorMeta) meta;
+          leatherMeta.setColor(Color.SILVER);
+          leatherMeta.setUnbreakable(true);
+          leatherMeta.addEnchant(Enchantment.PROTECTION, 3, true); // Could be better then .enchantments.
+        })
+            .enchantments(List.of(new EnchantmentData("PROTECTION", 3)))
+        .build());
 
     ItemHelper relluBootsItem = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_RELLU_BOOTS,
         ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
