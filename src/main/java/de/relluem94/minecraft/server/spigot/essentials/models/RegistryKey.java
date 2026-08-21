@@ -4,6 +4,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.NonNull;
 
+@Deprecated
 public record RegistryKey(String namespace, String key) {
 
   private static Plugin registeredPlugin;
