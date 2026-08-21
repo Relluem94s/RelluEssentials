@@ -68,7 +68,7 @@ public class NpcTradeHandler {
     }
 
     if (disabledItem.toItemStack().isSimilar(clickedItem)) {
-      player.playSound(player.getLocation(), "ENTITY_CHICKEN_STEP", 1f, 1f);
+      player.playSound(player.getLocation(), "entity.chicken.step", 1f, 1f);
       return;
     }
 
@@ -317,7 +317,7 @@ public class NpcTradeHandler {
         .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY, itemDisplayName,
             StringHelper.formatDouble(totalCost), PLUGIN_NAME_MONEY,
             StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
-    player.playSound(player, "ENTITY_WANDERING_TRADER_YES", SoundCategory.MASTER, 1f, 1f);
+    player.playSound(player, "entity.wandering_trader.yes", SoundCategory.MASTER, 1f, 1f);
   }
 
   private ItemStack resolveCleanPurchasedItem(ItemStack guiItem, int amount) {
@@ -425,7 +425,7 @@ public class NpcTradeHandler {
         .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL, itemDisplayName,
             StringHelper.formatDouble(totalEarnings), PLUGIN_NAME_MONEY,
             StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
-    player.playSound(player, "ENTITY_WANDERING_TRADER_NO", SoundCategory.MASTER, 1f, 1f);
+    player.playSound(player, "entity.wandering_trader.no", SoundCategory.MASTER, 1f, 1f);
   }
 
   private int removeAllMatchingItemsFromInventory(@NonNull Player player, ItemStack targetItem) {
