@@ -188,8 +188,9 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (e.getCurrentItem() == null) {
       return;
     }
-    if (serviceContext.getItemService()
-        .isItemStack(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED, e.getCurrentItem())) {
+    if (serviceContext.getItemService().isItemStack(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED), e.getCurrentItem())) {
       return;
     }
     if (e.getCurrentItem().getItemMeta() == null) {

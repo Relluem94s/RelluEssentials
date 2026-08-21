@@ -38,7 +38,7 @@ class ItemRegistryTest {
     MockitoAnnotations.openMocks(this);
     when(mockPlugin.getName()).thenReturn("TestPlugin");
     when(mockRelluEssentials.getName()).thenReturn("TestPlugin");
-    itemRegistry = new ItemRegistry(mockPlugin);
+    itemRegistry = new ItemRegistry();
 
     when(mockRegistryKey.toString()).thenReturn("test_key");
   }

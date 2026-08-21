@@ -245,7 +245,7 @@ public class ServiceManager implements Enable {
     translationService.setDefaultLanguage(lang);
     serviceContext.setTranslationService(translationService);
     serviceContext.setPluginMetadataService(new PluginMetadataService(relluEssentials));
-    serviceContext.setItemService(new ItemService(new ItemRegistry(relluEssentials)));
+    serviceContext.setItemService(new ItemService(new ItemRegistry()));
     serviceContext.setInventoryService(new InventoryService(new InventoryRegistry()));
   }
 }

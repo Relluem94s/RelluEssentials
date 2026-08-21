@@ -8,9 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -22,15 +20,12 @@ public class ItemRegistry {
 
   private static final String REGISTRY_KEY_NAME = "registry_key";
   private final Map<String, CustomItem> registeredItems = new LinkedHashMap<>();
-  private final NamespacedKey persistentDataKey;
 
   /**
    * Creates a new {@code ItemRegistry}.
    *
-   * @param plugin the plugin instance
    */
-  public ItemRegistry(@NonNull Plugin plugin) {
-    this.persistentDataKey = new NamespacedKey(plugin, REGISTRY_KEY_NAME);
+  public ItemRegistry() {
   }
 
   /**

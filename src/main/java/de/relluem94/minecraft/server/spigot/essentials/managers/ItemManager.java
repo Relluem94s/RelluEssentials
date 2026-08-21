@@ -275,7 +275,8 @@ public class ItemManager implements Enable {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
 
-    Object o = serviceContext.getItemService()
-        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).orElseThrow();
+    Object o = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
   }
 }

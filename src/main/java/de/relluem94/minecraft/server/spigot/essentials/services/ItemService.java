@@ -47,16 +47,6 @@ public class ItemService {
   }
 
   /**
-   * Finds an item by its string identifier (namespace).
-   *
-   * @param identifier the string ID to search for
-   * @return an {@link Optional} containing the item, or empty if not found
-   */
-  public Optional<CustomItem> findByIdentifier(@NonNull String identifier) {
-    return itemRegistry.findByIdentifier(identifier);
-  }
-
-  /**
    * Finds an item by its item stack.
    *
    * @param itemStack the item stack to check
@@ -69,13 +59,13 @@ public class ItemService {
   /**
    * Checks if the given item stack matches the item registered with the provided identifier.
    *
-   * @param identifier the string ID to check against
-   * @param itemStack the item stack to verify
+   * @param identifier the key to check against
+   * @param itemStack  the item stack to verify
    * @return true if the item stack matches the registered item, false otherwise
    */
-  public boolean isItemStack(@NonNull String identifier, @NonNull ItemStack itemStack) {
-    return findByIdentifier(identifier)
-        .map(customItem -> customItem.toItemStack().isSimilar(itemStack))
+  public boolean isItemStack(@NonNull RelluEssentialsNamespacedKey identifier,
+      @NonNull ItemStack itemStack) {
+    return find(identifier).map(customItem -> customItem.toItemStack().isSimilar(itemStack))
         .isPresent();
   }
 

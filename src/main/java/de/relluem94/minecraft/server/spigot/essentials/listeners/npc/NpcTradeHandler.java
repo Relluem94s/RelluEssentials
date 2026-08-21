@@ -13,6 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -43,12 +44,15 @@ public class NpcTradeHandler {
   private final ServiceContext serviceContext;
 
   public NpcTradeHandler(ServiceContext serviceContext) {
-    this.disabledItem = serviceContext.getItemService()
-        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).orElseThrow();
-    this.closeItem = serviceContext.getItemService()
-        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE).orElseThrow();
-    this.coinsItem = serviceContext.getItemService().findByIdentifier(PLUGIN_ITEM_NAMESPACE_COINS)
-        .orElseThrow();
+    this.disabledItem = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
+    this.closeItem = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
+    this.coinsItem = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
 
     this.buyBackSlotResolver = new BuyBackSlotResolver(serviceContext.getBuyBackService(),
         this.disabledItem.toItemStack());
