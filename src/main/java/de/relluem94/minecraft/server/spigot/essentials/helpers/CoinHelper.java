@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.util.Collections;
 import java.util.Objects;
 import org.bukkit.inventory.ItemStack;
@@ -18,11 +19,11 @@ public class CoinHelper {
    * Builds a coin {@link ItemStack} with the given amount stored in its lore and persistent data.
    *
    * @param coins the coin value to assign to the item
-   * @param coinItem ItemHelper of CustomItem Coin
+   * @param coinItem CustomItem of Coin
    * @return a configured coin {@link ItemStack}
    */
-  public static ItemStack buildCoinItem(int coins, ItemHelper coinItem) {
-    ItemStack coin = coinItem.getCustomItem();
+  public static ItemStack buildCoinItem(int coins, CustomItem coinItem) {
+    ItemStack coin = coinItem.toItemStack();
     ItemMeta im = Objects.requireNonNull(coin.getItemMeta());
     im.setLore(Collections.singletonList(
         String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));

@@ -3,16 +3,15 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -27,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("EntityPickupItemBags")
 public class EntityPickupItemBags implements ListenerConstruct {
 
-  private ItemHelper coinItem;
+  private CustomItem coinItem;
 
   private ServiceContext serviceContext;
 
@@ -35,7 +34,7 @@ public class EntityPickupItemBags implements ListenerConstruct {
   public void injectContext(ServiceContext context) {
     serviceContext = context;
     coinItem = serviceContext.getItemService().find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
+            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_COINS))
         .orElseThrow();
   }
 
@@ -46,7 +45,7 @@ public class EntityPickupItemBags implements ListenerConstruct {
       PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
 
       ItemStack is = e.getItem().getItemStack();
-      if (coinItem.almostEquals(is)) {
+      if (coinItem.toItemStack().isSimilar(is)) {
         ItemMeta im = is.getItemMeta();
 
         if (im != null && im.getPersistentDataContainer()

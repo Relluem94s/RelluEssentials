@@ -5,9 +5,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import de.relluem94.rellulib.utils.NetworkUtils;
 import java.util.Properties;
 import java.util.UUID;
@@ -100,26 +102,30 @@ public class PlayerHelper {
     return nearestPlayer;
   }
 
-  public static void setLobbyItems(@NotNull Player p, ItemService itemService) {
-    ItemHelper grapplingHookItem = itemService.find(
-        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK)).orElseThrow();
-    ItemHelper worldSelectorItem = itemService.find(
-        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR)).orElseThrow();
-    ItemHelper cloudSailorItem = itemService.find(
-        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
+  public static void setLobbyItems(@NotNull Player p, ItemService itemService,
+      PluginMetadataService pluginMetadataService) {
+    CustomItem grapplingHookItem = itemService.find(
+        new RelluEssentialsNamespacedKey(pluginMetadataService.getName(),
+            PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK)).orElseThrow();
+    CustomItem worldSelectorItem = itemService.find(
+        new RelluEssentialsNamespacedKey(pluginMetadataService.getName(),
+            PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR)).orElseThrow();
+    CustomItem cloudSailorItem = itemService.find(
+        new RelluEssentialsNamespacedKey(pluginMetadataService.getName(),
+            PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
 
     for (ItemStack i : p.getInventory().getContents()) {
       if (i == null) {
         continue;
       }
 
-      if (i.isSimilar(grapplingHookItem.getCustomItem())) {
+      if (i.isSimilar(grapplingHookItem.toItemStack())) {
         p.getInventory().remove(i);
       }
-      if (i.isSimilar(cloudSailorItem.getCustomItem())) {
+      if (i.isSimilar(cloudSailorItem.toItemStack())) {
         p.getInventory().remove(i);
       }
-      if (i.isSimilar(worldSelectorItem.getCustomItem())) {
+      if (i.isSimilar(worldSelectorItem.toItemStack())) {
         p.getInventory().remove(i);
       }
     }
@@ -127,9 +133,9 @@ public class PlayerHelper {
     p.getInventory().setArmorContents(new ItemStack[]{null, null, null, null});
     p.getInventory().setItemInOffHand(null);
 
-    p.getInventory().setItem(0, grapplingHookItem.getCustomItem());
-    p.getInventory().setItem(1, cloudSailorItem.getCustomItem());
-    p.getInventory().setItem(4, worldSelectorItem.getCustomItem());
+    p.getInventory().setItem(0, grapplingHookItem.toItemStack());
+    p.getInventory().setItem(1, cloudSailorItem.toItemStack());
+    p.getInventory().setItem(4, worldSelectorItem.toItemStack());
   }
 
   public static @NotNull Location getLookingLocation(@NotNull Player player, double range) {

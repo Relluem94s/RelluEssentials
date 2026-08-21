@@ -7,12 +7,12 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.CoinHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.List;
 import lombok.NonNull;
@@ -56,9 +56,8 @@ public class Purse implements CommandConstruct {
 
     if (args.length == 0) {
       PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
-      p.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL,
-              StringHelper.formatDouble(pe.getPurse())));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL, StringHelper.formatDouble(pe.getPurse())));
       return true;
     }
 
@@ -67,8 +66,8 @@ public class Purse implements CommandConstruct {
       if (serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
         PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(target);
         p.sendMessage(serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL_OTHER,
-                target.getCustomName(), StringHelper.formatDouble(pe.getPurse())));
+            .getWithPrefix(MessageKey.COMMAND_PURSE_TOTAL_OTHER, target.getCustomName(),
+                StringHelper.formatDouble(pe.getPurse())));
       } else {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
@@ -77,9 +76,8 @@ public class Purse implements CommandConstruct {
     }
 
     if (!TypeHelper.isInt(args[0])) {
-      p.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_VALUE_INVALID));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_VALUE_INVALID));
       return true;
     }
 
@@ -92,17 +90,16 @@ public class Purse implements CommandConstruct {
       pe.setHasToBeUpdated(true);
       pe.setUpdatedBy(pe.getId());
 
-      ItemHelper coinItem = serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
-          .orElseThrow();
+      CustomItem coinItem = serviceContext.getItemService().find(
+          new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+              PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
 
       p.getInventory().addItem(CoinHelper.buildCoinItem(coins, coinItem));
-      p.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM,
-              StringHelper.formatInt(coins)));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM, StringHelper.formatInt(coins)));
     } else {
-      p.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM_NOT_ENOUGH_MONEY));
     }
     return true;
   }
@@ -122,8 +119,6 @@ public class Purse implements CommandConstruct {
       return List.of();
     }
 
-    return Bukkit.getOnlinePlayers().stream()
-        .map(Player::getName)
-        .toList();
+    return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
   }
 }

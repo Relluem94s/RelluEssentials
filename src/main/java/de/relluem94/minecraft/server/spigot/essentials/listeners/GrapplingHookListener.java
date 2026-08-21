@@ -3,12 +3,11 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
@@ -46,12 +45,12 @@ public class GrapplingHookListener implements ListenerConstruct {
       return;
     }
 
-    RegistryKey grapplingHookKey = RegistryKey.of(RelluEssentials.getInstance(), "grappling_hook");
+    RelluEssentialsNamespacedKey grapplingHookKey = new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), "grappling_hook");
     ItemStack itemInMainHand = e.getPlayer().getInventory().getItemInMainHand();
 
 
     if (serviceContext.getItemService().find(grapplingHookKey)
-        .map(itemHelper -> itemHelper.almostEquals(itemInMainHand)).orElse(false)) {
+        .map(customItem -> customItem.toItemStack().isSimilar(itemInMainHand)).orElse(false)) {
       return;
     }
 

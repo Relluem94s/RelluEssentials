@@ -6,14 +6,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc.Type;
@@ -37,12 +36,12 @@ public class TraderNpcRegistry {
   private final List<String> npcName = new ArrayList<>();
   private final List<String> npcTraderTitle = new ArrayList<>();
   /**
-   *  Retrieves the list of registered NPCs.
+   * Retrieves the list of registered NPCs.
    */
   @Getter
   private final List<TraderNpc> npcs = new ArrayList<>();
-  private final ItemHelper disabledItem;
-  private final ItemHelper closeItem;
+  private final CustomItem disabledItem;
+  private final CustomItem closeItem;
   private final TranslationService translationService;
 
   /**
@@ -52,11 +51,11 @@ public class TraderNpcRegistry {
    */
   public TraderNpcRegistry(ServiceContext serviceContext) {
     this.disabledItem = serviceContext.getItemService().find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow();
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
     this.closeItem = serviceContext.getItemService().find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
-        .orElseThrow();
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
     this.translationService = serviceContext.getTranslationService();
   }
 
@@ -72,7 +71,7 @@ public class TraderNpcRegistry {
         public Inventory getMainGUI() {
           Inventory inv = InventoryHelper.fillInventory(
               InventoryHelper.createInventory(NpcHelper.INV_SIZE, getTitle()),
-              disabledItem.getCustomItem());
+              disabledItem.toItemStack());
           int slot = 0;
           for (int i = 0; i < ne.getSlotNames().length; i++) {
             slot = InventoryHelper.getNextSlot(slot);
@@ -90,16 +89,11 @@ public class TraderNpcRegistry {
 
               itemMeta.setLore(List.of(
                   translationService.get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
-                      PLUGIN_NAME_MONEY,
-                      String.valueOf(buyPricePerItem),
-                      PLUGIN_NAME_MONEY,
+                      PLUGIN_NAME_MONEY, String.valueOf(buyPricePerItem), PLUGIN_NAME_MONEY,
                       String.valueOf(buyPricePerItem * 64)),
                   translationService.get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
-                      PLUGIN_NAME_MONEY,
-                      String.valueOf(sellPricePerItem),
-                      PLUGIN_NAME_MONEY,
-                      String.valueOf(sellPricePerItem * 64))
-              ));
+                      PLUGIN_NAME_MONEY, String.valueOf(sellPricePerItem), PLUGIN_NAME_MONEY,
+                      String.valueOf(sellPricePerItem * 64))));
 
               itemStack.setItemMeta(itemMeta);
 
@@ -107,7 +101,7 @@ public class TraderNpcRegistry {
             }
             slot++;
           }
-          inv.setItem(53, closeItem.getCustomItem());
+          inv.setItem(53, closeItem.toItemStack());
           return inv;
         }
       };

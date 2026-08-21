@@ -36,13 +36,15 @@ import org.jspecify.annotations.NonNull;
 public class BetterMobs implements ListenerConstruct {
 
 
-  private final EnchantmentHelper telekinesis;
-  private final EnchantmentHelper thunderstrike;
-  private final EnchantmentHelper scavengers;
-  private final EnchantmentHelper lifesteal;
+  private EnchantmentHelper telekinesis;
+  private EnchantmentHelper thunderstrike;
+  private EnchantmentHelper scavengers;
+  private EnchantmentHelper lifesteal;
   private ServiceContext serviceContext;
 
-  public BetterMobs() {
+  @Override
+  public void injectContext(ServiceContext context) {
+    serviceContext = context;
     this.telekinesis = EnchantmentRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
@@ -59,11 +61,6 @@ public class BetterMobs implements ListenerConstruct {
             RegistryKey.of(RelluEssentials.getInstance(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL))
         .orElse(null);
-  }
-
-  @Override
-  public void injectContext(ServiceContext context) {
-    serviceContext = context;
   }
 
   @EventHandler

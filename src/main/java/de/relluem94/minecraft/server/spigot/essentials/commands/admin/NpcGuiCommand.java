@@ -2,15 +2,14 @@ package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
@@ -25,25 +24,23 @@ public class NpcGuiCommand implements SubCommand {
   @Override
   public void execute(Player player, String[] args) {
     if (!serviceContext.getGroupService().isSenderAuthorized(player, "admin")) {
-      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return;
     }
 
-    ItemHelper disabledItem = serviceContext.getItemService().find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow();
+    CustomItem disabledItem = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
 
     org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
         InventoryHelper.createInventory(18,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs"),
-        disabledItem.getCustomItem()
-    );
+        disabledItem.toItemStack());
 
-    for (int i = 0; i < serviceContext.getTraderNpcService().getAllNpcs().size();
-        i++) {
+    for (int i = 0; i < serviceContext.getTraderNpcService().getAllNpcs().size(); i++) {
       inv.setItem(i,
-          serviceContext.getTraderNpcService().getAllNpcs().get(i).getItemHelper()
-              .getCustomItem());
+          serviceContext.getTraderNpcService().getAllNpcs().get(i).getItemHelper().getCustomItem());
     }
 
     InventoryHelper.openInventory(player, inv);

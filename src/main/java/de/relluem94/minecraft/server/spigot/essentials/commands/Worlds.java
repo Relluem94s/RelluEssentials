@@ -4,7 +4,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
@@ -18,8 +17,9 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelpe
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,14 +45,14 @@ public class Worlds implements CommandConstruct {
 
   private ServiceContext serviceContext;
 
-  public static void openWorldMenu(Player p, ItemService itemService) {
+  public static void openWorldMenu(Player p, ItemService itemService, PluginMetadataService pluginMetadataService) {
     org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
         InventoryHelper.createInventory(18,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds"),
         itemService.find(
-                RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+                new RelluEssentialsNamespacedKey(pluginMetadataService.getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
             .orElseThrow()
-            .getCustomItem()
+            .toItemStack()
     );
 
     for (int i = 0; i < Bukkit.getWorlds().size(); i++) {
@@ -121,7 +121,7 @@ public class Worlds implements CommandConstruct {
               Commands.UNLOAD_NO_SAVE.getName(),
               Commands.CREATE.getName()
           ));
-      openWorldMenu(p, serviceContext.getItemService());
+      openWorldMenu(p, serviceContext.getItemService(), serviceContext.getPluginMetadataService());
       return true;
     }
 
