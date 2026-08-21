@@ -123,10 +123,10 @@ public record CustomItem(
             meta.getPersistentDataContainer().set(dataKey, PersistentDataType.DOUBLE, doubleValue);
           }
         }
+      }
 
-        for (Consumer<ItemMeta> modifier : metaModifiers) {
-          modifier.accept(meta);
-        }
+      for (Consumer<ItemMeta> modifier : metaModifiers) {
+        modifier.accept(meta);
       }
 
       itemStack.setItemMeta(meta);
