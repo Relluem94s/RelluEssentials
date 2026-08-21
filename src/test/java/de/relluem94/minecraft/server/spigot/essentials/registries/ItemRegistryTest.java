@@ -12,12 +12,9 @@ import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.util.Optional;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class ItemRegistryTest {
@@ -36,29 +33,15 @@ class ItemRegistryTest {
 
   private ItemRegistry itemRegistry;
 
-  private MockedStatic<RelluEssentials> mockedRelluEssentialsStatic;
-
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
     when(mockPlugin.getName()).thenReturn("TestPlugin");
     when(mockRelluEssentials.getName()).thenReturn("TestPlugin");
-
-    mockedRelluEssentialsStatic = Mockito.mockStatic(RelluEssentials.class);
-    mockedRelluEssentialsStatic.when(RelluEssentials::getInstance).thenReturn(mockRelluEssentials);
-
     itemRegistry = new ItemRegistry(mockPlugin);
 
     when(mockRegistryKey.toString()).thenReturn("test_key");
   }
-
-  @AfterEach
-  void tearDown() {
-    if (mockedRelluEssentialsStatic != null) {
-      mockedRelluEssentialsStatic.close();
-    }
-  }
-
 
   @Test
   void register_ShouldAddItemsToMap() {
@@ -145,7 +128,8 @@ class ItemRegistryTest {
   @Test
   void findByItemStack_ShouldReturnEmpty_WhenNoMatchFound() {
     org.bukkit.inventory.ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
-    org.bukkit.inventory.ItemStack itemStackFromCustomItem = mock(org.bukkit.inventory.ItemStack.class);
+    org.bukkit.inventory.ItemStack itemStackFromCustomItem = mock(
+        org.bukkit.inventory.ItemStack.class);
 
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
