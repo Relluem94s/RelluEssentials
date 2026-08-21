@@ -6,4 +6,9 @@ import lombok.AllArgsConstructor;
 public class RelluEssentialsNamespacedKey {
   private final String namespace;
   private final String key;
+
+  @Override
+  public String toString() {
+    return namespace + ":" + key;
+  }
 }
