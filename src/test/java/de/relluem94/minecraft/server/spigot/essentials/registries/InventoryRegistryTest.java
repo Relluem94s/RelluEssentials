@@ -5,9 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.registries.model.RegisteredInventory;
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +24,10 @@ class InventoryRegistryTest {
 
   @Test
   void register_ShouldStoreAndReturnInventory() {
-    RegistryKey key = new RegistryKey("test", "inventory");
+    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("test", "inventory");
     String title = "Test Inventory";
     int size = 27;
-    ItemHelper.Type filter = Type.GADGET;
+    CustomItem.Type filter = CustomItem.Type.GADGET;
 
     RegisteredInventory registeredInventory = inventoryRegistry.register(key, title, size, filter);
 
@@ -40,18 +39,17 @@ class InventoryRegistryTest {
 
   @Test
   void register_ShouldThrowException_WhenKeyAlreadyExists() {
-    RegistryKey key = new RegistryKey("test", "inventory");
-    inventoryRegistry.register(key, "First", 9, ItemHelper.Type.GADGET);
+    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("test", "inventory");
+    inventoryRegistry.register(key, "First", 9, CustomItem.Type.GADGET);
 
-    assertThrows(IllegalArgumentException.class, () ->
-        inventoryRegistry.register(key, "Second", 18, ItemHelper.Type.GADGET)
-    );
+    assertThrows(IllegalArgumentException.class,
+        () -> inventoryRegistry.register(key, "Second", 18, CustomItem.Type.GADGET));
   }
 
   @Test
   void find_ShouldReturnOptionalWithInventory_WhenKeyExists() {
-    RegistryKey key = new RegistryKey("test", "inventory");
-    inventoryRegistry.register(key, "Test", 9, ItemHelper.Type.GADGET);
+    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("test", "inventory");
+    inventoryRegistry.register(key, "Test", 9, CustomItem.Type.GADGET);
 
     Optional<RegisteredInventory> result = inventoryRegistry.find(key);
 
@@ -61,7 +59,7 @@ class InventoryRegistryTest {
 
   @Test
   void find_ShouldReturnEmptyOptional_WhenKeyDoesNotExist() {
-    RegistryKey key = new RegistryKey("non", "existent");
+    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("non", "existent");
 
     Optional<RegisteredInventory> result = inventoryRegistry.find(key);
 
@@ -70,12 +68,12 @@ class InventoryRegistryTest {
 
   @Test
   void findAllByNamespace_ShouldReturnOnlyInventoriesInNamespace() {
-    inventoryRegistry.register(new RegistryKey("plugin", "inv1"), "Inv 1", 9,
-        ItemHelper.Type.GADGET);
-    inventoryRegistry.register(new RegistryKey("plugin", "inv2"), "Inv 2", 9,
-        ItemHelper.Type.GADGET);
-    inventoryRegistry.register(new RegistryKey("other", "inv3"), "Inv 3", 9,
-        ItemHelper.Type.GADGET);
+    inventoryRegistry.register(new RelluEssentialsNamespacedKey("plugin", "inv1"), "Inv 1", 9,
+        CustomItem.Type.GADGET);
+    inventoryRegistry.register(new RelluEssentialsNamespacedKey("plugin", "inv2"), "Inv 2", 9,
+        CustomItem.Type.GADGET);
+    inventoryRegistry.register(new RelluEssentialsNamespacedKey("other", "inv3"), "Inv 3", 9,
+        CustomItem.Type.GADGET);
 
     List<RegisteredInventory> pluginInventories = inventoryRegistry.findAllByNamespace("plugin");
 
@@ -84,8 +82,8 @@ class InventoryRegistryTest {
 
   @Test
   void findAllByNamespace_ShouldReturnEmptyList_WhenNamespaceDoesNotExist() {
-    inventoryRegistry.register(new RegistryKey("plugin", "inv1"), "Inv 1", 9,
-        ItemHelper.Type.GADGET);
+    inventoryRegistry.register(new RelluEssentialsNamespacedKey("plugin", "inv1"), "Inv 1", 9,
+        CustomItem.Type.GADGET);
 
     List<RegisteredInventory> result = inventoryRegistry.findAllByNamespace("unknown");
 

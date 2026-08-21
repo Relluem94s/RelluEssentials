@@ -4,17 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.util.Optional;
-import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,13 +27,13 @@ class ItemRegistryTest {
   private Plugin mockPlugin;
 
   @Mock
-  private ItemHelper mockItemHelper;
+  private CustomItem mockCustomItem;
 
   @Mock
   private RelluEssentials mockRelluEssentials;
 
   @Mock
-  private RegistryKey mockRegistryKey;
+  private RelluEssentialsNamespacedKey mockRegistryKey;
 
   private ItemRegistry itemRegistry;
 
@@ -74,46 +71,44 @@ class ItemRegistryTest {
 
   @Test
   void register_ShouldAddItemsToMap() {
-    itemRegistry.register(mockRegistryKey, mockItemHelper);
+    itemRegistry.register(mockRegistryKey, mockCustomItem);
 
-    Optional<ItemHelper> found = itemRegistry.findByIdentifier("test_key");
+    Optional<CustomItem> found = itemRegistry.findByIdentifier("test_key");
     assertTrue(found.isPresent());
-    assertEquals(mockItemHelper, found.get());
-
-    verify(mockItemHelper).setData(any(NamespacedKey.class), eq("test_key"));
+    assertEquals(mockCustomItem, found.get());
   }
 
   @Test
   void register_ShouldThrowException_WhenKeyAlreadyExists() {
-    itemRegistry.register(mockRegistryKey, mockItemHelper);
+    itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     assertThrows(IllegalArgumentException.class,
-        () -> itemRegistry.register(mockRegistryKey, mockItemHelper));
+        () -> itemRegistry.register(mockRegistryKey, mockCustomItem));
   }
 
   @Test
   void find_ShouldReturnEmpty_WhenKeyDoesNotExist() {
-    RegistryKey unknownKey = mock(RegistryKey.class);
+    RelluEssentialsNamespacedKey unknownKey = mock(RelluEssentialsNamespacedKey.class);
     when(unknownKey.toString()).thenReturn("unknown");
 
-    Optional<ItemHelper> result = itemRegistry.find(unknownKey);
+    Optional<CustomItem> result = itemRegistry.find(unknownKey);
 
     assertTrue(result.isEmpty());
   }
 
   @Test
   void findByIdentifier_ShouldReturnCorrectItem() {
-    itemRegistry.register(mockRegistryKey, mockItemHelper);
+    itemRegistry.register(mockRegistryKey, mockCustomItem);
 
-    Optional<ItemHelper> result = itemRegistry.findByIdentifier("test_key");
+    Optional<CustomItem> result = itemRegistry.findByIdentifier("test_key");
 
     assertTrue(result.isPresent());
-    assertEquals(mockItemHelper, result.get());
+    assertEquals(mockCustomItem, result.get());
   }
 
   @Test
   void getAll_ShouldReturnAllRegisteredItems() {
-    itemRegistry.register(mockRegistryKey, mockItemHelper);
+    itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     assertEquals(1, itemRegistry.getAll().size());
     assertTrue(itemRegistry.getAll().containsKey("test_key"));
@@ -121,20 +116,20 @@ class ItemRegistryTest {
 
   @Test
   void getAllByType_ShouldFilterItemsCorrectly() {
-    ItemHelper typeAItem = mock(ItemHelper.class);
-    ItemHelper typeBItem = mock(ItemHelper.class);
-    RegistryKey keyA = mock(RegistryKey.class);
-    RegistryKey keyB = mock(RegistryKey.class);
+    CustomItem typeAItem = mock(CustomItem.class);
+    CustomItem typeBItem = mock(CustomItem.class);
+    RelluEssentialsNamespacedKey keyA = mock(RelluEssentialsNamespacedKey.class);
+    RelluEssentialsNamespacedKey keyB = mock(RelluEssentialsNamespacedKey.class);
 
     when(keyA.toString()).thenReturn("key_a");
     when(keyB.toString()).thenReturn("key_b");
-    when(typeAItem.getItemType()).thenReturn(Type.GADGET);
-    when(typeBItem.getItemType()).thenReturn(ItemHelper.Type.TOOL);
+    when(typeAItem.type()).thenReturn(CustomItem.Type.GADGET);
+    when(typeBItem.type()).thenReturn(CustomItem.Type.TOOL);
 
     itemRegistry.register(keyA, typeAItem);
     itemRegistry.register(keyB, typeBItem);
 
-    var results = itemRegistry.getAllByType(ItemHelper.Type.GADGET);
+    var results = itemRegistry.getAllByType(CustomItem.Type.GADGET);
 
     assertEquals(1, results.size());
     assertEquals(typeAItem, results.getFirst());
@@ -143,24 +138,24 @@ class ItemRegistryTest {
   @Test
   void findByItemStack_ShouldReturnItem_WhenMatchFound() {
     org.bukkit.inventory.ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
-    itemRegistry.register(mockRegistryKey, mockItemHelper);
+    itemRegistry.register(mockRegistryKey, mockCustomItem);
 
-    when(mockItemHelper.almostEquals(mockItemStack)).thenReturn(true);
+    when(mockCustomItem.toItemStack().isSimilar(mockItemStack)).thenReturn(true);
 
-    Optional<ItemHelper> result = itemRegistry.findByItemStack(mockItemStack);
+    Optional<CustomItem> result = itemRegistry.findByItemStack(mockItemStack);
 
     assertTrue(result.isPresent());
-    assertEquals(mockItemHelper, result.get());
+    assertEquals(mockCustomItem, result.get());
   }
 
   @Test
   void findByItemStack_ShouldReturnEmpty_WhenNoMatchFound() {
     org.bukkit.inventory.ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
-    itemRegistry.register(mockRegistryKey, mockItemHelper);
+    itemRegistry.register(mockRegistryKey, mockCustomItem);
 
-    when(mockItemHelper.almostEquals(mockItemStack)).thenReturn(false);
+    when(mockCustomItem.toItemStack().isSimilar(mockItemStack)).thenReturn(false);
 
-    Optional<ItemHelper> result = itemRegistry.findByItemStack(mockItemStack);
+    Optional<CustomItem> result = itemRegistry.findByItemStack(mockItemStack);
 
     assertTrue(result.isEmpty());
   }

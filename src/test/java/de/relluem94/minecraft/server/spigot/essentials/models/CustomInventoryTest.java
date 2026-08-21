@@ -34,7 +34,7 @@ class CustomInventoryTest {
 
     @Test
     void getTitleGUI() {
-        Assertions.assertEquals("BUILD_BLOCKS_TITLE", customInventory.getTitleGUI());
+        Assertions.assertEquals("BUILD_BLOCKS_TITLE", customInventory.getTitleGui());
     }
 
     @Test
@@ -53,8 +53,8 @@ class CustomInventoryTest {
 
     @Test
     void setTitleGUI() {
-        Assertions.assertEquals("BUILD_BLOCKS_TITLE", customInventory.getTitleGUI());
+        Assertions.assertEquals("BUILD_BLOCKS_TITLE", customInventory.getTitleGui());
         customInventory.setTitleGui("DECORATION_BLOCKS_TITLE");
-        Assertions.assertEquals("DECORATION_BLOCKS_TITLE", customInventory.getTitleGUI());
+        Assertions.assertEquals("DECORATION_BLOCKS_TITLE", customInventory.getTitleGui());
     }
 }
