@@ -163,6 +163,22 @@ public class EnchantmentHelper extends CustomEnchantment {
     );
   }
 
+  /**
+   * Creates and returns an enchanted book {@link ItemStack} containing this enchantment.
+   *
+   * @return an {@link ItemStack} representing the enchanted book
+   */
+  public ItemStack createEnchantedBook() {
+    ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
+    if (book.getItemMeta() instanceof EnchantmentStorageMeta meta) {
+      meta.getPersistentDataContainer()
+          .set(getKey(), PersistentDataType.INTEGER, getStartLevel());
+      book.setItemMeta(meta);
+    }
+    return book;
+  }
+
+
   private  @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item,
       EnchantmentHelper enchantment) {
     if (item.getItemMeta() instanceof EnchantmentStorageMeta meta) {

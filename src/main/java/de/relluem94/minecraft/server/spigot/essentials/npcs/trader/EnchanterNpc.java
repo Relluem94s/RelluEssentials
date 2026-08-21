@@ -80,7 +80,7 @@ public class EnchanterNpc extends TraderNpc {
     int slot = 0;
     for (EnchantmentHelper enchant : enchantments) {
       slot = InventoryHelper.getNextSlot(slot);
-      ItemStack book = enchant.getBook().getCustomItem().clone();
+      ItemStack book = enchant.createEnchantedBook();
       applyAdditionalLoreToItemStack(book, buildCostDataFromCost(enchant.getCost()));
       inv.setItem(slot, book);
       slot++;
