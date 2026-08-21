@@ -1,8 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.items;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -24,6 +26,7 @@ import org.bukkit.persistence.PersistentDataType;
  * @param cost The price of the item.
  * @param enchantments A list of enchantment data (key and level).
  * @param persistentData A map of persistent data (NamespacedKey and value).
+ * @param metaModifiers A list of functions to apply custom logic to the ItemMeta.
  * @param relluEssentialsNamespacedKey The unique identifier for this item in the registry.
  */
 public record CustomItem(
@@ -36,6 +39,7 @@ public record CustomItem(
     Integer cost,
     List<EnchantmentData> enchantments,
     Map<String, Object> persistentData,
+    List<Consumer<ItemMeta>> metaModifiers,
     RelluEssentialsNamespacedKey relluEssentialsNamespacedKey
 ) {
 
@@ -101,6 +105,10 @@ public record CustomItem(
         }
       }
 
+      if (cost != null) {
+        meta.getPersistentDataContainer().set(NamespacedKeyConstants.itemCost(), PersistentDataType.INTEGER, cost);
+      }
+
       for (Map.Entry<String, Object> entry : persistentData.entrySet()) {
         NamespacedKey dataKey = NamespacedKey.fromString(entry.getKey());
         if (dataKey != null) {
@@ -114,6 +122,10 @@ public record CustomItem(
           } else if (value instanceof Double doubleValue) {
             meta.getPersistentDataContainer().set(dataKey, PersistentDataType.DOUBLE, doubleValue);
           }
+        }
+
+        for (Consumer<ItemMeta> modifier : metaModifiers) {
+          modifier.accept(meta);
         }
       }
 

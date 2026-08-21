@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.bukkit.Material;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  * Builder for creating {@link CustomItem} instances.
@@ -22,8 +24,9 @@ public class CustomItemBuilder {
   private CustomItem.Type type = CustomItem.Type.NONE;
   private CustomItem.Rarity rarity = CustomItem.Rarity.NONE;
   private Integer cost = null;
-  private List<CustomItem.EnchantmentData> enchantments = new ArrayList<>();
-  private Map<String, Object> persistentData = new HashMap<>();
+  private final List<CustomItem.EnchantmentData> enchantments = new ArrayList<>();
+  private final Map<String, Object> persistentData = new HashMap<>();
+  private final List<Consumer<ItemMeta>> metaModifiers = new ArrayList<>();
 
   public CustomItemBuilder(RelluEssentialsNamespacedKey relluEssentialsNamespacedKey, Material material) {
     this.relluEssentialsNamespacedKey = relluEssentialsNamespacedKey;
@@ -61,17 +64,22 @@ public class CustomItemBuilder {
   }
 
   public CustomItemBuilder enchantments(List<CustomItem.EnchantmentData> enchantments) {
-    this.enchantments = new ArrayList<>(enchantments);
+    this.enchantments.addAll(enchantments);
     return this;
   }
 
   public CustomItemBuilder persistentData(Map<String, Object> persistentData) {
-    this.persistentData = new HashMap<>(persistentData);
+    this.persistentData.putAll(persistentData);
     return this;
   }
 
   public CustomItemBuilder addPersistentData(String key, Object value) {
     this.persistentData.put(key, value);
+    return this;
+  }
+
+  public CustomItemBuilder metaModifier(Consumer<ItemMeta> modifier) {
+    this.metaModifiers.add(modifier);
     return this;
   }
 
@@ -86,6 +94,7 @@ public class CustomItemBuilder {
         cost,
         Collections.unmodifiableList(enchantments),
         Collections.unmodifiableMap(persistentData),
+        Collections.unmodifiableList(metaModifiers),
         relluEssentialsNamespacedKey
     );
   }

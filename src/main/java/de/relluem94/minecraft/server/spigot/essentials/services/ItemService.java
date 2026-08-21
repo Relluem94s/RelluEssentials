@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,8 @@ public class ItemService {
    * @param key  the key to register the item under
    * @param item the item helper instance
    */
-  public void register(@NonNull RegistryKey key, @NonNull ItemHelper item) {
-    itemRegistry.register(key, item);
+  public void register(@NonNull CustomItem customItem) {
+    itemRegistry.register(customItem.relluEssentialsNamespacedKey(), customItem);
   }
 
   /**

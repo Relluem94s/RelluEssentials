@@ -5,6 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Exceptio
 import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class ItemRegistry {
    * @param item the item helper instance
    * @throws IllegalArgumentException if the item is already registered
    */
-  public void register(@NonNull RegistryKey key, @NonNull ItemHelper item) {
+  public void register(@NonNull RelluEssentialsNamespacedKey key, @NonNull ItemHelper item) {
     if (registeredItems.containsKey(key.toString())) {
       throw new IllegalArgumentException(String.format(PLUGIN_EXCEPTION_ITEM_REGISTRY, key));
     }
