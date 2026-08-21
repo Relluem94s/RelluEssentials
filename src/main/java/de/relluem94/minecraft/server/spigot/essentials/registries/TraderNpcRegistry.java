@@ -116,7 +116,7 @@ public class TraderNpcRegistry {
    */
   public void addNpc(TraderNpc traderNpc) {
     npcs.add(traderNpc);
-    npcItemStack.add(traderNpc.getItemHelper().getCustomItem());
+    npcItemStack.add(traderNpc.getCustomItem().toItemStack());
     npcName.add(traderNpc.getName());
 
     if (traderNpc.getType().equals(Type.TRADER) || traderNpc.getType().equals(Type.ENCHANTER)

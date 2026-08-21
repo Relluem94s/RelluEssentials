@@ -162,27 +162,6 @@ public class ItemHelper {
     this.cost = cost;
   }
 
-  public void applyCostToItemStack(@NonNull NamespacedKey pluginNamespacedKey) {
-    if (cost == null) {
-      return;
-    }
-    ItemMeta itemMeta = is.getItemMeta();
-    if (itemMeta == null) {
-      return;
-    }
-    itemMeta.getPersistentDataContainer().set(pluginNamespacedKey, PersistentDataType.INTEGER, cost);
-    is.setItemMeta(itemMeta);
-  }
-
-  public static List<String> remove(List<String> locLore) {
-    locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
-    locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
-    locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
-    locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
-    locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
-    return locLore;
-  }
-
   @Contract("_ -> new")
   public static @NotNull ItemStack getCleanItemStack(@NotNull ItemStack is) {
     return new ItemStack(is.getType(), 1);
@@ -263,7 +242,6 @@ public class ItemHelper {
    * @return ItemStack of ItemHelper
    */
   public ItemStack getCustomItem() {
-    addItemRarity();
     return is;
   }
 
@@ -349,33 +327,6 @@ public class ItemHelper {
 
     return itemMeta.getDisplayName().equals(compareMeta.getDisplayName());
   }
-
-  private void addItemRarity() {
-    ItemMeta im;
-    if (is.hasItemMeta() && is.getItemMeta() != null) {
-      im = is.getItemMeta();
-      List<String> locLore;
-      if (im.getLore() != null) {
-        locLore = im.getLore();
-      } else {
-        locLore = new ArrayList<>();
-      }
-
-      locLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
-      locLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
-      locLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
-      locLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
-      locLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
-
-      if (rarity.level != -1) {
-        locLore.add(rarity.getPrefix() + rarity.getDisplayName());
-      }
-
-      im.setLore(locLore);
-      is.setItemMeta(im);
-    }
-  }
-
 
   @Getter
   public enum Rarity {

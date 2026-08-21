@@ -11,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
@@ -215,7 +216,7 @@ public class NpcTradeHandler {
 
   private String resolveItemDisplayName(@NonNull ItemStack item) {
     Optional<String> enchantmentName = EnchantmentRegistry.findByBookItemStack(item)
-        .map(enchantment -> enchantment.getBook().getCustomItem().getItemMeta())
+        .map(enchantment -> enchantment.createEnchantedBook().getItemMeta())
         .filter(meta -> meta != null && meta.hasDisplayName()).map(ItemMeta::getDisplayName);
 
     if (enchantmentName.isPresent()) {
@@ -244,7 +245,7 @@ public class NpcTradeHandler {
     }
 
     Optional<Integer> enchantmentBuyPrice = EnchantmentRegistry.findByBookItemStack(item)
-        .map(enchantment -> enchantment.getBook().getCost());
+        .map(EnchantmentHelper::getCost);
     if (enchantmentBuyPrice.isPresent()) {
       return enchantmentBuyPrice.get();
     }
@@ -262,7 +263,7 @@ public class NpcTradeHandler {
     }
 
     Optional<Integer> enchantmentSellPrice = EnchantmentRegistry.findByBookItemStack(item)
-        .map(enchantment -> enchantment.getBook().getCost());
+        .map(EnchantmentHelper::getCost);
     if (enchantmentSellPrice.isPresent()) {
       return enchantmentSellPrice.get();
     }
@@ -322,7 +323,7 @@ public class NpcTradeHandler {
 
   private ItemStack resolveCleanPurchasedItem(ItemStack guiItem, int amount) {
     ItemStack purchasedItem = EnchantmentRegistry.findByBookItemStack(guiItem)
-        .map(enchantment -> enchantment.getBook().getCustomItem().clone()).orElseGet(
+        .map(enchantment -> enchantment.createEnchantedBook().clone()).orElseGet(
             () -> serviceContext.getItemService().findByItemStack(guiItem)
                 .map(itemHelper -> itemHelper.toItemStack().clone()).orElseGet(guiItem::clone));
 

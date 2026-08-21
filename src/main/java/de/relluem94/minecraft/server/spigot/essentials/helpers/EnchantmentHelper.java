@@ -2,10 +2,10 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.EnchantLevel;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.EnchantName;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Rarity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -146,24 +146,6 @@ public class EnchantmentHelper extends CustomEnchantment {
   private int cost;
 
   /**
-   * Creates and returns an enchanted book {@link ItemHelper} containing this enchantment.
-   *
-   * @return an {@link ItemHelper} representing the enchanted book
-   */
-  @Deprecated
-  public ItemHelper getBook() {
-    return new ItemHelper(
-        addBookEnchantment(
-            new ItemStack(Material.ENCHANTED_BOOK), this
-        ),
-        enchantName.displayName(),
-        ItemHelper.Type.ENCHANTMENT,
-        getRarity(),
-        cost
-    );
-  }
-
-  /**
    * Creates and returns an enchanted book {@link ItemStack} containing this enchantment.
    *
    * @return an {@link ItemStack} representing the enchanted book
@@ -178,8 +160,7 @@ public class EnchantmentHelper extends CustomEnchantment {
     return book;
   }
 
-
-  private  @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item,
+  private @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item,
       EnchantmentHelper enchantment) {
     if (item.getItemMeta() instanceof EnchantmentStorageMeta meta) {
       meta.getPersistentDataContainer()

@@ -40,7 +40,7 @@ public class NpcGuiCommand implements SubCommand {
 
     for (int i = 0; i < serviceContext.getTraderNpcService().getAllNpcs().size(); i++) {
       inv.setItem(i,
-          serviceContext.getTraderNpcService().getAllNpcs().get(i).getItemHelper().getCustomItem());
+          serviceContext.getTraderNpcService().getAllNpcs().get(i).getCustomItem().toItemStack());
     }
 
     InventoryHelper.openInventory(player, inv);

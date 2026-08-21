@@ -95,6 +95,21 @@ public record CustomItem(
         meta.setLore(lore);
       }
 
+      if (rarity.level != -1) {
+        List<String> currentLore = meta.getLore();
+        if (currentLore != null) {
+          currentLore.remove(Rarity.COMMON.getPrefix() + Rarity.COMMON.getDisplayName());
+          currentLore.remove(Rarity.UNCOMMON.getPrefix() + Rarity.UNCOMMON.getDisplayName());
+          currentLore.remove(Rarity.RARE.getPrefix() + Rarity.RARE.getDisplayName());
+          currentLore.remove(Rarity.EPIC.getPrefix() + Rarity.EPIC.getDisplayName());
+          currentLore.remove(Rarity.LEGENDARY.getPrefix() + Rarity.LEGENDARY.getDisplayName());
+          currentLore.add(rarity.getPrefix() + rarity.getDisplayName());
+          meta.setLore(currentLore);
+        } else {
+          meta.setLore(List.of(rarity.getPrefix() + rarity.getDisplayName()));
+        }
+      }
+
       for (EnchantmentData enchantment : enchantments) {
         NamespacedKey enchantmentKey = NamespacedKey.fromString(enchantment.key());
         if (enchantmentKey != null) {

@@ -8,10 +8,10 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentCons
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AttributeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.EnchantLevel;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.EnchantName;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import org.bukkit.attribute.Attribute;
