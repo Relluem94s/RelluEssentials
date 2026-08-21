@@ -20,10 +20,10 @@ public class GiveCloudSailorCommand implements SubCommand {
   public void execute(Player player, String[] args) {
     serviceContext.getItemService()
         .find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR))
-        .ifPresent(item -> player.getInventory().addItem(item.getCustomItem()));
+        .ifPresent(item -> player.getInventory().addItem(item.toItemStack()));
     serviceContext.getItemService()
         .find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
-        .ifPresent(item -> player.getInventory().addItem(item.getCustomItem()));
+        .ifPresent(item -> player.getInventory().addItem(item.toItemStack()));
   }
 
   @Override

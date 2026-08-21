@@ -14,6 +14,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -34,31 +36,22 @@ public class InventoryClickNpc implements ListenerConstruct {
   private NpcTradeHandler tradeHandler;
   private ServiceContext serviceContext;
   private final Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
-      BankService.npc_gui_deposit_5_percent,
-      (p, bae) -> serviceContext.getBankService().deposit(
-          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 5f),
-      BankService.npc_gui_deposit_20_percent,
-      (p, bae) -> serviceContext.getBankService().deposit(
-          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 20f),
-      BankService.npc_gui_deposit_50_percent,
-      (p, bae) -> serviceContext.getBankService().deposit(
-          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 50f),
-      BankService.npc_gui_deposit_all,
-      (p, bae) -> serviceContext.getBankService().deposit(
-          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 100f),
-      BankService.npc_gui_withdraw_5_percent,
-      (p, bae) -> serviceContext.getBankService().withdraw(
-          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 5f),
-      BankService.npc_gui_withdraw_20_percent,
-      (p, bae) -> serviceContext.getBankService().withdraw(
-          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 20f),
-      BankService.npc_gui_withdraw_50_percent,
-      (p, bae) -> serviceContext.getBankService().withdraw(
-          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 50f),
-      BankService.npc_gui_withdraw_all,
-      (p, bae) -> serviceContext.getBankService().withdraw(
-          serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 100f)
-  );
+      BankService.npc_gui_deposit_5_percent, (p, bae) -> serviceContext.getBankService()
+          .deposit(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 5f),
+      BankService.npc_gui_deposit_20_percent, (p, bae) -> serviceContext.getBankService()
+          .deposit(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 20f),
+      BankService.npc_gui_deposit_50_percent, (p, bae) -> serviceContext.getBankService()
+          .deposit(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 50f),
+      BankService.npc_gui_deposit_all, (p, bae) -> serviceContext.getBankService()
+          .deposit(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 100f),
+      BankService.npc_gui_withdraw_5_percent, (p, bae) -> serviceContext.getBankService()
+          .withdraw(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 5f),
+      BankService.npc_gui_withdraw_20_percent, (p, bae) -> serviceContext.getBankService()
+          .withdraw(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 20f),
+      BankService.npc_gui_withdraw_50_percent, (p, bae) -> serviceContext.getBankService()
+          .withdraw(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 50f),
+      BankService.npc_gui_withdraw_all, (p, bae) -> serviceContext.getBankService()
+          .withdraw(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 100f));
 
   @Override
   public void injectContext(ServiceContext context) {
@@ -72,14 +65,12 @@ public class InventoryClickNpc implements ListenerConstruct {
       return;
     }
 
-    PlayerEntry playerEntry = serviceContext.getPlayerService()
-        .getPlayerEntry(player);
+    PlayerEntry playerEntry = serviceContext.getPlayerService().getPlayerEntry(player);
     String title = e.getView().getTitle();
 
     if (title.equals(serviceContext.getTraderNpcService().getBankerNpc().getTitle())) {
       handleBankerInventory(e, player, playerEntry);
-    } else if (serviceContext.getTraderNpcService().getTraderNpcTitles()
-        .contains(title)) {
+    } else if (serviceContext.getTraderNpcService().getTraderNpcTitles().contains(title)) {
       tradeHandler.handle(e.getCurrentItem(), e.getClickedInventory(), player, playerEntry,
           e.getSlot(), e.isRightClick());
       e.setCancelled(true);
@@ -98,8 +89,9 @@ public class InventoryClickNpc implements ListenerConstruct {
     BankAccountEntry bankAccount = serviceContext.getBankService()
         .findBankAccountByPlayerId(playerEntry.getId());
 
-    Optional<ItemHelper> optionalDisabledItemHelper = serviceContext.getItemService()
-        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED);
+    Optional<CustomItem> optionalDisabledItemHelper = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED));
 
     if (clickedItem == null) {
       return;
@@ -113,13 +105,12 @@ public class InventoryClickNpc implements ListenerConstruct {
       return;
     }
 
-    ItemHelper disabledItemHelper = optionalDisabledItemHelper.get();
+    CustomItem disabledItemHelper = optionalDisabledItemHelper.get();
 
     if (BankService.npc_gui_deposit.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
-      InventoryHelper.openInventory(player,
-          serviceContext.getTraderNpcService().getBankerNpc()
-              .getDepositGUI(playerEntry.getPurse()));
+      InventoryHelper.openInventory(player, serviceContext.getTraderNpcService().getBankerNpc()
+          .getDepositGUI(playerEntry.getPurse()));
     } else if (BankService.npc_gui_balance_total.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
       player.sendMessage(serviceContext.getTranslationService()
@@ -132,46 +123,37 @@ public class InventoryClickNpc implements ListenerConstruct {
     } else if (BankService.npc_gui_withdraw.getCustomItem().getType()
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
-      InventoryHelper.openInventory(player,
-          serviceContext.getTraderNpcService().getBankerNpc()
-              .getWithdrawGUI(bankAccount.getValue()));
+      InventoryHelper.openInventory(player, serviceContext.getTraderNpcService().getBankerNpc()
+          .getWithdrawGUI(bankAccount.getValue()));
     } else if (BankService.UPGRADE_MATERIAL.equals(clickedItem.getType())) {
       serviceContext.getBankService().upgradeAccount(clickedItem, player, playerEntry, bankAccount);
-    } else if (BankService.npc_gui_balance_transactions.equalsExact(
-        clickedItem)) {
+    } else if (BankService.npc_gui_balance_transactions.equalsExact(clickedItem)) {
       handleTransactionHistory(player, bankAccount);
     } else if (BankService.npc_gui_upgrade.equalsExact(clickedItem)) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
           serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGUI());
-    } else if (disabledItemHelper.equalsExact(clickedItem)) {
+    } else if (disabledItemHelper.toItemStack().isSimilar(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {
       bankerDepositActions.entrySet().stream()
-          .filter(entry -> entry.getKey().equalsExact(clickedItem))
-          .findFirst()
+          .filter(entry -> entry.getKey().equalsExact(clickedItem)).findFirst()
           .ifPresent(entry -> entry.getValue().accept(player, bankAccount));
     }
   }
 
   private void handleTransactionHistory(Player player, BankAccountEntry bankAccount) {
     InventoryHelper.closeInventory(player);
-    player.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
+    player.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION));
     List<BankTransactionEntry> transactions = serviceContext.getBankService()
         .findTransactionsByBankAccountId(bankAccount.getId());
-    transactions.forEach(transaction -> player.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(
-            MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST,
+    transactions.forEach(transaction -> player.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_LIST,
             transaction.getValue() > 1 ? PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE
-                : PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE,
-            PLUGIN_COLOR_MONEY,
-            StringHelper.formatDouble(transaction.getValue()),
-            PLUGIN_NAME_MONEY,
-            transaction.getCreated()
-        )
-    ));
+                : PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE, PLUGIN_COLOR_MONEY,
+            StringHelper.formatDouble(transaction.getValue()), PLUGIN_NAME_MONEY,
+            transaction.getCreated())));
   }
 
   private boolean isNpcOrCustomHeadsInventory(@NonNull String title) {
@@ -187,15 +169,16 @@ public class InventoryClickNpc implements ListenerConstruct {
       return;
     }
 
-    Optional<ItemHelper> optionalItemHelper = serviceContext.getItemService()
-        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED);
+    Optional<CustomItem> optionalItemHelper = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED));
     if (optionalItemHelper.isEmpty()) {
       return;
     }
 
-    ItemHelper disabledItemHelper = optionalItemHelper.get();
+    CustomItem disabledItemHelper = optionalItemHelper.get();
 
-    if (!disabledItemHelper.getCustomItem().equals(e.getCurrentItem())) {
+    if (!disabledItemHelper.toItemStack().equals(e.getCurrentItem())) {
       player.getInventory().addItem(e.getCurrentItem().clone());
     }
   }

@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -29,7 +30,7 @@ public class InteractTraderNpc implements ListenerConstruct {
     this.buyBackSlotResolver = new BuyBackSlotResolver(
         serviceContext.getBuyBackService(), serviceContext.getItemService().find(
             new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow().getCustomItem());
+        .orElseThrow().toItemStack());
   }
 
   @EventHandler

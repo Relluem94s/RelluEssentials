@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import java.util.List;
@@ -50,10 +51,12 @@ public class BetterSoil implements ListenerConstruct {
       }
     } else {
       ItemStack itemInHand = e.getPlayer().getInventory().getItemInMainHand();
-      RegistryKey magicWaterBucketKey = RegistryKey.of(PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET);
+      RelluEssentialsNamespacedKey magicWaterBucketKey = new RelluEssentialsNamespacedKey(
+          serviceContext.getPluginMetadataService().getName(),
+          PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET);
 
       if (serviceContext.getItemService().find(magicWaterBucketKey)
-          .map(itemHelper -> itemHelper.almostEquals(itemInHand)).orElse(false)) {
+          .map(itemHelper -> itemHelper.toItemStack().isSimilar(itemInHand)).orElse(false)) {
         e.setCancelled(true);
         b = e.getClickedBlock().getRelative(e.getBlockFace());
         if (b.getType().equals(Material.AIR)) {
