@@ -59,7 +59,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enabl
 import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
-import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.EnchantmentData;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Type;
 import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
@@ -71,9 +70,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.block.Banner;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.Plugin;
 
@@ -194,148 +191,137 @@ public class ItemManager implements Enable {
           LeatherArmorMeta leatherMeta = (LeatherArmorMeta) meta;
           leatherMeta.setColor(Color.SILVER);
           leatherMeta.setUnbreakable(true);
-          leatherMeta.addEnchant(Enchantment.PROTECTION, 3, true); // Could be better then .enchantments.
+          leatherMeta.addEnchant(Enchantment.PROTECTION, 3, true);
         })
-            .enchantments(List.of(new EnchantmentData("PROTECTION", 3)))
         .build());
 
-    ItemHelper relluBootsItem = new ItemHelper(Material.LEATHER_BOOTS, 1, PLUGIN_ITEM_RELLU_BOOTS,
-        ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
-      @Override
-      public void init() {
-        LeatherArmorMeta relluBootsMeta = (LeatherArmorMeta) getItemMeta();
-        relluBootsMeta.setColor(Color.fromRGB(227, 59, 46));
-        relluBootsMeta.addEnchant(Enchantment.THORNS, 94, true);
-        relluBootsMeta.addEnchant(Enchantment.LOOTING, 94, true);
-        relluBootsMeta.addEnchant(Enchantment.PROTECTION, 94, true);
-        relluBootsMeta.setUnbreakable(true);
-        setItemMeta(relluBootsMeta);
-      }
-    };
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS),
+        Material.LEATHER_BOOTS)
+        .amount(1)
+        .displayName(PLUGIN_ITEM_RELLU_BOOTS)
+        .type(Type.ARMOR)
+        .rarity(Rarity.LEGENDARY)
+        .metaModifier(meta -> {
+          LeatherArmorMeta leatherMeta = (LeatherArmorMeta) meta;
+          leatherMeta.setColor(Color.fromRGB(227, 59, 46));
+          leatherMeta.addEnchant(Enchantment.THORNS, 94, true);
+          leatherMeta.addEnchant(Enchantment.LOOTING, 94, true);
+          leatherMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+          leatherMeta.setUnbreakable(true);
+        })
+        .build());
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS), relluBootsItem);
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE),
+        Material.LEATHER_CHESTPLATE)
+        .amount(1)
+        .displayName(PLUGIN_ITEM_RELLU_CHESTPLATE)
+        .type(Type.ARMOR)
+        .rarity(Rarity.LEGENDARY)
+        .metaModifier(meta -> {
+          LeatherArmorMeta leatherMeta = (LeatherArmorMeta) meta;
+          leatherMeta.setColor(Color.fromRGB(72, 179, 177));
+          leatherMeta.addEnchant(Enchantment.THORNS, 94, true);
+          leatherMeta.addEnchant(Enchantment.LOOTING, 94, true);
+          leatherMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+          leatherMeta.setUnbreakable(true);
+        })
+        .build());
 
-    ItemHelper relluChestplateItem = new ItemHelper(Material.LEATHER_CHESTPLATE, 1,
-        PLUGIN_ITEM_RELLU_CHESTPLATE, ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
-      @Override
-      public void init() {
-        LeatherArmorMeta relluChestplateMeta = (LeatherArmorMeta) getItemMeta();
-        relluChestplateMeta.setColor(Color.fromRGB(72, 179, 177));
-        relluChestplateMeta.addEnchant(Enchantment.THORNS, 94, true);
-        relluChestplateMeta.addEnchant(Enchantment.LOOTING, 94, true);
-        relluChestplateMeta.addEnchant(Enchantment.PROTECTION, 94, true);
-        relluChestplateMeta.setUnbreakable(true);
-        setItemMeta(relluChestplateMeta);
-      }
-    };
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_RELLU_HELMET),
+        Material.LEATHER_HELMET)
+        .amount(1)
+        .displayName(PLUGIN_ITEM_RELLU_HELMET)
+        .type(Type.ARMOR)
+        .rarity(Rarity.LEGENDARY)
+        .metaModifier(meta -> {
+          LeatherArmorMeta leatherMeta = (LeatherArmorMeta) meta;
+          leatherMeta.setColor(Color.fromRGB(243, 125, 0));
+          leatherMeta.addEnchant(Enchantment.THORNS, 94, true);
+          leatherMeta.addEnchant(Enchantment.LOOTING, 94, true);
+          leatherMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+          leatherMeta.setUnbreakable(true);
+        })
+        .build());
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE),
-        relluChestplateItem);
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS),
+        Material.LEATHER_LEGGINGS)
+        .amount(1)
+        .displayName(PLUGIN_ITEM_RELLU_LEGGINGS)
+        .type(Type.ARMOR)
+        .rarity(Rarity.LEGENDARY)
+        .metaModifier(meta -> {
+          LeatherArmorMeta leatherMeta = (LeatherArmorMeta) meta;
+          leatherMeta.setColor(Color.fromRGB(152, 216, 1));
+          leatherMeta.addEnchant(Enchantment.THORNS, 94, true);
+          leatherMeta.addEnchant(Enchantment.LOOTING, 94, true);
+          leatherMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+          leatherMeta.setUnbreakable(true);
+        })
+        .build());
 
-    ItemHelper relluHelmetItem = new ItemHelper(Material.LEATHER_HELMET, 1,
-        PLUGIN_ITEM_RELLU_HELMET, ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
-      @Override
-      public void init() {
-        LeatherArmorMeta relluHelmetMeta = (LeatherArmorMeta) getItemMeta();
-        relluHelmetMeta.setColor(Color.fromRGB(243, 125, 0));
-        relluHelmetMeta.addEnchant(Enchantment.THORNS, 94, true);
-        relluHelmetMeta.addEnchant(Enchantment.LOOTING, 94, true);
-        relluHelmetMeta.addEnchant(Enchantment.PROTECTION, 94, true);
-        relluHelmetMeta.setUnbreakable(true);
-        setItemMeta(relluHelmetMeta);
-      }
-    };
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD),
+        Material.SHIELD)
+        .amount(1)
+        .displayName(PLUGIN_ITEM_RELLU_SHIELD)
+        .type(Type.ARMOR)
+        .rarity(Rarity.LEGENDARY)
+        .metaModifier(meta -> {
+          BlockStateMeta blockStateMeta = (BlockStateMeta) meta;
+          Banner banner = (Banner) blockStateMeta.getBlockState();
+          banner.setBaseColor(DyeColor.PURPLE);
+          banner.update();
+          blockStateMeta.setBlockState(banner);
+          blockStateMeta.addEnchant(Enchantment.SHARPNESS, 94, true);
+          blockStateMeta.addEnchant(Enchantment.THORNS, 94, true);
+          blockStateMeta.addEnchant(Enchantment.LOOTING, 94, true);
+          blockStateMeta.addEnchant(Enchantment.PROTECTION, 94, true);
+          blockStateMeta.setUnbreakable(true);
+        })
+        .build());
 
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_HELMET),
-        relluHelmetItem);
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE),
+        Material.NETHERITE_PICKAXE)
+        .amount(1)
+        .displayName(PLUGIN_ITEM_RELLU_PICKAXE)
+        .type(Type.TOOL)
+        .rarity(Rarity.LEGENDARY)
+        .metaModifier(meta -> {
+          meta.addEnchant(Enchantment.LOOTING, 94, true);
+          meta.addEnchant(Enchantment.EFFICIENCY, 94, true);
+          meta.setUnbreakable(true);
+          EnchantmentRegistry.find(
+                  RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+              .ifPresent(enchant -> enchant.addTo(meta));
+        })
+        .build());
 
-    ItemHelper relluLeggingsItem = new ItemHelper(Material.LEATHER_LEGGINGS, 1,
-        PLUGIN_ITEM_RELLU_LEGGINGS, ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
-      @Override
-      public void init() {
-        LeatherArmorMeta relluLeggingsMeta = (LeatherArmorMeta) getItemMeta();
-        relluLeggingsMeta.setColor(Color.fromRGB(152, 216, 1));
-        relluLeggingsMeta.addEnchant(Enchantment.THORNS, 94, true);
-        relluLeggingsMeta.addEnchant(Enchantment.LOOTING, 94, true);
-        relluLeggingsMeta.addEnchant(Enchantment.PROTECTION, 94, true);
-        relluLeggingsMeta.setUnbreakable(true);
-        setItemMeta(relluLeggingsMeta);
-      }
-    };
-
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS),
-        relluLeggingsItem);
-
-    ItemHelper relluShieldItem = new ItemHelper(Material.SHIELD, 1, PLUGIN_ITEM_RELLU_SHIELD,
-        ItemHelper.Type.ARMOR, ItemHelper.Rarity.LEGENDARY) {
-      @Override
-      public void init() {
-        BlockStateMeta blockStateMeta = (BlockStateMeta) getItemMeta();
-        Banner banner = (Banner) blockStateMeta.getBlockState();
-        banner.setBaseColor(DyeColor.PURPLE);
-        banner.update();
-        blockStateMeta.setBlockState(banner);
-        blockStateMeta.addEnchant(Enchantment.SHARPNESS, 94, true);
-        blockStateMeta.addEnchant(Enchantment.THORNS, 94, true);
-        blockStateMeta.addEnchant(Enchantment.LOOTING, 94, true);
-        blockStateMeta.addEnchant(Enchantment.PROTECTION, 94, true);
-        blockStateMeta.setUnbreakable(true);
-        setItemMeta(blockStateMeta);
-      }
-    };
-
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD),
-        relluShieldItem);
-
-    ItemHelper relluPickaxeItem = new ItemHelper(Material.NETHERITE_PICKAXE, 1,
-        PLUGIN_ITEM_RELLU_PICKAXE, ItemHelper.Type.TOOL, ItemHelper.Rarity.LEGENDARY) {
-      @Override
-      public void init() {
-        ItemMeta relluPickaxeMeta = getItemMeta();
-        relluPickaxeMeta.addEnchant(Enchantment.LOOTING, 94, true);
-        relluPickaxeMeta.addEnchant(Enchantment.EFFICIENCY, 94, true);
-        relluPickaxeMeta.setUnbreakable(true);
-        setItemMeta(relluPickaxeMeta);
-      }
-
-      @Override
-      public ItemStack postInit(ItemStack is) {
-        EnchantmentRegistry.find(
-                RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
-            .ifPresent(enchant -> enchant.addTo(is));
-        return is;
-      }
-    };
-
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE),
-        relluPickaxeItem);
-
-    ItemHelper relluSwordItem = new ItemHelper(Material.NETHERITE_SWORD, 1, PLUGIN_ITEM_RELLU_SWORD,
-        ItemHelper.Type.WEAPON, ItemHelper.Rarity.LEGENDARY) {
-      @Override
-      public void init() {
-        ItemMeta relluSwordMeta = getItemMeta();
-        relluSwordMeta.addEnchant(Enchantment.SHARPNESS, 94, true);
-        relluSwordMeta.addEnchant(Enchantment.SWEEPING_EDGE, 94, true);
-        relluSwordMeta.addEnchant(Enchantment.LOOTING, 94, true);
-        relluSwordMeta.addEnchant(Enchantment.PROTECTION, 94, true);
-        relluSwordMeta.setUnbreakable(true);
-        setItemMeta(relluSwordMeta);
-      }
-
-      @Override
-      public ItemStack postInit(ItemStack is) {
-        EnchantmentRegistry.find(
-                RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
-            .ifPresent(enchant -> enchant.addTo(is));
-        EnchantmentRegistry.find(
-                RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
-            .ifPresent(enchant -> enchant.addTo(is));
-        return is;
-      }
-    };
-
-    itemService.register(RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_RELLU_SWORD), relluSwordItem);
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(plugin.getName(), PLUGIN_ITEM_NAMESPACE_RELLU_SWORD),
+        Material.NETHERITE_SWORD)
+        .amount(1)
+        .displayName(PLUGIN_ITEM_RELLU_SWORD)
+        .type(Type.WEAPON)
+        .rarity(Rarity.LEGENDARY)
+        .metaModifier(meta -> {
+          meta.addEnchant(Enchantment.SHARPNESS, 94, true);
+          meta.addEnchant(Enchantment.SWEEPING_EDGE, 94, true);
+          meta.addEnchant(Enchantment.LOOTING, 94, true);
+          meta.addEnchant(Enchantment.PROTECTION, 94, true);
+          meta.setUnbreakable(true);
+          EnchantmentRegistry.find(
+                  RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+              .ifPresent(enchant -> enchant.addTo(meta));
+          EnchantmentRegistry.find(
+                  RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
+              .ifPresent(enchant -> enchant.addTo(meta));
+        })
+        .build());
 
     serviceContext.getInventoryService().create(plugin, PLUGIN_INVENTORY_ADMIN_TOOLS,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dAdmin Tools", 9,
