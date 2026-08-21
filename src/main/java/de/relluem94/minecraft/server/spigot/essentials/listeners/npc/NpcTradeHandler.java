@@ -12,8 +12,8 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BuyBackSlotResolver;
@@ -36,9 +36,9 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class NpcTradeHandler {
 
-  private final ItemHelper disabledItem;
-  private final ItemHelper closeItem;
-  private final ItemHelper coinsItem;
+  private final CustomItem disabledItem;
+  private final CustomItem closeItem;
+  private final CustomItem coinsItem;
   private final BuyBackSlotResolver buyBackSlotResolver;
   private final ServiceContext serviceContext;
 
@@ -47,23 +47,23 @@ public class NpcTradeHandler {
         .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED).orElseThrow();
     this.closeItem = serviceContext.getItemService()
         .findByIdentifier(PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE).orElseThrow();
-    this.coinsItem = serviceContext.getItemService()
-        .findByIdentifier(PLUGIN_ITEM_NAMESPACE_COINS).orElseThrow();
+    this.coinsItem = serviceContext.getItemService().findByIdentifier(PLUGIN_ITEM_NAMESPACE_COINS)
+        .orElseThrow();
 
-    this.buyBackSlotResolver = new BuyBackSlotResolver(
-        serviceContext.getBuyBackService(), this.disabledItem.getCustomItem());
+    this.buyBackSlotResolver = new BuyBackSlotResolver(serviceContext.getBuyBackService(),
+        this.disabledItem.toItemStack());
     this.serviceContext = serviceContext;
   }
 
   public void handle(ItemStack clickedItem, Inventory clickedInventory, Player player,
       PlayerEntry playerEntry, int slot, boolean isRightClick) {
 
-    if (closeItem.equalsExact(clickedItem)) {
+    if (clickedItem.isSimilar(closeItem.toItemStack())) {
       InventoryHelper.closeInventory(player);
       return;
     }
 
-    if (disabledItem.equalsExact(clickedItem)) {
+    if (disabledItem.toItemStack().isSimilar(clickedItem)) {
       player.playSound(player.getLocation(), "ENTITY_CHICKEN_STEP", 1f, 1f);
       return;
     }
@@ -93,8 +93,7 @@ public class NpcTradeHandler {
       return false;
     }
     UUID profileUuid = skullMeta.getOwnerProfile().getUniqueId();
-    return Arrays.stream(CustomHeads.values())
-        .filter(ch -> !ch.equals(CustomHeads.BAG))
+    return Arrays.stream(CustomHeads.values()).filter(ch -> !ch.equals(CustomHeads.BAG))
         .anyMatch(ch -> ch.getUUID().equals(profileUuid));
   }
 
@@ -116,14 +115,12 @@ public class NpcTradeHandler {
             : null;
 
     if (buyPrice == null || sellPrice == null) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
       return;
     }
 
-    String itemDisplayName = itemMeta.hasDisplayName()
-        ? itemMeta.getDisplayName()
+    String itemDisplayName = itemMeta.hasDisplayName() ? itemMeta.getDisplayName()
         : clickedItem.getType().name().toLowerCase().replace('_', ' ');
 
     int amount = clickedItem.getAmount();
@@ -159,25 +156,22 @@ public class NpcTradeHandler {
         .findBagTypeByPartialName(clickedItem.getItemMeta().getDisplayName());
 
     if (bagTypeOptional.isEmpty()) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_BAG_FOUND));
       return;
     }
 
     BagTypeEntry bagType = bagTypeOptional.get();
     if (serviceContext.getBagService().hasBag(bagType.getId(), playerEntry)) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT,
-                  bagType.getDisplayName()));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_ALREADY_BOUGHT,
+              bagType.getDisplayName()));
       return;
     }
 
     if (playerEntry.getPurse() < bagType.getCost()) {
       player.sendMessage(serviceContext.getTranslationService()
-          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_COINS,
-              PLUGIN_NAME_MONEY));
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_NO_COINS, PLUGIN_NAME_MONEY));
       return;
     }
 
@@ -187,8 +181,7 @@ public class NpcTradeHandler {
   private void purchaseBag(BagTypeEntry bagType, Player player, PlayerEntry playerEntry) {
     serviceContext.getBagService().purchaseBag(bagType, player, playerEntry);
     player.sendMessage(serviceContext.getTranslationService()
-        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT,
-            bagType.getDisplayName()));
+        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bagType.getDisplayName()));
   }
 
   private void handleItemTrade(@NonNull ItemStack clickedItem, Inventory clickedInventory,
@@ -219,17 +212,15 @@ public class NpcTradeHandler {
   private String resolveItemDisplayName(@NonNull ItemStack item) {
     Optional<String> enchantmentName = EnchantmentRegistry.findByBookItemStack(item)
         .map(enchantment -> enchantment.getBook().getCustomItem().getItemMeta())
-        .filter(meta -> meta != null && meta.hasDisplayName())
-        .map(ItemMeta::getDisplayName);
+        .filter(meta -> meta != null && meta.hasDisplayName()).map(ItemMeta::getDisplayName);
 
     if (enchantmentName.isPresent()) {
       return enchantmentName.get();
     }
 
     Optional<String> registeredItemName = serviceContext.getItemService().findByItemStack(item)
-        .map(itemHelper -> itemHelper.getCustomItem().getItemMeta())
-        .filter(meta -> meta != null && meta.hasDisplayName())
-        .map(ItemMeta::getDisplayName);
+        .map(itemHelper -> itemHelper.toItemStack().getItemMeta())
+        .filter(meta -> meta != null && meta.hasDisplayName()).map(ItemMeta::getDisplayName);
 
     if (registeredItemName.isPresent()) {
       return registeredItemName.get();
@@ -255,7 +246,7 @@ public class NpcTradeHandler {
     }
 
     Optional<Integer> registeredItemBuyPrice = serviceContext.getItemService().findByItemStack(item)
-        .map(ItemHelper::getCost);
+        .map(CustomItem::cost);
     return registeredItemBuyPrice.orElseGet(() -> ItemPrice.from(item.getType()).getBuyPrice());
 
   }
@@ -273,40 +264,32 @@ public class NpcTradeHandler {
     }
 
     Optional<Integer> registeredItemSellPrice = serviceContext.getItemService()
-        .findByItemStack(item)
-        .map(itemHelper -> itemHelper.getCost());
-    if (registeredItemSellPrice.isPresent()) {
-      return registeredItemSellPrice.get();
-    }
-
-    return ItemPrice.from(item.getType()).getSellPrice();
+        .findByItemStack(item).map(CustomItem::cost);
+    return registeredItemSellPrice.orElseGet(() -> ItemPrice.from(item.getType()).getSellPrice());
   }
 
   private void handleBuy(ItemStack guiItem, Player player, PlayerEntry playerEntry, int buyPrice,
       String itemDisplayName, int amount, int slot) {
     if (buyPrice <= 0) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_TRADEABLE));
       return;
     }
 
     double totalCost = buyPrice * (double) amount;
 
     if (playerEntry.getPurse() - totalCost < 0) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS,
-                  itemDisplayName, StringHelper.formatDouble(totalCost), PLUGIN_NAME_MONEY,
-                  StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_NOT_ENOUGH_COINS, itemDisplayName,
+              StringHelper.formatDouble(totalCost), PLUGIN_NAME_MONEY,
+              StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
       return;
     }
 
     if (player.getInventory().firstEmpty() == -1) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL,
-                  itemDisplayName, StringHelper.formatDouble(totalCost)));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY_INVENTORY_FULL, itemDisplayName,
+              StringHelper.formatDouble(totalCost)));
       return;
     }
 
@@ -326,20 +309,18 @@ public class NpcTradeHandler {
           .setItem(49, buyBackSlotResolver.resolveForPlayer(player));
     }
 
-    player.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY, itemDisplayName,
-                StringHelper.formatDouble(totalCost), PLUGIN_NAME_MONEY,
-                StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
+    player.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BUY, itemDisplayName,
+            StringHelper.formatDouble(totalCost), PLUGIN_NAME_MONEY,
+            StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
     player.playSound(player, "ENTITY_WANDERING_TRADER_YES", SoundCategory.MASTER, 1f, 1f);
   }
 
   private ItemStack resolveCleanPurchasedItem(ItemStack guiItem, int amount) {
     ItemStack purchasedItem = EnchantmentRegistry.findByBookItemStack(guiItem)
-        .map(enchantment -> enchantment.getBook().getCustomItem().clone())
-        .orElseGet(() -> serviceContext.getItemService().findByItemStack(guiItem)
-            .map(itemHelper -> itemHelper.getCustomItem().clone())
-            .orElseGet(guiItem::clone));
+        .map(enchantment -> enchantment.getBook().getCustomItem().clone()).orElseGet(
+            () -> serviceContext.getItemService().findByItemStack(guiItem)
+                .map(itemHelper -> itemHelper.toItemStack().clone()).orElseGet(guiItem::clone));
 
     removePriceLoreFromItem(purchasedItem);
     purchasedItem.setAmount(amount);
@@ -353,8 +334,7 @@ public class NpcTradeHandler {
     }
 
     List<String> filteredLore = meta.getLore().stream()
-        .filter(line -> !line.contains(PLUGIN_NAME_MONEY))
-        .toList();
+        .filter(line -> !line.contains(PLUGIN_NAME_MONEY)).toList();
 
     meta.setLore(filteredLore.isEmpty() ? null : filteredLore);
     item.setItemMeta(meta);
@@ -374,10 +354,9 @@ public class NpcTradeHandler {
       int sellPrice, String itemDisplayName, int slot, boolean isRightClick) {
     ItemMeta meta = item.getItemMeta();
 
-    if (coinsItem.equalsName(item)) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
+    if (coinsItem.toItemStack().isSimilar(item)) {
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
       return;
     }
 
@@ -390,31 +369,27 @@ public class NpcTradeHandler {
       }
 
       if (!meta.getEnchants().isEmpty()) {
-        player.sendMessage(
-            serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED));
+        player.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_ENCHANTED));
         return;
       }
 
       if (meta instanceof Damageable damageable && damageable.hasDamage()) {
-        player.sendMessage(
-            serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_USED_ITEM));
+        player.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_USED_ITEM));
         return;
       }
 
       if (meta.hasDisplayName() && !(meta instanceof SkullMeta)) {
-        player.sendMessage(
-            serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
+        player.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_RENAMED));
         return;
       }
     }
 
     if (sellPrice == 0) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL_NO_PRICE));
       return;
     }
 
@@ -442,11 +417,10 @@ public class NpcTradeHandler {
     playerEntry.setPurse(playerEntry.getPurse() + totalEarnings);
     playerEntry.setUpdatedBy(playerEntry.getId());
     playerEntry.setHasToBeUpdated(true);
-    player.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL, itemDisplayName,
-                StringHelper.formatDouble(totalEarnings), PLUGIN_NAME_MONEY,
-                StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
+    player.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_SELL, itemDisplayName,
+            StringHelper.formatDouble(totalEarnings), PLUGIN_NAME_MONEY,
+            StringHelper.formatDouble(playerEntry.getPurse()), PLUGIN_NAME_MONEY));
     player.playSound(player, "ENTITY_WANDERING_TRADER_NO", SoundCategory.MASTER, 1f, 1f);
   }
 

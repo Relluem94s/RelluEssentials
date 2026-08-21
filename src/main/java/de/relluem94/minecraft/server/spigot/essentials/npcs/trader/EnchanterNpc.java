@@ -9,7 +9,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Namespac
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCost;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
@@ -35,16 +34,14 @@ import org.jspecify.annotations.NonNull;
 public class EnchanterNpc extends TraderNpc {
 
   private final ServiceContext serviceContext;
-  private final RelluEssentials relluEssentials;
 
   /**
    * Creates a new EnchanterNpc with a predefined display name, librarian profession and the
    * enchanter trader type.
    */
-  public EnchanterNpc(ServiceContext serviceContext, RelluEssentials relluEssentials) {
+  public EnchanterNpc(ServiceContext serviceContext) {
     super("§dEnchanter", Profession.LIBRARIAN, Type.ENCHANTER);
     this.serviceContext = serviceContext;
-    this.relluEssentials = relluEssentials;
   }
 
   private @NonNull @Unmodifiable List<EnchantmentHelper> resolveRegisteredEnchantments() {
@@ -53,13 +50,13 @@ public class EnchanterNpc extends TraderNpc {
 
   private @NonNull CustomItem resolveDisabledItem() {
     return serviceContext.getItemService()
-        .find(new RelluEssentialsNamespacedKey(relluEssentials.getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow();
   }
 
   private @NonNull CustomItem resolveCloseItem() {
     return serviceContext.getItemService()
-        .find(new RelluEssentialsNamespacedKey(relluEssentials.getName(),  PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
+        .find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),  PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
   }
 
   /**
@@ -86,7 +83,7 @@ public class EnchanterNpc extends TraderNpc {
     }
 
     int magicWaterSlot = InventoryHelper.getNextSlot(slot);
-    serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(relluEssentials.getName(),
+    serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
         PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET)).ifPresent(item -> {
       ItemStack magicWater = item.toItemStack();
       applyAdditionalLoreToItemStack(magicWater, buildCostData(magicWater));
@@ -94,7 +91,7 @@ public class EnchanterNpc extends TraderNpc {
     });
 
     int autoSellSlot = InventoryHelper.getNextSlot(magicWaterSlot + 1);
-    serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(relluEssentials.getName(),
+    serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
         PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER)).ifPresent(item -> {
       ItemStack hopper = item.toItemStack().clone();
       applyAdditionalLoreToItemStack(hopper, buildCostData(hopper));

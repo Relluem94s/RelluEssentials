@@ -8,10 +8,10 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.RecipeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.recipe.Shaped;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Map;
@@ -24,7 +24,8 @@ public class RecipeManager implements Enable {
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    TranslationService translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
+    TranslationService translationService = relluEssentialsPlugin.getServiceContext()
+        .getTranslationService();
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_RECIPE));
@@ -37,22 +38,15 @@ public class RecipeManager implements Enable {
 
   private @NonNull RecipeHelper buildCloudBootsRecipe(RelluEssentials plugin) {
     ServiceContext serviceContext = plugin.getServiceContext();
-    ItemHelper cloudSailorItem = serviceContext.getItemService().find(
-        RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
-    ItemHelper cloudBootsItem = serviceContext.getItemService().find(
-            RegistryKey.of(plugin, PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS))
-        .orElseThrow();
+    CustomItem cloudSailorItem = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
+    CustomItem cloudBootsItem = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow();
 
-    return new RecipeHelper(
-        PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS,
-        new Shaped(
-            new String[]{
-                "F F",
-                "F F",
-            },
-            Map.of('F', cloudSailorItem.getMaterial())
-        ),
-        cloudBootsItem.getCustomItem()
-    );
+    return new RecipeHelper(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS,
+        new Shaped(new String[]{"F F", "F F",}, Map.of('F', cloudSailorItem.material())),
+        cloudBootsItem.toItemStack());
   }
 }

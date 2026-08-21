@@ -6,15 +6,14 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -26,31 +25,29 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class BeekeeperNpc extends TraderNpc {
 
-  private final RelluEssentials relluEssentials;
   private final ServiceContext serviceContext;
 
-  public BeekeeperNpc(ServiceContext serviceContext, RelluEssentials relluEssentials) {
+  public BeekeeperNpc(ServiceContext serviceContext) {
     super("§dBeekeeper", Profession.NONE, Type.BEEKEEPER);
-    this.relluEssentials = relluEssentials;
     this.serviceContext = serviceContext;
   }
 
-  private ItemHelper resolveDisabledItem() {
-    return serviceContext.getItemService()
-        .find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow();
+  private CustomItem resolveDisabledItem() {
+    return serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
   }
 
-  private ItemHelper resolveCloseItem() {
-    return serviceContext.getItemService()
-        .find(RegistryKey.of(relluEssentials, PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
-        .orElseThrow();
+  private CustomItem resolveCloseItem() {
+    return serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
   }
 
   @Override
   public Inventory getMainGUI() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, getTitle()),
-        resolveDisabledItem().getCustomItem());
+        resolveDisabledItem().toItemStack());
 
     inv.setItem(10, createTradableItem(Material.BEEHIVE));
     inv.setItem(11, createTradableItem(Material.HONEYCOMB_BLOCK));
@@ -75,7 +72,7 @@ public class BeekeeperNpc extends TraderNpc {
     inv.setItem(42, createTradableCustomHead(CustomHeads.LIGHT_BLUE_CANDLE, 300, 300));
     inv.setItem(43, createTradableCustomHead(CustomHeads.LIGHT_GRAY_CANDLE, 300, 300));
 
-    inv.setItem(53, resolveCloseItem().getCustomItem());
+    inv.setItem(53, resolveCloseItem().toItemStack());
 
     return inv;
   }
@@ -88,16 +85,12 @@ public class BeekeeperNpc extends TraderNpc {
     }
 
     List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
-    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
-        PLUGIN_NAME_MONEY,
-        String.valueOf(buyPrice),
-        PLUGIN_NAME_MONEY,
-        String.valueOf(buyPrice * 64)));
-    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
-        PLUGIN_NAME_MONEY,
-        String.valueOf(sellPrice),
-        PLUGIN_NAME_MONEY,
-        String.valueOf(sellPrice * 64)));
+    lore.add(serviceContext.getTranslationService()
+        .get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE, PLUGIN_NAME_MONEY, String.valueOf(buyPrice),
+            PLUGIN_NAME_MONEY, String.valueOf(buyPrice * 64)));
+    lore.add(serviceContext.getTranslationService()
+        .get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE, PLUGIN_NAME_MONEY,
+            String.valueOf(sellPrice), PLUGIN_NAME_MONEY, String.valueOf(sellPrice * 64)));
     meta.setLore(lore);
 
     meta.getPersistentDataContainer().set(itemBuyPrice(), PersistentDataType.INTEGER, buyPrice);
@@ -119,16 +112,12 @@ public class BeekeeperNpc extends TraderNpc {
     int sellPrice = price.getSellPrice();
 
     List<String> lore = new ArrayList<>(meta.getLore() != null ? meta.getLore() : List.of());
-    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE,
-        PLUGIN_NAME_MONEY,
-        String.valueOf(buyPrice),
-        PLUGIN_NAME_MONEY,
-        String.valueOf(buyPrice * 64)));
-    lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE,
-        PLUGIN_NAME_MONEY,
-        String.valueOf(sellPrice),
-        PLUGIN_NAME_MONEY,
-        String.valueOf(sellPrice * 64)));
+    lore.add(serviceContext.getTranslationService()
+        .get(MessageKey.PLUGIN_ITEM_BUY_PRICE_MESSAGE, PLUGIN_NAME_MONEY, String.valueOf(buyPrice),
+            PLUGIN_NAME_MONEY, String.valueOf(buyPrice * 64)));
+    lore.add(serviceContext.getTranslationService()
+        .get(MessageKey.PLUGIN_ITEM_SELL_PRICE_MESSAGE, PLUGIN_NAME_MONEY,
+            String.valueOf(sellPrice), PLUGIN_NAME_MONEY, String.valueOf(sellPrice * 64)));
     meta.setLore(lore);
 
     item.setItemMeta(meta);
