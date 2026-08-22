@@ -14,6 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.EnchanterNpc;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.GroupRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
@@ -46,6 +47,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
+import de.relluem94.minecraft.server.spigot.essentials.services.EnchantmentService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.InventoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
@@ -247,5 +249,6 @@ public class ServiceManager implements Enable {
     serviceContext.setPluginMetadataService(new PluginMetadataService(relluEssentials));
     serviceContext.setItemService(new ItemService(new ItemRegistry()));
     serviceContext.setInventoryService(new InventoryService(new InventoryRegistry()));
+    serviceContext.setEnchantmentService(new EnchantmentService(new EnchantmentRegistry()));
   }
 }

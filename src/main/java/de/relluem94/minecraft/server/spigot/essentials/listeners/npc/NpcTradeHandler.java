@@ -19,7 +19,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BuyBackSlotResolver;
-import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -215,7 +214,8 @@ public class NpcTradeHandler {
   }
 
   private String resolveItemDisplayName(@NonNull ItemStack item) {
-    Optional<String> enchantmentName = EnchantmentRegistry.findByBookItemStack(item)
+    Optional<String> enchantmentName = serviceContext.getEnchantmentService()
+        .findByBookItemStack(item)
         .map(enchantment -> enchantment.createEnchantedBook().getItemMeta())
         .filter(meta -> meta != null && meta.hasDisplayName()).map(ItemMeta::getDisplayName);
 
@@ -244,8 +244,8 @@ public class NpcTradeHandler {
       return meta.getPersistentDataContainer().get(itemBuyPrice(), PersistentDataType.INTEGER);
     }
 
-    Optional<Integer> enchantmentBuyPrice = EnchantmentRegistry.findByBookItemStack(item)
-        .map(EnchantmentHelper::getCost);
+    Optional<Integer> enchantmentBuyPrice = serviceContext.getEnchantmentService()
+        .findByBookItemStack(item).map(EnchantmentHelper::getCost);
     if (enchantmentBuyPrice.isPresent()) {
       return enchantmentBuyPrice.get();
     }
@@ -262,8 +262,8 @@ public class NpcTradeHandler {
       return meta.getPersistentDataContainer().get(itemSellPrice(), PersistentDataType.INTEGER);
     }
 
-    Optional<Integer> enchantmentSellPrice = EnchantmentRegistry.findByBookItemStack(item)
-        .map(EnchantmentHelper::getCost);
+    Optional<Integer> enchantmentSellPrice = serviceContext.getEnchantmentService()
+        .findByBookItemStack(item).map(EnchantmentHelper::getCost);
     if (enchantmentSellPrice.isPresent()) {
       return enchantmentSellPrice.get();
     }
@@ -300,6 +300,10 @@ public class NpcTradeHandler {
 
     ItemStack purchasedItem = resolveCleanPurchasedItem(guiItem, amount);
 
+    if (guiItem.getItemMeta() == null) {
+      return;
+    }
+
     int resolvedSellPrice = resolveSellPrice(guiItem, guiItem.getItemMeta());
     writeSellPriceToItem(resolvedSellPrice, purchasedItem);
 
@@ -322,7 +326,7 @@ public class NpcTradeHandler {
   }
 
   private ItemStack resolveCleanPurchasedItem(ItemStack guiItem, int amount) {
-    ItemStack purchasedItem = EnchantmentRegistry.findByBookItemStack(guiItem)
+    ItemStack purchasedItem = serviceContext.getEnchantmentService().findByBookItemStack(guiItem)
         .map(enchantment -> enchantment.createEnchantedBook().clone()).orElseGet(
             () -> serviceContext.getItemService().findByItemStack(guiItem)
                 .map(itemHelper -> itemHelper.toItemStack().clone()).orElseGet(guiItem::clone));
@@ -366,8 +370,9 @@ public class NpcTradeHandler {
     }
 
     boolean isRegisteredItem = serviceContext.getItemService().findByItemStack(item).isPresent()
-        || EnchantmentRegistry.findByBookItemStack(item).isPresent()
-        || (meta != null && meta.getPersistentDataContainer().has(itemSellPrice(), PersistentDataType.INTEGER));
+        || serviceContext.getEnchantmentService().findByBookItemStack(item).isPresent() || (
+        meta != null && meta.getPersistentDataContainer()
+            .has(itemSellPrice(), PersistentDataType.INTEGER));
 
     if (!isRegisteredItem) {
       if (meta == null) {

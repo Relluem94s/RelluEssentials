@@ -1,8 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.registries;
 
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,15 +13,14 @@ import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Static registry for managing custom {@link EnchantmentHelper} instances, identified by a
- * {@link RegistryKey}.
+ * Registry for managing custom {@link EnchantmentHelper} instances, identified by a
+ * {@link RelluEssentialsNamespacedKey}.
  */
 public class EnchantmentRegistry {
 
-  private static final Map<RegistryKey, EnchantmentHelper> registry = new HashMap<>();
+  private final Map<RelluEssentialsNamespacedKey, EnchantmentHelper> registry = new HashMap<>();
 
-  private EnchantmentRegistry() {
-    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  public EnchantmentRegistry() {
   }
 
   /**
@@ -32,17 +30,17 @@ public class EnchantmentRegistry {
    * @param namespacedKey the unique namespaced key identifying the enchantment
    * @param enchantment   the {@link EnchantmentHelper} instance to register
    */
-  public static void register(Plugin plugin, String namespacedKey, EnchantmentHelper enchantment) {
-    registry.put(RegistryKey.of(plugin, namespacedKey), enchantment);
+  public void register(Plugin plugin, String namespacedKey, EnchantmentHelper enchantment) {
+    registry.put(new RelluEssentialsNamespacedKey(plugin.getName(), namespacedKey), enchantment);
   }
 
   /**
-   * Looks up a registered enchantment by its {@link RegistryKey}.
+   * Looks up a registered enchantment by its {@link RelluEssentialsNamespacedKey}.
    *
    * @param key the registry key to look up
    * @return an {@link Optional} containing the enchantment if found, or empty if not registered
    */
-  public static @NonNull Optional<EnchantmentHelper> find(RegistryKey key) {
+  public @NonNull Optional<EnchantmentHelper> find(RelluEssentialsNamespacedKey key) {
     return Optional.ofNullable(registry.get(key));
   }
 
@@ -51,7 +49,7 @@ public class EnchantmentRegistry {
    *
    * @return an unmodifiable {@link List} of all registered {@link EnchantmentHelper} instances
    */
-  public static @NonNull List<EnchantmentHelper> findAll() {
+  public @NonNull List<EnchantmentHelper> findAll() {
     return List.copyOf(registry.values());
   }
 
@@ -62,7 +60,7 @@ public class EnchantmentRegistry {
    * @param itemStack the item stack to check
    * @return an {@link Optional} containing the matching enchantment, or empty if no match is found
    */
-  public static @NonNull Optional<EnchantmentHelper> findByBookItemStack(
+  public @NonNull Optional<EnchantmentHelper> findByBookItemStack(
       @NonNull ItemStack itemStack) {
     if (!(itemStack.getItemMeta() instanceof EnchantmentStorageMeta meta)) {
       return Optional.empty();
@@ -79,7 +77,7 @@ public class EnchantmentRegistry {
   /**
    * Clears all registered enchantments.
    */
-  public static void clear() {
+  public void clear() {
     registry.clear();
   }
 
@@ -88,7 +86,7 @@ public class EnchantmentRegistry {
    *
    * @return the size of the registry
    */
-  public static int count() {
+  public int count() {
     return registry.size();
   }
 }
