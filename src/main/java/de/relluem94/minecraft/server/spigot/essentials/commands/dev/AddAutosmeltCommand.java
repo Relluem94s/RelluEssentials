@@ -1,23 +1,33 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.dev;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Sub-command that adds the Autosmelt enchantment to the item
- * currently held in the player's main hand.
+ * Sub-command that adds the Autosmelt enchantment to the item currently held in the player's main
+ * hand.
  */
 public class AddAutosmeltCommand implements SubCommand {
 
+  private final ServiceContext serviceContext;
+
+  /**
+   * Constructor for ServiceContext Injection.
+   */
+  public AddAutosmeltCommand(ServiceContext context) {
+    this.serviceContext = context;
+  }
+
   @Override
   public void execute(Player player, String[] args) {
-    EnchantmentRegistry.find(RegistryKey.of(RelluEssentials.getInstance(), EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT))
+    serviceContext.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT))
         .ifPresent(enchant -> enchant.addTo(player.getInventory().getItemInMainHand()));
   }
 

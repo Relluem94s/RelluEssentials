@@ -55,12 +55,10 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Type;
-import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
@@ -228,8 +226,9 @@ public class ItemManager implements Enable {
           meta.addEnchant(Enchantment.LOOTING, 94, true);
           meta.addEnchant(Enchantment.EFFICIENCY, 94, true);
           meta.setUnbreakable(true);
-          EnchantmentRegistry.find(
-                  RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+          serviceContext.getEnchantmentService().find(
+                  new RelluEssentialsNamespacedKey(plugin.getName(),
+                      EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
               .ifPresent(enchant -> enchant.addTo(meta));
         }).build());
 
@@ -243,25 +242,28 @@ public class ItemManager implements Enable {
           meta.addEnchant(Enchantment.LOOTING, 94, true);
           meta.addEnchant(Enchantment.PROTECTION, 94, true);
           meta.setUnbreakable(true);
-          EnchantmentRegistry.find(
-                  RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+          serviceContext.getEnchantmentService().find(
+                  new RelluEssentialsNamespacedKey(plugin.getName(),
+                      EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
               .ifPresent(enchant -> enchant.addTo(meta));
-          EnchantmentRegistry.find(
-                  RegistryKey.of(plugin, EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
+          serviceContext.getEnchantmentService().find(
+                  new RelluEssentialsNamespacedKey(plugin.getName(),
+                      EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
               .ifPresent(enchant -> enchant.addTo(meta));
         }).build());
 
     serviceContext.getInventoryService().create(plugin, PLUGIN_INVENTORY_ADMIN_TOOLS,
         Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dAdmin Tools", 9,
         CustomItem.Type.NONE).withFixedItem(itemService.find(
-        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+          new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
             PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow()).withFixedItem(itemService.find(
-        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+              new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
             PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET)).orElseThrow()).withFixedItem(
         itemService.find(
             new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
                 PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow()).withFixedItem(itemService.find(
-        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+                  new RelluEssentialsNamespacedKey(
+                      serviceContext.getPluginMetadataService().getName(),
             PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow());
 
     TranslationService translationService = serviceContext.getTranslationService();
@@ -274,9 +276,5 @@ public class ItemManager implements Enable {
         .getAllByNamespace(serviceContext.getPluginMetadataService().getName()).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
-
-    Object o = serviceContext.getItemService().find(
-        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
-            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
   }
 }

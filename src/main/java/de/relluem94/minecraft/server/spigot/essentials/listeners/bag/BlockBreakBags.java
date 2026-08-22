@@ -1,13 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -47,12 +45,12 @@ public class BlockBreakBags implements ListenerConstruct {
 
   @Override
   public void injectContext(ServiceContext context) {
-    this.delicate = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(),
+    this.delicate = context.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE))
         .orElse(null);
-    this.telekinesis = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(),
+    this.telekinesis = context.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
         .orElse(null);
   }

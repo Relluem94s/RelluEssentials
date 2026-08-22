@@ -1,15 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
@@ -26,35 +24,32 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("BlockDropItemBags")
 public class BlockDropItemBags implements ListenerConstruct {
 
-  private final EnchantmentHelper autosmelt;
-  private final EnchantmentHelper replenishment;
-  private final EnchantmentHelper telekinesis;
+  private EnchantmentHelper autosmelt;
+  private EnchantmentHelper replenishment;
+  private EnchantmentHelper telekinesis;
   private ServiceContext context;
-
-  public BlockDropItemBags() {
-    this.autosmelt = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT))
-        .orElse(null);
-    this.replenishment = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT))
-        .orElse(null);
-    this.telekinesis = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
-        .orElse(null);
-  }
 
   @Override
   public void injectContext(ServiceContext context) {
     this.context = context;
+
+    this.autosmelt = context.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_AUTOSMELT))
+        .orElse(null);
+    this.replenishment = context.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_REPLENISHMENT))
+        .orElse(null);
+    this.telekinesis = context.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+                EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
+        .orElse(null);
   }
 
   @EventHandler
   public void onBlockDrop(@NotNull BlockDropItemEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = context.getPlayerService().getPlayerEntry(p);
 
     for (Item i : e.getItems()) {
       Material type = i.getItemStack().getType();
@@ -108,6 +103,7 @@ public class BlockDropItemBags implements ListenerConstruct {
       }
     }
 
+    PlayerEntry pe = context.getPlayerService().getPlayerEntry(p);
     if (context.getBagService().hasBags(pe.getId())) {
       List<Item> lis = context.getBagService().collectItems(e.getItems(), e.getPlayer(), pe);
       e.getItems().removeAll(lis);

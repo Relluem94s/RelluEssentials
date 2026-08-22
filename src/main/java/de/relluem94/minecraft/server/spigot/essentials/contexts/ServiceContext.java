@@ -10,6 +10,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
+import de.relluem94.minecraft.server.spigot.essentials.services.EnchantmentService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.InventoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
@@ -87,4 +88,5 @@ public class ServiceContext {
   private SettingPlayerService settingPlayerService;
   private ItemService itemService;
   private InventoryService inventoryService;
+  private EnchantmentService enchantmentService;
 }
