@@ -12,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.commands.dev.GiveCloudSai
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.GivePickaxeCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.GiveRelluGearCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.GiveSkullsCommand;
+import de.relluem94.minecraft.server.spigot.essentials.commands.dev.PurseTesterCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.RemoveEnchantsCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.RotateTestCommand;
 import de.relluem94.minecraft.server.spigot.essentials.commands.dev.ShowPlayerStatsCommand;
@@ -57,6 +58,7 @@ public class DevCommand implements CommandConstruct {
             new CloneWorldCommand(),
             new ToggleDamageInfoCommand(context),
             new ShowPlayerStatsCommand(),
+            new PurseTesterCommand(context),
             new GiveSkullsCommand()));
   }
 
@@ -83,7 +85,7 @@ public class DevCommand implements CommandConstruct {
       return true;
     }
 
-    if (args.length > 1) {
+    if (args.length > 1 && !Commands.PURSE_TESTER.getName().equalsIgnoreCase(args[0])) {
       sender.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
@@ -130,7 +132,7 @@ public class DevCommand implements CommandConstruct {
   public enum Commands implements CommandsEnum {
     CUSTOM_MOB("cm"), CLOUD_SAILOR("cs"), PICKAXE("pick"), RELLU("rellu"), SMELT("smelt"), TELE(
         "tele"), NO_ENCHANT("noenchant"), WORLDS("worlds"), PLAYER_STATS("pl"), DAMAGE_INFO(
-        "di"), SKULL("sk"), ROTATE_TEST("rt"), DEV_PLATTFORM("dp");
+        "di"), SKULL("sk"), ROTATE_TEST("rt"), DEV_PLATTFORM("dp"), PURSE_TESTER("pt");
 
     private final String name;
     private final String[] subCommands;

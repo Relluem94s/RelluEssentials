@@ -1,18 +1,15 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.bag;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemCoins;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
-import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
-import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -26,16 +23,11 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("EntityPickupItemBags")
 public class EntityPickupItemBags implements ListenerConstruct {
 
-  private CustomItem coinItem;
-
   private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
     serviceContext = context;
-    coinItem = serviceContext.getItemService().find(
-            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_COINS))
-        .orElseThrow();
   }
 
   @EventHandler
@@ -43,33 +35,31 @@ public class EntityPickupItemBags implements ListenerConstruct {
     if (e.getEntity() instanceof Player p) {
 
       PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
-
       ItemStack is = e.getItem().getItemStack();
-      if (coinItem.toItemStack().isSimilar(is)) {
+
+      if (serviceContext.getItemService().hasKey(itemCoins(), is, PersistentDataType.INTEGER)) {
         ItemMeta im = is.getItemMeta();
+        if (im != null) {
+          Integer itemCoinsValue = im.getPersistentDataContainer()
+              .get(itemCoins(), PersistentDataType.INTEGER);
 
-        if (im != null && im.getPersistentDataContainer()
-            .has(itemCoins(), PersistentDataType.INTEGER)) {
-          Integer itemCoins = im.getPersistentDataContainer()
-              .get(NamespacedKeyConstants.itemCoins(), PersistentDataType.INTEGER);
+          if (itemCoinsValue != null) {
+            int coins = itemCoinsValue * is.getAmount();
+            serviceContext.getChatService().sendMessageInActionBar(p,
+                serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.COMMAND_PURSE_GAIN, StringHelper.formatInt(coins),
+                        StringHelper.formatDouble(pe.getPurse() + coins)));
+            pe.setPurse(pe.getPurse() + coins);
 
-          if (itemCoins == null) {
-            itemCoins = 0;
+            p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);
+
+            pe.setUpdatedBy(pe.getId());
+            pe.setHasToBeUpdated(true);
+
+            e.getItem().setItemStack(new ItemStack(Material.AIR));
+            e.setCancelled(true);
+            return;
           }
-
-          int coins = itemCoins * is.getAmount();
-          serviceContext.getChatService().sendMessageInActionBar(p,
-              serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PURSE_GAIN,
-                  StringHelper.formatInt(coins), StringHelper.formatDouble(pe.getPurse() + coins)));
-          pe.setPurse(pe.getPurse() + coins);
-
-          p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.PLAYERS, 1F, 1);
-
-          pe.setUpdatedBy(pe.getId());
-          pe.setHasToBeUpdated(true);
-
-          e.getItem().getItemStack().setAmount(0);
-          e.setCancelled(true);
         }
       }
 
@@ -78,8 +68,7 @@ public class EntityPickupItemBags implements ListenerConstruct {
           .isSettingActiveForWorld(WorldSetting.COLLECT_BAG, worldName);
 
       if (collectBagEnabled && serviceContext.getBagService().hasBags(pe.getId())
-          && serviceContext.getBagService().collectItem(e.getItem(),
-          p, pe)) {
+          && serviceContext.getBagService().collectItem(e.getItem(), p, pe)) {
         p.getInventory().remove(is);
         e.setCancelled(true);
         e.getItem().remove();

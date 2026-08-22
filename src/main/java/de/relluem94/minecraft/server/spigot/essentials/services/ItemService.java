@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.NonNull;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 /**
  * Service for managing and accessing registered items.
@@ -87,4 +90,18 @@ public class ItemService {
   public Map<String, CustomItem> getAll() {
     return itemRegistry.getAll();
   }
+
+  /**
+   * Checks if the item stack contains a specific persistent data key.
+   *
+   * @param key       the key to check for
+   * @param itemStack the item stack to check
+   * @return true if the key exists in the item's metadata, false otherwise
+   */
+  public boolean hasKey(@NonNull NamespacedKey key, @NonNull ItemStack itemStack,
+      @NonNull PersistentDataType persistentDataType) {
+    ItemMeta meta = itemStack.getItemMeta();
+    return meta != null && meta.getPersistentDataContainer().has(key, persistentDataType);
+  }
+
 }

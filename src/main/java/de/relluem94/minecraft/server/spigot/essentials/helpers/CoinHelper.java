@@ -5,9 +5,8 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Namespac
 import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.util.Collections;
-import java.util.Objects;
+import java.util.Optional;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 /**
@@ -24,11 +23,14 @@ public class CoinHelper {
    */
   public static ItemStack buildCoinItem(int coins, CustomItem coinItem) {
     ItemStack coin = coinItem.toItemStack();
-    ItemMeta im = Objects.requireNonNull(coin.getItemMeta());
-    im.setLore(Collections.singletonList(
-        String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));
-    im.getPersistentDataContainer().set(itemCoins(), PersistentDataType.INTEGER, coins);
-    coin.setItemMeta(im);
+
+    Optional.ofNullable(coin.getItemMeta()).ifPresent(im -> {
+      im.setLore(Collections.singletonList(
+          String.format(ItemConstants.PLUGIN_ITEM_COINS_LORE, StringHelper.formatInt(coins))));
+      im.getPersistentDataContainer().set(itemCoins(), PersistentDataType.INTEGER, coins);
+      coin.setItemMeta(im);
+    });
+
     return coin;
   }
 }
