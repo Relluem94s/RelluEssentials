@@ -3,7 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.events;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.SignAction;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -22,7 +22,7 @@ class RelluEssentialsSignInteractEventTest {
   private Block mockBlock;
 
   @Mock
-  private RegistryKey mockRegistryKey;
+  private RelluEssentialsNamespacedKey mockRelluEssentialsNamespacedKey;
 
   @Test
   void shouldCorrectlyInitializeEventWithProvidedValues() {
@@ -32,14 +32,14 @@ class RelluEssentialsSignInteractEventTest {
     RelluEssentialsSignInteractEvent event = new RelluEssentialsSignInteractEvent(
         mockPlayer,
         mockBlock,
-        mockRegistryKey,
+        mockRelluEssentialsNamespacedKey,
         signAction,
         customInput
     );
 
     assertEquals(mockPlayer, event.getPlayer());
     assertEquals(mockBlock, event.getClickedBlock());
-    assertEquals(mockRegistryKey, event.getActionKey());
+    assertEquals(mockRelluEssentialsNamespacedKey, event.getActionKey());
     assertEquals(signAction, event.getSignAction());
     assertEquals(customInput, event.getCustomInput());
     assertNotNull(event.getHandlers());

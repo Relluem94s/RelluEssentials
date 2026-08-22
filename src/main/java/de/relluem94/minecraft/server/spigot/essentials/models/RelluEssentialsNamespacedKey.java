@@ -1,8 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.models;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 @AllArgsConstructor
+@EqualsAndHashCode
 public class RelluEssentialsNamespacedKey {
   private final String namespace;
   private final String key;

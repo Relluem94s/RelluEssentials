@@ -5,7 +5,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.SignConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsSignInteractEvent;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,15 +15,12 @@ import org.jspecify.annotations.NonNull;
 public class SignTeleportAction implements ListenerConstruct {
 
 
-  private final RegistryKey signAction;
-
-  public SignTeleportAction() {
-    this.signAction = RegistryKey.of(SignConstants.PLUGIN_SIGN_ACTION_TELEPORT);
-  }
+  private RelluEssentialsNamespacedKey signAction;
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.signAction = new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+        SignConstants.PLUGIN_SIGN_ACTION_TELEPORT);
   }
 
   @EventHandler
@@ -39,12 +36,8 @@ public class SignTeleportAction implements ListenerConstruct {
     if (coordinates.length < 3) {
       return;
     }
-    Location destination = new Location(
-        player.getWorld(),
-        Integer.parseInt(coordinates[0]),
-        Integer.parseInt(coordinates[1]),
-        Integer.parseInt(coordinates[2])
-    );
+    Location destination = new Location(player.getWorld(), Integer.parseInt(coordinates[0]),
+        Integer.parseInt(coordinates[1]), Integer.parseInt(coordinates[2]));
     player.teleport(destination);
   }
 }

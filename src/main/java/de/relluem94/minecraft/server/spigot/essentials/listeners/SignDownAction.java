@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsSignInteractEvent;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.SignHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.SignRegistry;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,16 +23,14 @@ import org.jspecify.annotations.NonNull;
 public class SignDownAction implements ListenerConstruct {
 
 
-  private final RegistryKey signAction;
+  private RelluEssentialsNamespacedKey signAction;
   private ServiceContext serviceContext;
-
-  public SignDownAction() {
-    this.signAction = RegistryKey.of(SignConstants.PLUGIN_SIGN_ACTION_DOWN);
-  }
 
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
+    this.signAction = new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+        SignConstants.PLUGIN_SIGN_ACTION_DOWN);
   }
 
   @EventHandler
@@ -74,9 +72,8 @@ public class SignDownAction implements ListenerConstruct {
     }
 
     if (!endPointFound) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT));
     }
   }
 }
