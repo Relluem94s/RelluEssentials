@@ -77,8 +77,13 @@ public class NoDeathMessage implements ListenerConstruct {
     }
 
     if (deathChestSpawnActiveForWorld) {
-      serviceContext.getDeathChestService().spawnDeathChestForPlayer(p);
-      e.getDrops().clear();
+      boolean sucess = serviceContext.getDeathChestService().spawnDeathChestForPlayer(p);
+      if (sucess) {
+        e.getDrops().clear();
+      } else {
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_DEATH_CHEST_COULD_NOT_BE_PLACED));
+      }
     }
 
     if (deathCreateHomeActive) {

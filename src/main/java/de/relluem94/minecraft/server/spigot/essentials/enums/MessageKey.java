@@ -365,6 +365,7 @@ public enum MessageKey {
   PLUGIN_EVENT_QUIT_MESSAGE("plugin.event.quit_message"),
   PLUGIN_EVENT_DEATH("plugin.event.death"),
   PLUGIN_EVENT_DEATH_TP("plugin.event.death_tp"),
+  PLUGIN_EVENT_DEATH_CHEST_COULD_NOT_BE_PLACED("plugin.event.death.chest_could_not_be_placed"),
   PLUGIN_EVENT_SIGN_UP_OR_DOWN_NO_END_POINT("plugin.event.sign_up_or_down.no_end_point"),
   PLUGIN_EVENT_LIGHTS_TOGGLE("plugin.event.lights_toggle"),
   PLUGIN_EVENT_BAG_COLLECT("plugin.event.bag_collect"),

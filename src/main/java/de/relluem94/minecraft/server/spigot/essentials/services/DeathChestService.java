@@ -91,27 +91,43 @@ public class DeathChestService {
 
 
   private void placeDoubleChest(Block firstBlock, Block secondBlock) {
-    BlockFace facingDirection = determineFacingForDoubleChest(firstBlock, secondBlock);
+    Block first;
+    Block second;
 
-    firstBlock.setType(Material.CHEST);
-    org.bukkit.block.data.type.Chest firstChestData = (org.bukkit.block.data.type.Chest) firstBlock.getBlockData();
+    if (firstBlock.getX() < secondBlock.getX()) {
+      first = firstBlock;
+      second = secondBlock;
+    } else if (firstBlock.getZ() < secondBlock.getZ()) {
+      first = firstBlock;
+      second = secondBlock;
+    } else {
+      first = secondBlock;
+      second = firstBlock;
+    }
+
+    BlockFace facingDirection = determineFacingForDoubleChest(first, second);
+
+    first.setType(Material.CHEST);
+    org.bukkit.block.data.type.Chest firstChestData = (org.bukkit.block.data.type.Chest) first.getBlockData();
     firstChestData.setFacing(facingDirection);
     firstChestData.setType(Type.LEFT);
-    firstBlock.setBlockData(firstChestData);
+    first.setBlockData(firstChestData);
 
-    secondBlock.setType(Material.CHEST);
-    org.bukkit.block.data.type.Chest secondChestData = (org.bukkit.block.data.type.Chest) secondBlock.getBlockData();
+    second.setType(Material.CHEST);
+    org.bukkit.block.data.type.Chest secondChestData = (org.bukkit.block.data.type.Chest) second.getBlockData();
     secondChestData.setFacing(facingDirection);
     secondChestData.setType(Type.RIGHT);
-    secondBlock.setBlockData(secondChestData);
+    second.setBlockData(secondChestData);
   }
 
   private BlockFace determineFacingForDoubleChest(Block firstBlock, Block secondBlock) {
     BlockFace connectionAxis = firstBlock.getFace(secondBlock);
+
     if (connectionAxis == BlockFace.NORTH || connectionAxis == BlockFace.SOUTH) {
-      return BlockFace.WEST;
+      return BlockFace.EAST;
     }
-    return BlockFace.SOUTH;
+
+    return BlockFace.NORTH;
   }
 
   private void fillChestWithPlayerItems(Inventory chestInventory, ItemStack[] inventoryContents,
