@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_WORLD_LOBBY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper.isInWorld;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
@@ -25,8 +26,7 @@ import org.jspecify.annotations.NonNull;
 @ListenerName("GrapplingHookListener")
 public class GrapplingHookListener implements ListenerConstruct {
 
-
-  protected static final List<Player> COOL_DOWN = new ArrayList<>();
+  private static final List<Player> COOL_DOWN = new ArrayList<>();
 
   private ServiceContext serviceContext;
 
@@ -45,12 +45,13 @@ public class GrapplingHookListener implements ListenerConstruct {
       return;
     }
 
-    RelluEssentialsNamespacedKey grapplingHookKey = new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), "grappling_hook");
+    RelluEssentialsNamespacedKey grapplingHookKey = new RelluEssentialsNamespacedKey(
+        serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_GRAPPLINGHOOK);
     ItemStack itemInMainHand = e.getPlayer().getInventory().getItemInMainHand();
 
-
-    if (serviceContext.getItemService().find(grapplingHookKey)
-        .map(customItem -> customItem.toItemStack().isSimilar(itemInMainHand)).orElse(false)) {
+    if (!serviceContext.getItemService().find(grapplingHookKey)
+        .map(customItem -> customItem.toItemStack().isSimilar(itemInMainHand))
+        .orElse(false)) {
       return;
     }
 
@@ -59,23 +60,18 @@ public class GrapplingHookListener implements ListenerConstruct {
         Location hookLocation = e.getHook().getLocation();
         Location playerLocation = e.getPlayer().getLocation();
 
-        Vector playerVelocity = new Vector(
-            hookLocation.getX() - playerLocation.getX(),
+        Vector playerVelocity = new Vector(hookLocation.getX() - playerLocation.getX(),
             (hookLocation.getY() - playerLocation.getY()) + 0.001,
-            hookLocation.getZ() - playerLocation.getZ()
-        );
+            hookLocation.getZ() - playerLocation.getZ());
 
         e.getPlayer().setVelocity(playerVelocity);
         COOL_DOWN.add(e.getPlayer());
 
-        serviceContext.getSchedulerService().runTaskLater(() -> {
-          COOL_DOWN.remove(e.getPlayer());
-        }, 50L);
+        serviceContext.getSchedulerService()
+            .runTaskLater(() -> COOL_DOWN.remove(e.getPlayer()), 50L);
       } else {
-        e.getPlayer()
-            .sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
+        e.getPlayer().sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_GRAPPLING_HOOK_COOLDOWN));
       }
     }
   }
