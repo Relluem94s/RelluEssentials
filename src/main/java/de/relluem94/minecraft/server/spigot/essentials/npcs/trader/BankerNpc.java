@@ -4,13 +4,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.npc.BankerGui;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import java.util.List;
 import org.bukkit.entity.Villager.Profession;
@@ -25,36 +25,36 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     this.serviceContext = serviceContext;
   }
 
-  private ItemHelper resolveDisabledItem() {
+  private CustomItem resolveDisabledItem() {
     return serviceContext.getItemService().find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow();
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
   }
 
-  private ItemHelper resolveCloseItem() {
+  private CustomItem resolveCloseItem() {
     return serviceContext.getItemService().find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE))
-        .orElseThrow();
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
   }
 
   @Override
   public Inventory getMainGUI() {
-    Inventory inv = InventoryHelper.fillInventory(
-        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
+        resolveDisabledItem().toItemStack());
 
     inv.setItem(10, BankService.npc_gui_deposit.getCustomItem());
     inv.setItem(12, BankService.npc_gui_withdraw.getCustomItem());
     inv.setItem(14, BankService.npc_gui_balance.getCustomItem());
     inv.setItem(16, BankService.npc_gui_upgrade.getCustomItem());
-    inv.setItem(26, resolveCloseItem().getCustomItem());
+    inv.setItem(26, resolveCloseItem().toItemStack());
 
     return inv;
   }
 
   @Override
   public Inventory getDepositGUI(double total) {
-    Inventory inv = InventoryHelper.fillInventory(
-        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
+        resolveDisabledItem().toItemStack());
 
     long amount5 = Math.round(total * 0.05);
     long amount20 = Math.round(total * 0.20);
@@ -64,55 +64,49 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     inv.setItem(10, serviceContext.getBankService()
         .addLoreLine(BankService.npc_gui_deposit_5_percent.getCustomItem(),
             serviceContext.getTranslationService()
-                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount5,
+                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount5, PLUGIN_NAME_MONEY)));
+    inv.setItem(12, serviceContext.getBankService()
+        .addLoreLine(BankService.npc_gui_deposit_20_percent.getCustomItem(),
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount20,
                     PLUGIN_NAME_MONEY)));
-    inv.setItem(12,
-        serviceContext.getBankService()
-            .addLoreLine(BankService.npc_gui_deposit_20_percent.getCustomItem(),
-                serviceContext.getTranslationService()
-                    .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount20,
-                        PLUGIN_NAME_MONEY)));
-    inv.setItem(14,
-        serviceContext.getBankService()
-            .addLoreLine(BankService.npc_gui_deposit_50_percent.getCustomItem(),
-                serviceContext.getTranslationService()
-                    .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount50,
-                        PLUGIN_NAME_MONEY)));
+    inv.setItem(14, serviceContext.getBankService()
+        .addLoreLine(BankService.npc_gui_deposit_50_percent.getCustomItem(),
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount50,
+                    PLUGIN_NAME_MONEY)));
     inv.setItem(16, serviceContext.getBankService()
         .addLoreLine(BankService.npc_gui_deposit_all.getCustomItem(),
             serviceContext.getTranslationService()
                 .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amountAll,
                     PLUGIN_NAME_MONEY)));
-    inv.setItem(26, resolveCloseItem().getCustomItem());
+    inv.setItem(26, resolveCloseItem().toItemStack());
 
     return inv;
   }
 
   @Override
   public Inventory getWithdrawGUI(double total) {
-    Inventory inv = InventoryHelper.fillInventory(
-        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
+        resolveDisabledItem().toItemStack());
 
     long amount5 = Math.round(total * 0.05);
     long amount20 = Math.round(total * 0.20);
     long amount50 = Math.round(total * 0.50);
     long amountAll = Math.round(total);
 
-    inv.setItem(10,
-        serviceContext.getBankService()
-            .addLoreLine(BankService.npc_gui_withdraw_5_percent.getCustomItem(),
-                serviceContext.getTranslationService()
-                    .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount5,
-                        PLUGIN_NAME_MONEY)));
-    inv.setItem(12,
-        serviceContext.getBankService().addLoreLine(
-            BankService.npc_gui_withdraw_20_percent.getCustomItem(),
+    inv.setItem(10, serviceContext.getBankService()
+        .addLoreLine(BankService.npc_gui_withdraw_5_percent.getCustomItem(),
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount5,
+                    PLUGIN_NAME_MONEY)));
+    inv.setItem(12, serviceContext.getBankService()
+        .addLoreLine(BankService.npc_gui_withdraw_20_percent.getCustomItem(),
             serviceContext.getTranslationService()
                 .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount20,
                     PLUGIN_NAME_MONEY)));
-    inv.setItem(14,
-        serviceContext.getBankService().addLoreLine(
-            BankService.npc_gui_withdraw_50_percent.getCustomItem(),
+    inv.setItem(14, serviceContext.getBankService()
+        .addLoreLine(BankService.npc_gui_withdraw_50_percent.getCustomItem(),
             serviceContext.getTranslationService()
                 .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount50,
                     PLUGIN_NAME_MONEY)));
@@ -121,27 +115,27 @@ public class BankerNpc extends TraderNpc implements BankerGui {
             serviceContext.getTranslationService()
                 .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amountAll,
                     PLUGIN_NAME_MONEY)));
-    inv.setItem(26, resolveCloseItem().getCustomItem());
+    inv.setItem(26, resolveCloseItem().toItemStack());
 
     return inv;
   }
 
   @Override
   public Inventory getBalanceGUI() {
-    Inventory inv = InventoryHelper.fillInventory(
-        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
+        resolveDisabledItem().toItemStack());
 
     inv.setItem(10, BankService.npc_gui_balance_total.getCustomItem());
     inv.setItem(12, BankService.npc_gui_balance_transactions.getCustomItem());
-    inv.setItem(26, resolveCloseItem().getCustomItem());
+    inv.setItem(26, resolveCloseItem().toItemStack());
 
     return inv;
   }
 
   @Override
   public Inventory getUpgradeGUI() {
-    Inventory inv = InventoryHelper.fillInventory(
-        InventoryHelper.createInventory(27, getTitle()), resolveDisabledItem().getCustomItem());
+    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
+        resolveDisabledItem().toItemStack());
 
     int slot = 0;
     List<ItemHelper> bankTiersItems = serviceContext.getBankService().getBankTiers();
@@ -156,7 +150,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
       slot++;
     }
 
-    inv.setItem(26, resolveCloseItem().getCustomItem());
+    inv.setItem(26, resolveCloseItem().toItemStack());
 
     return inv;
   }

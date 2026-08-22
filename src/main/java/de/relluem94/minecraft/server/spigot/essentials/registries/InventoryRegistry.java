@@ -2,8 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.registries;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_INVENTORY_REGISTRY;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.registries.model.RegisteredInventory;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,8 +29,8 @@ public class InventoryRegistry {
    * @return The registered {@link RegisteredInventory}.
    * @throws IllegalArgumentException if the key is already registered.
    */
-  public @NonNull RegisteredInventory register(@NonNull RegistryKey key, @NonNull String title,
-      int size, ItemHelper.Type itemFilter) {
+  public @NonNull RegisteredInventory register(@NonNull RelluEssentialsNamespacedKey key, @NonNull String title,
+      int size, CustomItem.Type itemFilter) {
     if (registeredInventories.containsKey(key.toString())) {
       throw new IllegalArgumentException(String.format(PLUGIN_EXCEPTION_INVENTORY_REGISTRY, key));
     }
@@ -45,7 +45,7 @@ public class InventoryRegistry {
    * @param key The key to search for.
    * @return An {@link Optional} containing the inventory.
    */
-  public @NonNull Optional<RegisteredInventory> find(@NonNull RegistryKey key) {
+  public @NonNull Optional<RegisteredInventory> find(@NonNull RelluEssentialsNamespacedKey key) {
     return Optional.ofNullable(registeredInventories.get(key.toString()));
   }
 

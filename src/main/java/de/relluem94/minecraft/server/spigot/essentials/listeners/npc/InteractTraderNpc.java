@@ -3,13 +3,12 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.npc;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -30,8 +29,8 @@ public class InteractTraderNpc implements ListenerConstruct {
     this.serviceContext = context;
     this.buyBackSlotResolver = new BuyBackSlotResolver(
         serviceContext.getBuyBackService(), serviceContext.getItemService().find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow().getCustomItem());
+            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow().toItemStack());
   }
 
   @EventHandler

@@ -1,14 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.NonNull;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 /**
  * Service for managing and accessing registered items.
@@ -29,44 +28,22 @@ public class ItemService {
   }
 
   /**
-   * Registers a new {@link ItemHelper} using a {@link RegistryKey}.
+   * Registers a new {@link CustomItem} using a {@link RelluEssentialsNamespacedKey}.
    *
-   * @param key  the key to register the item under
-   * @param item the item helper instance
+   * @param customItem the item helper instance
    */
-  public void register(@NonNull RegistryKey key, @NonNull ItemHelper item) {
-    itemRegistry.register(key, item);
+  public void register(@NonNull CustomItem customItem) {
+    itemRegistry.register(customItem.relluEssentialsNamespacedKey(), customItem);
   }
 
   /**
-   * Registers a new {@link ItemHelper} using a specific {@link Plugin} for the namespace.
-   *
-   * @param plugin the plugin to use for the namespace
-   * @param key    the key to register the item under
-   * @param item   the item helper instance
-   */
-  public void register(@NonNull Plugin plugin, @NonNull String key, @NonNull ItemHelper item) {
-    register(RegistryKey.of(plugin, key), item);
-  }
-
-  /**
-   * Finds an item by its {@link RegistryKey}.
+   * Finds an item by its {@link RelluEssentialsNamespacedKey}.
    *
    * @param key the registry key
    * @return an {@link Optional} containing the item, or empty if not found
    */
-  public Optional<ItemHelper> find(@NonNull RegistryKey key) {
+  public Optional<CustomItem> find(@NonNull RelluEssentialsNamespacedKey key) {
     return itemRegistry.find(key);
-  }
-
-  /**
-   * Finds an item by its string identifier (namespace).
-   *
-   * @param identifier the string ID to search for
-   * @return an {@link Optional} containing the item, or empty if not found
-   */
-  public Optional<ItemHelper> findByIdentifier(@NonNull String identifier) {
-    return itemRegistry.findByIdentifier(identifier);
   }
 
   /**
@@ -75,21 +52,21 @@ public class ItemService {
    * @param itemStack the item stack to check
    * @return an {@link Optional} containing the item, or empty if not found
    */
-  public Optional<ItemHelper> findByItemStack(@NonNull ItemStack itemStack) {
+  public Optional<CustomItem> findByItemStack(@NonNull ItemStack itemStack) {
     return itemRegistry.findByItemStack(itemStack);
   }
 
   /**
    * Checks if the given item stack matches the item registered with the provided identifier.
    *
-   * @param identifier the string ID to check against
-   * @param itemStack the item stack to verify
+   * @param identifier the key to check against
+   * @param itemStack  the item stack to verify
    * @return true if the item stack matches the registered item, false otherwise
    */
-  public boolean isItemStack(@NonNull String identifier, @NonNull ItemStack itemStack) {
-    return findByIdentifier(identifier)
-        .map(itemHelper -> itemHelper.almostEquals(itemStack))
-        .isPresent();
+  public boolean isItemStack(@NonNull RelluEssentialsNamespacedKey identifier,
+      @NonNull ItemStack itemStack) {
+    return find(identifier).map(customItem -> customItem.toItemStack().isSimilar(itemStack))
+        .orElse(false);
   }
 
   /**
@@ -98,7 +75,7 @@ public class ItemService {
    * @param type the type to filter by
    * @return a list of items matching the type
    */
-  public List<ItemHelper> getAllByType(@NonNull ItemHelper.Type type) {
+  public List<CustomItem> getAllByType(@NonNull CustomItem.Type type) {
     return itemRegistry.getAllByType(type);
   }
 
@@ -107,7 +84,7 @@ public class ItemService {
    *
    * @return a map of all registered items
    */
-  public Map<String, ItemHelper> getAll() {
+  public Map<String, CustomItem> getAll() {
     return itemRegistry.getAll();
   }
 }

@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.registries;
 
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.SignAction;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,10 +32,9 @@ public class SignRegistry {
    */
   public static void register(@NonNull Plugin plugin, @NonNull String actionId,
       @NonNull SignAction action) {
-    RegistryKey key = RegistryKey.of(plugin, actionId);
+    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey(plugin.getName(), actionId);
     if (registeredActions.containsKey(key.toString())) {
-      throw new IllegalArgumentException(
-          "SignAction already registered for key: " + key);
+      throw new IllegalArgumentException("SignAction already registered for key: " + key);
     }
     registeredActions.put(key.toString(), action);
   }
@@ -46,7 +45,7 @@ public class SignRegistry {
    * @param key The registry key to search for.
    * @return An Optional containing the found SignAction, or empty if not found.
    */
-  public static Optional<SignAction> find(@NonNull RegistryKey key) {
+  public static Optional<SignAction> find(@NonNull RelluEssentialsNamespacedKey key) {
     return Optional.ofNullable(registeredActions.get(key.toString()));
   }
 
@@ -58,10 +57,9 @@ public class SignRegistry {
    * @return An Optional containing the matching SignAction, or empty if no match is found.
    */
   public static Optional<SignAction> findByLine(@NonNull String signLine) {
-    return registeredActions.values().stream()
-        .filter(action -> action.getShorthandBracket().equalsIgnoreCase(signLine)
-            || action.getNameBracket().equalsIgnoreCase(signLine)
-            || action.getDisplayName().equalsIgnoreCase(signLine))
+    return registeredActions.values().stream().filter(
+            action -> action.getShorthandBracket().equalsIgnoreCase(signLine) || action.getNameBracket()
+                .equalsIgnoreCase(signLine) || action.getDisplayName().equalsIgnoreCase(signLine))
         .findFirst();
   }
 
@@ -71,20 +69,20 @@ public class SignRegistry {
    *
    * @param signLine The string content of the sign line to match.
    * @return An Optional containing a Map Entry of the RegistryKey and SignAction, or empty if no
-   *     match is found.
+   * match is found.
    */
-  public static Optional<Map.Entry<RegistryKey, SignAction>> findEntryByLine(
+  public static Optional<Map.Entry<RelluEssentialsNamespacedKey, SignAction>> findEntryByLine(
       @NonNull String signLine) {
     String normalizedLine = signLine.replace("[", "").replace("]", "").trim();
-    return registeredActions.entrySet().stream()
-        .filter(entry -> {
-          SignAction action = entry.getValue();
-          return action.getShorthandBracket().equalsIgnoreCase(normalizedLine)
-              || action.getNameBracket().equalsIgnoreCase(normalizedLine)
-              || action.getDisplayName().equalsIgnoreCase(normalizedLine);
-        })
-        .map(entry -> Map.entry(RegistryKey.fromString(entry.getKey()), entry.getValue()))
-        .findFirst();
+    return registeredActions.entrySet().stream().filter(entry -> {
+      SignAction action = entry.getValue();
+      return action.getShorthandBracket().equalsIgnoreCase(normalizedLine)
+          || action.getNameBracket().equalsIgnoreCase(normalizedLine) || action.getDisplayName()
+          .equalsIgnoreCase(normalizedLine);
+    }).map(entry -> {
+      String[] parts = entry.getKey().split(":", 2);
+      return Map.entry(new RelluEssentialsNamespacedKey(parts[0], parts[1]), entry.getValue());
+    }).findFirst();
   }
 
   /**
@@ -105,7 +103,6 @@ public class SignRegistry {
   public static Collection<SignAction> getAllByNamespace(@NonNull String namespace) {
     return registeredActions.entrySet().stream()
         .filter(entry -> entry.getKey().startsWith(namespace.toLowerCase() + ":"))
-        .map(Map.Entry::getValue)
-        .toList();
+        .map(Map.Entry::getValue).toList();
   }
 }

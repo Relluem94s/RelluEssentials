@@ -5,7 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
@@ -17,10 +17,9 @@ public class GivePickaxeCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    player.getInventory().addItem(
-        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE))
-            .orElseThrow()
-            .getCustomItem());
+    player.getInventory().addItem(serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_RELLU_PICKAXE)).orElseThrow().toItemStack());
   }
 
   @Override

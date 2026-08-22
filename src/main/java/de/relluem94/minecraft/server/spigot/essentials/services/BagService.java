@@ -14,7 +14,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
@@ -485,9 +485,9 @@ public class BagService {
   }
 
   private ItemStack resolveDisabledItem() {
-    return serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+    return serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow()
-        .getCustomItem();
+        .toItemStack();
   }
 
   @Contract("_, _ -> new")

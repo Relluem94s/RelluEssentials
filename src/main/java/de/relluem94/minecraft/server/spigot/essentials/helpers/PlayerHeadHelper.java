@@ -6,9 +6,11 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayer
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.function.Consumer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
@@ -22,6 +24,40 @@ public class PlayerHeadHelper {
 
   private PlayerHeadHelper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  }
+
+  /**
+   * Returns a consumer that applies custom head textures to ItemMeta.
+   *
+   * @param ch The custom head data.
+   * @return A consumer to be used in meta modifiers.
+   */
+  public static Consumer<ItemMeta> customHeadModifier(@NotNull CustomHeads ch) {
+    return meta -> {
+      if (!(meta instanceof SkullMeta skullMeta)) {
+        return;
+      }
+
+      if (ch.getBase64().isEmpty()) {
+        return;
+      }
+
+      try {
+        String jsonString = new String(Base64.getDecoder().decode(ch.getBase64()));
+        String skinUrl = extractSkinUrlFromBase64(jsonString);
+
+        if (skinUrl != null) {
+          PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
+          PlayerTextures textures = profile.getTextures();
+          textures.setSkin(new URL(skinUrl));
+          profile.setTextures(textures);
+          skullMeta.setOwnerProfile(profile);
+          skullMeta.setDisplayName(ch.getName());
+        }
+      } catch (MalformedURLException e) {
+        throw new RuntimeException(e);
+      }
+    };
   }
 
   public static void createSkull(String name, org.bukkit.plugin.Plugin plugin,

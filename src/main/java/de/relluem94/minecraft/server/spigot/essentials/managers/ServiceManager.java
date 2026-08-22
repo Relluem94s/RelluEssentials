@@ -55,6 +55,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgr
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginManagerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
@@ -107,10 +108,10 @@ public class ServiceManager implements Enable {
     TraderNpcRegistry traderNpcRegistry = new TraderNpcRegistry(
         serviceContext);
     BankerNpc bankerNpc = new BankerNpc(serviceContext);
-    traderNpcRegistry.addNpc(new BagSalesmanNpc(serviceContext, relluEssentials));
+    traderNpcRegistry.addNpc(new BagSalesmanNpc(serviceContext));
     traderNpcRegistry.addNpc(bankerNpc);
-    traderNpcRegistry.addNpc(new BeekeeperNpc(serviceContext, relluEssentials));
-    traderNpcRegistry.addNpc(new EnchanterNpc(serviceContext, relluEssentials));
+    traderNpcRegistry.addNpc(new BeekeeperNpc(serviceContext));
+    traderNpcRegistry.addNpc(new EnchanterNpc(serviceContext));
     TraderNpcService traderNpcService = new TraderNpcService(traderNpcRegistry, traderNpcRepository,
         bankerNpc);
     traderNpcService.loadAndInitialiseNpcs();
@@ -243,7 +244,8 @@ public class ServiceManager implements Enable {
     translationService.loadLanguages();
     translationService.setDefaultLanguage(lang);
     serviceContext.setTranslationService(translationService);
-    serviceContext.setItemService(new ItemService(new ItemRegistry(relluEssentials)));
+    serviceContext.setPluginMetadataService(new PluginMetadataService(relluEssentials));
+    serviceContext.setItemService(new ItemService(new ItemRegistry()));
     serviceContext.setInventoryService(new InventoryService(new InventoryRegistry()));
   }
 }

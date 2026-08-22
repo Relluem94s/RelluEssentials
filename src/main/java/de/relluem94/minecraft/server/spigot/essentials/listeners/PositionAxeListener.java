@@ -5,9 +5,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.services.PositionService;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("PositionAxeListener")
 public class PositionAxeListener implements ListenerConstruct {
 
-  private ItemHelper positionAxeItem;
+  private CustomItem positionAxeItem;
 
   private ServiceContext serviceContext;
 
@@ -29,7 +29,7 @@ public class PositionAxeListener implements ListenerConstruct {
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
     positionAxeItem = context.getItemService().find(
-        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow();
+        new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow();
   }
 
   @EventHandler
@@ -41,7 +41,7 @@ public class PositionAxeListener implements ListenerConstruct {
     Player player = event.getPlayer();
     ItemStack item = player.getInventory().getItemInMainHand();
 
-    if (!positionAxeItem.almostEquals(item)) {
+    if (!positionAxeItem.toItemStack().isSimilar(item)) {
       return;
     }
 

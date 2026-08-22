@@ -6,7 +6,7 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Worlds;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -16,18 +16,14 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("OpenWorldSelector")
 public class OpenWorldSelector implements ListenerConstruct {
 
-
-  private final RegistryKey worldSelectorKey;
-
-  public OpenWorldSelector() {
-    this.worldSelectorKey = RegistryKey.of(PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR);
-  }
-
+  private RelluEssentialsNamespacedKey worldSelectorKey;
   private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
+    this.worldSelectorKey = new RelluEssentialsNamespacedKey(
+        serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR);
   }
 
   @EventHandler
@@ -44,8 +40,9 @@ public class OpenWorldSelector implements ListenerConstruct {
     }
 
     serviceContext.getItemService().find(worldSelectorKey).ifPresent(worldSelectorItem -> {
-      if (worldSelectorItem.equalsName(event.getItem())) {
-        Worlds.openWorldMenu(event.getPlayer(), serviceContext.getItemService());
+      if (worldSelectorItem.toItemStack().isSimilar(event.getItem())) {
+        Worlds.openWorldMenu(event.getPlayer(), serviceContext.getItemService(),
+            serviceContext.getPluginMetadataService());
         event.setCancelled(true);
       }
     });

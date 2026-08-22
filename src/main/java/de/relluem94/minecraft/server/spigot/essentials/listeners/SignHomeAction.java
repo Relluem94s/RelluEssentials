@@ -7,7 +7,7 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.events.RelluEssentialsSignInteractEvent;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.jspecify.annotations.NonNull;
@@ -16,15 +16,12 @@ import org.jspecify.annotations.NonNull;
 public class SignHomeAction implements ListenerConstruct {
 
 
-  private final RegistryKey signAction;
-
-  public SignHomeAction() {
-    this.signAction = RegistryKey.of(SignConstants.PLUGIN_SIGN_ACTION_HOME);
-  }
+  private RelluEssentialsNamespacedKey signAction;
 
   @Override
   public void injectContext(ServiceContext context) {
-
+    this.signAction = new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+        SignConstants.PLUGIN_SIGN_ACTION_HOME);
   }
 
   @EventHandler

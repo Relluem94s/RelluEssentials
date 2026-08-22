@@ -2,14 +2,13 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.CustomEnchantment;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.EnchantLevel;
 import de.relluem94.minecraft.server.spigot.essentials.models.enchantment.EnchantName;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Rarity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -18,9 +17,11 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Helper class for managing custom enchantments on {@link ItemStack}s. Provides functionality to
@@ -145,31 +146,40 @@ public class EnchantmentHelper extends CustomEnchantment {
   private int cost;
 
   /**
-   * Creates and returns an enchanted book {@link ItemHelper} containing this enchantment.
+   * Creates and returns an enchanted book {@link ItemStack} containing this enchantment.
    *
-   * @return an {@link ItemHelper} representing the enchanted book
+   * @return an {@link ItemStack} representing the enchanted book
    */
-  public ItemHelper getBook() {
-    return new ItemHelper(
-        ItemHelper.addBookEnchantment(
-            new ItemStack(Material.ENCHANTED_BOOK), this
-        ),
-        enchantName.displayName(),
-        ItemHelper.Type.ENCHANTMENT,
-        getRarity(),
-        cost
-    );
+  public ItemStack createEnchantedBook() {
+    ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
+    if (book.getItemMeta() instanceof EnchantmentStorageMeta meta) {
+      meta.getPersistentDataContainer()
+          .set(getKey(), PersistentDataType.INTEGER, getStartLevel());
+      meta.setDisplayName(getDisplayName());
+      meta.setLore(List.of(getLore()));
+      book.setItemMeta(meta);
+    }
+    return book;
+  }
+
+  private @NotNull ItemStack addBookEnchantment(@NotNull ItemStack item,
+      EnchantmentHelper enchantment) {
+    if (item.getItemMeta() instanceof EnchantmentStorageMeta meta) {
+      meta.getPersistentDataContainer()
+          .set(enchantment.getKey(), PersistentDataType.INTEGER, enchantment.getStartLevel());
+      item.setItemMeta(meta);
+    }
+
+    return item;
   }
 
   /**
-   * Applies this enchantment to the given {@link ItemStack} by adding attribute modifiers, updating
+   * Applies this enchantment to the given {@link ItemMeta} by adding attribute modifiers, updating
    * the item lore and storing the enchantment level in the persistent data container.
    *
-   * @param i the item to apply the enchantment to
+   * @param im the meta to apply the enchantment to
    */
-  public void addTo(ItemStack i) {
-    ItemMeta im = i.getItemMeta();
-
+  public void addTo(ItemMeta im) {
     if (im == null) {
       return;
     }
@@ -182,12 +192,12 @@ public class EnchantmentHelper extends CustomEnchantment {
         if (am == null) {
           continue;
         }
-        Objects.requireNonNull(im).addAttributeModifier(a, am);
+        im.addAttributeModifier(a, am);
       }
     }
 
     List<String> itemStackLore;
-    if (Objects.requireNonNull(im).getLore() != null) {
+    if (im.getLore() != null) {
       itemStackLore = im.getLore();
       Collections.reverse(itemStackLore);
       itemStackLore.add(getLore());
@@ -203,7 +213,20 @@ public class EnchantmentHelper extends CustomEnchantment {
     im.setLore(itemStackLore);
     PersistentDataContainer persistentDataContainer = im.getPersistentDataContainer();
     persistentDataContainer.set(super.getKey(), PersistentDataType.INTEGER, actualLevel);
+  }
 
+  /**
+   * Applies this enchantment to the given {@link ItemStack} by adding attribute modifiers, updating
+   * the item lore and storing the enchantment level in the persistent data container.
+   *
+   * @param i the item to apply the enchantment to
+   */
+  public void addTo(ItemStack i) {
+    ItemMeta im = i.getItemMeta();
+    if (im == null) {
+      return;
+    }
+    addTo(im);
     i.setItemMeta(im);
   }
 

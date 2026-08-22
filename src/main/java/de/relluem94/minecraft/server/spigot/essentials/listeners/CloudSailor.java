@@ -7,9 +7,9 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -35,8 +35,8 @@ import org.jspecify.annotations.NonNull;
 public class CloudSailor implements ListenerConstruct {
 
   private final Random random = new Random();
-  private ItemHelper cloudSailorItem = null;
-  private ItemHelper cloudBoots = null;
+  private CustomItem cloudSailorItem = null;
+  private CustomItem cloudBoots = null;
 
   private ServiceContext serviceContext;
 
@@ -44,9 +44,11 @@ public class CloudSailor implements ListenerConstruct {
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
     cloudSailorItem = serviceContext.getItemService().find(
-        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
     cloudBoots = serviceContext.getItemService().find(
-        RegistryKey.of(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow();
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow();
   }
 
   @EventHandler
@@ -58,7 +60,7 @@ public class CloudSailor implements ListenerConstruct {
       if (i == 19 || i == 94) {
         event.getDrops().clear();
         event.setDroppedExp(30);
-        event.getDrops().add(cloudSailorItem.getCustomItem());
+        event.getDrops().add(cloudSailorItem.toItemStack());
       }
     }
   }
@@ -66,11 +68,11 @@ public class CloudSailor implements ListenerConstruct {
   @EventHandler
   public void cloudBootsCrafting(@NonNull PrepareItemCraftEvent e) {
     if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta()
-        && cloudSailorItem.equalsExact(e.getRecipe().getResult())) {
+        && cloudSailorItem.toItemStack().isSimilar(e.getRecipe().getResult())) {
       for (ItemStack is : e.getInventory().getMatrix()) {
         if (is != null) {
           if (is.hasItemMeta()) {
-            if (!cloudSailorItem.equalsExact(is)) {
+            if (!cloudSailorItem.toItemStack().isSimilar(is)) {
               e.getInventory().setResult(null);
             }
           } else {
@@ -89,9 +91,9 @@ public class CloudSailor implements ListenerConstruct {
       if (useCloudSailor) {
         if (e.getCause().equals(DamageCause.FALL)) {
           if (p.getInventory().getBoots() != null && p.getInventory().getBoots()
-              .equals(cloudBoots.getCustomItem())) {
+              .equals(cloudBoots.toItemStack())) {
             e.setCancelled(true);
-          } else if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.getCustomItem())) {
+          } else if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())) {
             e.setDamage(e.getDamage() / 2);
           }
         }
@@ -107,9 +109,9 @@ public class CloudSailor implements ListenerConstruct {
     if (useCloudSailor) {
       if (e.getTo() != null && !e.getFrom().getBlock().getLocation()
           .equals(e.getTo().getBlock().getLocation())) {
-        if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.getCustomItem())
+        if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())
             || p.getInventory().getBoots() != null && p.getInventory().getBoots()
-            .equals(cloudBoots.getCustomItem())) {
+            .equals(cloudBoots.toItemStack())) {
           if (!p.isFlying() && !p.isSneaking()) {
 
             List<Block> blocks = new ArrayList<>();

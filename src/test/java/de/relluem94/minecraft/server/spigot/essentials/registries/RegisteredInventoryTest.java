@@ -11,8 +11,8 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.registries.model.RegisteredInventory;
 import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
 import java.util.Collections;
@@ -26,22 +26,22 @@ import org.mockito.MockedStatic;
 class RegisteredInventoryTest {
 
   private Player mockPlayer;
-  private RegistryKey registryKey;
+  private RelluEssentialsNamespacedKey registryKey;
   private ItemService mockItemService;
 
   @BeforeEach
   void setUp() {
     mockPlayer = mock(Player.class);
-    registryKey = new RegistryKey("test", "key");
+    registryKey = new RelluEssentialsNamespacedKey("test", "key");
     mockItemService = mock(ItemService.class);
   }
 
   @Test
   void testWithFixedItemAddsToList() {
     RegisteredInventory registeredInventory = new RegisteredInventory(
-        registryKey, "Test GUI", 9, ItemHelper.Type.TOOL);
+        registryKey, "Test GUI", 9, CustomItem.Type.TOOL);
 
-    ItemHelper item = mock(ItemHelper.class);
+    CustomItem item = mock(CustomItem.class);
     registeredInventory.withFixedItem(item);
     assertEquals(1, registeredInventory.getFixedItems().size());
     assertEquals(item, registeredInventory.getFixedItems().getFirst());
@@ -50,21 +50,21 @@ class RegisteredInventoryTest {
   @Test
   void testGetFixedItemsIsUnmodifiable() {
     RegisteredInventory registeredInventory = new RegisteredInventory(
-        registryKey, "Test GUI", 9, ItemHelper.Type.TOOL);
-    ItemHelper item = mock(ItemHelper.class);
+        registryKey, "Test GUI", 9, CustomItem.Type.TOOL);
+    CustomItem item = mock(CustomItem.class);
 
     registeredInventory.withFixedItem(item);
-    List<ItemHelper> items = registeredInventory.getFixedItems();
+    List<CustomItem> items = registeredInventory.getFixedItems();
 
-    assertThrows(UnsupportedOperationException.class, () -> items.add(mock(ItemHelper.class)));
+    assertThrows(UnsupportedOperationException.class, () -> items.add(mock(CustomItem.class)));
   }
 
   @Test
   void testOpenForLogicFlow() {
     RegisteredInventory registeredInventory = new RegisteredInventory(
-        registryKey, "Test GUI", 9, ItemHelper.Type.TOOL);
+        registryKey, "Test GUI", 9, CustomItem.Type.TOOL);
 
-    ItemHelper extraItem = mock(ItemHelper.class);
+    CustomItem extraItem = mock(CustomItem.class);
     Inventory mockInventory = mock(Inventory.class);
 
     try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
@@ -83,16 +83,16 @@ class RegisteredInventoryTest {
   @Test
   void testOpenForWithTypeFilterLogicFlow() {
     RegisteredInventory registeredInventory = new RegisteredInventory(
-        registryKey, "Test GUI", 9, ItemHelper.Type.TOOL);
+        registryKey, "Test GUI", 9, CustomItem.Type.TOOL);
 
-    ItemHelper extraItem = mock(ItemHelper.class);
+    CustomItem extraItem = mock(CustomItem.class);
     Inventory mockInventory = mock(Inventory.class);
 
     try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
-      when(mockItemService.getAllByType(ItemHelper.Type.TOOL)).thenReturn(Collections.emptyList());
+      when(mockItemService.getAllByType(CustomItem.Type.TOOL)).thenReturn(Collections.emptyList());
       mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(
               any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class),
-              any(ItemHelper.Type.class)))
+              any(CustomItem.Type.class)))
           .thenReturn(mockInventory);
 
       assertDoesNotThrow(
@@ -107,12 +107,12 @@ class RegisteredInventoryTest {
   void testConstructorSetsFields() {
     String title = "Custom Title";
     int size = 27;
-    ItemHelper.Type type = ItemHelper.Type.GADGET;
+    CustomItem.Type type = CustomItem.Type.GADGET;
 
     RegisteredInventory registeredInventory = new RegisteredInventory(registryKey, title, size,
         type);
 
-    assertEquals(registryKey, registeredInventory.getRegistryKey());
+    assertEquals(registryKey, registeredInventory.getRelluEssentialsNamespacedKey());
     assertEquals(title, registeredInventory.getTitle());
     assertEquals(size, registeredInventory.getSize());
     assertEquals(type, registeredInventory.getItemFilter());
@@ -123,7 +123,7 @@ class RegisteredInventoryTest {
   @Test
   void testOpenForWithoutExtraItems() {
     RegisteredInventory registeredInventory = new RegisteredInventory(
-        registryKey, "Test GUI", 9, ItemHelper.Type.TOOL);
+        registryKey, "Test GUI", 9, CustomItem.Type.TOOL);
     Inventory mockInventory = mock(Inventory.class);
 
     try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
@@ -141,14 +141,14 @@ class RegisteredInventoryTest {
   @Test
   void testOpenForWithTypeFilterWithoutExtraItems() {
     RegisteredInventory registeredInventory = new RegisteredInventory(
-        registryKey, "Test GUI", 9, ItemHelper.Type.TOOL);
+        registryKey, "Test GUI", 9, CustomItem.Type.TOOL);
     Inventory mockInventory = mock(Inventory.class);
 
     try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
-      when(mockItemService.getAllByType(ItemHelper.Type.TOOL)).thenReturn(Collections.emptyList());
+      when(mockItemService.getAllByType(CustomItem.Type.TOOL)).thenReturn(Collections.emptyList());
       mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(
               any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class),
-              any(ItemHelper.Type.class)))
+              any(CustomItem.Type.class)))
           .thenReturn(mockInventory);
       assertDoesNotThrow(
           () -> registeredInventory.openForWithTypeFilter(mockItemService, mockPlayer));

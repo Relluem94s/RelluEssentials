@@ -10,7 +10,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import de.relluem94.minecraft.server.spigot.essentials.commands.DevCommand;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
@@ -23,29 +23,29 @@ public class GiveRelluGearCommand implements SubCommand {
   @Override
   public void execute(Player player, String[] args) {
     player.getInventory().addItem(
-        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_HELMET))
+        serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),PLUGIN_ITEM_NAMESPACE_RELLU_HELMET))
             .orElseThrow()
-            .getCustomItem());
+            .toItemStack());
     player.getInventory().addItem(
-        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE))
+        serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),PLUGIN_ITEM_NAMESPACE_RELLU_CHESTPLATE))
             .orElseThrow()
-            .getCustomItem());
+            .toItemStack());
     player.getInventory().addItem(
-        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS))
+        serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),PLUGIN_ITEM_NAMESPACE_RELLU_LEGGINGS))
             .orElseThrow()
-            .getCustomItem());
+            .toItemStack());
     player.getInventory().addItem(
-        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS))
+        serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),PLUGIN_ITEM_NAMESPACE_RELLU_BOOTS))
             .orElseThrow()
-            .getCustomItem());
+            .toItemStack());
     player.getInventory().addItem(
-        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD))
+        serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD))
             .orElseThrow()
-            .getCustomItem());
+            .toItemStack());
     player.getInventory().addItem(
-        serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_RELLU_SWORD))
+        serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),PLUGIN_ITEM_NAMESPACE_RELLU_SWORD))
             .orElseThrow()
-            .getCustomItem());
+            .toItemStack());
   }
 
   @Override

@@ -42,9 +42,11 @@ import org.jetbrains.annotations.NotNull;
 public class BlockBreakBags implements ListenerConstruct {
 
   private final Set<Block> processingBlocks = new HashSet<>();
-  private final EnchantmentHelper delicate;
-  private final EnchantmentHelper telekinesis;
-  public BlockBreakBags() {
+  private EnchantmentHelper delicate;
+  private EnchantmentHelper telekinesis;
+
+  @Override
+  public void injectContext(ServiceContext context) {
     this.delicate = EnchantmentRegistry.find(
             RegistryKey.of(RelluEssentials.getInstance(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE))
@@ -53,11 +55,6 @@ public class BlockBreakBags implements ListenerConstruct {
             RegistryKey.of(RelluEssentials.getInstance(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
         .orElse(null);
-  }
-
-  @Override
-  public void injectContext(ServiceContext context) {
-
   }
 
   /**

@@ -23,6 +23,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SignManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
+import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import java.io.File;
 import java.util.Calendar;
@@ -91,6 +92,7 @@ public class RelluEssentials extends JavaPlugin {
     start = Calendar.getInstance().getTimeInMillis();
     persistenceContext = new PersistenceContext();
     serviceContext = new ServiceContext();
+    RegistryKey.initializeInternalPlugin(this);
     ServiceManager serviceManager = new ServiceManager();
     serviceManager.preEnable(this);
     startLoading();

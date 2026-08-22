@@ -3,16 +3,15 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_AUTOSELLHOPER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.CoinHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import java.util.Objects;
 import org.bukkit.Location;
@@ -34,13 +33,13 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("InventoryMoveItemProtect")
 public class InventoryMoveItemProtect implements ListenerConstruct {
 
-  private static ItemHelper coinItem = null;
+  private static CustomItem coinItem = null;
   private ServiceContext serviceContext;
 
   public InventoryMoveItemProtect() {
     InventoryMoveItemProtect.coinItem = serviceContext.getItemService().find(
-            RegistryKey.of(RelluEssentials.getInstance(), PLUGIN_ITEM_NAMESPACE_COINS))
-        .orElseThrow();
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
   }
 
   private boolean sellItem(Inventory inventory, ItemStack is, boolean isSource,
@@ -64,17 +63,19 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
           }
         }
 
-        if (coinItem.almostEquals(is) || sellPriceItem == 0) {
+        if (coinItem.toItemStack().isSimilar(is) || sellPriceItem == 0) {
           return false;
         }
 
         if (!isSource && (inventory.firstEmpty() != -1 && size < 4)) {
-          ItemHelper coinItem = serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
-              .orElseThrow();
+          CustomItem coinItem = serviceContext.getItemService().find(
+              new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+                  PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
           inventory.addItem(CoinHelper.buildCoinItem(sellPriceItem, coinItem));
 
           final ItemStack toRemove = is.clone();
-          serviceContext.getSchedulerService().runTaskLater(() -> inventory.removeItem(toRemove), 1L);
+          serviceContext.getSchedulerService()
+              .runTaskLater(() -> inventory.removeItem(toRemove), 1L);
           return false;
         } else {
           return true;
@@ -136,8 +137,7 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
         if (locationOtherSide == null) {
           return false;
         } else {
-          protection = serviceContext.getProtectionService()
-              .getProtectionEntry(locationOtherSide);
+          protection = serviceContext.getProtectionService().getProtectionEntry(locationOtherSide);
         }
 
         if (protection == null) {

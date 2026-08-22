@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.models.enchantment;
 
 import com.google.common.collect.Multimap;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import lombok.Getter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -15,7 +15,7 @@ public class CustomEnchantment {
   @Getter
   protected String lore;
   @Getter
-  protected ItemHelper.Rarity rarity;
+  protected CustomItem.Rarity rarity;
   protected EnchantmentTarget target;
   protected EnchantLevel level;
   protected EnchantName enchantName;

@@ -11,9 +11,9 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
@@ -64,17 +64,19 @@ public class NoDeathMessage implements ListenerConstruct {
         .isSettingActiveForWorld(WorldSetting.DEATH_CHEST_SPAWN, worldName);
 
     if (deathLoseCoinsActive) {
-      ItemHelper coinItem = serviceContext.getItemService().find(RegistryKey.of(PLUGIN_ITEM_NAMESPACE_COINS))
-          .orElseThrow();
+      CustomItem coinItem = serviceContext.getItemService().find(
+          new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+              PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
       for (ItemStack is : p.getInventory().getContents()) {
-        if (is != null && is.getItemMeta() != null && coinItem.almostEquals(is) && is.getItemMeta()
-            .getPersistentDataContainer().has(itemCoins(), PersistentDataType.INTEGER)) {
+        if (is != null && is.getItemMeta() != null && coinItem.toItemStack().isSimilar(is)
+            && is.getItemMeta().getPersistentDataContainer()
+            .has(itemCoins(), PersistentDataType.INTEGER)) {
           p.getInventory().remove(is);
         }
       }
     }
 
-    if(deathChestSpawnActiveForWorld){
+    if (deathChestSpawnActiveForWorld) {
       serviceContext.getDeathChestService().spawnDeathChestForPlayer(p);
       e.getDrops().clear();
     }
@@ -116,19 +118,11 @@ public class NoDeathMessage implements ListenerConstruct {
         return;
       }
 
-      p.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(
-              MessageKey.PLUGIN_EVENT_DEATH,
-              locationName,
-              serviceContext.getTranslationService().get(
-                  MessageKey.COMMAND_WHERE_STRING,
-                  (int) leLocation.getX(),
-                  (int) leLocation.getY(),
-                  (int) leLocation.getZ(),
-                  world.getName()
-              )
-          )
-      );
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_DEATH, locationName,
+              serviceContext.getTranslationService()
+                  .get(MessageKey.COMMAND_WHERE_STRING, (int) leLocation.getX(),
+                      (int) leLocation.getY(), (int) leLocation.getZ(), world.getName())));
     }
   }
 

@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.registries.InventoryRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.model.RegisteredInventory;
 import java.util.List;
@@ -31,8 +31,8 @@ public class InventoryService {
    */
   public @NonNull RegisteredInventory create(@NonNull Plugin plugin,
       @NonNull String inventoryId, @NonNull String title, int size,
-      @NonNull ItemHelper.Type itemFilter) {
-    RegistryKey key = RegistryKey.of(plugin, inventoryId);
+      @NonNull CustomItem.Type itemFilter) {
+    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey(plugin.getName(), inventoryId);
     return create(key, title, size, itemFilter);
   }
 
@@ -45,8 +45,8 @@ public class InventoryService {
    * @param itemFilter The item filter type.
    * @return The created {@link RegisteredInventory}.
    */
-  public @NonNull RegisteredInventory create(@NonNull RegistryKey key, @NonNull String title,
-      int size, @NonNull ItemHelper.Type itemFilter) {
+  public @NonNull RegisteredInventory create(@NonNull RelluEssentialsNamespacedKey key, @NonNull String title,
+      int size, @NonNull CustomItem.Type itemFilter) {
     return registry.register(key, title, size, itemFilter);
   }
 
@@ -56,7 +56,7 @@ public class InventoryService {
    * @param key The key to search for.
    * @return An {@link Optional} containing the inventory.
    */
-  public @NonNull Optional<RegisteredInventory> find(@NonNull RegistryKey key) {
+  public @NonNull Optional<RegisteredInventory> find(@NonNull RelluEssentialsNamespacedKey key) {
     return registry.find(key);
   }
 
