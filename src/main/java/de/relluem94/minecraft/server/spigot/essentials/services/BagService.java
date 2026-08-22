@@ -477,7 +477,7 @@ public class BagService {
     playerEntry.setPurse(playerEntry.getPurse() - bagType.getCost());
     playerEntry.setUpdatedBy(playerEntry.getId());
     playerEntry.setHasToBeUpdated(true);
-    BagEntry newBagEntry = bagRepository.insert(bagType.getId(), playerEntry.getId());
+    BagEntry newBagEntry = bagRepository.insert(playerEntry.getId(), bagType.getId());
     bagRegistry.register(newBagEntry);
 
     player.sendMessage(serviceContext.getTranslationService()

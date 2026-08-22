@@ -179,13 +179,7 @@ public class NpcTradeHandler {
       return;
     }
 
-    purchaseBag(bagType, player, playerEntry);
-  }
-
-  private void purchaseBag(BagTypeEntry bagType, Player player, PlayerEntry playerEntry) {
     serviceContext.getBagService().purchaseBag(bagType, player, playerEntry);
-    player.sendMessage(serviceContext.getTranslationService()
-        .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BAGS_BOUGHT, bagType.getDisplayName()));
   }
 
   private void handleItemTrade(@NonNull ItemStack clickedItem, Inventory clickedInventory,
