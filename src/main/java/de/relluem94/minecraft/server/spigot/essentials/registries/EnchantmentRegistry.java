@@ -20,9 +20,6 @@ public class EnchantmentRegistry {
 
   private final Map<RelluEssentialsNamespacedKey, EnchantmentHelper> registry = new HashMap<>();
 
-  public EnchantmentRegistry() {
-  }
-
   /**
    * Registers an enchantment under a key derived from the given plugin and namespaced key.
    *
