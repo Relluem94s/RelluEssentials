@@ -66,7 +66,7 @@ public class ItemService {
   public boolean isItemStack(@NonNull RelluEssentialsNamespacedKey identifier,
       @NonNull ItemStack itemStack) {
     return find(identifier).map(customItem -> customItem.toItemStack().isSimilar(itemStack))
-        .isPresent();
+        .orElse(false);
   }
 
   /**

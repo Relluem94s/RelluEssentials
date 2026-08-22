@@ -16,12 +16,8 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("OpenWorldSelector")
 public class OpenWorldSelector implements ListenerConstruct {
 
-
   private RelluEssentialsNamespacedKey worldSelectorKey;
   private ServiceContext serviceContext;
-
-  public OpenWorldSelector() {
-  }
 
   @Override
   public void injectContext(ServiceContext context) {
