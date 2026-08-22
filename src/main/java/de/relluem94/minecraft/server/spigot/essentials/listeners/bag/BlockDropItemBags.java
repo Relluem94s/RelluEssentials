@@ -53,9 +53,11 @@ public class BlockDropItemBags implements ListenerConstruct {
 
     for (Item i : e.getItems()) {
       Material type = i.getItemStack().getType();
-      int resolved = context.getBlockDropService()
-          .resolveDropAmount(type, i.getItemStack().getAmount());
-      i.getItemStack().setAmount(resolved);
+      if (context.getBlockDropService().hasDropRule(type)) {
+        int resolved = context.getBlockDropService()
+            .resolveDropAmount(type, i.getItemStack().getAmount());
+        i.getItemStack().setAmount(resolved);
+      }
     }
 
     if (autosmelt != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
