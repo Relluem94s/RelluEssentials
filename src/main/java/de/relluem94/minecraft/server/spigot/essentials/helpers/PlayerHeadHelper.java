@@ -4,7 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Base64;
 import java.util.function.Consumer;
 import org.bukkit.Bukkit;
@@ -49,7 +49,7 @@ public class PlayerHeadHelper {
         if (skinUrl != null) {
           PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
           PlayerTextures textures = profile.getTextures();
-          textures.setSkin(new URL(skinUrl));
+          textures.setSkin(URI.create(skinUrl).toURL());
           profile.setTextures(textures);
           skullMeta.setOwnerProfile(profile);
           skullMeta.setDisplayName(ch.getName());
@@ -106,7 +106,7 @@ public class PlayerHeadHelper {
       if (skinUrl != null) {
         PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
         PlayerTextures textures = profile.getTextures();
-        textures.setSkin(new URL(skinUrl));
+        textures.setSkin(URI.create(skinUrl).toURL());
         profile.setTextures(textures);
         sm.setOwnerProfile(profile);
         sm.setDisplayName(ch.getName());

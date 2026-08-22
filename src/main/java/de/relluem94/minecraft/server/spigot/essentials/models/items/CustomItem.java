@@ -8,6 +8,8 @@ import java.util.function.Consumer;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -113,7 +115,7 @@ public record CustomItem(
       for (EnchantmentData enchantment : enchantments) {
         NamespacedKey enchantmentKey = NamespacedKey.fromString(enchantment.key());
         if (enchantmentKey != null) {
-          org.bukkit.enchantments.Enchantment bukkitEnchantment = org.bukkit.enchantments.Enchantment.getByKey(enchantmentKey);
+          Enchantment bukkitEnchantment = Registry.ENCHANTMENT.get(enchantmentKey);
           if (bukkitEnchantment != null) {
             meta.addEnchant(bukkitEnchantment, enchantment.level(), true);
           }
