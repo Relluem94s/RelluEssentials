@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,8 +15,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.jetbrains.annotations.Unmodifiable;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Listener that handles the application of custom enchantments via the anvil UI. Intercepts
@@ -29,14 +26,11 @@ import org.jspecify.annotations.NonNull;
 @ListenerName("CustomEnchantment")
 public class CustomEnchantment implements ListenerConstruct {
 
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
-
-  }
-
-  private @NonNull @Unmodifiable List<EnchantmentHelper> resolveRegisteredEnchantments() {
-    return EnchantmentRegistry.findAll();
+    this.serviceContext = context;
   }
 
   /**
@@ -81,7 +75,8 @@ public class CustomEnchantment implements ListenerConstruct {
       return;
     }
 
-    List<EnchantmentHelper> registeredEnchantments = resolveRegisteredEnchantments();
+    List<EnchantmentHelper> registeredEnchantments = serviceContext.getEnchantmentService()
+        .findAll();
 
     boolean slotOneIsCustomBook = registeredEnchantments.stream()
         .anyMatch(enchant -> isBookWithEnchant(itemStackSlotOne, enchant));

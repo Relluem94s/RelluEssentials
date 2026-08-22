@@ -23,7 +23,6 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SignManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import java.io.File;
 import java.util.Calendar;
@@ -92,7 +91,6 @@ public class RelluEssentials extends JavaPlugin {
     start = Calendar.getInstance().getTimeInMillis();
     persistenceContext = new PersistenceContext();
     serviceContext = new ServiceContext();
-    RegistryKey.initializeInternalPlugin(this);
     ServiceManager serviceManager = new ServiceManager();
     serviceManager.preEnable(this);
     startLoading();
@@ -135,7 +133,8 @@ public class RelluEssentials extends JavaPlugin {
       return;
     }
     getServiceContext().getSchedulerService()
-        .runTaskLater(() -> getServiceContext().getNpcService().loadAndSpawnNpcsInLoadedChunks(), 20L);
+        .runTaskLater(() -> getServiceContext().getNpcService().loadAndSpawnNpcsInLoadedChunks(),
+            20L);
   }
 
   @Override
@@ -169,10 +168,9 @@ public class RelluEssentials extends JavaPlugin {
       return;
     }
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        serviceContext.getTranslationService()
-            .get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE,
-                Calendar.getInstance().getTimeInMillis() - start));
+    consoleSendMessage(PLUGIN_NAME_CONSOLE, serviceContext.getTranslationService()
+        .get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE,
+            Calendar.getInstance().getTimeInMillis() - start));
     consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
     consoleSendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
   }

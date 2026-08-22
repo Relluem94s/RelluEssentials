@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper.hasEnchant;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentConstants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
@@ -14,9 +13,8 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.World;
@@ -35,7 +33,6 @@ import org.jspecify.annotations.NonNull;
 @ListenerName("BetterMobs")
 public class BetterMobs implements ListenerConstruct {
 
-
   private EnchantmentHelper telekinesis;
   private EnchantmentHelper thunderstrike;
   private EnchantmentHelper scavengers;
@@ -45,20 +42,20 @@ public class BetterMobs implements ListenerConstruct {
   @Override
   public void injectContext(ServiceContext context) {
     serviceContext = context;
-    this.telekinesis = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(),
+    this.telekinesis = serviceContext.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
         .orElse(null);
-    this.thunderstrike = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(),
+    this.thunderstrike = serviceContext.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_THUNDERSTRIKE))
         .orElse(null);
-    this.scavengers = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(),
+    this.scavengers = serviceContext.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_SCAVENGERS))
         .orElse(null);
-    this.lifesteal = EnchantmentRegistry.find(
-            RegistryKey.of(RelluEssentials.getInstance(),
+    this.lifesteal = serviceContext.getEnchantmentService().find(
+            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_LIFESTEAL))
         .orElse(null);
   }
@@ -194,5 +191,4 @@ public class BetterMobs implements ListenerConstruct {
       }
     }
   }
-
 }

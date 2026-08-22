@@ -43,51 +43,56 @@ public class DevCommand implements CommandConstruct {
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
-    subCommandRegistry = new SubCommandRegistry<>(List.of(
-        new CustomMobCommand(),
-        new RotateTestCommand(context),
-        new DevPlattformCommand(context),
-        new GivePickaxeCommand(context),
-        new GiveCloudSailorCommand(context),
-        new GiveRelluGearCommand(context),
-        new AddAutosmeltCommand(),
-        new AddTelekinesisCommand(),
-        new RemoveEnchantsCommand(),
-        new CloneWorldCommand(),
-        new ToggleDamageInfoCommand(context),
-        new ShowPlayerStatsCommand(),
-        new GiveSkullsCommand()
-    ));
+    subCommandRegistry = new SubCommandRegistry<>(
+        List.of(
+            new CustomMobCommand(),
+            new RotateTestCommand(context),
+            new DevPlattformCommand(context),
+            new GivePickaxeCommand(context),
+            new GiveCloudSailorCommand(context),
+            new GiveRelluGearCommand(context),
+            new AddAutosmeltCommand(context),
+            new AddTelekinesisCommand(context),
+            new RemoveEnchantsCommand(context),
+            new CloneWorldCommand(),
+            new ToggleDamageInfoCommand(context),
+            new ShowPlayerStatsCommand(),
+            new GiveSkullsCommand()));
   }
 
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (!isPlayer(sender)) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
       return true;
     }
 
     Player p = (Player) sender;
 
     if (!p.getName().equalsIgnoreCase("Relluem94")) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_INVALID));
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_INVALID));
       return true;
     }
 
     if (args.length < 1) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (args.length > 1) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
       return true;
     }
 
     SubCommand subCommand = subCommandRegistry.find(args);
     if (subCommand == null) {
-      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WRONG_SUB_COMMAND));
       return true;
     }
 
@@ -123,19 +128,9 @@ public class DevCommand implements CommandConstruct {
 
   @Getter
   public enum Commands implements CommandsEnum {
-    CUSTOM_MOB("cm"),
-    CLOUD_SAILOR("cs"),
-    PICKAXE("pick"),
-    RELLU("rellu"),
-    SMELT("smelt"),
-    TELE("tele"),
-    NO_ENCHANT("noenchant"),
-    WORLDS("worlds"),
-    PLAYER_STATS("pl"),
-    DAMAGE_INFO("di"),
-    SKULL("sk"),
-    ROTATE_TEST("rt"),
-    DEV_PLATTFORM("dp");
+    CUSTOM_MOB("cm"), CLOUD_SAILOR("cs"), PICKAXE("pick"), RELLU("rellu"), SMELT("smelt"), TELE(
+        "tele"), NO_ENCHANT("noenchant"), WORLDS("worlds"), PLAYER_STATS("pl"), DAMAGE_INFO(
+        "di"), SKULL("sk"), ROTATE_TEST("rt"), DEV_PLATTFORM("dp");
 
     private final String name;
     private final String[] subCommands;

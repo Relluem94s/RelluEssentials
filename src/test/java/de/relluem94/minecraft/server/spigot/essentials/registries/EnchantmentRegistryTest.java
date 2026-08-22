@@ -2,8 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.registries;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -11,9 +9,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import java.util.List;
 import java.util.Optional;
 import org.bukkit.NamespacedKey;
@@ -46,42 +42,31 @@ class EnchantmentRegistryTest {
   @Mock
   private PersistentDataContainer mockPdc;
 
+  private EnchantmentRegistry registry;
+
   @BeforeEach
   void setUp() {
-    EnchantmentRegistry.clear();
+    registry = new EnchantmentRegistry();
   }
 
   @Test
   void testRegisterAndFind() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
     String key = "test_enchant";
-    RegistryKey registryKey = RegistryKey.of(mockPlugin, key);
+    RelluEssentialsNamespacedKey registryKey = new RelluEssentialsNamespacedKey("test_plugin", key);
 
-    EnchantmentRegistry.register(mockPlugin, key, mockEnchantment);
+    registry.register(mockPlugin, key, mockEnchantment);
 
-    Optional<EnchantmentHelper> found = EnchantmentRegistry.find(registryKey);
+    Optional<EnchantmentHelper> found = registry.find(registryKey);
 
     assertTrue(found.isPresent());
     assertEquals(mockEnchantment, found.get());
   }
 
   @Test
-  void privateConstructorThrowsIllegalStateException() throws Exception {
-    Constructor<EnchantmentRegistry> constructor = EnchantmentRegistry.class.getDeclaredConstructor();
-    constructor.setAccessible(true);
-
-    InvocationTargetException thrownException = assertThrows(
-        InvocationTargetException.class,
-        constructor::newInstance
-    );
-
-    assertInstanceOf(IllegalStateException.class, thrownException.getCause());
-  }
-
-  @Test
   void testFindNonExistent() {
-    RegistryKey randomKey = RegistryKey.of("namespace", "unknown");
-    Optional<EnchantmentHelper> found = EnchantmentRegistry.find(randomKey);
+    RelluEssentialsNamespacedKey randomKey = new RelluEssentialsNamespacedKey("namespace", "unknown");
+    Optional<EnchantmentHelper> found = registry.find(randomKey);
 
     assertFalse(found.isPresent());
   }
@@ -94,10 +79,10 @@ class EnchantmentRegistryTest {
     EnchantmentHelper enchant1 = mock(EnchantmentHelper.class);
     EnchantmentHelper enchant2 = mock(EnchantmentHelper.class);
 
-    EnchantmentRegistry.register(mockPlugin, key1, enchant1);
-    EnchantmentRegistry.register(mockPlugin, key2, enchant2);
+    registry.register(mockPlugin, key1, enchant1);
+    registry.register(mockPlugin, key2, enchant2);
 
-    List<EnchantmentHelper> all = EnchantmentRegistry.findAll();
+    List<EnchantmentHelper> all = registry.findAll();
 
     assertTrue(all.contains(enchant1));
     assertTrue(all.contains(enchant2));
@@ -107,9 +92,9 @@ class EnchantmentRegistryTest {
   @Test
   void testCount() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
-    EnchantmentRegistry.register(mockPlugin, "count_test", mockEnchantment);
+    registry.register(mockPlugin, "count_test", mockEnchantment);
 
-    assertEquals(1, EnchantmentRegistry.count());
+    assertEquals(1, registry.count());
   }
 
   @Test
@@ -118,7 +103,7 @@ class EnchantmentRegistryTest {
     NamespacedKey enchantmentKey = new NamespacedKey("test", "magic");
     when(mockEnchantment.getKey()).thenReturn(enchantmentKey);
 
-    EnchantmentRegistry.register(mockPlugin, "magic", mockEnchantment);
+    registry.register(mockPlugin, "magic", mockEnchantment);
 
     when(mockItemStack.getItemMeta()).thenReturn(mockMeta);
     when(mockMeta.getPersistentDataContainer()).thenReturn(mockPdc);
@@ -126,7 +111,7 @@ class EnchantmentRegistryTest {
     when(mockPdc.has(enchantmentKey, PersistentDataType.INTEGER)).thenReturn(true);
     when(mockMeta.getStoredEnchants()).thenReturn(java.util.Collections.emptyMap());
 
-    Optional<EnchantmentHelper> result = EnchantmentRegistry.findByBookItemStack(mockItemStack);
+    Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
 
     assertTrue(result.isPresent());
     assertEquals(mockEnchantment, result.get());
@@ -135,7 +120,7 @@ class EnchantmentRegistryTest {
   @Test
   void testFindByBookItemStack_NotABook() {
     when(mockItemStack.getItemMeta()).thenReturn(mock(org.bukkit.inventory.meta.ItemMeta.class));
-    Optional<EnchantmentHelper> result = EnchantmentRegistry.findByBookItemStack(mockItemStack);
+    Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
     assertFalse(result.isPresent());
   }
 
@@ -143,13 +128,13 @@ class EnchantmentRegistryTest {
   void testFindByBookItemStack_NoDataInPdc() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
     when(mockEnchantment.getKey()).thenReturn(new NamespacedKey("test", "magic"));
-    EnchantmentRegistry.register(mockPlugin, "magic", mockEnchantment);
+    registry.register(mockPlugin, "magic", mockEnchantment);
 
     when(mockItemStack.getItemMeta()).thenReturn(mockMeta);
     when(mockMeta.getPersistentDataContainer()).thenReturn(mockPdc);
     when(mockPdc.has(any(NamespacedKey.class), eq(PersistentDataType.INTEGER))).thenReturn(false);
 
-    Optional<EnchantmentHelper> result = EnchantmentRegistry.findByBookItemStack(mockItemStack);
+    Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
 
     assertFalse(result.isPresent());
   }

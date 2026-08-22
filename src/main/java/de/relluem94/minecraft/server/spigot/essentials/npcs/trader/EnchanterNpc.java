@@ -15,7 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
-import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -25,7 +24,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.Unmodifiable;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -45,19 +43,16 @@ public class EnchanterNpc extends TraderNpc {
     this.serviceContext = serviceContext;
   }
 
-  private @NonNull @Unmodifiable List<EnchantmentHelper> resolveRegisteredEnchantments() {
-    return EnchantmentRegistry.findAll();
-  }
-
   private @NonNull CustomItem resolveDisabledItem() {
-    return serviceContext.getItemService()
-        .find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-        .orElseThrow();
+    return serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow();
   }
 
   private @NonNull CustomItem resolveCloseItem() {
-    return serviceContext.getItemService()
-        .find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),  PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
+    return serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE)).orElseThrow();
   }
 
   /**
@@ -72,10 +67,11 @@ public class EnchanterNpc extends TraderNpc {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, getTitle()),
         resolveDisabledItem().toItemStack());
 
-    List<EnchantmentHelper> enchantments = resolveRegisteredEnchantments();
+    List<EnchantmentHelper> registeredEnchantments = serviceContext.getEnchantmentService()
+        .findAll();
 
     int slot = 0;
-    for (EnchantmentHelper enchant : enchantments) {
+    for (EnchantmentHelper enchant : registeredEnchantments) {
       slot = InventoryHelper.getNextSlot(slot);
       ItemStack book = enchant.createEnchantedBook();
       applyAdditionalLoreToItemStack(book, buildCostDataFromCost(enchant.getCost()));
@@ -84,7 +80,8 @@ public class EnchanterNpc extends TraderNpc {
     }
 
     int magicWaterSlot = InventoryHelper.getNextSlot(slot);
-    serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+    serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(
+        serviceContext.getPluginMetadataService().getName(),
         PLUGIN_ITEM_NAMESPACE_MAGIC_WATER_BUCKET)).ifPresent(item -> {
           ItemStack magicWater = item.toItemStack();
           applyAdditionalLoreToItemStack(magicWater, buildCostData(magicWater));
@@ -93,7 +90,8 @@ public class EnchanterNpc extends TraderNpc {
     );
 
     int autoSellSlot = InventoryHelper.getNextSlot(magicWaterSlot + 1);
-    serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+    serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(
+        serviceContext.getPluginMetadataService().getName(),
         PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER)).ifPresent(item -> {
           ItemStack hopper = item.toItemStack().clone();
           applyAdditionalLoreToItemStack(hopper, buildCostData(hopper));
@@ -128,8 +126,8 @@ public class EnchanterNpc extends TraderNpc {
   }
 
   private ItemCostData buildCostData(@NonNull ItemStack itemStack) {
-    return resolveCostFromItemStack(itemStack, itemCost())
-        .map(this::buildCostDataFromCost).orElse(new ItemCostData(0, List.of()));
+    return resolveCostFromItemStack(itemStack, itemCost()).map(this::buildCostDataFromCost)
+        .orElse(new ItemCostData(0, List.of()));
   }
 
   private ItemCostData buildCostDataFromCost(int cost) {
@@ -140,14 +138,14 @@ public class EnchanterNpc extends TraderNpc {
             PLUGIN_NAME_MONEY, String.valueOf(cost * 64))));
   }
 
-  private Optional<Integer> resolveCostFromItemStack(@NonNull ItemStack itemStack, @NonNull NamespacedKey pluginNamespacedKey) {
+  private Optional<Integer> resolveCostFromItemStack(@NonNull ItemStack itemStack,
+      @NonNull NamespacedKey pluginNamespacedKey) {
     ItemMeta meta = itemStack.getItemMeta();
     if (meta == null) {
       return Optional.empty();
     }
     return Optional.ofNullable(
-        meta.getPersistentDataContainer().get(pluginNamespacedKey, PersistentDataType.INTEGER)
-    );
+        meta.getPersistentDataContainer().get(pluginNamespacedKey, PersistentDataType.INTEGER));
   }
 
   private record ItemCostData(int cost, List<String> lore) {

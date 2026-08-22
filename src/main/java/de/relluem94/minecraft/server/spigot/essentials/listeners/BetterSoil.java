@@ -7,10 +7,8 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.EnchantmentCons
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.models.RegistryKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
-import de.relluem94.minecraft.server.spigot.essentials.registries.EnchantmentRegistry;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,7 +25,6 @@ import org.jspecify.annotations.NonNull;
 /* Better Call Soil */
 @ListenerName("BetterSoil")
 public class BetterSoil implements ListenerConstruct {
-
 
   private ServiceContext serviceContext;
 
@@ -77,22 +74,23 @@ public class BetterSoil implements ListenerConstruct {
   @EventHandler
   public void onHarvest(@NonNull PlayerHarvestBlockEvent e) {
     Player p = e.getPlayer();
-    PlayerEntry pe = serviceContext.getPlayerService()
-        .getPlayerEntry(p.getUniqueId());
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p.getUniqueId());
 
     List<ItemStack> lis = serviceContext.getBagService()
         .collectItemStacks(e.getItemsHarvested(), e.getPlayer(), pe);
     e.getItemsHarvested().removeAll(lis);
 
-    EnchantmentRegistry.find(RegistryKey.of(EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
-        .filter(telekinesis -> EnchantmentHelper.hasEnchant(
-            e.getPlayer().getInventory().getItemInMainHand(), telekinesis))
-        .ifPresent(_ -> {
-          for (ItemStack is : e.getItemsHarvested()) {
-            p.getInventory().addItem(is);
-          }
-          e.getItemsHarvested().clear();
-        });
+    serviceContext.getEnchantmentService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS)).filter(
+                telekinesis -> EnchantmentHelper.hasEnchant(
+            e.getPlayer().getInventory().getItemInMainHand(), telekinesis)).ifPresent(_ -> {
+              for (ItemStack is : e.getItemsHarvested()) {
+                p.getInventory().addItem(is);
+              }
+              e.getItemsHarvested().clear();
+            }
+    );
   }
 }
 
