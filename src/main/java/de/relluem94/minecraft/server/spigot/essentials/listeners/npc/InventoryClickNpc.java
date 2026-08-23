@@ -4,10 +4,16 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT;
@@ -39,6 +45,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * Listener that handles inventory click events specifically for NPC-related GUIs.
+ */
 @ListenerName("InventoryClickNpc")
 public class InventoryClickNpc implements ListenerConstruct {
 
@@ -74,6 +83,11 @@ public class InventoryClickNpc implements ListenerConstruct {
         (p, bae) -> bs.withdraw(ps.getPlayerEntry(p), p, bae, 100f));
   }
 
+  /**
+   * Injects the service context into the listener and initializes required handlers.
+   *
+   * @param context the service context containing necessary services
+   */
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
@@ -81,6 +95,11 @@ public class InventoryClickNpc implements ListenerConstruct {
     this.bankerDepositActions = initBankerDepositActions();
   }
 
+  /**
+   * Handles the {@link InventoryClickEvent} to route clicks to specific NPC GUI handlers.
+   *
+   * @param e the inventory click event
+   */
   @EventHandler
   public void onInventoryClickItem(@NonNull InventoryClickEvent e) {
     if (!(e.getWhoClicked() instanceof Player player) || e.getCurrentItem() == null) {
@@ -129,29 +148,46 @@ public class InventoryClickNpc implements ListenerConstruct {
 
     CustomItem customItemClose = optionalCustomItemClose.get();
 
-    if (BankService.npc_gui_deposit.equalsName(clickedItem)) {
+    CustomItem depositItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT);
+    CustomItem totalBalanceItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL);
+    CustomItem balanceItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE);
+    CustomItem withdrawItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW);
+    CustomItem transactionsItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS);
+    CustomItem upgradeItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE);
+
+    if (depositItem != null && depositItem.toItemStack().getType().equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player, serviceContext.getTraderNpcService().getBankerNpc()
           .getDepositGUI(playerEntry.getPurse()));
-    } else if (BankService.npc_gui_balance_total.equalsName(clickedItem)) {
+    } else if (totalBalanceItem != null && totalBalanceItem.toItemStack().getType()
+        .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       player.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_TOTAL,
               StringHelper.formatDouble(bankAccount.getValue()), PLUGIN_NAME_MONEY));
-    } else if (BankService.npc_gui_balance.equalsName(clickedItem)) {
+    } else if (balanceItem != null && balanceItem.toItemStack().getType()
+        .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
           serviceContext.getTraderNpcService().getBankerNpc().getBalanceGUI());
-    } else if (BankService.npc_gui_withdraw.getCustomItem().getType()
+    } else if (withdrawItem != null && withdrawItem.toItemStack().getType()
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player, serviceContext.getTraderNpcService().getBankerNpc()
           .getWithdrawGUI(bankAccount.getValue()));
     } else if (BankService.UPGRADE_MATERIAL.equals(clickedItem.getType())) {
       serviceContext.getBankService().upgradeAccount(clickedItem, player, playerEntry, bankAccount);
-    } else if (BankService.npc_gui_balance_transactions.equalsExact(clickedItem)) {
+    } else if (transactionsItem != null && transactionsItem.toItemStack().getType()
+        .equals(clickedItem.getType())) {
       handleTransactionHistory(player, bankAccount);
-    } else if (BankService.npc_gui_upgrade.equalsExact(clickedItem)) {
+    } else if (upgradeItem != null && upgradeItem.toItemStack().getType()
+        .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
           serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGUI());
@@ -159,8 +195,8 @@ public class InventoryClickNpc implements ListenerConstruct {
       InventoryHelper.closeInventory(player);
     } else {
       serviceContext.getItemService().getAll().values().stream().filter(ci -> ci.displayName()
-              .equals(
-                  clickedItem.getItemMeta() != null ? clickedItem.getItemMeta().getDisplayName() : ""))
+              .equals(clickedItem.getItemMeta() != null
+                  ? clickedItem.getItemMeta().getDisplayName() : ""))
           .findFirst().ifPresent(ci -> {
             BiConsumer<Player, BankAccountEntry> action = bankerDepositActions.get(
                 ci.relluEssentialsNamespacedKey());
