@@ -21,16 +21,33 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Service responsible for handling various types of chat communication,
+ * including player messages, console output, channel messages, and private messaging.
+ */
 public class ChatService {
 
   private final ServiceContext serviceContext;
   private final ReplyRegistry replyRegistry;
 
+  /**
+   * Constructs a new ChatService.
+   *
+   * @param serviceContext the service context containing necessary services
+   * @param replyRegistry  the registry managing player reply targets
+   */
   public ChatService(ServiceContext serviceContext, ReplyRegistry replyRegistry) {
     this.serviceContext = serviceContext;
     this.replyRegistry = replyRegistry;
   }
 
+  /**
+   * Sends a message to the sender. If the sender is a player, it sends it to them;
+   * otherwise, it sends it to the console.
+   *
+   * @param sender  the sender of the message
+   * @param message the message to be sent
+   */
   public void sendMessage(CommandSender sender, String message) {
     if (isPlayer(sender)) {
       Player p = (Player) sender;
@@ -40,11 +57,24 @@ public class ChatService {
     }
   }
 
+  /**
+   * Sends a message to the server console with a specific type prefix.
+   *
+   * @param type    the prefix/type of the message
+   * @param message the message content
+   */
   public void consoleSendMessage(String type, String message) {
     ConsoleCommandSender console = Bukkit.getConsoleSender();
     console.sendMessage(type + " " + message);
   }
 
+  /**
+   * Sends a message to the server console with a specific type prefix, repeated multiple times.
+   *
+   * @param type    the prefix/type of the message
+   * @param message the message content
+   * @param repeat  the number of times to repeat the message
+   */
   public void consoleSendMessage(String type, String message, int repeat) {
     ConsoleCommandSender console = Bukkit.getConsoleSender();
     for (int i = 0; i <= repeat; i++) {
@@ -52,6 +82,14 @@ public class ChatService {
     }
   }
 
+  /**
+   * Sends a formatted message to all authorized players in a specific channel.
+   *
+   * @param message the raw message to send
+   * @param sender  the player sending the message
+   * @param channel the channel identifier to strip from the message
+   * @param group   the group information for the sender
+   */
   public void sendMessageInChannel(String message, Player sender, String channel,
       GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
@@ -63,6 +101,14 @@ public class ChatService {
     }
   }
 
+  /**
+   * Sends a formatted message to all authorized players in a specific channel using a name string.
+   *
+   * @param message    the raw message to send
+   * @param senderName the name of the sender
+   * @param channel    the channel identifier to strip from the message
+   * @param group      the group information for the sender
+   */
   public void sendMessageInChannel(String message, String senderName, String channel,
       GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
@@ -74,22 +120,54 @@ public class ChatService {
     }
   }
 
+  /**
+   * Sends a message to a player's action bar.
+   *
+   * @param p       the recipient player
+   * @param message the message to display in the action bar
+   */
   public void sendMessageInActionBar(@NonNull Player p, String message) {
     p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
   }
 
+  /**
+   * Registers a reply target for a player.
+   *
+   * @param sender the player initiating the reply
+   * @param target the player to be replied to
+   */
   public void registerReply(Player sender, Player target) {
     replyRegistry.register(sender, target);
   }
 
+  /**
+   * Checks if a player has a registered reply target.
+   *
+   * @param sender the player to check
+   * @return true if a reply target exists, false otherwise
+   */
   public boolean hasReplyTarget(Player sender) {
     return replyRegistry.hasReplyTarget(sender);
   }
 
+  /**
+   * Finds the registered reply target for a player.
+   *
+   * @param sender the player to look up
+   * @return the target player, or null if none exists
+   */
   public Player findReplyTarget(Player sender) {
     return replyRegistry.findReplyTarget(sender);
   }
 
+  /**
+   * Sends a private message from one player to another.
+   *
+   * @param sender the sender of the private message
+   * @param target the recipient of the private message
+   * @param args   the message arguments
+   * @param start  the starting index in the arguments array
+   */
   public void sendPrivateMessage(CommandSender sender, Player target, String[] args, int start) {
     if (sender instanceof ConsoleCommandSender) {
       sender.sendMessage(
