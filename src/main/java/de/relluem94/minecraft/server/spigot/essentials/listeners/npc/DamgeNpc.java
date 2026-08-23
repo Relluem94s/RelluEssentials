@@ -25,7 +25,7 @@ public class DamgeNpc implements ListenerConstruct {
       return;
     }
 
-    boolean isTrackedNPC = serviceContext.getNpcService().getNPCs().stream()
+    boolean isTrackedNPC = serviceContext.getNpcService().getNpcs().stream()
         .anyMatch(npc -> event.getEntity().getUniqueId().equals(npc.getEntityUUID()));
 
     if (isTrackedNPC) {

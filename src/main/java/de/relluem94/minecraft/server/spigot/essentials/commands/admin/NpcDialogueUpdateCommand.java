@@ -58,7 +58,7 @@ public class NpcDialogueUpdateCommand implements SubCommand {
       return;
     }
 
-    Optional<Npc> npc = serviceContext.getNpcService().getNPCById(npcId);
+    Optional<Npc> npc = serviceContext.getNpcService().getNpcById(npcId);
     npc.ifPresentOrElse(foundNpc -> {
       String text = Arrays.stream(args, ARGS_TEXT_START_INDEX, args.length)
           .collect(Collectors.joining(" "));
@@ -72,7 +72,7 @@ public class NpcDialogueUpdateCommand implements SubCommand {
       entry.setText(StringHelper.replaceColor(text));
       entry.setUpdatedBy(playerEntry.getId());
 
-      boolean updated = serviceContext.getNpcService().updateNPCDialogue(entry, foundNpc.getId());
+      boolean updated = serviceContext.getNpcService().updateNpcDialogue(entry, foundNpc.getId());
 
       if (!updated) {
         player.sendMessage(
@@ -81,7 +81,7 @@ public class NpcDialogueUpdateCommand implements SubCommand {
         return;
       }
 
-      serviceContext.getNpcService().reloadNPCDialogue(foundNpc.getId());
+      serviceContext.getNpcService().reloadNpcDialogue(foundNpc.getId());
       player.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_UPDATED));
     }, () -> player.sendMessage(

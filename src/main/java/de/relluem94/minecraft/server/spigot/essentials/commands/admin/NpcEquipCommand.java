@@ -57,7 +57,7 @@ public class NpcEquipCommand implements SubCommand {
       return;
     }
 
-    Optional<Npc> npcOptional = serviceContext.getNpcService().getNPCById(npcId);
+    Optional<Npc> npcOptional = serviceContext.getNpcService().getNpcById(npcId);
     if (npcOptional.isEmpty()) {
       player.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NPC_NOT_FOUND));
@@ -101,7 +101,7 @@ public class NpcEquipCommand implements SubCommand {
         }
         HandlerList.unregisterAll(this);
 
-        serviceContext.getNpcService().saveNPCInventory(npc, event.getInventory());
+        serviceContext.getNpcService().saveNpcInventory(npc, event.getInventory());
 
         if (npc.getEntityUUID() != null) {
           NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(event.getInventory(),

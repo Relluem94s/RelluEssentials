@@ -48,7 +48,7 @@ public class NpcDeleteCommand implements SubCommand {
     PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
     NpcOperationResult result = serviceContext.getNpcService()
-        .deleteNPC(npcId, playerEntry.getId());
+        .deleteNpc(npcId, playerEntry.getId());
 
     if (!result.isSuccessful()) {
       player.sendMessage(

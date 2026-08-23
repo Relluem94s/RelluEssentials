@@ -142,7 +142,7 @@ public class RelluEssentials extends JavaPlugin {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         getServiceContext().getTranslationService().get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
     if (getServiceContext().getNpcService() != null) {
-      getServiceContext().getNpcService().despawnAllNPCs();
+      getServiceContext().getNpcService().despawnAllNpcs();
     }
     SudoManager sudoManager = new SudoManager();
     sudoManager.disable(this);

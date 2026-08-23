@@ -64,7 +64,7 @@ public class NpcCreateCommand implements SubCommand {
         .getPlayerEntry(player.getUniqueId());
     String worldName = player.getWorld().getName();
     NpcOperationResult result = serviceContext.getNpcService()
-        .createNPC(profileName, x, y, z, yaw, pitch, worldName, playerEntry.getId());
+        .createNpc(profileName, x, y, z, yaw, pitch, worldName, playerEntry.getId());
 
     if (!result.isSuccessful()) {
       player.sendMessage(

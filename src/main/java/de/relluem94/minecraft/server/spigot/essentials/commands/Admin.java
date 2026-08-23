@@ -146,7 +146,7 @@ public class Admin implements CommandConstruct {
         } else if ("dialogue".equalsIgnoreCase(strings[1])) {
           resolveNpcFromArg(strings[3]).ifPresent(npc -> {
             List<NpcDialogueEntry> dialogueEntries = serviceContext
-                .getNpcService().getNPCDialogues(npc.getDbid());
+                .getNpcService().getNpcDialogues(npc.getDbid());
             List<Integer> usedPositions = dialogueEntries.stream()
                 .map(NpcDialogueEntry::getListPosition)
                 .sorted()
@@ -219,7 +219,7 @@ public class Admin implements CommandConstruct {
 
   private Optional<String> resolveNearestNpcId(Player player) {
     return serviceContext.getNpcService()
-        .getNearestNPC(player.getLocation().getX(), player.getLocation().getY(),
+        .getNearestNpc(player.getLocation().getX(), player.getLocation().getY(),
             player.getLocation().getZ(), player.getWorld().getName())
         .map(npc -> String.valueOf(npc.getId()));
   }
@@ -228,9 +228,9 @@ public class Admin implements CommandConstruct {
     try {
       UUID npcId = UUID.fromString(npcIdArg);
       int listPosition = Integer.parseInt(listPositionArg);
-      return serviceContext.getNpcService().getNPCById(npcId)
+      return serviceContext.getNpcService().getNpcById(npcId)
           .flatMap(npc -> serviceContext.getNpcService()
-              .getNPCDialogues(npc.getDbid())
+              .getNpcDialogues(npc.getDbid())
               .stream()
               .filter(entry -> entry.getListPosition() == listPosition)
               .map(NpcDialogueEntry::getText)
@@ -244,7 +244,7 @@ public class Admin implements CommandConstruct {
   private Optional<Npc> resolveNpcFromArg(String npcIdArg) {
     try {
       UUID npcId = UUID.fromString(npcIdArg);
-      return serviceContext.getNpcService().getNPCById(npcId);
+      return serviceContext.getNpcService().getNpcById(npcId);
     } catch (IllegalArgumentException e) {
       return Optional.empty();
     }

@@ -61,9 +61,12 @@ class NpcServiceTest {
 
   private NpcService npcService;
 
+  @Mock
+  private NpcDialogueProgressService npcDialogueProgressService;
+
   @BeforeEach
   void setUp() {
-    npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
+    npcService = new NpcService(npcRepository, npcSpawner, npcValidator, npcDialogueProgressService);
   }
 
   private Npc buildNpc(UUID id, UUID entityUUID) {
@@ -84,7 +87,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(entityUUID));
 
-    npcService.createNPC("TestProfile", 1.0, 64.0, 1.0, 0f, 0f, "world", 1);
+    npcService.createNpc("TestProfile", 1.0, 64.0, 1.0, 0f, 0f, "world", 1);
 
     assertTrue(npcService.isTrackedNpcEntity(entityUUID));
   }
@@ -95,7 +98,7 @@ class NpcServiceTest {
   }
 
   @Test
-  void createNPCReturnsSuccessWhenValidInput() {
+  void createNpcReturnsSuccessWhenValidInput() {
     UUID entityUUID = UUID.randomUUID();
 
     when(npcValidator.validateProfileName("TestProfile"))
@@ -104,7 +107,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(entityUUID));
 
-    NpcOperationResult result = npcService.createNPC("TestProfile", 1.0, 64.0, 1.0, 0f, 0f, "world", 1);
+    NpcOperationResult result = npcService.createNpc("TestProfile", 1.0, 64.0, 1.0, 0f, 0f, "world", 1);
 
     assertAll(
         () -> assertTrue(result.isSuccessful()),
@@ -120,11 +123,11 @@ class NpcServiceTest {
   }
 
   @Test
-  void createNPCReturnsFailureWhenProfileNameInvalid() {
+  void createNpcReturnsFailureWhenProfileNameInvalid() {
     when(npcValidator.validateProfileName("bad"))
         .thenReturn(new NpcValidator.ValidationResult(false, "Invalid profile name."));
 
-    NpcOperationResult result = npcService.createNPC("bad", 1.0, 64.0, 1.0, 0f, 0f, "world", 1);
+    NpcOperationResult result = npcService.createNpc("bad", 1.0, 64.0, 1.0, 0f, 0f, "world", 1);
 
     assertAll(
         () -> assertFalse(result.isSuccessful()),
@@ -133,13 +136,13 @@ class NpcServiceTest {
   }
 
   @Test
-  void createNPCReturnsFailureWhenCoordinatesInvalid() {
+  void createNpcReturnsFailureWhenCoordinatesInvalid() {
     when(npcValidator.validateProfileName("TestProfile"))
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcValidator.validateCoordinates(Double.NaN, 0, 0))
         .thenReturn(new NpcValidator.ValidationResult(false, "Invalid coordinates."));
 
-    NpcOperationResult result = npcService.createNPC("TestProfile", Double.NaN, 0, 0, 0f, 0f, "world", 1);
+    NpcOperationResult result = npcService.createNpc("TestProfile", Double.NaN, 0, 0, 0f, 0f, "world", 1);
 
     assertAll(
         () -> assertFalse(result.isSuccessful()),
@@ -148,7 +151,7 @@ class NpcServiceTest {
   }
 
   @Test
-  void updateNPCProfileReturnsSuccessAndRespawns() {
+  void updateNpcProfileReturnsSuccessAndRespawns() {
     UUID npcId = UUID.randomUUID();
     UUID oldEntityUUID = UUID.randomUUID();
     UUID newEntityUUID = UUID.randomUUID();
@@ -170,7 +173,7 @@ class NpcServiceTest {
       inventoryHelper.when(() -> InventoryHelper.loadInventoryFromJSON(any(), any())).thenAnswer(inv -> null);
       equipmentHelper.when(() -> NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(any(), any())).thenAnswer(inv -> null);
 
-      NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+      NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
 
       assertAll(
           () -> assertTrue(result.isSuccessful()),
@@ -185,13 +188,13 @@ class NpcServiceTest {
 
   @Test
   void updateNPCProfileReturnsFailureWhenNpcNotFound() {
-    NpcOperationResult result = npcService.updateNPCProfile(UUID.randomUUID(), "NewProfile", 1);
+    NpcOperationResult result = npcService.updateNpcProfile(UUID.randomUUID(), "NewProfile", 1);
 
     assertFalse(result.isSuccessful());
   }
 
   @Test
-  void updateNPCProfileReturnsFailureWhenProfileNameInvalid() {
+  void updateNpcProfileReturnsFailureWhenProfileNameInvalid() {
     UUID npcId = UUID.randomUUID();
     Npc npc = buildNpc(npcId, null);
     loadNpcIntoService(npcId, npc);
@@ -199,13 +202,13 @@ class NpcServiceTest {
     when(npcValidator.validateProfileName("bad"))
         .thenReturn(new NpcValidator.ValidationResult(false, "Invalid profile name."));
 
-    NpcOperationResult result = npcService.updateNPCProfile(npcId, "bad", 1);
+    NpcOperationResult result = npcService.updateNpcProfile(npcId, "bad", 1);
 
     assertFalse(result.isSuccessful());
   }
 
   @Test
-  void updateNPCPositionReturnsSuccessAndRespawns() {
+  void updateNpcPositionReturnsSuccessAndRespawns() {
     UUID npcId = UUID.randomUUID();
     UUID oldEntityUUID = UUID.randomUUID();
     UUID newEntityUUID = UUID.randomUUID();
@@ -217,7 +220,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
 
-    NpcOperationResult result = npcService.updateNPCPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
+    NpcOperationResult result = npcService.updateNpcPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
 
     assertAll(
         () -> assertTrue(result.isSuccessful()),
@@ -234,13 +237,13 @@ class NpcServiceTest {
 
   @Test
   void updateNPCPositionReturnsFailureWhenNpcNotFound() {
-    NpcOperationResult result = npcService.updateNPCPosition(UUID.randomUUID(), 0, 0, 0, 0, 0, 1);
+    NpcOperationResult result = npcService.updateNpcPosition(UUID.randomUUID(), 0, 0, 0, 0, 0, 1);
 
     assertFalse(result.isSuccessful());
   }
 
   @Test
-  void updateNPCPositionReturnsFailureWhenCoordinatesInvalid() {
+  void updateNpcPositionReturnsFailureWhenCoordinatesInvalid() {
     UUID npcId = UUID.randomUUID();
     Npc npc = buildNpc(npcId, null);
     loadNpcIntoService(npcId, npc);
@@ -248,20 +251,20 @@ class NpcServiceTest {
     when(npcValidator.validateCoordinates(Double.NaN, 0, 0))
         .thenReturn(new NpcValidator.ValidationResult(false, "Invalid coordinates."));
 
-    NpcOperationResult result = npcService.updateNPCPosition(npcId, Double.NaN, 0, 0, 0, 0, 1);
+    NpcOperationResult result = npcService.updateNpcPosition(npcId, Double.NaN, 0, 0, 0, 0, 1);
 
     assertFalse(result.isSuccessful());
   }
 
   @Test
-  void saveNPCInventorySavesSerializedInventory() {
+  void saveNpcInventorySavesSerializedInventory() {
     UUID npcId = UUID.randomUUID();
     Npc npc = buildNpc(npcId, null);
 
     try (MockedStatic<InventoryHelper> inventoryHelper = mockStatic(InventoryHelper.class)) {
       inventoryHelper.when(() -> InventoryHelper.saveInventoryToJSON(inventory)).thenReturn(new JSONObject("{\"items\":[]}"));
 
-      npcService.saveNPCInventory(npc, inventory);
+      npcService.saveNpcInventory(npc, inventory);
 
       assertEquals("{\"items\":[]}", npc.getInventory().toString());
     }
@@ -276,7 +279,7 @@ class NpcServiceTest {
     Npc npc = buildNpc(npcId, entityUUID);
     loadNpcIntoService(npcId, npc);
 
-    NpcOperationResult result = npcService.deleteNPC(npcId, 1);
+    NpcOperationResult result = npcService.deleteNpc(npcId, 1);
 
     assertAll(
         () -> assertTrue(result.isSuccessful()),
@@ -285,12 +288,12 @@ class NpcServiceTest {
 
     verify(npcSpawner).despawnMannequin(entityUUID);
     verify(npcRepository).delete(npcId, 1);
-    assertFalse(npcService.getNPCById(npcId).isPresent());
+    assertFalse(npcService.getNpcById(npcId).isPresent());
   }
 
   @Test
   void deleteNPCReturnsFailureWhenNpcNotFound() {
-    NpcOperationResult result = npcService.deleteNPC(UUID.randomUUID(), 1);
+    NpcOperationResult result = npcService.deleteNpc(UUID.randomUUID(), 1);
 
     assertFalse(result.isSuccessful());
   }
@@ -305,15 +308,15 @@ class NpcServiceTest {
     loadNpcIntoService(npcId1, buildNpc(npcId1, entityUUID1));
     loadNpcIntoService(npcId2, buildNpc(npcId2, entityUUID2));
 
-    npcService.despawnAllNPCs();
+    npcService.despawnAllNpcs();
 
     verify(npcSpawner).despawnMannequin(entityUUID1);
     verify(npcSpawner).despawnMannequin(entityUUID2);
-    assertTrue(npcService.getNPCs().isEmpty());
+    assertTrue(npcService.getNpcs().isEmpty());
   }
 
   @Test
-  void reloadNPCDialogueUpdatesDialogueLines() {
+  void reloadNpcDialogueUpdatesDialogueLines() {
     UUID npcId = UUID.randomUUID();
     Npc npc = buildNpc(npcId, null);
     loadNpcIntoService(npcId, npc);
@@ -324,26 +327,26 @@ class NpcServiceTest {
 
     when(npcRepository.loadById(npcId)).thenReturn(Optional.of(refreshedNpc));
 
-    npcService.reloadNPCDialogue(npcId);
+    npcService.reloadNpcDialogue(npcId);
 
     assertEquals(refreshedDialogue, npc.getDialogueLines());
   }
 
   @Test
   void reloadNPCDialogueDoesNothingWhenNpcNotFound() {
-    npcService.reloadNPCDialogue(UUID.randomUUID());
+    npcService.reloadNpcDialogue(UUID.randomUUID());
 
     verify(npcRepository, never()).loadById(any());
   }
 
   @Test
-  void getNPCsReturnsAllLoadedNpcs() {
+  void getNpcsReturnsAllLoadedNpcs() {
     UUID npcId1 = UUID.randomUUID();
     UUID npcId2 = UUID.randomUUID();
     loadNpcIntoService(npcId1, buildNpc(npcId1, null));
     loadNpcIntoService(npcId2, buildNpc(npcId2, null));
 
-    List<Npc> result = npcService.getNPCs();
+    List<Npc> result = npcService.getNpcs();
 
     assertEquals(2, result.size());
   }
@@ -354,7 +357,7 @@ class NpcServiceTest {
     Npc npc = buildNpc(npcId, null);
     loadNpcIntoService(npcId, npc);
 
-    Optional<Npc> result = npcService.getNPCById(npcId);
+    Optional<Npc> result = npcService.getNpcById(npcId);
 
     assertAll(
         () -> assertTrue(result.isPresent()),
@@ -364,7 +367,7 @@ class NpcServiceTest {
 
   @Test
   void getNPCByIdReturnsEmptyWhenNpcNotLoaded() {
-    assertTrue(npcService.getNPCById(UUID.randomUUID()).isEmpty());
+    assertTrue(npcService.getNpcById(UUID.randomUUID()).isEmpty());
   }
 
   @Test
@@ -378,7 +381,7 @@ class NpcServiceTest {
     loadNpcIntoService(npcId1, nearNpc);
     loadNpcIntoService(npcId2, farNpc);
 
-    Optional<Npc> result = npcService.getNearestNPC(0.0, 64.0, 0.0, "world");
+    Optional<Npc> result = npcService.getNearestNpc(0.0, 64.0, 0.0, "world");
 
     assertAll(
         () -> assertTrue(result.isPresent()),
@@ -387,11 +390,11 @@ class NpcServiceTest {
   }
 
   @Test
-  void getNearestNPCReturnsEmptyWhenNoNpcsInWorld() {
+  void getNearestNpcReturnsEmptyWhenNoNpcsInWorld() {
     UUID npcId = UUID.randomUUID();
     loadNpcIntoService(npcId, new Npc(-1, npcId, "Test", 5.0, 64.0, 5.0, 0f, 0f, "other_world"));
 
-    Optional<Npc> result = npcService.getNearestNPC(0.0, 64.0, 0.0, "world");
+    Optional<Npc> result = npcService.getNearestNpc(0.0, 64.0, 0.0, "world");
 
     assertTrue(result.isEmpty());
   }
@@ -408,7 +411,7 @@ class NpcServiceTest {
 
     assertAll(
         () -> assertEquals(entityUUID, npc.getEntityUUID()),
-        () -> assertTrue(npcService.getNPCById(npcId).isPresent())
+        () -> assertTrue(npcService.getNpcById(npcId).isPresent())
     );
   }
 
@@ -424,7 +427,7 @@ class NpcServiceTest {
 
     npcService.spawnNpc(newNpc);
 
-    assertSame(existingNpc, npcService.getNPCById(npcId).get());
+    assertSame(existingNpc, npcService.getNpcById(npcId).get());
   }
 
   @Test
@@ -474,7 +477,7 @@ class NpcServiceTest {
     }
 
     assertAll(
-        () -> assertTrue(npcService.getNPCById(npcId).isPresent()),
+        () -> assertTrue(npcService.getNpcById(npcId).isPresent()),
         () -> assertEquals(entityUUID, npc.getEntityUUID())
     );
   }
@@ -513,50 +516,50 @@ class NpcServiceTest {
   }
 
   @Test
-  void getNPCDialoguesReturnsDialoguesFromRepository() {
+  void getNpcDialoguesReturnsDialoguesFromRepository() {
     List<NpcDialogueEntry> entries = List.of(new NpcDialogueEntry());
     when(npcRepository.loadDialoguesByNpcDbId(42)).thenReturn(entries);
 
-    List<NpcDialogueEntry> result = npcService.getNPCDialogues(42);
+    List<NpcDialogueEntry> result = npcService.getNpcDialogues(42);
 
     assertEquals(entries, result);
   }
 
   @Test
-  void addNPCDialogueDelegatesToRepository() {
+  void addNpcDialogueDelegatesToRepository() {
     NpcDialogueEntry entry = new NpcDialogueEntry();
 
-    npcService.addNPCDialogue(entry);
+    npcService.addNpcDialogue(entry);
 
     verify(npcRepository).addDialogue(entry);
   }
 
   @Test
-  void updateNPCDialogueDelegatesToRepository() {
+  void updateNpcDialogueDelegatesToRepository() {
     NpcDialogueEntry entry = new NpcDialogueEntry();
     UUID dialogueUuid = UUID.randomUUID();
     when(npcRepository.updateDialogue(entry, dialogueUuid)).thenReturn(true);
 
-    boolean result = npcService.updateNPCDialogue(entry, dialogueUuid);
+    boolean result = npcService.updateNpcDialogue(entry, dialogueUuid);
 
     assertTrue(result);
     verify(npcRepository).updateDialogue(entry, dialogueUuid);
   }
 
   @Test
-  void deleteNPCDialogueByPositionDelegatesToRepository() {
+  void deleteNpcDialogueByPositionDelegatesToRepository() {
     UUID npcId = UUID.randomUUID();
     Npc npc = buildNpc(npcId, null);
     loadNpcIntoService(npcId, npc);
 
-    npcService.deleteNPCDialogueByPosition(npcId, 2, 1);
+    npcService.deleteNpcDialogueByPosition(npcId, 2, 1);
 
     verify(npcRepository).deleteDialogueByPosition(npcId, 2, 1);
   }
 
   @Test
   void deleteNPCDialogueByPositionDoesNothingWhenNpcNotFound() {
-    npcService.deleteNPCDialogueByPosition(UUID.randomUUID(), 0, 1);
+    npcService.deleteNpcDialogueByPosition(UUID.randomUUID(), 0, 1);
 
     verify(npcRepository, never()).deleteDialogueByPosition(any(), anyInt(), anyInt());
   }
@@ -567,7 +570,7 @@ class NpcServiceTest {
     Npc npc = buildNpc(npcId, null);
     loadNpcIntoService(npcId, npc);
 
-    NpcOperationResult result = npcService.deleteNPC(npcId, 1);
+    NpcOperationResult result = npcService.deleteNpc(npcId, 1);
 
     assertTrue(result.isSuccessful());
     verify(npcSpawner, never()).despawnMannequin(any());
@@ -586,7 +589,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
 
-    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+    NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
 
     assertTrue(result.isSuccessful());
     verify(npcSpawner, never()).despawnMannequin(newEntityUUID);
@@ -601,11 +604,11 @@ class NpcServiceTest {
     loadNpcIntoService(npcId1, buildNpc(npcId1, entityUUID1));
     loadNpcIntoService(npcId2, buildNpc(npcId2, null));
 
-    npcService.despawnAllNPCs();
+    npcService.despawnAllNpcs();
 
     verify(npcSpawner).despawnMannequin(entityUUID1);
     verify(npcSpawner, never()).despawnMannequin(null);
-    assertTrue(npcService.getNPCs().isEmpty());
+    assertTrue(npcService.getNpcs().isEmpty());
   }
 
   @Test
@@ -620,7 +623,7 @@ class NpcServiceTest {
   }
 
   @Test
-  void updateNPCPositionDoesNotDespawnWhenEntityUUIDIsNull() {
+  void updateNpcPositionDoesNotDespawnWhenEntityUUIDIsNull() {
     UUID npcId = UUID.randomUUID();
     Npc npc = buildNpc(npcId, null);
     loadNpcIntoService(npcId, npc);
@@ -631,7 +634,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
 
-    NpcOperationResult result = npcService.updateNPCPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
+    NpcOperationResult result = npcService.updateNpcPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
 
     assertTrue(result.isSuccessful());
     verify(npcSpawner, never()).despawnMannequin(any());
@@ -650,7 +653,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.empty());
 
-    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+    NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
 
     assertTrue(result.isSuccessful());
     verify(npcSpawner).despawnMannequin(oldEntityUUID);
@@ -669,7 +672,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
 
-    NpcOperationResult result = npcService.updateNPCPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
+    NpcOperationResult result = npcService.updateNpcPosition(npcId, 10.0, 65.0, 10.0, 90f, 10f, 1);
 
     assertTrue(result.isSuccessful());
     verify(npcSpawner).despawnMannequin(oldEntityUUID);
@@ -677,7 +680,7 @@ class NpcServiceTest {
   }
 
   @Test
-  void updateNPCProfileDoesNotDespawnWhenEntityUUIDIsNull() {
+  void updateNpcProfileDoesNotDespawnWhenEntityUUIDIsNull() {
     UUID npcId = UUID.randomUUID();
     UUID newEntityUUID = UUID.randomUUID();
 
@@ -688,7 +691,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
 
-    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+    NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
 
     assertTrue(result.isSuccessful());
     verify(npcSpawner, never()).despawnMannequin(any());
@@ -709,7 +712,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.empty());
 
-    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+    NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
 
     assertTrue(result.isSuccessful());
     verify(npcSpawner).despawnMannequin(oldEntityUUID);
@@ -730,7 +733,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.empty());
 
-    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+    NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
 
     assertTrue(result.isSuccessful());
     verify(npcSpawner, never()).despawnMannequin(any());
@@ -751,7 +754,7 @@ class NpcServiceTest {
         .thenReturn(new NpcValidator.ValidationResult(true, null));
     when(npcSpawner.spawnMannequin(any())).thenReturn(Optional.of(newEntityUUID));
 
-    NpcOperationResult result = npcService.updateNPCProfile(npcId, "NewProfile", 1);
+    NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
 
     assertTrue(result.isSuccessful());
     assertEquals(newEntityUUID, result.getNpc().getEntityUUID());

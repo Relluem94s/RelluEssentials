@@ -57,7 +57,7 @@ public class NpcDialogueAddCommand implements SubCommand {
       return;
     }
 
-    Optional<Npc> npc = serviceContext.getNpcService().getNPCById(npcId);
+    Optional<Npc> npc = serviceContext.getNpcService().getNpcById(npcId);
     npc.ifPresentOrElse(npc1 -> {
           String text = Arrays.stream(args, ARGS_TEXT_START_INDEX, args.length)
               .collect(Collectors.joining(" "));
@@ -71,8 +71,8 @@ public class NpcDialogueAddCommand implements SubCommand {
           entry.setText(StringHelper.replaceColor(text));
           entry.setCreatedBy(playerEntry.getId());
 
-          serviceContext.getNpcService().addNPCDialogue(entry);
-          serviceContext.getNpcService().reloadNPCDialogue(npc1.getId());
+          serviceContext.getNpcService().addNpcDialogue(entry);
+          serviceContext.getNpcService().reloadNpcDialogue(npc1.getId());
           player.sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_ADDED));
         },

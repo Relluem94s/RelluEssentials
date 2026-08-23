@@ -76,7 +76,7 @@ public class NpcUpdateCommand implements SubCommand {
     PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
     NpcOperationResult result = serviceContext.getNpcService()
-        .updateNPCProfile(npcId, newProfile, playerEntry.getId());
+        .updateNpcProfile(npcId, newProfile, playerEntry.getId());
     sendOperationFeedback(player, result, MessageKey.COMMAND_NPC_UPDATED,
         MessageKey.COMMAND_NPC_OPERATION_FAILED);
   }
@@ -108,7 +108,7 @@ public class NpcUpdateCommand implements SubCommand {
     PlayerEntry playerEntry = serviceContext.getPlayerService()
         .getPlayerEntry(player.getUniqueId());
     NpcOperationResult result = serviceContext.getNpcService()
-        .updateNPCPosition(npcId, x, y, z, yaw, pitch, playerEntry.getId());
+        .updateNpcPosition(npcId, x, y, z, yaw, pitch, playerEntry.getId());
     sendOperationFeedback(player, result, MessageKey.COMMAND_NPC_UPDATED,
         MessageKey.COMMAND_NPC_OPERATION_FAILED);
   }

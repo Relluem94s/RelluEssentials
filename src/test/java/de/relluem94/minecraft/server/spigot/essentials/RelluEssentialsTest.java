@@ -273,7 +273,7 @@ class RelluEssentialsTest {
           .disable(spyPlugin);
 
       Mockito.verify(serviceContext.getNpcService())
-          .despawnAllNPCs();
+          .despawnAllNpcs();
 
       chatHelper.verify(() ->
           ChatHelper.consoleSendMessage(

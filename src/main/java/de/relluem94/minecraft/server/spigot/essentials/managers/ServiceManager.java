@@ -188,19 +188,20 @@ public class ServiceManager implements Enable {
     ProtectionActionService protectionActionService = new ProtectionActionService(serviceContext);
     serviceContext.setProtectionActionService(protectionActionService);
 
+    NpcDialogueRegistry npcDialogueRegistry = new NpcDialogueRegistry();
+    NpcDialogueProgressService npcDialogueProgressService = new NpcDialogueProgressService(
+        npcDialogueRegistry);
+    serviceContext.setNpcDialogueProgressService(npcDialogueProgressService);
+
     NpcRepository npcRepository = new NpcRepository(
         relluEssentials.getPersistenceContext().getNpcDao());
     NpcSpawner npcSpawner = new NpcSpawner(relluEssentials.getServer(),
         new NamespacedKey(relluEssentials, "npc_id"),
         new NpcMannequinAttributeApplier(serviceContext));
     NpcValidator npcValidator = new NpcValidator();
-    NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator);
+    NpcService npcService = new NpcService(npcRepository, npcSpawner,
+        npcValidator, npcDialogueProgressService);
     serviceContext.setNpcService(npcService);
-
-    NpcDialogueRegistry npcDialogueRegistry = new NpcDialogueRegistry();
-    NpcDialogueProgressService npcDialogueProgressService = new NpcDialogueProgressService(
-        npcDialogueRegistry);
-    serviceContext.setNpcDialogueProgressService(npcDialogueProgressService);
 
     PositionRegistry positionRegistry = new PositionRegistry();
     PositionService positionService = new PositionService(positionRegistry,

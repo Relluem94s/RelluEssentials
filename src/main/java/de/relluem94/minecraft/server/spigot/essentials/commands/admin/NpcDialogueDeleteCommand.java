@@ -53,14 +53,14 @@ public class NpcDialogueDeleteCommand implements SubCommand {
       return;
     }
 
-    Optional<Npc> npc = serviceContext.getNpcService().getNPCById(npcId);
+    Optional<Npc> npc = serviceContext.getNpcService().getNpcById(npcId);
     npc.ifPresentOrElse(foundNpc -> {
       PlayerEntry playerEntry = serviceContext.getPlayerService()
           .getPlayerEntry(player.getUniqueId());
 
       serviceContext.getNpcService()
-          .deleteNPCDialogueByPosition(foundNpc.getId(), listPosition, playerEntry.getId());
-      serviceContext.getNpcService().reloadNPCDialogue(foundNpc.getId());
+          .deleteNpcDialogueByPosition(foundNpc.getId(), listPosition, playerEntry.getId());
+      serviceContext.getNpcService().reloadNpcDialogue(foundNpc.getId());
       player.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_NPC_DIALOGUE_DELETED));
     }, () -> player.sendMessage(
