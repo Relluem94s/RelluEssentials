@@ -5,7 +5,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Service responsible for managing and advancing the dialogue progress of players interacting with NPCs.
+ * Service responsible for managing.
+ * And advancing the dialogue progress of players interacting with NPCs.
  */
 public class NpcDialogueProgressService {
 
@@ -21,7 +22,8 @@ public class NpcDialogueProgressService {
   }
 
   /**
-   * Retrieves the current dialogue line index for a player and advances their progress to the next line.
+   * Retrieves the current dialogue line index for a player.
+   * And advances their progress to the next line.
    * If the player reaches the end of the dialogue, the index wraps back to zero.
    *
    * @param npcId      The unique identifier of the NPC.
