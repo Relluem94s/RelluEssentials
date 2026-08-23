@@ -17,8 +17,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -65,9 +63,6 @@ import org.jspecify.annotations.Nullable;
  */
 public class BankService {
 
-  public static final ItemHelper npc_portable_bank = new ItemHelper(Material.YELLOW_SHULKER_BOX, 1,
-      PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK, Type.TOOL, Rarity.LEGENDARY,
-      List.of(PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1));
   public static final ItemHelper npc_gui_deposit = new ItemHelper(Material.GREEN_SHULKER_BOX, 1,
       PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT, Type.NPC_GUI, Rarity.NONE,
       List.of(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1));

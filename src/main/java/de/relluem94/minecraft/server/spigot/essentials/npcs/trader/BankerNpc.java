@@ -1,6 +1,12 @@
 package de.relluem94.minecraft.server.spigot.essentials.npcs.trader;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
@@ -16,10 +22,18 @@ import java.util.List;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
 
+/**
+ * Represents a Banker NPC that provides access to banking-related GUIs.
+ */
 public class BankerNpc extends TraderNpc implements BankerGui {
 
   private final ServiceContext serviceContext;
 
+  /**
+   * Creates a new Banker NPC.
+   *
+   * @param serviceContext the service context used to access various plugin services
+   */
   public BankerNpc(ServiceContext serviceContext) {
     super("§dBanker", Profession.NONE, Type.BANKER);
     this.serviceContext = serviceContext;
@@ -42,10 +56,30 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
-    inv.setItem(10, BankService.npc_gui_deposit.getCustomItem());
-    inv.setItem(12, BankService.npc_gui_withdraw.getCustomItem());
-    inv.setItem(14, BankService.npc_gui_balance.getCustomItem());
-    inv.setItem(16, BankService.npc_gui_upgrade.getCustomItem());
+    CustomItem depositItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT);
+    if (depositItem != null) {
+      inv.setItem(10, depositItem.toItemStack());
+    }
+
+    CustomItem withdrawItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW);
+    if (withdrawItem != null) {
+      inv.setItem(12, withdrawItem.toItemStack());
+    }
+
+    CustomItem balanceItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE);
+    if (balanceItem != null) {
+      inv.setItem(14, balanceItem.toItemStack());
+    }
+
+    CustomItem upgradeItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE);
+    if (upgradeItem != null) {
+      inv.setItem(16, upgradeItem.toItemStack());
+    }
+
     inv.setItem(26, resolveCloseItem().toItemStack());
 
     return inv;
@@ -125,8 +159,30 @@ public class BankerNpc extends TraderNpc implements BankerGui {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
-    inv.setItem(10, BankService.npc_gui_balance_total.getCustomItem());
-    inv.setItem(12, BankService.npc_gui_balance_transactions.getCustomItem());
+    CustomItem depositItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT);
+    if (depositItem != null) {
+      inv.setItem(10, depositItem.toItemStack());
+    }
+
+    CustomItem withdrawItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW);
+    if (withdrawItem != null) {
+      inv.setItem(12, withdrawItem.toItemStack());
+    }
+
+    CustomItem totalBalanceItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL);
+    if (totalBalanceItem != null) {
+      inv.setItem(10, totalBalanceItem.toItemStack());
+    }
+
+    CustomItem transactionsItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS);
+    if (transactionsItem != null) {
+      inv.setItem(12, transactionsItem.toItemStack());
+    }
+
     inv.setItem(26, resolveCloseItem().toItemStack());
 
     return inv;
