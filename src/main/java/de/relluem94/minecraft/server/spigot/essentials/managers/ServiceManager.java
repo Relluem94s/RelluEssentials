@@ -151,10 +151,8 @@ public class ServiceManager implements Enable {
     BagTypeRepository bagTypeRepository = new BagTypeRepository(persistenceContext.getBagDao());
 
     BagTypeRegistry bagTypeRegistry = new BagTypeRegistry();
-    bagTypeRegistry.registerAll(bagTypeRepository.findAll());
 
     BagRegistry bagRegistry = new BagRegistry();
-    bagRegistry.registerAll(bagRepository.findAll());
 
     BagService bagService = new BagService(
         serviceContext,

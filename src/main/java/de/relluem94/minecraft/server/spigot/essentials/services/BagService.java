@@ -44,6 +44,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Service responsible for managing bags, including their creation, retrieval,
+ * inventory representation, and item collection logic.
+ */
 public class BagService {
 
   private final BagRegistry bagRegistry;
@@ -52,6 +56,15 @@ public class BagService {
   private final ServiceContext serviceContext;
   private final List<ItemStack> bagBlocks2collect = new ArrayList<>();
 
+  /**
+   * Constructs a new {@link BagService}.
+   *
+   * @param serviceContext    the service context
+   * @param bagRegistry       the registry for bags
+   * @param bagRepository     the repository for bags
+   * @param bagTypeRegistry   the registry for bag types
+   * @param bagTypeRepository the repository for bag types
+   */
   public BagService(
       ServiceContext serviceContext,
       BagRegistry bagRegistry,
@@ -63,6 +76,9 @@ public class BagService {
     this.bagRegistry = bagRegistry;
     this.bagRepository = bagRepository;
     this.bagTypeRegistry = bagTypeRegistry;
+    bagTypeRegistry.registerAll(bagTypeRepository.findAll());
+    bagRegistry.registerAll(bagRepository.findAll());
+
     for (BagTypeEntry bagTypeEntry : this.bagTypeRegistry.getAll()) {
       Collections.addAll(this.bagBlocks2collect, getItemStacks(bagTypeEntry));
     }
@@ -149,6 +165,7 @@ public class BagService {
    * @param bagTypeId the bag type id to insert
    * @return the newly created and registered {@link BagEntry}
    */
+  @SuppressWarnings("unused")
   public BagEntry insertBag(int playerId, int bagTypeId) {
     BagEntry newBagEntry = bagRepository.insert(playerId, bagTypeId);
     bagRegistry.register(newBagEntry);
@@ -160,6 +177,7 @@ public class BagService {
    *
    * @param bagEntry the {@link BagEntry} to update
    */
+  @SuppressWarnings("unused")
   public void updateBag(BagEntry bagEntry) {
     bagRepository.update(bagEntry);
   }
@@ -203,10 +221,8 @@ public class BagService {
       PlayerEntry playerEntry
   ) {
     List<Item> collectedItems = new ArrayList<>();
-    ListIterator<Item> iterator = droppedItems.listIterator();
 
-    while (iterator.hasNext()) {
-      Item droppedItem = iterator.next();
+    for (Item droppedItem : droppedItems) {
       ItemStack itemWithoutAmount = droppedItem.getItemStack().clone();
       itemWithoutAmount.setAmount(1);
 
@@ -249,10 +265,8 @@ public class BagService {
       PlayerEntry playerEntry
   ) {
     List<ItemStack> collectedStacks = new ArrayList<>();
-    ListIterator<ItemStack> iterator = itemStacks.listIterator();
 
-    while (iterator.hasNext()) {
-      ItemStack itemStack = iterator.next();
+    for (ItemStack itemStack : itemStacks) {
       ItemStack itemWithoutAmount = itemStack.clone();
       itemWithoutAmount.setAmount(1);
 
@@ -356,6 +370,7 @@ public class BagService {
    * @param playerId the player id to look up
    * @return a {@link Collection} of {@link BagEntry} instances
    */
+  @SuppressWarnings("unused")
   public Collection<BagEntry> getBags(int playerId) {
     return bagRegistry.findAllByPlayerId(playerId);
   }
@@ -412,12 +427,12 @@ public class BagService {
    *
    * @param bagTypeId   the bag type id to open
    * @param playerEntry the {@link PlayerEntry} of the player
-   * @return the populated bag {@link Inventory}, or {@code null} if the player does not own this bag
+   * @return the populated bag {@link Inventory} or {@code null} if the player does not own this bag
    */
   public @Nullable Inventory getBagInventory(int bagTypeId, @NotNull PlayerEntry playerEntry) {
     Optional<BagEntry> optionalBagEntry = findBag(playerEntry.getId(), bagTypeId);
 
-    if (!optionalBagEntry.isPresent()) {
+    if (optionalBagEntry.isEmpty()) {
       return null;
     }
     BagEntry bagEntry = optionalBagEntry.get();
@@ -485,7 +500,11 @@ public class BagService {
   }
 
   private ItemStack resolveDisabledItem() {
-    return serviceContext.getItemService().find(new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+    return serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(
+            serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)
+        )
         .orElseThrow()
         .toItemStack();
   }
@@ -540,7 +559,6 @@ public class BagService {
 
   private ItemStack getItemStack(@NotNull BagEntry be, int slot) {
     String name = be.getBagType().getSlotName(slot);
-    int value = be.getSlotValue(slot);
 
     if (name == null) {
       return resolveDisabledItem();
@@ -564,6 +582,7 @@ public class BagService {
     }
 
     List<String> lore = new ArrayList<>();
+    int value = be.getSlotValue(slot);
     lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_AMOUNT, value));
     lore.add(serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_RETRIEVE));
 
@@ -573,6 +592,12 @@ public class BagService {
     return is;
   }
 
+  /**
+   * Returns a list of lowercase names of all bag types owned by the given player.
+   *
+   * @param playerId the player id to look up
+   * @return a {@link List} of {@link String} containing the bag type names
+   */
   public List<String> getBagTypeNamesForPlayer(int playerId) {
     return findBags(playerId)
         .stream()
