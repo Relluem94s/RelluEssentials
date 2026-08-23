@@ -90,6 +90,7 @@ public enum MessageKey {
   COMMAND_ADMIN_CLEAN_PROTECTIONS("command.admin.clean_protections"),
   COMMAND_ADMIN_CLEAN_PROTECTIONS_START("command.admin.clean_protections_start"),
   COMMAND_ADMIN_CLEAN_PROTECTIONS_CLEANING_UP("command.admin.clean_protections_cleaning_up"),
+  COMMAND_ADMIN_CLEAN_PROTECTIONS_OUTDATED_REMOVED("command.admin.clean_protections_outdated_removed"),
   COMMAND_ADMIN_CLEAN_PROTECTIONS_END("command.admin.clean_protections_end"),
   COMMAND_ADMIN_CLEAN_OLD_PROTECTIONS_END("command.admin.clean_old_protections_end"),
   COMMAND_ADMIN_CLEAN_OLD_LOCATIONS_END("command.admin.clean_old_locations_end"),

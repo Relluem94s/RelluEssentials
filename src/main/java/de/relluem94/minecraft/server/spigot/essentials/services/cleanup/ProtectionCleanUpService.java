@@ -11,14 +11,29 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+/**
+ * Service responsible for cleaning up outdated or invalid protection entries.
+ */
 public class ProtectionCleanUpService {
 
   private final ServiceContext serviceContext;
 
+  /**
+   * Constructs a new {@link ProtectionCleanUpService} with the provided service context.
+   *
+   * @param serviceContext the context containing necessary services
+   */
   public ProtectionCleanUpService(ServiceContext serviceContext) {
     this.serviceContext = serviceContext;
   }
 
+  /**
+   * Starts an asynchronous cleanup process for all protection entries.
+   * The process iterates through locations in batches to avoid server lag,
+   * checking if the block at the protected location matches the registered material.
+   *
+   * @param p the player performing the cleanup command to receive progress updates
+   */
   public void cleanUpProtections(@NonNull Player p) {
     HashMap<Location, ProtectionEntry> protectionEntryList = new HashMap<>(
         serviceContext.getProtectionService().getAllProtectionEntries()
@@ -101,6 +116,12 @@ public class ProtectionCleanUpService {
         300L
     );
 
-    serviceContext.getProtectionService().removeOutdatedProtectionsFromDatabaseAndRegistry();
+    int removedCount = serviceContext.getProtectionService()
+        .removeOutdatedProtectionsFromDatabaseAndRegistry();
+    if (removedCount > 0) {
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+          MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_OUTDATED_REMOVED,
+          removedCount));
+    }
   }
 }

@@ -29,14 +29,31 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Service responsible for handling protection-related actions such as protecting blocks,
+ * removing protections, and managing access rights.
+ */
 public class ProtectionActionService {
 
   private final ServiceContext serviceContext;
 
+  /**
+   * Constructs a new ProtectionActionService.
+   *
+   * @param serviceContext the service context containing necessary service dependencies
+   */
   public ProtectionActionService(ServiceContext serviceContext) {
     this.serviceContext = serviceContext;
   }
 
+  /**
+   * Attempts to remove protection from a specific block.
+   *
+   * @param p the player attempting to remove the protection
+   * @param b the block from which protection should be removed
+   * @return true if the removal was disallowed (e.g., not the owner),
+   *     false if successful or if no protection existed.
+   */
   public boolean removeProtectionFromBlock(Player p, Block b) {
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
     if (serviceContext.getProtectionService().isProtectableMaterial(b.getType())) {
@@ -104,6 +121,13 @@ public class ProtectionActionService {
     return false;
   }
 
+  /**
+   * Attempts to protect a block.
+   *
+   * @param p the player attempting to protect the block
+   * @param b the block to be protected
+   * @return true if the block was successfully protected, false otherwise
+   */
   public boolean protectBlock(Player p, Block b) {
     if (!serviceContext.getProtectionService().isProtectableMaterial(b.getType())) {
       return false;
@@ -130,7 +154,8 @@ public class ProtectionActionService {
         .findByLocationAndType(b.getLocation(), LocationType.PROTECTION);
 
     if (persistedLocationEntry == null) {
-      Logger.getLogger(ProtectionActionService.class.getName()).log(Level.INFO, "ERROR: {0}", b.getType().name());
+      Logger.getLogger(ProtectionActionService.class.getName())
+          .log(Level.INFO, "ERROR: {0}", b.getType().name());
 
       return false;
     }
@@ -221,14 +246,22 @@ public class ProtectionActionService {
     return flags;
   }
 
+  /**
+   * Adds a new user ID to the protection rights of a protection entry.
+   *
+   * @param p       the player performing the action
+   * @param pre     the protection entry to modify
+   * @param id      the ID of the player to add to the rights
+   * @param silent  if true, no messages will be sent to the player
+   */
   public void addRight(Player p, @NotNull ProtectionEntry pre, int id, boolean silent) {
     Location l = pre.getLocationEntry().getLocation();
     if (!pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)) {
       return;
     }
 
-    JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
-    List<Object> list = rightJSON.toList();
+    JSONArray rightJson = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
+    List<Object> list = rightJson.toList();
 
     if (!list.contains(id)) {
       list.add(id);
@@ -248,14 +281,22 @@ public class ProtectionActionService {
     }
   }
 
+  /**
+   * Removes a user ID from the protection rights of a protection entry.
+   *
+   * @param p       the player performing the action
+   * @param pre     the protection entry to modify
+   * @param id      the ID of the player to remove from the rights
+   * @param silent  if true, no messages will be sent to the player
+   */
   public void removeRight(Player p, @NotNull ProtectionEntry pre, int id, boolean silent) {
     Location l = pre.getLocationEntry().getLocation();
     if (!pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)) {
       return;
     }
 
-    JSONArray rightJSON = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
-    List<Object> list = rightJSON.toList();
+    JSONArray rightJson = pre.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
+    List<Object> list = rightJson.toList();
 
     if (list.contains(id)) {
       list.remove((Object) id);
@@ -275,6 +316,12 @@ public class ProtectionActionService {
     }
   }
 
+  /**
+   * Removes a user ID from the protection rights of a protection entry silently.
+   *
+   * @param pre the protection entry to modify
+   * @param id  the ID of the player to remove from the rights
+   */
   public void removeRight(ProtectionEntry pre, int id) {
     removeRight(null, pre, id, true);
   }
