@@ -29,8 +29,8 @@ public class InventoryRegistry {
    * @return The registered {@link RegisteredInventory}.
    * @throws IllegalArgumentException if the key is already registered.
    */
-  public @NonNull RegisteredInventory register(@NonNull RelluEssentialsNamespacedKey key, @NonNull String title,
-      int size, CustomItem.Type itemFilter) {
+  public @NonNull RegisteredInventory register(@NonNull RelluEssentialsNamespacedKey key,
+      @NonNull String title, int size, CustomItem.Type itemFilter) {
     if (registeredInventories.containsKey(key.toString())) {
       throw new IllegalArgumentException(String.format(PLUGIN_EXCEPTION_INVENTORY_REGISTRY, key));
     }

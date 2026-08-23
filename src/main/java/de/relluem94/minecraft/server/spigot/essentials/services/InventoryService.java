@@ -29,10 +29,10 @@ public class InventoryService {
    * @param itemFilter  The item filter type.
    * @return The created {@link RegisteredInventory}.
    */
-  public @NonNull RegisteredInventory create(@NonNull Plugin plugin,
-      @NonNull String inventoryId, @NonNull String title, int size,
-      @NonNull CustomItem.Type itemFilter) {
-    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey(plugin.getName(), inventoryId);
+  public @NonNull RegisteredInventory create(@NonNull Plugin plugin, @NonNull String inventoryId,
+      @NonNull String title, int size, @NonNull CustomItem.Type itemFilter) {
+    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey(plugin.getName(),
+        inventoryId);
     return create(key, title, size, itemFilter);
   }
 
@@ -45,8 +45,8 @@ public class InventoryService {
    * @param itemFilter The item filter type.
    * @return The created {@link RegisteredInventory}.
    */
-  public @NonNull RegisteredInventory create(@NonNull RelluEssentialsNamespacedKey key, @NonNull String title,
-      int size, @NonNull CustomItem.Type itemFilter) {
+  public @NonNull RegisteredInventory create(@NonNull RelluEssentialsNamespacedKey key,
+      @NonNull String title, int size, @NonNull CustomItem.Type itemFilter) {
     return registry.register(key, title, size, itemFilter);
   }
 

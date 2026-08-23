@@ -18,7 +18,6 @@ import org.jspecify.annotations.NonNull;
  */
 public class ItemRegistry {
 
-  private static final String REGISTRY_KEY_NAME = "registry_key";
   private final Map<String, CustomItem> registeredItems = new LinkedHashMap<>();
 
   /**
@@ -92,6 +91,20 @@ public class ItemRegistry {
   public List<CustomItem> getAllByType(CustomItem.Type type) {
     return registeredItems.values().stream()
         .filter(item -> item.type().equals(type))
+        .toList();
+  }
+
+  /**
+   * Returns all registered items of a specific type and namespace.
+   *
+   * @param type     the type to filter by
+   * @param namespace the namespace to filter by
+   * @return a list of items matching the type and namespace
+   */
+  public List<CustomItem> getAllByTypeAndNamespace(CustomItem.Type type, String namespace) {
+    return registeredItems.values().stream()
+        .filter(item -> item.type().equals(type)
+            && item.relluEssentialsNamespacedKey().getNamespace().equals(namespace))
         .toList();
   }
 }

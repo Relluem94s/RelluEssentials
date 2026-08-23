@@ -15,68 +15,26 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 /**
- * An immutable data model representing the blueprint of a custom item.
- * This class contains no Bukkit-specific instances (like ItemStack or Enchantment)
- * to ensure high testability and easy serialization.
+ * An immutable data model representing the blueprint of a custom item. This class contains no
+ * Bukkit-specific instances (like ItemStack or Enchantment) to ensure high testability and easy
+ * serialization.
  *
- * @param material The base material of the item.
- * @param amount The quantity of the item.
- * @param displayName The display name of the item.
- * @param lore The list of lore lines.
- * @param type The custom item type.
- * @param rarity The rarity level.
- * @param cost The price of the item.
- * @param enchantments A list of enchantment data (key and level).
- * @param persistentData A map of persistent data (NamespacedKey and value).
- * @param metaModifiers A list of functions to apply custom logic to the ItemMeta.
+ * @param material                     The base material of the item.
+ * @param amount                       The quantity of the item.
+ * @param displayName                  The display name of the item.
+ * @param lore                         The list of lore lines.
+ * @param type                         The custom item type.
+ * @param rarity                       The rarity level.
+ * @param cost                         The price of the item.
+ * @param enchantments                 A list of enchantment data (key and level).
+ * @param persistentData               A map of persistent data (NamespacedKey and value).
+ * @param metaModifiers                A list of functions to apply custom logic to the ItemMeta.
  * @param relluEssentialsNamespacedKey The unique identifier for this item in the registry.
  */
-public record CustomItem(
-    Material material,
-    int amount,
-    String displayName,
-    List<String> lore,
-    Type type,
-    Rarity rarity,
-    Integer cost,
-    List<EnchantmentData> enchantments,
-    Map<String, Object> persistentData,
-    List<Consumer<ItemMeta>> metaModifiers,
-    RelluEssentialsNamespacedKey relluEssentialsNamespacedKey
-) {
-
-  /**
-   * Data holder for enchantments to avoid using Bukkit's Enchantment class directly.
-   *
-   * @param key   The NamespacedKey of the enchantment as a string.
-   * @param level The enchantment level.
-   */
-  public record EnchantmentData(String key, int level) {}
-
-  public enum Type {
-    TOOL, INGREDIENT, GADGET, ARMOR, WEAPON, HUB, DECORATION,
-    BUILDING, NPC, NPC_GUI, ENCHANTMENT, MONEY, ADMIN_TOOL, NONE
-  }
-
-  @Getter
-  public enum Rarity {
-    NONE("", "", -1),
-    COMMON("Common", "§f§l", 0),
-    UNCOMMON("Uncommon", "§a§l", 1),
-    RARE("Rare", "§9§l", 2),
-    EPIC("Epic", "§5§l", 3),
-    LEGENDARY("Legendary", "§6§l", 4);
-
-    private final String displayName;
-    private final String prefix;
-    private final int level;
-
-    Rarity(String displayName, String prefix, int level) {
-      this.displayName = displayName;
-      this.prefix = prefix;
-      this.level = level;
-    }
-  }
+public record CustomItem(Material material, int amount, String displayName, List<String> lore,
+                         Type type, Rarity rarity, Integer cost, List<EnchantmentData> enchantments,
+                         Map<String, Object> persistentData, List<Consumer<ItemMeta>> metaModifiers,
+                         RelluEssentialsNamespacedKey relluEssentialsNamespacedKey) {
 
   /**
    * Converts this data model into a Bukkit ItemStack, applying all properties including
@@ -123,7 +81,8 @@ public record CustomItem(
       }
 
       if (cost != null) {
-        meta.getPersistentDataContainer().set(NamespacedKeyConstants.itemCost(), PersistentDataType.INTEGER, cost);
+        meta.getPersistentDataContainer()
+            .set(NamespacedKeyConstants.itemCost(), PersistentDataType.INTEGER, cost);
       }
 
       for (Map.Entry<String, Object> entry : persistentData.entrySet()) {
@@ -133,9 +92,11 @@ public record CustomItem(
           if (value instanceof String stringValue) {
             meta.getPersistentDataContainer().set(dataKey, PersistentDataType.STRING, stringValue);
           } else if (value instanceof Integer integerValue) {
-            meta.getPersistentDataContainer().set(dataKey, PersistentDataType.INTEGER, integerValue);
+            meta.getPersistentDataContainer()
+                .set(dataKey, PersistentDataType.INTEGER, integerValue);
           } else if (value instanceof Boolean booleanValue) {
-            meta.getPersistentDataContainer().set(dataKey, PersistentDataType.BYTE, (byte) (booleanValue ? 1 : 0));
+            meta.getPersistentDataContainer()
+                .set(dataKey, PersistentDataType.BYTE, (byte) (booleanValue ? 1 : 0));
           } else if (value instanceof Double doubleValue) {
             meta.getPersistentDataContainer().set(dataKey, PersistentDataType.DOUBLE, doubleValue);
           }
@@ -150,5 +111,59 @@ public record CustomItem(
     }
 
     return itemStack;
+  }
+
+  /**
+   * Item Type Enum.
+   */
+  public enum Type {
+    TOOL,
+    INGREDIENT,
+    GADGET,
+    ARMOR,
+    WEAPON,
+    HUB,
+    DECORATION,
+    BUILDING,
+    NPC,
+    NPC_GUI,
+    ENCHANTMENT,
+    MONEY,
+    ADMIN_TOOL,
+    NONE
+  }
+
+  /**
+   * Item Rartiy Enum.
+   */
+  @Getter
+  public enum Rarity {
+
+    NONE("", "", -1),
+    COMMON("Common", "§f§l", 0),
+    UNCOMMON("Uncommon", "§a§l", 1),
+    RARE("Rare", "§9§l", 2),
+    EPIC("Epic", "§5§l", 3),
+    LEGENDARY("Legendary", "§6§l", 4);
+
+    private final String displayName;
+    private final String prefix;
+    private final int level;
+
+    Rarity(String displayName, String prefix, int level) {
+      this.displayName = displayName;
+      this.prefix = prefix;
+      this.level = level;
+    }
+  }
+
+  /**
+   * Data holder for enchantments to avoid using Bukkit's Enchantment class directly.
+   *
+   * @param key   The NamespacedKey of the enchantment as a string.
+   * @param level The enchantment level.
+   */
+  public record EnchantmentData(String key, int level) {
+
   }
 }

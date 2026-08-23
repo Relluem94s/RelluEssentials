@@ -83,6 +83,18 @@ public class ItemService {
   }
 
   /**
+   * Returns all registered items of a specific type and namespace.
+   *
+   * @param type      the type to filter by
+   * @param namespace the namespace to filter by
+   * @return a list of items matching the type and namespace
+   */
+  public List<CustomItem> getAllByTypeAndNamespace(@NonNull CustomItem.Type type,
+      @NonNull String namespace) {
+    return itemRegistry.getAllByTypeAndNamespace(type, namespace);
+  }
+
+  /**
    * Returns all registered items.
    *
    * @return a map of all registered items
@@ -99,9 +111,8 @@ public class ItemService {
    * @return true if the key exists in the item's metadata, false otherwise
    */
   public boolean hasKey(@NonNull NamespacedKey key, @NonNull ItemStack itemStack,
-      @NonNull PersistentDataType persistentDataType) {
+      @NonNull PersistentDataType<?, ?> persistentDataType) {
     ItemMeta meta = itemStack.getItemMeta();
     return meta != null && meta.getPersistentDataContainer().has(key, persistentDataType);
   }
-
 }

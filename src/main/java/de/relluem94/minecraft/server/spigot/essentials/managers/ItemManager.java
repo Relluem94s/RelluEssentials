@@ -288,7 +288,8 @@ public class ItemManager implements Enable {
 
     serviceContext.getInventoryService().create(plugin, PLUGIN_INVENTORY_ADMIN_TOOLS,
         Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dAdmin Tools", 9,
-        CustomItem.Type.NONE).withFixedItem(itemService.find(
+        CustomItem.Type.NONE).withFixedItem(
+        itemService.find(
           new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
             PLUGIN_ITEM_NAMESPACE_POSITION_AXE)).orElseThrow()).withFixedItem(itemService.find(
               new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),

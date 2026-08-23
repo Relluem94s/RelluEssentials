@@ -29,12 +29,12 @@ public class RegisteredInventory {
    * Creates a new RegisteredInventory instance.
    *
    * @param relluEssentialsNamespacedKey the unique registry key for this inventory
-   * @param title       the title displayed in the inventory
-   * @param size        the number of slots in the inventory
-   * @param itemFilter  the type of items allowed in this inventory
+   * @param title                        the title displayed in the inventory
+   * @param size                         the number of slots in the inventory
+   * @param itemFilter                   the type of items allowed in this inventory
    */
-  public RegisteredInventory(@NonNull RelluEssentialsNamespacedKey relluEssentialsNamespacedKey, @NonNull String title, int size,
-      CustomItem.@NonNull Type itemFilter) {
+  public RegisteredInventory(@NonNull RelluEssentialsNamespacedKey relluEssentialsNamespacedKey,
+      @NonNull String title, int size, CustomItem.@NonNull Type itemFilter) {
     this.relluEssentialsNamespacedKey = relluEssentialsNamespacedKey;
     this.title = title;
     this.size = size;
@@ -80,6 +80,30 @@ public class RegisteredInventory {
   public void openForWithTypeFilter(@NonNull ItemService itemService, @NonNull Player player,
       CustomItem... extraItems) {
     List<CustomItem> items = new ArrayList<>(itemService.getAllByType(itemFilter));
+    items.addAll(fixedItems);
+    items.addAll(Arrays.asList(extraItems));
+
+    CustomInventory customInventory = new CustomInventory(itemFilter, size, title);
+    customInventory.setCustomItems(items);
+
+    InventoryHelper.openInventory(player,
+        InventoryHelper.getCustomItemInventory(customInventory, itemFilter));
+  }
+
+  /**
+   * Opens the inventory for the specified player, including all items of the specified type from
+   * the item service that belong to a specific namespace, fixed items, and additional items.
+   *
+   * @param itemService the service used to retrieve items by type
+   * @param namespace   the namespace to filter items by
+   * @param player      the player to open the inventory for
+   * @param extraItems  additional items to include in the inventory
+   */
+  @SuppressWarnings("unused")
+  public void openForWithTypeAndNamespaceFilter(@NonNull ItemService itemService,
+      @NonNull String namespace, @NonNull Player player, CustomItem... extraItems) {
+    List<CustomItem> items = new ArrayList<>(
+        itemService.getAllByTypeAndNamespace(itemFilter, namespace));
     items.addAll(fixedItems);
     items.addAll(Arrays.asList(extraItems));
 
