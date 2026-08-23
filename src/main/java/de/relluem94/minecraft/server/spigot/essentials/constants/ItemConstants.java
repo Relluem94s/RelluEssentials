@@ -34,6 +34,22 @@ public class ItemConstants {
   public static final String PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE = "npc_gui_close";
   public static final String PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR = "world_selector";
 
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_PORTABLE = "bank_portable";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT = "bank_deposit";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW = "bank_withdraw";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_BALANCE = "bank_balance";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE = "bank_upgrade";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL = "bank_deposit_all";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT = "bank_deposit_5_percent";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT = "bank_deposit_20_percent";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT = "bank_deposit_50_percent";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL = "bank_withdraw_all";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT = "bank_withdraw_5_percent";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT = "bank_withdraw_20_percent";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT = "bank_withdraw_50_percent";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL = "bank_balance_total";
+  public static final String PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS = "bank_balance_transactions";
+
   public static final String PLUGIN_ITEM_NPC_GUI_DISABLED_NAME = "   ";
   public static final String PLUGIN_ITEM_NPC_GUI_CLOSE_NAME = "Close";
 

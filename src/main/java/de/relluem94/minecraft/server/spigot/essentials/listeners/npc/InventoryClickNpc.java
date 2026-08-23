@@ -4,6 +4,15 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_NEGATIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_NPC_BANKER_TRANSACTION_POSITIVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
@@ -11,7 +20,6 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
@@ -20,6 +28,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEn
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,28 +44,41 @@ public class InventoryClickNpc implements ListenerConstruct {
 
   private NpcTradeHandler tradeHandler;
   private ServiceContext serviceContext;
-  private final Map<ItemHelper, BiConsumer<Player, BankAccountEntry>> bankerDepositActions = Map.of(
-      BankService.npc_gui_deposit_5_percent, (p, bae) -> serviceContext.getBankService()
-          .deposit(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 5f),
-      BankService.npc_gui_deposit_20_percent, (p, bae) -> serviceContext.getBankService()
-          .deposit(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 20f),
-      BankService.npc_gui_deposit_50_percent, (p, bae) -> serviceContext.getBankService()
-          .deposit(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 50f),
-      BankService.npc_gui_deposit_all, (p, bae) -> serviceContext.getBankService()
-          .deposit(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 100f),
-      BankService.npc_gui_withdraw_5_percent, (p, bae) -> serviceContext.getBankService()
-          .withdraw(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 5f),
-      BankService.npc_gui_withdraw_20_percent, (p, bae) -> serviceContext.getBankService()
-          .withdraw(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 20f),
-      BankService.npc_gui_withdraw_50_percent, (p, bae) -> serviceContext.getBankService()
-          .withdraw(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 50f),
-      BankService.npc_gui_withdraw_all, (p, bae) -> serviceContext.getBankService()
-          .withdraw(serviceContext.getPlayerService().getPlayerEntry(p), p, bae, 100f));
+  private Map<
+      RelluEssentialsNamespacedKey,
+      BiConsumer<Player, BankAccountEntry>> bankerDepositActions;
+
+  private Map<
+      RelluEssentialsNamespacedKey,
+      BiConsumer<Player, BankAccountEntry>> initBankerDepositActions() {
+    String ns = serviceContext.getPluginMetadataService().getName();
+    BankService bs = serviceContext.getBankService();
+    PlayerService ps = serviceContext.getPlayerService();
+
+    return Map.of(
+        new RelluEssentialsNamespacedKey(ns, PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT),
+        (p, bae) -> bs.deposit(ps.getPlayerEntry(p), p, bae, 5f),
+        new RelluEssentialsNamespacedKey(ns, PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT),
+        (p, bae) -> bs.deposit(ps.getPlayerEntry(p), p, bae, 20f),
+        new RelluEssentialsNamespacedKey(ns, PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT),
+        (p, bae) -> bs.deposit(ps.getPlayerEntry(p), p, bae, 50f),
+        new RelluEssentialsNamespacedKey(ns, PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL),
+        (p, bae) -> bs.deposit(ps.getPlayerEntry(p), p, bae, 100f),
+        new RelluEssentialsNamespacedKey(ns, PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT),
+        (p, bae) -> bs.withdraw(ps.getPlayerEntry(p), p, bae, 5f),
+        new RelluEssentialsNamespacedKey(ns, PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT),
+        (p, bae) -> bs.withdraw(ps.getPlayerEntry(p), p, bae, 20f),
+        new RelluEssentialsNamespacedKey(ns, PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT),
+        (p, bae) -> bs.withdraw(ps.getPlayerEntry(p), p, bae, 50f),
+        new RelluEssentialsNamespacedKey(ns, PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL),
+        (p, bae) -> bs.withdraw(ps.getPlayerEntry(p), p, bae, 100f));
+  }
 
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
     tradeHandler = new NpcTradeHandler(context);
+    this.bankerDepositActions = initBankerDepositActions();
   }
 
   @EventHandler
@@ -89,9 +111,9 @@ public class InventoryClickNpc implements ListenerConstruct {
     BankAccountEntry bankAccount = serviceContext.getBankService()
         .findBankAccountByPlayerId(playerEntry.getId());
 
-    Optional<CustomItem> optionalDisabledItemHelper = serviceContext.getItemService().find(
+    Optional<CustomItem> optionalCustomItemClose = serviceContext.getItemService().find(
         new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
-            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED));
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE));
 
     if (clickedItem == null) {
       return;
@@ -101,11 +123,11 @@ public class InventoryClickNpc implements ListenerConstruct {
       return;
     }
 
-    if (optionalDisabledItemHelper.isEmpty()) {
+    if (optionalCustomItemClose.isEmpty()) {
       return;
     }
 
-    CustomItem disabledItemHelper = optionalDisabledItemHelper.get();
+    CustomItem customItemClose = optionalCustomItemClose.get();
 
     if (BankService.npc_gui_deposit.equalsName(clickedItem)) {
       InventoryHelper.closeInventory(player);
@@ -133,12 +155,19 @@ public class InventoryClickNpc implements ListenerConstruct {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
           serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGUI());
-    } else if (disabledItemHelper.toItemStack().isSimilar(clickedItem)) {
+    } else if (customItemClose.toItemStack().isSimilar(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {
-      bankerDepositActions.entrySet().stream()
-          .filter(entry -> entry.getKey().equalsExact(clickedItem)).findFirst()
-          .ifPresent(entry -> entry.getValue().accept(player, bankAccount));
+      serviceContext.getItemService().getAll().values().stream().filter(ci -> ci.displayName()
+              .equals(
+                  clickedItem.getItemMeta() != null ? clickedItem.getItemMeta().getDisplayName() : ""))
+          .findFirst().ifPresent(ci -> {
+            BiConsumer<Player, BankAccountEntry> action = bankerDepositActions.get(
+                ci.relluEssentialsNamespacedKey());
+            if (action != null) {
+              action.accept(player, bankAccount);
+            }
+          });
     }
   }
 

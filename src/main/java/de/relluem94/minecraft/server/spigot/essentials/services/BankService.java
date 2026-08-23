@@ -27,6 +27,8 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankAccountEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTierEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BankTransactionEntry;
@@ -58,8 +60,8 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Service handling all bank-related business logic.
- * including deposits, withdrawals, account upgrades and interest calculations.
+ * Service handling all bank-related business logic. including deposits, withdrawals, account
+ * upgrades and interest calculations.
  */
 public class BankService {
 
@@ -128,6 +130,18 @@ public class BankService {
     this.bankTierRegistry = bankTierRegistry;
     this.bankRepository = bankRepository;
     this.plugin = plugin;
+  }
+
+  /**
+   * Retrieves a specific bank item by its constant name.
+   *
+   * @param constantName the constant name of the item
+   * @return the {@link CustomItem}, or {@code null} if not found
+   */
+  public @Nullable CustomItem getBankItem(String constantName) {
+    return serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            constantName)).orElse(null);
   }
 
   /**
@@ -469,8 +483,7 @@ public class BankService {
    * @param bankAccountId the bank account id
    * @return list of transaction entries
    */
-  public List<BankTransactionEntry> findTransactionsByBankAccountId(
-      int bankAccountId) {
+  public List<BankTransactionEntry> findTransactionsByBankAccountId(int bankAccountId) {
     return bankRepository.findTransactionsByBankAccountId(bankAccountId);
   }
 

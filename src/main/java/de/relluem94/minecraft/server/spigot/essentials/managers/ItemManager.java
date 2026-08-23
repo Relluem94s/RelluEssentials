@@ -15,6 +15,21 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_MAGIC_WATER_BUCKET;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_MAGIC_WATER_BUCKET_LORE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_AUTOSELL_HOPPER;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_PORTABLE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
@@ -31,6 +46,24 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_RELLU_SHIELD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_RELLU_SWORD;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_WORLDSELECTOR;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_GUI_CLOSE_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NPC_GUI_DISABLED_NAME;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_POSITION_AXE;
@@ -81,6 +114,7 @@ public class ItemManager implements Enable {
     RelluEssentials relluEssentials = (RelluEssentials) plugin;
     ServiceContext serviceContext = relluEssentials.getServiceContext();
     ItemService itemService = serviceContext.getItemService();
+    registerBankItems(serviceContext, itemService);
 
     itemService.register(new CustomItemBuilder(
         new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
@@ -276,5 +310,105 @@ public class ItemManager implements Enable {
         .getAllByNamespace(serviceContext.getPluginMetadataService().getName()).size();
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_INVENTORIES_REGISTERED, inventoryCount));
+  }
+
+  private void registerBankItems(ServiceContext serviceContext, ItemService itemService) {
+    String pluginName = serviceContext.getPluginMetadataService().getName();
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_PORTABLE),
+        Material.YELLOW_SHULKER_BOX).amount(1).displayName(PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK)
+        .type(CustomItem.Type.TOOL).rarity(CustomItem.Rarity.LEGENDARY)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_PORTABLE_BANK_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT),
+        Material.GREEN_SHULKER_BOX).amount(1).displayName(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT)
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW),
+        Material.RED_SHULKER_BOX).amount(1).displayName(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW)
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_BALANCE),
+        Material.YELLOW_SHULKER_BOX).amount(1).displayName(PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE)
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE),
+        Material.DIAMOND_BLOCK).amount(1).displayName(PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE)
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_UPGRADE_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL),
+        Material.GOLD_BLOCK).amount(1).displayName(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_ALL)
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT),
+        Material.GOLD_NUGGET).amount(1)
+        .displayName(String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 5))
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT),
+        Material.GOLD_INGOT).amount(1)
+        .displayName(String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 20))
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT),
+        Material.GOLD_INGOT).amount(1)
+        .displayName(String.format(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_X_PERCENT, 50))
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_DEPOSIT_AMOUNT_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL),
+        Material.GOLD_BLOCK).amount(1).displayName(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_ALL)
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT),
+        Material.GOLD_NUGGET).amount(1)
+        .displayName(String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 5))
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName,
+            PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT),
+        Material.GOLD_INGOT).amount(1)
+        .displayName(String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 20))
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName,
+            PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT),
+        Material.GOLD_INGOT).amount(1)
+        .displayName(String.format(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_X_PERCENT, 50))
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+        .lore(List.of(PLUGIN_ITEM_NPC_BANKER_GUI_WITHDRAW_AMOUNT_LORE1)).build());
+
+    itemService.register(new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(pluginName, PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL),
+        Material.YELLOW_SHULKER_BOX).amount(1).displayName(PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TOTAL)
+        .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE).build());
+
+    itemService.register(new CustomItemBuilder(new RelluEssentialsNamespacedKey(pluginName,
+        PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS), Material.MAP).amount(1)
+        .displayName(PLUGIN_ITEM_NPC_BANKER_GUI_BALANCE_TRANSACTIONS).type(CustomItem.Type.NPC_GUI)
+        .rarity(CustomItem.Rarity.NONE).build());
   }
 }
