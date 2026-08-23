@@ -33,14 +33,8 @@ import org.jetbrains.annotations.NotNull;
 @ListenerName("InventoryMoveItemProtect")
 public class InventoryMoveItemProtect implements ListenerConstruct {
 
-  private static CustomItem coinItem = null;
+  private CustomItem coinItem = null;
   private ServiceContext serviceContext;
-
-  public InventoryMoveItemProtect() {
-    InventoryMoveItemProtect.coinItem = serviceContext.getItemService().find(
-        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
-            PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
-  }
 
   private boolean sellItem(Inventory inventory, ItemStack is, boolean isSource,
       @NotNull Location location) {
@@ -88,6 +82,9 @@ public class InventoryMoveItemProtect implements ListenerConstruct {
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
+    this.coinItem = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
   }
 
   /**
