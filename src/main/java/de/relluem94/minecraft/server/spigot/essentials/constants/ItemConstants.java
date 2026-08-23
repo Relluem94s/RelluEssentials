@@ -6,6 +6,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import org.bukkit.ChatColor;
 
 /**
+ * Constants for item names, namespaces, and display strings used within the plugin.
  *
  * @author rellu
  */
