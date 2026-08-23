@@ -22,7 +22,7 @@ public class RegisteredInventory {
   private final RelluEssentialsNamespacedKey relluEssentialsNamespacedKey;
   private final String title;
   private final int size;
-  private final CustomItem.Type itemFilter;
+  private CustomItem.Type itemFilter;
   private final List<CustomItem> fixedItems;
 
   /**
@@ -86,6 +86,10 @@ public class RegisteredInventory {
     CustomInventory customInventory = new CustomInventory(itemFilter, size, title);
     customInventory.setCustomItems(items);
 
+    if (extraItems.length != 0) {
+      itemFilter = null;
+    }
+
     InventoryHelper.openInventory(player,
         InventoryHelper.getCustomItemInventory(customInventory, itemFilter));
   }
@@ -109,6 +113,10 @@ public class RegisteredInventory {
 
     CustomInventory customInventory = new CustomInventory(itemFilter, size, title);
     customInventory.setCustomItems(items);
+
+    if (extraItems.length != 0) {
+      itemFilter = null;
+    }
 
     InventoryHelper.openInventory(player,
         InventoryHelper.getCustomItemInventory(customInventory, itemFilter));
