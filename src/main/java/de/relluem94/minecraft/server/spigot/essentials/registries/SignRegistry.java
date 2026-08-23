@@ -102,7 +102,7 @@ public class SignRegistry {
    */
   public static Collection<SignAction> getAllByNamespace(@NonNull String namespace) {
     return registeredActions.entrySet().stream()
-        .filter(entry -> entry.getKey().startsWith(namespace.toLowerCase() + ":"))
+        .filter(entry -> entry.getKey().toLowerCase().startsWith(namespace.toLowerCase() + ":"))
         .map(Map.Entry::getValue).toList();
   }
 }

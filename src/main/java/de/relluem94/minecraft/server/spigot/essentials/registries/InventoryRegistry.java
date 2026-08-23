@@ -58,7 +58,8 @@ public class InventoryRegistry {
   public @NonNull @Unmodifiable List<RegisteredInventory> findAllByNamespace(
       @NonNull String namespace) {
     return registeredInventories.entrySet().stream()
-        .filter(entry -> entry.getKey().startsWith(namespace.toLowerCase() + ":"))
+        .filter(entry -> entry.getKey().toLowerCase()
+            .startsWith(namespace.toLowerCase() + ":"))
         .map(Map.Entry::getValue)
         .toList();
   }
