@@ -69,7 +69,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
     p.setPlayerListFooter(pie.getTabFooter());
 
     serviceContext.getPlayerService().setFlying(p);
-    serviceContext.getPlayerService().setAFK(p, true);
+    serviceContext.getPlayerService().setAfk(p, true);
     Bukkit.broadcastMessage(
         serviceContext.getTranslationService()
             .get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));

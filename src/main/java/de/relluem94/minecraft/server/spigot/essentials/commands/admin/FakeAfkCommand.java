@@ -21,11 +21,11 @@ public class FakeAfkCommand implements SubCommand {
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(player);
 
     if (pe.getPlayerState().equals(PlayerState.FAKE_AFK_ACTIVE)) {
-      serviceContext.getPlayerService().setAFK(player, false);
+      serviceContext.getPlayerService().setAfk(player, false);
       pe.setPlayerState(PlayerState.DEFAULT);
     } else {
       pe.setPlayerState(PlayerState.FAKE_AFK_ON);
-      serviceContext.getPlayerService().setAFK(player, false);
+      serviceContext.getPlayerService().setAfk(player, false);
       pe.setPlayerState(PlayerState.FAKE_AFK_ACTIVE);
     }
   }

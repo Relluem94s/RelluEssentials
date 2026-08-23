@@ -71,7 +71,7 @@ public class AFK implements CommandConstruct {
     }
 
     if (args.length == 0) {
-      serviceContext.getPlayerService().setAFK(p, false);
+      serviceContext.getPlayerService().setAfk(p, false);
       return true;
     }
 
@@ -88,7 +88,7 @@ public class AFK implements CommandConstruct {
     }
 
     if (args.length == 1) {
-      serviceContext.getPlayerService().setAFK(target, false);
+      serviceContext.getPlayerService().setAfk(target, false);
       return true;
     }
 

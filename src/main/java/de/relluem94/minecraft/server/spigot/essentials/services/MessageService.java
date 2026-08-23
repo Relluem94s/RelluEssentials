@@ -17,7 +17,7 @@ public class MessageService {
    *
    * @param translationService the service used for fetching translated strings
    */
-  public MessageService(TranslationService translationService){
+  public MessageService(TranslationService translationService) {
     this.translationService = translationService;
   }
 
