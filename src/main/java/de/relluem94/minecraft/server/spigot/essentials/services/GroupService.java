@@ -42,6 +42,7 @@ public class GroupService {
    * @param groupEntry the group entry to add
    * @return {@code true} if the group was added, {@code false} if it already existed
    */
+  @SuppressWarnings("unused")
   public boolean addGroup(@NotNull GroupEntry groupEntry) {
     if (groupRegistry.containsByName(groupEntry.getName())) {
       return false;
@@ -81,6 +82,7 @@ public class GroupService {
    * @param id the ID to search for
    * @return an {@link Optional} containing the group, or empty if not found
    */
+  @SuppressWarnings("unused")
   public Optional<GroupEntry> findGroupById(int id) {
     return groupRegistry.findById(id);
   }

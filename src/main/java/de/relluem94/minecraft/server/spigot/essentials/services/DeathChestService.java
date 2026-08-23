@@ -22,6 +22,10 @@ import org.bukkit.inventory.ItemStack;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Service responsible for handling the creation and protection of death chests
+ * when a player dies.
+ */
 public class DeathChestService {
 
   private static final List<BlockFace> HORIZONTAL_FACES = List.of(
@@ -30,10 +34,22 @@ public class DeathChestService {
 
   private final ServiceContext serviceContext;
 
+  /**
+   * Creates a new instance of {@link DeathChestService}.
+   *
+   * @param serviceContext the service context used to access other services
+   */
   public DeathChestService(ServiceContext serviceContext) {
     this.serviceContext = serviceContext;
   }
 
+  /**
+   * Spawns a double chest containing the player's inventory items at a suitable location
+   * and protects the chest so only the player can access it.
+   *
+   * @param player the player who died
+   * @return {@code true} if the death chest was successfully spawned, {@code false} otherwise
+   */
   public boolean spawnDeathChestForPlayer(Player player) {
     ItemStack[] inventoryContents = player.getInventory().getContents();
     ItemStack[] armorContents = player.getInventory().getArmorContents();
@@ -76,8 +92,8 @@ public class DeathChestService {
   private Block[] findTwoAdjacentAirBlocks(Location origin) {
     Block originBlock = origin.getBlock();
 
-    for (int yOffset = 0; yOffset <= 3; yOffset++) {
-      Block candidateBlock = originBlock.getRelative(0, yOffset, 0);
+    for (int offsetY = 0; offsetY <= 3; offsetY++) {
+      Block candidateBlock = originBlock.getRelative(0, offsetY, 0);
       for (BlockFace face : HORIZONTAL_FACES) {
         Block neighbor = candidateBlock.getRelative(face);
         if (candidateBlock.getType() == Material.AIR && neighbor.getType() == Material.AIR) {
@@ -88,7 +104,6 @@ public class DeathChestService {
 
     return null;
   }
-
 
   private void placeDoubleChest(Block firstBlock, Block secondBlock) {
     Block first;
@@ -108,13 +123,15 @@ public class DeathChestService {
     BlockFace facingDirection = determineFacingForDoubleChest(first, second);
 
     first.setType(Material.CHEST);
-    org.bukkit.block.data.type.Chest firstChestData = (org.bukkit.block.data.type.Chest) first.getBlockData();
+    org.bukkit.block.data.type.Chest firstChestData =
+        (org.bukkit.block.data.type.Chest) first.getBlockData();
     firstChestData.setFacing(facingDirection);
     firstChestData.setType(Type.LEFT);
     first.setBlockData(firstChestData);
 
     second.setType(Material.CHEST);
-    org.bukkit.block.data.type.Chest secondChestData = (org.bukkit.block.data.type.Chest) second.getBlockData();
+    org.bukkit.block.data.type.Chest secondChestData =
+        (org.bukkit.block.data.type.Chest) second.getBlockData();
     secondChestData.setFacing(facingDirection);
     secondChestData.setType(Type.RIGHT);
     second.setBlockData(secondChestData);
@@ -162,7 +179,8 @@ public class DeathChestService {
 
   private void protectChestBlockForPlayer(Block block, Player player) {
     PlayerEntry playerEntry = serviceContext.getPlayerService().getPlayerEntry(player);
-    Optional<LocationTypeEntry> locationTypeEntry = serviceContext.getLocationTypeService().findByName(LocationType.PROTECTION);
+    Optional<LocationTypeEntry> locationTypeEntry =
+        serviceContext.getLocationTypeService().findByName(LocationType.PROTECTION);
 
     if (locationTypeEntry.isEmpty()) {
       return;
@@ -173,7 +191,8 @@ public class DeathChestService {
     locationEntry.setPlayerId(playerEntry.getId());
     locationEntry.setLocationType(locationTypeEntry.get());
 
-    LocationEntry persistedLocationEntry = serviceContext.getLocationService().saveAndFetch(locationEntry);
+    LocationEntry persistedLocationEntry =
+        serviceContext.getLocationService().saveAndFetch(locationEntry);
 
     JSONObject rights = new JSONObject();
     rights.put("IDs", new JSONArray(List.of(playerEntry.getId())));
@@ -184,6 +203,7 @@ public class DeathChestService {
     protectionEntry.setFlags(new org.json.JSONObject());
     protectionEntry.setRights(rights);
 
-    serviceContext.getProtectionService().saveProtectionAndAddToRegistry(block.getLocation(), protectionEntry);
+    serviceContext.getProtectionService()
+        .saveProtectionAndAddToRegistry(block.getLocation(), protectionEntry);
   }
 }
