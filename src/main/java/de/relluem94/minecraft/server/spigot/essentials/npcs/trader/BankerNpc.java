@@ -5,8 +5,16 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_CLOSE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 
@@ -17,7 +25,6 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.npc.BankerGui;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
-import de.relluem94.minecraft.server.spigot.essentials.services.BankService;
 import java.util.List;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.inventory.Inventory;
@@ -91,29 +98,43 @@ public class BankerNpc extends TraderNpc implements BankerGui {
         resolveDisabledItem().toItemStack());
 
     long amount5 = Math.round(total * 0.05);
-    long amount20 = Math.round(total * 0.20);
-    long amount50 = Math.round(total * 0.50);
-    long amountAll = Math.round(total);
+    CustomItem depositFivePercentItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT);
+    if (depositFivePercentItem != null) {
+      inv.setItem(10, serviceContext.getBankService()
+          .addLoreLine(depositFivePercentItem.toItemStack(), serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount5, PLUGIN_NAME_MONEY)));
+    }
 
-    inv.setItem(10, serviceContext.getBankService()
-        .addLoreLine(BankService.npc_gui_deposit_5_percent.getCustomItem(),
-            serviceContext.getTranslationService()
-                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount5, PLUGIN_NAME_MONEY)));
-    inv.setItem(12, serviceContext.getBankService()
-        .addLoreLine(BankService.npc_gui_deposit_20_percent.getCustomItem(),
-            serviceContext.getTranslationService()
-                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount20,
-                    PLUGIN_NAME_MONEY)));
-    inv.setItem(14, serviceContext.getBankService()
-        .addLoreLine(BankService.npc_gui_deposit_50_percent.getCustomItem(),
-            serviceContext.getTranslationService()
-                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount50,
-                    PLUGIN_NAME_MONEY)));
-    inv.setItem(16, serviceContext.getBankService()
-        .addLoreLine(BankService.npc_gui_deposit_all.getCustomItem(),
-            serviceContext.getTranslationService()
-                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amountAll,
-                    PLUGIN_NAME_MONEY)));
+    long amount20 = Math.round(total * 0.20);
+    CustomItem depositTwentyPercentItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT);
+    if (depositTwentyPercentItem != null) {
+      inv.setItem(12, serviceContext.getBankService()
+          .addLoreLine(depositTwentyPercentItem.toItemStack(),
+              serviceContext.getTranslationService()
+                  .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount20,
+                      PLUGIN_NAME_MONEY)));
+    }
+
+    long amount50 = Math.round(total * 0.50);
+    CustomItem depositFiftyPercentItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT);
+    if (depositFiftyPercentItem != null) {
+      inv.setItem(14, serviceContext.getBankService()
+          .addLoreLine(depositFiftyPercentItem.toItemStack(), serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amount50, PLUGIN_NAME_MONEY)));
+    }
+
+    long amountAll = Math.round(total);
+    CustomItem depositAllItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL);
+    if (depositAllItem != null) {
+      inv.setItem(16, serviceContext.getBankService().addLoreLine(depositAllItem.toItemStack(),
+          serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_LORE, amountAll, PLUGIN_NAME_MONEY)));
+    }
+
     inv.setItem(26, resolveCloseItem().toItemStack());
 
     return inv;
@@ -125,30 +146,46 @@ public class BankerNpc extends TraderNpc implements BankerGui {
         resolveDisabledItem().toItemStack());
 
     long amount5 = Math.round(total * 0.05);
-    long amount20 = Math.round(total * 0.20);
-    long amount50 = Math.round(total * 0.50);
-    long amountAll = Math.round(total);
+    CustomItem withdrawFivePercentItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT);
+    if (withdrawFivePercentItem != null) {
+      inv.setItem(10, serviceContext.getBankService()
+          .addLoreLine(withdrawFivePercentItem.toItemStack(), serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount5, PLUGIN_NAME_MONEY)));
+    }
 
-    inv.setItem(10, serviceContext.getBankService()
-        .addLoreLine(BankService.npc_gui_withdraw_5_percent.getCustomItem(),
-            serviceContext.getTranslationService()
-                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount5,
-                    PLUGIN_NAME_MONEY)));
-    inv.setItem(12, serviceContext.getBankService()
-        .addLoreLine(BankService.npc_gui_withdraw_20_percent.getCustomItem(),
-            serviceContext.getTranslationService()
-                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount20,
-                    PLUGIN_NAME_MONEY)));
-    inv.setItem(14, serviceContext.getBankService()
-        .addLoreLine(BankService.npc_gui_withdraw_50_percent.getCustomItem(),
-            serviceContext.getTranslationService()
-                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount50,
-                    PLUGIN_NAME_MONEY)));
-    inv.setItem(16, serviceContext.getBankService()
-        .addLoreLine(BankService.npc_gui_withdraw_all.getCustomItem(),
-            serviceContext.getTranslationService()
-                .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amountAll,
-                    PLUGIN_NAME_MONEY)));
+    long amount20 = Math.round(total * 0.20);
+    CustomItem withdrawTwentyPercentItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT);
+    if (withdrawTwentyPercentItem != null) {
+      inv.setItem(12, serviceContext.getBankService()
+          .addLoreLine(withdrawTwentyPercentItem.toItemStack(),
+              serviceContext.getTranslationService()
+                  .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount20,
+                      PLUGIN_NAME_MONEY)));
+    }
+
+    long amount50 = Math.round(total * 0.50);
+    CustomItem withdrawFiftyPercentItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT);
+    if (withdrawFiftyPercentItem != null) {
+      inv.setItem(14, serviceContext.getBankService()
+          .addLoreLine(withdrawFiftyPercentItem.toItemStack(),
+              serviceContext.getTranslationService()
+                  .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amount50,
+                      PLUGIN_NAME_MONEY)));
+    }
+
+    long amountAll = Math.round(total);
+    CustomItem withdrawAllItem = serviceContext.getBankService()
+        .getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL);
+    if (withdrawAllItem != null) {
+      inv.setItem(16, serviceContext.getBankService().addLoreLine(withdrawAllItem.toItemStack(),
+          serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_LORE, amountAll,
+                  PLUGIN_NAME_MONEY)));
+    }
+
     inv.setItem(26, resolveCloseItem().toItemStack());
 
     return inv;
