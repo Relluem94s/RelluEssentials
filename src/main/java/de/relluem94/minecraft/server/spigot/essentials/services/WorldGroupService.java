@@ -25,6 +25,10 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Service responsible for managing world groups, including their settings,
+ * associated worlds, and player inventory persistence within those groups.
+ */
 public class WorldGroupService {
 
   private final WorldGroupRegistry worldGroupRegistry;
@@ -32,12 +36,22 @@ public class WorldGroupService {
   @Getter
   private final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
 
+  /**
+   * Constructs a new WorldGroupService.
+   *
+   * @param worldGroupRegistry the registry used to manage active settings for worlds
+   * @param worldGroupRepository the repository used for data persistence
+   */
   public WorldGroupService(WorldGroupRegistry worldGroupRegistry,
       WorldGroupRepository worldGroupRepository) {
     this.worldGroupRegistry = worldGroupRegistry;
     this.worldGroupRepository = worldGroupRepository;
   }
 
+  /**
+   * Loads all world groups and their associated worlds from the repository
+   * and updates the registry with active settings.
+   */
   public void loadAll() {
     worldsMap.clear();
     Map<WorldSetting, Set<String>> worldNamesByActiveSetting = buildEmptySettingMap();
@@ -53,14 +67,35 @@ public class WorldGroupService {
     worldNamesByActiveSetting.forEach(worldGroupRegistry::loadWorldsForSetting);
   }
 
+  /**
+   * Checks if a specific world setting is active for a given world.
+   *
+   * @param worldSetting the setting to check
+   * @param worldName the name of the world
+   * @return true if the setting is active, false otherwise
+   */
   public boolean isSettingActiveForWorld(WorldSetting worldSetting, String worldName) {
     return worldGroupRegistry.isSettingActiveForWorld(worldSetting, worldName);
   }
 
+  /**
+   * Finds the world group entry associated with the player's current world.
+   *
+   * @param player the player to check
+   * @return the world group entry, or null if not found
+   */
+  @SuppressWarnings("unused")
   public @Nullable WorldGroupEntry findWorldGroupEntryForPlayer(Player player) {
     return findWorldGroupEntryByWorldName(player.getWorld().getName()).orElse(null);
   }
 
+  /**
+   * Finds the world entry associated with the player's current world.
+   *
+   * @param player the player to check
+   * @return the world entry, or null if not found
+   */
+  @SuppressWarnings("unused")
   public @Nullable WorldEntry findWorldEntryForPlayer(Player player) {
     String worldName = player.getWorld().getName();
     return worldsMap.entries().stream()
@@ -71,6 +106,11 @@ public class WorldGroupService {
         .orElse(null);
   }
 
+  /**
+   * Loads the saved inventory and player state for a player into their current world group.
+   *
+   * @param player the player whose inventory should be loaded
+   */
   public void loadWorldGroupInventoryForPlayer(Player player) {
     PlayerEntry playerEntry = resolvePlayerEntry(player);
     findWorldGroupEntryByWorldName(player.getWorld().getName()).ifPresent(worldGroupEntry -> {
@@ -80,10 +120,25 @@ public class WorldGroupService {
     });
   }
 
+  /**
+   * Saves the player's current inventory and state to the world group they are currently in.
+   *
+   * @param player the player whose inventory should be saved
+   * @param clearAfterSave whether to clear the player's inventory and experience after saving
+   * @return true if the save was successful, false otherwise
+   */
   public boolean saveWorldGroupInventoryForPlayer(Player player, boolean clearAfterSave) {
     return saveWorldGroupInventoryForPlayerInWorld(player, player.getWorld(), clearAfterSave);
   }
 
+  /**
+   * Saves the player's current inventory and state to a specific world.
+   *
+   * @param player the player whose inventory should be saved
+   * @param world the world where the inventory should be saved
+   * @param clearAfterSave whether to clear the player's inventory and experience after saving
+   * @return true if the save was successful, false otherwise
+   */
   public boolean saveWorldGroupInventoryForPlayerInWorld(Player player, World world,
       boolean clearAfterSave) {
     PlayerEntry playerEntry = resolvePlayerEntry(player);
@@ -93,6 +148,14 @@ public class WorldGroupService {
         .orElse(false);
   }
 
+  /**
+   * Checks if the player has a saved inventory for the specified world.
+   *
+   * @param player the player to check
+   * @param world the world to check against
+   * @return true if an inventory exists, false otherwise
+   */
+  @SuppressWarnings("unused")
   public boolean hasWorldGroupInventory(Player player, World world) {
     PlayerEntry playerEntry = resolvePlayerEntry(player);
     return findWorldGroupEntryByWorldName(world.getName())
@@ -116,7 +179,8 @@ public class WorldGroupService {
       return existingEntry;
     }
 
-    WorldGroupInventoryEntry newEntry = buildNewInventoryEntry(player, playerEntry, worldGroupEntry);
+    WorldGroupInventoryEntry newEntry =
+        buildNewInventoryEntry(player, playerEntry, worldGroupEntry);
     worldGroupRepository.saveInventory(newEntry);
     return newEntry;
   }
@@ -210,7 +274,14 @@ public class WorldGroupService {
     }
   }
 
-
+  /**
+   * Creates a new world group.
+   *
+   * @param player the player creating the group
+   * @param name the name of the new group
+   * @return the created world group entry
+   */
+  @SuppressWarnings("unused")
   public WorldGroupEntry createWorldGroup(Player player, String name) {
     PlayerEntry playerEntry = resolvePlayerEntry(player);
     WorldGroupEntry worldGroupEntry = new WorldGroupEntry();
@@ -220,6 +291,14 @@ public class WorldGroupService {
     return worldGroupRepository.findWorldGroupByName(name);
   }
 
+  /**
+   * Adds a world to an existing world group.
+   *
+   * @param player the player performing the action
+   * @param worldGroupEntry the group to add the world to
+   * @param worldName the name of the world to add
+   */
+  @SuppressWarnings("unused")
   public void addWorldToGroup(Player player, WorldGroupEntry worldGroupEntry, String worldName) {
     PlayerEntry playerEntry = resolvePlayerEntry(player);
     WorldEntry worldEntry = new WorldEntry();
@@ -231,6 +310,13 @@ public class WorldGroupService {
     collectActiveSettingsForWorld(worldGroupEntry, worldName, buildEmptySettingMap());
   }
 
+  /**
+   * Removes a world from a world group.
+   *
+   * @param worldGroupEntry the group to remove the world from
+   * @param worldName the name of the world to remove
+   */
+  @SuppressWarnings("unused")
   public void removeWorldFromGroup(WorldGroupEntry worldGroupEntry, String worldName) {
     worldsMap.entries().removeIf(entry ->
         worldGroupEntry.equals(entry.getKey()) && worldName.equals(entry.getValue().getName())
@@ -238,6 +324,12 @@ public class WorldGroupService {
     worldGroupRegistry.removeWorldFromAllSettings(worldName);
   }
 
+  /**
+   * Finds a world group by its name.
+   *
+   * @param name the name of the group to find
+   * @return an optional containing the world group entry if found
+   */
   public Optional<WorldGroupEntry> findWorldGroupByName(String name) {
     return worldsMap.keySet().stream()
         .filter(entry -> name.equals(entry.getName()))
@@ -245,9 +337,19 @@ public class WorldGroupService {
         .or(() -> Optional.ofNullable(worldGroupRepository.findWorldGroupByName(name)));
   }
 
-
-  public void createAndRegisterWorld(String worldName, String worldGroupName, GroupEntry groupEntry, int createdBy) {
-    WorldGroupEntry persistedWorldGroupEntry = worldGroupRepository.findWorldGroupByName(worldGroupName);
+  /**
+   * Creates a new world and registers it within an existing world group.
+   *
+   * @param worldName the name of the new world
+   * @param worldGroupName the name of the group to register the world in
+   * @param groupEntry the group entry to associate with the world
+   * @param createdBy the ID of the user who created the world
+   */
+  @SuppressWarnings("unused")
+  public void createAndRegisterWorld(String worldName, String worldGroupName,
+      GroupEntry groupEntry, int createdBy) {
+    WorldGroupEntry persistedWorldGroupEntry =
+        worldGroupRepository.findWorldGroupByName(worldGroupName);
     if (persistedWorldGroupEntry == null) {
       return;
     }
@@ -263,6 +365,13 @@ public class WorldGroupService {
     collectActiveSettingsForWorld(persistedWorldGroupEntry, worldName, buildEmptySettingMap());
   }
 
+  /**
+   * Creates a new world group without any worlds.
+   *
+   * @param worldGroupName the name of the new group
+   * @param createdBy the ID of the user who created the group
+   */
+  @SuppressWarnings("unused")
   public void createAndRegisterWorldGroup(String worldGroupName, int createdBy) {
     WorldGroupEntry worldGroupEntry = new WorldGroupEntry();
     worldGroupEntry.setName(worldGroupName);
@@ -270,8 +379,17 @@ public class WorldGroupService {
     worldGroupRepository.saveWorldGroup(worldGroupEntry);
   }
 
-
-  public void initializeWorldGroupWithWorld(String worldGroupName, String worldName, GroupEntry groupEntry, int createdBy) {
+  /**
+   * Creates a new world group and immediately initializes it with a world.
+   *
+   * @param worldGroupName the name of the new group
+   * @param worldName the name of the world to initialize the group with
+   * @param groupEntry the group entry to associate with the world
+   * @param createdBy the ID of the user who created the group and world
+   */
+  @SuppressWarnings("unused")
+  public void initializeWorldGroupWithWorld(String worldGroupName, String worldName,
+      GroupEntry groupEntry, int createdBy) {
     if (findWorldGroupByName(worldGroupName).isPresent()) {
       return;
     }
@@ -281,7 +399,8 @@ public class WorldGroupService {
     worldGroupEntry.setName(worldGroupName);
     worldGroupRepository.saveWorldGroup(worldGroupEntry);
 
-    WorldGroupEntry persistedWorldGroupEntry = worldGroupRepository.findWorldGroupByName(worldGroupName);
+    WorldGroupEntry persistedWorldGroupEntry =
+        worldGroupRepository.findWorldGroupByName(worldGroupName);
 
     WorldEntry worldEntry = new WorldEntry();
     worldEntry.setGroupEntry(groupEntry);

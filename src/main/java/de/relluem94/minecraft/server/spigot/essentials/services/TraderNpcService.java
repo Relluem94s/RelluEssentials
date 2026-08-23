@@ -22,6 +22,13 @@ public class TraderNpcService {
   @Getter
   private final BankerNpc bankerNpc;
 
+  /**
+   * Constructs a new {@link TraderNpcService}.
+   *
+   * @param traderNpcRegistry the registry used to store and manage NPCs
+   * @param traderNpcRepository the repository used to load NPC data
+   * @param bankerNpc the specialized banker NPC instance
+   */
   public TraderNpcService(TraderNpcRegistry traderNpcRegistry,
       TraderNpcRepository traderNpcRepository, BankerNpc bankerNpc) {
     this.traderNpcRegistry = traderNpcRegistry;
@@ -30,7 +37,7 @@ public class TraderNpcService {
   }
 
   /**
-   * Loads all trader NPC entries from the repository and initialises the registry.
+   * Loads all trader NPC entries from the repository and initializes the registry.
    */
   public void loadAndInitialiseNpcs() {
     traderNpcRegistry.init(traderNpcRepository.loadAll());

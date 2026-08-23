@@ -13,15 +13,27 @@ import java.util.logging.Level;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Service responsible for loading and managing localized messages.
+ * It supports multiple languages and provides methods to retrieve formatted strings.
+ */
 public class TranslationService {
   private final JavaPlugin plugin;
   private final Map<String, Properties> languages = new HashMap<>();
   private String defaultLanguage = "de_DE";
 
+  /**
+   * Constructs a new TranslationService.
+   *
+   * @param plugin The plugin instance used to access resources and logger.
+   */
   public TranslationService(JavaPlugin plugin) {
     this.plugin = plugin;
   }
 
+  /**
+   * Loads all available language property files from the plugin resources.
+   */
   public void loadLanguages() {
     String[] availableLanguages = {"de_DE", "en_US", "da_DK"};
     for (String lang : availableLanguages) {
@@ -41,6 +53,11 @@ public class TranslationService {
     }
   }
 
+  /**
+   * Sets the default language to be used when no specific language is requested.
+   *
+   * @param language The language code (e.g., "en_US") to set as default.
+   */
   public void setDefaultLanguage(String language) {
     if (languages.containsKey(language)) {
       this.defaultLanguage = language;
@@ -50,6 +67,12 @@ public class TranslationService {
     }
   }
 
+  /**
+   * Retrieves a translated message using the default language.
+   *
+   * @param key The message key to look up.
+   * @return The translated and color-formatted string.
+   */
   public String get(MessageKey key) {
     return get(key, defaultLanguage);
   }
@@ -72,14 +95,34 @@ public class TranslationService {
     return value != null ? applyColors(value) : "§c[MISSING: " + key.getKey() + "]";
   }
 
+  /**
+   * Retrieves a translated message and formats it with the provided arguments.
+   *
+   * @param key  The message key to look up.
+   * @param args The arguments to format into the message string.
+   * @return The formatted and color-formatted string.
+   */
   public String get(MessageKey key, Object... args) {
     return String.format(get(key), args);
   }
 
+  /**
+   * Retrieves a translated message with the plugin's command prefix.
+   *
+   * @param key The message key to look up.
+   * @return The message string prefixed with the plugin command prefix.
+   */
   public String getWithPrefix(MessageKey key) {
     return Constants.PLUGIN_FORMS_COMMAND_PREFIX + get(key);
   }
 
+  /**
+   * Retrieves a translated message with the plugin's command prefix and formats it.
+   *
+   * @param key  The message key to look up.
+   * @param args The arguments to format into the message string.
+   * @return The formatted and prefixed message string.
+   */
   public String getWithPrefix(MessageKey key, Object... args) {
     return Constants.PLUGIN_FORMS_COMMAND_PREFIX + get(key, args);
   }
