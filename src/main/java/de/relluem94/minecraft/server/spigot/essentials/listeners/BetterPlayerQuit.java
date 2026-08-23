@@ -15,6 +15,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Listener responsible for handling player disconnection logic,
+ * including cleaning up player data, sudo status, and broadcasting quit messages.
+ */
 @ListenerName("BetterPlayerQuit")
 public class BetterPlayerQuit implements ListenerConstruct {
 
@@ -25,6 +29,11 @@ public class BetterPlayerQuit implements ListenerConstruct {
     this.serviceContext = context;
   }
 
+  /**
+   * Handles the player quit event to perform cleanup and broadcast the departure message.
+   *
+   * @param e the player quit event
+   */
   @EventHandler
   public void onLeave(@NonNull PlayerQuitEvent e) {
     e.setQuitMessage(null);
@@ -41,7 +50,8 @@ public class BetterPlayerQuit implements ListenerConstruct {
         serviceContext.getTranslationService()
             .get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
     serviceContext.getTeleportService().teleportWorld(p, Constants.PLUGIN_WORLD_LOBBY, true);
-    ScoreBoardManager.removePlayer(e.getPlayer().getUniqueId());
-    serviceContext.getNpcDialogueProgressService().resetPlayerProgress(e.getPlayer().getUniqueId());
+    ScoreBoardManager.removePlayer(p.getUniqueId());
+    serviceContext.getNpcDialogueProgressService().resetPlayerProgress(p.getUniqueId());
+    serviceContext.getClipboardService().removeClipboard(p);
   }
 }
