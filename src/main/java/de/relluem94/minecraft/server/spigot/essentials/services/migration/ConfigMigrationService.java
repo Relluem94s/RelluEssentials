@@ -20,6 +20,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Service responsible for migrating legacy configuration files to the new data format.
+ */
 @ApiStatus.Internal
 @RequiredArgsConstructor
 public class ConfigMigrationService {
@@ -27,10 +30,22 @@ public class ConfigMigrationService {
   private final File dataFolder;
   private final ServiceContext serviceContext;
 
+  /**
+   * Checks if a legacy configuration file exists for the given name.
+   *
+   * @param name The name of the configuration file without the extension.
+   * @return {@code true} if the file exists, {@code false} otherwise.
+   */
   public boolean legacyConfigExists(String name) {
     return resolveLegacyConfigFile(name).exists();
   }
 
+  /**
+   * Retrieves the list of players from the specified legacy configuration file.
+   *
+   * @param name The name of the configuration file.
+   * @return A list of {@link PlayerEntry} objects found in the configuration.
+   */
   public List<PlayerEntry> getPlayers(String name) {
     YamlConfiguration config = loadConfig(name);
     List<PlayerEntry> list = new ArrayList<>();
@@ -39,13 +54,15 @@ public class ConfigMigrationService {
     for (String uuid : Objects.requireNonNull(cs).getKeys(false)) {
       ConfigurationSection player = cs.getConfigurationSection(uuid);
 
-      String groupName = Objects.requireNonNull(Objects.requireNonNull(player).getString("group")).toLowerCase();
+      String groupName = Objects.requireNonNull(Objects.requireNonNull(player)
+          .getString("group")).toLowerCase();
       boolean fly = player.getBoolean("fly");
       boolean afk = player.getBoolean("afk");
       String customname = player.getString("customname");
 
       consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly + " group:" + groupName);
+          "Found Player: " + uuid + " customname:" + customname + " afk:" + afk
+              + " fly:" + fly + " group:" + groupName);
 
       PlayerEntry p = new PlayerEntry();
       p.setGroup(serviceContext.getGroupService().resolveGroupWithFallback(groupName));
@@ -60,6 +77,13 @@ public class ConfigMigrationService {
     return list;
   }
 
+  /**
+   * Retrieves the list of homes for a specific player from the specified legacy configuration file.
+   *
+   * @param name The name of the configuration file.
+   * @param p    The player whose homes are being retrieved.
+   * @return A list of {@link LocationEntry} objects representing the player's homes.
+   */
   public List<LocationEntry> getHomes(String name, @NotNull PlayerEntry p) {
     YamlConfiguration config = loadConfig(name);
     List<LocationEntry> list = new ArrayList<>();
@@ -87,10 +111,10 @@ public class ConfigMigrationService {
       float z = (float) homeSection.getDouble("z");
       float yaw = (float) homeSection.getDouble("yaw");
       float pitch = (float) homeSection.getDouble("pitch");
-      int typeId = homeName.equals("death") ? 2 : 1;
 
       consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Found Home: " + homeName + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
+          "Found Home: " + homeName + " x:" + x + " y:" + y + " z:" + z
+              + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
 
       LocationEntry locationEntry = new LocationEntry();
       locationEntry.setLocation(new Location(world, x, y, z, yaw, pitch));
@@ -98,6 +122,7 @@ public class ConfigMigrationService {
       locationEntry.setPlayerId(p.getId());
 
       LocationTypeEntry typeEntry = new LocationTypeEntry();
+      int typeId = homeName.equals("death") ? 2 : 1;
       typeEntry.setId(typeId);
       locationEntry.setLocationType(typeEntry);
 

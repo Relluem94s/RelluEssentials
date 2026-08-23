@@ -6,16 +6,31 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import lombok.NonNull;
 import org.bukkit.entity.Player;
 
+/**
+ * Service responsible for cleaning up outdated location data from the repository.
+ */
 public class LocationCleanUpService {
 
   private final TranslationService translationService;
   private final LocationRepository locationRepository;
 
-  public LocationCleanUpService(TranslationService translationService, LocationRepository locationRepository) {
+  /**
+   * Constructs a new LocationCleanUpService.
+   *
+   * @param translationService the service used for translating messages
+   * @param locationRepository the repository used to manage location data
+   */
+  public LocationCleanUpService(TranslationService translationService,
+      LocationRepository locationRepository) {
     this.translationService = translationService;
     this.locationRepository = locationRepository;
   }
 
+  /**
+   * Removes all outdated locations from the repository and notifies the player of the result.
+   *
+   * @param p the player executing the cleanup process
+   */
   public void cleanUpLocations(@NonNull Player p) {
     int deletedCount = locationRepository.removeOutdatedLocations();
     p.sendMessage(

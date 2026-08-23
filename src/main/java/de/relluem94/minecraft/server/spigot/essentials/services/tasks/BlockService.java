@@ -17,11 +17,7 @@ public class BlockService {
 
   private final SchedulerService schedulerService;
   private final HashMap<Location, Long> locations = new HashMap<>();
-  /**
-   *  Sets the material that will be placed at all registered locations.
-   *
-   * @param targetMaterial the new target material
-   */
+
   @Setter
   private Material targetMaterial;
 
@@ -41,7 +37,8 @@ public class BlockService {
    *
    * @param location the location to check
    * @param material the material to compare against
-   * @return {@code true} if the block at the location is of the given material, {@code false} otherwise
+   * @return {@code true} if the block at the location is of the given material,
+   *     {@code false} otherwise
    */
   public static boolean isBlockOfMaterial(@NotNull Location location, Material material) {
     return location.getBlock().getType() == material;
@@ -81,6 +78,19 @@ public class BlockService {
     );
   }
 
+  /**
+   * Schedules block placements for all registered locations using only their individual delays.
+   */
+  public void applyBlocks() {
+    applyBlocks(0);
+  }
+
+  /**
+   * Schedules Material replacements for all registered locations
+   * using only their individual delays.
+   *
+   * @param additionalDelay the extra delay in ticks added to each location's delay
+   */
   public void applyMaterial(long additionalDelay) {
     locations.forEach((location, delay) ->
         schedulerService.scheduleSyncDelayedTask(
@@ -89,8 +99,8 @@ public class BlockService {
                 Block block = location.getBlock();
                 String existingDataString = block.getBlockData().getAsString();
                 String newDataString = existingDataString.replace(
-                    block.getType().getKey().toString(),
-                    targetMaterial.getKey().toString()
+                    block.getType().getKeyOrThrow().toString(),
+                    targetMaterial.getKeyOrThrow().toString()
                 );
                 block.setBlockData(Bukkit.createBlockData(newDataString));
               } catch (IllegalArgumentException e) {
@@ -100,12 +110,5 @@ public class BlockService {
             Math.abs(delay + additionalDelay)
         )
     );
-  }
-
-  /**
-   * Schedules block placements for all registered locations using only their individual delays.
-   */
-  public void applyBlocks() {
-    applyBlocks(0);
   }
 }
