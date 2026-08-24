@@ -79,7 +79,6 @@ class RegisteredInventoryTest {
     }
   }
 
-
   @Test
   void testOpenForWithTypeFilterLogicFlow() {
     RegisteredInventory registeredInventory = new RegisteredInventory(
@@ -92,16 +91,14 @@ class RegisteredInventoryTest {
       when(mockItemService.getAllByType(CustomItem.Type.TOOL)).thenReturn(Collections.emptyList());
       mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(
               any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class),
-              any(CustomItem.Type.class)))
+              any()))
           .thenReturn(mockInventory);
 
       assertDoesNotThrow(
           () -> registeredInventory.openForWithTypeFilter(mockItemService, mockPlayer, extraItem));
-      mockedInventoryHelper.verify(
-          () -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
+      mockedInventoryHelper.verify(() -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
     }
   }
-
 
   @Test
   void testConstructorSetsFields() {
