@@ -1,0 +1,128 @@
+package de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc;
+
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.SqlResourceLoader;
+import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sql.DataSource;
+
+public class QueryExecutor {
+
+  private final DataSource dataSource;
+  private final SqlResourceLoader sqlResourceLoader;
+  private final Logger logger;
+
+  public QueryExecutor(DataSource dataSource, SqlResourceLoader sqlResourceLoader) {
+    this(dataSource, sqlResourceLoader, Logger.getLogger(QueryExecutor.class.getName()));
+  }
+
+  QueryExecutor(DataSource dataSource, SqlResourceLoader sqlResourceLoader, Logger logger) {
+    this.dataSource = dataSource;
+    this.sqlResourceLoader = sqlResourceLoader;
+    this.logger = logger;
+  }
+
+  public void queryForEach(String sqlFile, StatementConfigurer configurer, RowConsumer consumer) {
+    try (Connection connection = dataSource.getConnection();
+        PreparedStatement ps = connection.prepareStatement(
+            sqlResourceLoader.load("sqls/" + sqlFile))) {
+      configurer.configure(ps);
+      ps.execute();
+      try (ResultSet rs = ps.getResultSet()) {
+        while (rs.next()) {
+          consumer.consume(rs);
+        }
+      }
+    } catch (SQLException | FileNotFoundException ex) {
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
+    }
+  }
+
+  public <T> List<T> queryList(String sqlFile, StatementConfigurer configurer,
+      RowMapper<T> mapper) {
+    List<T> results = new ArrayList<>();
+    try (Connection connection = dataSource.getConnection();
+        PreparedStatement ps = connection.prepareStatement(
+            sqlResourceLoader.load("sqls/" + sqlFile))) {
+      configurer.configure(ps);
+      ps.execute();
+      try (ResultSet rs = ps.getResultSet()) {
+        while (rs.next()) {
+          results.add(mapper.map(rs));
+        }
+      }
+    } catch (SQLException | FileNotFoundException ex) {
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
+    }
+    return results;
+  }
+
+  public <T> T querySingle(String sqlFile, StatementConfigurer configurer, RowMapper<T> mapper) {
+    try (Connection connection = dataSource.getConnection();
+        PreparedStatement ps = connection.prepareStatement(
+            sqlResourceLoader.load("sqls/" + sqlFile))) {
+      configurer.configure(ps);
+      ps.execute();
+      try (ResultSet rs = ps.getResultSet()) {
+        if (rs.next()) {
+          return mapper.map(rs);
+        }
+      }
+    } catch (SQLException | FileNotFoundException ex) {
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
+    }
+    return null;
+  }
+
+  public void executeUpdate(String sqlFile, StatementConfigurer configurer) {
+    try (Connection connection = dataSource.getConnection();
+        PreparedStatement ps = connection.prepareStatement(
+            sqlResourceLoader.load("sqls/" + sqlFile))) {
+      configurer.configure(ps);
+      ps.execute();
+    } catch (SQLException | FileNotFoundException ex) {
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
+    }
+  }
+
+  public int executeUpdateWithCount(String sqlFile, StatementConfigurer configurer) {
+    try (Connection connection = dataSource.getConnection();
+        PreparedStatement ps = connection.prepareStatement(
+            sqlResourceLoader.load("sqls/" + sqlFile))) {
+      configurer.configure(ps);
+      return ps.executeUpdate();
+    } catch (SQLException | FileNotFoundException ex) {
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
+      return 0;
+    }
+  }
+
+  public int executeInsertWithGeneratedKey(String sqlFile, StatementConfigurer configurer) {
+    try (Connection connection = dataSource.getConnection();
+        PreparedStatement ps = connection.prepareStatement(
+            sqlResourceLoader.load("sqls/" + sqlFile),
+            PreparedStatement.RETURN_GENERATED_KEYS)) {
+      configurer.configure(ps);
+      ps.executeUpdate();
+      try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+        if (generatedKeys.next()) {
+          return generatedKeys.getInt(1);
+        }
+      }
+    } catch (SQLException | FileNotFoundException ex) {
+      logger.log(Level.SEVERE, ex.getMessage(), ex);
+    }
+    return -1;
+  }
+
+  public void executeScript(String script) {
+    executeUpdate(script, _ -> {
+    });
+  }
+}

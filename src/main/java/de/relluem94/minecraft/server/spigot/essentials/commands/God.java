@@ -1,110 +1,118 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_GOD_OFF;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_GOD_ON;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TARGET_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_LESS_ARGUMENTS;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_TO_MANY_ARGUMENTS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
-import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @CommandName("god")
 public class God implements CommandConstruct {
 
-    @Override
-    public CommandsEnum[] getCommands() {
-        return new CommandsEnum[0];
-    }
+  private ServiceContext serviceContext;
 
-    @Override
-    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.serviceContext = context;
+  }
 
-        if (isCMDBlock(sender) || isConsole(sender)) {
-            if (args.length < 1) {
-                sender.sendMessage(PLUGIN_COMMAND_TO_LESS_ARGUMENTS);
-                return true;   
-            }
-            
-            toggleGodMode(sender, args[0]);
-            return true; 
-        }
+  @Override
+  public CommandsEnum[] getCommands() {
+    return new CommandsEnum[0];
+  }
 
-        if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
-            return true;
-        }
+  @Override
+  public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
+      @NonNull String label, String[] args) {
 
-        Player p = (Player) sender;
-            
-        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-            return true;
-        }
-
-        if (args.length > 0) {
-            p.sendMessage(PLUGIN_COMMAND_TO_MANY_ARGUMENTS);
-            return true;   
-        }
-
-        toggleGodMode(p);
+    if (isCMDBlock(sender) || isConsole(sender)) {
+      if (args.length < 1) {
+        sender.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
         return true;
+      }
+
+      toggleGodMode(sender, args[0]);
+      return true;
     }
 
-    private void toggleGodMode(@NotNull Player p){
-        p.sendMessage(!p.isInvulnerable() ? PLUGIN_COMMAND_GOD_ON : PLUGIN_COMMAND_GOD_OFF);
-        p.setInvulnerable(!p.isInvulnerable());
+    if (!isPlayer(sender)) {
+      sender.sendMessage(
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      return true;
     }
 
-    private void toggleGodMode(CommandSender sender, String targetName) {
-        Player target = Bukkit.getPlayer(targetName);
-        
-        if (target == null) {
-            sender.sendMessage(String.format(PLUGIN_COMMAND_TARGET_NOT_A_PLAYER, targetName));
-            return;
-        }
+    Player p = (Player) sender;
 
-        toggleGodMode(target);
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      return true;
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        List<String> tabList = new ArrayList<>();
-
-        if (!Permission.isAuthorized(commandSender, Groups.getGroup("mod").getId())) {
-            return tabList;
-        }
-
-        if (isPlayer(commandSender)) {
-            return tabList;
-        }
-
-        if(strings.length > 1){
-            return tabList;
-        }
-
-        tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-
-        return tabList;
+    if (args.length > 0) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_MANY_ARGUMENTS));
+      return true;
     }
+
+    toggleGodMode(p);
+    return true;
+  }
+
+  private void toggleGodMode(@NotNull Player p) {
+    p.sendMessage(!p.isInvulnerable()
+        ? serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_GOD_ON)
+        : serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_GOD_OFF));
+    p.setInvulnerable(!p.isInvulnerable());
+  }
+
+  private void toggleGodMode(CommandSender sender, String targetName) {
+    Player target = Bukkit.getPlayer(targetName);
+
+    if (target == null) {
+      sender.sendMessage(
+          serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName));
+      return;
+    }
+
+    toggleGodMode(target);
+  }
+
+  @Override
+  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
+      @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    List<String> tabList = new ArrayList<>();
+
+    if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
+      return tabList;
+    }
+
+    if (isPlayer(commandSender)) {
+      return tabList;
+    }
+
+    if (strings.length > 1) {
+      return tabList;
+    }
+
+    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+
+    return tabList;
+  }
 }

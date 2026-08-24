@@ -1,32 +1,42 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import org.bukkit.plugin.Plugin;
 
-public class ConfigManager implements IEnable, IDisable {
+public class ConfigManager implements Enable, Disable {
 
-    @Override
-    public void enable()  {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_LOADING_CONFIGS);
+  @Override
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
 
-        if (RelluEssentials.getInstance().getDataFolder().exists()) {
-            return;
-        }
+    TranslationService translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        translationService.get(MessageKey.PLUGIN_MANAGER_LOADING_CONFIGS));
 
-        if(!RelluEssentials.getInstance().getDataFolder().mkdir()){
-            consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_FOLDER_MKDIR_ERROR);
-        }
-        
-        RelluEssentials.getInstance().saveDefaultConfig();
-
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_CONFIGS_LOADED);
+    if (plugin.getDataFolder().exists()) {
+      return;
     }
 
-    @Override
-    public void disable() {
-        RelluEssentials.getInstance().saveConfig();
+    if (!plugin.getDataFolder().mkdir()) {
+      consoleSendMessage(PLUGIN_NAME_CONSOLE,
+          translationService.get(MessageKey.PLUGIN_FOLDER_MKDIR_ERROR));
     }
-    
+
+    RelluEssentials.getInstance().saveDefaultConfig();
+
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        translationService.get(MessageKey.PLUGIN_MANAGER_CONFIGS_LOADED));
+  }
+
+  @Override
+  public void disable(Plugin plugin) {
+    plugin.saveConfig();
+  }
 }

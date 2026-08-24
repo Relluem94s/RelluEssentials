@@ -1,52 +1,67 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_AUTOSAVE_REGISTERED;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_MANAGER_REGISTER_AUTOSAVE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disable;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import java.util.Optional;
+import org.bukkit.plugin.Plugin;
 
-public class AutoSaveManager implements IEnable, IDisable {
+public class AutoSaveManager implements Enable, Disable {
 
-    public static final long AUTO_SAVE_MINUTES = 2;
+  public static final long AUTO_SAVE_MINUTES = 2;
+  private final int MAX_RETRIES = 4;
+  private int count = 0;
+  private ServiceContext context;
 
-    @Override
-    public void enable() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_REGISTER_AUTOSAVE);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                BagHelper.saveBags();
-            }
-        }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 * 60 * AUTO_SAVE_MINUTES);
+  @Override
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    context = relluEssentialsPlugin.getServiceContext();
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {               
-                PlayerHelper.savePlayers();
-            }
-        }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 *  60 * AUTO_SAVE_MINUTES);
+    Optional<GroupEntry> adminGroup = context.getGroupService()
+        .findGroupByName("admin");
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {               
-                PlayerHelper.savePlayersInv();
-            }
-        }.runTaskTimer(RelluEssentials.getInstance(), 0L,  20 *  60 * AUTO_SAVE_MINUTES);
-
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_AUTOSAVE_REGISTERED);
+    if (!adminGroup.isPresent() && count <= MAX_RETRIES) {
+      count++;
+      context.getSchedulerService().runTaskLater(() -> {
+        enable(plugin);
+      }, 100);
     }
 
-    @Override
-    public void disable() {
-        BagHelper.saveBags();
-        PlayerHelper.savePlayers();
-        PlayerHelper.savePlayersInv();
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        context.getTranslationService().get(MessageKey.PLUGIN_MANAGER_REGISTER_AUTOSAVE));
+
+    context.getSchedulerService().runTaskTimer(() -> adminGroup.ifPresent(context.getBagService()::savePendingBagUpdates),
+        0L, 20 * 60 * AUTO_SAVE_MINUTES);
+
+    context.getSchedulerService().runTaskTimer(
+        () -> adminGroup.ifPresent(context.getPlayerService()::savePlayers),
+        0L, 20 * 60 * AUTO_SAVE_MINUTES);
+
+    context.getSchedulerService().runTaskTimer(
+        () -> adminGroup.ifPresent(context.getPlayerService()::savePlayersInv),
+        0L, 20 * 60 * AUTO_SAVE_MINUTES);
+
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        context.getTranslationService().get(MessageKey.PLUGIN_MANAGER_AUTOSAVE_REGISTERED));
+  }
+
+  @Override
+  public void disable(Plugin plugin) {
+    Optional<GroupEntry> adminGroup = context.getGroupService().findGroupByName("admin");
+
+    if (adminGroup.isEmpty()) {
+      return;
     }
+
+    context.getBagService().savePendingBagUpdates(adminGroup.get());
+    context.getPlayerService().savePlayers(adminGroup.get());
+    context.getPlayerService().savePlayersInv(adminGroup.get());
+  }
 }

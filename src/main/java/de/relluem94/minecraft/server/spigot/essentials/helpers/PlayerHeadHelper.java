@@ -1,101 +1,133 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import java.net.URL;
-
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
+import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.Base64;
+import java.util.function.Consumer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.pojo.OfflinePlayerEntry;
-import java.util.Base64;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public class PlayerHeadHelper {
 
-    private PlayerHeadHelper() {
-        throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  private static final ItemStack PLAYER_HEAD = new ItemStack(Material.PLAYER_HEAD, 1);
+
+  private PlayerHeadHelper() {
+    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  }
+
+  /**
+   * Returns a consumer that applies custom head textures to ItemMeta.
+   *
+   * @param ch The custom head data.
+   * @return A consumer to be used in meta modifiers.
+   */
+  public static Consumer<ItemMeta> customHeadModifier(@NotNull CustomHeads ch) {
+    return meta -> {
+      if (!(meta instanceof SkullMeta skullMeta)) {
+        return;
+      }
+
+      if (ch.getBase64().isEmpty()) {
+        return;
+      }
+
+      try {
+        String jsonString = new String(Base64.getDecoder().decode(ch.getBase64()));
+        String skinUrl = extractSkinUrlFromBase64(jsonString);
+
+        if (skinUrl != null) {
+          PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
+          PlayerTextures textures = profile.getTextures();
+          textures.setSkin(URI.create(skinUrl).toURL());
+          profile.setTextures(textures);
+          skullMeta.setOwnerProfile(profile);
+          skullMeta.setDisplayName(ch.getName());
+        }
+      } catch (MalformedURLException e) {
+        throw new RuntimeException(e);
+      }
+    };
+  }
+
+  public static void createSkull(String name, org.bukkit.plugin.Plugin plugin,
+      java.util.function.Consumer<org.bukkit.inventory.ItemStack> callback) {
+    OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(name);
+    final org.bukkit.inventory.ItemStack is = new ItemStack(Material.PLAYER_HEAD, 1);
+    if (player == null) {
+      callback.accept(is);
+      return;
     }
 
-    private static final ItemStack PLAYER_HEAD = new ItemStack(Material.PLAYER_HEAD, 1);
+    org.bukkit.profile.PlayerProfile profile = org.bukkit.Bukkit.createPlayerProfile(player.getId(),
+        player.getName());
+    profile.update().whenComplete((updated, ex) -> Bukkit.getScheduler().runTask(plugin, () -> {
+      SkullMeta sm = (SkullMeta) is.getItemMeta();
+      if (sm == null) {
+        callback.accept(is);
+        return;
+      }
+      if (ex == null && updated != null && updated.isComplete()) {
+        sm.setOwnerProfile(updated);
+      } else {
+        sm.setOwningPlayer(Bukkit.getOfflinePlayer(player.getId()));
+      }
+      sm.setDisplayName(player.getName());
+      is.setItemMeta(sm);
+      callback.accept(is);
+    }));
+  }
 
-    public static void createSkull(String name, org.bukkit.plugin.Plugin plugin, java.util.function.Consumer<org.bukkit.inventory.ItemStack> callback) {
-        OfflinePlayerEntry player = PlayerHelper.getOfflinePlayerByName(name);
-        final org.bukkit.inventory.ItemStack is = PLAYER_HEAD.clone();
-        if (player == null) {
-            callback.accept(is);
-            return;
-        }
-
-        org.bukkit.profile.PlayerProfile profile = org.bukkit.Bukkit.createPlayerProfile(player.getId(), player.getName());
-        profile.update().whenComplete((updated, ex) -> Bukkit.getScheduler().runTask(plugin, () -> {
-            SkullMeta sm = (SkullMeta) is.getItemMeta();
-            if (sm == null) {
-                callback.accept(is);
-                return;
-            }
-            if (ex == null && updated != null && updated.isComplete()) {
-                sm.setOwnerProfile(updated);
-            } else {
-                sm.setOwningPlayer(Bukkit.getOfflinePlayer(player.getId()));
-            }
-            sm.setDisplayName(player.getName());
-            is.setItemMeta(sm);
-            callback.accept(is);
-        }));
+  public static @NotNull ItemStack getCustomSkull(@NotNull CustomHeads ch) {
+    ItemStack ph = PLAYER_HEAD.clone();
+    if (ch.getBase64().isEmpty()) {
+      return ph;
     }
 
-    public static @NotNull ItemStack getCustomSkull(@NotNull CustomHeads ch) {
-        ItemStack ph = PLAYER_HEAD.clone();
-        if (ch.getBase64().isEmpty()) {
-            return ph;
-        }
-
-        SkullMeta sm = (SkullMeta) ph.getItemMeta();
-        if (sm == null) {
-            return ph;
-        }
-
-        try {
-            PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID(), ch.getName());
-            PlayerTextures textures = profile.getTextures();
-
-            String base64 = ch.getBase64();
-            String jsonString = new String(Base64.getDecoder().decode(base64));
-            String skinUrl = extractSkinUrlFromBase64(jsonString);
-
-            if (skinUrl != null) {
-                textures.setSkin(new URL(skinUrl));
-                profile.setTextures(textures);
-                sm.setOwnerProfile(profile);
-                sm.setDisplayName(ch.getName());
-            } else {
-                Bukkit.getLogger().warning("Couldn't a Skin URL for head '" + ch.getName() + "' extrahieren.");
-            }
-
-            ph.setItemMeta(sm);
-        } catch (Exception e) {
-            Bukkit.getLogger().warning("Couldn't create the custom head '" + ch.getName() + "': " + e.getMessage());
-        }
-
-        return ph;
+    SkullMeta sm = (SkullMeta) ph.getItemMeta();
+    if (sm == null) {
+      return ph;
     }
 
-    private static @Nullable String extractSkinUrlFromBase64(String jsonString) {
-        try {
-            JSONObject json = new JSONObject(jsonString);
-            return json.getJSONObject("textures")
-                    .getJSONObject("SKIN")
-                    .getString("url");
-        } catch (Exception e) {
-            Bukkit.getLogger().warning("Couldn't in parsing the Base64 texture: " + e.getMessage());
-            return null;
-        }
+    try {
+      String jsonString = new String(Base64.getDecoder().decode(ch.getBase64()));
+      String skinUrl = extractSkinUrlFromBase64(jsonString);
+
+      if (skinUrl != null) {
+        PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
+        PlayerTextures textures = profile.getTextures();
+        textures.setSkin(URI.create(skinUrl).toURL());
+        profile.setTextures(textures);
+        sm.setOwnerProfile(profile);
+        sm.setDisplayName(ch.getName());
+        ph.setItemMeta(sm);
+      }
+    } catch (MalformedURLException e) {
+      throw new RuntimeException(e);
     }
+
+    return ph;
+  }
+
+  private static @Nullable String extractSkinUrlFromBase64(String jsonString) {
+    try {
+      JSONObject json = new JSONObject(jsonString);
+      return json.getJSONObject("textures")
+          .getJSONObject("SKIN")
+          .getString("url");
+    } catch (Exception e) {
+      Bukkit.getLogger().warning("Couldn't in parsing the Base64 texture: " + e.getMessage());
+      return null;
+    }
+  }
 }

@@ -1,0 +1,137 @@
+package de.relluem94.minecraft.server.spigot.essentials.listeners;
+
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.areBlocksMaterial;
+
+import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import org.bukkit.Effect;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
+import org.jspecify.annotations.NonNull;
+
+@ListenerName("CloudSailor")
+public class CloudSailor implements ListenerConstruct {
+
+  private final Random random = new Random();
+  private CustomItem cloudSailorItem = null;
+  private CustomItem cloudBoots = null;
+
+  private ServiceContext serviceContext;
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.serviceContext = context;
+    cloudSailorItem = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_CLOUD_SAILOR)).orElseThrow();
+    cloudBoots = serviceContext.getItemService().find(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow();
+  }
+
+  @EventHandler
+  public void mobDeath(@NonNull EntityDeathEvent event) {
+    LivingEntity e = event.getEntity();
+    if (e instanceof Chicken) {
+      int i = random.nextInt(150);
+
+      if (i == 19 || i == 94) {
+        event.getDrops().clear();
+        event.setDroppedExp(30);
+        event.getDrops().add(cloudSailorItem.toItemStack());
+      }
+    }
+  }
+
+  @EventHandler
+  public void cloudBootsCrafting(@NonNull PrepareItemCraftEvent e) {
+    if (e.getRecipe() != null && e.getRecipe().getResult().hasItemMeta()
+        && cloudSailorItem.toItemStack().isSimilar(e.getRecipe().getResult())) {
+      for (ItemStack is : e.getInventory().getMatrix()) {
+        if (is != null) {
+          if (is.hasItemMeta()) {
+            if (!cloudSailorItem.toItemStack().isSimilar(is)) {
+              e.getInventory().setResult(null);
+            }
+          } else {
+            e.getInventory().setResult(null);
+          }
+        }
+      }
+    }
+  }
+
+  @EventHandler(priority = EventPriority.HIGH)
+  public void onFallDamage(@NonNull EntityDamageEvent e) {
+    if (e.getEntity() instanceof Player p) {
+      boolean useCloudSailor = serviceContext.getWorldGroupService()
+          .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
+      if (useCloudSailor) {
+        if (e.getCause().equals(DamageCause.FALL)) {
+          if (p.getInventory().getBoots() != null && p.getInventory().getBoots()
+              .equals(cloudBoots.toItemStack())) {
+            e.setCancelled(true);
+          } else if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())) {
+            e.setDamage(e.getDamage() / 2);
+          }
+        }
+      }
+    }
+  }
+
+  @EventHandler
+  public void onSail(@NonNull PlayerMoveEvent e) {
+    Player p = e.getPlayer();
+    boolean useCloudSailor = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.USE_CLOUDSAILOR, p.getWorld().getName());
+    if (useCloudSailor) {
+      if (e.getTo() != null && !e.getFrom().getBlock().getLocation()
+          .equals(e.getTo().getBlock().getLocation())) {
+        if (p.getInventory().getItemInOffHand().equals(cloudSailorItem.toItemStack())
+            || p.getInventory().getBoots() != null && p.getInventory().getBoots()
+            .equals(cloudBoots.toItemStack())) {
+          if (!p.isFlying() && !p.isSneaking()) {
+
+            List<Block> blocks = new ArrayList<>();
+            blocks.add(p.getLocation().getBlock().getRelative(BlockFace.DOWN));
+            blocks.add(blocks.getFirst().getRelative(BlockFace.DOWN));
+
+            blocks.add(blocks.getFirst().getRelative(BlockFace.EAST));
+            blocks.add(blocks.getFirst().getRelative(BlockFace.NORTH));
+            blocks.add(blocks.getFirst().getRelative(BlockFace.SOUTH));
+            blocks.add(blocks.getFirst().getRelative(BlockFace.WEST));
+
+            if (areBlocksMaterial(blocks, Material.AIR)) {
+              Vector dir = p.getLocation().getDirection().multiply(0.5);
+              Vector vec = new Vector(dir.getX(), -0.001D, dir.getZ());
+              p.setVelocity(vec);
+              p.getWorld().playEffect(p.getLocation(), Effect.BAT_TAKEOFF, 1);
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -8,11 +8,15 @@ Find out how to get the plugin and how to use it.
 ## Usage of Plugin
 1. [Download](https://github.com/Relluem94s/RelluEssentials/packages) or [Build](https://github.com/Relluem94s/RelluEssentials#build) the plugin jar 
 2. Copy the jar into the `plugin` Directory
-3. Start and Stop the Server
-4. Set Host, User and Password of your MySQL Server in the config.yml
-5. Start your Server again
-6. Use (`/setGroup`) in your Server Console to grant permission to your player
-7. Enjoy
+3. Start and Stop the Server to create the config files
+4. Create a user for the Plugin with sufficient rights
+   (`GRANT CREATE ON *.* TO '<user>'@'<host>';`)
+   or
+   (`GRANT ALL ON `rellu_essentials`.* TO '<user>'@'<host>';`)
+5. Set Host, User and Password of your MySQL Server in the config.yml 
+6. Start your Server again
+7. Use (`/setGroup`) in your Server Console to grant permission to your player
+8. Enjoy
 
 # Functionality 
 What does the plugin include?
@@ -37,11 +41,13 @@ What does the plugin include?
 * Teleport to your Bed spawn location or set list tp to homes that get saved in players.yml (`/home`)
 * Open the Inventory (`/inv`)
 * Message other Players (`/msg`)
+* Modify Blocks with (`/modify`)
 * Get More Stuff (`/more`)
 * Nick Player (`/nick`)
 * Change time to Night (`/night`)
 * Set Permission Group (`/setGroup`)
 * Poke a Player if he does not respond (`/poke`)
+*  Set Positions for Modify Command (`/postion`)
 * Portable Crafting Bench (`/craft`)
 * Print Message in Chat in Player / Command Block Name (`/print`)
 * Protect your Chests, Doors and other Blocks with (`/protect`)
@@ -50,7 +56,7 @@ What does the plugin include?
 * Save, Reload your config or more (`/rellu`)
 * Rename item in your Hand (`/rename`)
 * Repair your favorite Tools (`/repair`)
-* Does a rollback of a player (`/rollback`) (WIP)
+* Reply to Player (`/reply`)
 * Edit or Copy your Signs (`/sign`)
 * Teleport to World Spawn (`/spawn`)
 * Change your Speed with (`/speed`)
@@ -66,8 +72,7 @@ What does the plugin include?
 * Warps you to a defined Point (`/warp`)
 * Show where a Player is (`/where`)
 * Show Worlds or Teleport to the spawn (`/world`)
-* Set Positions for Modify Command (`/postion`)
-* Modify selected Blocks (`/modify`)
+
 
 
 ## NPCs
@@ -121,7 +126,7 @@ What does the plugin include?
     * Salvage (Salvage Tools and Armor and get back resources and enchantments) [needs some love]
 
 
-## Events
+## Listener
 * Better Chat Format (Player >> Message)
     * Color Codes for VIP and higher
     * Chat Channels Vip, Mod, Admin | #v, #m, #a
@@ -169,41 +174,10 @@ it will run a specified Dev-Sever (with docker mysql and phpmyadmin) check [Rell
 # Documentation
 How it is working? What's under the hood?
 
-## Helpers
-- AttributeHelper
-- BagHelper
-- BankerHelper
-- [BlockHelper](./docs/helpers/BlockHelper.md)
-- [ChatHelper](./docs/helpers/ChatHelper.md)
-- [ConfigHelper](./docs/helpers/ConfigHelper.md)
-- DatabaseHelper
-- EnchantmentHelper
-- ExperienceHelper
-- [InventoryHelper](./docs/helpers/InventoryHelper.md)
-- [ItemHelper](./docs/helpers/ItemHelper.md)
-- [MobHelper](./docs/helpers/MobHelper.md)
-- NPCHelper
-- PlayerHeadHelper
-- [PlayerHelper](./docs/helpers/PlayerHelper.md)
-- [ProtectionHelper](./docs/helpers/ProtectionHelper.md)
-- [RecipeHelper](./docs/helpers/RecipeHelper.md)
-- [SignHelper](./docs/helpers/SignHelper.md)
-- [StringHelper](./docs/helpers/StringHelper.md)
-- [TypeHelper](./docs/helpers/TypeHelper.md)
-- [UUIDHelper](./docs/helpers/UUIDHelper.md)
-- [WorldHelper](./docs/helpers/WorldHelper.md)
-- others
-  - [Vector2Location](./docs/helpers/Vector2Location.md)
-
-
-## API
-- BagAPI
-- BankAPI
-- NPCAPI
-- PlayerAPI
-- ProtectionAPI
-- WarpAPI
-
+## JavaDocs
+```shell
+mvn clean site:run -P docs -Dport=9090
+```
 
 ## Database Model
 ![Database Model](https://raw.githubusercontent.com/Relluem94s/RelluEssentials/master/db_model.svg)

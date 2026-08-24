@@ -1,14 +1,24 @@
 package de.relluem94.minecraft.server.spigot.essentials.managers;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.*;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
-public class SkillManager implements IEnable {
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import org.bukkit.plugin.Plugin;
 
-    @Override
-    public void enable() {
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_REGISTER_SKILLS);
-        consoleSendMessage(PLUGIN_NAME_CONSOLE, PLUGIN_COLOR_COMMAND + PLUGIN_MANAGER_SKILLS_REGISTERED);
-    }
-    
+public class SkillManager implements Enable {
+
+  @Override
+  public void enable(Plugin plugin) {
+    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
+    TranslationService translationService = relluEssentialsPlugin.getServiceContext().getTranslationService();
+
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_SKILLS));
+    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+        translationService.get(MessageKey.PLUGIN_MANAGER_SKILLS_REGISTERED));
+  }
 }

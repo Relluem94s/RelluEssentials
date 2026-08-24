@@ -1,0 +1,87 @@
+package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
+
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.normalizeYaw;
+
+import de.relluem94.minecraft.server.spigot.essentials.commands.Modify;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
+import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.rellulib.stores.DoubleStore;
+import java.util.ArrayList;
+import java.util.List;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
+
+public class PasteCommand implements SubCommand {
+
+  private final int blocksPerTick;
+  private final ServiceContext serviceContext;
+
+  public PasteCommand(ServiceContext serviceContext, int blocksPerTick) {
+    this.blocksPerTick = blocksPerTick;
+    this.serviceContext = serviceContext;
+  }
+
+  @Override
+  public void execute(Player player, String[] args) {
+    DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardEntry =
+        serviceContext.getClipboardService().getClipboard(player);
+    if (clipboardEntry == null || clipboardEntry.getSecondValue() == null
+        || clipboardEntry.getSecondValue().isEmpty()) {
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MODIFY_NO_CLIPBOARD));
+      return;
+    }
+
+    final long[] currentDelay = {0};
+    final int[] counter = {0};
+
+    Location playerTargetLoc = player.getLocation().clone();
+    playerTargetLoc.setX(playerTargetLoc.getBlockX());
+    playerTargetLoc.setY(playerTargetLoc.getBlockY());
+    playerTargetLoc.setZ(playerTargetLoc.getBlockZ());
+
+    float yaw = normalizeYaw(player.getLocation().getYaw());
+
+    List<ModifyHistoryEntry> history = new ArrayList<>();
+    for (ModifyClipboardEntry entry : clipboardEntry.getSecondValue()) {
+      Block block = getBlock(entry, yaw, playerTargetLoc);
+
+      history.add(
+          new ModifyHistoryEntry(block.getLocation(), block.getType(), block.getBlockData()));
+      serviceContext.getProtectionService().removeBlockProtectionIfExists(block);
+
+      BlockData rotatedData = ModifyHelper.rotateBlockData(entry.getData(), yaw);
+
+      serviceContext.getSchedulerService().runTaskLater(() -> {
+        block.setType(entry.getMaterial());
+        block.setBlockData(rotatedData);
+      }, currentDelay[0]);
+
+
+      counter[0]++;
+      if (counter[0] >= blocksPerTick) {
+        currentDelay[0]++;
+        counter[0] = 0;
+      }
+    }
+
+    serviceContext.getUndoHistoryService().addHistory(player, history);
+    player.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_MODIFY_PASTE_STARTED,
+            clipboardEntry.getSecondValue().size()));
+  }
+
+  @Override
+  public boolean matches(String[] args) {
+    return args.length == 1
+        && Modify.Commands.PASTE.getName().equalsIgnoreCase(args[0]);
+  }
+}

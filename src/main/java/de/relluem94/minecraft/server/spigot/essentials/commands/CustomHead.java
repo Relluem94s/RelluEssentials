@@ -1,93 +1,101 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_CUSTOMHEADS_TITLE;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_NOT_A_PLAYER;
-import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COMMAND_PERMISSION_MISSING;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper.getCustomSkull;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import de.relluem94.minecraft.server.spigot.essentials.CustomItems;
-import de.relluem94.minecraft.server.spigot.essentials.constants.CustomHeads;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Groups;
-import de.relluem94.minecraft.server.spigot.essentials.permissions.Permission;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @CommandName("customheads")
 public class CustomHead implements CommandConstruct {
 
-    @Override
-    public CommandsEnum[] getCommands() {
-        return new CommandsEnum[0];
+  private ServiceContext serviceContext;
+
+  @Override
+  public void injectContext(ServiceContext context) {
+    this.serviceContext = context;
+  }
+
+  @Override
+  public CommandsEnum[] getCommands() {
+    return new CommandsEnum[0];
+  }
+
+  @Override
+  public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
+      @NonNull String label, String[] args) {
+    if (!isPlayer(sender)) {
+      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER));
+      return true;
     }
 
-    @Override
-    public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command, @NonNull String label, String[] args) {
-        if (!isPlayer(sender)) {
-            sender.sendMessage(PLUGIN_COMMAND_NOT_A_PLAYER);
-            return true;
-        }
+    Player p = (Player) sender;
 
-        Player p = (Player) sender;
-
-        if (!Permission.isAuthorized(p, Groups.getGroup("mod").getId())) {
-            p.sendMessage(PLUGIN_COMMAND_PERMISSION_MISSING);
-            return true;
-        }
-            
-        org.bukkit.inventory.Inventory inv = InventoryHelper.createInventory(54, PLUGIN_COMMAND_CUSTOMHEADS_TITLE);
-        InventoryHelper.fillInventory(inv, CustomItems.npc_gui_disabled.getCustomItem());
-
-        inv.setItem(10, getCustomSkull(CustomHeads.BOOK1));
-        inv.setItem(11, getCustomSkull(CustomHeads.BOOKS1));
-        inv.setItem(12, getCustomSkull(CustomHeads.BOOKS2));
-        inv.setItem(13, getCustomSkull(CustomHeads.MONEY_BAG));
-        inv.setItem(14, getCustomSkull(CustomHeads.COMPUTER));
-        inv.setItem(15, getCustomSkull(CustomHeads.ASTRONAUT_HELMET));
-        inv.setItem(16, getCustomSkull(CustomHeads.BOOK1));
-        
-        inv.setItem(19, getCustomSkull(CustomHeads.DARK_OAK_LOG));
-        inv.setItem(20, getCustomSkull(CustomHeads.PRISMARINE));
-        inv.setItem(21, getCustomSkull(CustomHeads.QUARTZ));
-        inv.setItem(22, getCustomSkull(CustomHeads.BUSH));
-        inv.setItem(23, getCustomSkull(CustomHeads.DIAMOND_ORE));
-        inv.setItem(24, getCustomSkull(CustomHeads.PUMPKIN));
-        inv.setItem(25, getCustomSkull(CustomHeads.OAK_WOOD_PLANKS));
-        
-        inv.setItem(28, getCustomSkull(CustomHeads.SHARK));
-        inv.setItem(29, getCustomSkull(CustomHeads.SKULL1));
-        inv.setItem(30, getCustomSkull(CustomHeads.SKULL2));
-        inv.setItem(31, getCustomSkull(CustomHeads.ENDERMANN));
-        inv.setItem(32, getCustomSkull(CustomHeads.LUCKY_BLOCK));
-        inv.setItem(33, getCustomSkull(CustomHeads.GREEN_ORB));
-        inv.setItem(34, getCustomSkull(CustomHeads.GOLDEN_CHEST));
-        
-        inv.setItem(37, getCustomSkull(CustomHeads.BREAD));
-        inv.setItem(38, getCustomSkull(CustomHeads.TELEVISON));
-        inv.setItem(39, getCustomSkull(CustomHeads.GUARDIAN));
-        inv.setItem(40, getCustomSkull(CustomHeads.ROBOT));
-        inv.setItem(41, getCustomSkull(CustomHeads.HAMBURGER));
-        inv.setItem(42, getCustomSkull(CustomHeads.CUPCAKE));
-        inv.setItem(43, getCustomSkull(CustomHeads.COMPANION_CUBE));
-        
-        p.openInventory(inv);        
-        return true;
+    if (!serviceContext.getGroupService().isSenderAuthorized(p, "mod")) {
+      p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      return true;
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        return new ArrayList<>();
-    }
+    org.bukkit.inventory.Inventory inv = InventoryHelper.createInventory(54,
+        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_CUSTOMHEADS_TITLE));
+    InventoryHelper.fillInventory(inv, serviceContext.getItemService().find(
+            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+        .orElseThrow().toItemStack());
+
+    inv.setItem(10, getCustomSkull(CustomHeads.BOOK1));
+    inv.setItem(11, getCustomSkull(CustomHeads.BOOKS1));
+    inv.setItem(12, getCustomSkull(CustomHeads.BOOKS2));
+    inv.setItem(13, getCustomSkull(CustomHeads.MONEY_BAG));
+    inv.setItem(14, getCustomSkull(CustomHeads.COMPUTER));
+    inv.setItem(15, getCustomSkull(CustomHeads.ASTRONAUT_HELMET));
+    inv.setItem(16, getCustomSkull(CustomHeads.BOOK1));
+
+    inv.setItem(19, getCustomSkull(CustomHeads.DARK_OAK_LOG));
+    inv.setItem(20, getCustomSkull(CustomHeads.PRISMARINE));
+    inv.setItem(21, getCustomSkull(CustomHeads.QUARTZ));
+    inv.setItem(22, getCustomSkull(CustomHeads.BUSH));
+    inv.setItem(23, getCustomSkull(CustomHeads.DIAMOND_ORE));
+    inv.setItem(24, getCustomSkull(CustomHeads.PUMPKIN));
+    inv.setItem(25, getCustomSkull(CustomHeads.OAK_WOOD_PLANKS));
+
+    inv.setItem(28, getCustomSkull(CustomHeads.SHARK));
+    inv.setItem(29, getCustomSkull(CustomHeads.SKULL1));
+    inv.setItem(30, getCustomSkull(CustomHeads.SKULL2));
+    inv.setItem(31, getCustomSkull(CustomHeads.ENDERMANN));
+    inv.setItem(32, getCustomSkull(CustomHeads.LUCKY_BLOCK));
+    inv.setItem(33, getCustomSkull(CustomHeads.GREEN_ORB));
+    inv.setItem(34, getCustomSkull(CustomHeads.GOLDEN_CHEST));
+
+    inv.setItem(37, getCustomSkull(CustomHeads.BREAD));
+    inv.setItem(38, getCustomSkull(CustomHeads.TELEVISON));
+    inv.setItem(39, getCustomSkull(CustomHeads.GUARDIAN));
+    inv.setItem(40, getCustomSkull(CustomHeads.ROBOT));
+    inv.setItem(41, getCustomSkull(CustomHeads.HAMBURGER));
+    inv.setItem(42, getCustomSkull(CustomHeads.CUPCAKE));
+    inv.setItem(43, getCustomSkull(CustomHeads.COMPANION_CUBE));
+
+    p.openInventory(inv);
+    return true;
+  }
+
+  @Override
+  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
+      @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    return new ArrayList<>();
+  }
 }
