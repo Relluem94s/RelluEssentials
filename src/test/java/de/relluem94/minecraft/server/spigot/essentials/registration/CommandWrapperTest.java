@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.wrappers;
+package de.relluem94.minecraft.server.spigot.essentials.registration;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,7 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
+import de.relluem94.minecraft.server.spigot.essentials.registration.CommandWrapper;
 import de.relluem94.minecraft.server.spigot.essentials.registries.CommandRegistry;
-import de.relluem94.minecraft.server.spigot.essentials.wrappers.CommandWrapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
