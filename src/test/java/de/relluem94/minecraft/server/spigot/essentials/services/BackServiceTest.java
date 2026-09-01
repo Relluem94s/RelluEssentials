@@ -67,10 +67,8 @@ class BackServiceTest {
 
     Optional<Location> result = backService.findBackPoint(player);
 
-    assertAll(
-        () -> assertTrue(result.isPresent()),
-        () -> assertEquals(location, result.get())
-    );
+    assertTrue(result.isPresent());
+    assertEquals(location, result.get());
   }
 
   @Test

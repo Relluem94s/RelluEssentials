@@ -100,12 +100,10 @@ class UndoHistoryServiceTest {
 
     List<ModifyHistoryEntry> result = undoHistoryService.popLastHistory(player);
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertEquals(singleHistory, result),
-        () -> assertEquals(1, result.size()),
-        () -> verify(undoHistoryRepository).removeLast(player)
-    );
+    assertNotNull(result);
+    assertEquals(singleHistory, result);
+    assertEquals(1, result.size());
+    verify(undoHistoryRepository).removeLast(player);
   }
 
   @Test
