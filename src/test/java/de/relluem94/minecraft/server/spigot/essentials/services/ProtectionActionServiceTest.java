@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -32,6 +31,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Chest;
 import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.Sign;
+import org.bukkit.block.data.type.WallHangingSign;
+import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -83,28 +85,19 @@ class ProtectionActionServiceTest {
   void removeProtectionFromBlockReturnsFalseWhenMaterialIsNotProtectable() {
     when(block.getType()).thenReturn(Material.DIRT);
     when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
-
-    Block eastRelative = mock(Block.class);
-    Block southRelative = mock(Block.class);
-    Block northRelative = mock(Block.class);
-    Block westRelative = mock(Block.class);
-    Block upRelative = mock(Block.class);
-
     BlockData nonMatchingData = mock(BlockData.class);
-    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(upRelative.getBlockData()).thenReturn(nonMatchingData);
+    Block eastRelative = buildRelativeBlockWithData(nonMatchingData);
+    Block southRelative = buildRelativeBlockWithData(nonMatchingData);
+    Block northRelative = buildRelativeBlockWithData(nonMatchingData);
+    Block westRelative = buildRelativeBlockWithData(nonMatchingData);
+    Block upRelative = buildRelativeBlockWithData(nonMatchingData);
 
     when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
     when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
     when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
     when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
     when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    setupPlayerEntryWithId();
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
@@ -118,21 +111,17 @@ class ProtectionActionServiceTest {
     when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
     when(block.getBlockData()).thenReturn(mock(Chest.class));
     when(block.getLocation()).thenReturn(location);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    setupPlayerEntryWithId();
 
     LocationEntry locationEntry = buildLocationEntry(99, location);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(any(Location.class))).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage("disallow")
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("disallow"));
   }
 
   @Test
@@ -142,22 +131,19 @@ class ProtectionActionServiceTest {
     when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
     when(block.getBlockData()).thenReturn(mock(Chest.class));
     when(block.getLocation()).thenReturn(location);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    setupPlayerEntryWithId();
 
     LocationEntry locationEntry = buildLocationEntry(1, location);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(any(Location.class))).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
+        "removed");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertFalse(result),
+    assertAll(() -> assertFalse(result),
         () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed")
-    );
+        () -> verify(player).sendMessage("removed"));
   }
 
   @Test
@@ -194,12 +180,11 @@ class ProtectionActionServiceTest {
     when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
     when(block.getLocation()).thenReturn(location);
     when(block.getBlockData()).thenReturn(mock(BlockData.class));
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    setupPlayerEntryWithId();
 
     LocationEntry existingLocationEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(existingLocationEntry);
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(
+        existingLocationEntry);
 
     boolean result = protectionActionService.protectBlock(player, block);
 
@@ -213,26 +198,16 @@ class ProtectionActionServiceTest {
     when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
     when(block.getLocation()).thenReturn(location);
     when(block.getBlockData()).thenReturn(mock(BlockData.class));
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    setupPlayerEntryWithId();
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
-        .thenReturn(builtEntry);
-
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION), eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
+    setupLocationServiceForSuccessfulProtection(location, builtEntry);
 
     boolean result = protectionActionService.protectBlock(player, block);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(locationService).save(builtEntry),
-        () -> verify(protectionService).saveProtectionAndAddToRegistry(eq(location), any(ProtectionEntry.class)),
-        () -> verify(player).sendMessage("protected")
-    );
+    assertAll(() -> assertTrue(result), () -> verify(locationService).save(builtEntry),
+        () -> verify(protectionService).saveProtectionAndAddToRegistry(eq(location),
+            any(ProtectionEntry.class)), () -> verify(player).sendMessage("protected"));
   }
 
   @Test
@@ -243,16 +218,14 @@ class ProtectionActionServiceTest {
     when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
     when(block.getLocation()).thenReturn(location);
     when(block.getBlockData()).thenReturn(mock(BlockData.class));
+    setupPlayerEntryWithId();
 
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
         .thenReturn(null);
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION), eq(1))).thenReturn(builtEntry);
+    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
+        eq(1))).thenReturn(builtEntry);
 
     boolean result = protectionActionService.protectBlock(player, block);
 
@@ -266,28 +239,21 @@ class ProtectionActionServiceTest {
     when(protectionService.isProtectableMaterial(Material.LEVER)).thenReturn(true);
     when(block.getLocation()).thenReturn(location);
     when(block.getBlockData()).thenReturn(mock(BlockData.class));
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    setupPlayerEntryWithId();
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
-        .thenReturn(builtEntry);
-
-    when(locationService.buildLocationEntry(any(Location.class), any(), any(LocationType.class), anyInt())).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
-
+    setupLocationServiceForSuccessfulProtection(location, builtEntry);
     protectionActionService.protectBlock(player, block);
 
-    verify(protectionService).saveProtectionAndAddToRegistry(eq(location), org.mockito.Mockito.argThat(entry -> {
-      JSONObject flags = entry.getFlags();
-      if (!flags.has(PLUGIN_EVENT_PROTECT_FLAGS)) {
-        return false;
-      }
-      JSONArray flagArray = flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
-      return flagArray.toList().contains(ProtectionFlags.ALLOW_REDSTONE.name());
-    }));
+    verify(protectionService).saveProtectionAndAddToRegistry(eq(location),
+        org.mockito.Mockito.argThat(entry -> {
+          JSONObject flags = entry.getFlags();
+          if (!flags.has(PLUGIN_EVENT_PROTECT_FLAGS)) {
+            return false;
+          }
+          JSONArray flagArray = flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
+          return flagArray.toList().contains(ProtectionFlags.ALLOW_REDSTONE.name());
+        }));
   }
 
   @Test
@@ -299,28 +265,21 @@ class ProtectionActionServiceTest {
 
     Door doorData = mock(Door.class);
     when(block.getBlockData()).thenReturn(doorData);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    setupPlayerEntryWithId();
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
-        .thenReturn(builtEntry);
-
-    when(locationService.buildLocationEntry(any(Location.class), any(), any(LocationType.class), anyInt())).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
-
+    setupLocationServiceForSuccessfulProtection(location, builtEntry);
     protectionActionService.protectBlock(player, block);
 
-    verify(protectionService).saveProtectionAndAddToRegistry(eq(location), org.mockito.Mockito.argThat(entry -> {
-      JSONObject flags = entry.getFlags();
-      if (!flags.has(PLUGIN_EVENT_PROTECT_FLAGS)) {
-        return false;
-      }
-      JSONArray flagArray = flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
-      return flagArray.toList().contains(ProtectionFlags.ALLOW_REDSTONE.name());
-    }));
+    verify(protectionService).saveProtectionAndAddToRegistry(eq(location),
+        org.mockito.Mockito.argThat(entry -> {
+          JSONObject flags = entry.getFlags();
+          if (!flags.has(PLUGIN_EVENT_PROTECT_FLAGS)) {
+            return false;
+          }
+          JSONArray flagArray = flags.getJSONArray(PLUGIN_EVENT_PROTECT_FLAGS);
+          return flagArray.toList().contains(ProtectionFlags.ALLOW_REDSTONE.name());
+        }));
   }
 
   @Test
@@ -340,23 +299,18 @@ class ProtectionActionServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
-        .thenReturn(builtEntry);
-
-    when(locationService.buildLocationEntry(any(Location.class), any(), any(LocationType.class), anyInt())).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
-
+    setupLocationServiceForSuccessfulProtection(location, builtEntry);
     protectionActionService.protectBlock(player, block);
 
-    verify(protectionService).saveProtectionAndAddToRegistry(eq(location), org.mockito.Mockito.argThat(entry -> {
-      JSONObject rights = entry.getRights();
-      if (!rights.has(PLUGIN_EVENT_PROTECT_RIGHTS)) {
-        return false;
-      }
-      JSONArray rightArray = rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
-      return rightArray.length() == 2;
-    }));
+    verify(protectionService).saveProtectionAndAddToRegistry(eq(location),
+        org.mockito.Mockito.argThat(entry -> {
+          JSONObject rights = entry.getRights();
+          if (!rights.has(PLUGIN_EVENT_PROTECT_RIGHTS)) {
+            return false;
+          }
+          JSONArray rightArray = rights.getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS);
+          return rightArray.length() == 2;
+        }));
   }
 
   @Test
@@ -364,65 +318,37 @@ class ProtectionActionServiceTest {
     Location location = new Location(world, 0, 0, 0);
     LocationEntry locationEntry = mock(LocationEntry.class);
     when(locationEntry.getLocation()).thenReturn(location);
-
-    JSONArray existingRights = new JSONArray();
-    existingRights.put(1);
-    JSONObject rightsJson = new JSONObject();
-    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
-
-    ProtectionEntry protectionEntry = new ProtectionEntry();
-    protectionEntry.setLocationEntry(locationEntry);
-    protectionEntry.setRights(rightsJson);
-
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD)).thenReturn("right added");
+    ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 1);
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD)).thenReturn("right added");
 
     protectionActionService.addRight(player, protectionEntry, 2, false);
 
-    assertAll(
-        () -> verify(protectionService).updateProtectionRights(protectionEntry),
+    assertAll(() -> verify(protectionService).updateProtectionRights(protectionEntry),
         () -> verify(protectionService).removeProtectionEntry(location),
         () -> verify(protectionService).putProtectionEntry(location, protectionEntry),
-        () -> verify(player).sendMessage("right added"),
-        () -> assertTrue(protectionEntry.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(2))
-    );
+        () -> verify(player).sendMessage("right added"), () -> assertTrue(
+            protectionEntry.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList()
+                .contains(2)));
   }
 
   @Test
   void addRightSendsFailedMessageWhenIdAlreadyExists() {
     LocationEntry locationEntry = mock(LocationEntry.class);
-
-    JSONArray existingRights = new JSONArray();
-    existingRights.put(2);
-    JSONObject rightsJson = new JSONObject();
-    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
-
-    ProtectionEntry protectionEntry = new ProtectionEntry();
-    protectionEntry.setLocationEntry(locationEntry);
-    protectionEntry.setRights(rightsJson);
-
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED)).thenReturn("right add failed");
+    ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 2);
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD_FAILED)).thenReturn("right add failed");
 
     protectionActionService.addRight(player, protectionEntry, 2, false);
 
-    assertAll(
-        () -> verify(protectionService, never()).updateProtectionRights(any()),
-        () -> verify(player).sendMessage("right add failed")
-    );
+    assertAll(() -> verify(protectionService, never()).updateProtectionRights(any()),
+        () -> verify(player).sendMessage("right add failed"));
   }
 
   @Test
   void addRightDoesNotSendMessageWhenSilent() {
     LocationEntry locationEntry = mock(LocationEntry.class);
-
-    JSONArray existingRights = new JSONArray();
-    existingRights.put(1);
-    JSONObject rightsJson = new JSONObject();
-    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
-
-    ProtectionEntry protectionEntry = new ProtectionEntry();
-    protectionEntry.setLocationEntry(locationEntry);
-    protectionEntry.setRights(rightsJson);
-
+    ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 1);
     protectionActionService.addRight(player, protectionEntry, 2, true);
 
     verify(player, never()).sendMessage(any(String.class));
@@ -447,67 +373,38 @@ class ProtectionActionServiceTest {
     Location location = new Location(world, 0, 0, 0);
     LocationEntry locationEntry = mock(LocationEntry.class);
     when(locationEntry.getLocation()).thenReturn(location);
-
-    JSONArray existingRights = new JSONArray();
-    existingRights.put(1);
-    existingRights.put(2);
-    JSONObject rightsJson = new JSONObject();
-    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
-
-    ProtectionEntry protectionEntry = new ProtectionEntry();
-    protectionEntry.setLocationEntry(locationEntry);
-    protectionEntry.setRights(rightsJson);
-
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE)).thenReturn("right removed");
+    ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 1, 2);
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE)).thenReturn("right removed");
 
     protectionActionService.removeRight(player, protectionEntry, 2, false);
 
-    assertAll(
-        () -> verify(protectionService).updateProtectionRights(protectionEntry),
+    assertAll(() -> verify(protectionService).updateProtectionRights(protectionEntry),
         () -> verify(protectionService).removeProtectionEntry(location),
         () -> verify(protectionService).putProtectionEntry(location, protectionEntry),
-        () -> verify(player).sendMessage("right removed"),
-        () -> assertFalse(protectionEntry.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList().contains(2))
-    );
+        () -> verify(player).sendMessage("right removed"), () -> assertFalse(
+            protectionEntry.getRights().getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS).toList()
+                .contains(2)));
   }
 
   @Test
   void removeRightSendsFailedMessageWhenIdDoesNotExist() {
     LocationEntry locationEntry = mock(LocationEntry.class);
-
-    JSONArray existingRights = new JSONArray();
-    existingRights.put(1);
-    JSONObject rightsJson = new JSONObject();
-    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
-
-    ProtectionEntry protectionEntry = new ProtectionEntry();
-    protectionEntry.setLocationEntry(locationEntry);
-    protectionEntry.setRights(rightsJson);
-
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED)).thenReturn("right remove failed");
+    ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 1);
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_REMOVE_FAILED)).thenReturn(
+        "right remove failed");
 
     protectionActionService.removeRight(player, protectionEntry, 99, false);
 
-    assertAll(
-        () -> verify(protectionService, never()).updateProtectionRights(any()),
-        () -> verify(player).sendMessage("right remove failed")
-    );
+    assertAll(() -> verify(protectionService, never()).updateProtectionRights(any()),
+        () -> verify(player).sendMessage("right remove failed"));
   }
 
   @Test
   void removeRightDoesNotSendMessageWhenSilent() {
     LocationEntry locationEntry = mock(LocationEntry.class);
-
-    JSONArray existingRights = new JSONArray();
-    existingRights.put(1);
-    existingRights.put(2);
-    JSONObject rightsJson = new JSONObject();
-    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
-
-    ProtectionEntry protectionEntry = new ProtectionEntry();
-    protectionEntry.setLocationEntry(locationEntry);
-    protectionEntry.setRights(rightsJson);
-
+    ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 1, 2);
     protectionActionService.removeRight(player, protectionEntry, 2, true);
 
     verify(player, never()).sendMessage(any(String.class));
@@ -531,24 +428,13 @@ class ProtectionActionServiceTest {
     Location location = new Location(world, 0, 0, 0);
     LocationEntry locationEntry = mock(LocationEntry.class);
     when(locationEntry.getLocation()).thenReturn(location);
-
-    JSONArray existingRights = new JSONArray();
-    existingRights.put(1);
-    existingRights.put(2);
-    JSONObject rightsJson = new JSONObject();
-    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
-
-    ProtectionEntry protectionEntry = new ProtectionEntry();
-    protectionEntry.setLocationEntry(locationEntry);
-    protectionEntry.setRights(rightsJson);
+    ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 1, 2);
 
     protectionActionService.removeRight(protectionEntry, 2);
 
-    assertAll(
-        () -> verify(protectionService).updateProtectionRights(protectionEntry),
+    assertAll(() -> verify(protectionService).updateProtectionRights(protectionEntry),
         () -> verify(protectionService).removeProtectionEntry(location),
-        () -> verify(protectionService).putProtectionEntry(location, protectionEntry)
-    );
+        () -> verify(protectionService).putProtectionEntry(location, protectionEntry));
   }
 
   @Test
@@ -564,7 +450,8 @@ class ProtectionActionServiceTest {
 
     ProtectionEntry protectionEntryWithNullLocation = new ProtectionEntry();
     protectionEntryWithNullLocation.setLocationEntry(null);
-    when(protectionService.getProtectionEntry(any(Location.class))).thenReturn(protectionEntryWithNullLocation);
+    when(protectionService.getProtectionEntry(any(Location.class))).thenReturn(
+        protectionEntryWithNullLocation);
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
@@ -579,7 +466,7 @@ class ProtectionActionServiceTest {
 
     Block eastRelative = mock(Block.class);
 
-    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    WallSign wallSign = mock(WallSign.class);
     when(wallSign.getFacing()).thenReturn(BlockFace.WEST);
     when(eastRelative.getBlockData()).thenReturn(wallSign);
     when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
@@ -593,15 +480,14 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
+        "removed");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertFalse(result),
+    assertAll(() -> assertFalse(result),
         () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed")
-    );
+        () -> verify(player).sendMessage("removed"));
   }
 
   @Test
@@ -612,7 +498,7 @@ class ProtectionActionServiceTest {
 
     Block eastRelative = mock(Block.class);
 
-    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    WallSign wallSign = mock(WallSign.class);
     when(wallSign.getFacing()).thenReturn(BlockFace.WEST);
     when(eastRelative.getBlockData()).thenReturn(wallSign);
     when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
@@ -626,14 +512,12 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage("disallow")
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("disallow"));
   }
 
   @Test
@@ -648,7 +532,7 @@ class ProtectionActionServiceTest {
     BlockData nonMatchingData = mock(BlockData.class);
     when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
 
-    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    WallSign wallSign = mock(WallSign.class);
     when(wallSign.getFacing()).thenReturn(BlockFace.NORTH);
     when(southRelative.getBlockData()).thenReturn(wallSign);
     when(southRelative.getRelative(BlockFace.SOUTH)).thenReturn(block);
@@ -663,15 +547,14 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
+        "removed");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertFalse(result),
+    assertAll(() -> assertFalse(result),
         () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed")
-    );
+        () -> verify(player).sendMessage("removed"));
   }
 
   @Test
@@ -688,7 +571,7 @@ class ProtectionActionServiceTest {
     when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
     when(southRelative.getBlockData()).thenReturn(nonMatchingData);
 
-    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    WallSign wallSign = mock(WallSign.class);
     when(wallSign.getFacing()).thenReturn(BlockFace.SOUTH);
     when(northRelative.getBlockData()).thenReturn(wallSign);
     when(northRelative.getRelative(BlockFace.NORTH)).thenReturn(block);
@@ -704,15 +587,14 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
+        "removed");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertFalse(result),
+    assertAll(() -> assertFalse(result),
         () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed")
-    );
+        () -> verify(player).sendMessage("removed"));
   }
 
   @Test
@@ -731,7 +613,7 @@ class ProtectionActionServiceTest {
     when(southRelative.getBlockData()).thenReturn(nonMatchingData);
     when(northRelative.getBlockData()).thenReturn(nonMatchingData);
 
-    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    WallSign wallSign = mock(WallSign.class);
     when(wallSign.getFacing()).thenReturn(BlockFace.EAST);
     when(westRelative.getBlockData()).thenReturn(wallSign);
     when(westRelative.getRelative(BlockFace.WEST)).thenReturn(block);
@@ -748,15 +630,14 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
+        "removed");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertFalse(result),
+    assertAll(() -> assertFalse(result),
         () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed")
-    );
+        () -> verify(player).sendMessage("removed"));
   }
 
   @Test
@@ -777,7 +658,7 @@ class ProtectionActionServiceTest {
     when(northRelative.getBlockData()).thenReturn(nonMatchingData);
     when(westRelative.getBlockData()).thenReturn(nonMatchingData);
 
-    org.bukkit.block.data.type.Sign standingSign = mock(org.bukkit.block.data.type.Sign.class);
+    Sign standingSign = mock(Sign.class);
     when(upRelative.getBlockData()).thenReturn(standingSign);
     when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
     when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
@@ -794,15 +675,14 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
+        "removed");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertFalse(result),
+    assertAll(() -> assertFalse(result),
         () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed")
-    );
+        () -> verify(player).sendMessage("removed"));
   }
 
   @Test
@@ -823,7 +703,7 @@ class ProtectionActionServiceTest {
     when(northRelative.getBlockData()).thenReturn(nonMatchingData);
     when(westRelative.getBlockData()).thenReturn(nonMatchingData);
 
-    org.bukkit.block.data.type.Sign standingSign = mock(org.bukkit.block.data.type.Sign.class);
+    Sign standingSign = mock(Sign.class);
     when(upRelative.getBlockData()).thenReturn(standingSign);
     when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
     when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
@@ -840,14 +720,12 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage("disallow")
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("disallow"));
   }
 
   @Test
@@ -868,7 +746,7 @@ class ProtectionActionServiceTest {
     when(northRelative.getBlockData()).thenReturn(nonMatchingData);
     when(westRelative.getBlockData()).thenReturn(nonMatchingData);
 
-    org.bukkit.block.data.type.Sign standingSign = mock(org.bukkit.block.data.type.Sign.class);
+    Sign standingSign = mock(Sign.class);
     when(upRelative.getBlockData()).thenReturn(standingSign);
     when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
     when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
@@ -911,23 +789,26 @@ class ProtectionActionServiceTest {
     when(block.getRelative(BlockFace.EAST)).thenReturn(eastNeighbour);
     when(block.getRelative(BlockFace.WEST)).thenReturn(westNeighbour);
 
-    try (var mockedStatic = org.mockito.Mockito.mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.class)) {
-      mockedStatic.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.hasPermission(eastNeighbour, player)).thenReturn(true);
+    try (var mockedStatic = org.mockito.Mockito.mockStatic(
+        de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.class)) {
+      mockedStatic.when(
+          () -> de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.hasPermission(
+              eastNeighbour, player)).thenReturn(true);
 
       PlayerEntry playerEntry = buildPlayerEntry();
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
-      when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null);
-      when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
-      when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY)).thenReturn("chest deny");
+      when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(
+          null);
+      when(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+      when(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY)).thenReturn("chest deny");
 
       boolean result = protectionActionService.protectBlock(player, block);
 
-      assertAll(
-          () -> assertFalse(result),
-          () -> verify(player).sendMessage("disallow"),
-          () -> verify(player).sendMessage("chest deny")
-      );
+      assertAll(() -> assertFalse(result), () -> verify(player).sendMessage("disallow"),
+          () -> verify(player).sendMessage("chest deny"));
     }
   }
 
@@ -956,12 +837,13 @@ class ProtectionActionServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
         .thenReturn(builtEntry);
 
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION), eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
+    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
+        eq(1))).thenReturn(builtEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
+        "protected");
 
     boolean result = protectionActionService.protectBlock(player, block);
 
@@ -993,12 +875,13 @@ class ProtectionActionServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
         .thenReturn(builtEntry);
 
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION), eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
+    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
+        eq(1))).thenReturn(builtEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
+        "protected");
 
     boolean result = protectionActionService.protectBlock(player, block);
 
@@ -1030,12 +913,13 @@ class ProtectionActionServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
         .thenReturn(builtEntry);
 
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION), eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
+    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
+        eq(1))).thenReturn(builtEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
+        "protected");
 
     boolean result = protectionActionService.protectBlock(player, block);
 
@@ -1067,12 +951,13 @@ class ProtectionActionServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
         .thenReturn(builtEntry);
 
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION), eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
+    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
+        eq(1))).thenReturn(builtEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
+        "protected");
 
     boolean result = protectionActionService.protectBlock(player, block);
 
@@ -1104,7 +989,8 @@ class ProtectionActionServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     LocationEntry existingLocationEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(existingLocationEntry);
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(
+        existingLocationEntry);
 
     boolean result = protectionActionService.protectBlock(player, block);
 
@@ -1138,12 +1024,13 @@ class ProtectionActionServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-        .thenReturn(null)
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
         .thenReturn(builtEntry);
 
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION), eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
+    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
+        eq(1))).thenReturn(builtEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
+        "protected");
 
     boolean result = protectionActionService.protectBlock(player, block);
 
@@ -1173,19 +1060,23 @@ class ProtectionActionServiceTest {
     when(block.getRelative(BlockFace.EAST)).thenReturn(eastNeighbour);
     when(block.getRelative(BlockFace.WEST)).thenReturn(westNeighbour);
 
-    try (var mockedStatic = org.mockito.Mockito.mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.class)) {
-      mockedStatic.when(() -> de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.hasPermission(eastNeighbour, player)).thenReturn(false);
+    try (var mockedStatic = org.mockito.Mockito.mockStatic(
+        de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.class)) {
+      mockedStatic.when(
+          () -> de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.hasPermission(
+              eastNeighbour, player)).thenReturn(false);
 
       PlayerEntry playerEntry = buildPlayerEntry();
       when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
       LocationEntry builtEntry = buildLocationEntry(1, location);
-      when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
-          .thenReturn(null)
-          .thenReturn(builtEntry);
+      when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(
+          null).thenReturn(builtEntry);
 
-      when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION), eq(1))).thenReturn(builtEntry);
-      when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn("protected");
+      when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
+          eq(1))).thenReturn(builtEntry);
+      when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
+          "protected");
 
       boolean result = protectionActionService.protectBlock(player, block);
 
@@ -1201,7 +1092,7 @@ class ProtectionActionServiceTest {
 
     Block eastRelative = mock(Block.class);
 
-    org.bukkit.block.data.type.WallHangingSign wallHangingSign = mock(org.bukkit.block.data.type.WallHangingSign.class);
+    WallHangingSign wallHangingSign = mock(WallHangingSign.class);
     when(wallHangingSign.getFacing()).thenReturn(BlockFace.WEST);
     when(eastRelative.getBlockData()).thenReturn(wallHangingSign);
     when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
@@ -1215,15 +1106,14 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
+        "removed");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertFalse(result),
+    assertAll(() -> assertFalse(result),
         () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed")
-    );
+        () -> verify(player).sendMessage("removed"));
   }
 
   @Test
@@ -1234,7 +1124,8 @@ class ProtectionActionServiceTest {
 
     Block eastRelative = mock(Block.class);
 
-    org.bukkit.block.data.type.WallHangingSign wallHangingSign = mock(org.bukkit.block.data.type.WallHangingSign.class);
+    WallHangingSign wallHangingSign = mock(
+        WallHangingSign.class);
     when(wallHangingSign.getFacing()).thenReturn(BlockFace.WEST);
     when(eastRelative.getBlockData()).thenReturn(wallHangingSign);
     when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
@@ -1248,14 +1139,12 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage("disallow")
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("disallow"));
   }
 
   @Test
@@ -1270,7 +1159,8 @@ class ProtectionActionServiceTest {
     Block upRelative = mock(Block.class);
     Block differentBlock = mock(Block.class);
 
-    org.bukkit.block.data.type.WallHangingSign wallHangingSign = mock(org.bukkit.block.data.type.WallHangingSign.class);
+    WallHangingSign wallHangingSign = mock(
+        WallHangingSign.class);
     when(wallHangingSign.getFacing()).thenReturn(BlockFace.WEST);
     when(eastRelative.getBlockData()).thenReturn(wallHangingSign);
     when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(differentBlock);
@@ -1313,7 +1203,7 @@ class ProtectionActionServiceTest {
     when(northRelative.getBlockData()).thenReturn(nonMatchingData);
     when(westRelative.getBlockData()).thenReturn(nonMatchingData);
 
-    org.bukkit.block.data.type.Door door = mock(org.bukkit.block.data.type.Door.class);
+    Door door = mock(Door.class);
     when(upRelative.getBlockData()).thenReturn(door);
     when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
     when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
@@ -1330,15 +1220,14 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
+        "removed");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertFalse(result),
+    assertAll(() -> assertFalse(result),
         () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed")
-    );
+        () -> verify(player).sendMessage("removed"));
   }
 
   @Test
@@ -1359,7 +1248,7 @@ class ProtectionActionServiceTest {
     when(northRelative.getBlockData()).thenReturn(nonMatchingData);
     when(westRelative.getBlockData()).thenReturn(nonMatchingData);
 
-    org.bukkit.block.data.type.Door door = mock(org.bukkit.block.data.type.Door.class);
+    Door door = mock(Door.class);
     when(upRelative.getBlockData()).thenReturn(door);
     when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
     when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
@@ -1376,14 +1265,12 @@ class ProtectionActionServiceTest {
     LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
     ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
     when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+    when(translationService.getWithPrefix(
+        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
 
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
-    assertAll(
-        () -> assertTrue(result),
-        () -> verify(player).sendMessage("disallow")
-    );
+    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("disallow"));
   }
 
   @Test
@@ -1404,7 +1291,7 @@ class ProtectionActionServiceTest {
     when(northRelative.getBlockData()).thenReturn(nonMatchingData);
     when(westRelative.getBlockData()).thenReturn(nonMatchingData);
 
-    org.bukkit.block.data.type.Door door = mock(org.bukkit.block.data.type.Door.class);
+    Door door = mock(Door.class);
     when(upRelative.getBlockData()).thenReturn(door);
     when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(differentBlock);
 
@@ -1425,43 +1312,21 @@ class ProtectionActionServiceTest {
   @Test
   void removeRightDoesNotSendMessageWhenSilentAndIdDoesNotExist() {
     LocationEntry locationEntry = mock(LocationEntry.class);
-
-    JSONArray existingRights = new JSONArray();
-    existingRights.put(1);
-    JSONObject rightsJson = new JSONObject();
-    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
-
-    ProtectionEntry protectionEntry = new ProtectionEntry();
-    protectionEntry.setLocationEntry(locationEntry);
-    protectionEntry.setRights(rightsJson);
-
+    ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 1);
     protectionActionService.removeRight(player, protectionEntry, 99, true);
 
-    assertAll(
-        () -> verify(protectionService, never()).updateProtectionRights(any()),
-        () -> verify(player, never()).sendMessage(any(String.class))
-    );
+    assertAll(() -> verify(protectionService, never()).updateProtectionRights(any()),
+        () -> verify(player, never()).sendMessage(any(String.class)));
   }
 
   @Test
   void addRightDoesNotSendMessageWhenSilentAndIdAlreadyExists() {
     LocationEntry locationEntry = mock(LocationEntry.class);
-
-    JSONArray existingRights = new JSONArray();
-    existingRights.put(2);
-    JSONObject rightsJson = new JSONObject();
-    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
-
-    ProtectionEntry protectionEntry = new ProtectionEntry();
-    protectionEntry.setLocationEntry(locationEntry);
-    protectionEntry.setRights(rightsJson);
-
+    ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 2);
     protectionActionService.addRight(player, protectionEntry, 2, true);
 
-    assertAll(
-        () -> verify(protectionService, never()).updateProtectionRights(any()),
-        () -> verify(player, never()).sendMessage(any(String.class))
-    );
+    assertAll(() -> verify(protectionService, never()).updateProtectionRights(any()),
+        () -> verify(player, never()).sendMessage(any(String.class)));
   }
 
   private PlayerEntry buildPlayerEntry() {
@@ -1480,6 +1345,46 @@ class ProtectionActionServiceTest {
   private ProtectionEntry buildProtectionEntry(LocationEntry locationEntry) {
     ProtectionEntry protectionEntry = new ProtectionEntry();
     protectionEntry.setLocationEntry(locationEntry);
+    return protectionEntry;
+  }
+
+  private Block buildRelativeBlockWithData(BlockData data) {
+    Block relative = mock(Block.class);
+    when(relative.getBlockData()).thenReturn(data);
+    return relative;
+  }
+
+  private void setupPlayerEntryWithId() {
+    PlayerEntry playerEntry = buildPlayerEntry();
+    playerEntry.setId(1);
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+  }
+
+  private void setupLocationServiceForSuccessfulProtection(Location location,
+      LocationEntry builtEntry) {
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
+        .thenReturn(builtEntry);
+    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
+        eq(1))).thenReturn(builtEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
+        "protected");
+  }
+
+  private JSONObject buildRightsJson(Integer... playerIds) {
+    JSONArray rights = new JSONArray();
+    for (Integer id : playerIds) {
+      rights.put(id);
+    }
+    JSONObject rightsJson = new JSONObject();
+    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, rights);
+    return rightsJson;
+  }
+
+  private ProtectionEntry buildProtectionEntryWithRights(LocationEntry locationEntry,
+      Integer... playerIds) {
+    ProtectionEntry protectionEntry = new ProtectionEntry();
+    protectionEntry.setLocationEntry(locationEntry);
+    protectionEntry.setRights(buildRightsJson(playerIds));
     return protectionEntry;
   }
 }
