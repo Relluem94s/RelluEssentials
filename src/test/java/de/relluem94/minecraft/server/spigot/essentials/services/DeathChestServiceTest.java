@@ -905,4 +905,59 @@ class DeathChestServiceTest {
     );
   }
 
+  @Test
+  void spawnDeathChestForPlayerUsesOriginalChestInventoryWhenHolderIsNotDoubleChest() {
+    ItemStack item = mock(ItemStack.class);
+    when(item.getType()).thenReturn(Material.DIRT);
+
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
+
+    Location location = new Location(world, 0, 64, 0);
+    when(player.getLocation()).thenReturn(location);
+    when(world.getBlockAt(any(Location.class))).thenReturn(originBlock);
+
+    when(originBlock.getRelative(0, 0, 0)).thenReturn(originBlock);
+    when(originBlock.getType()).thenReturn(Material.AIR);
+    when(originBlock.getRelative(BlockFace.NORTH)).thenReturn(neighborBlock);
+    when(neighborBlock.getType()).thenReturn(Material.AIR);
+
+    when(originBlock.getX()).thenReturn(0);
+    when(neighborBlock.getX()).thenReturn(0);
+    when(originBlock.getZ()).thenReturn(0);
+    when(neighborBlock.getZ()).thenReturn(-1);
+
+    when(originBlock.getBlockData()).thenReturn(originChestData);
+    when(neighborBlock.getBlockData()).thenReturn(neighborChestData);
+
+    Inventory singleChestInventory = mock(Inventory.class);
+    Chest nonDoubleChestHolder = mock(Chest.class);
+    when(originBlock.getState()).thenReturn(chestState);
+    when(chestState.getInventory()).thenReturn(singleChestInventory);
+    when(singleChestInventory.getHolder()).thenReturn(nonDoubleChestHolder);
+
+    when(originBlock.getLocation()).thenReturn(new Location(world, 0, 64, 0));
+    when(neighborBlock.getLocation()).thenReturn(new Location(world, 0, 64, -1));
+
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
+    when(serviceContext.getLocationService()).thenReturn(locationService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(playerEntry.getId()).thenReturn(1);
+    when(locationTypeService.findByName(LocationType.PROTECTION))
+        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
+
+    deathChestService.spawnDeathChestForPlayer(player);
+
+    assertAll(
+        () -> verify(singleChestInventory).addItem(item),
+        () -> verify(doubleChestInventory, never()).addItem(any(ItemStack.class))
+    );
+  }
+
 }
