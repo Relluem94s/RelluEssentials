@@ -2,12 +2,11 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 
+import de.relluem94.minecraft.server.spigot.essentials.builders.CustomItemBuilder;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
@@ -107,12 +106,12 @@ public class BankService {
   }
 
   /**
-   * Builds the list of upgrade item helpers from all registered bank tiers.
+   * Builds the list of upgrade items from all registered bank tiers.
    *
-   * @return list of {@link ItemHelper} representing each available bank tier upgrade
+   * @return list of {@link CustomItem} representing each available bank tier upgrade
    */
-  public @NonNull List<ItemHelper> getBankTiers() {
-    List<ItemHelper> bankTierItems = new ArrayList<>();
+  public @NonNull List<CustomItem> getBankTiers() {
+    List<CustomItem> bankTierItems = new ArrayList<>();
     for (BankTierEntry bte : bankTierRegistry.getBankTiers()) {
       String lore1 = serviceContext.getTranslationService()
           .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_COST_LORE, bte.getCost());
@@ -121,14 +120,22 @@ public class BankService {
       String lore3 = serviceContext.getTranslationService()
           .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_LIMIT_LORE, bte.getLimit());
 
-      ItemHelper itemHelper = new ItemHelper(new ItemStack(UPGRADE_MATERIAL, 1), bte.getName(),
-          Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore1, lore2, lore3));
-      itemHelper.setData(new NamespacedKey(plugin, "cost"), "" + bte.getCost());
-      bankTierItems.add(itemHelper);
+      CustomItem customItem = new CustomItemBuilder(
+          new RelluEssentialsNamespacedKey(
+              serviceContext.getPluginMetadataService().getName(),
+              bte.getName()),
+          UPGRADE_MATERIAL)
+          .displayName(bte.getName())
+          .type(CustomItem.Type.NPC_GUI)
+          .rarity(CustomItem.Rarity.NONE)
+          .lore(Arrays.asList(lore1, lore2, lore3))
+          .addPersistentData(new NamespacedKey(plugin, "cost").toString(), String.valueOf(bte.getCost()))
+          .build();
+
+      bankTierItems.add(customItem);
     }
     return bankTierItems;
   }
-
   /**
    * Deposits a percentage of the player's purse into their bank account.
    *

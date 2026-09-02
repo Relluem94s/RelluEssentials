@@ -21,7 +21,6 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.npc.BankerGui;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
@@ -231,10 +230,10 @@ public class BankerNpc extends TraderNpc implements BankerGui {
         resolveDisabledItem().toItemStack());
 
     int slot = 0;
-    List<ItemHelper> bankTiersItems = serviceContext.getBankService().getBankTiers();
+    List<CustomItem> bankTiersItems = serviceContext.getBankService().getBankTiers();
     for (int i = 0; i < bankTiersItems.size(); i++) {
       slot = InventoryHelper.getNextSlot(slot);
-      inv.setItem(slot, bankTiersItems.get(i).getCustomItem());
+      inv.setItem(slot, bankTiersItems.get(i).toItemStack());
       if (bankTiersItems.size() <= 3) {
         slot++; // for spacing
         slot++; // disables it self if enduser adds new banktier
