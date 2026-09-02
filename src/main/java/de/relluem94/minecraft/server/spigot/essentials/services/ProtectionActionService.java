@@ -218,9 +218,11 @@ public class ProtectionActionService {
   private JSONObject buildRightsJson(PlayerEntry pe) {
     int partnerPlayerId = resolvePartnerPlayerId(pe);
 
-    int[] rightHolderIds = partnerPlayerId != -1
-        ? new int[]{pe.getId(), partnerPlayerId}
-        : new int[]{pe.getId()};
+    JSONArray rightHolderIds = new JSONArray();
+    rightHolderIds.put(pe.getId());
+    if (partnerPlayerId != -1) {
+      rightHolderIds.put(partnerPlayerId);
+    }
 
     JSONObject rights = new JSONObject();
     rights.put(PLUGIN_EVENT_PROTECT_RIGHTS, rightHolderIds);
@@ -255,7 +257,6 @@ public class ProtectionActionService {
    * @param silent  if true, no messages will be sent to the player
    */
   public void addRight(Player p, @NotNull ProtectionEntry pre, int id, boolean silent) {
-    Location l = pre.getLocationEntry().getLocation();
     if (!pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)) {
       return;
     }
@@ -265,10 +266,11 @@ public class ProtectionActionService {
 
     if (!list.contains(id)) {
       list.add(id);
+      Location location = pre.getLocationEntry().getLocation();
       pre.setRights(new JSONObject().put(PLUGIN_EVENT_PROTECT_RIGHTS, list));
       serviceContext.getProtectionService().updateProtectionRights(pre);
-      serviceContext.getProtectionService().removeProtectionEntry(l);
-      serviceContext.getProtectionService().putProtectionEntry(l, pre);
+      serviceContext.getProtectionService().removeProtectionEntry(location);
+      serviceContext.getProtectionService().putProtectionEntry(location, pre);
       if (!silent) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_RIGHT_ADD));
