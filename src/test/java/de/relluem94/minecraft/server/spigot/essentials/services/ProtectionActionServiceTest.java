@@ -409,7 +409,6 @@ class ProtectionActionServiceTest {
 
   @Test
   void addRightDoesNotSendMessageWhenSilent() {
-    Location location = new Location(world, 0, 0, 0);
     LocationEntry locationEntry = mock(LocationEntry.class);
 
     JSONArray existingRights = new JSONArray();
@@ -444,6 +443,7 @@ class ProtectionActionServiceTest {
   void removeRightRemovesPlayerIdAndUpdatesRegistry() {
     Location location = new Location(world, 0, 0, 0);
     LocationEntry locationEntry = mock(LocationEntry.class);
+    when(locationEntry.getLocation()).thenReturn(location);
 
     JSONArray existingRights = new JSONArray();
     existingRights.put(1);
@@ -470,7 +470,6 @@ class ProtectionActionServiceTest {
 
   @Test
   void removeRightSendsFailedMessageWhenIdDoesNotExist() {
-    Location location = new Location(world, 0, 0, 0);
     LocationEntry locationEntry = mock(LocationEntry.class);
 
     JSONArray existingRights = new JSONArray();
@@ -528,6 +527,7 @@ class ProtectionActionServiceTest {
   void removeRightWithTwoArgsCallsSilentRemoveRight() {
     Location location = new Location(world, 0, 0, 0);
     LocationEntry locationEntry = mock(LocationEntry.class);
+    when(locationEntry.getLocation()).thenReturn(location);
 
     JSONArray existingRights = new JSONArray();
     existingRights.put(1);
