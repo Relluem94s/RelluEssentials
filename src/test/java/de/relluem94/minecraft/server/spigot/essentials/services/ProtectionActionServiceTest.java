@@ -22,6 +22,8 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -236,6 +238,7 @@ class ProtectionActionServiceTest {
   @Test
   void protectBlockReturnsFalseWhenPersistedLocationEntryIsNull() {
     Location location = new Location(world, 0, 0, 0);
+    Logger.getLogger(ProtectionActionService.class.getName()).setLevel(Level.OFF);
     when(block.getType()).thenReturn(Material.CHEST);
     when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
     when(block.getLocation()).thenReturn(location);
@@ -1189,6 +1192,236 @@ class ProtectionActionServiceTest {
 
       assertTrue(result);
     }
+  }
+
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenWallHangingSignAttachedToEastAndPlayerIsOwner() {
+    Location attachedBlockLocation = new Location(world, 1, 0, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+
+    org.bukkit.block.data.type.WallHangingSign wallHangingSign = mock(org.bukkit.block.data.type.WallHangingSign.class);
+    when(wallHangingSign.getFacing()).thenReturn(BlockFace.WEST);
+    when(eastRelative.getBlockData()).thenReturn(wallHangingSign);
+    when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
+    when(eastRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertFalse(result),
+        () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
+        () -> verify(player).sendMessage("removed")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsTrueWhenWallHangingSignAttachedToEastAndPlayerIsNotOwner() {
+    Location attachedBlockLocation = new Location(world, 1, 0, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+
+    org.bukkit.block.data.type.WallHangingSign wallHangingSign = mock(org.bukkit.block.data.type.WallHangingSign.class);
+    when(wallHangingSign.getFacing()).thenReturn(BlockFace.WEST);
+    when(eastRelative.getBlockData()).thenReturn(wallHangingSign);
+    when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
+    when(eastRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertTrue(result),
+        () -> verify(player).sendMessage("disallow")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenWallHangingSignFacingDoesNotPointToBlock() {
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+    Block westRelative = mock(Block.class);
+    Block upRelative = mock(Block.class);
+    Block differentBlock = mock(Block.class);
+
+    org.bukkit.block.data.type.WallHangingSign wallHangingSign = mock(org.bukkit.block.data.type.WallHangingSign.class);
+    when(wallHangingSign.getFacing()).thenReturn(BlockFace.WEST);
+    when(eastRelative.getBlockData()).thenReturn(wallHangingSign);
+    when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(differentBlock);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(upRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertFalse(result);
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenDoorAttachedAboveAndPlayerIsOwner() {
+    Location attachedBlockLocation = new Location(world, 0, 1, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+    Block westRelative = mock(Block.class);
+    Block upRelative = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    org.bukkit.block.data.type.Door door = mock(org.bukkit.block.data.type.Door.class);
+    when(upRelative.getBlockData()).thenReturn(door);
+    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
+    when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertFalse(result),
+        () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
+        () -> verify(player).sendMessage("removed")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsTrueWhenDoorAttachedAboveAndPlayerIsNotOwner() {
+    Location attachedBlockLocation = new Location(world, 0, 1, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+    Block westRelative = mock(Block.class);
+    Block upRelative = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    org.bukkit.block.data.type.Door door = mock(org.bukkit.block.data.type.Door.class);
+    when(upRelative.getBlockData()).thenReturn(door);
+    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
+    when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertTrue(result),
+        () -> verify(player).sendMessage("disallow")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenDoorBlockDownDoesNotPointToBlock() {
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+    Block westRelative = mock(Block.class);
+    Block upRelative = mock(Block.class);
+    Block differentBlock = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    org.bukkit.block.data.type.Door door = mock(org.bukkit.block.data.type.Door.class);
+    when(upRelative.getBlockData()).thenReturn(door);
+    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(differentBlock);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertFalse(result);
   }
 
   private PlayerEntry buildPlayerEntry() {
