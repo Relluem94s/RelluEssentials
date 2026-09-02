@@ -352,7 +352,7 @@ public class BankService {
    *                 check based on last played date
    */
   public void checkInterest(UUID uuid, boolean midnight) {
-    OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+    OfflinePlayer op = resolveOfflinePlayer(uuid);
 
     if (!op.hasPlayedBefore()) {
       return;
@@ -384,6 +384,10 @@ public class BankService {
     if (lastPlayedDate.before(todayDate)) {
       bankInterestMap.put(uuid, bae);
     }
+  }
+
+  protected OfflinePlayer resolveOfflinePlayer(UUID uuid) {
+    return Bukkit.getOfflinePlayer(uuid);
   }
 
   /**

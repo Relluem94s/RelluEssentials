@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -665,6 +666,9 @@ class BankServiceTest {
     BankTierEntry tier = createBankTierEntry(1, 0L, 10.0, 100000);
     BankAccountEntry bae = createBankAccountEntry(1, 1000.0, tier);
 
+    OfflinePlayer offlinePlayer = mock(OfflinePlayer.class);
+    when(offlinePlayer.hasPlayedBefore()).thenReturn(true);
+
     when(player.getUniqueId()).thenReturn(uuid);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn("interest paid");
@@ -674,8 +678,11 @@ class BankServiceTest {
     when(playerService.getPlayerEntry(uuid)).thenReturn(pe);
     when(bankRepository.findBankAccountByPlayerId(1)).thenReturn(bae);
 
-    bankService.checkInterest(uuid, true);
-    bankService.payInterestToPlayer(player);
+    BankService spyService = spy(bankService);
+    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+
+    spyService.checkInterest(uuid, true);
+    spyService.payInterestToPlayer(player);
 
     verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(100.0), eq(1000.0), eq(1));
     verify(player).sendMessage("interest paid");
