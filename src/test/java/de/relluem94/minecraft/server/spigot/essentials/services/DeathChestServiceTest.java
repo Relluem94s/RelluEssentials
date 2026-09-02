@@ -193,6 +193,8 @@ class DeathChestServiceTest {
     when(originBlock.getZ()).thenReturn(0);
     when(neighborBlock.getZ()).thenReturn(-1);
 
+    when(neighborBlock.getFace(originBlock)).thenReturn(BlockFace.SOUTH);
+
     when(originBlock.getBlockData()).thenReturn(originChestData);
     when(neighborBlock.getBlockData()).thenReturn(neighborChestData);
 
@@ -575,4 +577,332 @@ class DeathChestServiceTest {
         () -> verify(locationService, times(2)).saveAndFetch(any(LocationEntry.class))
     );
   }
+
+
+  @Test
+  void spawnDeathChestForPlayerSkipsNullItemsInArmorAndOffHandSlots() {
+    ItemStack mainItem = mock(ItemStack.class);
+    when(mainItem.getType()).thenReturn(Material.DIRT);
+
+    ItemStack offHandItem = mock(ItemStack.class);
+    when(offHandItem.getType()).thenReturn(Material.SHIELD);
+
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getContents()).thenReturn(new ItemStack[]{mainItem, null});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[]{null, null});
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[]{offHandItem, null});
+
+    setupSuccessfulChestPlacement();
+
+    deathChestService.spawnDeathChestForPlayer(player);
+
+    assertAll(
+        () -> verify(doubleChestInventory).addItem(mainItem),
+        () -> verify(doubleChestInventory).addItem(offHandItem),
+        () -> verify(doubleChestInventory, times(2)).addItem(any(ItemStack.class))
+    );
+  }
+
+  @Test
+  void spawnDeathChestForPlayerSkipsAirMaterialItemsInArmorAndOffHandSlots() {
+    ItemStack airItem = mock(ItemStack.class);
+    when(airItem.getType()).thenReturn(Material.AIR);
+
+    ItemStack mainItem = mock(ItemStack.class);
+    when(mainItem.getType()).thenReturn(Material.DIRT);
+
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getContents()).thenReturn(new ItemStack[]{mainItem, airItem});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[]{airItem, airItem});
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[]{airItem});
+
+    setupSuccessfulChestPlacement();
+
+    deathChestService.spawnDeathChestForPlayer(player);
+
+    assertAll(
+        () -> verify(doubleChestInventory).addItem(mainItem),
+        () -> verify(doubleChestInventory, times(1)).addItem(any(ItemStack.class))
+    );
+  }
+
+  private void setupSuccessfulChestPlacement() {
+    Location location = new Location(world, 0, 64, 0);
+    when(player.getLocation()).thenReturn(location);
+    when(world.getBlockAt(any(Location.class))).thenReturn(originBlock);
+
+    when(originBlock.getRelative(0, 0, 0)).thenReturn(originBlock);
+    when(originBlock.getType()).thenReturn(Material.AIR);
+    when(originBlock.getRelative(BlockFace.NORTH)).thenReturn(neighborBlock);
+    when(neighborBlock.getType()).thenReturn(Material.AIR);
+
+    when(originBlock.getX()).thenReturn(0);
+    when(neighborBlock.getX()).thenReturn(0);
+    when(originBlock.getZ()).thenReturn(0);
+    when(neighborBlock.getZ()).thenReturn(-1);
+
+    when(originBlock.getBlockData()).thenReturn(originChestData);
+    when(neighborBlock.getBlockData()).thenReturn(neighborChestData);
+
+    when(originBlock.getState()).thenReturn(chestState);
+    when(chestState.getInventory()).thenReturn(doubleChestInventory);
+    when(doubleChestInventory.getHolder()).thenReturn(doubleChest);
+    when(doubleChest.getInventory()).thenReturn(doubleChestInventory);
+
+    when(originBlock.getLocation()).thenReturn(new Location(world, 0, 64, 0));
+    when(neighborBlock.getLocation()).thenReturn(new Location(world, 0, 64, -1));
+
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
+    when(serviceContext.getLocationService()).thenReturn(locationService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(playerEntry.getId()).thenReturn(1);
+    when(locationTypeService.findByName(LocationType.PROTECTION))
+        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
+  }
+
+
+  @Test
+  void spawnDeathChestForPlayerPlacesDoubleChestAlongXAxisWhenFirstBlockHasSmallerX() {
+    ItemStack item = mock(ItemStack.class);
+    when(item.getType()).thenReturn(Material.DIRT);
+
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
+
+    when(originBlock.getRelative(0, 0, 0)).thenReturn(originBlock);
+    when(originBlock.getType()).thenReturn(Material.AIR);
+    when(originBlock.getRelative(BlockFace.NORTH)).thenReturn(neighborBlock);
+    when(neighborBlock.getType()).thenReturn(Material.AIR);
+
+    when(originBlock.getX()).thenReturn(0);
+    when(neighborBlock.getX()).thenReturn(1);
+
+    when(originBlock.getBlockData()).thenReturn(originChestData);
+    when(neighborBlock.getBlockData()).thenReturn(neighborChestData);
+
+    when(originBlock.getFace(neighborBlock)).thenReturn(BlockFace.EAST);
+
+    setupInventoryAndServicesForChestPlacement(item);
+
+    deathChestService.spawnDeathChestForPlayer(player);
+
+    assertAll(
+        () -> verify(originChestData).setType(Type.LEFT),
+        () -> verify(neighborChestData).setType(Type.RIGHT),
+        () -> verify(originChestData).setFacing(BlockFace.NORTH),
+        () -> verify(neighborChestData).setFacing(BlockFace.NORTH)
+    );
+  }
+
+  @Test
+  void spawnDeathChestForPlayerPlacesDoubleChestAlongZAxisWhenFirstBlockHasSmallerZ() {
+    ItemStack item = mock(ItemStack.class);
+    when(item.getType()).thenReturn(Material.DIRT);
+
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
+
+    when(originBlock.getRelative(0, 0, 0)).thenReturn(originBlock);
+    when(originBlock.getType()).thenReturn(Material.AIR);
+    when(originBlock.getRelative(BlockFace.NORTH)).thenReturn(neighborBlock);
+    when(neighborBlock.getType()).thenReturn(Material.AIR);
+
+    when(originBlock.getX()).thenReturn(0);
+    when(neighborBlock.getX()).thenReturn(0);
+    when(originBlock.getZ()).thenReturn(0);
+    when(neighborBlock.getZ()).thenReturn(1);
+
+    when(originBlock.getBlockData()).thenReturn(originChestData);
+    when(neighborBlock.getBlockData()).thenReturn(neighborChestData);
+
+    when(originBlock.getFace(neighborBlock)).thenReturn(BlockFace.SOUTH);
+
+    setupInventoryAndServicesForChestPlacement(item);
+
+    deathChestService.spawnDeathChestForPlayer(player);
+
+    assertAll(
+        () -> verify(originChestData).setType(Type.LEFT),
+        () -> verify(neighborChestData).setType(Type.RIGHT),
+        () -> verify(originChestData).setFacing(BlockFace.EAST),
+        () -> verify(neighborChestData).setFacing(BlockFace.EAST)
+    );
+  }
+
+  private void setupInventoryAndServicesForChestPlacement(ItemStack item) {
+    Location location = new Location(world, 0, 64, 0);
+    when(player.getLocation()).thenReturn(location);
+    when(world.getBlockAt(any(Location.class))).thenReturn(originBlock);
+
+    when(originBlock.getState()).thenReturn(chestState);
+    when(chestState.getInventory()).thenReturn(doubleChestInventory);
+    when(doubleChestInventory.getHolder()).thenReturn(doubleChest);
+    when(doubleChest.getInventory()).thenReturn(doubleChestInventory);
+
+    when(originBlock.getLocation()).thenReturn(new Location(world, 0, 64, 0));
+    when(neighborBlock.getLocation()).thenReturn(new Location(world, 0, 64, 1));
+
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
+    when(serviceContext.getLocationService()).thenReturn(locationService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(playerEntry.getId()).thenReturn(1);
+    when(locationTypeService.findByName(LocationType.PROTECTION))
+        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
+  }
+
+
+  @Test
+  void spawnDeathChestForPlayerReturnsTrueWhenOnlyOffHandContainsItems() {
+    ItemStack offHandItem = mock(ItemStack.class);
+    when(offHandItem.getType()).thenReturn(Material.SHIELD);
+
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getContents()).thenReturn(new ItemStack[0]);
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[]{offHandItem});
+
+    setupSuccessfulChestPlacement();
+
+    boolean result = deathChestService.spawnDeathChestForPlayer(player);
+
+    assertTrue(result);
+  }
+
+  @Test
+  void spawnDeathChestForPlayerFindsAirBlocksAtHigherYOffsetWhenOriginIsNotAir() {
+    ItemStack item = mock(ItemStack.class);
+    when(item.getType()).thenReturn(Material.DIRT);
+
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
+
+    Location location = new Location(world, 0, 64, 0);
+    when(player.getLocation()).thenReturn(location);
+    when(world.getBlockAt(any(Location.class))).thenReturn(originBlock);
+
+    Block solidBlock = mock(Block.class);
+    when(solidBlock.getType()).thenReturn(Material.STONE);
+
+    Block airBlockAtOffset2 = mock(Block.class);
+    when(airBlockAtOffset2.getType()).thenReturn(Material.AIR);
+
+    when(originBlock.getRelative(0, 0, 0)).thenReturn(solidBlock);
+    when(originBlock.getRelative(0, 1, 0)).thenReturn(solidBlock);
+    when(originBlock.getRelative(0, 2, 0)).thenReturn(airBlockAtOffset2);
+
+    when(airBlockAtOffset2.getRelative(BlockFace.NORTH)).thenReturn(neighborBlock);
+    when(neighborBlock.getType()).thenReturn(Material.AIR);
+
+    when(airBlockAtOffset2.getX()).thenReturn(0);
+    when(neighborBlock.getX()).thenReturn(0);
+    when(airBlockAtOffset2.getZ()).thenReturn(0);
+    when(neighborBlock.getZ()).thenReturn(-1);
+
+    org.bukkit.block.data.type.Chest airBlockChestData = mock(org.bukkit.block.data.type.Chest.class);
+    when(airBlockAtOffset2.getBlockData()).thenReturn(airBlockChestData);
+    when(neighborBlock.getBlockData()).thenReturn(neighborChestData);
+
+    Chest airBlockChestState = mock(Chest.class);
+    when(airBlockAtOffset2.getState()).thenReturn(airBlockChestState);
+    when(airBlockChestState.getInventory()).thenReturn(doubleChestInventory);
+    when(doubleChestInventory.getHolder()).thenReturn(doubleChest);
+    when(doubleChest.getInventory()).thenReturn(doubleChestInventory);
+
+    when(airBlockAtOffset2.getLocation()).thenReturn(new Location(world, 0, 66, 0));
+    when(neighborBlock.getLocation()).thenReturn(new Location(world, 0, 66, -1));
+
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
+    when(serviceContext.getLocationService()).thenReturn(locationService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(playerEntry.getId()).thenReturn(1);
+    when(locationTypeService.findByName(LocationType.PROTECTION))
+        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
+
+    boolean result = deathChestService.spawnDeathChestForPlayer(player);
+
+    assertAll(
+        () -> assertTrue(result),
+        () -> verify(airBlockAtOffset2).setType(Material.CHEST),
+        () -> verify(neighborBlock).setType(Material.CHEST)
+    );
+  }
+
+  @Test
+  void spawnDeathChestForPlayerSkipsNeighborWhenNotAirAndFindsNextValidFace() {
+    ItemStack item = mock(ItemStack.class);
+    when(item.getType()).thenReturn(Material.DIRT);
+
+    when(player.getInventory()).thenReturn(playerInventory);
+    when(playerInventory.getContents()).thenReturn(new ItemStack[]{item});
+    when(playerInventory.getArmorContents()).thenReturn(new ItemStack[0]);
+    when(playerInventory.getExtraContents()).thenReturn(new ItemStack[0]);
+
+    Location location = new Location(world, 0, 64, 0);
+    when(player.getLocation()).thenReturn(location);
+    when(world.getBlockAt(any(Location.class))).thenReturn(originBlock);
+
+    when(originBlock.getRelative(0, 0, 0)).thenReturn(originBlock);
+    when(originBlock.getType()).thenReturn(Material.AIR);
+
+    Block solidNeighbor = mock(Block.class);
+    when(solidNeighbor.getType()).thenReturn(Material.STONE);
+
+    when(originBlock.getRelative(BlockFace.NORTH)).thenReturn(solidNeighbor);
+    when(originBlock.getRelative(BlockFace.EAST)).thenReturn(neighborBlock);
+    when(neighborBlock.getType()).thenReturn(Material.AIR);
+
+    when(originBlock.getX()).thenReturn(0);
+    when(neighborBlock.getX()).thenReturn(1);
+
+    when(originBlock.getBlockData()).thenReturn(originChestData);
+    when(neighborBlock.getBlockData()).thenReturn(neighborChestData);
+
+    when(originBlock.getFace(neighborBlock)).thenReturn(BlockFace.EAST);
+
+    when(originBlock.getState()).thenReturn(chestState);
+    when(chestState.getInventory()).thenReturn(doubleChestInventory);
+    when(doubleChestInventory.getHolder()).thenReturn(doubleChest);
+    when(doubleChest.getInventory()).thenReturn(doubleChestInventory);
+
+    when(originBlock.getLocation()).thenReturn(new Location(world, 0, 64, 0));
+    when(neighborBlock.getLocation()).thenReturn(new Location(world, 1, 64, 0));
+
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(serviceContext.getLocationTypeService()).thenReturn(locationTypeService);
+    when(serviceContext.getLocationService()).thenReturn(locationService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(playerEntry.getId()).thenReturn(1);
+    when(locationTypeService.findByName(LocationType.PROTECTION))
+        .thenReturn(Optional.of(locationTypeEntry));
+    when(locationService.saveAndFetch(any(LocationEntry.class))).thenReturn(persistedLocationEntry);
+
+    boolean result = deathChestService.spawnDeathChestForPlayer(player);
+
+    assertAll(
+        () -> assertTrue(result),
+        () -> verify(originBlock).setType(Material.CHEST),
+        () -> verify(neighborBlock).setType(Material.CHEST)
+    );
+  }
+
 }
