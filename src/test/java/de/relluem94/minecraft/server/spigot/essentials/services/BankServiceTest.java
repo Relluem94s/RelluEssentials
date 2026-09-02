@@ -384,7 +384,7 @@ class BankServiceTest {
     assertAll(
         () -> assertEquals(500.0, pe.getPurse()),
         () -> assertTrue(pe.isHasToBeUpdated()),
-        () -> verify(bankRepository).updateBankAccount(eq(1), eq(0f), eq(1000.0), eq(2)),
+        () -> verify(bankRepository).updateBankAccount(eq(1), eq(0.0), eq(1000.0), eq(2)),
         () -> verify(player).sendMessage("bought with purse")
     );
   }
@@ -412,7 +412,7 @@ class BankServiceTest {
     spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
 
     assertAll(
-        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-500L), eq(1000.0), eq(2)),
+        () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-500.0), eq(1000.0), eq(2)),
         () -> verify(player).sendMessage("bought with bank")
     );
   }
