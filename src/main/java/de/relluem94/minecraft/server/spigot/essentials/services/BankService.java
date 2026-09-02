@@ -6,7 +6,6 @@ import de.relluem94.minecraft.server.spigot.essentials.builders.CustomItemBuilde
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
@@ -44,6 +43,7 @@ import org.jspecify.annotations.Nullable;
  * upgrades and interest calculations.
  */
 public class BankService {
+
   public static final Material UPGRADE_MATERIAL = Material.AMETHYST_SHARD;
 
   private final ServiceContext serviceContext;
@@ -121,21 +121,18 @@ public class BankService {
           .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_LIMIT_LORE, bte.getLimit());
 
       CustomItem customItem = new CustomItemBuilder(
-          new RelluEssentialsNamespacedKey(
-              serviceContext.getPluginMetadataService().getName(),
-              bte.getName()),
-          UPGRADE_MATERIAL)
-          .displayName(bte.getName())
-          .type(CustomItem.Type.NPC_GUI)
-          .rarity(CustomItem.Rarity.NONE)
+          new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+              bte.getName()), UPGRADE_MATERIAL).displayName(bte.getName())
+          .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
           .lore(Arrays.asList(lore1, lore2, lore3))
-          .addPersistentData(new NamespacedKey(plugin, "cost").toString(), String.valueOf(bte.getCost()))
-          .build();
+          .addPersistentData(new NamespacedKey(plugin, "cost").toString(),
+              String.valueOf(bte.getCost())).build();
 
       bankTierItems.add(customItem);
     }
     return bankTierItems;
   }
+
   /**
    * Deposits a percentage of the player's purse into their bank account.
    *
@@ -256,16 +253,18 @@ public class BankService {
    * @param bae       the player's current bank account
    */
   public void upgradeAccount(ItemStack itemStack, Player p, PlayerEntry pe, BankAccountEntry bae) {
-    for (ItemHelper ih : getBankTiers()) {
-      if (!ih.getCustomItem().equals(itemStack)) {
+    for (CustomItem customItem : getBankTiers()) {
+      if (!customItem.toItemStack().isSimilar(itemStack)) {
         continue;
       }
 
-      long costs = 0;
-      if (ih.hasData(new NamespacedKey(plugin, "cost"))) {
-        costs = Long.parseLong(ih.getData(new NamespacedKey(plugin, "cost")));
+      String costString = (String) customItem.persistentData()
+          .get(new NamespacedKey(plugin, "cost").toString());
+      if (costString == null) {
+        continue;
       }
 
+      long costs = Long.parseLong(costString);
       BankTierEntry bt = getBankTierEntryByCost(costs);
 
       if (!isValidUpgrade(p, bae, bt, costs)) {
