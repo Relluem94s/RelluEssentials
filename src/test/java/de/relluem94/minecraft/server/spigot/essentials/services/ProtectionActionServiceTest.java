@@ -1310,6 +1310,34 @@ class ProtectionActionServiceTest {
   }
 
   @Test
+  void protectBlockIncludesFirstPartnerIdInRightsWhenPlayerIsSecondPartner() {
+    Location location = new Location(world, 0, 0, 0);
+    when(block.getType()).thenReturn(Material.CHEST);
+    when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
+    when(block.getLocation()).thenReturn(location);
+    when(block.getBlockData()).thenReturn(mock(BlockData.class));
+
+    PlayerPartnerEntry partnerEntry = new PlayerPartnerEntry();
+    partnerEntry.setFirstPartnerId(2);
+    partnerEntry.setSecondPartnerId(1);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    playerEntry.setPartner(partnerEntry);
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry builtEntry = buildLocationEntry(1, location);
+    setupLocationServiceForSuccessfulProtection(location, builtEntry);
+    protectionActionService.protectBlock(player, block);
+
+    verify(protectionService).saveProtectionAndAddToRegistry(eq(location),
+        org.mockito.Mockito.argThat(entry ->
+            entry.getRights()
+                .getJSONArray(PLUGIN_EVENT_PROTECT_RIGHTS)
+                .toList()
+                .contains(2)));
+  }
+
+  @Test
   void removeRightDoesNotSendMessageWhenSilentAndIdDoesNotExist() {
     LocationEntry locationEntry = mock(LocationEntry.class);
     ProtectionEntry protectionEntry = buildProtectionEntryWithRights(locationEntry, 1);
