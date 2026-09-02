@@ -94,7 +94,7 @@ public class BankService {
     }
 
     List<String> lore = im.getLore() != null ? new ArrayList<>(im.getLore()) : new ArrayList<>();
-    if (lore.size() == 1) {
+    if (lore.size() <= 1) {
       lore.add(line);
     } else {
       lore.set(1, line);
