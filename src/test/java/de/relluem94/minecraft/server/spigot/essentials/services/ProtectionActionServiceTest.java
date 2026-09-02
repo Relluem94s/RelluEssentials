@@ -548,6 +548,344 @@ class ProtectionActionServiceTest {
     );
   }
 
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenProtectionEntryHasNullLocationEntry() {
+    Location location = new Location(world, 0, 0, 0);
+    when(block.getType()).thenReturn(Material.CHEST);
+    when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
+    when(block.getBlockData()).thenReturn(mock(Chest.class));
+    when(block.getLocation()).thenReturn(location);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    ProtectionEntry protectionEntryWithNullLocation = new ProtectionEntry();
+    protectionEntryWithNullLocation.setLocationEntry(null);
+    when(protectionService.getProtectionEntry(any(Location.class))).thenReturn(protectionEntryWithNullLocation);
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertFalse(result);
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenSignAttachedToEastAndPlayerIsOwner() {
+    Location attachedBlockLocation = new Location(world, 1, 0, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+
+    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    when(wallSign.getFacing()).thenReturn(BlockFace.WEST);
+    when(eastRelative.getBlockData()).thenReturn(wallSign);
+    when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
+    when(eastRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertFalse(result),
+        () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
+        () -> verify(player).sendMessage("removed")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsTrueWhenSignAttachedToEastAndPlayerIsNotOwner() {
+    Location attachedBlockLocation = new Location(world, 1, 0, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+
+    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    when(wallSign.getFacing()).thenReturn(BlockFace.WEST);
+    when(eastRelative.getBlockData()).thenReturn(wallSign);
+    when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
+    when(eastRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertTrue(result),
+        () -> verify(player).sendMessage("disallow")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenSignAttachedToSouthAndPlayerIsOwner() {
+    Location attachedBlockLocation = new Location(world, 0, 0, 1);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    when(wallSign.getFacing()).thenReturn(BlockFace.NORTH);
+    when(southRelative.getBlockData()).thenReturn(wallSign);
+    when(southRelative.getRelative(BlockFace.SOUTH)).thenReturn(block);
+    when(southRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertFalse(result),
+        () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
+        () -> verify(player).sendMessage("removed")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenSignAttachedToNorthAndPlayerIsOwner() {
+    Location attachedBlockLocation = new Location(world, 0, 0, -1);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    when(wallSign.getFacing()).thenReturn(BlockFace.SOUTH);
+    when(northRelative.getBlockData()).thenReturn(wallSign);
+    when(northRelative.getRelative(BlockFace.NORTH)).thenReturn(block);
+    when(northRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertFalse(result),
+        () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
+        () -> verify(player).sendMessage("removed")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenSignAttachedToWestAndPlayerIsOwner() {
+    Location attachedBlockLocation = new Location(world, -1, 0, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+    Block westRelative = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    org.bukkit.block.data.type.WallSign wallSign = mock(org.bukkit.block.data.type.WallSign.class);
+    when(wallSign.getFacing()).thenReturn(BlockFace.EAST);
+    when(westRelative.getBlockData()).thenReturn(wallSign);
+    when(westRelative.getRelative(BlockFace.WEST)).thenReturn(block);
+    when(westRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertFalse(result),
+        () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
+        () -> verify(player).sendMessage("removed")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenSignAttachedAboveAndPlayerIsOwner() {
+    Location attachedBlockLocation = new Location(world, 0, 1, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+    Block westRelative = mock(Block.class);
+    Block upRelative = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    org.bukkit.block.data.type.Sign standingSign = mock(org.bukkit.block.data.type.Sign.class);
+    when(upRelative.getBlockData()).thenReturn(standingSign);
+    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
+    when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn("removed");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertFalse(result),
+        () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
+        () -> verify(player).sendMessage("removed")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsTrueWhenSignAttachedAboveAndPlayerIsNotOwner() {
+    Location attachedBlockLocation = new Location(world, 0, 1, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+    Block westRelative = mock(Block.class);
+    Block upRelative = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    org.bukkit.block.data.type.Sign standingSign = mock(org.bukkit.block.data.type.Sign.class);
+    when(upRelative.getBlockData()).thenReturn(standingSign);
+    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
+    when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertAll(
+        () -> assertTrue(result),
+        () -> verify(player).sendMessage("disallow")
+    );
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenSignAttachedAboveAndNoProtectionExists() {
+    Location attachedBlockLocation = new Location(world, 0, 1, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+    Block westRelative = mock(Block.class);
+    Block upRelative = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    org.bukkit.block.data.type.Sign standingSign = mock(org.bukkit.block.data.type.Sign.class);
+    when(upRelative.getBlockData()).thenReturn(standingSign);
+    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
+    when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(null);
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertFalse(result);
+  }
+
   private PlayerEntry buildPlayerEntry() {
     PlayerEntry playerEntry = new PlayerEntry();
     playerEntry.setId(1);
