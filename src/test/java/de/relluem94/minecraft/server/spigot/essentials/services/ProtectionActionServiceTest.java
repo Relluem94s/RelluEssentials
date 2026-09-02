@@ -889,7 +889,6 @@ class ProtectionActionServiceTest {
     assertFalse(result);
   }
 
-
   @Test
   void protectBlockReturnsFalseWhenDoubleChestNeighbourIsProtectedByOther() {
     Location location = new Location(world, 0, 0, 0);
@@ -1194,7 +1193,6 @@ class ProtectionActionServiceTest {
     }
   }
 
-
   @Test
   void removeProtectionFromBlockReturnsFalseWhenWallHangingSignAttachedToEastAndPlayerIsOwner() {
     Location attachedBlockLocation = new Location(world, 1, 0, 0);
@@ -1422,6 +1420,48 @@ class ProtectionActionServiceTest {
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
     assertFalse(result);
+  }
+
+  @Test
+  void removeRightDoesNotSendMessageWhenSilentAndIdDoesNotExist() {
+    LocationEntry locationEntry = mock(LocationEntry.class);
+
+    JSONArray existingRights = new JSONArray();
+    existingRights.put(1);
+    JSONObject rightsJson = new JSONObject();
+    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
+
+    ProtectionEntry protectionEntry = new ProtectionEntry();
+    protectionEntry.setLocationEntry(locationEntry);
+    protectionEntry.setRights(rightsJson);
+
+    protectionActionService.removeRight(player, protectionEntry, 99, true);
+
+    assertAll(
+        () -> verify(protectionService, never()).updateProtectionRights(any()),
+        () -> verify(player, never()).sendMessage(any(String.class))
+    );
+  }
+
+  @Test
+  void addRightDoesNotSendMessageWhenSilentAndIdAlreadyExists() {
+    LocationEntry locationEntry = mock(LocationEntry.class);
+
+    JSONArray existingRights = new JSONArray();
+    existingRights.put(2);
+    JSONObject rightsJson = new JSONObject();
+    rightsJson.put(PLUGIN_EVENT_PROTECT_RIGHTS, existingRights);
+
+    ProtectionEntry protectionEntry = new ProtectionEntry();
+    protectionEntry.setLocationEntry(locationEntry);
+    protectionEntry.setRights(rightsJson);
+
+    protectionActionService.addRight(player, protectionEntry, 2, true);
+
+    assertAll(
+        () -> verify(protectionService, never()).updateProtectionRights(any()),
+        () -> verify(player, never()).sendMessage(any(String.class))
+    );
   }
 
   private PlayerEntry buildPlayerEntry() {
