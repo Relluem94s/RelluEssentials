@@ -31,7 +31,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -157,7 +156,7 @@ public class BankService {
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
 
-        p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+        p.playSound(p, "item.armor.equip_gold", SoundCategory.MASTER, 1f, 1f);
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
                 StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
@@ -175,7 +174,7 @@ public class BankService {
           pe.setUpdatedBy(pe.getId());
           pe.setHasToBeUpdated(true);
 
-          p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+          p.playSound(p, "item.armor.equip_gold", SoundCategory.MASTER, 1f, 1f);
           p.sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
                   StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
@@ -193,7 +192,7 @@ public class BankService {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_NO_COINS_MESSAGE,
               PLUGIN_NAME_MONEY));
-      p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
+      p.playSound(p, "entity.villager.no", SoundCategory.MASTER, 1f, 1f);
       InventoryHelper.closeInventory(p);
     }
   }
@@ -224,7 +223,7 @@ public class BankService {
       pe.setUpdatedBy(pe.getId());
       pe.setHasToBeUpdated(true);
 
-      p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+      p.playSound(p, "item.armor.equip_gold", SoundCategory.MASTER, 1f, 1f);
       p.sendMessage(String.format(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE,
               StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY)));
@@ -235,7 +234,7 @@ public class BankService {
     } else {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS, PLUGIN_NAME_MONEY));
-      p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
+      p.playSound(p, "entity.villager.no", SoundCategory.MASTER, 1f, 1f);
       InventoryHelper.closeInventory(p);
     }
   }
