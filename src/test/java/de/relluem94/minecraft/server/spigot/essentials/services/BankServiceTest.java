@@ -10,9 +10,11 @@ import static org.mockito.Mockito.anyDouble;
 import static org.mockito.Mockito.anyFloat;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -184,6 +186,7 @@ class BankServiceTest {
     BankTierEntry tier2 = createBankTierEntry(2, 500L, 5.0, 50000);
     List<BankTierEntry> tiers = List.of(tier1, tier2);
 
+    when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(tiers);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(translationService.get(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_COST_LORE), any())).thenReturn("Cost lore");
@@ -355,16 +358,21 @@ class BankServiceTest {
     BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
     PlayerEntry pe = createPlayerEntry(1000.0);
 
+    ItemStack upgradeItem = mock(ItemStack.class);
+    ItemHelper itemHelper = mock(ItemHelper.class);
+    when(itemHelper.getCustomItem()).thenReturn(upgradeItem);
+    when(itemHelper.hasData(any())).thenReturn(true);
+    when(itemHelper.getData(any())).thenReturn("500");
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(itemHelper)).when(spyService).getBankTiers();
+
+    when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(any(MessageKey.class), any())).thenReturn("lore");
-    when(plugin.getName()).thenReturn("essentials");
     when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_PURSE)).thenReturn("bought with purse");
 
-    List<ItemHelper> tiers = bankService.getBankTiers();
-    ItemStack upgradeItem = tiers.getFirst().getCustomItem();
-
-    bankService.upgradeAccount(upgradeItem, player, pe, bae);
+    spyService.upgradeAccount(upgradeItem, player, pe, bae);
 
     assertAll(
         () -> assertEquals(500.0, pe.getPurse()),
@@ -381,16 +389,21 @@ class BankServiceTest {
     BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
     PlayerEntry pe = createPlayerEntry(200.0);
 
+    ItemStack upgradeItem = mock(ItemStack.class);
+    ItemHelper itemHelper = mock(ItemHelper.class);
+    when(itemHelper.getCustomItem()).thenReturn(upgradeItem);
+    when(itemHelper.hasData(any())).thenReturn(true);
+    when(itemHelper.getData(any())).thenReturn("500");
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(itemHelper)).when(spyService).getBankTiers();
+
+    when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(any(MessageKey.class), any())).thenReturn("lore");
-    when(plugin.getName()).thenReturn("essentials");
     when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BANK)).thenReturn("bought with bank");
 
-    List<ItemHelper> tiers = bankService.getBankTiers();
-    ItemStack upgradeItem = tiers.getFirst().getCustomItem();
-
-    bankService.upgradeAccount(upgradeItem, player, pe, bae);
+    spyService.upgradeAccount(upgradeItem, player, pe, bae);
 
     assertAll(
         () -> verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(-500L), eq(1000.0), eq(2)),
@@ -405,16 +418,21 @@ class BankServiceTest {
     BankAccountEntry bae = createBankAccountEntry(1, 300.0, currentTier);
     PlayerEntry pe = createPlayerEntry(300.0);
 
+    ItemStack upgradeItem = mock(ItemStack.class);
+    ItemHelper itemHelper = mock(ItemHelper.class);
+    when(itemHelper.getCustomItem()).thenReturn(upgradeItem);
+    when(itemHelper.hasData(any())).thenReturn(true);
+    when(itemHelper.getData(any())).thenReturn("500");
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(itemHelper)).when(spyService).getBankTiers();
+
+    when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(any(MessageKey.class), any())).thenReturn("lore");
-    when(plugin.getName()).thenReturn("essentials");
     when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_USING_BOTH)).thenReturn("bought with both");
 
-    List<ItemHelper> tiers = bankService.getBankTiers();
-    ItemStack upgradeItem = tiers.getFirst().getCustomItem();
-
-    bankService.upgradeAccount(upgradeItem, player, pe, bae);
+    spyService.upgradeAccount(upgradeItem, player, pe, bae);
 
     assertAll(
         () -> assertEquals(0.0, pe.getPurse()),
@@ -431,16 +449,21 @@ class BankServiceTest {
     BankAccountEntry bae = createBankAccountEntry(1, 100.0, currentTier);
     PlayerEntry pe = createPlayerEntry(100.0);
 
+    ItemStack upgradeItem = mock(ItemStack.class);
+    ItemHelper itemHelper = mock(ItemHelper.class);
+    when(itemHelper.getCustomItem()).thenReturn(upgradeItem);
+    when(itemHelper.hasData(any())).thenReturn(true);
+    when(itemHelper.getData(any())).thenReturn("500");
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(itemHelper)).when(spyService).getBankTiers();
+
+    when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(any(MessageKey.class), any())).thenReturn("lore");
-    when(plugin.getName()).thenReturn("essentials");
     when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS), any())).thenReturn("not enough");
 
-    List<ItemHelper> tiers = bankService.getBankTiers();
-    ItemStack upgradeItem = tiers.getFirst().getCustomItem();
-
-    bankService.upgradeAccount(upgradeItem, player, pe, bae);
+    spyService.upgradeAccount(upgradeItem, player, pe, bae);
 
     verify(player).sendMessage("not enough");
   }
@@ -452,16 +475,21 @@ class BankServiceTest {
     BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
     PlayerEntry pe = createPlayerEntry(1000.0);
 
+    ItemStack upgradeItem = mock(ItemStack.class);
+    ItemHelper itemHelper = mock(ItemHelper.class);
+    when(itemHelper.getCustomItem()).thenReturn(upgradeItem);
+    when(itemHelper.hasData(any())).thenReturn(true);
+    when(itemHelper.getData(any())).thenReturn("500");
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(itemHelper)).when(spyService).getBankTiers();
+
+    when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(any(MessageKey.class), any())).thenReturn("lore");
-    when(plugin.getName()).thenReturn("essentials");
     when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT)).thenReturn("already bought");
 
-    List<ItemHelper> tiers = bankService.getBankTiers();
-    ItemStack upgradeItem = tiers.getFirst().getCustomItem();
-
-    bankService.upgradeAccount(upgradeItem, player, pe, bae);
+    spyService.upgradeAccount(upgradeItem, player, pe, bae);
 
     verify(player).sendMessage("already bought");
   }
@@ -473,16 +501,21 @@ class BankServiceTest {
     BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
     PlayerEntry pe = createPlayerEntry(1000.0);
 
+    ItemStack upgradeItem = mock(ItemStack.class);
+    ItemHelper itemHelper = mock(ItemHelper.class);
+    when(itemHelper.getCustomItem()).thenReturn(upgradeItem);
+    when(itemHelper.hasData(any())).thenReturn(true);
+    when(itemHelper.getData(any())).thenReturn("500");
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(itemHelper)).when(spyService).getBankTiers();
+
+    when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(any(MessageKey.class), any())).thenReturn("lore");
-    when(plugin.getName()).thenReturn("essentials");
     when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_ALREADY_BOUGHT)).thenReturn("already bought");
 
-    List<ItemHelper> tiers = bankService.getBankTiers();
-    ItemStack upgradeItem = tiers.getFirst().getCustomItem();
-
-    bankService.upgradeAccount(upgradeItem, player, pe, bae);
+    spyService.upgradeAccount(upgradeItem, player, pe, bae);
 
     verify(player).sendMessage("already bought");
   }
@@ -494,16 +527,21 @@ class BankServiceTest {
     BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
     PlayerEntry pe = createPlayerEntry(2000.0);
 
+    ItemStack upgradeItem = mock(ItemStack.class);
+    ItemHelper itemHelper = mock(ItemHelper.class);
+    when(itemHelper.getCustomItem()).thenReturn(upgradeItem);
+    when(itemHelper.hasData(any())).thenReturn(true);
+    when(itemHelper.getData(any())).thenReturn("500");
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(itemHelper)).when(spyService).getBankTiers();
+
+    when(plugin.getName()).thenReturn("essentials");
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of(targetTier));
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(any(MessageKey.class), any())).thenReturn("lore");
-    when(plugin.getName()).thenReturn("essentials");
     when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_BUY_LOWER_ACCOUNT)).thenReturn("lower account");
 
-    List<ItemHelper> tiers = bankService.getBankTiers();
-    ItemStack upgradeItem = tiers.getFirst().getCustomItem();
-
-    bankService.upgradeAccount(upgradeItem, player, pe, bae);
+    spyService.upgradeAccount(upgradeItem, player, pe, bae);
 
     verify(player).sendMessage("lower account");
   }
@@ -511,21 +549,22 @@ class BankServiceTest {
   @Test
   void upgradeAccountDoesNothingWhenTierEntryNotFound() {
     BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
-    BankTierEntry registryTier = createBankTierEntry(2, 500L, 5.0, 50000);
     BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
     PlayerEntry pe = createPlayerEntry(1000.0);
 
-    when(bankTierRegistry.getBankTiers()).thenReturn(List.of(registryTier));
-    when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(any(MessageKey.class), any())).thenReturn("lore");
+    ItemStack upgradeItem = mock(ItemStack.class);
+    ItemHelper itemHelper = mock(ItemHelper.class);
+    when(itemHelper.getCustomItem()).thenReturn(upgradeItem);
+    when(itemHelper.hasData(any())).thenReturn(true);
+    when(itemHelper.getData(any())).thenReturn("500");
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(itemHelper)).when(spyService).getBankTiers();
+
     when(plugin.getName()).thenReturn("essentials");
-
-    List<ItemHelper> tiers = bankService.getBankTiers();
-    ItemStack upgradeItem = tiers.getFirst().getCustomItem();
-
     when(bankTierRegistry.getBankTiers()).thenReturn(List.of());
 
-    bankService.upgradeAccount(upgradeItem, player, pe, bae);
+    spyService.upgradeAccount(upgradeItem, player, pe, bae);
 
     verify(bankRepository, never()).updateBankAccount(anyInt(), anyFloat(), anyDouble(), anyInt());
     verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt());
