@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
@@ -314,8 +313,10 @@ public class BankService {
    * Triggers interest calculation and payment for all currently online players.
    */
   public void triggerInterestForAllOnlinePlayers() {
-    if (!Bukkit.getOnlinePlayers().isEmpty()) {
-      for (Player p : Bukkit.getOnlinePlayers()) {
+    if (!serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers()
+        .isEmpty()) {
+      for (Player p : serviceContext.getPluginMetadataService().getPlugin().getServer()
+          .getOnlinePlayers()) {
         checkInterest(p.getUniqueId(), true);
         payInterestToPlayer(p);
       }
@@ -386,8 +387,14 @@ public class BankService {
     }
   }
 
+  /**
+   * Resolves an {@link OfflinePlayer} by their {@link UUID}.
+   *
+   * @param uuid the unique identifier of the player to resolve
+   * @return the resolved {@link OfflinePlayer}
+   */
   protected OfflinePlayer resolveOfflinePlayer(UUID uuid) {
-    return Bukkit.getOfflinePlayer(uuid);
+    return serviceContext.getPluginMetadataService().getPlugin().getServer().getOfflinePlayer(uuid);
   }
 
   /**
