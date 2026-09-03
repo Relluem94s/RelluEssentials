@@ -11,6 +11,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -284,6 +286,15 @@ class BagServiceTest {
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(pluginMetadataService.getName()).thenReturn("relluessentials");
 
+    CustomItem disabledItemEntry = mock(CustomItem.class);
+    ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+    when(disabledItemEntry.toItemStack()).thenReturn(disabledItemStack);
+    when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
+        .thenReturn(Optional.of(disabledItemEntry));
+
+    when(itemFactory.getItemMeta(any(Material.class))).thenReturn(null);
+    doReturn(true).when(itemFactory).equals(isNull(), isNull());
+
     ItemStack stoneItem = new ItemStack(Material.STONE, 1);
     int result = bagService.getSlotByItemStack(bagEntry, stoneItem);
 
@@ -384,6 +395,9 @@ class BagServiceTest {
     when(translationService.get(eq(MessageKey.PLUGIN_EVENT_BAG_COLLECT), anyInt(), anyString()))
         .thenReturn("collected");
 
+    when(serviceContext.getItemService()).thenReturn(itemService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getName()).thenReturn("relluessentials");
     BagService serviceWithBlocks = buildServiceWithBagTypeBlocks(typedBagType);
 
     List<ItemStack> result = serviceWithBlocks.collectItemStacks(List.of(itemStack), player,
@@ -413,14 +427,10 @@ class BagServiceTest {
   void collectItemReturnsFalseWhenNoMatchingBagSlot() {
     BagTypeEntry typedBagType = mock(BagTypeEntry.class);
     BagEntry noMatchBagEntry = mock(BagEntry.class);
-    when(noMatchBagEntry.getBagType()).thenReturn(typedBagType);
 
     for (int i = 0; i < BAG_SIZE; i++) {
       when(typedBagType.getSlotName(i)).thenReturn("STONE");
     }
-
-    when(playerEntry.getId()).thenReturn(1);
-    when(bagRegistry.findAllByPlayerId(1)).thenReturn(List.of(noMatchBagEntry));
 
     Item droppedItem = mock(Item.class);
     ItemStack diamondStack = new ItemStack(Material.DIAMOND, 2);
@@ -462,6 +472,10 @@ class BagServiceTest {
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(translationService.get(eq(MessageKey.PLUGIN_EVENT_BAG_COLLECT), anyInt(), anyString()))
         .thenReturn("collected");
+
+    when(serviceContext.getItemService()).thenReturn(itemService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getName()).thenReturn("relluessentials");
 
     BagService serviceWithBlocks = buildServiceWithBagTypeBlocks(typedBagType);
 
@@ -691,7 +705,6 @@ class BagServiceTest {
     CustomItem disabledItemEntry =
         mock(CustomItem.class);
     ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
-    when(disabledItemEntry.toItemStack()).thenReturn(disabledItemStack);
 
     return new BagService(
         serviceContext,
