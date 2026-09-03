@@ -114,10 +114,8 @@ class BagServiceTest {
 
     Optional<BagEntry> result = bagService.findBag(1, 2);
 
-    assertAll(
-        () -> assertTrue(result.isPresent()),
-        () -> assertEquals(bagEntry, result.get())
-    );
+    assertTrue(result.isPresent());
+    assertEquals(bagEntry, result.get());
   }
 
   @Test
@@ -158,10 +156,8 @@ class BagServiceTest {
 
     Optional<BagTypeEntry> result = bagService.findBagTypeByPartialName("stone");
 
-    assertAll(
-        () -> assertTrue(result.isPresent()),
-        () -> assertEquals(bagTypeEntry, result.get())
-    );
+    assertTrue(result.isPresent());
+    assertEquals(bagTypeEntry, result.get());
   }
 
   @Test
@@ -179,10 +175,8 @@ class BagServiceTest {
 
     Optional<BagTypeEntry> result = bagService.findBagTypeById(5);
 
-    assertAll(
-        () -> assertTrue(result.isPresent()),
-        () -> assertEquals(bagTypeEntry, result.get())
-    );
+    assertTrue(result.isPresent());
+    assertEquals(bagTypeEntry, result.get());
   }
 
   @Test
@@ -426,7 +420,6 @@ class BagServiceTest {
   @Test
   void collectItemReturnsFalseWhenNoMatchingBagSlot() {
     BagTypeEntry typedBagType = mock(BagTypeEntry.class);
-    BagEntry noMatchBagEntry = mock(BagEntry.class);
 
     for (int i = 0; i < BAG_SIZE; i++) {
       when(typedBagType.getSlotName(i)).thenReturn("STONE");
@@ -540,7 +533,7 @@ class BagServiceTest {
 
     assertAll(
         () -> assertEquals(1, result.size()),
-        () -> assertEquals("stonebag", result.get(0))
+        () -> assertEquals("stonebag", result.getFirst())
     );
   }
 
@@ -701,10 +694,6 @@ class BagServiceTest {
     when(localBagTypeRepository.findAll()).thenReturn(List.of(typedBagType));
     when(localBagRepository.findAll()).thenReturn(new ArrayList<>());
     when(localBagTypeRegistry.getAll()).thenReturn(List.of(typedBagType));
-
-    CustomItem disabledItemEntry =
-        mock(CustomItem.class);
-    ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
 
     return new BagService(
         serviceContext,
