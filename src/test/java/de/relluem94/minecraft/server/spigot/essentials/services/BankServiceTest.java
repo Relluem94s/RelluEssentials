@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -65,6 +66,8 @@ class BankServiceTest {
   private PlayerService playerService;
   @Mock
   private Player player;
+  @Mock
+  private Server server;
 
   private BankService bankService;
 
@@ -732,5 +735,99 @@ class BankServiceTest {
 
     verify(bankRepository, never()).updateBankAccount(anyInt(), anyFloat(), anyDouble(), anyInt());
     verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt());
+  }
+
+  @Test
+  void triggerInterestForAllOnlinePlayersDoesNothingWhenNoPlayersOnline() {
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    when(plugin.getServer()).thenReturn(server);
+    doReturn(new ArrayList<>()).when(server).getOnlinePlayers();
+
+    bankService.triggerInterestForAllOnlinePlayers();
+
+    verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt());
+  }
+
+  @Test
+  void triggerInterestForAllOnlinePlayersCallsCheckInterestAndPayInterestForEachOnlinePlayer() {
+    UUID uuid = UUID.randomUUID();
+    BankTierEntry tier = createBankTierEntry(1, 0L, 10.0, 100000);
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, tier);
+    PlayerEntry pe = createPlayerEntry(0.0);
+
+    OfflinePlayer offlinePlayer = mock(OfflinePlayer.class);
+    when(offlinePlayer.hasPlayedBefore()).thenReturn(true);
+
+    when(player.getUniqueId()).thenReturn(uuid);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    when(plugin.getServer()).thenReturn(server);
+    doReturn(List.of(player)).when(server).getOnlinePlayers();
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(playerService.getPlayerEntry(uuid)).thenReturn(pe);
+    when(bankRepository.findBankAccountByPlayerId(1)).thenReturn(bae);
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn("interest paid");
+
+    BankService spyService = spy(bankService);
+    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+
+    spyService.triggerInterestForAllOnlinePlayers();
+
+    verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(100.0), eq(1000.0), eq(1));
+    verify(player).sendMessage("interest paid");
+  }
+
+  @Test
+  void triggerInterestForAllOnlinePlayersCallsCheckInterestAndPayInterestForMultipleOnlinePlayers() {
+    UUID uuid1 = UUID.randomUUID();
+    UUID uuid2 = UUID.randomUUID();
+
+    BankTierEntry tier = createBankTierEntry(1, 0L, 10.0, 100000);
+
+    BankAccountEntry bae1 = createBankAccountEntry(1, 1000.0, tier);
+    BankAccountEntry bae2 = createBankAccountEntry(2, 2000.0, tier);
+
+    PlayerEntry pe1 = createPlayerEntry(0.0);
+    pe1.setId(1);
+    PlayerEntry pe2 = createPlayerEntry(0.0);
+    pe2.setId(2);
+
+    Player player2 = mock(Player.class);
+
+    OfflinePlayer offlinePlayer1 = mock(OfflinePlayer.class);
+    OfflinePlayer offlinePlayer2 = mock(OfflinePlayer.class);
+    when(offlinePlayer1.hasPlayedBefore()).thenReturn(true);
+    when(offlinePlayer2.hasPlayedBefore()).thenReturn(true);
+
+    when(player.getUniqueId()).thenReturn(uuid1);
+    when(player2.getUniqueId()).thenReturn(uuid2);
+
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    when(plugin.getServer()).thenReturn(server);
+    doReturn(List.of(player, player2)).when(server).getOnlinePlayers();
+
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(playerService.getPlayerEntry(uuid1)).thenReturn(pe1);
+    when(playerService.getPlayerEntry(uuid2)).thenReturn(pe2);
+
+    when(bankRepository.findBankAccountByPlayerId(1)).thenReturn(bae1);
+    when(bankRepository.findBankAccountByPlayerId(2)).thenReturn(bae2);
+
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn("interest paid");
+
+    BankService spyService = spy(bankService);
+    doReturn(offlinePlayer1).when(spyService).resolveOfflinePlayer(uuid1);
+    doReturn(offlinePlayer2).when(spyService).resolveOfflinePlayer(uuid2);
+
+    spyService.triggerInterestForAllOnlinePlayers();
+
+    verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(100.0), eq(1000.0), eq(1));
+    verify(bankRepository).addTransactionToBank(eq(2), eq(1), eq(200.0), eq(2000.0), eq(1));
+    verify(player).sendMessage("interest paid");
+    verify(player2).sendMessage("interest paid");
   }
 }
