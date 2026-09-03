@@ -830,4 +830,121 @@ class BankServiceTest {
     verify(player).sendMessage("interest paid");
     verify(player2).sendMessage("interest paid");
   }
+
+  @Test
+  void checkInterestDoesNothingWhenPlayerHasNeverPlayedBefore() {
+    UUID uuid = UUID.randomUUID();
+    OfflinePlayer offlinePlayer = mock(OfflinePlayer.class);
+    when(offlinePlayer.hasPlayedBefore()).thenReturn(false);
+
+    BankService spyService = spy(bankService);
+    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+
+    spyService.checkInterest(uuid, false);
+
+    verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt());
+  }
+
+  @Test
+  void checkInterestDoesNothingWhenPlayerEntryIsNull() {
+    UUID uuid = UUID.randomUUID();
+    OfflinePlayer offlinePlayer = mock(OfflinePlayer.class);
+    when(offlinePlayer.hasPlayedBefore()).thenReturn(true);
+
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(playerService.getPlayerEntry(uuid)).thenReturn(null);
+
+    BankService spyService = spy(bankService);
+    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+
+    spyService.checkInterest(uuid, false);
+
+    verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt());
+  }
+
+  @Test
+  void checkInterestDoesNothingWhenBankAccountIsNull() {
+    UUID uuid = UUID.randomUUID();
+    OfflinePlayer offlinePlayer = mock(OfflinePlayer.class);
+    when(offlinePlayer.hasPlayedBefore()).thenReturn(true);
+
+    PlayerEntry pe = createPlayerEntry(0.0);
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(playerService.getPlayerEntry(uuid)).thenReturn(pe);
+    when(bankRepository.findBankAccountByPlayerId(pe.getId())).thenReturn(null);
+
+    BankService spyService = spy(bankService);
+    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+
+    spyService.checkInterest(uuid, false);
+
+    verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt());
+  }
+
+  @Test
+  void checkInterestQueuesInterestWhenLastPlayedIsBeforeToday() {
+    UUID uuid = UUID.randomUUID();
+    BankTierEntry tier = createBankTierEntry(1, 0L, 10.0, 100000);
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, tier);
+    PlayerEntry pe = createPlayerEntry(0.0);
+
+    OfflinePlayer offlinePlayer = mock(OfflinePlayer.class);
+    when(offlinePlayer.hasPlayedBefore()).thenReturn(true);
+    when(offlinePlayer.getLastPlayed()).thenReturn(0L);
+
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(playerService.getPlayerEntry(uuid)).thenReturn(pe);
+    when(bankRepository.findBankAccountByPlayerId(pe.getId())).thenReturn(bae);
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.getWithPrefix(eq(MessageKey.PLUGIN_EVENT_NPC_BANKER_INTEREST), any(), any())).thenReturn("interest paid");
+    when(player.getUniqueId()).thenReturn(uuid);
+
+    BankService spyService = spy(bankService);
+    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+
+    spyService.checkInterest(uuid, false);
+    spyService.payInterestToPlayer(player);
+
+    verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(100.0), eq(1000.0), eq(1));
+  }
+
+  @Test
+  void checkInterestDoesNotQueueInterestWhenLastPlayedIsToday() {
+    UUID uuid = UUID.randomUUID();
+    BankTierEntry tier = createBankTierEntry(1, 0L, 10.0, 100000);
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, tier);
+    PlayerEntry pe = createPlayerEntry(0.0);
+
+    OfflinePlayer offlinePlayer = mock(OfflinePlayer.class);
+    when(offlinePlayer.hasPlayedBefore()).thenReturn(true);
+    when(offlinePlayer.getLastPlayed()).thenReturn(System.currentTimeMillis());
+
+    when(serviceContext.getPlayerService()).thenReturn(playerService);
+    when(playerService.getPlayerEntry(uuid)).thenReturn(pe);
+    when(bankRepository.findBankAccountByPlayerId(pe.getId())).thenReturn(bae);
+    when(player.getUniqueId()).thenReturn(uuid);
+
+    BankService spyService = spy(bankService);
+    doReturn(offlinePlayer).when(spyService).resolveOfflinePlayer(uuid);
+
+    spyService.checkInterest(uuid, false);
+    spyService.payInterestToPlayer(player);
+
+    verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt());
+  }
+
+  @Test
+  void resolveOfflinePlayerReturnsOfflinePlayerFromServer() {
+    UUID uuid = UUID.randomUUID();
+    OfflinePlayer offlinePlayer = mock(OfflinePlayer.class);
+
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    when(plugin.getServer()).thenReturn(server);
+    when(server.getOfflinePlayer(uuid)).thenReturn(offlinePlayer);
+
+    OfflinePlayer result = bankService.resolveOfflinePlayer(uuid);
+
+    assertEquals(offlinePlayer, result);
+  }
 }
