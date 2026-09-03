@@ -99,10 +99,10 @@ class BankServiceTest {
     return pe;
   }
 
-  private CustomItem createUpgradeCustomItem(ItemStack matchingItemStack, long cost) {
+  private CustomItem createUpgradeCustomItem(ItemStack matchingItemStack) {
     CustomItem customItem = mock(CustomItem.class);
     when(customItem.toItemStack()).thenReturn(matchingItemStack);
-    when(customItem.persistentData()).thenReturn(Map.of("essentials:cost", String.valueOf(cost)));
+    when(customItem.persistentData()).thenReturn(Map.of("essentials:cost", String.valueOf(500L)));
     return customItem;
   }
 
@@ -370,7 +370,7 @@ class BankServiceTest {
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
-    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack, 500L);
+    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
     doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
@@ -400,7 +400,7 @@ class BankServiceTest {
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
-    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack, 500L);
+    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
     doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
@@ -428,7 +428,7 @@ class BankServiceTest {
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
-    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack, 500L);
+    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
     doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
@@ -458,7 +458,7 @@ class BankServiceTest {
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
-    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack, 500L);
+    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
     doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
@@ -483,7 +483,7 @@ class BankServiceTest {
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
-    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack, 500L);
+    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
     doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
@@ -508,7 +508,7 @@ class BankServiceTest {
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
-    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack, 500L);
+    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
     doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
@@ -533,7 +533,7 @@ class BankServiceTest {
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
-    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack, 500L);
+    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
     doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
@@ -557,7 +557,7 @@ class BankServiceTest {
     ItemStack upgradeItemStack = mock(ItemStack.class);
     when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
 
-    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack, 500L);
+    CustomItem upgradeCustomItem = createUpgradeCustomItem(upgradeItemStack);
 
     BankService spyService = spy(bankService);
     doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
