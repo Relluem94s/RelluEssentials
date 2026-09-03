@@ -687,4 +687,50 @@ class BankServiceTest {
     verify(bankRepository).addTransactionToBank(eq(1), eq(1), eq(100.0), eq(1000.0), eq(1));
     verify(player).sendMessage("interest paid");
   }
+
+  @Test
+  void upgradeAccountSkipsItemWhenItemStackIsNotSimilar() {
+    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(1000.0);
+
+    ItemStack upgradeItemStack = mock(ItemStack.class);
+    ItemStack differentItemStack = mock(ItemStack.class);
+    when(upgradeItemStack.isSimilar(differentItemStack)).thenReturn(false);
+
+    CustomItem upgradeCustomItem = mock(CustomItem.class);
+    when(upgradeCustomItem.toItemStack()).thenReturn(upgradeItemStack);
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+
+    spyService.upgradeAccount(differentItemStack, player, pe, bae);
+
+    verify(bankRepository, never()).updateBankAccount(anyInt(), anyFloat(), anyDouble(), anyInt());
+    verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt());
+  }
+
+  @Test
+  void upgradeAccountSkipsItemWhenCostPersistentDataIsNull() {
+    BankTierEntry currentTier = createBankTierEntry(1, 100L, 2.0, 10000);
+    BankAccountEntry bae = createBankAccountEntry(1, 1000.0, currentTier);
+    PlayerEntry pe = createPlayerEntry(1000.0);
+
+    ItemStack upgradeItemStack = mock(ItemStack.class);
+    when(upgradeItemStack.isSimilar(upgradeItemStack)).thenReturn(true);
+
+    CustomItem upgradeCustomItem = mock(CustomItem.class);
+    when(upgradeCustomItem.toItemStack()).thenReturn(upgradeItemStack);
+    when(upgradeCustomItem.persistentData()).thenReturn(Map.of());
+
+    when(plugin.getName()).thenReturn("essentials");
+
+    BankService spyService = spy(bankService);
+    doReturn(List.of(upgradeCustomItem)).when(spyService).getBankTiers();
+
+    spyService.upgradeAccount(upgradeItemStack, player, pe, bae);
+
+    verify(bankRepository, never()).updateBankAccount(anyInt(), anyFloat(), anyDouble(), anyInt());
+    verify(bankRepository, never()).addTransactionToBank(anyInt(), anyInt(), anyDouble(), anyDouble(), anyInt());
+  }
 }
