@@ -693,6 +693,8 @@ class BagServiceTest {
     when(localBagTypeRegistry.getAll()).thenReturn(List.of(typedBagType));
 
     stubDisabledItemResolution();
+    lenient().when(itemFactory.getItemMeta(any(Material.class))).thenReturn(null);
+    lenient().doReturn(true).when(itemFactory).equals(isNull(), isNull());
 
     return new BagService(
         serviceContext,
