@@ -42,6 +42,7 @@ import org.bukkit.Server;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,10 +87,15 @@ class BagServiceTest {
   private Server server;
   @Mock
   private ItemFactory itemFactory;
+  @Mock
+  private Inventory mockInventory;
 
   @BeforeEach
   void setUp() throws NoSuchFieldException, IllegalAccessException {
     lenient().when(server.getItemFactory()).thenReturn(itemFactory);
+    lenient().when(server.createInventory(isNull(), anyInt(), anyString())).thenReturn(mockInventory);
+    lenient().when(mockInventory.getSize()).thenReturn(54);
+
     Field serverField = Bukkit.class.getDeclaredField("server");
     serverField.setAccessible(true);
     serverField.set(null, server);
@@ -629,17 +635,12 @@ class BagServiceTest {
 
     for (int i = 0; i < BAG_SIZE; i++) {
       when(typedBagType.getSlotName(i)).thenReturn(null);
-      when(ownedBagEntry.getSlotValue(i)).thenReturn(0);
     }
 
     when(bagRegistry.findByPlayerIdAndBagTypeId(1, 5)).thenReturn(Optional.of(ownedBagEntry));
     when(serviceContext.getItemService()).thenReturn(itemService);
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(pluginMetadataService.getName()).thenReturn("relluessentials");
-    when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(eq(MessageKey.PLUGIN_BAG_AMOUNT), anyInt())).thenReturn(
-        "Amount: 0");
-    when(translationService.get(MessageKey.PLUGIN_BAG_RETRIEVE)).thenReturn("Retrieve");
 
     CustomItem disabledItemEntry = mock(CustomItem.class);
     ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
