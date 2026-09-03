@@ -12,6 +12,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -651,7 +652,7 @@ class BagServiceTest {
         .thenReturn(Optional.of(disabledItemEntry));
 
     when(bagRegistry.findByPlayerIdAndBagTypeId(1, 5)).thenReturn(Optional.of(ownedBagEntry));
-
+//TODO STUBS MISSING
     lenient().when(serviceContext.getTranslationService()).thenReturn(translationService);
     lenient().when(translationService.get(eq(MessageKey.PLUGIN_BAG_AMOUNT), anyInt())).thenReturn("Amount: 0");
     lenient().when(translationService.get(MessageKey.PLUGIN_BAG_RETRIEVE)).thenReturn("Retrieve");
@@ -659,6 +660,102 @@ class BagServiceTest {
     var result = bagService.getBagInventory(5, playerEntry);
 
     assertNotNull(result);
+  }
+
+  @Test
+  void getBagInventoryReturnsDisabledItemWhenSlotNameIsNull() {
+    when(playerEntry.getId()).thenReturn(1);
+
+    BagTypeEntry typedBagType = mock(BagTypeEntry.class);
+    BagEntry ownedBagEntry = mock(BagEntry.class);
+    when(ownedBagEntry.getBagType()).thenReturn(typedBagType);
+    when(typedBagType.getDisplayName()).thenReturn("StoneBag");
+
+    for (int i = 0; i < BAG_SIZE; i++) {
+      when(typedBagType.getSlotName(i)).thenReturn(null);
+    }
+
+    when(serviceContext.getItemService()).thenReturn(itemService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getName()).thenReturn("relluessentials");
+
+    CustomItem disabledItemEntry = mock(CustomItem.class);
+    ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+    when(disabledItemEntry.toItemStack()).thenReturn(disabledItemStack);
+    when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
+        .thenReturn(Optional.of(disabledItemEntry));
+
+    when(bagRegistry.findByPlayerIdAndBagTypeId(1, 5)).thenReturn(Optional.of(ownedBagEntry));
+
+    Inventory result = bagService.getBagInventory(5, playerEntry);
+
+    assertNotNull(result);
+    verify(mockInventory, atLeast(2)).setItem(eq(10), eq(disabledItemStack));
+  }
+
+  @Test
+  void getBagInventoryReturnsAirItemWhenSlotNameIsInvalidMaterial() {
+    when(playerEntry.getId()).thenReturn(1);
+
+    BagTypeEntry typedBagType = mock(BagTypeEntry.class);
+    BagEntry ownedBagEntry = mock(BagEntry.class);
+    when(ownedBagEntry.getBagType()).thenReturn(typedBagType);
+    when(typedBagType.getDisplayName()).thenReturn("StoneBag");
+
+    for (int i = 0; i < BAG_SIZE; i++) {
+      when(typedBagType.getSlotName(i)).thenReturn("NOT_A_REAL_MATERIAL_XYZ");
+    }
+
+    when(serviceContext.getItemService()).thenReturn(itemService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getName()).thenReturn("relluessentials");
+
+    CustomItem disabledItemEntry = mock(CustomItem.class);
+    ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+    when(disabledItemEntry.toItemStack()).thenReturn(disabledItemStack);
+    when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
+        .thenReturn(Optional.of(disabledItemEntry));
+
+    when(bagRegistry.findByPlayerIdAndBagTypeId(1, 5)).thenReturn(Optional.of(ownedBagEntry));
+
+    Inventory result = bagService.getBagInventory(5, playerEntry);
+
+    assertNotNull(result);
+    verify(mockInventory, atLeast(2)).setItem(eq(10), eq(disabledItemStack));
+  }
+
+  @Test
+  void getBagInventoryReturnsItemWithoutLoreWhenItemMetaIsNull() {
+    when(playerEntry.getId()).thenReturn(1);
+
+    BagTypeEntry typedBagType = mock(BagTypeEntry.class);
+    BagEntry ownedBagEntry = mock(BagEntry.class);
+    when(ownedBagEntry.getBagType()).thenReturn(typedBagType);
+    when(typedBagType.getDisplayName()).thenReturn("StoneBag");
+
+    for (int i = 0; i < BAG_SIZE; i++) {
+      when(typedBagType.getSlotName(i)).thenReturn("STONE");
+    }
+
+    when(itemFactory.getItemMeta(any(Material.class))).thenReturn(null);
+    doReturn(true).when(itemFactory).equals(isNull(), isNull());
+
+    when(serviceContext.getItemService()).thenReturn(itemService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getName()).thenReturn("relluessentials");
+
+    CustomItem disabledItemEntry = mock(CustomItem.class);
+    ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+    when(disabledItemEntry.toItemStack()).thenReturn(disabledItemStack);
+    when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
+        .thenReturn(Optional.of(disabledItemEntry));
+
+    when(bagRegistry.findByPlayerIdAndBagTypeId(1, 5)).thenReturn(Optional.of(ownedBagEntry));
+
+    Inventory result = bagService.getBagInventory(5, playerEntry);
+
+    assertNotNull(result);
+    verify(mockInventory).setItem(eq(10), eq(new ItemStack(Material.STONE, 1)));
   }
 
   @Test
