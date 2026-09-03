@@ -875,6 +875,63 @@ class BagServiceTest {
     assertNotNull(result);
   }
 
+  @Test
+  void collectItemReturnsFalseWhenPlayerHasNoBags() {
+    BagTypeEntry typedBagType = mock(BagTypeEntry.class);
+
+    for (int i = 0; i < BAG_SIZE; i++) {
+      when(typedBagType.getSlotName(i)).thenReturn("STONE");
+    }
+
+    when(playerEntry.getId()).thenReturn(1);
+    when(bagRegistry.findAllByPlayerId(1)).thenReturn(new ArrayList<>());
+
+    Item droppedItem = mock(Item.class);
+    ItemStack stoneStack = new ItemStack(Material.STONE, 2);
+    when(droppedItem.getItemStack()).thenReturn(stoneStack);
+    Player player = mock(Player.class);
+
+    BagService serviceWithBlocks = buildServiceWithBagTypeBlocks(typedBagType);
+
+    boolean result = serviceWithBlocks.collectItem(droppedItem, player, playerEntry);
+
+    assertFalse(result);
+  }
+
+  @Test
+  void collectItemReturnsFalseWhenPlayerBagsHaveNoMatchingSlotForItem() {
+    BagTypeEntry stoneBagType = mock(BagTypeEntry.class);
+    BagEntry stoneBagEntry = mock(BagEntry.class);
+    when(stoneBagEntry.getBagType()).thenReturn(stoneBagType);
+
+    for (int i = 0; i < BAG_SIZE; i++) {
+      when(stoneBagType.getSlotName(i)).thenReturn("STONE");
+    }
+
+    when(playerEntry.getId()).thenReturn(1);
+    when(bagRegistry.findAllByPlayerId(1)).thenReturn(List.of(stoneBagEntry));
+
+    Item droppedItem = mock(Item.class);
+    ItemStack dirtStack = new ItemStack(Material.DIRT, 1);
+    when(droppedItem.getItemStack()).thenReturn(dirtStack);
+    Player player = mock(Player.class);
+
+    BagTypeEntry dirtBagType = mock(BagTypeEntry.class);
+    for (int i = 0; i < BAG_SIZE; i++) {
+      if (i == 0) {
+        when(dirtBagType.getSlotName(i)).thenReturn("DIRT");
+      } else {
+        when(dirtBagType.getSlotName(i)).thenReturn(null);
+      }
+    }
+
+    BagService serviceWithBlocks = buildServiceWithBagTypeBlocks(dirtBagType);
+
+    boolean result = serviceWithBlocks.collectItem(droppedItem, player, playerEntry);
+
+    assertFalse(result);
+  }
+
   private void stubBagTypeRegistryWithEntries(List<BagTypeEntry> entries) {
     lenient().when(bagTypeRegistry.getAll()).thenReturn(entries);
   }
