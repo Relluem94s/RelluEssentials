@@ -634,10 +634,12 @@ class BagServiceTest {
     when(typedBagType.getDisplayName()).thenReturn("StoneBag");
 
     for (int i = 0; i < BAG_SIZE; i++) {
-      when(typedBagType.getSlotName(i)).thenReturn(null);
+      when(typedBagType.getSlotName(i)).thenReturn("STONE");
     }
 
-    when(bagRegistry.findByPlayerIdAndBagTypeId(1, 5)).thenReturn(Optional.of(ownedBagEntry));
+    lenient().when(itemFactory.getItemMeta(any(Material.class))).thenReturn(null);
+    lenient().doReturn(true).when(itemFactory).equals(isNull(), isNull());
+
     when(serviceContext.getItemService()).thenReturn(itemService);
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(pluginMetadataService.getName()).thenReturn("relluessentials");
@@ -647,6 +649,12 @@ class BagServiceTest {
     when(disabledItemEntry.toItemStack()).thenReturn(disabledItemStack);
     when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
         .thenReturn(Optional.of(disabledItemEntry));
+
+    when(bagRegistry.findByPlayerIdAndBagTypeId(1, 5)).thenReturn(Optional.of(ownedBagEntry));
+
+    lenient().when(serviceContext.getTranslationService()).thenReturn(translationService);
+    lenient().when(translationService.get(eq(MessageKey.PLUGIN_BAG_AMOUNT), anyInt())).thenReturn("Amount: 0");
+    lenient().when(translationService.get(MessageKey.PLUGIN_BAG_RETRIEVE)).thenReturn("Retrieve");
 
     var result = bagService.getBagInventory(5, playerEntry);
 
