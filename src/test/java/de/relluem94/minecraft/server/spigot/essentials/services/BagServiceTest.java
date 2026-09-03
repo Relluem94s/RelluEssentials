@@ -46,6 +46,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -636,10 +637,13 @@ class BagServiceTest {
 
     for (int i = 0; i < BAG_SIZE; i++) {
       when(typedBagType.getSlotName(i)).thenReturn("STONE");
+      when(ownedBagEntry.getSlotValue(i)).thenReturn(0);
     }
 
-    lenient().when(itemFactory.getItemMeta(any(Material.class))).thenReturn(null);
+    ItemMeta stoneItemMeta = mock(ItemMeta.class);
+    when(itemFactory.getItemMeta(Material.STONE)).thenReturn(stoneItemMeta);
     lenient().doReturn(true).when(itemFactory).equals(isNull(), isNull());
+    lenient().doReturn(true).when(itemFactory).equals(eq(stoneItemMeta), eq(stoneItemMeta));
 
     when(serviceContext.getItemService()).thenReturn(itemService);
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
@@ -651,15 +655,16 @@ class BagServiceTest {
     when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
         .thenReturn(Optional.of(disabledItemEntry));
 
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.get(eq(MessageKey.PLUGIN_BAG_AMOUNT), anyInt())).thenReturn("Amount: 0");
+    when(translationService.get(MessageKey.PLUGIN_BAG_RETRIEVE)).thenReturn("Retrieve");
+
     when(bagRegistry.findByPlayerIdAndBagTypeId(1, 5)).thenReturn(Optional.of(ownedBagEntry));
-//TODO STUBS MISSING
-    lenient().when(serviceContext.getTranslationService()).thenReturn(translationService);
-    lenient().when(translationService.get(eq(MessageKey.PLUGIN_BAG_AMOUNT), anyInt())).thenReturn("Amount: 0");
-    lenient().when(translationService.get(MessageKey.PLUGIN_BAG_RETRIEVE)).thenReturn("Retrieve");
 
     var result = bagService.getBagInventory(5, playerEntry);
 
     assertNotNull(result);
+    verify(stoneItemMeta, atLeast(1)).setLore(List.of("Amount: 0", "Retrieve"));
   }
 
   @Test
