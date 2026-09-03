@@ -972,6 +972,41 @@ class BagServiceTest {
     );
   }
 
+  @Test
+  void collectItemStacksSkipsItemStackWhenItIsInBagBlocksButHasNoMatchingSlotInPlayerBag() {
+    BagTypeEntry stoneBagType = mock(BagTypeEntry.class);
+    BagEntry stoneBagEntry = mock(BagEntry.class);
+    when(stoneBagEntry.getBagType()).thenReturn(stoneBagType);
+
+    for (int i = 0; i < BAG_SIZE; i++) {
+      when(stoneBagType.getSlotName(i)).thenReturn("STONE");
+    }
+
+    when(playerEntry.getId()).thenReturn(1);
+    when(bagRegistry.findAllByPlayerId(1)).thenReturn(List.of(stoneBagEntry));
+
+    ItemStack dirtStack = new ItemStack(Material.DIRT, 3);
+    Player player = mock(Player.class);
+
+    BagTypeEntry dirtBagType = mock(BagTypeEntry.class);
+    for (int i = 0; i < BAG_SIZE; i++) {
+      if (i == 0) {
+        when(dirtBagType.getSlotName(i)).thenReturn("DIRT");
+      } else {
+        when(dirtBagType.getSlotName(i)).thenReturn(null);
+      }
+    }
+
+    BagService serviceWithBlocks = buildServiceWithBagTypeBlocks(dirtBagType);
+
+    List<ItemStack> result = serviceWithBlocks.collectItemStacks(List.of(dirtStack), player, playerEntry);
+
+    assertAll(
+        () -> assertTrue(result.isEmpty()),
+        () -> verify(stoneBagEntry, never()).setSlotValue(anyInt(), anyInt()),
+        () -> verify(stoneBagEntry, never()).setHasToBeUpdated(true)
+    );
+  }
 
   private void stubBagTypeRegistryWithEntries(List<BagTypeEntry> entries) {
     lenient().when(bagTypeRegistry.getAll()).thenReturn(entries);

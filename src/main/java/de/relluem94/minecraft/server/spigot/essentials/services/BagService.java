@@ -193,17 +193,7 @@ public class BagService {
     List<ItemStack> slotItemStacks = Arrays.asList(getItemStacks(bagEntry.getBagType()));
     ItemStack itemStackWithoutAmount = ItemHelper.getCleanItemStack(itemStack);
 
-    if (!slotItemStacks.contains(itemStackWithoutAmount)) {
-      return -1;
-    }
-
-    for (int slotIndex = 0; slotIndex < BAG_SIZE; slotIndex++) {
-      if (slotItemStacks.get(slotIndex).equals(itemStackWithoutAmount)) {
-        return slotIndex;
-      }
-    }
-
-    return -1;
+    return slotItemStacks.indexOf(itemStackWithoutAmount);
   }
 
   /**
