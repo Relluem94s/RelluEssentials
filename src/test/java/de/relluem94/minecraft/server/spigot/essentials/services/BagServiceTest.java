@@ -39,7 +39,6 @@ import java.util.Optional;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Server;
-import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -337,10 +336,6 @@ class BagServiceTest {
     when(translationService.get(eq(MessageKey.PLUGIN_EVENT_BAG_COLLECT), anyInt(), anyString()))
         .thenReturn("collected");
 
-    when(serviceContext.getItemService()).thenReturn(itemService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getName()).thenReturn("relluessentials");
-
     BagService serviceWithBlocks = buildServiceWithBagTypeBlocks(typedBagType);
 
     List<Item> result = serviceWithBlocks.collectItems(List.of(droppedItem), player, playerEntry);
@@ -351,7 +346,7 @@ class BagServiceTest {
     );
     verify(matchingBagEntry).setSlotValue(0, 15);
     verify(matchingBagEntry).setHasToBeUpdated(true);
-    verify(player).playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
+    verify(player).playSound(player, "entity.item.pickup", SoundCategory.PLAYERS, 0.5F, 1);
   }
 
   @Test
@@ -389,13 +384,9 @@ class BagServiceTest {
     when(translationService.get(eq(MessageKey.PLUGIN_EVENT_BAG_COLLECT), anyInt(), anyString()))
         .thenReturn("collected");
 
-    when(serviceContext.getItemService()).thenReturn(itemService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getName()).thenReturn("relluessentials");
     BagService serviceWithBlocks = buildServiceWithBagTypeBlocks(typedBagType);
 
-    List<ItemStack> result = serviceWithBlocks.collectItemStacks(List.of(itemStack), player,
-        playerEntry);
+    List<ItemStack> result = serviceWithBlocks.collectItemStacks(List.of(itemStack), player, playerEntry);
 
     assertAll(
         () -> assertEquals(1, result.size()),
@@ -466,17 +457,11 @@ class BagServiceTest {
     when(translationService.get(eq(MessageKey.PLUGIN_EVENT_BAG_COLLECT), anyInt(), anyString()))
         .thenReturn("collected");
 
-    when(serviceContext.getItemService()).thenReturn(itemService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getName()).thenReturn("relluessentials");
-
     BagService serviceWithBlocks = buildServiceWithBagTypeBlocks(typedBagType);
 
     boolean result = serviceWithBlocks.collectItem(droppedItem, player, playerEntry);
 
-    assertAll(
-        () -> assertTrue(result)
-    );
+    assertTrue(result);
     verify(matchingBagEntry).setSlotValue(0, 4);
     verify(matchingBagEntry).setHasToBeUpdated(true);
   }
@@ -645,7 +630,8 @@ class BagServiceTest {
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(pluginMetadataService.getName()).thenReturn("relluessentials");
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(translationService.get(eq(MessageKey.PLUGIN_BAG_AMOUNT), anyInt())).thenReturn("Amount: 0");
+    when(translationService.get(eq(MessageKey.PLUGIN_BAG_AMOUNT), anyInt())).thenReturn(
+        "Amount: 0");
     when(translationService.get(MessageKey.PLUGIN_BAG_RETRIEVE)).thenReturn("Retrieve");
 
     CustomItem disabledItemEntry = mock(CustomItem.class);
@@ -685,19 +671,32 @@ class BagServiceTest {
     );
   }
 
+  private void stubDisabledItemResolution() {
+    lenient().when(serviceContext.getItemService()).thenReturn(itemService);
+    lenient().when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    lenient().when(pluginMetadataService.getName()).thenReturn("relluessentials");
+
+    CustomItem disabledItemEntry = mock(CustomItem.class);
+    ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+    lenient().when(disabledItemEntry.toItemStack()).thenReturn(disabledItemStack);
+    lenient().when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
+        .thenReturn(Optional.of(disabledItemEntry));
+  }
+
   private BagService buildServiceWithBagTypeBlocks(BagTypeEntry typedBagType) {
     BagTypeRepository localBagTypeRepository = mock(BagTypeRepository.class);
     BagRepository localBagRepository = mock(BagRepository.class);
-    BagRegistry localBagRegistry = mock(BagRegistry.class);
     BagTypeRegistry localBagTypeRegistry = mock(BagTypeRegistry.class);
 
     when(localBagTypeRepository.findAll()).thenReturn(List.of(typedBagType));
     when(localBagRepository.findAll()).thenReturn(new ArrayList<>());
     when(localBagTypeRegistry.getAll()).thenReturn(List.of(typedBagType));
 
+    stubDisabledItemResolution();
+
     return new BagService(
         serviceContext,
-        localBagRegistry,
+        bagRegistry,
         localBagRepository,
         localBagTypeRegistry,
         localBagTypeRepository
