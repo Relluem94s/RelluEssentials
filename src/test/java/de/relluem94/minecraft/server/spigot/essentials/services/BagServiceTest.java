@@ -243,6 +243,7 @@ class BagServiceTest {
     assertFalse(result);
   }
 
+
   @Test
   void getSlotByItemStackReturnsNegativeOneWhenItemNotInBagType() {
     ItemStack queriedItem = new ItemStack(Material.STONE, 5);
@@ -256,6 +257,12 @@ class BagServiceTest {
     when(serviceContext.getItemService()).thenReturn(itemService);
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(pluginMetadataService.getName()).thenReturn("relluessentials");
+
+    CustomItem disabledItemEntry = mock(CustomItem.class);
+    ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+    when(disabledItemEntry.toItemStack()).thenReturn(disabledItemStack);
+    when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
+        .thenReturn(Optional.of(disabledItemEntry));
 
     int result = bagService.getSlotByItemStack(bagEntry, queriedItem);
 
