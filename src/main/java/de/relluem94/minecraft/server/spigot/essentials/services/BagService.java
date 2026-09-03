@@ -32,7 +32,6 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -243,7 +242,7 @@ public class BagService {
         serviceContext.getChatService().sendMessageInActionBar(player,
             serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
                 droppedItem.getItemStack().getAmount(), droppedItem.getName()));
-        player.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
+        player.playSound(player, "entity.item.pickup", SoundCategory.PLAYERS, 0.5F, 1);
         collectedItems.add(droppedItem);
       }
     }
@@ -287,7 +286,7 @@ public class BagService {
             serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
                 itemStack.getAmount(),
                 itemStack.getType().name().replace("_", " ").toLowerCase()));
-        player.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
+        player.playSound(player, "entity.item.pickup", SoundCategory.PLAYERS, 0.5F, 1);
         collectedStacks.add(itemStack);
       }
     }
@@ -328,7 +327,7 @@ public class BagService {
       serviceContext.getChatService().sendMessageInActionBar(player,
           serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
               droppedItem.getItemStack().getAmount(), droppedItem.getName()));
-      player.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
+      player.playSound(player, "entity.item.pickup", SoundCategory.PLAYERS, 0.5F, 1);
       droppedItem.getItemStack().setAmount(0);
       return true;
     }
