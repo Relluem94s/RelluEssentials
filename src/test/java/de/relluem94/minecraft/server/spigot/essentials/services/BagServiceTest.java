@@ -823,6 +823,84 @@ class BagServiceTest {
     );
   }
 
+  @Test
+  void getBagsInventoryForPlayerReturnsInventoryWithOnlyOwnedBags() {
+    BagTypeEntry ownedBagType = mock(BagTypeEntry.class);
+    BagTypeEntry notOwnedBagType = mock(BagTypeEntry.class);
+
+    when(ownedBagType.getId()).thenReturn(1);
+    when(notOwnedBagType.getId()).thenReturn(2);
+    when(ownedBagType.getDisplayName()).thenReturn("StoneBag");
+
+    when(playerEntry.getId()).thenReturn(1);
+    when(bagRegistry.existsByPlayerIdAndBagTypeId(1, 1)).thenReturn(true);
+    when(bagRegistry.existsByPlayerIdAndBagTypeId(1, 2)).thenReturn(false);
+
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.get(MessageKey.PLUGIN_BAG_GUI_TITLE)).thenReturn("Bags");
+    when(translationService.get(MessageKey.PLUGIN_BAG_CLICK_TO_OPEN)).thenReturn("Click to open");
+
+    stubDisabledItemResolution();
+    stubBagTypeRegistryWithEntries(List.of(ownedBagType, notOwnedBagType));
+
+    BagService serviceWithBagTypes = buildServiceWithBagTypeRegistryEntries(
+        List.of(ownedBagType, notOwnedBagType));
+
+    Inventory result = serviceWithBagTypes.getBagsInventory(playerEntry);
+
+    assertNotNull(result);
+    verify(mockInventory, never()).setItem(anyInt(), eq(null));
+  }
+
+  @Test
+  void getBagsInventoryForNpcReturnInventoryWithAllBagTypes() {
+    BagTypeEntry firstBagType = mock(BagTypeEntry.class);
+    BagTypeEntry secondBagType = mock(BagTypeEntry.class);
+
+    when(firstBagType.getDisplayName()).thenReturn("StoneBag");
+    when(secondBagType.getDisplayName()).thenReturn("IronBag");
+
+    stubDisabledItemResolution();
+    stubBagTypeRegistryWithEntries(List.of(firstBagType, secondBagType));
+
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(translationService.get(MessageKey.PLUGIN_BAG_CLICK_TO_BUY)).thenReturn("Click to buy");
+    when(translationService.get(eq(MessageKey.PLUGIN_BAG_COST_TO_BUY), anyInt())).thenReturn("Cost: 0");
+
+    BagService serviceWithBagTypes = buildServiceWithBagTypeRegistryEntries(
+        List.of(firstBagType, secondBagType));
+
+    Inventory result = serviceWithBagTypes.getBagsInventory(true, "Shop");
+
+    assertNotNull(result);
+  }
+
+  private void stubBagTypeRegistryWithEntries(List<BagTypeEntry> entries) {
+    lenient().when(bagTypeRegistry.getAll()).thenReturn(entries);
+  }
+
+  private BagService buildServiceWithBagTypeRegistryEntries(List<BagTypeEntry> bagTypeEntries) {
+    BagTypeRepository localBagTypeRepository = mock(BagTypeRepository.class);
+    BagRepository localBagRepository = mock(BagRepository.class);
+    BagTypeRegistry localBagTypeRegistry = mock(BagTypeRegistry.class);
+
+    when(localBagTypeRepository.findAll()).thenReturn(bagTypeEntries);
+    when(localBagRepository.findAll()).thenReturn(new ArrayList<>());
+    when(localBagTypeRegistry.getAll()).thenReturn(bagTypeEntries);
+
+    stubDisabledItemResolution();
+    lenient().when(itemFactory.getItemMeta(any(Material.class))).thenReturn(null);
+    lenient().doReturn(true).when(itemFactory).equals(isNull(), isNull());
+
+    return new BagService(
+        serviceContext,
+        bagRegistry,
+        localBagRepository,
+        localBagTypeRegistry,
+        localBagTypeRepository
+    );
+  }
+
   private void stubDisabledItemResolution() {
     lenient().when(serviceContext.getItemService()).thenReturn(itemService);
     lenient().when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
