@@ -11,6 +11,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -28,15 +29,19 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagRepository;
 import de.relluem94.minecraft.server.spigot.essentials.repositories.BagTypeRepository;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,8 +81,18 @@ class BagServiceTest {
 
   private BagService bagService;
 
+  @Mock
+  private Server server;
+  @Mock
+  private ItemFactory itemFactory;
+
   @BeforeEach
-  void setUp() {
+  void setUp() throws NoSuchFieldException, IllegalAccessException {
+    lenient().when(server.getItemFactory()).thenReturn(itemFactory);
+    Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, server);
+
     when(bagTypeRepository.findAll()).thenReturn(new ArrayList<>());
     when(bagRepository.findAll()).thenReturn(new ArrayList<>());
     when(bagTypeRegistry.getAll()).thenReturn(new ArrayList<>());
@@ -243,6 +258,10 @@ class BagServiceTest {
       when(emptyBagType.getSlotName(i)).thenReturn(null);
     }
 
+    when(serviceContext.getItemService()).thenReturn(itemService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getName()).thenReturn("relluessentials");
+
     int result = bagService.getSlotByItemStack(bagEntry, queriedItem);
 
     assertEquals(-1, result);
@@ -260,6 +279,10 @@ class BagServiceTest {
         when(typedBagType.getSlotName(i)).thenReturn(null);
       }
     }
+
+    when(serviceContext.getItemService()).thenReturn(itemService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getName()).thenReturn("relluessentials");
 
     ItemStack stoneItem = new ItemStack(Material.STONE, 1);
     int result = bagService.getSlotByItemStack(bagEntry, stoneItem);
@@ -308,6 +331,10 @@ class BagServiceTest {
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(translationService.get(eq(MessageKey.PLUGIN_EVENT_BAG_COLLECT), anyInt(), anyString()))
         .thenReturn("collected");
+
+    when(serviceContext.getItemService()).thenReturn(itemService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getName()).thenReturn("relluessentials");
 
     BagService serviceWithBlocks = buildServiceWithBagTypeBlocks(typedBagType);
 
@@ -660,19 +687,11 @@ class BagServiceTest {
     when(localBagTypeRepository.findAll()).thenReturn(List.of(typedBagType));
     when(localBagRepository.findAll()).thenReturn(new ArrayList<>());
     when(localBagTypeRegistry.getAll()).thenReturn(List.of(typedBagType));
-    Collection<BagEntry> playerBags = bagRegistry.findAllByPlayerId(1);
-    when(localBagRegistry.findAllByPlayerId(1)).thenReturn(playerBags);
-
-    when(serviceContext.getItemService()).thenReturn(itemService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getName()).thenReturn("relluessentials");
 
     CustomItem disabledItemEntry =
         mock(CustomItem.class);
     ItemStack disabledItemStack = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
     when(disabledItemEntry.toItemStack()).thenReturn(disabledItemStack);
-    when(itemService.find(any(RelluEssentialsNamespacedKey.class)))
-        .thenReturn(Optional.of(disabledItemEntry));
 
     return new BagService(
         serviceContext,
