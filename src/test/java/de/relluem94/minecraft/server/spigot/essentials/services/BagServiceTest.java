@@ -789,6 +789,40 @@ class BagServiceTest {
     );
   }
 
+  @Test
+  void insertBagPersistsBagAndRegistersInRegistry() {
+    when(bagRepository.insert(1, 2)).thenReturn(bagEntry);
+
+    BagEntry result = bagService.insertBag(1, 2);
+
+    assertAll(
+        () -> assertEquals(bagEntry, result),
+        () -> verify(bagRepository).insert(1, 2),
+        () -> verify(bagRegistry).register(bagEntry)
+    );
+  }
+
+  @Test
+  void updateBagPersistsBagToRepository() {
+    bagService.updateBag(bagEntry);
+
+    verify(bagRepository).update(bagEntry);
+  }
+
+  @Test
+  void getBagsReturnsCollectionForPlayer() {
+    List<BagEntry> bags = List.of(bagEntry);
+    when(bagRegistry.findAllByPlayerId(1)).thenReturn(bags);
+
+    Collection<BagEntry> result = bagService.getBags(1);
+
+    assertAll(
+        () -> assertNotNull(result),
+        () -> assertEquals(1, result.size()),
+        () -> assertTrue(result.contains(bagEntry))
+    );
+  }
+
   private void stubDisabledItemResolution() {
     lenient().when(serviceContext.getItemService()).thenReturn(itemService);
     lenient().when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
