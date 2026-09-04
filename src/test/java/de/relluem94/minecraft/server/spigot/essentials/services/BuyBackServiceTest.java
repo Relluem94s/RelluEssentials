@@ -66,9 +66,9 @@ class BuyBackServiceTest {
     ItemStack mockedStack = mock(ItemStack.class);
     AtomicInteger amount = new AtomicInteger(0);
     when(mockedStack.getType()).thenReturn(material);
-    when(mockedStack.getAmount()).thenAnswer(invocation -> amount.get());
+    when(mockedStack.getAmount()).thenAnswer(_ -> amount.get());
     when(mockedStack.getMaxStackSize()).thenReturn(64);
-    lenient().when(mockedStack.clone()).thenAnswer(invocation -> createTrackingMockItemStack(material));
+    lenient().when(mockedStack.clone()).thenAnswer(_ -> createTrackingMockItemStack(material));
     return mockedStack;
   }
 
