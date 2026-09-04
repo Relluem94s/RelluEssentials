@@ -60,8 +60,10 @@ class TranslationServiceTest {
 
   @Test
   void loadLanguagesLoadsAvailableLanguageFiles() {
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(GERMAN_PROPERTIES_CONTENT));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(GERMAN_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -88,8 +90,10 @@ class TranslationServiceTest {
 
   @Test
   void getReturnsTranslatedMessageForDefaultLanguage() {
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(GERMAN_PROPERTIES_CONTENT));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(GERMAN_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -102,8 +106,10 @@ class TranslationServiceTest {
 
   @Test
   void getReturnsMissingPlaceholderWhenKeyNotFound() {
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(GERMAN_PROPERTIES_CONTENT));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(GERMAN_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -134,8 +140,10 @@ class TranslationServiceTest {
 
   @Test
   void getWithArgsFormatsMessageCorrectly() {
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(GERMAN_PROPERTIES_CONTENT));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(GERMAN_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -163,8 +171,10 @@ class TranslationServiceTest {
 
   @Test
   void getWithPrefixReturnsPrefixedMessage() {
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(GERMAN_PROPERTIES_CONTENT));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(GERMAN_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -180,8 +190,10 @@ class TranslationServiceTest {
 
   @Test
   void getWithPrefixAndArgsReturnsPrefixedFormattedMessage() {
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(GERMAN_PROPERTIES_CONTENT));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(GERMAN_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -197,8 +209,10 @@ class TranslationServiceTest {
 
   @Test
   void setDefaultLanguageSwitchesToValidLanguage() {
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(GERMAN_PROPERTIES_CONTENT));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(GERMAN_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -212,8 +226,10 @@ class TranslationServiceTest {
 
   @Test
   void setDefaultLanguageKeepsCurrentLanguageWhenInvalidLanguageProvided() {
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(GERMAN_PROPERTIES_CONTENT));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(GERMAN_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -228,8 +244,10 @@ class TranslationServiceTest {
   @Test
   void applyColorsConvertsAmpersandToSectionSign() {
     String propertiesWithColor = "test.key=&aGreen Text\n";
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(propertiesWithColor));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(propertiesWithColor));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -243,8 +261,10 @@ class TranslationServiceTest {
   @Test
   void applyColorsWrapsFormatArgumentsWithColorCodes() {
     String propertiesWithFormat = "test.format=Hello %s World\n";
-    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(propertiesWithFormat));
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(
+        toInputStream(propertiesWithFormat));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -279,7 +299,8 @@ class TranslationServiceTest {
   @Test
   void getReturnsMissingPlaceholderWhenDefaultLanguageNotLoaded() {
     when(plugin.getResource("lang/de_DE.properties")).thenReturn(null);
-    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(VALID_PROPERTIES_CONTENT));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(
+        toInputStream(VALID_PROPERTIES_CONTENT));
     when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
 
     translationService.loadLanguages();
@@ -297,7 +318,8 @@ class TranslationServiceTest {
   @Test
   void loadLanguagesLogsErrorWhenLanguageFileThrowsIOException() throws IOException {
     InputStream brokenStream = mock(InputStream.class);
-    when(brokenStream.read(any(), anyInt(), anyInt())).thenThrow(new IOException("Simulated read error"));
+    when(brokenStream.read(any(), anyInt(), anyInt())).thenThrow(
+        new IOException("Simulated read error"));
 
     when(plugin.getResource("lang/de_DE.properties")).thenReturn(brokenStream);
     when(plugin.getResource("lang/en_US.properties")).thenReturn(null);
@@ -309,5 +331,23 @@ class TranslationServiceTest {
     translationService.loadLanguages();
 
     verify(spyLogger).log(eq(Level.SEVERE), contains("de_DE"), any(IOException.class));
+  }
+
+  @Test
+  void getReturnsFallbackValueFromDefaultLanguageWhenKeyMissingInCurrentLanguage() {
+    String germanContent = "test.key=Hallo Welt\ntest.german.only=Nur Deutsch\n";
+    String englishContent = "test.key=Hello World\n";
+
+    when(plugin.getResource("lang/de_DE.properties")).thenReturn(toInputStream(germanContent));
+    when(plugin.getResource("lang/en_US.properties")).thenReturn(toInputStream(englishContent));
+    when(plugin.getResource("lang/da_DK.properties")).thenReturn(null);
+
+    translationService.loadLanguages();
+    translationService.setDefaultLanguage("de_DE");
+
+    MessageKey key = buildMessageKey("test.german.only");
+    String result = translationService.get(key, "en_US");
+
+    assertEquals("Nur Deutsch", result);
   }
 }
