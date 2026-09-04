@@ -1357,6 +1357,117 @@ class ProtectionActionServiceTest {
         () -> verify(player, never()).sendMessage(any(String.class)));
   }
 
+  @Test
+  void protectBlockReturnsFalseWhenRightNeighbourChestIsProtectedByOther() {
+    Location location = new Location(world, 0, 0, 0);
+    when(block.getType()).thenReturn(Material.CHEST);
+    when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
+    when(block.getLocation()).thenReturn(location);
+
+    Chest chestData = mock(Chest.class);
+    when(chestData.getType()).thenReturn(Chest.Type.LEFT);
+    when(chestData.getFacing()).thenReturn(BlockFace.NORTH);
+    when(block.getBlockData()).thenReturn(chestData);
+
+    Block eastNeighbour = mock(Block.class);
+    Block westNeighbour = mock(Block.class);
+
+    when(eastNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
+
+    Chest westNeighbourChestData = mock(Chest.class);
+    when(westNeighbourChestData.getFacing()).thenReturn(BlockFace.NORTH);
+    when(westNeighbour.getBlockData()).thenReturn(westNeighbourChestData);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastNeighbour);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westNeighbour);
+
+    try (var mockedStatic = org.mockito.Mockito.mockStatic(
+        de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.class)) {
+      mockedStatic.when(
+          () -> de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.hasPermission(
+              westNeighbour, player)).thenReturn(true);
+
+      PlayerEntry playerEntry = buildPlayerEntry();
+      when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+      when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null);
+      when(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
+      when(translationService.getWithPrefix(
+          MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD_CHEST_DENY)).thenReturn("chest deny");
+
+      boolean result = protectionActionService.protectBlock(player, block);
+
+      assertAll(() -> assertFalse(result), () -> verify(player).sendMessage("disallow"),
+          () -> verify(player).sendMessage("chest deny"));
+    }
+  }
+
+  @Test
+  void protectBlockSkipsDoubleChestLogicWhenChestIsSingle() {
+    Location location = new Location(world, 0, 0, 0);
+    when(block.getType()).thenReturn(Material.CHEST);
+    when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
+    when(block.getLocation()).thenReturn(location);
+
+    Chest chestData = mock(Chest.class);
+    when(chestData.getType()).thenReturn(Chest.Type.SINGLE);
+    when(block.getBlockData()).thenReturn(chestData);
+
+    setupPlayerEntryWithId();
+
+    LocationEntry builtEntry = buildLocationEntry(1, location);
+    setupLocationServiceForSuccessfulProtection(location, builtEntry);
+
+    boolean result = protectionActionService.protectBlock(player, block);
+
+    assertAll(() -> assertTrue(result),
+        () -> verify(protectionService).saveProtectionAndAddToRegistry(eq(location),
+            any(ProtectionEntry.class)));
+  }
+
+  @Test
+  void removeProtectionFromBlockReturnsFalseWhenSignAboveHasNullLocationEntry() {
+    Location attachedBlockLocation = new Location(world, 0, 1, 0);
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block eastRelative = mock(Block.class);
+    Block southRelative = mock(Block.class);
+    Block northRelative = mock(Block.class);
+    Block westRelative = mock(Block.class);
+    Block upRelative = mock(Block.class);
+
+    BlockData nonMatchingData = mock(BlockData.class);
+    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
+    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
+
+    Sign standingSign = mock(Sign.class);
+    when(upRelative.getBlockData()).thenReturn(standingSign);
+    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
+    when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    ProtectionEntry protectionEntryWithNullLocation = new ProtectionEntry();
+    protectionEntryWithNullLocation.setLocationEntry(null);
+    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(
+        protectionEntryWithNullLocation);
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertFalse(result);
+  }
+
   private PlayerEntry buildPlayerEntry() {
     PlayerEntry playerEntry = new PlayerEntry();
     playerEntry.setId(1);
