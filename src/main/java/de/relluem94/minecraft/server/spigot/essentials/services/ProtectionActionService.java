@@ -326,6 +326,10 @@ public class ProtectionActionService {
     removeRight(null, pre, id, true);
   }
 
+  @SuppressWarnings("DuplicateBranchesInSwitch")
+  /* JaCoCo incorrectly reports missing branch coverage when Sign and Door
+   are merged into a single branch, despite both being covered by tests.
+   Keeping them as separate branches ensures accurate coverage reporting. */
   private boolean isAttachedToBlock(@NotNull Block b, BlockFace face) {
     Block attachedBlock = b.getRelative(face);
     BlockData bd = attachedBlock.getBlockData();
@@ -339,7 +343,8 @@ public class ProtectionActionService {
         WallSign sign = (WallSign) attachedBlock.getBlockData();
         yield attachedBlock.getRelative(sign.getFacing().getOppositeFace()).equals(b);
       }
-      case Sign _, Door _ -> attachedBlock.getRelative(BlockFace.DOWN).equals(b);
+      case Sign _ -> attachedBlock.getRelative(BlockFace.DOWN).equals(b);
+      case Door _ -> attachedBlock.getRelative(BlockFace.DOWN).equals(b);
       default -> false;
     };
   }
