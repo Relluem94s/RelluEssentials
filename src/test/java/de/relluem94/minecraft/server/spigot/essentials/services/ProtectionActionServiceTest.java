@@ -88,29 +88,6 @@ class ProtectionActionServiceTest {
   }
 
   @Test
-  void removeProtectionFromBlockReturnsFalseWhenMaterialIsNotProtectable() {
-    when(block.getType()).thenReturn(Material.DIRT);
-    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
-    BlockData nonMatchingData = mock(BlockData.class);
-    Block eastRelative = buildRelativeBlockWithData(nonMatchingData);
-    Block southRelative = buildRelativeBlockWithData(nonMatchingData);
-    Block northRelative = buildRelativeBlockWithData(nonMatchingData);
-    Block westRelative = buildRelativeBlockWithData(nonMatchingData);
-    Block upRelative = buildRelativeBlockWithData(nonMatchingData);
-
-    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
-    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
-    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
-    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
-    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
-    setupPlayerEntryWithId();
-
-    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
-
-    assertFalse(result);
-  }
-
-  @Test
   void removeProtectionFromBlockReturnsTrueWhenPlayerIsNotOwner() {
     Location location = new Location(world, 0, 0, 0);
     when(block.getType()).thenReturn(Material.CHEST);
@@ -630,44 +607,6 @@ class ProtectionActionServiceTest {
   }
 
   @Test
-  void removeProtectionFromBlockReturnsFalseWhenWallHangingSignFacingDoesNotPointToBlock() {
-    when(block.getType()).thenReturn(Material.DIRT);
-    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
-
-    Block eastRelative = mock(Block.class);
-    Block southRelative = mock(Block.class);
-    Block northRelative = mock(Block.class);
-    Block westRelative = mock(Block.class);
-    Block upRelative = mock(Block.class);
-    Block differentBlock = mock(Block.class);
-
-    WallHangingSign wallHangingSign = mock(
-        WallHangingSign.class);
-    when(wallHangingSign.getFacing()).thenReturn(BlockFace.WEST);
-    when(eastRelative.getBlockData()).thenReturn(wallHangingSign);
-    when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(differentBlock);
-
-    BlockData nonMatchingData = mock(BlockData.class);
-    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(upRelative.getBlockData()).thenReturn(nonMatchingData);
-
-    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
-    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
-    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
-    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
-    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
-
-    assertFalse(result);
-  }
-
-  @Test
   void protectBlockIncludesFirstPartnerIdInRightsWhenPlayerIsSecondPartner() {
     Location location = new Location(world, 0, 0, 0);
     when(block.getType()).thenReturn(Material.CHEST);
@@ -760,6 +699,56 @@ class ProtectionActionServiceTest {
           () -> verify(player).sendMessage("chest deny"));
     }
   }
+
+  @ParameterizedTest
+  @MethodSource("noAttachmentScenarios")
+  void removeProtectionFromBlockReturnsFalseWhenNoBlockIsAttached(
+      Block eastRelative, Block southRelative, Block northRelative,
+      Block westRelative, Block upRelative) {
+
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
+    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
+    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(buildPlayerEntry());
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    assertFalse(result);
+  }
+
+  static Stream<Arguments> noAttachmentScenarios() {
+    BlockData nonMatching = mock(BlockData.class);
+
+    Block nonMatchingEast  = buildRelativeBlockWithDataStatic(nonMatching);
+    Block nonMatchingSouth = buildRelativeBlockWithDataStatic(nonMatching);
+    Block nonMatchingNorth = buildRelativeBlockWithDataStatic(nonMatching);
+    Block nonMatchingWest  = buildRelativeBlockWithDataStatic(nonMatching);
+    Block nonMatchingUp    = buildRelativeBlockWithDataStatic(nonMatching);
+
+    WallHangingSign wallHangingSignWrongFacing = mock(WallHangingSign.class);
+    when(wallHangingSignWrongFacing.getFacing()).thenReturn(BlockFace.WEST);
+    Block differentBlock = mock(Block.class);
+    Block eastWithWrongFacingSign = buildRelativeBlockWithDataStatic(wallHangingSignWrongFacing);
+    when(eastWithWrongFacingSign.getRelative(BlockFace.EAST)).thenReturn(differentBlock);
+
+    return Stream.of(
+        Arguments.of(nonMatchingEast,        nonMatchingSouth, nonMatchingNorth, nonMatchingWest, nonMatchingUp),
+        Arguments.of(eastWithWrongFacingSign, nonMatchingSouth, nonMatchingNorth, nonMatchingWest, nonMatchingUp)
+    );
+  }
+
+  private static Block buildRelativeBlockWithDataStatic(BlockData data) {
+    Block relative = mock(Block.class);
+    when(relative.getBlockData()).thenReturn(data);
+    return relative;
+  }
+
 
   @ParameterizedTest
   @MethodSource("wallSignAndStandingSignAttachmentScenarios")
@@ -1091,7 +1080,6 @@ class ProtectionActionServiceTest {
     );
   }
 
-
   private void setupNonMatchingRelativesExcept(BlockFace excludedFace) {
     BlockData nonMatchingData = mock(BlockData.class);
     List<BlockFace> sideFaces = List.of(BlockFace.EAST, BlockFace.SOUTH, BlockFace.NORTH, BlockFace.WEST, BlockFace.UP);
@@ -1121,12 +1109,6 @@ class ProtectionActionServiceTest {
     ProtectionEntry protectionEntry = new ProtectionEntry();
     protectionEntry.setLocationEntry(locationEntry);
     return protectionEntry;
-  }
-
-  private Block buildRelativeBlockWithData(BlockData data) {
-    Block relative = mock(Block.class);
-    when(relative.getBlockData()).thenReturn(data);
-    return relative;
   }
 
   private void setupPlayerEntryWithId() {
