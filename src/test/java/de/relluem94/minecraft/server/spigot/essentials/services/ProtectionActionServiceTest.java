@@ -667,158 +667,6 @@ class ProtectionActionServiceTest {
   }
 
   @Test
-  void protectBlockReturnsTrueWhenDoubleChestFacingNorthAndNeighboursAreNotProtected() {
-    Location location = new Location(world, 0, 0, 0);
-    when(block.getType()).thenReturn(Material.CHEST);
-    when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
-    when(block.getLocation()).thenReturn(location);
-
-    Chest chestData = mock(Chest.class);
-    when(chestData.getType()).thenReturn(Chest.Type.LEFT);
-    when(chestData.getFacing()).thenReturn(BlockFace.NORTH);
-    when(block.getBlockData()).thenReturn(chestData);
-
-    Block eastNeighbour = mock(Block.class);
-    Block westNeighbour = mock(Block.class);
-
-    when(eastNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
-    when(westNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
-
-    when(block.getRelative(BlockFace.EAST)).thenReturn(eastNeighbour);
-    when(block.getRelative(BlockFace.WEST)).thenReturn(westNeighbour);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
-        .thenReturn(builtEntry);
-
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
-        eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
-        "protected");
-
-    boolean result = protectionActionService.protectBlock(player, block);
-
-    assertTrue(result);
-  }
-
-  @Test
-  void protectBlockReturnsTrueWhenDoubleChestFacingEastAndNeighboursAreNotProtected() {
-    Location location = new Location(world, 0, 0, 0);
-    when(block.getType()).thenReturn(Material.CHEST);
-    when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
-    when(block.getLocation()).thenReturn(location);
-
-    Chest chestData = mock(Chest.class);
-    when(chestData.getType()).thenReturn(Chest.Type.LEFT);
-    when(chestData.getFacing()).thenReturn(BlockFace.EAST);
-    when(block.getBlockData()).thenReturn(chestData);
-
-    Block southNeighbour = mock(Block.class);
-    Block northNeighbour = mock(Block.class);
-
-    when(southNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
-    when(northNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
-
-    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southNeighbour);
-    when(block.getRelative(BlockFace.NORTH)).thenReturn(northNeighbour);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
-        .thenReturn(builtEntry);
-
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
-        eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
-        "protected");
-
-    boolean result = protectionActionService.protectBlock(player, block);
-
-    assertTrue(result);
-  }
-
-  @Test
-  void protectBlockReturnsTrueWhenDoubleChestFacingSouthAndNeighboursAreNotProtected() {
-    Location location = new Location(world, 0, 0, 0);
-    when(block.getType()).thenReturn(Material.CHEST);
-    when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
-    when(block.getLocation()).thenReturn(location);
-
-    Chest chestData = mock(Chest.class);
-    when(chestData.getType()).thenReturn(Chest.Type.LEFT);
-    when(chestData.getFacing()).thenReturn(BlockFace.SOUTH);
-    when(block.getBlockData()).thenReturn(chestData);
-
-    Block westNeighbour = mock(Block.class);
-    Block eastNeighbour = mock(Block.class);
-
-    when(westNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
-    when(eastNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
-
-    when(block.getRelative(BlockFace.WEST)).thenReturn(westNeighbour);
-    when(block.getRelative(BlockFace.EAST)).thenReturn(eastNeighbour);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
-        .thenReturn(builtEntry);
-
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
-        eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
-        "protected");
-
-    boolean result = protectionActionService.protectBlock(player, block);
-
-    assertTrue(result);
-  }
-
-  @Test
-  void protectBlockReturnsTrueWhenDoubleChestFacingWestAndNeighboursAreNotProtected() {
-    Location location = new Location(world, 0, 0, 0);
-    when(block.getType()).thenReturn(Material.CHEST);
-    when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
-    when(block.getLocation()).thenReturn(location);
-
-    Chest chestData = mock(Chest.class);
-    when(chestData.getType()).thenReturn(Chest.Type.LEFT);
-    when(chestData.getFacing()).thenReturn(BlockFace.WEST);
-    when(block.getBlockData()).thenReturn(chestData);
-
-    Block northNeighbour = mock(Block.class);
-    Block southNeighbour = mock(Block.class);
-
-    when(northNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
-    when(southNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
-
-    when(block.getRelative(BlockFace.NORTH)).thenReturn(northNeighbour);
-    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southNeighbour);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    LocationEntry builtEntry = buildLocationEntry(1, location);
-    when(locationService.findByLocationAndType(location, LocationType.PROTECTION)).thenReturn(null)
-        .thenReturn(builtEntry);
-
-    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION),
-        eq(1))).thenReturn(builtEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD)).thenReturn(
-        "protected");
-
-    boolean result = protectionActionService.protectBlock(player, block);
-
-    assertTrue(result);
-  }
-
-  @Test
   void protectBlockReturnsFalseWhenLocationAlreadyExistsAndDoubleChestHasNoRights() {
     Location location = new Location(world, 0, 0, 0);
     when(block.getType()).thenReturn(Material.CHEST);
@@ -961,130 +809,6 @@ class ProtectionActionServiceTest {
     when(northRelative.getBlockData()).thenReturn(nonMatchingData);
     when(westRelative.getBlockData()).thenReturn(nonMatchingData);
     when(upRelative.getBlockData()).thenReturn(nonMatchingData);
-
-    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
-    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
-    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
-    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
-    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
-
-    assertFalse(result);
-  }
-
-  @Test
-  void removeProtectionFromBlockReturnsFalseWhenDoorAttachedAboveAndPlayerIsOwner() {
-    Location attachedBlockLocation = new Location(world, 0, 1, 0);
-    when(block.getType()).thenReturn(Material.DIRT);
-    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
-
-    Block eastRelative = mock(Block.class);
-    Block southRelative = mock(Block.class);
-    Block northRelative = mock(Block.class);
-    Block westRelative = mock(Block.class);
-    Block upRelative = mock(Block.class);
-
-    BlockData nonMatchingData = mock(BlockData.class);
-    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
-
-    Door door = mock(Door.class);
-    when(upRelative.getBlockData()).thenReturn(door);
-    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
-    when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
-
-    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
-    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
-    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
-    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
-    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
-    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
-    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
-        "removed");
-
-    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
-
-    assertAll(() -> assertFalse(result),
-        () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed"));
-  }
-
-  @Test
-  void removeProtectionFromBlockReturnsTrueWhenDoorAttachedAboveAndPlayerIsNotOwner() {
-    Location attachedBlockLocation = new Location(world, 0, 1, 0);
-    when(block.getType()).thenReturn(Material.DIRT);
-    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
-
-    Block eastRelative = mock(Block.class);
-    Block southRelative = mock(Block.class);
-    Block northRelative = mock(Block.class);
-    Block westRelative = mock(Block.class);
-    Block upRelative = mock(Block.class);
-
-    BlockData nonMatchingData = mock(BlockData.class);
-    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
-
-    Door door = mock(Door.class);
-    when(upRelative.getBlockData()).thenReturn(door);
-    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(block);
-    when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
-
-    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
-    when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
-    when(block.getRelative(BlockFace.NORTH)).thenReturn(northRelative);
-    when(block.getRelative(BlockFace.WEST)).thenReturn(westRelative);
-    when(block.getRelative(BlockFace.UP)).thenReturn(upRelative);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
-    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
-    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(
-        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
-
-    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
-
-    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("disallow"));
-  }
-
-  @Test
-  void removeProtectionFromBlockReturnsFalseWhenDoorBlockDownDoesNotPointToBlock() {
-    when(block.getType()).thenReturn(Material.DIRT);
-    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
-
-    Block eastRelative = mock(Block.class);
-    Block southRelative = mock(Block.class);
-    Block northRelative = mock(Block.class);
-    Block westRelative = mock(Block.class);
-    Block upRelative = mock(Block.class);
-    Block differentBlock = mock(Block.class);
-
-    BlockData nonMatchingData = mock(BlockData.class);
-    when(eastRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(southRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(northRelative.getBlockData()).thenReturn(nonMatchingData);
-    when(westRelative.getBlockData()).thenReturn(nonMatchingData);
-
-    Door door = mock(Door.class);
-    when(upRelative.getBlockData()).thenReturn(door);
-    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(differentBlock);
 
     when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
     when(block.getRelative(BlockFace.SOUTH)).thenReturn(southRelative);
@@ -1360,6 +1084,117 @@ class ProtectionActionServiceTest {
         Arguments.of(BlockFace.WEST,  BlockFace.EAST,  new Location(world, -1, 0, 0))
     );
   }
+
+  @ParameterizedTest
+  @MethodSource("doubleChestFacingDirectionsWithNeighbourFaces")
+  void protectBlockReturnsTrueWhenDoubleChestFacingDirectionAndNeighboursAreNotProtected(
+      BlockFace chestFacing, BlockFace leftNeighbourFace, BlockFace rightNeighbourFace) {
+
+    Location location = new Location(world, 0, 0, 0);
+    when(block.getType()).thenReturn(Material.CHEST);
+    when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
+    when(block.getLocation()).thenReturn(location);
+
+    Chest chestData = mock(Chest.class);
+    when(chestData.getType()).thenReturn(Chest.Type.LEFT);
+    when(chestData.getFacing()).thenReturn(chestFacing);
+    when(block.getBlockData()).thenReturn(chestData);
+
+    Block leftNeighbour = mock(Block.class);
+    Block rightNeighbour = mock(Block.class);
+    when(leftNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
+    when(rightNeighbour.getBlockData()).thenReturn(mock(BlockData.class));
+
+    when(block.getRelative(leftNeighbourFace)).thenReturn(leftNeighbour);
+    when(block.getRelative(rightNeighbourFace)).thenReturn(rightNeighbour);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry builtEntry = buildLocationEntry(1, location);
+    when(locationService.findByLocationAndType(location, LocationType.PROTECTION))
+        .thenReturn(null)
+        .thenReturn(builtEntry);
+    when(locationService.buildLocationEntry(eq(location), eq(null), eq(LocationType.PROTECTION), eq(1)))
+        .thenReturn(builtEntry);
+    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ADD))
+        .thenReturn("protected");
+
+    boolean result = protectionActionService.protectBlock(player, block);
+
+    assertTrue(result);
+  }
+
+  static Stream<Arguments> doubleChestFacingDirectionsWithNeighbourFaces() {
+    return Stream.of(
+        Arguments.of(BlockFace.NORTH, BlockFace.EAST,  BlockFace.WEST),
+        Arguments.of(BlockFace.EAST,  BlockFace.SOUTH, BlockFace.NORTH),
+        Arguments.of(BlockFace.SOUTH, BlockFace.WEST,  BlockFace.EAST),
+        Arguments.of(BlockFace.WEST,  BlockFace.NORTH, BlockFace.SOUTH)
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("doorAttachmentAboveScenarios")
+  void removeProtectionFromBlockHandlesDoorAttachedAbove(
+      boolean doorPointsToBlock, int locationEntryPlayerId,
+      boolean expectedResult, MessageKey translationKey, String translationValue) {
+
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Location attachedBlockLocation = new Location(world, 0, 1, 0);
+    Block upRelative = mock(Block.class);
+    Block blockBelowDoor = doorPointsToBlock ? block : mock(Block.class);
+
+    Door door = mock(Door.class);
+    when(upRelative.getBlockData()).thenReturn(door);
+    when(upRelative.getRelative(BlockFace.DOWN)).thenReturn(blockBelowDoor);
+
+    if (doorPointsToBlock) {
+      when(upRelative.getLocation()).thenReturn(attachedBlockLocation);
+    }
+
+    setupNonMatchingRelativesExcept(BlockFace.UP);
+    doReturn(upRelative).when(block).getRelative(BlockFace.UP);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    if (doorPointsToBlock) {
+      LocationEntry locationEntry = buildLocationEntry(locationEntryPlayerId, attachedBlockLocation);
+      ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+      when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
+      when(translationService.getWithPrefix(translationKey)).thenReturn(translationValue);
+    }
+
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    if (!doorPointsToBlock) {
+      assertFalse(result);
+    } else if (expectedResult) {
+      assertAll(
+          () -> assertTrue(result),
+          () -> verify(player).sendMessage(translationValue)
+      );
+    } else {
+      ProtectionEntry capturedEntry = protectionService.getProtectionEntry(attachedBlockLocation);
+      assertAll(
+          () -> assertFalse(result),
+          () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(capturedEntry),
+          () -> verify(player).sendMessage(translationValue)
+      );
+    }
+  }
+
+  static Stream<Arguments> doorAttachmentAboveScenarios() {
+    return Stream.of(
+        Arguments.of(true,  1,  false, MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE,  "removed"),
+        Arguments.of(true,  99, true,  MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW, "disallow"),
+        Arguments.of(false, 0,  false, null, null)
+    );
+  }
+
 
   private void setupNonMatchingRelativesExcept(BlockFace excludedFace) {
     BlockData nonMatchingData = mock(BlockData.class);
