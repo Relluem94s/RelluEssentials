@@ -30,8 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- * Service responsible for handling protection-related actions such as protecting blocks,
- * removing protections, and managing access rights.
+ * Service responsible for handling protection-related actions such as protecting blocks, removing
+ * protections, and managing access rights.
  */
 public class ProtectionActionService {
 
@@ -51,8 +51,8 @@ public class ProtectionActionService {
    *
    * @param p the player attempting to remove the protection
    * @param b the block from which protection should be removed
-   * @return true if the removal was disallowed (e.g., not the owner),
-   *     false if successful or if no protection existed.
+   * @return true if the removal was disallowed (e.g., not the owner), false if successful or if no
+   *     protection existed.
    */
   public boolean removeProtectionFromBlock(Player p, Block b) {
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
@@ -95,11 +95,12 @@ public class ProtectionActionService {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
       return false;
-    } else {
+    } else if (bpe != null && bpe.getLocationEntry() != null) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
       return true;
     }
+    return false;
   }
 
   private boolean removeProtectionForBlockAttachedAbove(Player p, Block b, PlayerEntry pe) {
@@ -111,12 +112,10 @@ public class ProtectionActionService {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE));
       return false;
-    } else {
-      if (bpe != null && bpe.getLocationEntry() != null) {
-        p.sendMessage(serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-        return true;
-      }
+    } else if (bpe != null && bpe.getLocationEntry() != null) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+      return true;
     }
     return false;
   }
@@ -195,8 +194,8 @@ public class ProtectionActionService {
       }
     };
 
-    if (isNeighbourChestProtectedByOther(leftNeighbour, cd, p)
-        || isNeighbourChestProtectedByOther(rightNeighbour, cd, p)) {
+    if (isNeighbourChestProtectedByOther(leftNeighbour, cd, p) || isNeighbourChestProtectedByOther(
+        rightNeighbour, cd, p)) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
       p.sendMessage(serviceContext.getTranslationService()
@@ -233,8 +232,7 @@ public class ProtectionActionService {
     if (pe.getPartner() == null) {
       return -1;
     }
-    return pe.getId() != pe.getPartner().getFirstPartnerId()
-        ? pe.getPartner().getFirstPartnerId()
+    return pe.getId() != pe.getPartner().getFirstPartnerId() ? pe.getPartner().getFirstPartnerId()
         : pe.getPartner().getSecondPartnerId();
   }
 
@@ -251,10 +249,10 @@ public class ProtectionActionService {
   /**
    * Adds a new user ID to the protection rights of a protection entry.
    *
-   * @param p       the player performing the action
-   * @param pre     the protection entry to modify
-   * @param id      the ID of the player to add to the rights
-   * @param silent  if true, no messages will be sent to the player
+   * @param p      the player performing the action
+   * @param pre    the protection entry to modify
+   * @param id     the ID of the player to add to the rights
+   * @param silent if true, no messages will be sent to the player
    */
   public void addRight(Player p, @NotNull ProtectionEntry pre, int id, boolean silent) {
     if (!pre.getRights().has(PLUGIN_EVENT_PROTECT_RIGHTS)) {
@@ -286,10 +284,10 @@ public class ProtectionActionService {
   /**
    * Removes a user ID from the protection rights of a protection entry.
    *
-   * @param p       the player performing the action
-   * @param pre     the protection entry to modify
-   * @param id      the ID of the player to remove from the rights
-   * @param silent  if true, no messages will be sent to the player
+   * @param p      the player performing the action
+   * @param pre    the protection entry to modify
+   * @param id     the ID of the player to remove from the rights
+   * @param silent if true, no messages will be sent to the player
    */
   public void removeRight(Player p, @NotNull ProtectionEntry pre, int id, boolean silent) {
     Location l = pre.getLocationEntry().getLocation();
