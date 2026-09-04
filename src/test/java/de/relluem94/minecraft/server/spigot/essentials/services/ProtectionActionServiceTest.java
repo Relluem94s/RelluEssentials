@@ -939,69 +939,6 @@ class ProtectionActionServiceTest {
   }
 
   @Test
-  void removeProtectionFromBlockReturnsFalseWhenWallHangingSignAttachedToEastAndPlayerIsOwner() {
-    Location attachedBlockLocation = new Location(world, 1, 0, 0);
-    when(block.getType()).thenReturn(Material.DIRT);
-    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
-
-    Block eastRelative = mock(Block.class);
-
-    WallHangingSign wallHangingSign = mock(WallHangingSign.class);
-    when(wallHangingSign.getFacing()).thenReturn(BlockFace.WEST);
-    when(eastRelative.getBlockData()).thenReturn(wallHangingSign);
-    when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
-    when(eastRelative.getLocation()).thenReturn(attachedBlockLocation);
-
-    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    LocationEntry locationEntry = buildLocationEntry(1, attachedBlockLocation);
-    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
-    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE)).thenReturn(
-        "removed");
-
-    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
-
-    assertAll(() -> assertFalse(result),
-        () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
-        () -> verify(player).sendMessage("removed"));
-  }
-
-  @Test
-  void removeProtectionFromBlockReturnsTrueWhenWallHangingSignAttachedToEastAndPlayerIsNotOwner() {
-    Location attachedBlockLocation = new Location(world, 1, 0, 0);
-    when(block.getType()).thenReturn(Material.DIRT);
-    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
-
-    Block eastRelative = mock(Block.class);
-
-    WallHangingSign wallHangingSign = mock(
-        WallHangingSign.class);
-    when(wallHangingSign.getFacing()).thenReturn(BlockFace.WEST);
-    when(eastRelative.getBlockData()).thenReturn(wallHangingSign);
-    when(eastRelative.getRelative(BlockFace.EAST)).thenReturn(block);
-    when(eastRelative.getLocation()).thenReturn(attachedBlockLocation);
-
-    when(block.getRelative(BlockFace.EAST)).thenReturn(eastRelative);
-
-    PlayerEntry playerEntry = buildPlayerEntry();
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
-
-    LocationEntry locationEntry = buildLocationEntry(99, attachedBlockLocation);
-    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
-    when(protectionService.getProtectionEntry(attachedBlockLocation)).thenReturn(protectionEntry);
-    when(translationService.getWithPrefix(
-        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW)).thenReturn("disallow");
-
-    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
-
-    assertAll(() -> assertTrue(result), () -> verify(player).sendMessage("disallow"));
-  }
-
-  @Test
   void removeProtectionFromBlockReturnsFalseWhenWallHangingSignFacingDoesNotPointToBlock() {
     when(block.getType()).thenReturn(Material.DIRT);
     when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
@@ -1320,6 +1257,62 @@ class ProtectionActionServiceTest {
     boolean result = protectionActionService.removeProtectionFromBlock(player, block);
 
     assertFalse(result);
+  }
+
+  @ParameterizedTest
+  @MethodSource("wallHangingSignAttachmentScenarios")
+  void removeProtectionFromBlockHandlesWallHangingSignAttachment(
+      BlockFace attachedFace, BlockFace signFacing, Location attachedLocation,
+      int locationEntryPlayerId, boolean expectedResult, MessageKey translationKey, String translationValue) {
+
+    when(block.getType()).thenReturn(Material.DIRT);
+    when(protectionService.isProtectableMaterial(Material.DIRT)).thenReturn(false);
+
+    Block attachedRelative = mock(Block.class);
+    WallHangingSign wallHangingSign = mock(WallHangingSign.class);
+    when(wallHangingSign.getFacing()).thenReturn(signFacing);
+    when(attachedRelative.getBlockData()).thenReturn(wallHangingSign);
+    when(attachedRelative.getRelative(signFacing.getOppositeFace())).thenReturn(block);
+    when(attachedRelative.getLocation()).thenReturn(attachedLocation);
+
+    setupNonMatchingRelativesExcept(attachedFace);
+    doReturn(attachedRelative).when(block).getRelative(attachedFace);
+
+    PlayerEntry playerEntry = buildPlayerEntry();
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    LocationEntry locationEntry = buildLocationEntry(locationEntryPlayerId, attachedLocation);
+    ProtectionEntry protectionEntry = buildProtectionEntry(locationEntry);
+    when(protectionService.getProtectionEntry(attachedLocation)).thenReturn(protectionEntry);
+    when(translationService.getWithPrefix(translationKey)).thenReturn(translationValue);
+    boolean result = protectionActionService.removeProtectionFromBlock(player, block);
+
+    if (expectedResult) {
+      assertAll(
+          () -> assertTrue(result),
+          () -> verify(player).sendMessage(translationValue)
+      );
+    } else {
+      assertAll(
+          () -> assertFalse(result),
+          () -> verify(protectionService).deleteProtectionAndRemoveFromRegistry(protectionEntry),
+          () -> verify(player).sendMessage(translationValue)
+      );
+    }
+  }
+
+  static Stream<Arguments> wallHangingSignAttachmentScenarios() {
+    World world = mock(World.class);
+    return Stream.of(
+        Arguments.of(BlockFace.EAST,  BlockFace.WEST,  new Location(world, 1,  0,  0), 1,  false, MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE,   "removed"),
+        Arguments.of(BlockFace.EAST,  BlockFace.WEST,  new Location(world, 1,  0,  0), 99, true,  MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW,  "disallow"),
+        Arguments.of(BlockFace.SOUTH, BlockFace.NORTH, new Location(world, 0,  0,  1), 1,  false, MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE,   "removed"),
+        Arguments.of(BlockFace.SOUTH, BlockFace.NORTH, new Location(world, 0,  0,  1), 99, true,  MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW,  "disallow"),
+        Arguments.of(BlockFace.NORTH, BlockFace.SOUTH, new Location(world, 0,  0, -1), 1,  false, MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE,   "removed"),
+        Arguments.of(BlockFace.NORTH, BlockFace.SOUTH, new Location(world, 0,  0, -1), 99, true,  MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW,  "disallow"),
+        Arguments.of(BlockFace.WEST,  BlockFace.EAST,  new Location(world, -1, 0,  0), 1,  false, MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_REMOVE,   "removed"),
+        Arguments.of(BlockFace.WEST,  BlockFace.EAST,  new Location(world, -1, 0,  0), 99, true,  MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW,  "disallow")
+    );
   }
 
   @ParameterizedTest
