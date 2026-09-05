@@ -32,12 +32,12 @@ public class BetterPlayerQuit implements ListenerConstruct {
   /**
    * Handles the player quit event to perform cleanup and broadcast the departure message.
    *
-   * @param e the player quit event
+   * @param event the player quit event
    */
   @EventHandler
-  public void onLeave(@NonNull PlayerQuitEvent e) {
-    e.setQuitMessage(null);
-    Player p = e.getPlayer();
+  public void onLeave(@NonNull PlayerQuitEvent event) {
+    event.setQuitMessage(null);
+    Player p = event.getPlayer();
 
     if (SudoManager.sudoers.containsKey(p.getUniqueId())) {
       Sudo.exitSudo(Objects.requireNonNull(Bukkit.getPlayer(p.getUniqueId())), serviceContext);
@@ -46,7 +46,7 @@ public class BetterPlayerQuit implements ListenerConstruct {
     serviceContext.getPlayerService().savePlayer(p);
     serviceContext.getBuyBackService().clearBuyBackHistory(p);
 
-    Bukkit.broadcastMessage(
+    serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
         serviceContext.getTranslationService()
             .get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
     serviceContext.getTeleportService().teleportWorld(p, Constants.PLUGIN_WORLD_LOBBY, true);
