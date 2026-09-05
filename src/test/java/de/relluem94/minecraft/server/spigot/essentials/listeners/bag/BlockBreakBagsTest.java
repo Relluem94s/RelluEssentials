@@ -454,7 +454,7 @@ class BlockBreakBagsTest {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
           .thenReturn(true);
 
-      doAnswer(invocation -> {
+      doAnswer(_ -> {
         BlockBreakEvent reentrantEvent = mock(BlockBreakEvent.class);
         when(reentrantEvent.getPlayer()).thenReturn(player);
         when(reentrantEvent.getBlock()).thenReturn(block);
@@ -715,7 +715,6 @@ class BlockBreakBagsTest {
     }
   }
 
-
   @Test
   void onBlockBreakChorusPlantWith51BlocksDoesNotCancel() {
     injectWithBothEnchantments();
@@ -750,8 +749,6 @@ class BlockBreakBagsTest {
     when(block.getRelative(BlockFace.DOWN)).thenReturn(blockBelow);
     when(blockBelow.getType()).thenReturn(Material.END_STONE);
 
-    lenient().when(serviceContext.getPluginManagerService()).thenReturn(pluginManagerService);
-
     try (MockedStatic<EnchantmentHelper> staticMock = mockStatic(EnchantmentHelper.class)) {
       staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, delicateHelper))
           .thenReturn(false);
@@ -761,6 +758,236 @@ class BlockBreakBagsTest {
       listener.onBlockBreak(event);
 
       verify(event, never()).setCancelled(true);
+    }
+  }
+
+  @Test
+  void onBlockBreakChorusPlantRecursionIsGuardedByDeduplication() {
+    injectWithBothEnchantments();
+
+    BlockBreakEvent event = buildEvent();
+    when(block.getType()).thenReturn(Material.CHORUS_PLANT);
+
+    Block childBlock = mock(Block.class);
+    when(childBlock.getType()).thenReturn(Material.CHORUS_PLANT);
+
+    MultipleFacing childFacing = mock(MultipleFacing.class);
+    when(childFacing.getFaces()).thenReturn(Collections.emptySet());
+    when(childBlock.getBlockData()).thenReturn(childFacing);
+
+    MultipleFacing rootFacing = mock(MultipleFacing.class);
+    when(rootFacing.getFaces()).thenReturn(Set.of(BlockFace.UP));
+    when(block.getBlockData()).thenReturn(rootFacing);
+    when(block.getRelative(BlockFace.UP)).thenReturn(childBlock);
+
+    Block blockBelow = mock(Block.class);
+    when(block.getRelative(BlockFace.DOWN)).thenReturn(blockBelow);
+    when(blockBelow.getType()).thenReturn(Material.END_STONE);
+
+    World world = mock(World.class);
+    Location location = mock(Location.class);
+    when(block.getWorld()).thenReturn(world);
+    when(block.getLocation()).thenReturn(location);
+    Item droppedItem = mock(Item.class);
+    when(world.dropItem(any(), any())).thenReturn(droppedItem);
+    when(serviceContext.getPluginManagerService()).thenReturn(pluginManagerService);
+
+    try (MockedStatic<EnchantmentHelper> staticMock = mockStatic(EnchantmentHelper.class)) {
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, delicateHelper))
+          .thenReturn(false);
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
+          .thenReturn(true);
+
+      listener.onBlockBreak(event);
+
+      assertAll(
+          () -> verify(event).setCancelled(true),
+          () -> verify(block).setType(Material.AIR),
+          () -> verify(childBlock).setType(Material.AIR),
+          () -> verify(world).dropItem(any(), any()),
+          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class))
+      );
+    }
+  }
+
+  @Test
+  void onBlockBreakChorusPlantNeighborIsNotChorusPlantSkipsRecursion() {
+    injectWithBothEnchantments();
+
+    BlockBreakEvent event = buildEvent();
+    when(block.getType()).thenReturn(Material.CHORUS_PLANT);
+
+    Block nonChorusNeighbor = mock(Block.class);
+    when(nonChorusNeighbor.getType()).thenReturn(Material.AIR);
+
+    MultipleFacing rootFacing = mock(MultipleFacing.class);
+    when(rootFacing.getFaces()).thenReturn(Set.of(BlockFace.UP));
+    when(block.getBlockData()).thenReturn(rootFacing);
+    when(block.getRelative(BlockFace.UP)).thenReturn(nonChorusNeighbor);
+
+    Block blockBelow = mock(Block.class);
+    when(block.getRelative(BlockFace.DOWN)).thenReturn(blockBelow);
+    when(blockBelow.getType()).thenReturn(Material.END_STONE);
+
+    World world = mock(World.class);
+    Location location = mock(Location.class);
+    when(block.getWorld()).thenReturn(world);
+    when(block.getLocation()).thenReturn(location);
+    Item droppedItem = mock(Item.class);
+    when(world.dropItem(any(), any())).thenReturn(droppedItem);
+    when(serviceContext.getPluginManagerService()).thenReturn(pluginManagerService);
+
+    try (MockedStatic<EnchantmentHelper> staticMock = mockStatic(EnchantmentHelper.class)) {
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, delicateHelper))
+          .thenReturn(false);
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
+          .thenReturn(true);
+
+      listener.onBlockBreak(event);
+
+      verify(event).setCancelled(true);
+    }
+  }
+
+  @Test
+  void onBlockBreakChorusPlantBlockDataNotMultipleFacingSkipsChildren() {
+    injectWithBothEnchantments();
+
+    BlockBreakEvent event = buildEvent();
+    when(block.getType()).thenReturn(Material.CHORUS_PLANT);
+
+    when(block.getBlockData()).thenReturn(mock(BlockData.class));
+
+    Block blockBelow = mock(Block.class);
+    when(block.getRelative(BlockFace.DOWN)).thenReturn(blockBelow);
+    when(blockBelow.getType()).thenReturn(Material.END_STONE);
+
+    World world = mock(World.class);
+    Location location = mock(Location.class);
+    when(block.getWorld()).thenReturn(world);
+    when(block.getLocation()).thenReturn(location);
+    Item droppedItem = mock(Item.class);
+    when(world.dropItem(any(), any())).thenReturn(droppedItem);
+    when(serviceContext.getPluginManagerService()).thenReturn(pluginManagerService);
+
+    try (MockedStatic<EnchantmentHelper> staticMock = mockStatic(EnchantmentHelper.class)) {
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, delicateHelper))
+          .thenReturn(false);
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
+          .thenReturn(true);
+
+      listener.onBlockBreak(event);
+
+      assertAll(
+          () -> verify(event).setCancelled(true),
+          () -> verify(world).dropItem(any(), any())
+      );
+    }
+  }
+
+  @Test
+  void onBlockBreakChorusPlantSkipsPreviousFaceDirectionToPreventBacktracking() {
+    injectWithBothEnchantments();
+
+    BlockBreakEvent event = buildEvent();
+    when(block.getType()).thenReturn(Material.CHORUS_PLANT);
+
+    Block childBlock = mock(Block.class);
+    when(childBlock.getType()).thenReturn(Material.CHORUS_PLANT);
+
+    Block grandchildBlock = mock(Block.class);
+    when(grandchildBlock.getType()).thenReturn(Material.CHORUS_PLANT);
+
+    MultipleFacing grandchildFacing = mock(MultipleFacing.class);
+    when(grandchildFacing.getFaces()).thenReturn(Collections.emptySet());
+    when(grandchildBlock.getBlockData()).thenReturn(grandchildFacing);
+
+    MultipleFacing childFacing = mock(MultipleFacing.class);
+    when(childFacing.getFaces()).thenReturn(Set.of(BlockFace.WEST, BlockFace.UP));
+    when(childBlock.getBlockData()).thenReturn(childFacing);
+    when(childBlock.getRelative(BlockFace.WEST)).thenReturn(block);
+    when(childBlock.getRelative(BlockFace.UP)).thenReturn(grandchildBlock);
+
+    MultipleFacing rootFacing = mock(MultipleFacing.class);
+    when(rootFacing.getFaces()).thenReturn(Set.of(BlockFace.EAST));
+    when(block.getBlockData()).thenReturn(rootFacing);
+    when(block.getRelative(BlockFace.EAST)).thenReturn(childBlock);
+
+    Block blockBelow = mock(Block.class);
+    when(block.getRelative(BlockFace.DOWN)).thenReturn(blockBelow);
+    when(blockBelow.getType()).thenReturn(Material.END_STONE);
+
+    World world = mock(World.class);
+    Location location = mock(Location.class);
+    when(block.getWorld()).thenReturn(world);
+    when(block.getLocation()).thenReturn(location);
+
+    Item droppedItem = mock(Item.class);
+    when(world.dropItem(any(), any())).thenReturn(droppedItem);
+    when(serviceContext.getPluginManagerService()).thenReturn(pluginManagerService);
+
+    try (MockedStatic<EnchantmentHelper> staticMock = mockStatic(EnchantmentHelper.class)) {
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, delicateHelper))
+          .thenReturn(false);
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
+          .thenReturn(true);
+
+      listener.onBlockBreak(event);
+
+      assertAll(
+          () -> verify(event).setCancelled(true),
+          () -> verify(childBlock).setType(Material.AIR),
+          () -> verify(grandchildBlock).setType(Material.AIR),
+          () -> verify(block, org.mockito.Mockito.times(1)).setType(Material.AIR)
+      );
+    }
+  }
+
+  @Test
+  void onBlockBreakChorusPlantDeduplicationPreventsProcessingSameBlockTwice() {
+    injectWithBothEnchantments();
+
+    BlockBreakEvent event = buildEvent();
+    when(block.getType()).thenReturn(Material.CHORUS_PLANT);
+
+    Block sharedBlock = mock(Block.class);
+    when(sharedBlock.getType()).thenReturn(Material.CHORUS_PLANT);
+
+    MultipleFacing sharedFacing = mock(MultipleFacing.class);
+    when(sharedFacing.getFaces()).thenReturn(Collections.emptySet());
+    when(sharedBlock.getBlockData()).thenReturn(sharedFacing);
+
+    MultipleFacing rootFacing = mock(MultipleFacing.class);
+    when(rootFacing.getFaces()).thenReturn(Set.of(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST));
+    when(block.getBlockData()).thenReturn(rootFacing);
+    when(block.getRelative(BlockFace.NORTH)).thenReturn(sharedBlock);
+    when(block.getRelative(BlockFace.SOUTH)).thenReturn(sharedBlock);
+    when(block.getRelative(BlockFace.EAST)).thenReturn(sharedBlock);
+
+    Block blockBelow = mock(Block.class);
+    when(block.getRelative(BlockFace.DOWN)).thenReturn(blockBelow);
+    when(blockBelow.getType()).thenReturn(Material.END_STONE);
+
+    World world = mock(World.class);
+    Location location = mock(Location.class);
+    when(block.getWorld()).thenReturn(world);
+    when(block.getLocation()).thenReturn(location);
+    Item droppedItem = mock(Item.class);
+    when(world.dropItem(any(), any())).thenReturn(droppedItem);
+    when(serviceContext.getPluginManagerService()).thenReturn(pluginManagerService);
+
+    try (MockedStatic<EnchantmentHelper> staticMock = mockStatic(EnchantmentHelper.class)) {
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, delicateHelper))
+          .thenReturn(false);
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
+          .thenReturn(true);
+
+      listener.onBlockBreak(event);
+
+      assertAll(
+          () -> verify(event).setCancelled(true),
+          () -> verify(sharedBlock, org.mockito.Mockito.times(1)).setType(Material.AIR)
+      );
     }
   }
 }

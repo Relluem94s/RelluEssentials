@@ -106,7 +106,7 @@ public class BlockBreakBags implements ListenerConstruct {
 
       if (isChorusPlant(b) && b.getRelative(BlockFace.DOWN).getType().equals(Material.END_STONE)) {
 
-        List<Block> blocks = new ArrayList<>(getChorusBlocks(b, 0, null));
+        List<Block> blocks = new ArrayList<>(getChorusBlocks(b, null));
 
         if (blocks.size() <= 50) {
           e.setCancelled(true);
@@ -170,13 +170,8 @@ public class BlockBreakBags implements ListenerConstruct {
     return b.getType().equals(Material.SUGAR_CANE) || b.getType().equals(Material.BAMBOO);
   }
 
-  private @NotNull Set<Block> getChorusBlocks(Block b, int count, BlockFace prevBlockFace) {
+  private @NotNull Set<Block> getChorusBlocks(Block b, BlockFace prevBlockFace) {
     Set<Block> blocks = new LinkedHashSet<>();
-
-    count++;
-    if (count == 30) {
-      return blocks;
-    }
 
     if (isChorusPlant(b)) {
       if (b.getBlockData() instanceof MultipleFacing bdf) {
@@ -189,7 +184,7 @@ public class BlockBreakBags implements ListenerConstruct {
             continue;
           }
           if (blocks.add(block)) {
-            blocks.addAll(getChorusBlocks(block, 28, bf.getOppositeFace()));
+            blocks.addAll(getChorusBlocks(block, bf.getOppositeFace()));
           }
         }
       }
