@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -42,9 +41,11 @@ public class BlockBreakBags implements ListenerConstruct {
   private final Set<Block> processingBlocks = new HashSet<>();
   private EnchantmentHelper delicate;
   private EnchantmentHelper telekinesis;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
+    this.serviceContext = context;
     this.delicate = context.getEnchantmentService().find(
             new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
                 EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE))
@@ -116,7 +117,7 @@ public class BlockBreakBags implements ListenerConstruct {
               new ItemStack(Material.CHORUS_FRUIT, blocks.size() + 1));
           EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item,
               blocks.size() + 1);
-          Bukkit.getPluginManager().callEvent(entityPickupItemEvent);
+          serviceContext.getPluginManagerService().callEvent(entityPickupItemEvent);
         }
       }
 
@@ -131,7 +132,7 @@ public class BlockBreakBags implements ListenerConstruct {
 
           processingBlocks.add(blockAbove);
           BlockBreakEvent fakeBreakEvent = new BlockBreakEvent(blockAbove, p);
-          Bukkit.getPluginManager().callEvent(fakeBreakEvent);
+          serviceContext.getPluginManagerService().callEvent(fakeBreakEvent);
           processingBlocks.remove(blockAbove);
 
           dropCount++;
@@ -142,7 +143,7 @@ public class BlockBreakBags implements ListenerConstruct {
         if (isSugarCaneOrIsBamboo(b)) {
           processingBlocks.add(b);
           BlockBreakEvent fakeBreakEvent = new BlockBreakEvent(b, p);
-          Bukkit.getPluginManager().callEvent(fakeBreakEvent);
+          serviceContext.getPluginManagerService().callEvent(fakeBreakEvent);
           processingBlocks.remove(b);
 
           b.setType(Material.AIR);
@@ -155,7 +156,7 @@ public class BlockBreakBags implements ListenerConstruct {
               .dropItem(originalBlock.getLocation(), new ItemStack(m, dropCount));
           EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item,
               dropCount);
-          Bukkit.getPluginManager().callEvent(entityPickupItemEvent);
+          serviceContext.getPluginManagerService().callEvent(entityPickupItemEvent);
         }
       }
     }
