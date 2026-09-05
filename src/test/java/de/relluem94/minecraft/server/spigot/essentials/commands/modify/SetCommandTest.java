@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
@@ -23,8 +24,10 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import java.util.List;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -43,6 +46,12 @@ class SetCommandTest {
     undoHistoryService = mock(UndoHistoryService.class);
     ProtectionService protectionService = mock(ProtectionService.class);
     SchedulerService schedulerService = mock(SchedulerService.class);
+    PluginMetadataService pluginMetadataService = mock(PluginMetadataService.class);
+    Plugin plugin = mock(Plugin.class);
+    Server server = mock(Server.class);
+
+    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    when(plugin.getServer()).thenReturn(server);
 
     TranslationService translationService = mock(TranslationService.class);
     when(translationService.getWithPrefix(any())).thenReturn("msg");
@@ -54,6 +63,7 @@ class SetCommandTest {
     when(serviceContext.getProtectionService()).thenReturn(protectionService);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
 
     doAnswer(invocation -> {
       Runnable task = invocation.getArgument(0);
@@ -84,9 +94,10 @@ class SetCommandTest {
     verify(undoHistoryService, never()).addHistory(any(), any());
   }
 
+  @SuppressWarnings("DataFlowIssue")
   @Test
   void execute_withValidMaterialAndSelection_processesBlocks() {
-    Selection selection = buildSelection(0, 0, 0, 1, 1, 1);
+    Selection selection = buildSelection(1, 1, 1);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Block blockA = mock(Block.class);
@@ -119,7 +130,7 @@ class SetCommandTest {
 
   @Test
   void execute_skipsBlocksAlreadyMatchingTargetMaterial() {
-    Selection selection = buildSelection(0, 0, 0, 0, 0, 0);
+    Selection selection = buildSelection(0, 0, 0);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Block stoneBlock = mock(Block.class);
@@ -156,15 +167,15 @@ class SetCommandTest {
     assert !setCommand.matches(new String[]{"set"});
   }
 
-  private Selection buildSelection(int x1, int y1, int z1, int x2, int y2, int z2) {
+  private Selection buildSelection(int x2, int y2, int z2) {
     org.bukkit.World world = mock(org.bukkit.World.class);
     org.bukkit.Location pos1 = mock(org.bukkit.Location.class);
     org.bukkit.Location pos2 = mock(org.bukkit.Location.class);
     when(pos1.getWorld()).thenReturn(world);
     when(pos2.getWorld()).thenReturn(world);
-    when(pos1.getBlockX()).thenReturn(x1);
-    when(pos1.getBlockY()).thenReturn(y1);
-    when(pos1.getBlockZ()).thenReturn(z1);
+    when(pos1.getBlockX()).thenReturn(0);
+    when(pos1.getBlockY()).thenReturn(0);
+    when(pos1.getBlockZ()).thenReturn(0);
     when(pos2.getBlockX()).thenReturn(x2);
     when(pos2.getBlockY()).thenReturn(y2);
     when(pos2.getBlockZ()).thenReturn(z2);

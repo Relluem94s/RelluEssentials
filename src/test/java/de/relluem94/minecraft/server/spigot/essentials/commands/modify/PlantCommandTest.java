@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
@@ -27,9 +28,11 @@ import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockServi
 import java.util.List;
 import java.util.function.Consumer;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -51,9 +54,14 @@ class PlantCommandTest {
     ProtectionService protectionService = mock(ProtectionService.class);
     TranslationService translationService = mock(TranslationService.class);
     SchedulerService schedulerService = mock(SchedulerService.class);
+    var pluginMetadataService = mock(PluginMetadataService.class);
+    Plugin plugin = mock(Plugin.class);
+    Server server = mock(Server.class);
 
     when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationService.getWithPrefix(any())).thenReturn("msg");
+    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    when(plugin.getServer()).thenReturn(server);
 
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
@@ -61,6 +69,7 @@ class PlantCommandTest {
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(serviceContext.getProtectionService()).thenReturn(protectionService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
 
     plantCommand = new PlantCommand(serviceContext, 2);
   }
@@ -105,12 +114,13 @@ class PlantCommandTest {
     }
   }
 
+  @SuppressWarnings("DataFlowIssue")
   @Test
   void execute_withValidPlantMaterialAndValidSelection_addsHistoryAndSendsStartedMessage() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
-    Block block = buildPlantableBlock(Material.AIR, Material.GRASS_BLOCK);
+    Block block = buildPlantableBlock(Material.AIR);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
@@ -217,7 +227,7 @@ class PlantCommandTest {
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Material originalMaterial = Material.AIR;
-    Block block = buildPlantableBlock(originalMaterial, Material.GRASS_BLOCK);
+    Block block = buildPlantableBlock(originalMaterial);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
@@ -244,9 +254,9 @@ class PlantCommandTest {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
-    Block firstBlock = buildPlantableBlock(Material.AIR, Material.GRASS_BLOCK);
-    Block secondBlock = buildPlantableBlock(Material.AIR, Material.GRASS_BLOCK);
-    Block thirdBlock = buildPlantableBlock(Material.AIR, Material.GRASS_BLOCK);
+    Block firstBlock = buildPlantableBlock(Material.AIR);
+    Block secondBlock = buildPlantableBlock(Material.AIR);
+    Block thirdBlock = buildPlantableBlock(Material.AIR);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
@@ -336,7 +346,7 @@ class PlantCommandTest {
     return block;
   }
 
-  private Block buildPlantableBlock(Material blockMaterial, Material belowMaterial) {
+  private Block buildPlantableBlock(Material blockMaterial) {
     Block block = buildBlock(blockMaterial);
     Block below = mock(Block.class, RETURNS_DEEP_STUBS);
     when(below.getType().isSolid()).thenReturn(true);

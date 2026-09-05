@@ -17,16 +17,42 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Sub-command implementation that places a specified plant material on top of solid blocks
+ * within the player's current selection.
+ *
+ * <p>Only blocks that are empty, have a solid block directly below them, and do not already
+ * contain the target material are considered for placement. Each placed block is recorded
+ * in the undo history, allowing the operation to be reverted.</p>
+ */
 public class PlantCommand implements SubCommand {
 
   private final int blocksPerTick;
   private final ServiceContext serviceContext;
 
+  /**
+   * Creates a new {@code PlantCommand} with the given service context and batch size.
+   *
+   * @param serviceContext the context providing access to all required services
+   * @param blocksPerTick  the maximum number of blocks to place per scheduler tick
+   */
   public PlantCommand(ServiceContext serviceContext, int blocksPerTick) {
     this.blocksPerTick = blocksPerTick;
     this.serviceContext = serviceContext;
   }
 
+  /**
+   * Executes the plant command for the given player using the provided arguments.
+   *
+   * <p>Resolves the target material from {@code args[1]} and validates that it is a plantable
+   * material. Iterates over all blocks in the player's selection, placing the material on
+   * top of solid blocks that are currently empty. Placement is distributed across scheduler
+   * ticks according to the configured blocks-per-tick limit. All affected blocks are saved
+   * to the undo history.</p>
+   *
+   * @param player the player executing the command
+   * @param args   the command arguments, where {@code args[1]} is the material name
+   */
   @Override
   public void execute(Player player, String[] args) {
     Material material = Material.getMaterial(args[1].toUpperCase());
@@ -42,7 +68,8 @@ public class PlantCommand implements SubCommand {
       return;
     }
 
-    BlockService blockService = new BlockService(serviceContext.getSchedulerService(), material);
+    BlockService blockService = new BlockService(serviceContext.getSchedulerService(), material,
+        serviceContext.getPluginMetadataService().getPlugin().getServer());
     List<ModifyHistoryEntry> history = new ArrayList<>();
 
     final long[] currentDelay = {0};
@@ -80,6 +107,16 @@ public class PlantCommand implements SubCommand {
                 material.name()));
   }
 
+  /**
+   * Returns {@code true} if the given arguments represent a valid plant sub-command invocation.
+   *
+   * <p>Expects exactly two arguments where the first argument matches the plant command name,
+   * case-insensitively.</p>
+   *
+   * @param args the command arguments to evaluate
+   * @return {@code true} if this sub-command should handle the given arguments, {@code false}
+   *     otherwise
+   */
   @Override
   public boolean matches(String @NonNull [] args) {
     return args.length == 2 && Modify.Commands.PLANT.getName().equalsIgnoreCase(args[0]);
