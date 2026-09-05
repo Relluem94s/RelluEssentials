@@ -990,4 +990,46 @@ class BlockBreakBagsTest {
       );
     }
   }
+
+  @Test
+  void onBlockBreakTelekinesisWithSugarCaneTopBlockIsNotSugarCaneSkipsInnerDropCount() {
+    injectWithBothEnchantments();
+
+    when(serviceContext.getPluginManagerService()).thenReturn(pluginManagerService);
+
+    when(block.getType()).thenReturn(Material.SUGAR_CANE);
+
+    Block blockAbove = mock(Block.class);
+    when(block.getRelative(BlockFace.UP)).thenReturn(blockAbove);
+    when(blockAbove.getType())
+        .thenReturn(Material.SUGAR_CANE)
+        .thenReturn(Material.STONE);
+
+    Block aboveAbove = mock(Block.class);
+    when(blockAbove.getRelative(BlockFace.UP)).thenReturn(aboveAbove);
+    when(aboveAbove.getType()).thenReturn(Material.AIR);
+
+    World world = mock(World.class);
+    Location location = mock(Location.class);
+    when(block.getWorld()).thenReturn(world);
+    when(block.getLocation()).thenReturn(location);
+    Item droppedItem = mock(Item.class);
+    when(world.dropItem(any(), any())).thenReturn(droppedItem);
+
+    BlockBreakEvent event = buildEvent();
+
+    try (MockedStatic<EnchantmentHelper> staticMock = mockStatic(EnchantmentHelper.class)) {
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, delicateHelper))
+          .thenReturn(false);
+      staticMock.when(() -> EnchantmentHelper.hasEnchant(mainHandItem, telekinesisHelper))
+          .thenReturn(true);
+
+      listener.onBlockBreak(event);
+
+      assertAll(
+          () -> verify(event).setCancelled(true),
+          () -> verify(pluginManagerService).callEvent(any(EntityPickupItemEvent.class))
+      );
+    }
+  }
 }
