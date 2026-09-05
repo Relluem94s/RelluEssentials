@@ -12,8 +12,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.commands.AFK;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
+import de.relluem94.minecraft.server.spigot.essentials.commands.Afk;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import java.lang.reflect.Field;
@@ -44,7 +44,7 @@ class CommandWrapperTest {
     @BeforeEach
     void setUp() {
         commandWrapper = new CommandWrapper(new Admin());
-        commandWrapperNoSubCommands = new CommandWrapper(new AFK());
+        commandWrapperNoSubCommands = new CommandWrapper(new Afk());
     }
 
     @AfterEach

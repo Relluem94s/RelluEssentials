@@ -22,8 +22,8 @@ import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Service responsible for handling various types of chat communication,
- * including player messages, console output, channel messages, and private messaging.
+ * Service responsible for handling various types of chat communication, including player messages,
+ * console output, channel messages, and private messaging.
  */
 public class ChatService {
 
@@ -42,8 +42,8 @@ public class ChatService {
   }
 
   /**
-   * Sends a message to the sender. If the sender is a player, it sends it to them;
-   * otherwise, it sends it to the console.
+   * Sends a message to the sender. If the sender is a player, it sends it to them; otherwise, it
+   * sends it to the console.
    *
    * @param sender  the sender of the message
    * @param message the message to be sent
@@ -64,7 +64,8 @@ public class ChatService {
    * @param message the message content
    */
   public void consoleSendMessage(String type, String message) {
-    ConsoleCommandSender console = Bukkit.getConsoleSender();
+    ConsoleCommandSender console = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getConsoleSender();
     console.sendMessage(type + " " + message);
   }
 
@@ -76,7 +77,8 @@ public class ChatService {
    * @param repeat  the number of times to repeat the message
    */
   public void consoleSendMessage(String type, String message, int repeat) {
-    ConsoleCommandSender console = Bukkit.getConsoleSender();
+    ConsoleCommandSender console = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getConsoleSender();
     for (int i = 0; i <= repeat; i++) {
       console.sendMessage(type + " " + message);
     }
@@ -93,10 +95,12 @@ public class ChatService {
   public void sendMessageInChannel(String message, Player sender, String channel,
       GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
-    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+    for (Player onlinePlayer : serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getOnlinePlayers()) {
       if (serviceContext.getGroupService().isSenderAuthorized(onlinePlayer, group.getName())) {
-        sendMessage(onlinePlayer, sender.getCustomName() + group.getPrefix()
-            + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE + replaceColor(strippedMessage));
+        sendMessage(onlinePlayer,
+            sender.getCustomName() + group.getPrefix() + PLUGIN_FORMS_SPACER_CHANNEL
+                + PLUGIN_COLOR_MESSAGE + replaceColor(strippedMessage));
       }
     }
   }
@@ -114,8 +118,9 @@ public class ChatService {
     String strippedMessage = message.replaceFirst(channel, "");
     for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
       if (serviceContext.getGroupService().isSenderAuthorized(onlinePlayer, group.getName())) {
-        sendMessage(onlinePlayer, senderName + group.getPrefix()
-            + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE + replaceColor(strippedMessage));
+        sendMessage(onlinePlayer,
+            senderName + group.getPrefix() + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE
+                + replaceColor(strippedMessage));
       }
     }
   }
