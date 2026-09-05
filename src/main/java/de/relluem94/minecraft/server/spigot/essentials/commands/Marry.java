@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,12 +25,22 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command implementation for the marry system, allowing players to send marriage requests, accept
+ * them, and divorce their partner. Handles pending request tracking, partner persistence, and
+ * automatic permission sharing between married players via the protection service.
+ */
 @CommandName("marry")
 public class Marry implements CommandConstruct {
 
   private final HashMap<Player, Player> marryAcceptList = new HashMap<>();
   private ServiceContext serviceContext;
 
+  /**
+   * Injects the {@link ServiceContext} into this command instance.
+   *
+   * @param context the service context providing access to all required services
+   */
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
@@ -43,32 +52,25 @@ public class Marry implements CommandConstruct {
   }
 
   private void addMarryEntry(Player player, Player target) {
-    if (serviceContext.getPlayerService().getPlayerEntry(player).getPartner()
-        != null
-        || serviceContext.getPlayerService().getPlayerEntry(target).getPartner()
-        != null) {
-      player.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED));
+    if (serviceContext.getPlayerService().getPlayerEntry(player).getPartner() != null
+        || serviceContext.getPlayerService().getPlayerEntry(target).getPartner() != null) {
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_IS_MARRIED));
       return;
     }
 
-    player.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST,
-            target.getCustomName()));
+    player.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST, target.getCustomName()));
     target.sendMessage(serviceContext.getTranslationService()
-        .getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST,
-            player.getCustomName()));
+        .getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST, player.getCustomName()));
 
     marryAcceptList.put(target, player);
     serviceContext.getSchedulerService().runTaskLater(() -> {
       if (hasMarryEntry(target)) {
-        player.sendMessage(
-            serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
-        target.sendMessage(
-            serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
+        player.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
+        target.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_MARRY_REQUEST_EXPIRED));
         removeMarryEntry(target);
       }
     }, 20 * 60 * 2L);
@@ -82,13 +84,11 @@ public class Marry implements CommandConstruct {
     marryAcceptList.remove(target);
   }
 
-  public void marry(@NotNull Player player, @NotNull Player target) {
-    target.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, player.getCustomName()));
-    player.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, target.getCustomName()));
+  private void marry(@NotNull Player player, @NotNull Player target) {
+    target.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, player.getCustomName()));
+    player.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_MARRY_MARRIED, target.getCustomName()));
 
     PlayerEntry firstPlayer = serviceContext.getPlayerService()
 
@@ -108,14 +108,12 @@ public class Marry implements CommandConstruct {
     firstPlayer.setPartner(playerPartnerEntry);
     secondPlayer.setPartner(playerPartnerEntry);
 
-    serviceContext.getProtectionService()
-        .getProtectionEntriesOwnedBy(firstPlayer.getId())
-        .forEach(pre -> serviceContext.getProtectionActionService()
+    serviceContext.getProtectionService().getProtectionEntriesOwnedBy(firstPlayer.getId()).forEach(
+        pre -> serviceContext.getProtectionActionService()
             .addRight(target, pre, secondPlayer.getId(), true));
 
-    serviceContext.getProtectionService()
-        .getProtectionEntriesOwnedBy(secondPlayer.getId())
-        .forEach(pre -> serviceContext.getProtectionActionService()
+    serviceContext.getProtectionService().getProtectionEntriesOwnedBy(secondPlayer.getId()).forEach(
+        pre -> serviceContext.getProtectionActionService()
             .addRight(player, pre, firstPlayer.getId(), true));
   }
 
@@ -123,28 +121,38 @@ public class Marry implements CommandConstruct {
     PlayerPartnerEntry ppe = pe.getPartner();
 
     PlayerEntry secondPlayerEntry = serviceContext.getPlayerService()
-
         .getPlayerEntryByInternalId(
             ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId()
                 : ppe.getFirstPartnerId());
 
-    Player firstPlayer = Bukkit.getPlayer(UUID.fromString(pe.getUuid()));
-    OfflinePlayer secondOfflinePlayer = Bukkit.getOfflinePlayer(
-        UUID.fromString(secondPlayerEntry.getUuid()));
+    if (pe.getUuid() == null) {
+      return;
+    }
+
+    if (secondPlayerEntry == null) {
+      return;
+    }
+
+    if (secondPlayerEntry.getUuid() == null) {
+      return;
+    }
+
+    Player firstPlayer = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getPlayer(UUID.fromString(pe.getUuid()));
+    OfflinePlayer secondOfflinePlayer = serviceContext.getPluginMetadataService().getPlugin()
+        .getServer().getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUuid()));
 
     if (firstPlayer != null && secondOfflinePlayer.getName() != null) {
-      Player secondPlayer = Bukkit.getPlayer(secondOfflinePlayer.getName());
+      Player secondPlayer = serviceContext.getPluginMetadataService().getPlugin().getServer()
+          .getPlayer(secondOfflinePlayer.getName());
       if (secondOfflinePlayer.isOnline() && secondPlayer != null) {
-        firstPlayer.sendMessage(
-            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
-                secondPlayer.getDisplayName()));
-        secondPlayer.sendMessage(
-            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
-                firstPlayer.getCustomName()));
+        firstPlayer.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, secondPlayer.getDisplayName()));
+        secondPlayer.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, firstPlayer.getCustomName()));
       } else {
-        firstPlayer.sendMessage(
-            serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED,
-                secondOfflinePlayer.getName()));
+        firstPlayer.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, secondOfflinePlayer.getName()));
       }
 
       ppe.setDeletedBy(pe.getId());
@@ -170,6 +178,17 @@ public class Marry implements CommandConstruct {
     }
   }
 
+  /**
+   * Handles execution of the marry command. Supports three interactions: sending a marriage request
+   * to another player, accepting a pending request, and divorcing the current partner. Requires the
+   * sender to be a player with the {@code vip} group.
+   *
+   * @param sender  the command sender, must be a player
+   * @param command the executed command
+   * @param label   the alias used to trigger the command
+   * @param args    the command arguments; expects zero or one argument
+   * @return {@code true} if the command was handled, {@code false} if the sender is not a player
+   */
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
@@ -189,12 +208,9 @@ public class Marry implements CommandConstruct {
     }
 
     if (args.length == 0) {
-      p.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MARRY_INFO,
-              command.getName(),
-              command.getName(), Commands.ACCEPT.getName(),
-              command.getName(), Commands.DIVORCE.getName()
-          ));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MARRY_INFO, command.getName(), command.getName(),
+              Commands.ACCEPT.getName(), command.getName(), Commands.DIVORCE.getName()));
       return true;
     }
 
@@ -212,26 +228,22 @@ public class Marry implements CommandConstruct {
       }
 
       if (args[0].equalsIgnoreCase(Commands.DIVORCE.getName())) {
-        PlayerEntry pe = serviceContext.getPlayerService()
-            .getPlayerEntry(p);
-        if (serviceContext.getPlayerService()
-            .getPlayerEntry(p).getPartner()
-            != null) {
+        PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
+        if (serviceContext.getPlayerService().getPlayerEntry(p).getPartner() != null) {
           divorce(pe);
           return true;
         }
 
-        p.sendMessage(
-            serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCE_NOT_MARRIED));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCE_NOT_MARRIED));
         return true;
       }
 
-      Player target = Bukkit.getPlayer(args[0]);
+      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
+          .getPlayer(args[0]);
       if (target == null) {
-        p.sendMessage(
-            serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
         return true;
       }
 
@@ -251,6 +263,17 @@ public class Marry implements CommandConstruct {
     return true;
   }
 
+  /**
+   * Provides tab completion for the marry command. Returns available sub-commands and online player
+   * names for the first argument. Returns an empty list if the sender lacks the {@code user} group,
+   * is not a player, or has already entered more than one argument.
+   *
+   * @param commandSender the sender requesting tab completion
+   * @param command       the command being completed
+   * @param s             the alias used
+   * @param strings       the current arguments entered by the sender
+   * @return a list of applicable tab completion suggestions
+   */
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -274,11 +297,14 @@ public class Marry implements CommandConstruct {
     return tabList;
   }
 
+  /**
+   * Defines the available sub-commands for the broadcast command.
+   * Each entry represents a distinct broadcast mode.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 
-    ACCEPT("accept"),
-    DIVORCE("divorce");
+    ACCEPT("accept"), DIVORCE("divorce");
 
     private final String name;
     private final String[] subCommands;
