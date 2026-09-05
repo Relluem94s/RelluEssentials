@@ -47,13 +47,11 @@ public class BlockBreakBags implements ListenerConstruct {
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
     this.delicate = context.getEnchantmentService().find(
-            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE))
-        .orElse(null);
+        new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE)).orElse(null);
     this.telekinesis = context.getEnchantmentService().find(
-            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
-        .orElse(null);
+        new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS)).orElse(null);
   }
 
   /**
@@ -99,8 +97,7 @@ public class BlockBreakBags implements ListenerConstruct {
       }
     }
 
-    if (telekinesis != null && EnchantmentHelper.hasEnchant(
-        p.getInventory().getItemInMainHand(),
+    if (telekinesis != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
         telekinesis)) {
       int dropCount = 0;
 
@@ -126,7 +123,6 @@ public class BlockBreakBags implements ListenerConstruct {
           return;
         }
 
-        Block originalBlock = b;
         while (isSugarCaneOrIsBamboo(b.getRelative(BlockFace.UP))) {
           Block blockAbove = b.getRelative(BlockFace.UP);
 
@@ -150,14 +146,14 @@ public class BlockBreakBags implements ListenerConstruct {
           dropCount++;
         }
 
-        if (!m.equals(Material.AIR) && dropCount > 0) {
-          e.setCancelled(true);
-          Item item = originalBlock.getWorld()
-              .dropItem(originalBlock.getLocation(), new ItemStack(m, dropCount));
-          EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item,
-              dropCount);
-          serviceContext.getPluginManagerService().callEvent(entityPickupItemEvent);
-        }
+        // TODO: TEST IF THIS IS OKAY TO REMOVE!
+        //  if (!m.equals(Material.AIR) && dropCount > 0) {
+        e.setCancelled(true);
+        Item item = e.getBlock().getWorld()
+            .dropItem(e.getBlock().getLocation(), new ItemStack(m, dropCount));
+        EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item, dropCount);
+        serviceContext.getPluginManagerService().callEvent(entityPickupItemEvent);
+        // }
       }
     }
   }
