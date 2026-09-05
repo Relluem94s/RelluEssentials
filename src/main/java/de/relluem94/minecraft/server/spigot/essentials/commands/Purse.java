@@ -16,7 +16,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.List;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Handles the /purse command for managing player coin purses.
- * Allows players to check their own balance or withdraw coins as physical items.
- * Moderators can additionally inspect the balance of other online players.
+ * Handles the /purse command for managing player coin purses. Allows players to check their own
+ * balance or withdraw coins as physical items. Moderators can additionally inspect the balance of
+ * other online players.
  */
 @CommandName("purse")
 public class Purse implements CommandConstruct {
@@ -44,8 +43,7 @@ public class Purse implements CommandConstruct {
   }
 
   /**
-   * Executes the /purse command.
-   * With the following behavior based on provided arguments:
+   * Executes the /purse command. With the following behavior based on provided arguments:
    * <ul>
    *   <li>No arguments: displays the executing player's current purse balance.</li>
    *   <li>Player name as argument: displays the target player's balance
@@ -139,14 +137,14 @@ public class Purse implements CommandConstruct {
   }
 
   /**
-   * Provides tab-completion suggestions for the /purse command.
-   * Returns the names of all currently online players when the sender has moderator permission
-   * and exactly one argument is being typed. Returns an empty list otherwise.
+   * Provides tab-completion suggestions for the /purse command. Returns the names of all currently
+   * online players when the sender has moderator permission and exactly one argument is being
+   * typed. Returns an empty list otherwise.
    *
    * @param commandSender the entity requesting tab-completion
-   * @param command the command for which completion is requested
-   * @param s the alias used to trigger the command
-   * @param strings the current argument tokens provided by the sender
+   * @param command       the command for which completion is requested
+   * @param s             the alias used to trigger the command
+   * @param strings       the current argument tokens provided by the sender
    * @return a list of online player names, or an empty list if conditions are not met
    */
   @Override
@@ -159,6 +157,7 @@ public class Purse implements CommandConstruct {
       return List.of();
     }
 
-    return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+    return serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers()
+        .stream().map(Player::getName).toList();
   }
 }
