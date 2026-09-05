@@ -80,7 +80,7 @@ public class ProtectionCleanUpService {
             processed++;
           }
 
-          int percent = (int) Math.round((index[0] / (double) total) * 100);
+          int percent = total == 0 ? 100 : (int) Math.round((index[0] / (double) total) * 100);
           p.sendMessage(
               serviceContext.getTranslationService().getWithPrefix(
                   MessageKey.COMMAND_ADMIN_CLEAN_PROTECTIONS_PERCENTAGE,

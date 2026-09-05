@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
+import de.relluem94.rellulib.stores.DoubleStore;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -27,34 +28,39 @@ public class SelectionService {
    * Attempts to resolve a selection for the given player.
    *
    * <p>This method validates that the player has stored positions, that both positions are set,
-   * and that both positions belong to the same world. If any validation fails, a message
-   * is sent to the player and {@code null} is returned.
+   * and that both positions belong to the same world. If any validation fails, a message is sent to
+   * the player and {@code null} is returned.
    *
    * @param player The player for whom to resolve the selection.
    * @return The resolved {@link Selection} if valid, or {@code null} if validation fails.
    */
   public @Nullable Selection resolve(Player player) {
     if (!serviceContext.getPositionService().hasPositions(player)) {
-      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_NO_POSITIONS));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MODIFY_NO_POSITIONS));
       return null;
     }
 
-    Location pos1 = serviceContext.getPositionService().getPositions(player).getValue();
-    Location pos2 = serviceContext.getPositionService().getPositions(player).getSecondValue();
+    DoubleStore<Location, Location> positions = serviceContext.getPositionService()
+        .getPositions(player);
+    Location pos1 = positions.getValue();
+    Location pos2 = positions.getSecondValue();
 
-    if (pos1 == null) {
-      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_POS_1_EMPTY));
+    if (positions.getValue() == null) {
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MODIFY_POS_1_EMPTY));
       return null;
     }
 
-    if (pos2 == null) {
-      player.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_POS_2_EMPTY));
+    if (positions.getSecondValue() == null) {
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MODIFY_POS_2_EMPTY));
       return null;
     }
 
     if (pos1.getWorld() != pos2.getWorld()) {
-      player.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_MODIFY_DIFFERENT_WORLDS));
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_MODIFY_DIFFERENT_WORLDS));
       return null;
     }
 

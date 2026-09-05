@@ -130,7 +130,7 @@ public class DatabaseManager implements Enable {
     WorldGroupRegistry worldGroupRegistry = new WorldGroupRegistry();
     WorldGroupRepository worldGroupRepository = new WorldGroupRepository(
         persistenceContext.getWorldGroupDao());
-    WorldGroupService worldGroupService = new WorldGroupService(worldGroupRegistry,
+    WorldGroupService worldGroupService = new WorldGroupService(serviceContext, worldGroupRegistry,
         worldGroupRepository);
     worldGroupService.loadAll();
     serviceContext.setWorldGroupService(worldGroupService);

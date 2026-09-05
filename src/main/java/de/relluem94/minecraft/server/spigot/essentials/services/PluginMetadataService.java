@@ -5,6 +5,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Provides access to the technical metadata of the plugin.
  */
+@SuppressWarnings({"ClassCanBeRecord", "LombokGetterMayBeUsed"})
 public class PluginMetadataService {
 
   private final Plugin plugin;

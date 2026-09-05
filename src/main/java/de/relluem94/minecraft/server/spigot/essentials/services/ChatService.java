@@ -176,9 +176,8 @@ public class ChatService {
     }
 
     Player senderPlayer = (Player) sender;
-    String message = buildMessage(senderPlayer, args, start);
-
     if (serviceContext.getGroupService().isSenderAuthorized(senderPlayer, "user")) {
+      String message = buildMessage(senderPlayer, args, start);
       target.sendMessage(senderPlayer.getCustomName() + PLUGIN_FORMS_MSG_SPACER_IN + message);
       senderPlayer.sendMessage(target.getCustomName() + PLUGIN_FORMS_MSG_SPACER_OUT + message);
     } else {

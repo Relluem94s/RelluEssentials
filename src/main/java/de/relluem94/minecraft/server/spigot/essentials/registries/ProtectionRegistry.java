@@ -36,7 +36,7 @@ public class ProtectionRegistry {
     this.protectionEntryMap.putAll(protectionEntryMap);
   }
 
-  private static Location normalizeLocation(Location location) {
+  private Location normalizeLocation(Location location) {
     return new Location(location.getWorld(), location.getX(), location.getY(), location.getZ());
   }
 

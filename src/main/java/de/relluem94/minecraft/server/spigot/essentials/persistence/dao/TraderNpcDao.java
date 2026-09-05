@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.dao;
 
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.TraderNpcMapper;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.SqlResourceLoader;
 import java.io.FileNotFoundException;
@@ -15,7 +15,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 
 /**
- * Data Access Object for {@link TraderNPCEntry} persistence operations.
+ * Data Access Object for {@link TraderNpcEntry} persistence operations.
  *
  * <p>Handles all database interactions related to trader NPCs,
  * including loading NPC configurations from the underlying data store.</p>
@@ -31,12 +31,12 @@ public class TraderNpcDao {
   }
 
   /**
-   * Retrieves all {@link TraderNPCEntry} records from the database.
+   * Retrieves all {@link TraderNpcEntry} records from the database.
    *
    * @return a list of all trader NPC entries; never {@code null}, may be empty
    */
-  public List<TraderNPCEntry> findAll() {
-    List<TraderNPCEntry> results = new ArrayList<>();
+  public List<TraderNpcEntry> findAll() {
+    List<TraderNpcEntry> results = new ArrayList<>();
     try (Connection connection = dataSource.getConnection();
         PreparedStatement ps = connection.prepareStatement(
             sqlResourceLoader.load("sqls/getNPCs.sql"))) {
