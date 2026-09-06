@@ -8,6 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
+import de.relluem94.minecraft.server.spigot.essentials.services.CoinItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.EnchantmentService;
@@ -89,4 +90,5 @@ public class ServiceContext {
   private ItemService itemService;
   private InventoryService inventoryService;
   private EnchantmentService enchantmentService;
+  private CoinItemService coinItemService;
 }
