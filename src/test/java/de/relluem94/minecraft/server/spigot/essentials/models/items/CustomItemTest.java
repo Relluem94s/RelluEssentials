@@ -36,13 +36,6 @@ class CustomItemTest {
   @Mock
   Server server;
 
-  @SuppressWarnings("unchecked")
-  private static void setBukkitServer(Server server) throws Exception {
-    java.lang.reflect.Field serverField = org.bukkit.Bukkit.class.getDeclaredField("server");
-    serverField.setAccessible(true);
-    serverField.set(null, server);
-  }
-
   private CustomItem buildMinimalItem() {
     return new CustomItem(Material.STONE, 1, "Name", List.of(), Type.NONE, Rarity.NONE, null,
         List.of(), Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), server);
@@ -331,6 +324,29 @@ class CustomItemTest {
       assertNotNull(dataKey);
       verify(capturedMeta[0].getPersistentDataContainer()).set(dataKey, PersistentDataType.DOUBLE,
           3.14);
+    }
+  }
+
+  @Test
+  void toItemStackSkipsEnchantmentWithInvalidKey() {
+    ItemMeta[] capturedMeta = new ItemMeta[1];
+
+    try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
+        (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(
+            mock)); MockedStatic<NamespacedKey> mockedNamespacedKey = Mockito.mockStatic(
+        NamespacedKey.class)) {
+
+      mockedNamespacedKey.when(() -> NamespacedKey.fromString("not a valid key!!"))
+          .thenReturn(null);
+
+      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
+          Rarity.NONE, null, List.of(new CustomItem.EnchantmentData("not a valid key!!", 1)),
+          Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), server);
+
+      customItem.toItemStack();
+
+      verify(capturedMeta[0], never()).addEnchant(Mockito.any(), Mockito.anyInt(),
+          Mockito.anyBoolean());
     }
   }
 }
