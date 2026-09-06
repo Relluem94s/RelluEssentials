@@ -13,7 +13,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -98,7 +97,8 @@ public class Suicide implements CommandConstruct {
       return true;
     }
 
-    Player target = Bukkit.getPlayer(args[0]);
+    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getPlayer(args[0]);
     if (target == null) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
@@ -136,8 +136,8 @@ public class Suicide implements CommandConstruct {
    * Provides tab completion suggestions for the suicide command.
    *
    * <p>Returns a list of online player names as suggestions for the first argument,
-   * but only if the sender has {@code mod} permission. Returns an empty list otherwise
-   * or when more than one argument has already been provided.
+   * but only if the sender has {@code mod} permission. Returns an empty list otherwise or when more
+   * than one argument has already been provided.
    *
    * @param commandSender the entity requesting tab completion
    * @param command       the command being tab-completed
