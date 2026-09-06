@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -140,12 +139,12 @@ public class Teleport implements CommandConstruct {
    * Handles execution of the teleport command.
    *
    * <p>Validates that the sender is a player and is authorized. Delegates to the appropriate
-   * teleport behaviour based on the provided arguments.
+   * teleport behavior based on the provided arguments.
    *
-   * @param sender the entity executing the command
+   * @param sender  the entity executing the command
    * @param command the command that was executed
-   * @param label the alias used to trigger the command
-   * @param args the arguments provided with the command
+   * @param label   the alias used to trigger the command
+   * @param args    the arguments provided with the command
    * @return {@code true} if the command was handled, {@code false} otherwise
    */
   @Override
@@ -215,7 +214,8 @@ public class Teleport implements CommandConstruct {
     }
 
     if (args.length == 2) {
-      Player target = Bukkit.getPlayer(args[1]);
+      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
+          .getPlayer(args[1]);
       if (target == null) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[1]));
@@ -297,9 +297,9 @@ public class Teleport implements CommandConstruct {
    * Returns an empty list if the sender is not an authorized player.
    *
    * @param commandSender the entity requesting tab completion
-   * @param command the command being completed
-   * @param s the alias used
-   * @param strings the current argument tokens
+   * @param command       the command being completed
+   * @param s             the alias used
+   * @param strings       the current argument tokens
    * @return a list of tab completion suggestions, or an empty list if unauthorized
    */
   @Override
@@ -317,18 +317,24 @@ public class Teleport implements CommandConstruct {
 
     if (strings.length == 1) {
       tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
-      Bukkit.getOnlinePlayers().stream().filter(player -> !player.equals(commandSender))
-          .map(Player::getName).forEach(tabList::add);
+      serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers().stream()
+          .filter(player -> !player.equals(commandSender)).map(Player::getName)
+          .forEach(tabList::add);
     }
 
     if (strings.length == 2 && strings[0].equalsIgnoreCase(Commands.TO.getName())) {
-      Bukkit.getOnlinePlayers().stream().filter(player -> !player.equals(commandSender))
-          .map(Player::getName).forEach(tabList::add);
+      serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers().stream()
+          .filter(player -> !player.equals(commandSender)).map(Player::getName)
+          .forEach(tabList::add);
     }
 
     return tabList;
   }
 
+  /**
+   * Defines the available sub-commands for the broadcast command.
+   * Each entry represents a distinct broadcast mode.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 
