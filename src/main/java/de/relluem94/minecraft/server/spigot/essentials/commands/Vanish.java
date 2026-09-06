@@ -12,13 +12,17 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command implementation for vanishing and revealing players.
+ * Maintains a list of currently vanished players and handles visibility toggling
+ * for both the executing player and specified targets.
+ */
 @CommandName("vanish")
 public class Vanish implements CommandConstruct {
 
@@ -82,7 +86,8 @@ public class Vanish implements CommandConstruct {
         serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_VANISH));
 
     boolean canSee = false;
-    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+    for (Player onlinePlayer : serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getOnlinePlayers()) {
       if (onlinePlayer.canSee(target)) {
         onlinePlayer.hidePlayer(RelluEssentials.getInstance(), target);
       } else {
