@@ -4,13 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bukkit.Server;
 import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +60,7 @@ class PluginManagerServiceTest {
   void callEventPropagatesRuntimeException() {
     doThrow(new RuntimeException("event error")).when(pluginManager).callEvent(event);
 
-    org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> pluginManagerService.callEvent(event));
+    assertThrows(RuntimeException.class, () -> pluginManagerService.callEvent(event));
   }
 
   @Test
@@ -82,7 +85,7 @@ class PluginManagerServiceTest {
   void isPluginEnabledPropagatesRuntimeException() {
     when(pluginManager.isPluginEnabled("TestPlugin")).thenThrow(new RuntimeException("manager error"));
 
-    org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> pluginManagerService.isPluginEnabled("TestPlugin"));
+    assertThrows(RuntimeException.class, () -> pluginManagerService.isPluginEnabled("TestPlugin"));
   }
 
   @Test
@@ -107,6 +110,23 @@ class PluginManagerServiceTest {
   void getPluginPropagatesRuntimeException() {
     when(pluginManager.getPlugin("TestPlugin")).thenThrow(new RuntimeException("manager error"));
 
-    org.junit.jupiter.api.Assertions.assertThrows(RuntimeException.class, () -> pluginManagerService.getPlugin("TestPlugin"));
+    assertThrows(RuntimeException.class, () -> pluginManagerService.getPlugin("TestPlugin"));
+  }
+
+  @Test
+  void registerEventsDelegatesListenerAndPluginToPluginManager() {
+    Listener listener = mock(Listener.class);
+
+    pluginManagerService.registerEvents(listener);
+
+    verify(pluginManager).registerEvents(listener, plugin);
+  }
+
+  @Test
+  void registerEventsPropagatesRuntimeException() {
+    Listener listener = mock(Listener.class);
+    doThrow(new RuntimeException("register error")).when(pluginManager).registerEvents(listener, plugin);
+
+    assertThrows(RuntimeException.class, () -> pluginManagerService.registerEvents(listener));
   }
 }
