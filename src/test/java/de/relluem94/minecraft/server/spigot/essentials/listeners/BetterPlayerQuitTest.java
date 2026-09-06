@@ -130,17 +130,17 @@ class BetterPlayerQuitTest {
   void onLeavePlayerInSudoShouldExitSudoBeforeCleanup() {
     SudoManager.sudoers.put(playerUuid, playerEntry);
 
-    try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.commands.Sudo> sudoMock = mockStatic(
-        de.relluem94.minecraft.server.spigot.essentials.commands.Sudo.class); MockedStatic<org.bukkit.Bukkit> bukkitMock = mockStatic(
-        org.bukkit.Bukkit.class)) {
+    when(server.getPlayer(playerUuid)).thenReturn(player);
 
-      bukkitMock.when(() -> org.bukkit.Bukkit.getPlayer(playerUuid)).thenReturn(player);
+    try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.commands.Sudo> sudoMock = mockStatic(
+        de.relluem94.minecraft.server.spigot.essentials.commands.Sudo.class)) {
 
       betterPlayerQuit.onLeave(playerQuitEvent);
 
       assertAll(() -> sudoMock.verify(
               () -> de.relluem94.minecraft.server.spigot.essentials.commands.Sudo.exitSudo(player,
-                  serviceContext)), () -> verify(playerService).savePlayer(player),
+                  serviceContext)),
+          () -> verify(playerService).savePlayer(player),
           () -> verify(buyBackService).clearBuyBackHistory(player),
           () -> verify(server).broadcastMessage("TestPlayer left the game"),
           () -> verify(teleportService).teleportWorld(player, PLUGIN_WORLD_LOBBY, true),
