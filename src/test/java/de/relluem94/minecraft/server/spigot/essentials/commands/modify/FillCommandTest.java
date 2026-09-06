@@ -11,16 +11,19 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +35,7 @@ class FillCommandTest {
     private SchedulerService schedulerService;
     private FillCommand fillCommand;
     private FillCommand fillrCommand;
+    private Server server;
 
     private static final int BLOCKS_PER_TICK = 2;
     private static final int MAX_RADIUS = 10;
@@ -43,6 +47,7 @@ class FillCommandTest {
         undoHistoryService = mock(UndoHistoryService.class);
         protectionService = mock(ProtectionService.class);
         schedulerService = mock(SchedulerService.class);
+        server = mock(Server.class);
 
         fillCommand = new FillCommand(buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
         fillrCommand = new FillCommand(buildServiceContext(), true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
@@ -53,11 +58,18 @@ class FillCommandTest {
         when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
         when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
 
+        PluginMetadataService pluginMetadataService = mock(PluginMetadataService.class);
+        Plugin plugin = mock(Plugin.class);
+        when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+        when(plugin.getServer()).thenReturn(server);
+
         ServiceContext serviceContext = mock(ServiceContext.class);
         when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
         when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
         when(serviceContext.getProtectionService()).thenReturn(protectionService);
         when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+        when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+
         return serviceContext;
     }
 
@@ -96,8 +108,8 @@ class FillCommandTest {
     @Test
     void execute_fill_withRadiusExceedingMax_sendsRadiusTooHighMessage() {
         World world = mock(World.class);
-        Block startBlock = buildSolidBlock(world, 0, 0, 0);
-        Location playerLocation = buildLocation(world, 0, 0, 0);
+        Block startBlock = buildSolidBlock(world);
+        Location playerLocation = buildLocation(world);
         when(player.getLocation()).thenReturn(playerLocation);
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
@@ -111,8 +123,8 @@ class FillCommandTest {
     @Test
     void execute_fill_withNonEmptyStartBlock_addsEmptyHistory() {
         World world = mock(World.class);
-        Block startBlock = buildSolidBlock(world, 0, 0, 0);
-        Location playerLocation = buildLocation(world, 0, 0, 0);
+        Block startBlock = buildSolidBlock(world);
+        Location playerLocation = buildLocation(world);
         when(player.getLocation()).thenReturn(playerLocation);
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
@@ -125,11 +137,11 @@ class FillCommandTest {
     @Test
     void execute_fill_withEmptyStartBlock_fillsAdjacentAirAndAddsHistory() {
         World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0, 0);
-        Block solidNeighbor = buildSolidBlock(world, 0, 0, 0);
+        Block startBlock = buildEmptyBlock(world, 0, 0);
+        Block solidNeighbor = buildSolidBlock(world);
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidNeighbor);
 
-        Location playerLocation = buildLocation(world, 0, 0, 0);
+        Location playerLocation = buildLocation(world);
         when(player.getLocation()).thenReturn(playerLocation);
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
@@ -142,14 +154,14 @@ class FillCommandTest {
     @Test
     void execute_fillr_withEmptyStartBlockAndEmptyBelow_spreadsBothDirections() {
         World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0, 0);
-        Block belowBlock = buildEmptyBlock(world, 0, -1, 0);
-        Block solidNeighbor = buildSolidBlock(world, 0, 0, 0);
+        Block startBlock = buildEmptyBlock(world, 0, 0);
+        Block belowBlock = buildEmptyBlock(world, 0, -1);
+        Block solidNeighbor = buildSolidBlock(world);
 
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidNeighbor);
         when(world.getBlockAt(0, -1, 0)).thenReturn(belowBlock);
 
-        Location playerLocation = buildLocation(world, 0, 0, 0);
+        Location playerLocation = buildLocation(world);
         when(player.getLocation()).thenReturn(playerLocation);
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
@@ -195,16 +207,16 @@ class FillCommandTest {
             buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, 2);
 
         World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0, 0);
-        Block emptyNeighbor1 = buildEmptyBlock(world, 1, 0, 0);
-        Block emptyNeighbor2 = buildEmptyBlock(world, -1, 0, 0);
-        Block solidFallback = buildSolidBlock(world, 0, 0, 0);
+        Block startBlock = buildEmptyBlock(world, 0, 0);
+        Block emptyNeighbor1 = buildEmptyBlock(world, 1, 0);
+        Block emptyNeighbor2 = buildEmptyBlock(world, -1, 0);
+        Block solidFallback = buildSolidBlock(world);
 
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
         when(world.getBlockAt(1, 0, 0)).thenReturn(emptyNeighbor1);
         when(world.getBlockAt(-1, 0, 0)).thenReturn(emptyNeighbor2);
 
-        Location playerLocation = buildLocation(world, 0, 0, 0);
+        Location playerLocation = buildLocation(world);
         when(player.getLocation()).thenReturn(playerLocation);
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
@@ -217,14 +229,14 @@ class FillCommandTest {
     @Test
     void execute_fill_whenBlockExceedsRadius_skipsBlockAndDoesNotAddToHistory() {
         World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0, 0);
-        Block farEmptyBlock = buildEmptyBlock(world, 10, 0, 0);
-        Block solidFallback = buildSolidBlock(world, 0, 0, 0);
+        Block startBlock = buildEmptyBlock(world, 0, 0);
+        Block farEmptyBlock = buildEmptyBlock(world, 10, 0);
+        Block solidFallback = buildSolidBlock(world);
 
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
         when(world.getBlockAt(10, 0, 0)).thenReturn(farEmptyBlock);
 
-        Location playerLocation = buildLocation(world, 0, 0, 0);
+        Location playerLocation = buildLocation(world);
         when(player.getLocation()).thenReturn(playerLocation);
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
@@ -237,17 +249,17 @@ class FillCommandTest {
     @Test
     void execute_fill_whenNeighborAlreadyVisited_doesNotProcessNeighborTwice() {
         World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0, 0);
-        Block leftNeighbor = buildEmptyBlock(world, -1, 0, 0);
-        Block rightNeighbor = buildEmptyBlock(world, 1, 0, 0);
-        Block solidFallback = buildSolidBlock(world, 0, 0, 0);
+        Block startBlock = buildEmptyBlock(world, 0, 0);
+        Block leftNeighbor = buildEmptyBlock(world, -1, 0);
+        Block rightNeighbor = buildEmptyBlock(world, 1, 0);
+        Block solidFallback = buildSolidBlock(world);
 
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
         when(world.getBlockAt(-1, 0, 0)).thenReturn(leftNeighbor);
         when(world.getBlockAt(1, 0, 0)).thenReturn(rightNeighbor);
         when(world.getBlockAt(0, 0, 0)).thenReturn(startBlock);
 
-        Location playerLocation = buildLocation(world, 0, 0, 0);
+        Location playerLocation = buildLocation(world);
         when(player.getLocation()).thenReturn(playerLocation);
         when(playerLocation.clone()).thenReturn(playerLocation);
         when(playerLocation.getBlock()).thenReturn(startBlock);
@@ -260,9 +272,9 @@ class FillCommandTest {
     @Test
     void execute_fill_whenNeighborExceedsRadius_skipsNeighborAndDoesNotAddToHistory() {
         World world = mock(World.class);
-        Block startBlock = buildEmptyBlock(world, 0, 0, 0);
-        Block outOfRadiusNeighbor = buildEmptyBlock(world, 1, 0, 0);
-        Block solidFallback = buildSolidBlock(world, 0, 0, 0);
+        Block startBlock = buildEmptyBlock(world, 0, 0);
+        Block outOfRadiusNeighbor = buildEmptyBlock(world, 1, 0);
+        Block solidFallback = buildSolidBlock(world);
 
         when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(solidFallback);
         when(world.getBlockAt(0, 0, 0)).thenReturn(startBlock);
@@ -294,16 +306,16 @@ class FillCommandTest {
         verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 1));
     }
 
-    private Location buildLocation(World world, int x, int y, int z) {
+    private Location buildLocation(World world) {
         Location location = mock(Location.class);
         when(location.getWorld()).thenReturn(world);
-        when(location.getBlockX()).thenReturn(x);
-        when(location.getBlockY()).thenReturn(y);
-        when(location.getBlockZ()).thenReturn(z);
+        when(location.getBlockX()).thenReturn(0);
+        when(location.getBlockY()).thenReturn(0);
+        when(location.getBlockZ()).thenReturn(0);
         return location;
     }
 
-    private Block buildEmptyBlock(World world, int x, int y, int z) {
+    private Block buildEmptyBlock(World world, int x, int y) {
         Block block = mock(Block.class);
         BlockData blockData = mock(BlockData.class);
         Location location = mock(Location.class);
@@ -313,12 +325,12 @@ class FillCommandTest {
         when(block.getLocation()).thenReturn(location);
         when(block.getX()).thenReturn(x);
         when(block.getY()).thenReturn(y);
-        when(block.getZ()).thenReturn(z);
+        when(block.getZ()).thenReturn(0);
         when(block.getWorld()).thenReturn(world);
         return block;
     }
 
-    private Block buildSolidBlock(World world, int x, int y, int z) {
+    private Block buildSolidBlock(World world) {
         Block block = mock(Block.class);
         BlockData blockData = mock(BlockData.class);
         Location location = mock(Location.class);
@@ -326,9 +338,9 @@ class FillCommandTest {
         when(block.isEmpty()).thenReturn(false);
         when(block.getBlockData()).thenReturn(blockData);
         when(block.getLocation()).thenReturn(location);
-        when(block.getX()).thenReturn(x);
-        when(block.getY()).thenReturn(y);
-        when(block.getZ()).thenReturn(z);
+        when(block.getX()).thenReturn(0);
+        when(block.getY()).thenReturn(0);
+        when(block.getZ()).thenReturn(0);
         when(block.getWorld()).thenReturn(world);
         return block;
     }

@@ -12,13 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command that allows players to open their own or another player's ender chest.
+ * Requires VIP permissions for self-access
+ * and MOD permissions for accessing other players' ender chests.
+ */
 @CommandName("enderchest")
 public class Enderchest implements CommandConstruct {
 
@@ -58,19 +62,20 @@ public class Enderchest implements CommandConstruct {
       return true;
     }
 
-    if (Bukkit.getPlayer(args[0]) == null) {
-      p.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+    if (serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer(args[0])
+        == null) {
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
-    Player target = Objects.requireNonNull(Bukkit.getPlayer(args[0])).getPlayer();
+    Player target = Objects.requireNonNull(
+            serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer(args[0]))
+        .getPlayer();
 
     if (target == null) {
-      p.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
       return true;
     }
 
@@ -81,9 +86,8 @@ public class Enderchest implements CommandConstruct {
     }
 
     p.openInventory(target.getEnderChest());
-    p.sendMessage(
-        serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_ENDERCHEST_PLAYER,
-            target.getCustomName()));
+    p.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_ENDERCHEST_PLAYER, target.getCustomName()));
     return true;
   }
 

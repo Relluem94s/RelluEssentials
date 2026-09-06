@@ -3,19 +3,20 @@ package de.relluem94.minecraft.server.spigot.essentials.services.tasks;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import java.util.HashMap;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Service for scheduling and applying block changes at specific world locations.
- * Delegates all task scheduling to the provided {@link SchedulerService}.
+ * Service for scheduling and applying block changes at specific world locations. Delegates all task
+ * scheduling to the provided {@link SchedulerService}.
  */
 public class BlockService {
 
   private final SchedulerService schedulerService;
+  private final Server server;
   private final HashMap<Location, Long> locations = new HashMap<>();
 
   @Setter
@@ -26,9 +27,11 @@ public class BlockService {
    *
    * @param schedulerService the scheduler service used to delay block placements
    * @param targetMaterial   the material to place at the registered locations
+   * @param server           the server to create Blockdata
    */
-  public BlockService(SchedulerService schedulerService, Material targetMaterial) {
+  public BlockService(SchedulerService schedulerService, Material targetMaterial, Server server) {
     this.schedulerService = schedulerService;
+    this.server = server;
     this.targetMaterial = targetMaterial;
   }
 
@@ -37,8 +40,8 @@ public class BlockService {
    *
    * @param location the location to check
    * @param material the material to compare against
-   * @return {@code true} if the block at the location is of the given material,
-   *     {@code false} otherwise
+   * @return {@code true} if the block at the location is of the given material, {@code false}
+   *     otherwise
    */
   public static boolean isBlockOfMaterial(@NotNull Location location, Material material) {
     return location.getBlock().getType() == material;
@@ -64,18 +67,14 @@ public class BlockService {
   }
 
   /**
-   * Schedules block placements for all registered locations, adding the given base delay
-   * to each location's individual delay value.
+   * Schedules block placements for all registered locations, adding the given base delay to each
+   * location's individual delay value.
    *
    * @param additionalDelay the extra delay in ticks added to each location's delay
    */
   public void applyBlocks(long additionalDelay) {
-    locations.forEach((location, delay) ->
-        schedulerService.scheduleSyncDelayedTask(
-            () -> location.getBlock().setType(targetMaterial),
-            Math.abs(delay + additionalDelay)
-        )
-    );
+    locations.forEach((location, delay) -> schedulerService.scheduleSyncDelayedTask(
+        () -> location.getBlock().setType(targetMaterial), Math.abs(delay + additionalDelay)));
   }
 
   /**
@@ -86,29 +85,22 @@ public class BlockService {
   }
 
   /**
-   * Schedules Material replacements for all registered locations
-   * using only their individual delays.
+   * Schedules Material replacements for all registered locations using only their individual
+   * delays.
    *
    * @param additionalDelay the extra delay in ticks added to each location's delay
    */
   public void applyMaterial(long additionalDelay) {
-    locations.forEach((location, delay) ->
-        schedulerService.scheduleSyncDelayedTask(
-            () -> {
-              try {
-                Block block = location.getBlock();
-                String existingDataString = block.getBlockData().getAsString();
-                String newDataString = existingDataString.replace(
-                    block.getType().getKeyOrThrow().toString(),
-                    targetMaterial.getKeyOrThrow().toString()
-                );
-                block.setBlockData(Bukkit.createBlockData(newDataString));
-              } catch (IllegalArgumentException e) {
-                location.getBlock().setType(targetMaterial);
-              }
-            },
-            Math.abs(delay + additionalDelay)
-        )
-    );
+    locations.forEach((location, delay) -> schedulerService.scheduleSyncDelayedTask(() -> {
+      try {
+        Block block = location.getBlock();
+        String existingDataString = block.getBlockData().getAsString();
+        String newDataString = existingDataString.replace(
+            block.getType().getKeyOrThrow().toString(), targetMaterial.getKeyOrThrow().toString());
+        block.setBlockData(server.createBlockData(newDataString));
+      } catch (IllegalArgumentException e) {
+        location.getBlock().setType(targetMaterial);
+      }
+    }, Math.abs(delay + additionalDelay)));
   }
 }

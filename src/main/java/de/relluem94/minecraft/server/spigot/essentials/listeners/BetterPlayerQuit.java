@@ -9,15 +9,14 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import java.util.Objects;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Listener responsible for handling player disconnection logic,
- * including cleaning up player data, sudo status, and broadcasting quit messages.
+ * Listener responsible for handling player disconnection logic, including cleaning up player data,
+ * sudo status, and broadcasting quit messages.
  */
 @ListenerName("BetterPlayerQuit")
 public class BetterPlayerQuit implements ListenerConstruct {
@@ -32,21 +31,23 @@ public class BetterPlayerQuit implements ListenerConstruct {
   /**
    * Handles the player quit event to perform cleanup and broadcast the departure message.
    *
-   * @param e the player quit event
+   * @param event the player quit event
    */
   @EventHandler
-  public void onLeave(@NonNull PlayerQuitEvent e) {
-    e.setQuitMessage(null);
-    Player p = e.getPlayer();
+  public void onLeave(@NonNull PlayerQuitEvent event) {
+    event.setQuitMessage(null);
+    Player p = event.getPlayer();
 
     if (SudoManager.sudoers.containsKey(p.getUniqueId())) {
-      Sudo.exitSudo(Objects.requireNonNull(Bukkit.getPlayer(p.getUniqueId())), serviceContext);
+      Sudo.exitSudo(Objects.requireNonNull(
+          serviceContext.getPluginMetadataService().getPlugin().getServer()
+              .getPlayer(p.getUniqueId())), serviceContext);
     }
 
     serviceContext.getPlayerService().savePlayer(p);
     serviceContext.getBuyBackService().clearBuyBackHistory(p);
 
-    Bukkit.broadcastMessage(
+    serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
         serviceContext.getTranslationService()
             .get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
     serviceContext.getTeleportService().teleportWorld(p, Constants.PLUGIN_WORLD_LOBBY, true);

@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -29,14 +30,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,11 +63,26 @@ class PlayerServiceTest {
   @Mock
   private WorldGroupService worldGroupService;
 
+  @Mock
+  private PluginMetadataService pluginMetadataService;
+
+  @Mock
+  private Plugin plugin;
+
+  @Mock
+  private Server server;
+
   private PlayerService playerService;
 
   @BeforeEach
   void setUp() {
     playerService = new PlayerService(serviceContext, playerRegistry, playerRepository);
+  }
+
+  private void setupServerChain() {
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    when(plugin.getServer()).thenReturn(server);
   }
 
   @Test
@@ -88,11 +103,11 @@ class PlayerServiceTest {
 
     Collection<Player> onlinePlayers = List.of(onlinePlayer);
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(onlinePlayers);
+    setupServerChain();
+    doReturn(onlinePlayers).when(server).getOnlinePlayers();
 
-      playerService.initialize();
-    }
+
+    playerService.initialize();
 
     verify(playerRegistry).putPlayerEntry(uuid, playerEntry);
     verify(onlinePlayer).setCustomName("§a[VIP] TestPlayer");
@@ -103,12 +118,12 @@ class PlayerServiceTest {
   void initializeThrowsIllegalStateExceptionWhenCalledTwice() {
     when(playerRepository.findAll()).thenReturn(List.of());
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(List.of());
-      playerService.initialize();
+    setupServerChain();
+    when(server.getOnlinePlayers()).thenReturn(List.of());
 
-      assertThrows(IllegalStateException.class, () -> playerService.initialize());
-    }
+    playerService.initialize();
+
+    assertThrows(IllegalStateException.class, () -> playerService.initialize());
   }
 
   @Test
@@ -255,12 +270,11 @@ class PlayerServiceTest {
     when(groupEntry.getPrefix()).thenReturn("§c[ADMIN] ");
     when(playerEntry.getId()).thenReturn(1);
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(() -> Bukkit.getPlayer(uuid)).thenReturn(onlinePlayer);
-      when(playerRegistry.getPlayerEntry(onlinePlayer.getUniqueId())).thenReturn(playerEntry);
+    setupServerChain();
+    when(server.getPlayer(uuid)).thenReturn(onlinePlayer);
+    when(playerRegistry.getPlayerEntry(onlinePlayer.getUniqueId())).thenReturn(playerEntry);
 
-      playerService.updateGroup(offlinePlayer, groupEntry);
-    }
+    playerService.updateGroup(offlinePlayer, groupEntry);
 
     assertAll(
         () -> verify(playerEntry).setGroup(groupEntry),
@@ -357,11 +371,12 @@ class PlayerServiceTest {
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(translationService.getWithPrefix(any(), anyString(), anyString(), anyString())).thenReturn("AFK message");
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      playerService.setAfk(player, false);
+    setupServerChain();
+    when(server.broadcastMessage("AFK message")).thenReturn(0);
 
-      bukkit.verify(() -> Bukkit.broadcastMessage("AFK message"));
-    }
+    playerService.setAfk(player, false);
+
+    verify(server).broadcastMessage("AFK message");
 
     assertAll(
         () -> verify(playerEntry).setAfk(true),
@@ -506,11 +521,11 @@ class PlayerServiceTest {
     when(translationService.get(any(MessageKey.class), any())).thenReturn("Inventories saved");
     when(serviceContext.getChatService()).thenReturn(chatService);
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(List.of(player));
+    setupServerChain();
+    doReturn(List.of(player)).when(server).getOnlinePlayers();
 
-      playerService.savePlayersInv(adminGroup);
-    }
+
+    playerService.savePlayersInv(adminGroup);
 
     verify(chatService).sendMessageInChannel(
         "Inventories saved",
@@ -679,7 +694,6 @@ class PlayerServiceTest {
     assertEquals(0, result.size());
   }
 
-
   @Test
   void setAfkWithFakeAfkActiveStateForcesAfkTrueAndBroadcastsActivation() {
     Player player = mock(Player.class);
@@ -697,11 +711,12 @@ class PlayerServiceTest {
         eq(MessageKey.COMMAND_AFK_DEACTIVATED), anyString(), anyString(), eq("§a"))
     ).thenReturn("AFK deactivated message");
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      playerService.setAfk(player, false);
+    setupServerChain();
+    when(server.broadcastMessage("AFK deactivated message")).thenReturn(0);
 
-      bukkit.verify(() -> Bukkit.broadcastMessage("AFK deactivated message"));
-    }
+    playerService.setAfk(player, false);
+
+    verify(server).broadcastMessage("AFK deactivated message");
 
     verify(playerEntry, never()).setAfk(any(Boolean.class));
     verify(playerEntry, never()).setHasToBeUpdated(any(Boolean.class));
@@ -724,11 +739,12 @@ class PlayerServiceTest {
         eq(MessageKey.COMMAND_AFK_ACTIVATED), anyString(), anyString(), eq("§c"))
     ).thenReturn("AFK activated message");
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      playerService.setAfk(player, false);
+    setupServerChain();
+    when(server.broadcastMessage("AFK activated message")).thenReturn(0);
 
-      bukkit.verify(() -> Bukkit.broadcastMessage("AFK activated message"));
-    }
+    playerService.setAfk(player, false);
+
+    verify(server).broadcastMessage("AFK activated message");
 
     verify(playerEntry, never()).setAfk(any(Boolean.class));
     verify(playerEntry, never()).setHasToBeUpdated(any(Boolean.class));
@@ -752,11 +768,12 @@ class PlayerServiceTest {
         eq(MessageKey.COMMAND_AFK_DEACTIVATED), anyString(), anyString(), eq("§a"))
     ).thenReturn("AFK deactivated message");
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      playerService.setAfk(player, false);
+    setupServerChain();
+    when(server.broadcastMessage("AFK deactivated message")).thenReturn(0);
 
-      bukkit.verify(() -> Bukkit.broadcastMessage("AFK deactivated message"));
-    }
+    playerService.setAfk(player, false);
+
+    verify(server).broadcastMessage("AFK deactivated message");
 
     assertAll(
         () -> verify(playerEntry).setAfk(false),
@@ -780,9 +797,10 @@ class PlayerServiceTest {
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(translationService.getWithPrefix(any(), anyString(), anyString(), anyString())).thenReturn("AFK message");
 
-    try (MockedStatic<Bukkit> _ = Mockito.mockStatic(Bukkit.class)) {
-      playerService.setAfk(player, false);
-    }
+    setupServerChain();
+    when(server.broadcastMessage("AFK message")).thenReturn(0);
+
+    playerService.setAfk(player, false);
 
     assertAll(
         () -> verify(playerEntry, never()).setAfk(any(Boolean.class)),
@@ -790,7 +808,6 @@ class PlayerServiceTest {
         () -> verify(player, never()).setInvulnerable(any(Boolean.class))
     );
   }
-
 
   @Test
   void setFlyingDoesNothingWhenAuthorizedButFlyingFlagNotSet() {
@@ -818,11 +835,11 @@ class PlayerServiceTest {
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
     when(worldGroupService.saveWorldGroupInventoryForPlayer(player, false)).thenReturn(false);
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(List.of(player));
+    setupServerChain();
+    doReturn(List.of(player)).when(server).getOnlinePlayers();
 
-      playerService.savePlayersInv(adminGroup);
-    }
+
+    playerService.savePlayersInv(adminGroup);
 
     verify(chatService, never()).sendMessageInChannel(anyString(), anyString(), any(), any());
   }
@@ -839,11 +856,10 @@ class PlayerServiceTest {
     when(playerRegistry.getPlayerEntry(uuid)).thenReturn(playerEntry);
     when(playerEntry.getId()).thenReturn(1);
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(() -> Bukkit.getPlayer(uuid)).thenReturn(null);
+    setupServerChain();
+    when(server.getPlayer(uuid)).thenReturn(null);
 
-      playerService.updateGroup(offlinePlayer, groupEntry);
-    }
+    playerService.updateGroup(offlinePlayer, groupEntry);
 
     assertAll(
         () -> verify(playerEntry).setGroup(groupEntry),

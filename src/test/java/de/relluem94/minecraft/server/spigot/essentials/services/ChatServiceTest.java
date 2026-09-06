@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -15,19 +17,18 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
-import java.util.Collection;
 import java.util.List;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -47,6 +48,15 @@ class ChatServiceTest {
   private TranslationService translationService;
 
   @Mock
+  private PluginMetadataService pluginMetadataService;
+
+  @Mock
+  private Plugin plugin;
+
+  @Mock
+  private Server server;
+
+  @Mock
   private Player senderPlayer;
 
   @Mock
@@ -59,6 +69,11 @@ class ChatServiceTest {
 
   @BeforeEach
   void setUp() {
+    lenient().when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    lenient().when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    lenient().when(plugin.getServer()).thenReturn(server);
+    lenient().when(server.getConsoleSender()).thenReturn(consoleCommandSender);
+
     chatService = new ChatService(serviceContext, replyRegistry);
   }
 
@@ -71,46 +86,30 @@ class ChatServiceTest {
 
   @Test
   void sendMessageSendsToConsoleWhenSenderIsNotPlayer() {
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getConsoleSender).thenReturn(consoleCommandSender);
+    chatService.sendMessage(consoleCommandSender, "hello");
 
-      chatService.sendMessage(consoleCommandSender, "hello");
-
-      verify(consoleCommandSender).sendMessage(" hello");
-    }
+    verify(consoleCommandSender).sendMessage(" hello");
   }
 
   @Test
   void consoleSendMessageSendsFormattedMessage() {
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getConsoleSender).thenReturn(consoleCommandSender);
+    chatService.consoleSendMessage("INFO", "server started");
 
-      chatService.consoleSendMessage("INFO", "server started");
-
-      verify(consoleCommandSender).sendMessage("INFO server started");
-    }
+    verify(consoleCommandSender).sendMessage("INFO server started");
   }
 
   @Test
   void consoleSendMessageWithRepeatSendsMessageCorrectNumberOfTimes() {
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getConsoleSender).thenReturn(consoleCommandSender);
+    chatService.consoleSendMessage("INFO", "repeated", 2);
 
-      chatService.consoleSendMessage("INFO", "repeated", 2);
-
-      verify(consoleCommandSender, Mockito.times(3)).sendMessage("INFO repeated");
-    }
+    verify(consoleCommandSender, Mockito.times(3)).sendMessage("INFO repeated");
   }
 
   @Test
   void consoleSendMessageWithRepeatZeroSendsOnce() {
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getConsoleSender).thenReturn(consoleCommandSender);
+    chatService.consoleSendMessage("INFO", "once", 0);
 
-      chatService.consoleSendMessage("INFO", "once", 0);
-
-      verify(consoleCommandSender, Mockito.times(1)).sendMessage("INFO once");
-    }
+    verify(consoleCommandSender, Mockito.times(1)).sendMessage("INFO once");
   }
 
   @Test
@@ -118,87 +117,71 @@ class ChatServiceTest {
     GroupEntry group = new GroupEntry(1, "admin", "[A] ");
     Player authorizedPlayer = mock(Player.class);
     Player unauthorizedPlayer = mock(Player.class);
-    Collection<? extends Player> onlinePlayers = List.of(authorizedPlayer, unauthorizedPlayer);
 
     when(senderPlayer.getCustomName()).thenReturn("SenderName");
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(authorizedPlayer, "admin")).thenReturn(true);
     when(groupService.isSenderAuthorized(unauthorizedPlayer, "admin")).thenReturn(false);
+    doReturn(List.of(authorizedPlayer, unauthorizedPlayer)).when(server).getOnlinePlayers();
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(onlinePlayers);
+    chatService.sendMessageInChannel("!admin hello world", senderPlayer, "!admin", group);
 
-      chatService.sendMessageInChannel("!admin hello world", senderPlayer, "!admin", group);
-
-      verify(authorizedPlayer).sendMessage(anyString());
-      verify(unauthorizedPlayer, never()).sendMessage(anyString());
-    }
+    verify(authorizedPlayer).sendMessage(anyString());
+    verify(unauthorizedPlayer, never()).sendMessage(anyString());
   }
 
   @Test
   void sendMessageInChannelWithPlayerSenderStripsChannelFromMessage() {
     GroupEntry group = new GroupEntry(1, "admin", "[A] ");
-    Collection<? extends Player> onlinePlayers = List.of(senderPlayer);
 
     when(senderPlayer.getCustomName()).thenReturn("SenderName");
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(senderPlayer, "admin")).thenReturn(true);
+    doReturn(List.of(senderPlayer)).when(server).getOnlinePlayers();
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(onlinePlayers);
+    chatService.sendMessageInChannel("!admin hello world", senderPlayer, "!admin", group);
 
-      chatService.sendMessageInChannel("!admin hello world", senderPlayer, "!admin", group);
+    ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
+    verify(senderPlayer).sendMessage(messageCaptor.capture());
+    String sentMessage = messageCaptor.getValue();
 
-      ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-      verify(senderPlayer).sendMessage(messageCaptor.capture());
-      String sentMessage = messageCaptor.getValue();
-
-      assertAll(() -> assertTrue(sentMessage.contains("SenderName")),
-          () -> assertTrue(sentMessage.contains("[A] ")),
-          () -> assertFalse(sentMessage.contains("!admin")));
-    }
+    assertAll(() -> assertTrue(sentMessage.contains("SenderName")),
+        () -> assertTrue(sentMessage.contains("[A] ")),
+        () -> assertFalse(sentMessage.contains("!admin")));
   }
 
   @Test
   void sendMessageInChannelWithSenderNameSendsToAuthorizedPlayers() {
     GroupEntry group = new GroupEntry(1, "mod", "[M] ");
     Player authorizedPlayer = mock(Player.class);
-    Collection<? extends Player> onlinePlayers = List.of(authorizedPlayer);
 
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(authorizedPlayer, "mod")).thenReturn(true);
+    doReturn(List.of(authorizedPlayer)).when(server).getOnlinePlayers();
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(onlinePlayers);
+    chatService.sendMessageInChannel("!mod hello", "ConsoleSender", "!mod", group);
 
-      chatService.sendMessageInChannel("!mod hello", "ConsoleSender", "!mod", group);
-
-      verify(authorizedPlayer).sendMessage(anyString());
-    }
+    verify(authorizedPlayer).sendMessage(anyString());
   }
 
   @Test
   void sendMessageInChannelWithSenderNameStripsChannelFromMessage() {
     GroupEntry group = new GroupEntry(1, "mod", "[M] ");
     Player authorizedPlayer = mock(Player.class);
-    Collection<? extends Player> onlinePlayers = List.of(authorizedPlayer);
 
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(authorizedPlayer, "mod")).thenReturn(true);
+    doReturn(List.of(authorizedPlayer)).when(server).getOnlinePlayers();
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(onlinePlayers);
+    chatService.sendMessageInChannel("!mod hello", "ConsoleSender", "!mod", group);
 
-      chatService.sendMessageInChannel("!mod hello", "ConsoleSender", "!mod", group);
+    ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
+    verify(authorizedPlayer).sendMessage(messageCaptor.capture());
+    String sentMessage = messageCaptor.getValue();
 
-      ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-      verify(authorizedPlayer).sendMessage(messageCaptor.capture());
-      String sentMessage = messageCaptor.getValue();
-
-      assertAll(() -> assertTrue(sentMessage.contains("ConsoleSender")),
-          () -> assertTrue(sentMessage.contains("[M] ")),
-          () -> assertFalse(sentMessage.contains("!mod")));
-    }
+    assertAll(() -> assertTrue(sentMessage.contains("ConsoleSender")),
+        () -> assertTrue(sentMessage.contains("[M] ")),
+        () -> assertFalse(sentMessage.contains("!mod")));
   }
 
   @Test
@@ -341,25 +324,20 @@ class ChatServiceTest {
     verify(senderPlayer).sendMessage(anyString());
   }
 
-
   @Test
   void sendMessageInChannelWithSenderNameDoesNotSendToUnauthorizedPlayers() {
     GroupEntry group = new GroupEntry(1, "mod", "[M] ");
     Player authorizedPlayer = mock(Player.class);
     Player unauthorizedPlayer = mock(Player.class);
-    Collection<? extends Player> onlinePlayers = List.of(authorizedPlayer, unauthorizedPlayer);
 
     when(serviceContext.getGroupService()).thenReturn(groupService);
     when(groupService.isSenderAuthorized(authorizedPlayer, "mod")).thenReturn(true);
     when(groupService.isSenderAuthorized(unauthorizedPlayer, "mod")).thenReturn(false);
+    doReturn(List.of(authorizedPlayer, unauthorizedPlayer)).when(server).getOnlinePlayers();
 
-    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
-      bukkit.when(Bukkit::getOnlinePlayers).thenReturn(onlinePlayers);
+    chatService.sendMessageInChannel("!mod hello", "ConsoleSender", "!mod", group);
 
-      chatService.sendMessageInChannel("!mod hello", "ConsoleSender", "!mod", group);
-
-      verify(authorizedPlayer).sendMessage(anyString());
-      verify(unauthorizedPlayer, never()).sendMessage(anyString());
-    }
+    verify(authorizedPlayer).sendMessage(anyString());
+    verify(unauthorizedPlayer, never()).sendMessage(anyString());
   }
 }

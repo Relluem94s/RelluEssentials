@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,21 +18,51 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command implementation that sets the game mode of a player to {@link GameMode#ADVENTURE}.
+ *
+ * <p>If an argument is provided, the command targets the specified online player.
+ * Otherwise, the command targets the sender itself, requiring the sender to be a player.
+ * Requires the sender to have the {@code mod} group authorization.</p>
+ */
 @CommandName("2")
 public class GameModeAdventure implements CommandConstruct {
 
   private ServiceContext serviceContext;
 
+  /**
+   * Injects the {@link ServiceContext} into this command.
+   *
+   * @param context the service context providing access to all required services
+   */
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
   }
 
+  /**
+   * Returns an empty array, as this command has no sub-commands.
+   *
+   * @return an empty {@link CommandsEnum} array
+   */
   @Override
   public CommandsEnum[] getCommands() {
     return new CommandsEnum[0];
   }
 
+  /**
+   * Handles the execution of the adventure game mode command.
+   *
+   * <p>If one argument is provided, the game mode of the specified target player is set to
+   * {@link GameMode#ADVENTURE}. If no argument is provided, the sender itself is used as
+   * the target, requiring the sender to be a {@link Player}.</p>
+   *
+   * @param sender  the entity that executed the command
+   * @param command the command that was executed
+   * @param label   the alias used to trigger the command
+   * @param args    the arguments passed to the command
+   * @return {@code true} in all cases to indicate that the command was handled
+   */
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NonNull Command command,
       @NonNull String label, String[] args) {
@@ -44,7 +73,8 @@ public class GameModeAdventure implements CommandConstruct {
     }
 
     if (args.length == 1) {
-      Player target = Bukkit.getPlayer(args[0]);
+      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
+          .getPlayer(args[0]);
 
       if (target == null) {
         sender.sendMessage(serviceContext.getTranslationService()
@@ -73,6 +103,19 @@ public class GameModeAdventure implements CommandConstruct {
             serviceContext.getTranslationService().get(MessageKey.COMMAND_GAMEMODE_ADVENTURE)));
   }
 
+  /**
+   * Provides tab completion suggestions for the adventure game mode command.
+   *
+   * <p>Returns a list of online player names as suggestions for the first argument.
+   * Returns an empty list if the sender lacks {@code mod} authorization or more than one
+   * argument is already present.</p>
+   *
+   * @param commandSender the entity requesting tab completion
+   * @param command       the command being tab-completed
+   * @param s             the alias used to trigger the command
+   * @param strings       the arguments currently entered by the sender
+   * @return a list of matching online player names, or an empty list
+   */
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {

@@ -18,64 +18,54 @@ import org.bukkit.block.CommandBlock;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Sub-command that generates a developer testing platform around the executing player.
+ *
+ * <p>The platform consists of a grid of 5x5 cells, each showcasing either a specific
+ * {@link Material} via a repeating command block setup or a {@link TraderNpc} spawn point.
+ * Blocks are placed asynchronously in batches to avoid server lag. All placed blocks are
+ * recorded in the undo history to allow reverting the operation.
+ */
 public class DevPlattformCommand implements SubCommand {
 
-  private static final List<Material> DEV_PLATTFORM_MATERIAL_LIST = Arrays.asList(
-      Material.IRON_ORE,
-      Material.DEEPSLATE_IRON_ORE,
-      Material.RAW_IRON_BLOCK,
-      Material.COPPER_ORE,
-      Material.DEEPSLATE_COPPER_ORE,
-      Material.RAW_COPPER_BLOCK,
-      Material.DIAMOND_ORE,
-      Material.DEEPSLATE_DIAMOND_ORE,
-      Material.REDSTONE_ORE,
-      Material.DEEPSLATE_REDSTONE_ORE,
-      Material.COAL_ORE,
-      Material.DEEPSLATE_COAL_ORE,
-      Material.GOLD_ORE,
-      Material.DEEPSLATE_GOLD_ORE,
-      Material.EMERALD_ORE,
-      Material.DEEPSLATE_EMERALD_ORE,
-      Material.LAPIS_ORE,
-      Material.DEEPSLATE_LAPIS_ORE,
-      Material.ANCIENT_DEBRIS,
-      Material.NETHER_QUARTZ_ORE,
-      Material.NETHER_GOLD_ORE,
-      Material.AMETHYST_BLOCK,
-      Material.BUDDING_AMETHYST,
-      Material.DIRT,
-      Material.SAND,
-      Material.RED_SAND,
-      Material.SOUL_SAND,
-      Material.SOUL_SOIL,
-      Material.GRAVEL,
-      Material.CLAY,
-      Material.MUD,
-      Material.STONE,
-      Material.DEEPSLATE,
-      Material.COBBLESTONE,
-      Material.COBBLED_DEEPSLATE,
-      Material.GRASS_BLOCK,
-      Material.TUFF,
-      Material.CALCITE,
-      Material.BLACKSTONE,
-      Material.ANDESITE,
-      Material.DIORITE,
-      Material.GRANITE,
-      Material.END_STONE,
-      Material.NETHERRACK,
-      Material.GRAY_STAINED_GLASS,
-      Material.PUMPKIN,
-      Material.MELON,
-      Material.PALE_OAK_LOG
-  );
+  private static final List<Material> DEV_PLATTFORM_MATERIAL_LIST = Arrays.asList(Material.IRON_ORE,
+      Material.DEEPSLATE_IRON_ORE, Material.RAW_IRON_BLOCK, Material.COPPER_ORE,
+      Material.DEEPSLATE_COPPER_ORE, Material.RAW_COPPER_BLOCK, Material.DIAMOND_ORE,
+      Material.DEEPSLATE_DIAMOND_ORE, Material.REDSTONE_ORE, Material.DEEPSLATE_REDSTONE_ORE,
+      Material.COAL_ORE, Material.DEEPSLATE_COAL_ORE, Material.GOLD_ORE,
+      Material.DEEPSLATE_GOLD_ORE, Material.EMERALD_ORE, Material.DEEPSLATE_EMERALD_ORE,
+      Material.LAPIS_ORE, Material.DEEPSLATE_LAPIS_ORE, Material.ANCIENT_DEBRIS,
+      Material.NETHER_QUARTZ_ORE, Material.NETHER_GOLD_ORE, Material.AMETHYST_BLOCK,
+      Material.BUDDING_AMETHYST, Material.DIRT, Material.SAND, Material.RED_SAND,
+      Material.SOUL_SAND, Material.SOUL_SOIL, Material.GRAVEL, Material.CLAY, Material.MUD,
+      Material.STONE, Material.DEEPSLATE, Material.COBBLESTONE, Material.COBBLED_DEEPSLATE,
+      Material.GRASS_BLOCK, Material.TUFF, Material.CALCITE, Material.BLACKSTONE, Material.ANDESITE,
+      Material.DIORITE, Material.GRANITE, Material.END_STONE, Material.NETHERRACK,
+      Material.GRAY_STAINED_GLASS, Material.PUMPKIN, Material.MELON, Material.PALE_OAK_LOG);
   private final ServiceContext serviceContext;
 
+  /**
+   * Creates a new {@link DevPlattformCommand} with the given service context.
+   *
+   * @param context the {@link ServiceContext} providing access to required services such as
+   *                the scheduler, trader NPC service, undo history service and plugin metadata
+   */
   public DevPlattformCommand(ServiceContext context) {
     this.serviceContext = context;
   }
 
+  /**
+   * Generates the developer platform centered at the executing player's current location.
+   *
+   * <p>Builds a grid of cells oriented relative to the player's facing direction.
+   * Each cell either places a repeating command block that sets the showcased {@link Material}
+   * one block above, backed by a redstone block, or spawns a {@link TraderNpc} once all
+   * materials have been displayed. All modified block states are recorded for undo support.
+   *
+   * @param player the player who triggered the command and whose location and facing direction
+   *               determine the platform's origin and orientation
+   * @param args   the command arguments passed to this sub-command
+   */
   @Override
   public void execute(Player player, String[] args) {
     World world = player.getWorld();
@@ -86,10 +76,17 @@ public class DevPlattformCommand implements SubCommand {
 
     List<ModifyHistoryEntry> undoList = new ArrayList<>();
 
-    BlockService frame = new BlockService(serviceContext.getSchedulerService(), Material.OCHRE_FROGLIGHT);
-    BlockService inner = new BlockService(serviceContext.getSchedulerService(), Material.BIRCH_PLANKS);
-    BlockService redstone = new BlockService(serviceContext.getSchedulerService(), Material.REDSTONE_BLOCK);
-    BlockService air = new BlockService(serviceContext.getSchedulerService(), Material.AIR);
+    BlockService frame = new BlockService(serviceContext.getSchedulerService(),
+        Material.OCHRE_FROGLIGHT,
+        serviceContext.getPluginMetadataService().getPlugin().getServer());
+    BlockService inner = new BlockService(serviceContext.getSchedulerService(),
+        Material.BIRCH_PLANKS,
+        serviceContext.getPluginMetadataService().getPlugin().getServer());
+    BlockService redstone = new BlockService(serviceContext.getSchedulerService(),
+        Material.REDSTONE_BLOCK,
+        serviceContext.getPluginMetadataService().getPlugin().getServer());
+    BlockService air = new BlockService(serviceContext.getSchedulerService(), Material.AIR,
+        serviceContext.getPluginMetadataService().getPlugin().getServer());
 
     List<TraderNpc> traderNpcs = serviceContext.getTraderNpcService().getAllNpcs();
 
@@ -229,6 +226,14 @@ public class DevPlattformCommand implements SubCommand {
     serviceContext.getUndoHistoryService().addHistory(player, undoList);
   }
 
+  /**
+   * Determines whether the given arguments match this sub-command.
+   *
+   * @param args the command arguments to evaluate
+   * @return {@code true} if exactly one argument is provided and it equals the
+   *         {@link DevCommand.Commands#DEV_PLATTFORM}
+   *         command name, ignoring case; {@code false} otherwise
+   */
   @Override
   public boolean matches(String @NonNull [] args) {
     return args.length == 1 && DevCommand.Commands.DEV_PLATTFORM.getName()
