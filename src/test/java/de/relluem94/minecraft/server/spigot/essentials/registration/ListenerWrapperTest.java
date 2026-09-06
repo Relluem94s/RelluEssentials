@@ -1,9 +1,8 @@
-package de.relluem94.minecraft.server.spigot.essentials.wrappers;
+package de.relluem94.minecraft.server.spigot.essentials.registration;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import java.lang.reflect.Field;
-import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,23 +33,16 @@ class ListenerWrapperTest {
   private ListenerWrapper listenerWrapper;
 
   @BeforeEach
-  void setUp() throws Exception {
+  void setUp() {
+    Mockito.when(javaPlugin.getServer()).thenReturn(server);
     Mockito.when(server.getPluginManager()).thenReturn(pluginManager);
-
-    Field serverField = Bukkit.class.getDeclaredField("server");
-    serverField.setAccessible(true);
-    serverField.set(null, server);
 
     listenerWrapper = new ListenerWrapper(listenerConstruct);
   }
 
   @AfterEach
-  void tearDown() throws Exception {
+  void tearDown() {
     listenerWrapper = null;
-
-    Field serverField = Bukkit.class.getDeclaredField("server");
-    serverField.setAccessible(true);
-    serverField.set(null, null);
   }
 
   @Test

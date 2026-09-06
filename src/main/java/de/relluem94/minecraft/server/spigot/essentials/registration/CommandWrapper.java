@@ -1,4 +1,4 @@
-package de.relluem94.minecraft.server.spigot.essentials.wrappers;
+package de.relluem94.minecraft.server.spigot.essentials.registration;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.AnnotationHelper;

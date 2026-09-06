@@ -13,7 +13,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_UPDATEDBY;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,9 +27,9 @@ public class TraderNpcMapper {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
-  public static @NonNull TraderNPCEntry mapNPC(@NonNull ResultSet rs,
+  public static @NonNull TraderNpcEntry mapNPC(@NonNull ResultSet rs,
       @NonNull Function<String, Villager.Profession> professionResolver) throws SQLException {
-    TraderNPCEntry traderNpcEntry = new TraderNPCEntry();
+    TraderNpcEntry traderNpcEntry = new TraderNpcEntry();
 
     traderNpcEntry.setId(rs.getInt(FIELD_ID));
     traderNpcEntry.setCreated(rs.getString(FIELD_CREATED));

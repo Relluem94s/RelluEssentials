@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_BORDER;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
@@ -48,20 +47,13 @@ public class RelluEssentials extends JavaPlugin {
   private PersistenceContext persistenceContext;
 
   @Getter
+  @Deprecated
   private boolean isUnitTest = false;
 
   /* Manager */
   private AutoSaveManager autoSaveManager;
   private ConfigManager configManager;
   private WorldManager worldManager;
-
-  /**
-   * Default constructor for the RelluEssentials plugin. Used by the Spigot server to instantiate
-   * the plugin.
-   */
-  public RelluEssentials() {
-    super();
-  }
 
   /**
    * Constructor for unit testing purposes. Allows injecting a custom loader, description, data
@@ -102,12 +94,9 @@ public class RelluEssentials extends JavaPlugin {
     enchantmentManager.enable(this);
     ItemManager itemManager = new ItemManager();
     itemManager.enable(this);
-    DatabaseManager databaseManager = new DatabaseManager(
-        getConfig().getString("database.host"),
-        getConfig().getString("database.user"),
-        getConfig().getString("database.password"),
-        getConfig().getInt("database.port")
-    );
+    DatabaseManager databaseManager = new DatabaseManager(getConfig().getString("database.host"),
+        getConfig().getString("database.user"), getConfig().getString("database.password"),
+        getConfig().getInt("database.port"));
     databaseManager.enable(this);
     serviceManager.enable(this);
     SignManager signManager = new SignManager();
@@ -129,9 +118,6 @@ public class RelluEssentials extends JavaPlugin {
     stopLoading();
     worldManager = new WorldManager();
     worldManager.enable(this);
-    if (isUnitTest) {
-      return;
-    }
     getServiceContext().getSchedulerService()
         .runTaskLater(() -> getServiceContext().getNpcService().loadAndSpawnNpcsInLoadedChunks(),
             20L);
@@ -139,7 +125,7 @@ public class RelluEssentials extends JavaPlugin {
 
   @Override
   public void onDisable() {
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE,
         getServiceContext().getTranslationService().get(MessageKey.PLUGIN_MANAGER_STOP_MESSAGE));
     if (getServiceContext().getNpcService() != null) {
       getServiceContext().getNpcService().despawnAllNpcs();
@@ -153,25 +139,20 @@ public class RelluEssentials extends JavaPlugin {
 
   private void startLoading() {
     setInstance(this);
-    if (isUnitTest) {
-      return;
-    }
-    consoleSendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
-    consoleSendMessage(PLUGIN_NAME_CONSOLE, "", 2);
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
+    getServer().getConsoleSender().sendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
+    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
+    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
+    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE,
         serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
-    consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
+    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
   }
 
   private void stopLoading() {
-    if (isUnitTest) {
-      return;
-    }
-    consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
-    consoleSendMessage(PLUGIN_NAME_CONSOLE, serviceContext.getTranslationService()
-        .get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE,
+    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
+    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE,
+        serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE,
             Calendar.getInstance().getTimeInMillis() - start));
-    consoleSendMessage(PLUGIN_NAME_CONSOLE, "");
-    consoleSendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
+    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
+    getServer().getConsoleSender().sendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
   }
 }

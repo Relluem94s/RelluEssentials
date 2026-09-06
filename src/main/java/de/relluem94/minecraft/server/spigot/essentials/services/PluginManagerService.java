@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import org.bukkit.event.Event;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 
@@ -31,6 +32,15 @@ public class PluginManagerService {
    */
   public void callEvent(Event event) {
     pluginManager().callEvent(event);
+  }
+
+  /**
+   * Registers a listener on runtime.
+   *
+   * @param listener ro be registered
+   */
+  public void registerEvents(Listener listener) {
+    pluginManager().registerEvents(listener, plugin);
   }
 
   /**

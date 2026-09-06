@@ -27,7 +27,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lombok.Getter;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.block.CommandBlock;
@@ -40,22 +39,37 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command handler for world management operations.
+ *
+ * <p>Provides functionality to teleport between worlds, list loaded worlds,
+ * load, unload and create worlds. Also supports command block execution
+ * targeting the nearest player.</p>
+ */
 @CommandName("world")
 public class Worlds implements CommandConstruct {
 
   private ServiceContext serviceContext;
 
-  public static void openWorldMenu(Player p, ItemService itemService, PluginMetadataService pluginMetadataService) {
+  /**
+   * Opens a graphical world selection inventory for the given player.
+   *
+   * <p>Displays all currently loaded worlds as clickable globe heads
+   * inside an {@link org.bukkit.inventory.Inventory}.</p>
+   *
+   * @param p                     the player who receives the inventory
+   * @param itemService            the service used to retrieve disabled-slot items
+   * @param pluginMetadataService  the service used to access plugin and server metadata
+   */
+  public static void openWorldMenu(Player p, ItemService itemService,
+      PluginMetadataService pluginMetadataService) {
     org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
         InventoryHelper.createInventory(18,
             Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds"),
-        itemService.find(
-                new RelluEssentialsNamespacedKey(pluginMetadataService.getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
-            .orElseThrow()
-            .toItemStack()
-    );
+        itemService.find(new RelluEssentialsNamespacedKey(pluginMetadataService.getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow().toItemStack());
 
-    for (int i = 0; i < Bukkit.getWorlds().size(); i++) {
+    for (int i = 0; i < pluginMetadataService.getPlugin().getServer().getWorlds().size(); i++) {
       ItemStack is = PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE);
       ItemMeta im = is.getItemMeta();
 
@@ -63,7 +77,7 @@ public class Worlds implements CommandConstruct {
         return;
       }
 
-      im.setDisplayName(Bukkit.getWorlds().get(i).getName());
+      im.setDisplayName(pluginMetadataService.getPlugin().getServer().getWorlds().get(i).getName());
 
       is.setItemMeta(im);
       inv.setItem(i, is);
@@ -81,16 +95,13 @@ public class Worlds implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender commandSender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (isCMDBlock(commandSender) && args.length == 2 && !args[0].equalsIgnoreCase(
-        Commands.LIST.getName())
-        && args[1].equals("@p")) {
+        Commands.LIST.getName()) && args[1].equals("@p")) {
       BlockCommandSender bcs = (BlockCommandSender) commandSender;
       CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
       Player p = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
       if (p == null) {
-        commandSender.sendMessage(
-            String.format(serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER),
-                "No Player in Reach"));
+        commandSender.sendMessage(String.format(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER), "No Player in Reach"));
         return true;
       }
 
@@ -113,14 +124,10 @@ public class Worlds implements CommandConstruct {
     }
 
     if (args.length == 0) {
-      p.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_INFO,
-              Commands.LIST.getName(),
-              Commands.LOAD.getName(),
-              Commands.UNLOAD.getName(),
-              Commands.UNLOAD_NO_SAVE.getName(),
-              Commands.CREATE.getName()
-          ));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WORLD_INFO, Commands.LIST.getName(),
+              Commands.LOAD.getName(), Commands.UNLOAD.getName(), Commands.UNLOAD_NO_SAVE.getName(),
+              Commands.CREATE.getName()));
       openWorldMenu(p, serviceContext.getItemService(), serviceContext.getPluginMetadataService());
       return true;
     }
@@ -139,7 +146,8 @@ public class Worlds implements CommandConstruct {
 
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_INFO));
-      Bukkit.getWorlds().forEach(w -> p.sendMessage(w.getName()));
+      serviceContext.getPluginMetadataService().getPlugin().getServer().getWorlds()
+          .forEach(w -> p.sendMessage(w.getName()));
       return true;
     }
 
@@ -189,10 +197,9 @@ public class Worlds implements CommandConstruct {
   }
 
   private boolean isValidWorldEnvironment(String input) {
-    return Arrays.stream(World.Environment.values())
-        .filter(env -> env.name().equalsIgnoreCase(input))
-        .findFirst()
-        .orElse(null) != null;
+    return
+        Arrays.stream(World.Environment.values()).filter(env -> env.name().equalsIgnoreCase(input))
+            .findFirst().orElse(null) != null;
   }
 
   private void createWorld(Player p, String @NotNull [] args) {
@@ -213,15 +220,13 @@ public class Worlds implements CommandConstruct {
   private void unloadWorld(@NotNull Player p, String name, boolean save) {
     try {
       WorldHelper.unloadWorld(name, save);
-      p.sendMessage(save
-          ? serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD)
-          : serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE));
+      p.sendMessage(save ? serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD) : serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WORLD_UNLOAD_NO_SAVE));
     } catch (WorldNotLoadedException ex) {
-      Logger.getLogger(Worlds.class.getName())
-          .log(Level.SEVERE, serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED),
-              ex);
+      Logger.getLogger(Worlds.class.getName()).log(Level.SEVERE,
+          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED),
+          ex);
     }
   }
 
@@ -280,13 +285,12 @@ public class Worlds implements CommandConstruct {
     return new ArrayList<>();
   }
 
+  /**
+   * Enumeration of all available sub-commands for the {@code /world} command.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
-    CREATE("create"),
-    LOAD("load"),
-    LIST("list"),
-    UNLOAD("unload"),
-    UNLOAD_NO_SAVE("unloadNoSave");
+    CREATE("create"), LOAD("load"), LIST("list"), UNLOAD("unload"), UNLOAD_NO_SAVE("unloadNoSave");
 
     private final String name;
     private final String[] subCommands;

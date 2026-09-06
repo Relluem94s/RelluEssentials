@@ -13,13 +13,17 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command implementation for sending title messages to players.
+ * Requires the sender to have at least moderator permissions.
+ * Usage: /title <player> <title> [subtitle]
+ */
 @CommandName("title")
 public class Title implements CommandConstruct {
 
@@ -34,12 +38,14 @@ public class Title implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (args.length < 2) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (!serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -48,10 +54,11 @@ public class Title implements CommandConstruct {
   }
 
   private void title(String @NotNull [] args, CommandSender commandSender) {
-    Player target = Bukkit.getPlayer(args[0]);
+    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getPlayer(args[0]);
     if (target == null) {
-      commandSender.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER));
+      commandSender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER));
       return;
     }
 

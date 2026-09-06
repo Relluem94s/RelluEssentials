@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -76,7 +76,7 @@ class TraderTraderNpcMapperTest {
             when(resultSet.getString(String.format(FIELD_SLOT_VAR_NAME, (i + 1)))).thenReturn("slot_" + i);
         }
 
-        TraderNPCEntry result = TraderNpcMapper.mapNPC(resultSet, PROFESSION_RESOLVER);
+        TraderNpcEntry result = TraderNpcMapper.mapNPC(resultSet, PROFESSION_RESOLVER);
 
         assertAll(
                 () -> assertEquals(1, result.getId()),

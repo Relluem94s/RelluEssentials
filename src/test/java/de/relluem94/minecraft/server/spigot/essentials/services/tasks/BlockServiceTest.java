@@ -4,39 +4,39 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.MockedStatic;
 
 class BlockServiceTest {
 
   private SchedulerService schedulerService;
+  private Server server;
   private BlockService blockService;
   private final Material targetMaterial = Material.DIAMOND_BLOCK;
 
   @BeforeEach
   void setUp() {
     schedulerService = mock(SchedulerService.class);
-    blockService = new BlockService(schedulerService, targetMaterial);
+    server = mock(Server.class);
+    blockService = new BlockService(schedulerService, targetMaterial, server);
   }
 
   @Test
   void testAddAndMergeLocations() {
     Location loc1 = mock(Location.class);
     Location loc2 = mock(Location.class);
-    BlockService otherService = new BlockService(schedulerService, Material.STONE);
+    BlockService otherService = new BlockService(schedulerService, Material.STONE, server);
 
     blockService.addLocation(loc1, 10L);
     otherService.addLocation(loc2, 20L);
@@ -78,55 +78,51 @@ class BlockServiceTest {
 
   @Test
   void testApplyMaterialSuccess() {
-    try (MockedStatic<Bukkit> mockedBukkit = mockStatic(Bukkit.class)) {
-      Location location = mock(Location.class);
-      Block block = mock(Block.class);
-      BlockData blockData = mock(BlockData.class);
+    Location location = mock(Location.class);
+    Block block = mock(Block.class);
+    BlockData blockData = mock(BlockData.class);
+    BlockData newBlockData = mock(BlockData.class);
 
-      Material existingMaterial = Material.DIRT;
-      String existingDataString = "minecraft:dirt";
-      String newDataString = "minecraft:diamond_block";
+    Material existingMaterial = Material.DIRT;
+    String existingDataString = "minecraft:dirt";
+    String newDataString = "minecraft:diamond_block";
 
-      when(location.getBlock()).thenReturn(block);
-      when(block.getBlockData()).thenReturn(blockData);
-      when(block.getType()).thenReturn(existingMaterial);
-      when(blockData.getAsString()).thenReturn(existingDataString);
+    when(location.getBlock()).thenReturn(block);
+    when(block.getBlockData()).thenReturn(blockData);
+    when(block.getType()).thenReturn(existingMaterial);
+    when(blockData.getAsString()).thenReturn(existingDataString);
+    when(server.createBlockData(newDataString)).thenReturn(newBlockData);
 
-      mockedBukkit.when(() -> Bukkit.createBlockData(newDataString)).thenReturn(blockData);
+    blockService.addLocation(location, 0L);
+    blockService.applyMaterial(0L);
 
-      blockService.addLocation(location, 0L);
-      blockService.applyMaterial(0L);
+    ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
+    verify(schedulerService).scheduleSyncDelayedTask(runnableCaptor.capture(), anyLong());
 
-      ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
-      verify(schedulerService).scheduleSyncDelayedTask(runnableCaptor.capture(), anyLong());
+    runnableCaptor.getValue().run();
 
-      runnableCaptor.getValue().run();
-
-      verify(block).setBlockData(blockData);
-    }
+    verify(block).setBlockData(newBlockData);
   }
 
   @Test
   void testApplyMaterialFallbackToSetTypeOnException() {
-    try (MockedStatic<Bukkit> mockedBukkit = mockStatic(Bukkit.class)) {
-      Location location = mock(Location.class);
-      Block block = mock(Block.class);
-      BlockData blockData = mock(BlockData.class);
+    Location location = mock(Location.class);
+    Block block = mock(Block.class);
+    BlockData blockData = mock(BlockData.class);
 
-      when(location.getBlock()).thenReturn(block);
-      when(block.getBlockData()).thenReturn(blockData);
-      when(blockData.getAsString()).thenThrow(new IllegalArgumentException("Simulated failure"));
+    when(location.getBlock()).thenReturn(block);
+    when(block.getBlockData()).thenReturn(blockData);
+    when(blockData.getAsString()).thenThrow(new IllegalArgumentException("Simulated failure"));
 
-      blockService.addLocation(location, 0L);
-      blockService.applyMaterial(0L);
+    blockService.addLocation(location, 0L);
+    blockService.applyMaterial(0L);
 
-      ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
-      verify(schedulerService).scheduleSyncDelayedTask(runnableCaptor.capture(), anyLong());
+    ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
+    verify(schedulerService).scheduleSyncDelayedTask(runnableCaptor.capture(), anyLong());
 
-      runnableCaptor.getValue().run();
+    runnableCaptor.getValue().run();
 
-      verify(block).setType(targetMaterial);
-    }
+    verify(block).setType(targetMaterial);
   }
 
   @Test
@@ -134,7 +130,6 @@ class BlockServiceTest {
     Location location = mock(Location.class);
     Block block = mock(Block.class);
     when(location.getBlock()).thenReturn(block);
-
     when(block.getType()).thenReturn(Material.DIAMOND_BLOCK);
 
     boolean isDiamondBlock = BlockService.isBlockOfMaterial(location, Material.DIAMOND_BLOCK);

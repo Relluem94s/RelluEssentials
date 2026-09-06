@@ -137,7 +137,7 @@ public class PositionService {
     Vector playerVec = player.getLocation().toVector();
     double projFirst = direction.dot(first.toVector().subtract(playerVec));
     double projSecond = direction.dot(second.toVector().subtract(playerVec));
-    Location farther = projFirst > projSecond ? first : second;
+    Location farther = projFirst >= projSecond ? first : second;
 
     int multiplier = expand ? 1 : -1;
     Vector offset = direction.clone().multiply(amount * multiplier);

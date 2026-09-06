@@ -212,7 +212,7 @@ public class NpcService {
   }
 
   private void restoreNpcEquipment(@NonNull Npc npc) {
-    if (npc.getInventory() == null || npc.getEntityUUID() == null) {
+    if (npc.getInventory() == null) {
       return;
     }
     Inventory equipmentInventory = Bukkit.createInventory(null, 54);

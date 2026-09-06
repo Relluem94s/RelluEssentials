@@ -5,7 +5,7 @@
   <groupId>de.relluem94</groupId>
   <artifactId>relluessentials</artifactId>
   <name>RelluEssentials</name>
-  <version>4.4</version>
+  <version>4.5</version>
   <url>https://github.com/Relluem94s/RelluEssentials</url>
   <properties>
     <lombok.version>1.18.46</lombok.version>
@@ -545,6 +545,26 @@
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
+        <executions>
+          <execution>
+            <id>copy-jacoco-dark-css</id>
+            <phase>test</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.reporting.outputDirectory}/jacoco/jacoco-resources</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/src/jacoco</directory>
+                  <includes>
+                    <include>report.css</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

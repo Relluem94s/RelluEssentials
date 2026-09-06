@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -33,16 +32,41 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command implementation for broadcasting formatted messages to all players on the server.
+ *
+ * <p>Supports execution by players (requires mod permission), the console, and command blocks.
+ * When executed from a command block, the {@code @p} selector is resolved to the nearest player.
+ */
 @CommandName("print")
 public class Print implements CommandConstruct {
 
   private ServiceContext serviceContext;
 
+  /**
+   * Injects the service context required for translation, group, and plugin metadata services.
+   *
+   * @param context the service context to inject
+   */
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
   }
 
+  /**
+   * Executes the print command, broadcasting a formatted message to all players.
+   *
+   * <p>Resolves the sender's display name based on their type (player, console, or command block).
+   * Players require the {@code mod} group permission. Command blocks support the {@code @p}
+   * selector, which is replaced with the custom name of the nearest player.
+   *
+   * @param sender  the command sender executing the command
+   * @param command the command being executed
+   * @param label   the alias used to execute the command
+   * @param args    the arguments provided with the command; the first argument onwards forms the
+   *                message
+   * @return {@code true} in all cases, indicating the command was handled
+   */
   @Override
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
@@ -65,11 +89,10 @@ public class Print implements CommandConstruct {
         CommandBlock cb = (CommandBlock) bcs.getBlock().getState();
         targetedPlayerBySelector = PlayerHelper.getTargetedPlayer(cb.getBlock().getLocation());
         if (targetedPlayerBySelector == null) {
-          sender.sendMessage(
-              serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
-                      serviceContext.getTranslationService()
-                          .get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
+          sender.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER,
+                  serviceContext.getTranslationService()
+                      .get(MessageKey.COMMAND_NO_PLAYER_IN_REACH)));
           return true;
         }
       }
@@ -106,15 +129,30 @@ public class Print implements CommandConstruct {
           Objects.requireNonNull(targetedPlayerBySelector.getCustomName()));
     }
 
-    Bukkit.broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + message);
+    serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + message);
     return true;
   }
 
+  /**
+   * Returns the sub-commands associated with this command.
+   *
+   * @return an empty array, as this command has no sub-commands
+   */
   @Override
   public CommandsEnum[] getCommands() {
     return new CommandsEnum[0];
   }
 
+  /**
+   * Provides tab-completion suggestions for the print command.
+   *
+   * @param commandSender the sender requesting tab-completion
+   * @param command       the command being tab-completed
+   * @param s             the alias used
+   * @param strings       the current arguments
+   * @return an empty list, as no tab-completion suggestions are provided
+   */
   @Override
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {

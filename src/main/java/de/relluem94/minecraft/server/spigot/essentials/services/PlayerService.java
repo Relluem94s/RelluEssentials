@@ -16,27 +16,27 @@ import de.relluem94.minecraft.server.spigot.essentials.repositories.PlayerReposi
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Service responsible for managing player data, including registration,
- * retrieval, and persistence via the player registry and repository.
+ * Service responsible for managing player data, including registration, retrieval, and persistence
+ * via the player registry and repository.
  */
 public class PlayerService {
 
   private final PlayerRegistry playerRegistry;
   private final ServiceContext serviceContext;
   private final PlayerRepository playerRepository;
+  private boolean initialized = false;
 
   /**
    * Constructs a new PlayerService.
    *
-   * @param serviceContext  The global service context.
-   * @param playerRegistry  The registry for managing in-memory player entries.
+   * @param serviceContext   The global service context.
+   * @param playerRegistry   The registry for managing in-memory player entries.
    * @param playerRepository The repository for persisting player data.
    */
   public PlayerService(ServiceContext serviceContext, PlayerRegistry playerRegistry,
@@ -46,11 +46,9 @@ public class PlayerService {
     this.playerRepository = playerRepository;
   }
 
-  private boolean initialized = false;
-
   /**
-   * Initializes the service by loading all player entries from the repository into the registry
-   * and applying group prefixes to currently online players.
+   * Initializes the service by loading all player entries from the repository into the registry and
+   * applying group prefixes to currently online players.
    *
    * @throws IllegalStateException if the service has already been initialized.
    */
@@ -61,14 +59,15 @@ public class PlayerService {
     initialized = true;
 
     List<PlayerEntry> playerEntries = playerRepository.findAll();
-    playerEntries.forEach(playerEntry ->
-        playerRegistry.putPlayerEntry(UUID.fromString(playerEntry.getUuid()), playerEntry)
-    );
+    playerEntries.forEach(
+        playerEntry -> playerRegistry.putPlayerEntry(UUID.fromString(playerEntry.getUuid()),
+            playerEntry));
 
-    Bukkit.getOnlinePlayers().forEach(player -> {
-      PlayerEntry playerEntry = playerRegistry.getPlayerEntry(player.getUniqueId());
-      setGroup(player, playerEntry.getGroup());
-    });
+    serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers()
+        .forEach(player -> {
+          PlayerEntry playerEntry = playerRegistry.getPlayerEntry(player.getUniqueId());
+          setGroup(player, playerEntry.getGroup());
+        });
   }
 
   /**
@@ -79,8 +78,7 @@ public class PlayerService {
    */
   @SuppressWarnings("unused")
   public @Nullable PlayerEntry getPlayerByName(String name) {
-    for (PlayerEntry pe : playerRegistry.getPlayerEntryMap()
-        .values()) {
+    for (PlayerEntry pe : playerRegistry.getPlayerEntryMap().values()) {
       if (pe.getName().equals(name)) {
         return pe;
       }
@@ -96,8 +94,7 @@ public class PlayerService {
    * @return The {@link PlayerEntry} if found, otherwise {@code null}.
    */
   public @Nullable PlayerEntry getPlayerByUuid(String uuid) {
-    for (PlayerEntry pe : playerRegistry.getPlayerEntryMap()
-        .values()) {
+    for (PlayerEntry pe : playerRegistry.getPlayerEntryMap().values()) {
       if (pe.getUuid().equals(uuid)) {
         return pe;
       }
@@ -107,8 +104,8 @@ public class PlayerService {
   }
 
   /**
-   * Gets the custom name of a player.
-   * Falling back to their Minecraft name if no custom name is set.
+   * Gets the custom name of a player. Falling back to their Minecraft name if no custom name is
+   * set.
    *
    * @param p The player.
    * @return The custom name or the default Minecraft name.
@@ -146,7 +143,8 @@ public class PlayerService {
     PlayerEntry pe = playerRegistry.getPlayerEntry(p.getUniqueId());
 
     if (p.isOnline()) {
-      Player player = Bukkit.getPlayer(p.getUniqueId());
+      Player player = serviceContext.getPluginMetadataService().getPlugin().getServer()
+          .getPlayer(p.getUniqueId());
       if (player != null) {
         player.setCustomName(g.getPrefix() + getCustomName(player));
         player.setPlayerListName(g.getPrefix() + getCustomName(player));
@@ -185,12 +183,8 @@ public class PlayerService {
    * @return The {@link PlayerEntry} if found, otherwise {@code null}.
    */
   public @Nullable PlayerEntry getPlayerEntryByInternalId(int id) {
-    return playerRegistry.getPlayerEntryMap()
-        .values()
-        .stream()
-        .filter(pe -> pe.getId() == id)
-        .findFirst()
-        .orElse(null);
+    return playerRegistry.getPlayerEntryMap().values().stream().filter(pe -> pe.getId() == id)
+        .findFirst().orElse(null);
   }
 
   /**
@@ -210,14 +204,10 @@ public class PlayerService {
     }
 
     if (!join) {
-      Bukkit.broadcastMessage(
+      serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
           serviceContext.getTranslationService().getWithPrefix(
               !isAfk ? MessageKey.COMMAND_AFK_ACTIVATED : MessageKey.COMMAND_AFK_DEACTIVATED,
-              p.getLocale(),
-              p.getCustomName() + "§f",
-              !isAfk ? "§c" : "§a"
-          )
-      );
+              p.getLocale(), p.getCustomName() + "§f", !isAfk ? "§c" : "§a"));
       isAfk = !isAfk; // Invert for single invertion ^_^
     }
 
@@ -275,13 +265,9 @@ public class PlayerService {
     }
 
     if (updatedPlayers != 0) {
-      serviceContext.getChatService().sendMessageInChannel(
-          serviceContext.getTranslationService()
-              .get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers),
-          PLUGIN_NAME_CHAT_CONSOLE,
-          BetterChatFormat.ADMIN_CHANNEL,
-          adminGroup
-      );
+      serviceContext.getChatService().sendMessageInChannel(serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_PLAYERS_SAVED, updatedPlayers), PLUGIN_NAME_CHAT_CONSOLE,
+          BetterChatFormat.ADMIN_CHANNEL, adminGroup);
     }
   }
 
@@ -293,19 +279,16 @@ public class PlayerService {
   public void savePlayersInv(GroupEntry adminGroup) {
     int updatedPlayers = 0;
 
-    for (Player p : Bukkit.getOnlinePlayers()) {
-      updatedPlayers += serviceContext.getWorldGroupService()
-          .saveWorldGroupInventoryForPlayer(p, false) ? 1 : 0;
+    for (Player p : serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getOnlinePlayers()) {
+      updatedPlayers +=
+          serviceContext.getWorldGroupService().saveWorldGroupInventoryForPlayer(p, false) ? 1 : 0;
     }
 
     if (updatedPlayers != 0) {
-      serviceContext.getChatService().sendMessageInChannel(
-          serviceContext.getTranslationService()
+      serviceContext.getChatService().sendMessageInChannel(serviceContext.getTranslationService()
               .get(MessageKey.PLUGIN_PLAYERS_INVENTORY_SAVED, updatedPlayers),
-          PLUGIN_NAME_CHAT_CONSOLE,
-          BetterChatFormat.ADMIN_CHANNEL,
-          adminGroup
-      );
+          PLUGIN_NAME_CHAT_CONSOLE, BetterChatFormat.ADMIN_CHANNEL, adminGroup);
     }
   }
 
@@ -337,8 +320,8 @@ public class PlayerService {
   /**
    * Manually adds a player entry to the registry.
    *
-   * @param uuid         The player's UUID.
-   * @param playerEntry  The player entry to add.
+   * @param uuid        The player's UUID.
+   * @param playerEntry The player entry to add.
    */
   public void putPlayerEntry(UUID uuid, PlayerEntry playerEntry) {
     playerRegistry.putPlayerEntry(uuid, playerEntry);
