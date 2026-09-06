@@ -298,8 +298,8 @@ public class Marry implements CommandConstruct {
   }
 
   /**
-   * Defines the available sub-commands for the broadcast command.
-   * Each entry represents a distinct broadcast mode.
+   * Defines the available sub-commands for the marry command.
+   * Each entry represents a distinct marry mode.
    */
   @Getter
   public enum Commands implements CommandsEnum {

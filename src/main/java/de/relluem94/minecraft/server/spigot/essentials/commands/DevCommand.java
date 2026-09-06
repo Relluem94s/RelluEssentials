@@ -34,6 +34,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command to set sunny weather in a specific world or the player's current world.
+ *
+ * <p>Usage: /sun [world]
+ *
+ * <p>Requires the player to have the "mod" group permission.
+ */
 @CommandName("ZAQmNCRXEdwSGU7DvEcXTbBkp2qEaCSSNkQcMhL3m7KSDtmXWaxtbYCaQCFBR96fj")
 public class DevCommand implements CommandConstruct {
 
@@ -55,7 +62,7 @@ public class DevCommand implements CommandConstruct {
             new AddAutosmeltCommand(context),
             new AddTelekinesisCommand(context),
             new RemoveEnchantsCommand(context),
-            new CloneWorldCommand(),
+            new CloneWorldCommand(context),
             new ToggleDamageInfoCommand(context),
             new ShowPlayerStatsCommand(),
             new PurseTesterCommand(context),
@@ -127,7 +134,10 @@ public class DevCommand implements CommandConstruct {
 
     return tabList;
   }
-
+  /**
+   * Defines the available sub-commands for the dev command.
+   * Each entry represents a distinct dev mode.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
     CUSTOM_MOB("cm"), CLOUD_SAILOR("cs"), PICKAXE("pick"), RELLU("rellu"), SMELT("smelt"), TELE(

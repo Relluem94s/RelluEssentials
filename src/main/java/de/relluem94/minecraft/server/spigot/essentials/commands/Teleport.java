@@ -332,8 +332,8 @@ public class Teleport implements CommandConstruct {
   }
 
   /**
-   * Defines the available sub-commands for the broadcast command.
-   * Each entry represents a distinct broadcast mode.
+   * Defines the available sub-commands for the teleport command.
+   * Each entry represents a distinct teleport mode.
    */
   @Getter
   public enum Commands implements CommandsEnum {
