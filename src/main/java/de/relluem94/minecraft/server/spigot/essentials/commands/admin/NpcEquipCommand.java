@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.admin;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.commands.Admin;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -10,7 +9,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import java.util.Optional;
 import java.util.UUID;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -19,6 +17,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Sub-command that opens an equipment inventory for a specific NPC, allowing administrators to
+ * manage the NPC's equipped items. Changes are persisted and applied to the NPC entity on
+ * inventory close.
+ */
 public class NpcEquipCommand implements SubCommand {
 
   private static final int ARGS_SUBCOMMAND_INDEX = 0;
@@ -30,6 +33,11 @@ public class NpcEquipCommand implements SubCommand {
 
   private final ServiceContext serviceContext;
 
+  /**
+   * Constructs Sub Command.
+   * 
+   * @param context the service context providing access to all required services
+   */
   public NpcEquipCommand(ServiceContext context) {
     this.serviceContext = context;
   }
@@ -65,15 +73,13 @@ public class NpcEquipCommand implements SubCommand {
     }
 
     Npc npc = npcOptional.get();
-    openNPCInventoryForPlayer(player, npc);
+    openNpcInventoryForPlayer(player, npc);
   }
 
-  private void openNPCInventoryForPlayer(Player player, @NonNull Npc npc) {
-    Inventory equipmentInventory = Bukkit.createInventory(
-        null,
-        NPC_EQUIPMENT_INVENTORY_SIZE,
-        NPC_EQUIPMENT_INVENTORY_TITLE_PREFIX + npc.getId()
-    );
+  private void openNpcInventoryForPlayer(Player player, @NonNull Npc npc) {
+    Inventory equipmentInventory = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .createInventory(null, NPC_EQUIPMENT_INVENTORY_SIZE,
+            NPC_EQUIPMENT_INVENTORY_TITLE_PREFIX + npc.getId());
 
     if (npc.getInventory() != null) {
       InventoryHelper.loadInventoryFromJSON(equipmentInventory, npc.getInventory());
@@ -109,13 +115,13 @@ public class NpcEquipCommand implements SubCommand {
         }
       }
     };
-    Bukkit.getPluginManager().registerEvents(closeListener, RelluEssentials.getInstance());
+    serviceContext.getPluginManagerService().registerEvents(closeListener);
   }
 
   @Override
   public boolean matches(String @NonNull [] args) {
-    return args.length >= 2
-        && Admin.Commands.NPC.getName().equalsIgnoreCase(args[ARGS_SUBCOMMAND_INDEX])
-        && "equip".equalsIgnoreCase(args[ARGS_ACTION_INDEX]);
+    return args.length >= 2 && Admin.Commands.NPC.getName()
+        .equalsIgnoreCase(args[ARGS_SUBCOMMAND_INDEX]) && "equip".equalsIgnoreCase(
+        args[ARGS_ACTION_INDEX]);
   }
 }
