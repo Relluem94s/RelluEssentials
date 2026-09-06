@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -54,15 +53,15 @@ public class ConfigMigrationService {
     for (String uuid : Objects.requireNonNull(cs).getKeys(false)) {
       ConfigurationSection player = cs.getConfigurationSection(uuid);
 
-      String groupName = Objects.requireNonNull(Objects.requireNonNull(player)
-          .getString("group")).toLowerCase();
+      String groupName = Objects.requireNonNull(Objects.requireNonNull(player).getString("group"))
+          .toLowerCase();
       boolean fly = player.getBoolean("fly");
       boolean afk = player.getBoolean("afk");
       String customname = player.getString("customname");
 
       consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Found Player: " + uuid + " customname:" + customname + " afk:" + afk
-              + " fly:" + fly + " group:" + groupName);
+          "Found Player: " + uuid + " customname:" + customname + " afk:" + afk + " fly:" + fly
+              + " group:" + groupName);
 
       PlayerEntry p = new PlayerEntry();
       p.setGroup(serviceContext.getGroupService().resolveGroupWithFallback(groupName));
@@ -78,7 +77,8 @@ public class ConfigMigrationService {
   }
 
   /**
-   * Retrieves the list of homes for a specific player from the specified legacy configuration file.
+   * Retrieves the list of homes for a specific player from the specified legacy configuration
+   * file.
    *
    * @param name The name of the configuration file.
    * @param p    The player whose homes are being retrieved.
@@ -100,7 +100,9 @@ public class ConfigMigrationService {
       }
 
       String worldName = homeSection.getString("world");
-      World world = worldName != null ? Bukkit.getServer().getWorld(worldName) : null;
+      World world =
+          worldName != null ? serviceContext.getPluginMetadataService().getPlugin().getServer()
+              .getWorld(worldName) : null;
 
       if (world == null) {
         continue;
@@ -113,8 +115,8 @@ public class ConfigMigrationService {
       float pitch = (float) homeSection.getDouble("pitch");
 
       consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Found Home: " + homeName + " x:" + x + " y:" + y + " z:" + z
-              + " yaw:" + yaw + " pitch:" + pitch + " world:" + world);
+          "Found Home: " + homeName + " x:" + x + " y:" + y + " z:" + z + " yaw:" + yaw + " pitch:"
+              + pitch + " world:" + world);
 
       LocationEntry locationEntry = new LocationEntry();
       locationEntry.setLocation(new Location(world, x, y, z, yaw, pitch));
