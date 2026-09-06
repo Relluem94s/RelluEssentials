@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.registration;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +36,7 @@ public class ListenerWrapper {
       return;
     }
     construct.injectContext(serviceContext);
-    Bukkit.getServer().getPluginManager().registerEvents(construct, javaPlugin);
+    javaPlugin.getServer().getPluginManager().registerEvents(construct, javaPlugin);
     initialised = true;
   }
 }
