@@ -15,7 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -116,7 +115,8 @@ public class ChatService {
   public void sendMessageInChannel(String message, String senderName, String channel,
       GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
-    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+    for (Player onlinePlayer : serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getOnlinePlayers()) {
       if (serviceContext.getGroupService().isSenderAuthorized(onlinePlayer, group.getName())) {
         sendMessage(onlinePlayer,
             senderName + group.getPrefix() + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE
