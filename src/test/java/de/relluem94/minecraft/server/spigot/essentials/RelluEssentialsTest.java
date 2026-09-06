@@ -285,4 +285,120 @@ class RelluEssentialsTest {
           spyPlugin.getServiceContext().getTranslationService()));
     }
   }
+
+
+  @Test
+  void onEnableShouldScheduleNpcSpawn() {
+    FileConfiguration configuration = Mockito.mock(FileConfiguration.class);
+    Mockito.when(configuration.getString("database.host")).thenReturn("localhost");
+    Mockito.when(configuration.getString("database.user")).thenReturn("test");
+    Mockito.when(configuration.getString("database.password")).thenReturn("test");
+    Mockito.when(configuration.getInt("database.port")).thenReturn(3306);
+
+    RelluEssentials spyPlugin = Mockito.spy(plugin);
+    Mockito.doReturn(configuration).when(spyPlugin).getConfig();
+
+    Server server = Mockito.mock(Server.class);
+    org.bukkit.scoreboard.ScoreboardManager scoreboardManager = Mockito.mock(
+        org.bukkit.scoreboard.ScoreboardManager.class);
+    Mockito.when(server.getScoreboardManager()).thenReturn(scoreboardManager);
+
+    de.relluem94.minecraft.server.spigot.essentials.services.NpcService npcService =
+        Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.NpcService.class);
+
+    de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService schedulerService =
+        Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService.class);
+
+    Mockito.doAnswer(invocation -> {
+      Runnable task = invocation.getArgument(0);
+      task.run();
+      return null;
+    }).when(schedulerService).runTaskLater(Mockito.any(), Mockito.eq(20L));
+
+    try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(
+        Bukkit.class); MockedStatic<RelluEssentialsRegistry> _ = Mockito.mockStatic(
+        RelluEssentialsRegistry.class); MockedConstruction<ServiceContext> _ = Mockito.mockConstruction(
+        ServiceContext.class, (mock, _) -> {
+          Mockito.when(mock.getTranslationService()).thenReturn(Mockito.mock(
+              de.relluem94.minecraft.server.spigot.essentials.services.TranslationService.class,
+              Mockito.RETURNS_DEEP_STUBS));
+          Mockito.when(mock.getSchedulerService()).thenReturn(schedulerService);
+          Mockito.when(mock.getNpcService()).thenReturn(npcService);
+        }); MockedConstruction<PersistenceContext> _ = Mockito.mockConstruction(
+        PersistenceContext.class); MockedConstruction<ServiceManager> _ = Mockito.mockConstruction(
+        ServiceManager.class); MockedConstruction<ConfigManager> _ = Mockito.mockConstruction(
+        ConfigManager.class); MockedConstruction<EnchantmentManager> _ = Mockito.mockConstruction(
+        EnchantmentManager.class); MockedConstruction<ItemManager> _ = Mockito.mockConstruction(
+        ItemManager.class); MockedConstruction<DatabaseManager> _ = Mockito.mockConstruction(
+        DatabaseManager.class); MockedConstruction<CommandManager> _ = Mockito.mockConstruction(
+        CommandManager.class); MockedConstruction<SignManager> _ = Mockito.mockConstruction(
+        SignManager.class); MockedConstruction<SkillManager> _ = Mockito.mockConstruction(
+        SkillManager.class); MockedConstruction<RecipeManager> _ = Mockito.mockConstruction(
+        RecipeManager.class); MockedConstruction<BankManager> _ = Mockito.mockConstruction(
+        BankManager.class); MockedConstruction<ListenerManager> _ = Mockito.mockConstruction(
+        ListenerManager.class); MockedConstruction<AutoSaveManager> _ = Mockito.mockConstruction(
+        AutoSaveManager.class); MockedConstruction<ScoreBoardManager> _ = Mockito.mockConstruction(
+        ScoreBoardManager.class); MockedConstruction<WorldManager> _ = Mockito.mockConstruction(
+        WorldManager.class)) {
+      bukkit.when(Bukkit::getServer).thenReturn(server);
+
+      spyPlugin.onEnable();
+
+      Mockito.verify(schedulerService).runTaskLater(Mockito.any(), Mockito.eq(20L));
+      Mockito.verify(npcService).loadAndSpawnNpcsInLoadedChunks();
+    }
+  }
+
+  @Test
+  void onDisableShouldSkipNpcDespawnWhenNpcServiceIsNull() {
+    ServiceContext serviceContext = Mockito.mock(ServiceContext.class);
+    Mockito.when(serviceContext.getTranslationService()).thenReturn(
+        Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.TranslationService.class,
+            Mockito.RETURNS_DEEP_STUBS));
+    Mockito.when(serviceContext.getNpcService()).thenReturn(null);
+
+    PersistenceContext persistenceContext = Mockito.mock(PersistenceContext.class);
+
+    RelluEssentials spyPlugin = Mockito.spy(plugin);
+    Mockito.doReturn(serviceContext).when(spyPlugin).getServiceContext();
+    Mockito.doReturn(persistenceContext).when(spyPlugin).getPersistenceContext();
+
+    org.bukkit.command.ConsoleCommandSender consoleSender = Mockito.mock(
+        org.bukkit.command.ConsoleCommandSender.class);
+    Server server = spyPlugin.getServer();
+    Mockito.when(server.getConsoleSender()).thenReturn(consoleSender);
+
+    try (MockedConstruction<SudoManager> _ = Mockito.mockConstruction(
+        SudoManager.class); MockedConstruction<AutoSaveManager> _ = Mockito.mockConstruction(
+        AutoSaveManager.class); MockedConstruction<WorldManager> _ = Mockito.mockConstruction(
+        WorldManager.class); MockedConstruction<ConfigManager> _ = Mockito.mockConstruction(
+        ConfigManager.class)) {
+      AutoSaveManager autoSave = Mockito.mock(AutoSaveManager.class);
+      WorldManager world = Mockito.mock(WorldManager.class);
+      ConfigManager config = Mockito.mock(ConfigManager.class);
+
+      java.lang.reflect.Field autoSaveField = RelluEssentials.class.getDeclaredField("autoSaveManager");
+      autoSaveField.setAccessible(true);
+      autoSaveField.set(spyPlugin, autoSave);
+
+      java.lang.reflect.Field worldField = RelluEssentials.class.getDeclaredField("worldManager");
+      worldField.setAccessible(true);
+      worldField.set(spyPlugin, world);
+
+      java.lang.reflect.Field configField = RelluEssentials.class.getDeclaredField("configManager");
+      configField.setAccessible(true);
+      configField.set(spyPlugin, config);
+
+      spyPlugin.onDisable();
+
+      Mockito.verify(serviceContext).getNpcService();
+      Mockito.verify(serviceContext).getTranslationService();
+      Mockito.verifyNoMoreInteractions(serviceContext);
+      Mockito.verify(autoSave).disable(spyPlugin);
+      Mockito.verify(world).disable(spyPlugin);
+      Mockito.verify(config).disable(spyPlugin);
+    } catch (NoSuchFieldException | IllegalAccessException exception) {
+      throw new AssertionError(exception);
+    }
+  }
 }

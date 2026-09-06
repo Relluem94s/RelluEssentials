@@ -274,7 +274,7 @@ class PurseTest {
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
     when(targetPlayer.getName()).thenReturn("targetName");
-    doReturn(List.of(targetPlayer)).when(server.getOnlinePlayers());
+    doReturn(List.of(targetPlayer)).when(server).getOnlinePlayers();
 
     List<String> result = purse.onTabComplete(commandSender, command, "purse", new String[]{"t"});
 
