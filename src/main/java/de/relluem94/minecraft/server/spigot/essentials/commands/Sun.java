@@ -11,7 +11,6 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,6 +18,13 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Command to set sunny weather in a specific world or the player's current world.
+ *
+ * <p>Usage: /sun [world]
+ *
+ * <p>Requires the player to have the "mod" group permission.
+ */
 @CommandName("sun")
 public class Sun implements CommandConstruct {
 
@@ -50,13 +56,13 @@ public class Sun implements CommandConstruct {
       p.getWorld().setStorm(false);
       p.getWorld().setThundering(false);
       p.getWorld().setWeatherDuration(1000000);
-      p.sendMessage(
-          serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, p.getWorld().getName()));
+      p.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, p.getWorld().getName()));
       return true;
     }
 
-    World world = Bukkit.getWorld(args[0]);
+    World world = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getWorld(args[0]);
 
     if (world == null) {
       p.sendMessage(serviceContext.getTranslationService()
@@ -67,9 +73,8 @@ public class Sun implements CommandConstruct {
     world.setStorm(false);
     world.setThundering(false);
     world.setWeatherDuration(1000000);
-    p.sendMessage(
-        serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, world.getName()));
+    p.sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, world.getName()));
     return true;
   }
 
