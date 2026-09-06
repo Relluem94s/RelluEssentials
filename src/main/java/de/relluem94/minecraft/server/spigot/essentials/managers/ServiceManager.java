@@ -46,6 +46,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BlockDropService
 import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
+import de.relluem94.minecraft.server.spigot.essentials.services.CoinItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.DeathChestService;
 import de.relluem94.minecraft.server.spigot.essentials.services.EnchantmentService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
@@ -171,6 +172,8 @@ public class ServiceManager implements Enable {
     ChatService chatService = new ChatService(serviceContext, replyRegistry);
     serviceContext.setChatService(chatService);
 
+    CoinItemService coinItemService = new CoinItemService(serviceContext);
+    serviceContext.setCoinItemService(coinItemService);
     BankTierRegistry bankTierRegistry = new BankTierRegistry(
         persistenceContext.getBankDao().findAllBankTiers());
     BankRepository bankRepository = new BankRepository(persistenceContext.getBankDao());

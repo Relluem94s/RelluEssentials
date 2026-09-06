@@ -1,18 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_COINS;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.CoinHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
-import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.List;
 import lombok.NonNull;
@@ -26,6 +22,8 @@ import org.jetbrains.annotations.Nullable;
  * Handles the /purse command for managing player coin purses. Allows players to check their own
  * balance or withdraw coins as physical items. Moderators can additionally inspect the balance of
  * other online players.
+ *
+ * @author rellu
  */
 @CommandName("purse")
 public class Purse implements CommandConstruct {
@@ -112,11 +110,7 @@ public class Purse implements CommandConstruct {
       pe.setHasToBeUpdated(true);
       pe.setUpdatedBy(pe.getId());
 
-      CustomItem coinItem = serviceContext.getItemService().find(
-          new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
-              PLUGIN_ITEM_NAMESPACE_COINS)).orElseThrow();
-
-      p.getInventory().addItem(CoinHelper.buildCoinItem(coins, coinItem));
+      p.getInventory().addItem(serviceContext.getCoinItemService().getCoin(coins));
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_PURSE_TO_ITEM, StringHelper.formatInt(coins)));
     } else {
