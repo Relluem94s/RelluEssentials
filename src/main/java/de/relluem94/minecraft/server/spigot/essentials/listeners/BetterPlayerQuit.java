@@ -9,15 +9,14 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstr
 import de.relluem94.minecraft.server.spigot.essentials.managers.ScoreBoardManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import java.util.Objects;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Listener responsible for handling player disconnection logic,
- * including cleaning up player data, sudo status, and broadcasting quit messages.
+ * Listener responsible for handling player disconnection logic, including cleaning up player data,
+ * sudo status, and broadcasting quit messages.
  */
 @ListenerName("BetterPlayerQuit")
 public class BetterPlayerQuit implements ListenerConstruct {
@@ -40,7 +39,9 @@ public class BetterPlayerQuit implements ListenerConstruct {
     Player p = event.getPlayer();
 
     if (SudoManager.sudoers.containsKey(p.getUniqueId())) {
-      Sudo.exitSudo(Objects.requireNonNull(Bukkit.getPlayer(p.getUniqueId())), serviceContext);
+      Sudo.exitSudo(Objects.requireNonNull(
+          serviceContext.getPluginMetadataService().getPlugin().getServer()
+              .getPlayer(p.getUniqueId())), serviceContext);
     }
 
     serviceContext.getPlayerService().savePlayer(p);
