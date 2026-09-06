@@ -303,8 +303,17 @@ class RelluEssentialsTest {
         org.bukkit.scoreboard.ScoreboardManager.class);
     Mockito.when(server.getScoreboardManager()).thenReturn(scoreboardManager);
 
+    de.relluem94.minecraft.server.spigot.essentials.services.NpcService npcService =
+        Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.NpcService.class);
+
     de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService schedulerService =
         Mockito.mock(de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService.class);
+
+    Mockito.doAnswer(invocation -> {
+      Runnable task = invocation.getArgument(0);
+      task.run();
+      return null;
+    }).when(schedulerService).runTaskLater(Mockito.any(), Mockito.eq(20L));
 
     try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(
         Bukkit.class); MockedStatic<RelluEssentialsRegistry> _ = Mockito.mockStatic(
@@ -314,8 +323,7 @@ class RelluEssentialsTest {
               de.relluem94.minecraft.server.spigot.essentials.services.TranslationService.class,
               Mockito.RETURNS_DEEP_STUBS));
           Mockito.when(mock.getSchedulerService()).thenReturn(schedulerService);
-          Mockito.when(mock.getNpcService()).thenReturn(Mockito.mock(
-              de.relluem94.minecraft.server.spigot.essentials.services.NpcService.class));
+          Mockito.when(mock.getNpcService()).thenReturn(npcService);
         }); MockedConstruction<PersistenceContext> _ = Mockito.mockConstruction(
         PersistenceContext.class); MockedConstruction<ServiceManager> _ = Mockito.mockConstruction(
         ServiceManager.class); MockedConstruction<ConfigManager> _ = Mockito.mockConstruction(
@@ -337,6 +345,7 @@ class RelluEssentialsTest {
       spyPlugin.onEnable();
 
       Mockito.verify(schedulerService).runTaskLater(Mockito.any(), Mockito.eq(20L));
+      Mockito.verify(npcService).loadAndSpawnNpcsInLoadedChunks();
     }
   }
 
@@ -392,24 +401,4 @@ class RelluEssentialsTest {
       throw new AssertionError(exception);
     }
   }
-
-  @Test
-  void defaultConstructorShouldNotSetUnitTestFlag() throws Exception {
-    Field isUnitTestField = RelluEssentials.class.getDeclaredField("isUnitTest");
-    isUnitTestField.setAccessible(true);
-
-    boolean valueOnProtectedConstructorInstance = (boolean) isUnitTestField.get(plugin);
-
-    assertTrue(valueOnProtectedConstructorInstance);
-
-    RelluEssentials freshInstance = Mockito.mock(RelluEssentials.class);
-    Mockito.when(freshInstance.isUnitTest()).thenCallRealMethod();
-
-    Field freshField = RelluEssentials.class.getDeclaredField("isUnitTest");
-    freshField.setAccessible(true);
-    freshField.set(freshInstance, false);
-
-    assertTrue(!freshInstance.isUnitTest());
-  }
-
 }

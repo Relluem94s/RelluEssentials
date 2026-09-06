@@ -56,14 +56,6 @@ public class RelluEssentials extends JavaPlugin {
   private WorldManager worldManager;
 
   /**
-   * Default constructor for the RelluEssentials plugin. Used by the Spigot server to instantiate
-   * the plugin.
-   */
-  public RelluEssentials() {
-    super();
-  }
-
-  /**
    * Constructor for unit testing purposes. Allows injecting a custom loader, description, data
    * folder, and file without requiring a running Spigot server.
    *
