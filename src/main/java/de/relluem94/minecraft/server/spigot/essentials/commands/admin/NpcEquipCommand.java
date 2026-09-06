@@ -35,7 +35,7 @@ public class NpcEquipCommand implements SubCommand {
 
   /**
    * Constructs Sub Command.
-   * 
+   *
    * @param context the service context providing access to all required services
    */
   public NpcEquipCommand(ServiceContext context) {
