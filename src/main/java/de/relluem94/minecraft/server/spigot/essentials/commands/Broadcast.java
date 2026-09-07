@@ -16,12 +16,12 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation for broadcasting messages to all online players. Supports two broadcast
@@ -66,9 +66,7 @@ public class Broadcast implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
-
-    return tabList;
+    return TabCompleterHelper.getCommands(Commands.values());
   }
 
   /**
@@ -124,13 +122,12 @@ public class Broadcast implements CommandConstruct {
     message = replaceSymbols(replaceColor(message));
 
     if (chat) {
-      serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
+      serviceContext.getServerService().broadcastMessage(
           PLUGIN_NAME_BROADCAST + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + message);
       return;
     }
 
-    for (Player op : serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getOnlinePlayers()) {
+    for (Player op : serviceContext.getServerService().getOnlinePlayers()) {
       op.sendTitle(PLUGIN_NAME_BROADCAST, message, 5, 80, 5);
     }
   }
