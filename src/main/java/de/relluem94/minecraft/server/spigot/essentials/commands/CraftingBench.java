@@ -3,13 +3,13 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,6 +17,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command that opens a virtual crafting bench inventory for authorized players.
@@ -53,8 +54,8 @@ public class CraftingBench implements CommandConstruct {
       return true;
     }
 
-    Inventory workbench = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .createInventory(null, InventoryType.WORKBENCH,
+    Inventory workbench = serviceContext.getServerService()
+        .createInventory(null, getWorkbenchInventoryType(),
             serviceContext.getTranslationService().get(MessageKey.COMMAND_CRAFTINGBENCH_TITLE));
     p.openInventory(workbench);
     p.sendMessage(serviceContext.getTranslationService()
@@ -66,5 +67,10 @@ public class CraftingBench implements CommandConstruct {
   public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     return new ArrayList<>();
+  }
+
+  @Generated
+  protected InventoryType getWorkbenchInventoryType() {
+    return InventoryType.WORKBENCH;
   }
 }
