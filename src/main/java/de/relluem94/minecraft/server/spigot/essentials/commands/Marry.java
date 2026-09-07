@@ -17,13 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation for the marry system, allowing players to send marriage requests, accept

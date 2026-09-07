@@ -34,12 +34,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 @CommandName("admin")
 public class Admin implements CommandConstruct {

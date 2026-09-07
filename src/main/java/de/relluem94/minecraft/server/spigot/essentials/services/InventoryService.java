@@ -7,9 +7,9 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.model.Register
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Unmodifiable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Service responsible for managing and accessing registered inventories via an internal registry.
