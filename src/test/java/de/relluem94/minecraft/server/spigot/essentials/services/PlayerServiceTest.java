@@ -30,9 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,13 +62,7 @@ class PlayerServiceTest {
   private WorldGroupService worldGroupService;
 
   @Mock
-  private PluginMetadataService pluginMetadataService;
-
-  @Mock
-  private Plugin plugin;
-
-  @Mock
-  private Server server;
+  private ServerService serverService;
 
   private PlayerService playerService;
 
@@ -80,9 +72,7 @@ class PlayerServiceTest {
   }
 
   private void setupServerChain() {
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
   }
 
   @Test
@@ -104,7 +94,7 @@ class PlayerServiceTest {
     Collection<Player> onlinePlayers = List.of(onlinePlayer);
 
     setupServerChain();
-    doReturn(onlinePlayers).when(server).getOnlinePlayers();
+    doReturn(onlinePlayers).when(serverService).getOnlinePlayers();
 
 
     playerService.initialize();
@@ -119,7 +109,7 @@ class PlayerServiceTest {
     when(playerRepository.findAll()).thenReturn(List.of());
 
     setupServerChain();
-    when(server.getOnlinePlayers()).thenReturn(List.of());
+    when(serverService.getOnlinePlayers()).thenReturn(List.of());
 
     playerService.initialize();
 
@@ -271,7 +261,7 @@ class PlayerServiceTest {
     when(playerEntry.getId()).thenReturn(1);
 
     setupServerChain();
-    when(server.getPlayer(uuid)).thenReturn(onlinePlayer);
+    when(serverService.getPlayer(uuid)).thenReturn(onlinePlayer);
     when(playerRegistry.getPlayerEntry(onlinePlayer.getUniqueId())).thenReturn(playerEntry);
 
     playerService.updateGroup(offlinePlayer, groupEntry);
@@ -372,11 +362,11 @@ class PlayerServiceTest {
     when(translationService.getWithPrefix(any(), anyString(), anyString(), anyString())).thenReturn("AFK message");
 
     setupServerChain();
-    when(server.broadcastMessage("AFK message")).thenReturn(0);
+    when(serverService.broadcastMessage("AFK message")).thenReturn(0);
 
     playerService.setAfk(player, false);
 
-    verify(server).broadcastMessage("AFK message");
+    verify(serverService).broadcastMessage("AFK message");
 
     assertAll(
         () -> verify(playerEntry).setAfk(true),
@@ -522,7 +512,7 @@ class PlayerServiceTest {
     when(serviceContext.getChatService()).thenReturn(chatService);
 
     setupServerChain();
-    doReturn(List.of(player)).when(server).getOnlinePlayers();
+    doReturn(List.of(player)).when(serverService).getOnlinePlayers();
 
 
     playerService.savePlayersInv(adminGroup);
@@ -712,11 +702,11 @@ class PlayerServiceTest {
     ).thenReturn("AFK deactivated message");
 
     setupServerChain();
-    when(server.broadcastMessage("AFK deactivated message")).thenReturn(0);
+    when(serverService.broadcastMessage("AFK deactivated message")).thenReturn(0);
 
     playerService.setAfk(player, false);
 
-    verify(server).broadcastMessage("AFK deactivated message");
+    verify(serverService).broadcastMessage("AFK deactivated message");
 
     verify(playerEntry, never()).setAfk(any(Boolean.class));
     verify(playerEntry, never()).setHasToBeUpdated(any(Boolean.class));
@@ -740,11 +730,11 @@ class PlayerServiceTest {
     ).thenReturn("AFK activated message");
 
     setupServerChain();
-    when(server.broadcastMessage("AFK activated message")).thenReturn(0);
+    when(serverService.broadcastMessage("AFK activated message")).thenReturn(0);
 
     playerService.setAfk(player, false);
 
-    verify(server).broadcastMessage("AFK activated message");
+    verify(serverService).broadcastMessage("AFK activated message");
 
     verify(playerEntry, never()).setAfk(any(Boolean.class));
     verify(playerEntry, never()).setHasToBeUpdated(any(Boolean.class));
@@ -769,11 +759,11 @@ class PlayerServiceTest {
     ).thenReturn("AFK deactivated message");
 
     setupServerChain();
-    when(server.broadcastMessage("AFK deactivated message")).thenReturn(0);
+    when(serverService.broadcastMessage("AFK deactivated message")).thenReturn(0);
 
     playerService.setAfk(player, false);
 
-    verify(server).broadcastMessage("AFK deactivated message");
+    verify(serverService).broadcastMessage("AFK deactivated message");
 
     assertAll(
         () -> verify(playerEntry).setAfk(false),
@@ -798,7 +788,7 @@ class PlayerServiceTest {
     when(translationService.getWithPrefix(any(), anyString(), anyString(), anyString())).thenReturn("AFK message");
 
     setupServerChain();
-    when(server.broadcastMessage("AFK message")).thenReturn(0);
+    when(serverService.broadcastMessage("AFK message")).thenReturn(0);
 
     playerService.setAfk(player, false);
 
@@ -836,7 +826,7 @@ class PlayerServiceTest {
     when(worldGroupService.saveWorldGroupInventoryForPlayer(player, false)).thenReturn(false);
 
     setupServerChain();
-    doReturn(List.of(player)).when(server).getOnlinePlayers();
+    doReturn(List.of(player)).when(serverService).getOnlinePlayers();
 
 
     playerService.savePlayersInv(adminGroup);
@@ -857,7 +847,7 @@ class PlayerServiceTest {
     when(playerEntry.getId()).thenReturn(1);
 
     setupServerChain();
-    when(server.getPlayer(uuid)).thenReturn(null);
+    when(serverService.getPlayer(uuid)).thenReturn(null);
 
     playerService.updateGroup(offlinePlayer, groupEntry);
 
