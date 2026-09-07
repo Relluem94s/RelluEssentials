@@ -30,7 +30,7 @@ public class InventoryService {
    * @return The created {@link RegisteredInventory}.
    */
   public @NonNull RegisteredInventory create(@NonNull Plugin plugin, @NonNull String inventoryId,
-      @NonNull String title, int size, @NonNull CustomItem.Type itemFilter) {
+      @NonNull String title, int size, CustomItem.@NonNull Type itemFilter) {
     RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey(plugin.getName(),
         inventoryId);
     return create(key, title, size, itemFilter);
@@ -46,7 +46,7 @@ public class InventoryService {
    * @return The created {@link RegisteredInventory}.
    */
   public @NonNull RegisteredInventory create(@NonNull RelluEssentialsNamespacedKey key,
-      @NonNull String title, int size, @NonNull CustomItem.Type itemFilter) {
+      @NonNull String title, int size, CustomItem.@NonNull Type itemFilter) {
     return registry.register(key, title, size, itemFilter);
   }
 

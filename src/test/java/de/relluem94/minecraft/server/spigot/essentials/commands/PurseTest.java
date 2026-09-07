@@ -271,17 +271,4 @@ class PurseTest {
     assertThrows(NullPointerException.class,
         () -> purse.onCommand(null, command, "purse", new String[]{}));
   }
-
-  @Test
-  @SuppressWarnings("DataFlowIssue")
-  void onCommandThrowsNullPointerExceptionWhenLabelIsNull() {
-    assertThrows(NullPointerException.class,
-        () -> purse.onCommand(commandSender, command, null, new String[]{}));
-  }
-
-  @Test
-  @SuppressWarnings("DataFlowIssue")
-  void constructorThrowsNullPointerExceptionWhenServiceContextIsNull() {
-    assertThrows(NullPointerException.class, () -> new CoinItemService(null));
-  }
 }

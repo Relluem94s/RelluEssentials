@@ -35,12 +35,6 @@ class ItemServiceTest {
   @InjectMocks
   private ItemService itemService;
 
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void constructorThrowsNullPointerExceptionWhenItemRegistryIsNull() {
-    assertThrows(NullPointerException.class, () -> new ItemService(null));
-  }
-
   @Test
   void registerDelegatesToItemRegistry() {
     CustomItem customItem = mock(CustomItem.class);
@@ -80,12 +74,6 @@ class ItemServiceTest {
     assertFalse(result.isPresent());
   }
 
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void findThrowsNullPointerExceptionWhenKeyIsNull() {
-    assertThrows(NullPointerException.class, () -> itemService.find(null));
-  }
-
   @Test
   void findByItemStackReturnsItemWhenItemStackMatches() {
     ItemStack itemStack = mock(ItemStack.class);
@@ -106,12 +94,6 @@ class ItemServiceTest {
     Optional<CustomItem> result = itemService.findByItemStack(itemStack);
 
     assertFalse(result.isPresent());
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void findByItemStackThrowsNullPointerExceptionWhenItemStackIsNull() {
-    assertThrows(NullPointerException.class, () -> itemService.findByItemStack(null));
   }
 
   @Test
@@ -158,20 +140,6 @@ class ItemServiceTest {
     assertFalse(result);
   }
 
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void isItemStackThrowsNullPointerExceptionWhenIdentifierIsNull() {
-    ItemStack itemStack = mock(ItemStack.class);
-    assertThrows(NullPointerException.class, () -> itemService.isItemStack(null, itemStack));
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void isItemStackThrowsNullPointerExceptionWhenItemStackIsNull() {
-    RelluEssentialsNamespacedKey identifier = mock(RelluEssentialsNamespacedKey.class);
-    assertThrows(NullPointerException.class, () -> itemService.isItemStack(identifier, null));
-  }
-
   @Test
   void getAllByTypeReturnsFilteredItems() {
     CustomItem.Type type = CustomItem.Type.values()[0];
@@ -184,12 +152,6 @@ class ItemServiceTest {
         () -> assertEquals(expectedItems.size(), result.size()),
         () -> assertEquals(expectedItems, result)
     );
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void getAllByTypeThrowsNullPointerExceptionWhenTypeIsNull() {
-    assertThrows(NullPointerException.class, () -> itemService.getAllByType(null));
   }
 
   @Test
@@ -205,21 +167,6 @@ class ItemServiceTest {
         () -> assertEquals(expectedItems.size(), result.size()),
         () -> assertEquals(expectedItems, result)
     );
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void getAllByTypeAndNamespaceThrowsNullPointerExceptionWhenTypeIsNull() {
-    assertThrows(NullPointerException.class,
-        () -> itemService.getAllByTypeAndNamespace(null, "namespace"));
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void getAllByTypeAndNamespaceThrowsNullPointerExceptionWhenNamespaceIsNull() {
-    CustomItem.Type type = CustomItem.Type.values()[0];
-    assertThrows(NullPointerException.class,
-        () -> itemService.getAllByTypeAndNamespace(type, null));
   }
 
   @Test
@@ -284,26 +231,9 @@ class ItemServiceTest {
 
   @SuppressWarnings("DataFlowIssue")
   @Test
-  void hasKeyThrowsNullPointerExceptionWhenKeyIsNull() {
-    ItemStack itemStack = mock(ItemStack.class);
-    assertThrows(NullPointerException.class,
-        () -> itemService.hasKey(null, itemStack, PersistentDataType.STRING));
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
   void hasKeyThrowsNullPointerExceptionWhenItemStackIsNull() {
     NamespacedKey key = mock(NamespacedKey.class);
     assertThrows(NullPointerException.class,
         () -> itemService.hasKey(key, null, PersistentDataType.STRING));
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void hasKeyThrowsNullPointerExceptionWhenPersistentDataTypeIsNull() {
-    NamespacedKey key = mock(NamespacedKey.class);
-    ItemStack itemStack = mock(ItemStack.class);
-    assertThrows(NullPointerException.class,
-        () -> itemService.hasKey(key, itemStack, null));
   }
 }

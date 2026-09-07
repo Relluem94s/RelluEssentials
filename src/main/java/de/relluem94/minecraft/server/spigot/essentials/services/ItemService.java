@@ -78,7 +78,7 @@ public class ItemService {
    * @param type the type to filter by
    * @return a list of items matching the type
    */
-  public List<CustomItem> getAllByType(@NonNull CustomItem.Type type) {
+  public List<CustomItem> getAllByType(CustomItem.@NonNull Type type) {
     return itemRegistry.getAllByType(type);
   }
 
@@ -89,7 +89,7 @@ public class ItemService {
    * @param namespace the namespace to filter by
    * @return a list of items matching the type and namespace
    */
-  public List<CustomItem> getAllByTypeAndNamespace(@NonNull CustomItem.Type type,
+  public List<CustomItem> getAllByTypeAndNamespace(CustomItem.@NonNull Type type,
       @NonNull String namespace) {
     return itemRegistry.getAllByTypeAndNamespace(type, namespace);
   }
