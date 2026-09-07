@@ -80,8 +80,7 @@ public class Purse implements CommandConstruct {
       return true;
     }
 
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(args[0]);
+    Player target = serviceContext.getServerService().getPlayer(args[0]);
     if (target != null) {
       if (serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
         PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(target);
@@ -151,7 +150,7 @@ public class Purse implements CommandConstruct {
       return List.of();
     }
 
-    return serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers()
+    return serviceContext.getServerService().getOnlinePlayers()
         .stream().map(Player::getName).toList();
   }
 }

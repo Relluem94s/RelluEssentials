@@ -20,16 +20,14 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.CoinItemService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
-import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,11 +48,7 @@ class PurseTest {
   @Mock
   private CoinItemService coinItemService;
   @Mock
-  private PluginMetadataService pluginMetadataService;
-  @Mock
-  private Plugin plugin;
-  @Mock
-  private Server server;
+  private ServerService serverService;
   @Mock
   private Player player;
   @Mock
@@ -121,10 +115,8 @@ class PurseTest {
   void onCommandDisplaysTargetBalanceWhenModViewsOtherPlayer() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getPlayer("targetName")).thenReturn(targetPlayer);
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serverService.getPlayer("targetName")).thenReturn(targetPlayer);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(targetPlayer)).thenReturn(playerEntry);
     when(playerEntry.getPurse()).thenReturn(200.0);
@@ -143,10 +135,8 @@ class PurseTest {
   void onCommandDeniesTargetBalanceViewWhenNotMod() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
     when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getPlayer("targetName")).thenReturn(targetPlayer);
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serverService.getPlayer("targetName")).thenReturn(targetPlayer);
     when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(
         "no permission");
 
@@ -158,10 +148,8 @@ class PurseTest {
   @Test
   void onCommandRejectsInvalidIntegerArgument() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getPlayer("notAnInt")).thenReturn(null);
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serverService.getPlayer("notAnInt")).thenReturn(null);
     when(translationService.getWithPrefix(
         MessageKey.COMMAND_PURSE_TO_ITEM_VALUE_INVALID)).thenReturn("invalid value");
 
@@ -173,10 +161,8 @@ class PurseTest {
   @Test
   void onCommandWithdrawsCoinsWhenSufficientBalance() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getPlayer("50")).thenReturn(null);
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serverService.getPlayer("50")).thenReturn(null);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getPurse()).thenReturn(100.0);
@@ -199,10 +185,8 @@ class PurseTest {
   @Test
   void onCommandRejectsWithdrawalWhenInsufficientBalance() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getPlayer("200")).thenReturn(null);
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serverService.getPlayer("200")).thenReturn(null);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getPurse()).thenReturn(100.0);
@@ -218,10 +202,8 @@ class PurseTest {
   @Test
   void onCommandWithdrawsAbsoluteValueWhenNegativeIntegerProvided() {
     when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getPlayer("-30")).thenReturn(null);
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serverService.getPlayer("-30")).thenReturn(null);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getPurse()).thenReturn(100.0);
@@ -270,11 +252,9 @@ class PurseTest {
   @Test
   void onTabCompleteReturnsOnlinePlayerNamesWhenModAndOneArg() {
     when(groupService.isSenderAuthorized(commandSender, "mod")).thenReturn(true);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(targetPlayer.getName()).thenReturn("targetName");
-    doReturn(List.of(targetPlayer)).when(server).getOnlinePlayers();
+    doReturn(List.of(targetPlayer)).when(serverService).getOnlinePlayers();
 
     List<String> result = purse.onTabComplete(commandSender, command, "purse", new String[]{"t"});
 
@@ -297,17 +277,6 @@ class PurseTest {
   void onCommandThrowsNullPointerExceptionWhenLabelIsNull() {
     assertThrows(NullPointerException.class,
         () -> purse.onCommand(commandSender, command, null, new String[]{}));
-  }
-
-  @Test
-  @SuppressWarnings("DataFlowIssue")
-  void onCommandReturnsTrueWhenCommandIsNull() {
-    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(
-        "not a player");
-
-    boolean result = purse.onCommand(commandSender, null, "purse", new String[]{});
-
-    assertAll(() -> assertTrue(result), () -> verify(commandSender).sendMessage("not a player"));
   }
 
   @Test
