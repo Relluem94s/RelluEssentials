@@ -21,7 +21,6 @@ import org.bukkit.WorldCreator;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
@@ -232,20 +231,22 @@ class ServerServiceTest {
     );
   }
 
+  @SuppressWarnings("DataFlowIssue")
   @Test
   void createInventoryWithTypeDelegatesToServer() {
     InventoryHolder holder = mock(InventoryHolder.class);
 
-    serverService.createInventory(holder, (InventoryType) null);
+    serverService.createInventory(holder, null);
 
     verify(server).createInventory(eq(holder), eq(null));
   }
 
+  @SuppressWarnings("DataFlowIssue")
   @Test
   void createInventoryWithTypeAndTitleDelegatesToServer() {
     InventoryHolder holder = mock(InventoryHolder.class);
 
-    serverService.createInventory(holder, (InventoryType) null, "Title");
+    serverService.createInventory(holder, null, "Title");
 
     verify(server).createInventory(eq(holder), eq(null), eq("Title"));
   }
@@ -347,4 +348,20 @@ class ServerServiceTest {
 
     verify(server).unloadWorld(world, false);
   }
+
+
+  @Test
+  void getWorldsReturnsAllWorlds() {
+    World world = mock(World.class);
+    List<World> worlds = List.of(world);
+    when(server.getWorlds()).thenReturn(worlds);
+
+    List<World> result = serverService.getWorlds();
+
+    assertAll(
+        () -> assertNotNull(result),
+        () -> assertEquals(worlds, result)
+    );
+  }
+
 }

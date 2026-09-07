@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.Keyed;
 import org.bukkit.OfflinePlayer;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.profile.PlayerProfile;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Service over {@link Server} to avoid static {@code Bukkit.*} access throughout the codebase.
@@ -235,6 +237,16 @@ public class ServerService {
    */
   public PlayerProfile createPlayerProfile(UUID uuid, String name) {
     return server.createPlayerProfile(uuid, name);
+  }
+
+  /**
+   * Gets a list of all worlds on this server.
+   *
+   * @return a list of worlds
+   */
+  @NotNull
+  public List<World> getWorlds() {
+    return server.getWorlds();
   }
 
   /**
