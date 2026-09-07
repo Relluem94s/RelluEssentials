@@ -3,7 +3,6 @@ package de.relluem94.minecraft.server.spigot.essentials;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.PersistenceContext;
@@ -42,6 +41,7 @@ import org.mockito.MockedConstruction;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 class RelluEssentialsTest {
 
   private RelluEssentials plugin;
@@ -66,6 +66,7 @@ class RelluEssentialsTest {
     try (MockedStatic<Bukkit> bukkit = Mockito.mockStatic(Bukkit.class)) {
       bukkit.when(Bukkit::getServer).thenReturn(server);
 
+      @SuppressWarnings("deprecation")
       JavaPluginLoader loader = new JavaPluginLoader(server);
       PluginDescriptionFile description = Mockito.mock(PluginDescriptionFile.class);
 
@@ -89,11 +90,6 @@ class RelluEssentialsTest {
     Field instanceField = RelluEssentials.class.getDeclaredField("instance");
     instanceField.setAccessible(true);
     instanceField.set(null, null);
-  }
-
-  @Test
-  void constructorShouldSetUnitTestFlag() {
-    assertTrue(plugin.isUnitTest());
   }
 
   @Test
@@ -279,7 +275,6 @@ class RelluEssentialsTest {
       spyPlugin.onEnable();
 
       assertEquals(spyPlugin, RelluEssentials.getInstance());
-      assertTrue(spyPlugin.isUnitTest());
 
       registry.verify(() -> RelluEssentialsRegistry.initialize(
           spyPlugin.getServiceContext().getTranslationService()));

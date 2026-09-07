@@ -26,6 +26,7 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssential
 import java.io.File;
 import java.util.Calendar;
 import lombok.Getter;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -38,17 +39,11 @@ public class RelluEssentials extends JavaPlugin {
 
   private static RelluEssentials instance;
 
-  private long start;
-
   @Getter
   private ServiceContext serviceContext;
 
   @Getter
   private PersistenceContext persistenceContext;
-
-  @Getter
-  @Deprecated
-  private boolean isUnitTest = false;
 
   /* Manager */
   private AutoSaveManager autoSaveManager;
@@ -67,7 +62,6 @@ public class RelluEssentials extends JavaPlugin {
   protected RelluEssentials(JavaPluginLoader loader, PluginDescriptionFile description,
       File dataFolder, File file) {
     super(loader, description, dataFolder, file);
-    isUnitTest = true;
   }
 
   public static synchronized RelluEssentials getInstance() {
@@ -80,12 +74,20 @@ public class RelluEssentials extends JavaPlugin {
 
   @Override
   public void onEnable() {
-    start = Calendar.getInstance().getTimeInMillis();
+    final long start = System.currentTimeMillis();
     persistenceContext = new PersistenceContext();
     serviceContext = new ServiceContext();
     ServiceManager serviceManager = new ServiceManager();
     serviceManager.preEnable(this);
-    startLoading();
+    ConsoleCommandSender sender = getServer().getConsoleSender();
+    setInstance(this);
+    sender.sendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
+    sender.sendMessage(PLUGIN_NAME_CONSOLE, "");
+    sender.sendMessage(PLUGIN_NAME_CONSOLE, "");
+    sender.sendMessage(PLUGIN_NAME_CONSOLE,
+        serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
+    sender.sendMessage(PLUGIN_NAME_CONSOLE, "");
+
     RelluEssentialsRegistry.initialize(getServiceContext().getTranslationService());
 
     configManager = new ConfigManager();
@@ -115,7 +117,14 @@ public class RelluEssentials extends JavaPlugin {
     autoSaveManager.enable(this);
     ScoreBoardManager scoreBoardManager = new ScoreBoardManager();
     scoreBoardManager.enable(this);
-    stopLoading();
+
+    sender.sendMessage(PLUGIN_NAME_CONSOLE, "");
+    sender.sendMessage(PLUGIN_NAME_CONSOLE,
+        serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE,
+            Calendar.getInstance().getTimeInMillis() - start));
+    sender.sendMessage(PLUGIN_NAME_CONSOLE, "");
+    sender.sendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
+
     worldManager = new WorldManager();
     worldManager.enable(this);
     getServiceContext().getSchedulerService()
@@ -135,24 +144,5 @@ public class RelluEssentials extends JavaPlugin {
     autoSaveManager.disable(this);
     worldManager.disable(this);
     configManager.disable(this);
-  }
-
-  private void startLoading() {
-    setInstance(this);
-    getServer().getConsoleSender().sendMessage(PLUGIN_COLOR_COMMAND, PLUGIN_FORMS_BORDER);
-    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
-    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
-    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE,
-        serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
-    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
-  }
-
-  private void stopLoading() {
-    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
-    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE,
-        serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_START_TIME_MESSAGE,
-            Calendar.getInstance().getTimeInMillis() - start));
-    getServer().getConsoleSender().sendMessage(PLUGIN_NAME_CONSOLE, "");
-    getServer().getConsoleSender().sendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
   }
 }

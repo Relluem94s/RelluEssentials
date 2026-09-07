@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -33,15 +32,13 @@ public class WorldManager implements Enable, Disable {
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    if (relluEssentialsPlugin.isUnitTest()) {
-      return;
-    }
     serviceContext = relluEssentialsPlugin.getServiceContext();
 
     Multimap<WorldGroupEntry, WorldEntry> worldsMap = serviceContext.getWorldGroupService()
         .getWorldsMap();
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
+    serviceContext.getPluginMetadataService().getPlugin().getServer().getConsoleSender()
+        .sendMessage(PLUGIN_NAME_CONSOLE,
+            PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
 
     for (WorldGroupEntry wge : worldsMap.keySet()) {
       if (wge == null) {
@@ -69,11 +66,6 @@ public class WorldManager implements Enable, Disable {
 
   @Override
   public void disable(Plugin plugin) {
-    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    if (relluEssentialsPlugin.isUnitTest()) {
-      return;
-    }
-
     Multimap<WorldGroupEntry, WorldEntry> worldsMap = serviceContext.getWorldGroupService()
         .getWorldsMap();
     for (WorldGroupEntry wge : worldsMap.keySet()) {
