@@ -7,13 +7,12 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import lombok.NonNull;
+import java.util.stream.Collectors;
 import org.bukkit.Material;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
@@ -24,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation for the cookie command.
@@ -49,7 +49,8 @@ public class Cookies implements CommandConstruct {
   /**
    * Provides tab completion suggestions for the cookie command.
    * Returns a list of online player names if the sender is an authorized player.
-   * Returns an empty list if the sender is not a player, not authorized, or more than one argument is present.
+   * Returns an empty list if the sender is not a player, not authorized,
+   * or more than one argument is present.
    *
    * @param commandSender the sender requesting tab completion
    * @param command the command being tab-completed
@@ -74,9 +75,8 @@ public class Cookies implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-
-    return tabList;
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 
   /**
@@ -94,7 +94,8 @@ public class Cookies implements CommandConstruct {
    * Executes the cookie command.
    * When executed from a command block with the {@code @p} argument, targets the nearest player.
    * When executed by a VIP player without arguments, gives a cookie to themselves.
-   * When executed by a VIP player with a player name argument, gives a cookie to the specified target.
+   * When executed by a VIP player with a player name argument,
+   * gives a cookie to the specified target.
    *
    * @param sender the sender of the command, either a player or a command block
    * @param command the command being executed
@@ -139,8 +140,7 @@ public class Cookies implements CommandConstruct {
       return true;
     }
 
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(args[0]);
+    Player target = serviceContext.getServerService().getPlayer(args[0]);
     if (target == null) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
