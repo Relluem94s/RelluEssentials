@@ -289,4 +289,27 @@ class CookiesTest {
       );
     }
   }
+
+  @Test
+  void onCommandDropsCookieToSelfWhenItemMetaIsNull() {
+    ItemFactory itemFactory = mock(ItemFactory.class);
+    World world = mock(World.class);
+    Location location = mock(Location.class);
+
+    when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
+    when(player.getWorld()).thenReturn(world);
+    when(player.getLocation()).thenReturn(location);
+    when(itemFactory.getItemMeta(any())).thenReturn(null);
+
+    try (MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+      bukkit.when(Bukkit::getItemFactory).thenReturn(itemFactory);
+
+      boolean result = cookies.onCommand(player, command, "cookie", new String[]{});
+
+      assertAll(
+          () -> assertTrue(result),
+          () -> verify(world).dropItem(any(), any())
+      );
+    }
+  }
 }
