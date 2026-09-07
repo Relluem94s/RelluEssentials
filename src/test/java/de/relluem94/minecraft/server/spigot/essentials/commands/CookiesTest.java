@@ -239,4 +239,30 @@ class CookiesTest {
       );
     }
   }
+
+  @Test
+  void onCommandSendsNotAPlayerWhenSenderIsCommandBlockWithOneArgNotAtP() {
+    BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+
+    boolean result = cookies.onCommand(blockCommandSender, command, "cookie", new String[]{"somePlayer"});
+
+    assertAll(
+        () -> assertTrue(result),
+        () -> verify(blockCommandSender).sendMessage(TRANSLATED_MESSAGE)
+    );
+  }
+
+  @Test
+  void onCommandSendsNotAPlayerWhenSenderIsCommandBlockWithNoArgs() {
+    BlockCommandSender blockCommandSender = mock(BlockCommandSender.class);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+
+    boolean result = cookies.onCommand(blockCommandSender, command, "cookie", new String[]{});
+
+    assertAll(
+        () -> assertTrue(result),
+        () -> verify(blockCommandSender).sendMessage(TRANSLATED_MESSAGE)
+    );
+  }
 }
