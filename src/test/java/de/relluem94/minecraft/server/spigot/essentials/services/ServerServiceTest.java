@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -12,7 +13,6 @@ import static org.mockito.Mockito.when;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-
 import org.bukkit.Keyed;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -21,6 +21,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
@@ -224,6 +225,47 @@ class ServerServiceTest {
     when(server.createInventory(holder, 27, "Title")).thenReturn(inventory);
 
     Inventory result = serverService.createInventory(holder, 27, "Title");
+
+    assertAll(
+        () -> assertNotNull(result),
+        () -> assertEquals(inventory, result)
+    );
+  }
+
+  @Test
+  void createInventoryWithTypeDelegatesToServer() {
+    InventoryHolder holder = mock(InventoryHolder.class);
+
+    serverService.createInventory(holder, (InventoryType) null);
+
+    verify(server).createInventory(eq(holder), eq(null));
+  }
+
+  @Test
+  void createInventoryWithTypeAndTitleDelegatesToServer() {
+    InventoryHolder holder = mock(InventoryHolder.class);
+
+    serverService.createInventory(holder, (InventoryType) null, "Title");
+
+    verify(server).createInventory(eq(holder), eq(null), eq("Title"));
+  }
+
+  @Test
+  void createInventoryWithSizeDelegatesToServer() {
+    InventoryHolder holder = mock(InventoryHolder.class);
+
+    serverService.createInventory(holder, 27);
+
+    verify(server).createInventory(holder, 27);
+  }
+
+  @Test
+  void createInventoryWithSizeReturnsInventory() {
+    InventoryHolder holder = mock(InventoryHolder.class);
+    Inventory inventory = mock(Inventory.class);
+    when(server.createInventory(holder, 27)).thenReturn(inventory);
+
+    Inventory result = serverService.createInventory(holder, 27);
 
     assertAll(
         () -> assertNotNull(result),

@@ -11,6 +11,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
@@ -186,6 +187,43 @@ public class ServerService {
    */
   public Inventory createInventory(InventoryHolder holder, int size, String title) {
     return server.createInventory(holder, size, title);
+  }
+
+  /**
+   * Creates an inventory with the given holder and type.
+   *
+   * @param holder the inventory holder, or {@code null}
+   * @param type   the inventory type
+   * @return the created inventory
+   * @throws IllegalArgumentException if the {@link InventoryType} cannot be viewed
+   */
+  public Inventory createInventory(InventoryHolder holder, InventoryType type) {
+    return server.createInventory(holder, type);
+  }
+
+  /**
+   * Creates an inventory with the given holder, type, and title.
+   *
+   * @param holder the inventory holder, or {@code null}
+   * @param type   the inventory type
+   * @param title  the inventory title
+   * @return the created inventory
+   * @throws IllegalArgumentException if the {@link InventoryType} cannot be viewed
+   */
+  public Inventory createInventory(InventoryHolder holder, InventoryType type, String title) {
+    return server.createInventory(holder, type, title);
+  }
+
+  /**
+   * Creates an inventory of type CHEST with the given holder and size.
+   *
+   * @param holder the inventory holder, or {@code null}
+   * @param size   the inventory size (must be a multiple of 9)
+   * @return the created inventory
+   * @throws IllegalArgumentException if the size is not a multiple of 9
+   */
+  public Inventory createInventory(InventoryHolder holder, int size) {
+    return server.createInventory(holder, size);
   }
 
   /**
