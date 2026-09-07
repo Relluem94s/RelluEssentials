@@ -42,7 +42,6 @@ public class PluginMetadataService {
    *
    * @return the main class name
    */
-  @SuppressWarnings("unused")
   public String getMainClass() {
     return plugin.getDescription().getMain();
   }

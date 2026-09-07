@@ -100,8 +100,7 @@ public class Enderchest implements CommandConstruct {
       return new ArrayList<>();
     }
 
-    return serviceContext.getServerService().getOnlinePlayers().stream()
-        .map(Player::getName)
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
         .collect(Collectors.toList());
   }
 }
