@@ -70,11 +70,11 @@ public class Exit implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (isConsole(sender)) {
-      serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
+      serviceContext.getServerService().broadcastMessage(
           serviceContext.getTranslationService().get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
 
       serviceContext.getSchedulerService().runTaskLater(
-          () -> serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers()
+          () -> serviceContext.getServerService().getOnlinePlayers()
               .forEach(op -> {
                 serviceContext.getTeleportService().teleportWorld(op, PLUGIN_WORLD_LOBBY, true);
                 op.kickPlayer(serviceContext.getTranslationService()
