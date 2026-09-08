@@ -233,6 +233,10 @@ class MarryTest {
     Player targetPlayer = mock(Player.class);
     PlayerEntry playerEntry = mock(PlayerEntry.class);
     PlayerEntry targetEntry = mock(PlayerEntry.class);
+    PlayerPartnerEntry playerPartnerEntry = mock(PlayerPartnerEntry.class);
+
+    de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry firstProtectionEntry = mock(de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry.class);
+    de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry secondProtectionEntry = mock(de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry.class);
 
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(player.getName()).thenReturn("SenderPlayer");
@@ -247,20 +251,38 @@ class MarryTest {
     when(playerService.getPlayerEntry(targetPlayer)).thenReturn(targetEntry);
     when(playerEntry.getPartner()).thenReturn(null);
     when(targetEntry.getPartner()).thenReturn(null);
+    when(playerEntry.getId()).thenReturn(1);
+    when(targetEntry.getId()).thenReturn(2);
 
     when(player.getCustomName()).thenReturn("SenderPlayer");
     when(targetPlayer.getCustomName()).thenReturn(targetName);
 
     when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST, targetName)).thenReturn("send-request");
     when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST, "SenderPlayer")).thenReturn("receive-request");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_MARRY_MARRIED), any())).thenReturn("married");
+    when(playerService.getPartner(any())).thenReturn(playerPartnerEntry);
 
-    boolean result = marry.onCommand(player, command, "marry", new String[]{targetName});
+    when(protectionService.getProtectionEntriesOwnedBy(2)).thenReturn(List.of(firstProtectionEntry));
+    when(protectionService.getProtectionEntriesOwnedBy(1)).thenReturn(List.of(secondProtectionEntry));
+
+    Runnable[] capturedTask = new Runnable[1];
+    doAnswer(invocation -> {
+      capturedTask[0] = invocation.getArgument(0);
+      return null;
+    }).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
+
+    when(groupService.isSenderAuthorized(targetPlayer, "vip")).thenReturn(true);
+
+    marry.onCommand(player, command, "marry", new String[]{targetName});
+    marry.onCommand(targetPlayer, command, "marry", new String[]{"accept"});
 
     assertAll(
-        () -> assertTrue(result),
+        () -> assertTrue(marry.onCommand(targetPlayer, command, "marry", new String[]{})),
         () -> verify(player).sendMessage("send-request"),
         () -> verify(targetPlayer).sendMessage("receive-request"),
-        () -> verify(schedulerService).runTaskLater(any(Runnable.class), anyLong())
+        () -> verify(schedulerService).runTaskLater(any(Runnable.class), anyLong()),
+        () -> verify(protectionActionService).addRight(targetPlayer, firstProtectionEntry, 1, true),
+        () -> verify(protectionActionService).addRight(player, secondProtectionEntry, 2, true)
     );
   }
 
