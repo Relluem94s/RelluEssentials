@@ -193,10 +193,7 @@ class MarryTest {
   void onCommandSendsTargetNotAPlayerWhenTargetIsNull() {
     String targetName = "UnknownPlayer";
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer(targetName)).thenReturn(null);
+    when(serverService.getPlayer(targetName)).thenReturn(null);
     when(translationService.getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetName)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{targetName});
@@ -215,10 +212,7 @@ class MarryTest {
     Player targetPlayer = mock(Player.class);
     when(targetPlayer.getName()).thenReturn("SomePlayer");
 
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer("SomePlayer")).thenReturn(targetPlayer);
+    when(serverService.getPlayer("SomePlayer")).thenReturn(targetPlayer);
     when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SELF_MARRIAGE)).thenReturn(TRANSLATED_MESSAGE);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"SomePlayer"});
@@ -244,10 +238,7 @@ class MarryTest {
     when(player.getName()).thenReturn("SenderPlayer");
     when(targetPlayer.getName()).thenReturn(targetName);
 
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer(targetName)).thenReturn(targetPlayer);
+    when(serverService.getPlayer(targetName)).thenReturn(targetPlayer);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerService.getPlayerEntry(targetPlayer)).thenReturn(targetEntry);
@@ -295,10 +286,7 @@ class MarryTest {
     when(player.getName()).thenReturn("SenderPlayer");
     when(targetPlayer.getName()).thenReturn(targetName);
 
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer(targetName)).thenReturn(targetPlayer);
+    when(serverService.getPlayer(targetName)).thenReturn(targetPlayer);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerEntry.getPartner()).thenReturn(existingPartner);
@@ -388,10 +376,7 @@ class MarryTest {
     when(player.getName()).thenReturn("SenderPlayer");
     when(targetPlayer.getName()).thenReturn(targetName);
 
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer(targetName)).thenReturn(targetPlayer);
+    when(serverService.getPlayer(targetName)).thenReturn(targetPlayer);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerService.getPlayerEntry(targetPlayer)).thenReturn(targetEntry);
@@ -420,10 +405,7 @@ class MarryTest {
     when(player.getName()).thenReturn("SenderPlayer");
     when(targetPlayer.getName()).thenReturn(targetName);
 
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer(targetName)).thenReturn(targetPlayer);
+    when(serverService.getPlayer(targetName)).thenReturn(targetPlayer);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerService.getPlayerEntry(targetPlayer)).thenReturn(targetEntry);
@@ -465,10 +447,7 @@ class MarryTest {
     when(player.getName()).thenReturn("SenderPlayer");
     when(targetPlayer.getName()).thenReturn(targetName);
 
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer(targetName)).thenReturn(targetPlayer);
+    when(serverService.getPlayer(targetName)).thenReturn(targetPlayer);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(playerService.getPlayerEntry(targetPlayer)).thenReturn(targetEntry);
@@ -529,7 +508,6 @@ class MarryTest {
     PlayerEntry playerEntry = mock(PlayerEntry.class);
     PlayerPartnerEntry partnerEntry = mock(PlayerPartnerEntry.class);
     PlayerEntry secondPlayerEntry = mock(PlayerEntry.class);
-    org.bukkit.OfflinePlayer secondOfflinePlayer = mock(org.bukkit.OfflinePlayer.class);
 
     String firstUuid = "550e8400-e29b-41d4-a716-446655440000";
     String secondUuid = "660e8400-e29b-41d4-a716-446655440001";
@@ -545,11 +523,6 @@ class MarryTest {
     when(secondPlayerEntry.getUuid()).thenReturn(secondUuid);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(null);
-
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
@@ -631,10 +604,7 @@ class MarryTest {
     when(ownedBySecond.getCreatedBy()).thenReturn(2);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
+    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
     when(secondOfflinePlayer.getName()).thenReturn("SecondPlayer");
     when(secondOfflinePlayer.isOnline()).thenReturn(true);
     when(serverService.getPlayer("SecondPlayer")).thenReturn(secondPlayer);
@@ -681,10 +651,7 @@ class MarryTest {
     when(secondPlayerEntry.getUuid()).thenReturn(secondUuid);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
+    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
     when(secondOfflinePlayer.getName()).thenReturn("SecondPlayer");
     when(secondOfflinePlayer.isOnline()).thenReturn(false);
 
@@ -721,10 +688,7 @@ class MarryTest {
     when(secondPlayerEntry.getUuid()).thenReturn(secondUuid);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
+    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
     when(secondOfflinePlayer.getName()).thenReturn(null);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
@@ -755,10 +719,7 @@ class MarryTest {
     when(secondPlayerEntry.getUuid()).thenReturn(secondUuid);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
-    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
-    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
-    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
+    when(serverService.getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
     when(secondOfflinePlayer.getName()).thenReturn("SecondPlayer");
     when(secondOfflinePlayer.isOnline()).thenReturn(true);
     when(serverService.getPlayer("SecondPlayer")).thenReturn(null);

@@ -137,8 +137,8 @@ public class Marry implements CommandConstruct {
     }
 
     Player firstPlayer = serviceContext.getServerService().getPlayer(UUID.fromString(pe.getUuid()));
-    OfflinePlayer secondOfflinePlayer = serviceContext.getPluginMetadataService().getPlugin()
-        .getServer().getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUuid()));
+    OfflinePlayer secondOfflinePlayer = serviceContext.getServerService()
+        .getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUuid()));
 
     if (firstPlayer != null && secondOfflinePlayer.getName() != null) {
       Player secondPlayer = serviceContext.getServerService()
@@ -237,8 +237,7 @@ public class Marry implements CommandConstruct {
         return true;
       }
 
-      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(args[0]);
+      Player target = serviceContext.getServerService().getPlayer(args[0]);
       if (target == null) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
