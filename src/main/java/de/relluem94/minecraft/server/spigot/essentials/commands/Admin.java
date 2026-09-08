@@ -95,7 +95,8 @@ public class Admin implements CommandConstruct {
     }
     if (strings.length == 2) {
       if (Commands.PING.getName().equalsIgnoreCase(strings[0])) {
-        tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+        tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
+            .map(Player::getName).toList());
       }
       if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
         tabList.addAll(List.of("create", "update", "delete", "dialogue", "equip"));
@@ -191,7 +192,8 @@ public class Admin implements CommandConstruct {
       if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
         if ("create".equalsIgnoreCase(strings[1])) {
           tabList.add(resolvePlayerCoordinate(player, "yaw"));
-        } else if ("update".equalsIgnoreCase(strings[1]) && "position".equalsIgnoreCase(strings[3])) {
+        } else if ("update".equalsIgnoreCase(strings[1])
+            && "position".equalsIgnoreCase(strings[3])) {
           tabList.add(resolvePlayerCoordinate(player, "z"));
         }
       }
@@ -200,7 +202,8 @@ public class Admin implements CommandConstruct {
       if (Commands.NPC.getName().equalsIgnoreCase(strings[0])) {
         if ("create".equalsIgnoreCase(strings[1])) {
           tabList.add(resolvePlayerCoordinate(player, "pitch"));
-        } else if ("update".equalsIgnoreCase(strings[1]) && "position".equalsIgnoreCase(strings[3])) {
+        } else if ("update".equalsIgnoreCase(strings[1])
+            && "position".equalsIgnoreCase(strings[3])) {
           tabList.add(resolvePlayerCoordinate(player, "yaw"));
         }
       }
@@ -307,6 +310,12 @@ public class Admin implements CommandConstruct {
     return true;
   }
 
+  /**
+   * Represents all available sub-commands for the /admin command.
+   *
+   * <p>Each entry defines the primary command name and optional nested sub-command names
+   * that are used for tab completion and command routing.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 

@@ -5,11 +5,11 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -94,6 +94,7 @@ public class Sun implements CommandConstruct {
       return new ArrayList<>();
     }
 
-    return TabCompleterHelper.getWorlds();
+    return serviceContext.getServerService().getWorlds().stream().map(World::getName)
+        .collect(Collectors.toList());
   }
 }

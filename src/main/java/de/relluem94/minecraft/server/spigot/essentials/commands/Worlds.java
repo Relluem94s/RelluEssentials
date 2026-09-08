@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import org.bukkit.World;
 import org.bukkit.WorldType;
@@ -249,14 +250,16 @@ public class Worlds implements CommandConstruct {
     if (strings.length == 1) {
       List<String> tabList = new ArrayList<>();
       tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
-      tabList.addAll(TabCompleterHelper.getWorlds());
+      tabList.addAll(serviceContext.getServerService().getWorlds().stream()
+          .map(World::getName).toList());
       return tabList;
 
     }
 
     if (strings.length == 2) {
       if (Commands.UNLOAD.getName().equalsIgnoreCase(strings[0])) {
-        return TabCompleterHelper.getWorlds();
+        return serviceContext.getServerService().getWorlds().stream().map(World::getName)
+            .collect(Collectors.toList());
       }
 
       if (Commands.CREATE.getName().equalsIgnoreCase(strings[0])) {

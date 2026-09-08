@@ -6,18 +6,19 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -103,7 +104,6 @@ public class PlayerInfo implements CommandConstruct {
       sender.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_PLAYERINFO_MARRIED_TO,
               serviceContext.getPlayerService()
-
                   .getPlayerEntryByInternalId(pet.getPartner().getFirstPartnerId()).getName(),
               serviceContext.getPlayerService()
 
@@ -179,8 +179,7 @@ public class PlayerInfo implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-
-    return tabList;
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

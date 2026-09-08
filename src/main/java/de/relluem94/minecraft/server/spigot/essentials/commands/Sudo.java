@@ -7,7 +7,6 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
@@ -16,6 +15,7 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.rellulib.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -219,14 +219,15 @@ public class Sudo implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getOnlinePlayers());
       tabList.addAll(serviceContext.getCommandService().getAllCommandNames());
+      tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
+          .map(Player::getName).toList());
       return tabList;
     }
 
     if (strings.length == 2) {
-      tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-      return tabList;
+      return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+          .collect(Collectors.toList());
     }
 
     return tabList;

@@ -51,8 +51,8 @@ public class PlayerList implements CommandConstruct {
   }
 
   /**
-   * Executes the player list command by sending the sender a header and an entry
-   * for each visible online player.
+   * Executes the player list command by sending the sender a header and an entry for each visible
+   * online player.
    *
    * <p>If the sender is a {@link Player}, players that are not visible to the sender
    * via {@link Player#canSee(Player)} are skipped.
@@ -68,8 +68,8 @@ public class PlayerList implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
 
-    Collection<? extends Player> onlinePlayers = serviceContext.getPluginMetadataService()
-        .getPlugin().getServer().getOnlinePlayers();
+    Collection<? extends Player> onlinePlayers = serviceContext.getServerService()
+        .getOnlinePlayers();
     sender.sendMessage(serviceContext.getTranslationService()
         .getWithPrefix(MessageKey.COMMAND_LIST_HEADER, onlinePlayers.size()));
     for (Player player : onlinePlayers) {

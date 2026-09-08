@@ -6,12 +6,10 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.WorldType;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,22 +24,6 @@ public class TabCompleterHelper {
 
   private TabCompleterHelper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
-  }
-
-  /**
-   * Returns a list of names of all currently online players.
-   *
-   * @return a {@link List} of online player names
-   * @deprecated Use the Bukkit API directly to retrieve online players
-   */
-  @Deprecated
-  public static @NotNull List<String> getOnlinePlayers() {
-    List<String> playerList = new ArrayList<>();
-    for (Player p : Bukkit.getOnlinePlayers()) {
-      playerList.add(p.getName());
-    }
-
-    return playerList;
   }
 
   /**
@@ -71,23 +53,6 @@ public class TabCompleterHelper {
     }
 
     return commands;
-  }
-
-  /**
-   * Returns a list of names of all worlds currently loaded on the server.
-   *
-   * @return a {@link List} of world names
-   * @deprecated Use the Bukkit API directly to retrieve loaded worlds
-   */
-  @Deprecated
-  public static @NotNull List<String> getWorlds() {
-    List<String> worldNames = new ArrayList<>();
-
-    for (World world : Bukkit.getWorlds()) {
-      worldNames.add(world.getName());
-    }
-
-    return worldNames;
   }
 
   /**
@@ -124,8 +89,7 @@ public class TabCompleterHelper {
   /**
    * Returns a list of all available world environment type names.
    *
-   * @return a {@link List} of environment type names derived from
-   *     {@link World.Environment}
+   * @return a {@link List} of environment type names derived from {@link World.Environment}
    */
   public static @NotNull List<String> getWorldEnvironmentTypes() {
     List<String> worldTypes = new ArrayList<>();

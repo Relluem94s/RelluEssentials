@@ -220,7 +220,8 @@ public class Protect implements CommandConstruct {
         } else if (strings[0].equalsIgnoreCase(Commands.RIGHT.getName()) && (
             strings[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[0])
                 || strings[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[1]))) {
-          tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+          tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
+              .map(Player::getName).toList());
         }
         break;
       default:

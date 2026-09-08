@@ -6,11 +6,11 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -125,8 +125,7 @@ public class Vanish implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-
-    return tabList;
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

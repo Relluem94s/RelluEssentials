@@ -7,11 +7,11 @@ import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -19,6 +19,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for retrieving player heads.
+ *
+ * <p>Allows authorized players (mod or higher) to obtain the skull item
+ * of any specified player by name.
+ * </p>
+ *
+ * @author rellu
+ */
 @CommandName("head")
 public class Head implements CommandConstruct {
 
@@ -86,8 +95,7 @@ public class Head implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-
-    return tabList;
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

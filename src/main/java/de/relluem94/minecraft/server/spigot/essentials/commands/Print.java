@@ -129,8 +129,7 @@ public class Print implements CommandConstruct {
           Objects.requireNonNull(targetedPlayerBySelector.getCustomName()));
     }
 
-    serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + message);
+    serviceContext.getServerService().broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + message);
     return true;
   }
 
