@@ -21,6 +21,7 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerPartnerEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionActionService;
@@ -30,6 +31,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.List;
 import java.util.UUID;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -235,8 +237,8 @@ class MarryTest {
     PlayerEntry targetEntry = mock(PlayerEntry.class);
     PlayerPartnerEntry playerPartnerEntry = mock(PlayerPartnerEntry.class);
 
-    de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry firstProtectionEntry = mock(de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry.class);
-    de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry secondProtectionEntry = mock(de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry.class);
+    ProtectionEntry firstProtectionEntry = mock(ProtectionEntry.class);
+    ProtectionEntry secondProtectionEntry = mock(ProtectionEntry.class);
 
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
     when(player.getName()).thenReturn("SenderPlayer");
@@ -612,6 +614,8 @@ class MarryTest {
     PlayerEntry secondPlayerEntry = mock(PlayerEntry.class);
     Player secondPlayer = mock(Player.class);
     org.bukkit.OfflinePlayer secondOfflinePlayer = mock(org.bukkit.OfflinePlayer.class);
+    ProtectionEntry ownedByFirst = mock(ProtectionEntry.class);
+    ProtectionEntry ownedBySecond = mock(ProtectionEntry.class);
 
     String firstUuid = "550e8400-e29b-41d4-a716-446655440000";
     String secondUuid = "660e8400-e29b-41d4-a716-446655440001";
@@ -624,6 +628,10 @@ class MarryTest {
     when(playerService.getPlayerEntryByInternalId(2)).thenReturn(secondPlayerEntry);
     when(playerEntry.getUuid()).thenReturn(firstUuid);
     when(secondPlayerEntry.getUuid()).thenReturn(secondUuid);
+    when(secondPlayerEntry.getId()).thenReturn(2);
+
+    when(ownedByFirst.getCreatedBy()).thenReturn(1);
+    when(ownedBySecond.getCreatedBy()).thenReturn(2);
 
     when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
     when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
@@ -639,7 +647,10 @@ class MarryTest {
     when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, "SecondPlayer")).thenReturn("divorced-first");
     when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, "FirstPlayer")).thenReturn("divorced-second");
 
-    when(protectionService.getAllProtectionEntries()).thenReturn(new java.util.HashMap<>());
+    java.util.Map<Location, ProtectionEntry> protectionEntries = new java.util.HashMap<>();
+    protectionEntries.put(mock(Location.class), ownedByFirst);
+    protectionEntries.put(mock(Location.class), ownedBySecond);
+    when(protectionService.getAllProtectionEntries()).thenReturn(protectionEntries);
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
@@ -647,7 +658,9 @@ class MarryTest {
         () -> assertTrue(result),
         () -> verify(player).sendMessage("divorced-first"),
         () -> verify(secondPlayer).sendMessage("divorced-second"),
-        () -> verify(playerService).deletePartner(partnerEntry)
+        () -> verify(playerService).deletePartner(partnerEntry),
+        () -> verify(protectionActionService).removeRight(player, ownedByFirst, 2, true),
+        () -> verify(protectionActionService).removeRight(ownedBySecond, 1)
     );
   }
 
