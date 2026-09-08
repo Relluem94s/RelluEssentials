@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
@@ -171,10 +172,8 @@ class AfkTest {
 
     List<String> result = afk.onTabComplete(nonModSender, command, "afk", new String[]{"a"});
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertTrue(result.isEmpty())
-    );
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
   }
 
   @Test
@@ -184,10 +183,8 @@ class AfkTest {
 
     List<String> result = afk.onTabComplete(nonPlayerSender, command, "afk", new String[]{"a"});
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertTrue(result.isEmpty())
-    );
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
   }
 
   @Test
@@ -196,10 +193,8 @@ class AfkTest {
 
     List<String> result = afk.onTabComplete(player, command, "afk", new String[]{"arg1", "arg2"});
 
-    assertAll(
-        () -> assertNotNull(result),
-        () -> assertTrue(result.isEmpty())
-    );
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
   }
 
   @Test
@@ -210,4 +205,22 @@ class AfkTest {
 
     assertNotNull(result);
   }
+
+
+  @Test
+  void onCommandReturnsFalseWhenSenderIsModAndTargetExistsButTooManyArgsProvided() {
+    String targetName = "TargetPlayer";
+    Player targetPlayer = mock(Player.class);
+    when(groupService.isSenderAuthorized(player, "user")).thenReturn(true);
+    when(serverService.getPlayer(targetName)).thenReturn(targetPlayer);
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    boolean result = afk.onCommand(player, command, "afk", new String[]{targetName, "extraArg"});
+
+    assertAll(
+        () -> assertFalse(result),
+        () -> verify(playerService, never()).setAfk(targetPlayer, false)
+    );
+  }
+
 }
