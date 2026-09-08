@@ -267,11 +267,7 @@ class MarryTest {
     when(protectionService.getProtectionEntriesOwnedBy(2)).thenReturn(List.of(firstProtectionEntry));
     when(protectionService.getProtectionEntriesOwnedBy(1)).thenReturn(List.of(secondProtectionEntry));
 
-    Runnable[] capturedTask = new Runnable[1];
-    doAnswer(invocation -> {
-      capturedTask[0] = invocation.getArgument(0);
-      return null;
-    }).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
+    doAnswer(_ -> null).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
 
     when(groupService.isSenderAuthorized(targetPlayer, "vip")).thenReturn(true);
 
