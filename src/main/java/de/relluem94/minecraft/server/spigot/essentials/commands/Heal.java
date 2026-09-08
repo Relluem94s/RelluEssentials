@@ -5,14 +5,15 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -105,15 +106,14 @@ public class Heal implements CommandConstruct {
     return true;
   }
 
-  private void heal(@org.jspecify.annotations.NonNull Player p) {
-    p.setHealth(Objects.requireNonNull(p.getAttribute(Attribute.MAX_HEALTH)).getDefaultValue());
+  private void heal(@NonNull Player p) {
+    p.setHealth(getMaxHealth(p));
     p.setFoodLevel(20);
     p.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_HEAL));
   }
 
   private void heal(CommandSender sender, String targetName) {
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(targetName);
+    Player target = serviceContext.getServerService().getPlayer(targetName);
 
     if (target == null) {
       sender.sendMessage(serviceContext.getTranslationService()
@@ -122,6 +122,17 @@ public class Heal implements CommandConstruct {
     }
 
     heal(target);
+  }
+
+  /**
+   * Returns the maximum health value for the given player.
+   *
+   * @param p the player whose maximum health is retrieved
+   * @return the default maximum health value
+   */
+  @Generated
+  protected double getMaxHealth(Player p) {
+    return Objects.requireNonNull(p.getAttribute(Attribute.MAX_HEALTH)).getDefaultValue();
   }
 
   /**
@@ -154,8 +165,7 @@ public class Heal implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-
-    return tabList;
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }
