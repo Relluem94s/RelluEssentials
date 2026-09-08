@@ -120,10 +120,9 @@ public class Marry implements CommandConstruct {
   private void divorce(@NotNull PlayerEntry pe) {
     PlayerPartnerEntry ppe = pe.getPartner();
 
-    PlayerEntry secondPlayerEntry = serviceContext.getPlayerService()
-        .getPlayerEntryByInternalId(
-            ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId()
-                : ppe.getFirstPartnerId());
+    PlayerEntry secondPlayerEntry = serviceContext.getPlayerService().getPlayerEntryByInternalId(
+        ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId()
+            : ppe.getFirstPartnerId());
 
     if (pe.getUuid() == null) {
       return;
@@ -137,13 +136,12 @@ public class Marry implements CommandConstruct {
       return;
     }
 
-    Player firstPlayer = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(UUID.fromString(pe.getUuid()));
+    Player firstPlayer = serviceContext.getServerService().getPlayer(UUID.fromString(pe.getUuid()));
     OfflinePlayer secondOfflinePlayer = serviceContext.getPluginMetadataService().getPlugin()
         .getServer().getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUuid()));
 
     if (firstPlayer != null && secondOfflinePlayer.getName() != null) {
-      Player secondPlayer = serviceContext.getPluginMetadataService().getPlugin().getServer()
+      Player secondPlayer = serviceContext.getServerService()
           .getPlayer(secondOfflinePlayer.getName());
       if (secondOfflinePlayer.isOnline() && secondPlayer != null) {
         firstPlayer.sendMessage(serviceContext.getTranslationService()
@@ -292,14 +290,15 @@ public class Marry implements CommandConstruct {
     }
 
     tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+    tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
+        .map(Player::getName).toList());
 
     return tabList;
   }
 
   /**
-   * Defines the available sub-commands for the marry command.
-   * Each entry represents a distinct marry mode.
+   * Defines the available sub-commands for the marry command. Each entry represents a distinct
+   * marry mode.
    */
   @Getter
   public enum Commands implements CommandsEnum {
