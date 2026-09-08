@@ -738,4 +738,45 @@ class MarryTest {
         () -> verify(playerService, never()).deletePartner(any())
     );
   }
+
+  @Test
+  void onCommandDivorceSendsMessageOnlyToFirstPlayerWhenPartnerIsOnlineButServerPlayerIsNull() {
+    PlayerEntry playerEntry = mock(PlayerEntry.class);
+    PlayerPartnerEntry partnerEntry = mock(PlayerPartnerEntry.class);
+    PlayerEntry secondPlayerEntry = mock(PlayerEntry.class);
+    org.bukkit.OfflinePlayer secondOfflinePlayer = mock(org.bukkit.OfflinePlayer.class);
+
+    String firstUuid = "550e8400-e29b-41d4-a716-446655440000";
+    String secondUuid = "660e8400-e29b-41d4-a716-446655440001";
+
+    when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(playerEntry.getPartner()).thenReturn(partnerEntry);
+    when(playerEntry.getId()).thenReturn(1);
+    when(partnerEntry.getSecondPartnerId()).thenReturn(2);
+    when(playerService.getPlayerEntryByInternalId(2)).thenReturn(secondPlayerEntry);
+    when(playerEntry.getUuid()).thenReturn(firstUuid);
+    when(secondPlayerEntry.getUuid()).thenReturn(secondUuid);
+
+    when(serverService.getPlayer(UUID.fromString(firstUuid))).thenReturn(player);
+    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
+    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
+    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
+    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getOfflinePlayer(UUID.fromString(secondUuid))).thenReturn(secondOfflinePlayer);
+    when(secondOfflinePlayer.getName()).thenReturn("SecondPlayer");
+    when(secondOfflinePlayer.isOnline()).thenReturn(true);
+    when(serverService.getPlayer("SecondPlayer")).thenReturn(null);
+
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_DIVORCED, "SecondPlayer")).thenReturn("divorced-offline");
+
+    when(protectionService.getAllProtectionEntries()).thenReturn(new java.util.HashMap<>());
+
+    boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
+
+    assertAll(
+        () -> assertTrue(result),
+        () -> verify(player).sendMessage("divorced-offline"),
+        () -> verify(playerService).deletePartner(partnerEntry)
+    );
+  }
 }
