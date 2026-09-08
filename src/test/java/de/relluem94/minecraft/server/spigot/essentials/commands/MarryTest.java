@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
@@ -428,6 +429,55 @@ class MarryTest {
     assertAll(
         () -> verify(player).sendMessage("request-expired"),
         () -> verify(targetPlayer).sendMessage("request-expired")
+    );
+  }
+
+  @Test
+  void onCommandDoesNotSendExpiredMessageWhenMarryRequestWasAlreadyAccepted() {
+    String targetName = "TargetPlayer";
+    Player targetPlayer = mock(Player.class);
+    PlayerEntry playerEntry = mock(PlayerEntry.class);
+    PlayerEntry targetEntry = mock(PlayerEntry.class);
+    PlayerPartnerEntry playerPartnerEntry = mock(PlayerPartnerEntry.class);
+
+    when(groupService.isSenderAuthorized(player, "vip")).thenReturn(true);
+    when(player.getName()).thenReturn("SenderPlayer");
+    when(targetPlayer.getName()).thenReturn(targetName);
+
+    when(serviceContext.getPluginMetadataService()).thenReturn(mock(de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService.class));
+    when(serviceContext.getPluginMetadataService().getPlugin()).thenReturn(mock(org.bukkit.plugin.java.JavaPlugin.class));
+    when(serviceContext.getPluginMetadataService().getPlugin().getServer()).thenReturn(mock(org.bukkit.Server.class));
+    when(serviceContext.getPluginMetadataService().getPlugin().getServer().getPlayer(targetName)).thenReturn(targetPlayer);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(playerService.getPlayerEntry(targetPlayer)).thenReturn(targetEntry);
+    when(playerEntry.getPartner()).thenReturn(null);
+    when(targetEntry.getPartner()).thenReturn(null);
+
+    when(player.getCustomName()).thenReturn("SenderPlayer");
+    when(targetPlayer.getCustomName()).thenReturn(targetName);
+
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_SEND_REQUEST, targetName)).thenReturn("send-request");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_MARRY_RECEIVE_REQUEST, "SenderPlayer")).thenReturn("receive-request");
+    when(translationService.getWithPrefix(eq(MessageKey.COMMAND_MARRY_MARRIED), any())).thenReturn("married");
+    when(playerService.getPartner(any())).thenReturn(playerPartnerEntry);
+
+    Runnable[] capturedTask = new Runnable[1];
+    doAnswer(invocation -> {
+      capturedTask[0] = invocation.getArgument(0);
+      return null;
+    }).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
+
+    when(groupService.isSenderAuthorized(targetPlayer, "vip")).thenReturn(true);
+
+    marry.onCommand(player, command, "marry", new String[]{targetName});
+    marry.onCommand(targetPlayer, command, "marry", new String[]{"accept"});
+
+    capturedTask[0].run();
+
+    assertAll(
+        () -> verify(player, never()).sendMessage("request-expired"),
+        () -> verify(targetPlayer, never()).sendMessage("request-expired")
     );
   }
 }
