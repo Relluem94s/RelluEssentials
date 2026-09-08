@@ -575,6 +575,7 @@ class MarryTest {
     when(playerEntry.getId()).thenReturn(1);
     when(partnerEntry.getSecondPartnerId()).thenReturn(2);
     when(playerService.getPlayerEntryByInternalId(2)).thenReturn(null);
+    when(playerEntry.getUuid()).thenReturn("550e8400-e29b-41d4-a716-446655440000");
 
     boolean result = marry.onCommand(player, command, "marry", new String[]{"divorce"});
 
