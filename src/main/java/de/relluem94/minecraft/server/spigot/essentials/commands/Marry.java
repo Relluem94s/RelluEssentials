@@ -227,7 +227,7 @@ public class Marry implements CommandConstruct {
 
       if (args[0].equalsIgnoreCase(Commands.DIVORCE.getName())) {
         PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
-        if (serviceContext.getPlayerService().getPlayerEntry(p).getPartner() != null) {
+        if (pe.getPartner() != null) {
           divorce(pe);
           return true;
         }
