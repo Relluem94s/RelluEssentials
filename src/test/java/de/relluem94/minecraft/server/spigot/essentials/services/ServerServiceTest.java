@@ -19,6 +19,8 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -362,6 +364,25 @@ class ServerServiceTest {
         () -> assertNotNull(result),
         () -> assertEquals(worlds, result)
     );
+  }
+
+  @Test
+  void dispatchCommandReturnsTrueWhenCommandIsFound() throws CommandException {
+    CommandSender sender = mock(CommandSender.class);
+    when(server.dispatchCommand(sender, "test abc 123")).thenReturn(true);
+
+    boolean result = serverService.dispatchCommand(sender, "test abc 123");
+
+    assertTrue(result);
+  }
+
+  @Test
+  void dispatchCommandDelegatesToServer() throws CommandException {
+    CommandSender sender = mock(CommandSender.class);
+
+    serverService.dispatchCommand(sender, "test abc 123");
+
+    verify(server).dispatchCommand(sender, "test abc 123");
   }
 
 }

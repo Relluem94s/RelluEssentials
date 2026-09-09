@@ -10,6 +10,8 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -42,6 +44,20 @@ public class ServerService {
    */
   public ConsoleCommandSender getConsoleSender() {
     return server.getConsoleSender();
+  }
+
+  /**
+   * Dispatches a command on this server, and executes it if found.
+   *
+   * @param sender      the apparent sender of the command
+   * @param commandLine the command + arguments. Example: {@code test abc 123}
+   * @return {@code false} if no target is found
+   * @throws CommandException thrown when the executor for the given command fails
+   *     with an unhandled exception
+   */
+  public boolean dispatchCommand(@NotNull CommandSender sender, @NotNull String commandLine)
+      throws CommandException {
+    return server.dispatchCommand(sender, commandLine);
   }
 
   /**
