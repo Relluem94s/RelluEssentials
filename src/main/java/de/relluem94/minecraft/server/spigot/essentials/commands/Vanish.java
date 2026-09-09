@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -56,13 +55,12 @@ public class Vanish implements CommandConstruct {
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_VANISH));
       boolean canSee = !isVanished.contains(p);
 
-      for (Player onlinePlayer : serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getOnlinePlayers()) {
+      for (Player onlinePlayer : serviceContext.getServerService().getOnlinePlayers()) {
         if (canSee) {
-          onlinePlayer.hidePlayer(RelluEssentials.getInstance(), p);
+          onlinePlayer.hidePlayer(serviceContext.getPluginMetadataService().getPlugin(), p);
           isVanished.add(p);
         } else {
-          onlinePlayer.showPlayer(RelluEssentials.getInstance(), p);
+          onlinePlayer.showPlayer(serviceContext.getPluginMetadataService().getPlugin(), p);
           isVanished.remove(p);
         }
       }
@@ -74,8 +72,7 @@ public class Vanish implements CommandConstruct {
       return true;
     }
 
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(args[0]);
+    Player target = serviceContext.getServerService().getPlayer(args[0]);
     if (target == null) {
       p.sendMessage(serviceContext.getTranslationService()
           .get(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
@@ -86,12 +83,11 @@ public class Vanish implements CommandConstruct {
         serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_VANISH));
 
     boolean canSee = false;
-    for (Player onlinePlayer : serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getOnlinePlayers()) {
+    for (Player onlinePlayer : serviceContext.getServerService().getOnlinePlayers()) {
       if (onlinePlayer.canSee(target)) {
-        onlinePlayer.hidePlayer(RelluEssentials.getInstance(), target);
+        onlinePlayer.hidePlayer(serviceContext.getPluginMetadataService().getPlugin(), target);
       } else {
-        onlinePlayer.showPlayer(RelluEssentials.getInstance(), target);
+        onlinePlayer.showPlayer(serviceContext.getPluginMetadataService().getPlugin(), target);
         canSee = true;
       }
     }
