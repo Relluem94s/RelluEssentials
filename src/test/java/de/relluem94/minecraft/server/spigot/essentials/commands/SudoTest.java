@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -73,8 +74,6 @@ class SudoTest {
 
   private static final String TRANSLATED_MESSAGE = "translated-message";
   private static final UUID PLAYER_UUID = UUID.randomUUID();
-  private static final UUID TARGET_UUID = UUID.fromString("00000000-0000-0000-0000-000000000002");
-
 
   @BeforeEach
   void setUp() {
@@ -166,7 +165,6 @@ class SudoTest {
   @Test
   void onCommandExitsSudoModeWhenPlayerIsAlreadyInSudoMode() {
     GroupEntry originalGroup = new GroupEntry(1, "user", "§8");
-    GroupEntry sudoGroup = new GroupEntry(2, "admin", "§c");
 
     PlayerEntry originalEntry = mock(PlayerEntry.class);
     when(originalEntry.getGroup()).thenReturn(originalGroup);
@@ -197,10 +195,15 @@ class SudoTest {
     when(commandService.getAllCommandNames()).thenReturn(List.of());
     when(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);
 
-    boolean result = sudo.onCommand(player, command, "sudo", new String[]{"UnknownPlayer"});
+    try (MockedStatic<PlayerHelper> playerHelperMock = mockStatic(PlayerHelper.class)) {
+      playerHelperMock.when(() -> PlayerHelper.getOfflinePlayerByName("UnknownPlayer")).thenReturn(null);
 
-    assertTrue(result);
-    verify(player).sendMessage(TRANSLATED_MESSAGE);
+      boolean result = sudo.onCommand(player, command, "sudo", new String[]{"UnknownPlayer"});
+
+      assertTrue(result);
+      verify(player).sendMessage(TRANSLATED_MESSAGE);
+      verify(playerService, never()).getPlayerEntry(any(UUID.class));
+    }
   }
 
   @Test
