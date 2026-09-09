@@ -6,15 +6,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
@@ -33,6 +36,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,6 +73,8 @@ class SudoTest {
 
   private static final String TRANSLATED_MESSAGE = "translated-message";
   private static final UUID PLAYER_UUID = UUID.randomUUID();
+  private static final UUID TARGET_UUID = UUID.fromString("00000000-0000-0000-0000-000000000002");
+
 
   @BeforeEach
   void setUp() {
@@ -213,10 +219,11 @@ class SudoTest {
   void onCommandActivatesSudoModeWhenTargetPlayerIsFound() {
     GroupEntry targetGroup = new GroupEntry(2, "vip", "§e");
 
-    Player onlineTarget = mock(Player.class);
-    UUID targetUuid = UUID.randomUUID();
-    when(onlineTarget.getName()).thenReturn("TargetPlayer");
-    when(onlineTarget.getUniqueId()).thenReturn(targetUuid);
+    UUID targetUuid = UUID.fromString("00000000-0000-0000-0000-000000000002");
+
+    OfflinePlayerEntry offlinePlayerEntry = new OfflinePlayerEntry();
+    offlinePlayerEntry.setId(targetUuid);
+    offlinePlayerEntry.setName("TargetPlayer");
 
     PlayerEntry targetEntry = mock(PlayerEntry.class);
     when(targetEntry.getGroup()).thenReturn(targetGroup);
@@ -228,29 +235,33 @@ class SudoTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(commandService.getAllCommandNames()).thenReturn(List.of());
     when(playerService.getPlayerEntry(player)).thenReturn(senderEntry);
-    doReturn(List.of(onlineTarget)).when(serverService).getOnlinePlayers();
     when(playerService.getPlayerEntry(targetUuid)).thenReturn(targetEntry);
     when(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_ACTIVATED, "§eTargetPlayer")).thenReturn(TRANSLATED_MESSAGE);
 
-    boolean result = sudo.onCommand(player, command, "sudo", new String[]{"TargetPlayer"});
+    try (MockedStatic<PlayerHelper> playerHelperMock = mockStatic(PlayerHelper.class)) {
+      playerHelperMock.when(() -> PlayerHelper.getOfflinePlayerByName("TargetPlayer")).thenReturn(offlinePlayerEntry);
 
-    assertTrue(result);
-    verify(worldGroupService).saveWorldGroupInventoryForPlayer(player, true);
-    verify(senderEntry).setGroup(targetGroup);
-    verify(worldGroupService).loadWorldGroupInventoryForPlayer(player);
-    verify(player).setCustomName("§eTargetPlayer");
-    verify(player).sendMessage(TRANSLATED_MESSAGE);
-    assertTrue(SudoManager.sudoers.containsKey(PLAYER_UUID));
+      boolean result = sudo.onCommand(player, command, "sudo", new String[]{"TargetPlayer"});
+
+      assertTrue(result);
+      verify(worldGroupService).saveWorldGroupInventoryForPlayer(player, true);
+      verify(senderEntry).setGroup(targetGroup);
+      verify(worldGroupService).loadWorldGroupInventoryForPlayer(player);
+      verify(player).setCustomName("§eTargetPlayer");
+      verify(player).sendMessage(TRANSLATED_MESSAGE);
+      assertTrue(SudoManager.sudoers.containsKey(PLAYER_UUID));
+    }
   }
 
   @Test
   void onCommandActivatesSudoModeAndSetsCustomNameWhenTargetHasCustomName() {
     GroupEntry targetGroup = new GroupEntry(2, "vip", "§e");
 
-    Player onlineTarget = mock(Player.class);
-    UUID targetUuid = UUID.randomUUID();
-    when(onlineTarget.getName()).thenReturn("TargetPlayer");
-    when(onlineTarget.getUniqueId()).thenReturn(targetUuid);
+    UUID targetUuid = UUID.fromString("00000000-0000-0000-0000-000000000002");
+
+    OfflinePlayerEntry offlinePlayerEntry = new OfflinePlayerEntry();
+    offlinePlayerEntry.setId(targetUuid);
+    offlinePlayerEntry.setName("TargetPlayer");
 
     PlayerEntry targetEntry = mock(PlayerEntry.class);
     when(targetEntry.getGroup()).thenReturn(targetGroup);
@@ -262,15 +273,18 @@ class SudoTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(commandService.getAllCommandNames()).thenReturn(List.of());
     when(playerService.getPlayerEntry(player)).thenReturn(senderEntry);
-    doReturn(List.of(onlineTarget)).when(serverService).getOnlinePlayers();
     when(playerService.getPlayerEntry(targetUuid)).thenReturn(targetEntry);
     when(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_ACTIVATED, "§eTargetPlayer")).thenReturn(TRANSLATED_MESSAGE);
 
-    boolean result = sudo.onCommand(player, command, "sudo", new String[]{"TargetPlayer"});
+    try (MockedStatic<PlayerHelper> playerHelperMock = mockStatic(PlayerHelper.class)) {
+      playerHelperMock.when(() -> PlayerHelper.getOfflinePlayerByName("TargetPlayer")).thenReturn(offlinePlayerEntry);
 
-    assertTrue(result);
-    verify(player).setCustomName("§eTargetPlayer");
-    verify(player).setCustomName("§eCustomName");
+      boolean result = sudo.onCommand(player, command, "sudo", new String[]{"TargetPlayer"});
+
+      assertTrue(result);
+      verify(player).setCustomName("§eTargetPlayer");
+      verify(player).setCustomName("§eCustomName");
+    }
   }
 
   @Test
