@@ -119,8 +119,7 @@ public class Spawn implements CommandConstruct {
     }
 
     if (args.length == 1) {
-      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(args[0]);
+      Player target = serviceContext.getServerService().getPlayer(args[0]);
 
       if (!serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
         sender.sendMessage(serviceContext.getTranslationService()
