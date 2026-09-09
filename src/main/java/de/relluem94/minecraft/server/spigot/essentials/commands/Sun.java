@@ -61,8 +61,7 @@ public class Sun implements CommandConstruct {
       return true;
     }
 
-    World world = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getWorld(args[0]);
+    World world = serviceContext.getServerService().getWorld(args[0]);
 
     if (world == null) {
       p.sendMessage(serviceContext.getTranslationService()

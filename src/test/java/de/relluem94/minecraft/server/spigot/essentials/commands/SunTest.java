@@ -1,0 +1,209 @@
+package de.relluem94.minecraft.server.spigot.essentials.commands;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
+import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
+import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
+import java.util.List;
+import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class SunTest {
+
+  @Mock
+  private ServiceContext serviceContext;
+
+  @Mock
+  private TranslationService translationService;
+
+  @Mock
+  private GroupService groupService;
+
+  @Mock
+  private ServerService serverService;
+
+  @Mock
+  private Command command;
+
+  @Mock
+  private Player player;
+
+  @Mock
+  private World world;
+
+  private Sun sun;
+
+  private static final String TRANSLATED_MESSAGE = "translated-message";
+
+  @BeforeEach
+  void setUp() {
+    sun = new Sun();
+    sun.injectContext(serviceContext);
+
+    lenient().when(serviceContext.getTranslationService()).thenReturn(translationService);
+    lenient().when(serviceContext.getGroupService()).thenReturn(groupService);
+    lenient().when(serviceContext.getServerService()).thenReturn(serverService);
+  }
+
+  @Test
+  void getCommandsReturnsEmptyArray() {
+    CommandsEnum[] result = sun.getCommands();
+
+    assertNotNull(result);
+    assertEquals(0, result.length);
+  }
+
+  @Test
+  void onCommandSendsNotAPlayerMessageWhenSenderIsNotPlayer() {
+    CommandSender nonPlayerSender = mock(CommandSender.class);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_NOT_A_PLAYER)).thenReturn(TRANSLATED_MESSAGE);
+
+    boolean result = sun.onCommand(nonPlayerSender, command, "sun", new String[]{});
+
+    assertTrue(result);
+    verify(nonPlayerSender).sendMessage(TRANSLATED_MESSAGE);
+  }
+
+  @Test
+  void onCommandSendsPermissionMissingWhenPlayerIsNotMod() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(false);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING)).thenReturn(TRANSLATED_MESSAGE);
+
+    boolean result = sun.onCommand(player, command, "sun", new String[]{});
+
+    assertTrue(result);
+    verify(player).sendMessage(TRANSLATED_MESSAGE);
+  }
+
+  @Test
+  void onCommandSetsSunnyWeatherInPlayerWorldWhenNoArgsProvided() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(player.getWorld()).thenReturn(world);
+    when(world.getName()).thenReturn("world");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, "world")).thenReturn(TRANSLATED_MESSAGE);
+
+    boolean result = sun.onCommand(player, command, "sun", new String[]{});
+
+    assertTrue(result);
+    verify(world).setStorm(false);
+    verify(world).setThundering(false);
+    verify(world).setWeatherDuration(1000000);
+    verify(player).sendMessage(TRANSLATED_MESSAGE);
+  }
+
+  @Test
+  void onCommandSendsWorldNotLoadedMessageWhenWorldNotFound() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(serverService.getWorld("unknownWorld")).thenReturn(null);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, "unknownWorld")).thenReturn(TRANSLATED_MESSAGE);
+
+    boolean result = sun.onCommand(player, command, "sun", new String[]{"unknownWorld"});
+
+    assertTrue(result);
+    verify(player).sendMessage(TRANSLATED_MESSAGE);
+    verify(world, never()).setStorm(false);
+  }
+
+  @Test
+  void onCommandSetsSunnyWeatherInSpecifiedWorldWhenWorldFound() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(serverService.getWorld("nether")).thenReturn(world);
+    when(world.getName()).thenReturn("nether");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, "nether")).thenReturn(TRANSLATED_MESSAGE);
+
+    boolean result = sun.onCommand(player, command, "sun", new String[]{"nether"});
+
+    assertTrue(result);
+    verify(world).setStorm(false);
+    verify(world).setThundering(false);
+    verify(world).setWeatherDuration(1000000);
+    verify(player).sendMessage(TRANSLATED_MESSAGE);
+  }
+
+  @Test
+  void onCommandDoesNotUsePlayerWorldWhenSpecifiedWorldFound() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    when(serverService.getWorld("nether")).thenReturn(world);
+    when(world.getName()).thenReturn("nether");
+    when(translationService.getWithPrefix(MessageKey.COMMAND_WEATHER_SUN, "nether")).thenReturn(TRANSLATED_MESSAGE);
+
+    sun.onCommand(player, command, "sun", new String[]{"nether"});
+
+    verify(player, never()).getWorld();
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyListWhenSenderIsNotMod() {
+    CommandSender unauthorizedSender = mock(CommandSender.class);
+    when(groupService.isSenderAuthorized(unauthorizedSender, "mod")).thenReturn(false);
+
+    List<String> result = sun.onTabComplete(unauthorizedSender, command, "sun", new String[]{"a"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyListWhenMoreThanOneArgProvided() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = sun.onTabComplete(player, command, "sun", new String[]{"arg1", "arg2"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsWorldNamesWhenModWithOneArg() {
+    World firstWorld = mock(World.class);
+    World secondWorld = mock(World.class);
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    doReturn(List.of(firstWorld, secondWorld)).when(serverService).getWorlds();
+    when(firstWorld.getName()).thenReturn("world");
+    when(secondWorld.getName()).thenReturn("world_nether");
+
+    List<String> result = sun.onTabComplete(player, command, "sun", new String[]{"w"});
+
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertTrue(result.contains("world"));
+    assertTrue(result.contains("world_nether"));
+  }
+
+  @Test
+  void onTabCompleteReturnsAllWorldNamesWhenModWithEmptyArg() {
+    World firstWorld = mock(World.class);
+    World secondWorld = mock(World.class);
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+    doReturn(List.of(firstWorld, secondWorld)).when(serverService).getWorlds();
+    when(firstWorld.getName()).thenReturn("world");
+    when(secondWorld.getName()).thenReturn("world_nether");
+
+    List<String> result = sun.onTabComplete(player, command, "sun", new String[]{""});
+
+    assertNotNull(result);
+    assertEquals(2, result.size());
+    assertTrue(result.contains("world"));
+    assertTrue(result.contains("world_nether"));
+  }
+}
