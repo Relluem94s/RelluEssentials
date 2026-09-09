@@ -87,8 +87,7 @@ public class Repair implements CommandConstruct {
             .getWithPrefix(MessageKey.COMMAND_CANNOT_REPAIR, item.getType().name()));
       }
     } else {
-      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(args[0]);
+      Player target = serviceContext.getServerService().getPlayer(args[0]);
       if (target == null) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
