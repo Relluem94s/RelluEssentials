@@ -54,8 +54,7 @@ public class Title implements CommandConstruct {
   }
 
   private void title(String @NotNull [] args, CommandSender commandSender) {
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(args[0]);
+    Player target = serviceContext.getServerService().getPlayer(args[0]);
     if (target == null) {
       commandSender.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER));
