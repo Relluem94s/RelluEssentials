@@ -64,8 +64,7 @@ public class Where implements CommandConstruct {
   }
 
   private void where(CommandSender commandSender, String targetArg) {
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(targetArg);
+    Player target = serviceContext.getServerService().getPlayer(targetArg);
     if (target == null) {
       commandSender.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, targetArg));
