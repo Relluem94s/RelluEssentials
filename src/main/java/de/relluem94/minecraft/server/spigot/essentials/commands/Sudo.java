@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -123,7 +122,8 @@ public class Sudo implements CommandConstruct {
       return true;
     }
 
-    if (RelluEssentials.getInstance().getCommand(args[0]) != null) {
+    if (serviceContext.getCommandService().getAllCommandNames().stream()
+        .anyMatch((commandString) -> commandString.equals(args[0]))) {
       dispatchCommand(args);
       return true;
     }
@@ -175,10 +175,8 @@ public class Sudo implements CommandConstruct {
   }
 
   private void dispatchCommand(String[] args) {
-    ConsoleCommandSender console = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getConsoleSender();
-    serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .dispatchCommand(console, StringUtils.toString(args));
+    ConsoleCommandSender console = serviceContext.getServerService().getConsoleSender();
+    serviceContext.getServerService().dispatchCommand(console, StringUtils.toString(args));
   }
 
   /**
