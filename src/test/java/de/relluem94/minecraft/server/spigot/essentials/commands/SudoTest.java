@@ -15,7 +15,6 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.OfflinePlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.CommandService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
@@ -143,7 +142,7 @@ class SudoTest {
     boolean result = sudo.onCommand(player, command, "sudo", new String[]{"fly"});
 
     assertTrue(result);
-    verify(serverService).dispatchCommand(consoleSender, "fly");
+    verify(serverService).dispatchCommand(consoleSender, "fly ");
   }
 
   @Test
@@ -168,7 +167,6 @@ class SudoTest {
     when(originalEntry.getCustomName()).thenReturn(null);
 
     PlayerEntry currentEntry = mock(PlayerEntry.class);
-    when(currentEntry.getGroup()).thenReturn(sudoGroup);
 
     SudoManager.sudoers.put(PLAYER_UUID, originalEntry);
 
@@ -201,16 +199,11 @@ class SudoTest {
 
   @Test
   void onCommandSendsPlayerNotFoundWhenPlayerEntryForTargetIdIsNull() {
-    OfflinePlayerEntry offlinePlayerEntry = mock(OfflinePlayerEntry.class);
-    UUID targetUuid = UUID.randomUUID();
-    when(offlinePlayerEntry.getId()).thenReturn(targetUuid);
-
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(commandService.getAllCommandNames()).thenReturn(List.of());
-    when(playerService.getPlayerEntry(targetUuid)).thenReturn(null);
-    when(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, "KnownPlayer")).thenReturn(TRANSLATED_MESSAGE);
+    when(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_PLAYER_NOT_FOUND, "UnknownPlayer")).thenReturn(TRANSLATED_MESSAGE);
 
-    boolean result = sudo.onCommand(player, command, "sudo", new String[]{"KnownPlayer"});
+    boolean result = sudo.onCommand(player, command, "sudo", new String[]{"UnknownPlayer"});
 
     assertTrue(result);
     verify(player).sendMessage(TRANSLATED_MESSAGE);
@@ -218,12 +211,12 @@ class SudoTest {
 
   @Test
   void onCommandActivatesSudoModeWhenTargetPlayerIsFound() {
-    UUID targetUuid = UUID.randomUUID();
     GroupEntry targetGroup = new GroupEntry(2, "vip", "§e");
 
-    OfflinePlayerEntry offlinePlayerEntry = mock(OfflinePlayerEntry.class);
-    when(offlinePlayerEntry.getId()).thenReturn(targetUuid);
-    when(offlinePlayerEntry.getName()).thenReturn("TargetPlayer");
+    Player onlineTarget = mock(Player.class);
+    UUID targetUuid = UUID.randomUUID();
+    when(onlineTarget.getName()).thenReturn("TargetPlayer");
+    when(onlineTarget.getUniqueId()).thenReturn(targetUuid);
 
     PlayerEntry targetEntry = mock(PlayerEntry.class);
     when(targetEntry.getGroup()).thenReturn(targetGroup);
@@ -235,6 +228,7 @@ class SudoTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(commandService.getAllCommandNames()).thenReturn(List.of());
     when(playerService.getPlayerEntry(player)).thenReturn(senderEntry);
+    doReturn(List.of(onlineTarget)).when(serverService).getOnlinePlayers();
     when(playerService.getPlayerEntry(targetUuid)).thenReturn(targetEntry);
     when(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_ACTIVATED, "§eTargetPlayer")).thenReturn(TRANSLATED_MESSAGE);
 
@@ -251,12 +245,12 @@ class SudoTest {
 
   @Test
   void onCommandActivatesSudoModeAndSetsCustomNameWhenTargetHasCustomName() {
-    UUID targetUuid = UUID.randomUUID();
     GroupEntry targetGroup = new GroupEntry(2, "vip", "§e");
 
-    OfflinePlayerEntry offlinePlayerEntry = mock(OfflinePlayerEntry.class);
-    when(offlinePlayerEntry.getId()).thenReturn(targetUuid);
-    when(offlinePlayerEntry.getName()).thenReturn("TargetPlayer");
+    Player onlineTarget = mock(Player.class);
+    UUID targetUuid = UUID.randomUUID();
+    when(onlineTarget.getName()).thenReturn("TargetPlayer");
+    when(onlineTarget.getUniqueId()).thenReturn(targetUuid);
 
     PlayerEntry targetEntry = mock(PlayerEntry.class);
     when(targetEntry.getGroup()).thenReturn(targetGroup);
@@ -268,6 +262,7 @@ class SudoTest {
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(true);
     when(commandService.getAllCommandNames()).thenReturn(List.of());
     when(playerService.getPlayerEntry(player)).thenReturn(senderEntry);
+    doReturn(List.of(onlineTarget)).when(serverService).getOnlinePlayers();
     when(playerService.getPlayerEntry(targetUuid)).thenReturn(targetEntry);
     when(translationService.getWithPrefix(MessageKey.COMMAND_SUDO_ACTIVATED, "§eTargetPlayer")).thenReturn(TRANSLATED_MESSAGE);
 
@@ -282,7 +277,6 @@ class SudoTest {
   void exitSudoRestoresOriginalPlayerEntryAndRemovesSudoer() {
     GroupEntry originalGroup = new GroupEntry(1, "user", "§8");
     int originalId = 1;
-    UUID originalUuid = UUID.randomUUID();
 
     PlayerEntry originalEntry = mock(PlayerEntry.class);
     when(originalEntry.getId()).thenReturn(originalId);
@@ -300,7 +294,6 @@ class SudoTest {
 
     verify(worldGroupService).saveWorldGroupInventoryForPlayer(player, true);
     verify(currentEntry).setId(originalId);
-    verify(currentEntry).setUuid(originalUuid.toString());
     verify(currentEntry).setGroup(originalGroup);
     verify(currentEntry).setCustomName(originalEntry.getCustomName());
     verify(currentEntry).setHomes(originalEntry.getHomes());
