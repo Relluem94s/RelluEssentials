@@ -78,15 +78,15 @@ public class DevPlattformCommand implements SubCommand {
 
     BlockService frame = new BlockService(serviceContext.getSchedulerService(),
         Material.OCHRE_FROGLIGHT,
-        serviceContext.getPluginMetadataService().getPlugin().getServer());
+        serviceContext.getServerService());
     BlockService inner = new BlockService(serviceContext.getSchedulerService(),
         Material.BIRCH_PLANKS,
-        serviceContext.getPluginMetadataService().getPlugin().getServer());
+        serviceContext.getServerService());
     BlockService redstone = new BlockService(serviceContext.getSchedulerService(),
         Material.REDSTONE_BLOCK,
-        serviceContext.getPluginMetadataService().getPlugin().getServer());
+        serviceContext.getServerService());
     BlockService air = new BlockService(serviceContext.getSchedulerService(), Material.AIR,
-        serviceContext.getPluginMetadataService().getPlugin().getServer());
+        serviceContext.getServerService());
 
     List<TraderNpc> traderNpcs = serviceContext.getTraderNpcService().getAllNpcs();
 

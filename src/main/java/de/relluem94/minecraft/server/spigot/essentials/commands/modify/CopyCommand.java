@@ -79,7 +79,7 @@ public class CopyCommand implements SubCommand {
     List<ModifyHistoryEntry> history = new ArrayList<>();
 
     BlockService blockService = new BlockService(serviceContext.getSchedulerService(), Material.AIR,
-        serviceContext.getPluginMetadataService().getPlugin().getServer());
+        serviceContext.getServerService());
     BlockProcessor blockProcessor = new BlockProcessor(blocksPerTick);
     forEachBlock(selection, block -> {
       ModifyHistoryEntry historyEntry = new ModifyHistoryEntry(block.getLocation(), block.getType(),
