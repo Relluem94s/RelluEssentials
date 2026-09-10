@@ -26,8 +26,7 @@ public class CleanUpChatCommand implements SubCommand {
 
   @Override
   public void execute(Player player, String[] args) {
-    for (Player onlinePlayer : serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getOnlinePlayers()) {
+    for (Player onlinePlayer : serviceContext.getServerService().getOnlinePlayers()) {
       for (int i = 0; i < 100; i++) {
         onlinePlayer.sendMessage("");
       }
