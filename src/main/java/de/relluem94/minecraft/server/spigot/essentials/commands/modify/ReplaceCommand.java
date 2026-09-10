@@ -63,7 +63,7 @@ public class ReplaceCommand implements SubCommand {
     }
 
     BlockService blockService = new BlockService(serviceContext.getSchedulerService(), toMaterial,
-        serviceContext.getPluginMetadataService().getPlugin().getServer());
+        serviceContext.getServerService());
     BlockProcessor blockProcessor = new BlockProcessor(blocksPerTick);
     List<ModifyHistoryEntry> history = new ArrayList<>();
 
