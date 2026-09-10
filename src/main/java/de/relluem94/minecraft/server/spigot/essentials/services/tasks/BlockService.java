@@ -1,11 +1,11 @@
 package de.relluem94.minecraft.server.spigot.essentials.services.tasks;
 
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import java.util.HashMap;
 import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlockService {
 
   private final SchedulerService schedulerService;
-  private final Server server;
+  private final ServerService serverService;
   private final HashMap<Location, Long> locations = new HashMap<>();
 
   @Setter
@@ -27,11 +27,12 @@ public class BlockService {
    *
    * @param schedulerService the scheduler service used to delay block placements
    * @param targetMaterial   the material to place at the registered locations
-   * @param server           the server to create Blockdata
+   * @param serverService    the server service used to create Blockdata
    */
-  public BlockService(SchedulerService schedulerService, Material targetMaterial, Server server) {
+  public BlockService(SchedulerService schedulerService, Material targetMaterial,
+      ServerService serverService) {
     this.schedulerService = schedulerService;
-    this.server = server;
+    this.serverService = serverService;
     this.targetMaterial = targetMaterial;
   }
 
@@ -97,7 +98,7 @@ public class BlockService {
         String existingDataString = block.getBlockData().getAsString();
         String newDataString = existingDataString.replace(
             block.getType().getKeyOrThrow().toString(), targetMaterial.getKeyOrThrow().toString());
-        block.setBlockData(server.createBlockData(newDataString));
+        block.setBlockData(serverService.createBlockData(newDataString));
       } catch (IllegalArgumentException e) {
         location.getBlock().setType(targetMaterial);
       }
