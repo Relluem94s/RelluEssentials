@@ -60,7 +60,7 @@ public class WallCommand implements SubCommand {
     }
 
     BlockService blockService = new BlockService(serviceContext.getSchedulerService(), material,
-        serviceContext.getPluginMetadataService().getPlugin().getServer());
+        serviceContext.getServerService());
     BlockProcessor blockProcessor = new BlockProcessor(blocksPerTick);
     List<ModifyHistoryEntry> history = new ArrayList<>();
 

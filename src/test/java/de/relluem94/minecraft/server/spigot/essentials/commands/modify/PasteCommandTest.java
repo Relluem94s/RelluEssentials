@@ -34,7 +34,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -77,10 +76,6 @@ class PasteCommandTest {
     when(serviceContext.getProtectionService()).thenReturn(protectionService);
 
     pasteCommand = new PasteCommand(serviceContext, 2);
-  }
-
-  @AfterEach
-  void tearDown() {
   }
 
   @Test

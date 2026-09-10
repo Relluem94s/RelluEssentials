@@ -11,12 +11,12 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.List;
-import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Handles the /purse command for managing player coin purses. Allows players to check their own
@@ -80,8 +80,7 @@ public class Purse implements CommandConstruct {
       return true;
     }
 
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(args[0]);
+    Player target = serviceContext.getServerService().getPlayer(args[0]);
     if (target != null) {
       if (serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
         PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(target);
@@ -151,7 +150,7 @@ public class Purse implements CommandConstruct {
       return List.of();
     }
 
-    return serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers()
+    return serviceContext.getServerService().getOnlinePlayers()
         .stream().map(Player::getName).toList();
   }
 }

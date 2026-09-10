@@ -16,14 +16,12 @@ import de.relluem94.minecraft.server.spigot.essentials.services.BuyBackService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ClipboardService;
 import de.relluem94.minecraft.server.spigot.essentials.services.NpcDialogueProgressService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
-import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.UUID;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,6 +47,9 @@ class BetterPlayerQuitTest {
   private TranslationService translationService;
 
   @Mock
+  private ServerService serverService;
+
+  @Mock
   private TeleportService teleportService;
 
   @Mock
@@ -56,15 +57,6 @@ class BetterPlayerQuitTest {
 
   @Mock
   private ClipboardService clipboardService;
-
-  @Mock
-  private PluginMetadataService pluginMetadataService;
-
-  @Mock
-  private Plugin plugin;
-
-  @Mock
-  private Server server;
 
   @Mock
   private Player player;
@@ -91,12 +83,10 @@ class BetterPlayerQuitTest {
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(serviceContext.getBuyBackService()).thenReturn(buyBackService);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(serviceContext.getTeleportService()).thenReturn(teleportService);
     when(serviceContext.getNpcDialogueProgressService()).thenReturn(npcDialogueProgressService);
     when(serviceContext.getClipboardService()).thenReturn(clipboardService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
 
     when(playerQuitEvent.getPlayer()).thenReturn(player);
     when(player.getUniqueId()).thenReturn(playerUuid);
@@ -119,7 +109,7 @@ class BetterPlayerQuitTest {
     assertAll(() -> verify(playerQuitEvent).setQuitMessage(null),
         () -> verify(playerService).savePlayer(player),
         () -> verify(buyBackService).clearBuyBackHistory(player),
-        () -> verify(server).broadcastMessage("TestPlayer left the game"),
+        () -> verify(serverService).broadcastMessage("TestPlayer left the game"),
         () -> verify(teleportService).teleportWorld(player, PLUGIN_WORLD_LOBBY, true),
         () -> verify(npcDialogueProgressService).resetPlayerProgress(playerUuid),
         () -> verify(clipboardService).removeClipboard(player));
@@ -130,7 +120,7 @@ class BetterPlayerQuitTest {
   void onLeavePlayerInSudoShouldExitSudoBeforeCleanup() {
     SudoManager.sudoers.put(playerUuid, playerEntry);
 
-    when(server.getPlayer(playerUuid)).thenReturn(player);
+    when(serverService.getPlayer(playerUuid)).thenReturn(player);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.commands.Sudo> sudoMock = mockStatic(
         de.relluem94.minecraft.server.spigot.essentials.commands.Sudo.class)) {
@@ -142,7 +132,7 @@ class BetterPlayerQuitTest {
                   serviceContext)),
           () -> verify(playerService).savePlayer(player),
           () -> verify(buyBackService).clearBuyBackHistory(player),
-          () -> verify(server).broadcastMessage("TestPlayer left the game"),
+          () -> verify(serverService).broadcastMessage("TestPlayer left the game"),
           () -> verify(teleportService).teleportWorld(player, PLUGIN_WORLD_LOBBY, true),
           () -> verify(npcDialogueProgressService).resetPlayerProgress(playerUuid),
           () -> verify(clipboardService).removeClipboard(player));
@@ -175,7 +165,7 @@ class BetterPlayerQuitTest {
 
     assertAll(
         () -> verify(translationService).get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, "TestPlayer"),
-        () -> verify(server).broadcastMessage("TestPlayer left the game"));
+        () -> verify(serverService).broadcastMessage("TestPlayer left the game"));
   }
 
   @Test

@@ -18,8 +18,8 @@ public class NpcDao {
 
   public List<NpcEntry> findAll() {
     return queryExecutor.queryList("getCustomNPCs.sql",
-        ps -> {},
-        rs -> NpcMapper.mapNPC(rs));
+        _ -> {},
+        NpcMapper::mapNPC);
   }
 
   public NpcEntry findByUuid(UUID uuid) {

@@ -22,17 +22,16 @@ import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataSe
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockService;
 import java.util.List;
 import java.util.function.Consumer;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -54,14 +53,11 @@ class PlantCommandTest {
     ProtectionService protectionService = mock(ProtectionService.class);
     TranslationService translationService = mock(TranslationService.class);
     SchedulerService schedulerService = mock(SchedulerService.class);
+    ServerService serverService = mock(ServerService.class);
     var pluginMetadataService = mock(PluginMetadataService.class);
-    Plugin plugin = mock(Plugin.class);
-    Server server = mock(Server.class);
 
     when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationService.getWithPrefix(any())).thenReturn("msg");
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
 
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
@@ -70,6 +66,7 @@ class PlantCommandTest {
     when(serviceContext.getProtectionService()).thenReturn(protectionService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
 
     plantCommand = new PlantCommand(serviceContext, 2);
   }

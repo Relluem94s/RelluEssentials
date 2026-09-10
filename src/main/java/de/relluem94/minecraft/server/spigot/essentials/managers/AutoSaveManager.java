@@ -27,11 +27,9 @@ public class AutoSaveManager implements Enable, Disable {
     Optional<GroupEntry> adminGroup = context.getGroupService()
         .findGroupByName("admin");
 
-    if (!adminGroup.isPresent() && count <= MAX_RETRIES) {
+    if (adminGroup.isEmpty() && count <= MAX_RETRIES) {
       count++;
-      context.getSchedulerService().runTaskLater(() -> {
-        enable(plugin);
-      }, 100);
+      context.getSchedulerService().runTaskLater(() -> enable(plugin), 100);
     }
 
     consoleSendMessage(PLUGIN_NAME_CONSOLE,

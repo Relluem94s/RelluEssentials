@@ -9,13 +9,12 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import lombok.NonNull;
+import java.util.stream.Collectors;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -23,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation that displays all game rules and their current values for a specified or
@@ -132,7 +132,7 @@ public class GameRules implements CommandConstruct {
   }
 
   private void showGameRulesForWorld(CommandSender sender, String name) {
-    World world = serviceContext.getPluginMetadataService().getPlugin().getServer().getWorld(name);
+    World world = serviceContext.getServerService().getWorld(name);
     if (world == null) {
       sender.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_WORLD_NOT_LOADED, name));
@@ -164,6 +164,7 @@ public class GameRules implements CommandConstruct {
       return new ArrayList<>();
     }
 
-    return TabCompleterHelper.getWorlds();
+    return serviceContext.getServerService().getWorlds().stream().map(World::getName)
+        .collect(Collectors.toList());
   }
 }

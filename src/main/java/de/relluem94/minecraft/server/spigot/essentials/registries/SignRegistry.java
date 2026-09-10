@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
-import lombok.NonNull;
 import org.bukkit.plugin.Plugin;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A registry that manages the mapping between unique keys and {@link SignAction} implementations.

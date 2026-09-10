@@ -8,12 +8,11 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
+import java.util.stream.Collectors;
 import org.bukkit.Location;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
@@ -22,6 +21,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation for teleporting players to the world spawn location.
@@ -71,8 +71,8 @@ public class Spawn implements CommandConstruct {
     }
 
     if (isPlayer(commandSender) || isConsole(commandSender)) {
-      tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-      return tabList;
+      return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+          .collect(Collectors.toList());
     }
 
     return tabList;
@@ -119,8 +119,7 @@ public class Spawn implements CommandConstruct {
     }
 
     if (args.length == 1) {
-      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(args[0]);
+      Player target = serviceContext.getServerService().getPlayer(args[0]);
 
       if (!serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
         sender.sendMessage(serviceContext.getTranslationService()

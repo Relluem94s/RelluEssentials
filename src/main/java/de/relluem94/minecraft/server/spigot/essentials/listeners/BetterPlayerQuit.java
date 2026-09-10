@@ -40,14 +40,13 @@ public class BetterPlayerQuit implements ListenerConstruct {
 
     if (SudoManager.sudoers.containsKey(p.getUniqueId())) {
       Sudo.exitSudo(Objects.requireNonNull(
-          serviceContext.getPluginMetadataService().getPlugin().getServer()
-              .getPlayer(p.getUniqueId())), serviceContext);
+          serviceContext.getServerService().getPlayer(p.getUniqueId())), serviceContext);
     }
 
     serviceContext.getPlayerService().savePlayer(p);
     serviceContext.getBuyBackService().clearBuyBackHistory(p);
 
-    serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
+    serviceContext.getServerService().broadcastMessage(
         serviceContext.getTranslationService()
             .get(MessageKey.PLUGIN_EVENT_QUIT_MESSAGE, p.getCustomName()));
     serviceContext.getTeleportService().teleportWorld(p, Constants.PLUGIN_WORLD_LOBBY, true);

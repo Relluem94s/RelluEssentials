@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -191,8 +191,7 @@ public class Teleport implements CommandConstruct {
         return true;
       }
 
-      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(args[0]);
+      Player target = serviceContext.getServerService().getPlayer(args[0]);
       if (target == null) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
@@ -214,8 +213,7 @@ public class Teleport implements CommandConstruct {
     }
 
     if (args.length == 2) {
-      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(args[1]);
+      Player target = serviceContext.getServerService().getPlayer(args[1]);
       if (target == null) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[1]));
@@ -317,13 +315,13 @@ public class Teleport implements CommandConstruct {
 
     if (strings.length == 1) {
       tabList.addAll(TabCompleterHelper.getCommands(getCommands()));
-      serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers().stream()
+      serviceContext.getServerService().getOnlinePlayers().stream()
           .filter(player -> !player.equals(commandSender)).map(Player::getName)
           .forEach(tabList::add);
     }
 
     if (strings.length == 2 && strings[0].equalsIgnoreCase(Commands.TO.getName())) {
-      serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers().stream()
+      serviceContext.getServerService().getOnlinePlayers().stream()
           .filter(player -> !player.equals(commandSender)).map(Player::getName)
           .forEach(tabList::add);
     }

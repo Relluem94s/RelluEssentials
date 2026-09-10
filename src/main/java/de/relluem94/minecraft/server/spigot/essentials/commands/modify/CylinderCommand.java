@@ -64,7 +64,7 @@ public class CylinderCommand implements SubCommand {
     double radiusZ = (selection.getMaxZ() - selection.getMinZ()) / 2.0;
 
     BlockService blockService = new BlockService(serviceContext.getSchedulerService(), material,
-        serviceContext.getPluginMetadataService().getPlugin().getServer());
+        serviceContext.getServerService());
     BlockProcessor blockProcessor = new BlockProcessor(blocksPerTick);
     List<ModifyHistoryEntry> history = new ArrayList<>();
 

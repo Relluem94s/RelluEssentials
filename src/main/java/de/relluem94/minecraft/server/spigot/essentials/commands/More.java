@@ -5,17 +5,17 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
+import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation for the /more command.
@@ -80,8 +80,7 @@ public class More implements CommandConstruct {
       return true;
     }
 
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(args[0]);
+    Player target = serviceContext.getServerService().getPlayer(args[0]);
     if (target == null) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
@@ -131,6 +130,7 @@ public class More implements CommandConstruct {
       return new ArrayList<>();
     }
 
-    return TabCompleterHelper.getOnlinePlayers();
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

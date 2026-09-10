@@ -5,25 +5,25 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
+import java.util.stream.Collectors;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation that sets the game mode of a player to {@link GameMode#ADVENTURE}.
  *
  * <p>If an argument is provided, the command targets the specified online player.
- * Otherwise, the command targets the sender itself, requiring the sender to be a player.
- * Requires the sender to have the {@code mod} group authorization.</p>
+ * Otherwise, the command targets the sender itself, requiring the sender to be a player. Requires
+ * the sender to have the {@code mod} group authorization.</p>
  */
 @CommandName("2")
 public class GameModeAdventure implements CommandConstruct {
@@ -54,8 +54,8 @@ public class GameModeAdventure implements CommandConstruct {
    * Handles the execution of the adventure game mode command.
    *
    * <p>If one argument is provided, the game mode of the specified target player is set to
-   * {@link GameMode#ADVENTURE}. If no argument is provided, the sender itself is used as
-   * the target, requiring the sender to be a {@link Player}.</p>
+   * {@link GameMode#ADVENTURE}. If no argument is provided, the sender itself is used as the
+   * target, requiring the sender to be a {@link Player}.</p>
    *
    * @param sender  the entity that executed the command
    * @param command the command that was executed
@@ -73,8 +73,7 @@ public class GameModeAdventure implements CommandConstruct {
     }
 
     if (args.length == 1) {
-      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(args[0]);
+      Player target = serviceContext.getServerService().getPlayer(args[0]);
 
       if (target == null) {
         sender.sendMessage(serviceContext.getTranslationService()
@@ -107,8 +106,8 @@ public class GameModeAdventure implements CommandConstruct {
    * Provides tab completion suggestions for the adventure game mode command.
    *
    * <p>Returns a list of online player names as suggestions for the first argument.
-   * Returns an empty list if the sender lacks {@code mod} authorization or more than one
-   * argument is already present.</p>
+   * Returns an empty list if the sender lacks {@code mod} authorization or more than one argument
+   * is already present.</p>
    *
    * @param commandSender the entity requesting tab completion
    * @param command       the command being tab-completed
@@ -127,6 +126,7 @@ public class GameModeAdventure implements CommandConstruct {
       return new ArrayList<>();
     }
 
-    return TabCompleterHelper.getOnlinePlayers();
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

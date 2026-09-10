@@ -29,6 +29,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionAction
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingPlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SettingService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TeleportService;
@@ -53,6 +54,7 @@ import lombok.Setter;
 public class ServiceContext {
 
   /* Services */
+  private ServerService serverService;
   private TranslationService translationService;
   private GroupService groupService;
   private PlayerService playerService;

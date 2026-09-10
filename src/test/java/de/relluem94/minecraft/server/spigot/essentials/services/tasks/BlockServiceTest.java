@@ -9,9 +9,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,22 +21,22 @@ import org.mockito.ArgumentCaptor;
 class BlockServiceTest {
 
   private SchedulerService schedulerService;
-  private Server server;
+  private ServerService serverService;
   private BlockService blockService;
   private final Material targetMaterial = Material.DIAMOND_BLOCK;
 
   @BeforeEach
   void setUp() {
     schedulerService = mock(SchedulerService.class);
-    server = mock(Server.class);
-    blockService = new BlockService(schedulerService, targetMaterial, server);
+    serverService = mock(ServerService.class);
+    blockService = new BlockService(schedulerService, targetMaterial, serverService);
   }
 
   @Test
   void testAddAndMergeLocations() {
     Location loc1 = mock(Location.class);
     Location loc2 = mock(Location.class);
-    BlockService otherService = new BlockService(schedulerService, Material.STONE, server);
+    BlockService otherService = new BlockService(schedulerService, Material.STONE, serverService);
 
     blockService.addLocation(loc1, 10L);
     otherService.addLocation(loc2, 20L);
@@ -91,7 +91,7 @@ class BlockServiceTest {
     when(block.getBlockData()).thenReturn(blockData);
     when(block.getType()).thenReturn(existingMaterial);
     when(blockData.getAsString()).thenReturn(existingDataString);
-    when(server.createBlockData(newDataString)).thenReturn(newBlockData);
+    when(serverService.createBlockData(newDataString)).thenReturn(newBlockData);
 
     blockService.addLocation(location, 0L);
     blockService.applyMaterial(0L);

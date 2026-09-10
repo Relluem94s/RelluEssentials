@@ -17,13 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation for the marry system, allowing players to send marriage requests, accept
@@ -120,10 +120,9 @@ public class Marry implements CommandConstruct {
   private void divorce(@NotNull PlayerEntry pe) {
     PlayerPartnerEntry ppe = pe.getPartner();
 
-    PlayerEntry secondPlayerEntry = serviceContext.getPlayerService()
-        .getPlayerEntryByInternalId(
-            ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId()
-                : ppe.getFirstPartnerId());
+    PlayerEntry secondPlayerEntry = serviceContext.getPlayerService().getPlayerEntryByInternalId(
+        ppe.getSecondPartnerId() != pe.getId() ? ppe.getSecondPartnerId()
+            : ppe.getFirstPartnerId());
 
     if (pe.getUuid() == null) {
       return;
@@ -137,13 +136,12 @@ public class Marry implements CommandConstruct {
       return;
     }
 
-    Player firstPlayer = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(UUID.fromString(pe.getUuid()));
-    OfflinePlayer secondOfflinePlayer = serviceContext.getPluginMetadataService().getPlugin()
-        .getServer().getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUuid()));
+    Player firstPlayer = serviceContext.getServerService().getPlayer(UUID.fromString(pe.getUuid()));
+    OfflinePlayer secondOfflinePlayer = serviceContext.getServerService()
+        .getOfflinePlayer(UUID.fromString(secondPlayerEntry.getUuid()));
 
     if (firstPlayer != null && secondOfflinePlayer.getName() != null) {
-      Player secondPlayer = serviceContext.getPluginMetadataService().getPlugin().getServer()
+      Player secondPlayer = serviceContext.getServerService()
           .getPlayer(secondOfflinePlayer.getName());
       if (secondOfflinePlayer.isOnline() && secondPlayer != null) {
         firstPlayer.sendMessage(serviceContext.getTranslationService()
@@ -229,7 +227,7 @@ public class Marry implements CommandConstruct {
 
       if (args[0].equalsIgnoreCase(Commands.DIVORCE.getName())) {
         PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
-        if (serviceContext.getPlayerService().getPlayerEntry(p).getPartner() != null) {
+        if (pe.getPartner() != null) {
           divorce(pe);
           return true;
         }
@@ -239,8 +237,7 @@ public class Marry implements CommandConstruct {
         return true;
       }
 
-      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(args[0]);
+      Player target = serviceContext.getServerService().getPlayer(args[0]);
       if (target == null) {
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
@@ -292,14 +289,15 @@ public class Marry implements CommandConstruct {
     }
 
     tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+    tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
+        .map(Player::getName).toList());
 
     return tabList;
   }
 
   /**
-   * Defines the available sub-commands for the marry command.
-   * Each entry represents a distinct marry mode.
+   * Defines the available sub-commands for the marry command. Each entry represents a distinct
+   * marry mode.
    */
   @Getter
   public enum Commands implements CommandsEnum {

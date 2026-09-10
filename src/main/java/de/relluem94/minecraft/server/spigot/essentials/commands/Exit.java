@@ -11,12 +11,12 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstru
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command handler for the {@code /exit} command.
@@ -70,11 +70,11 @@ public class Exit implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
     if (isConsole(sender)) {
-      serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
+      serviceContext.getServerService().broadcastMessage(
           serviceContext.getTranslationService().get(MessageKey.COMMAND_EXIT_SERVER_SHUTTING_DOWN));
 
       serviceContext.getSchedulerService().runTaskLater(
-          () -> serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers()
+          () -> serviceContext.getServerService().getOnlinePlayers()
               .forEach(op -> {
                 serviceContext.getTeleportService().teleportWorld(op, PLUGIN_WORLD_LOBBY, true);
                 op.kickPlayer(serviceContext.getTranslationService()

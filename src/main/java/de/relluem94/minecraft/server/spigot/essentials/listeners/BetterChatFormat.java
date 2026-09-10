@@ -62,12 +62,12 @@ public class BetterChatFormat implements ListenerConstruct {
         serviceContext.getChatService()
             .sendMessageInChannel(e.getMessage(), p, ADMIN_CHANNEL, admin.get());
       } else {
-        serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
+        serviceContext.getServerService().broadcastMessage(
             p.getCustomName() + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + replaceColor(
                 e.getMessage()));
       }
     } else {
-      serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
+      serviceContext.getServerService().broadcastMessage(
           p.getCustomName() + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + e.getMessage());
     }
   }

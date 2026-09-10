@@ -13,12 +13,10 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ChatService;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
-import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import java.util.Optional;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,13 +36,7 @@ class BetterChatFormatTest {
   private ChatService chatService;
 
   @Mock
-  private PluginMetadataService pluginMetadataService;
-
-  @Mock
-  private Plugin plugin;
-
-  @Mock
-  private Server server;
+  private ServerService serverService;
 
   @Mock
   private Player player;
@@ -74,9 +66,7 @@ class BetterChatFormatTest {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(false);
     when(chatEvent.getMessage()).thenReturn("hello");
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(chatEvent.getPlayer()).thenReturn(player);
     when(player.getCustomName()).thenReturn("TestPlayer");
 
@@ -90,9 +80,7 @@ class BetterChatFormatTest {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(false);
     when(chatEvent.getMessage()).thenReturn("hello world");
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(chatEvent.getPlayer()).thenReturn(player);
     when(player.getCustomName()).thenReturn("TestPlayer");
 
@@ -100,7 +88,7 @@ class BetterChatFormatTest {
 
     assertAll(
         () -> verify(chatEvent).setCancelled(true),
-        () -> verify(server).broadcastMessage(anyString()),
+        () -> verify(serverService).broadcastMessage(anyString()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
     );
@@ -114,16 +102,14 @@ class BetterChatFormatTest {
     when(groupService.findGroupByName("mod")).thenReturn(Optional.empty());
     when(groupService.findGroupByName("admin")).thenReturn(Optional.empty());
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(chatEvent.getPlayer()).thenReturn(player);
     when(player.getCustomName()).thenReturn("TestPlayer");
 
     betterChatFormat.onChat(chatEvent);
 
     assertAll(
-        () -> verify(server).broadcastMessage(anyString()),
+        () -> verify(serverService).broadcastMessage(anyString()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
     );
@@ -145,7 +131,7 @@ class BetterChatFormatTest {
     assertAll(
         () -> verify(chatService).sendMessageInChannel(
             anyString(), eq(player), eq(BetterChatFormat.VIP_CHANNEL), eq(vipGroupEntry)),
-        () -> verify(server, never()).broadcastMessage(anyString())
+        () -> verify(serverService, never()).broadcastMessage(anyString())
     );
   }
 
@@ -166,7 +152,7 @@ class BetterChatFormatTest {
     assertAll(
         () -> verify(chatService).sendMessageInChannel(
             anyString(), eq(player), eq(BetterChatFormat.MOD_CHANNEL), eq(modGroupEntry)),
-        () -> verify(server, never()).broadcastMessage(anyString())
+        () -> verify(serverService, never()).broadcastMessage(anyString())
     );
   }
 
@@ -187,7 +173,7 @@ class BetterChatFormatTest {
     assertAll(
         () -> verify(chatService).sendMessageInChannel(
             anyString(), eq(player), eq(BetterChatFormat.ADMIN_CHANNEL), eq(adminGroupEntry)),
-        () -> verify(server, never()).broadcastMessage(anyString())
+        () -> verify(serverService, never()).broadcastMessage(anyString())
     );
   }
 
@@ -196,9 +182,7 @@ class BetterChatFormatTest {
     when(chatEvent.getMessage()).thenReturn(BetterChatFormat.MOD_CHANNEL + "mod message");
     when(chatEvent.getPlayer()).thenReturn(player);
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(player.getCustomName()).thenReturn("TestPlayer");
     when(groupService.findGroupByName("vip")).thenReturn(Optional.empty());
     when(groupService.findGroupByName("mod")).thenReturn(Optional.of(modGroupEntry));
@@ -209,7 +193,7 @@ class BetterChatFormatTest {
     betterChatFormat.onChat(chatEvent);
 
     assertAll(
-        () -> verify(server).broadcastMessage(anyString()),
+        () -> verify(serverService).broadcastMessage(anyString()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
     );
@@ -224,16 +208,14 @@ class BetterChatFormatTest {
     when(groupService.findGroupByName("admin")).thenReturn(Optional.of(adminGroupEntry));
     when(groupService.isSenderAuthorized(player, "admin")).thenReturn(false);
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(chatEvent.getPlayer()).thenReturn(player);
     when(player.getCustomName()).thenReturn("TestPlayer");
 
     betterChatFormat.onChat(chatEvent);
 
     assertAll(
-        () -> verify(server).broadcastMessage(anyString()),
+        () -> verify(serverService).broadcastMessage(anyString()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
     );
@@ -247,16 +229,14 @@ class BetterChatFormatTest {
     when(groupService.findGroupByName("mod")).thenReturn(Optional.empty());
     when(groupService.findGroupByName("admin")).thenReturn(Optional.empty());
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(chatEvent.getPlayer()).thenReturn(player);
     when(player.getCustomName()).thenReturn("TestPlayer");
 
     betterChatFormat.onChat(chatEvent);
 
     assertAll(
-        () -> verify(server).broadcastMessage(anyString()),
+        () -> verify(serverService).broadcastMessage(anyString()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
     );
@@ -267,9 +247,7 @@ class BetterChatFormatTest {
     when(groupService.isSenderAuthorized(player, "vip")).thenReturn(false);
     when(chatEvent.getMessage()).thenReturn("hello");
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(chatEvent.getPlayer()).thenReturn(player);
     when(player.getCustomName()).thenReturn("TestPlayer");
 
@@ -297,16 +275,14 @@ class BetterChatFormatTest {
     when(groupService.findGroupByName("mod")).thenReturn(Optional.empty());
     when(groupService.findGroupByName("admin")).thenReturn(Optional.empty());
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(chatEvent.getPlayer()).thenReturn(player);
     when(player.getCustomName()).thenReturn("TestPlayer");
 
     betterChatFormat.onChat(chatEvent);
 
     assertAll(
-        () -> verify(server).broadcastMessage(anyString()),
+        () -> verify(serverService).broadcastMessage(anyString()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
     );
@@ -320,16 +296,14 @@ class BetterChatFormatTest {
     when(groupService.findGroupByName("mod")).thenReturn(Optional.empty());
     when(groupService.findGroupByName("admin")).thenReturn(Optional.empty());
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(chatEvent.getPlayer()).thenReturn(player);
     when(player.getCustomName()).thenReturn("TestPlayer");
 
     betterChatFormat.onChat(chatEvent);
 
     assertAll(
-        () -> verify(server).broadcastMessage(anyString()),
+        () -> verify(serverService).broadcastMessage(anyString()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
     );
@@ -343,16 +317,14 @@ class BetterChatFormatTest {
     when(groupService.findGroupByName("mod")).thenReturn(Optional.empty());
     when(groupService.findGroupByName("admin")).thenReturn(Optional.empty());
     when(serviceContext.getGroupService()).thenReturn(groupService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(chatEvent.getPlayer()).thenReturn(player);
     when(player.getCustomName()).thenReturn("TestPlayer");
 
     betterChatFormat.onChat(chatEvent);
 
     assertAll(
-        () -> verify(server).broadcastMessage(anyString()),
+        () -> verify(serverService).broadcastMessage(anyString()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(Player.class), any(), any()),
         () -> verify(chatService, never()).sendMessageInChannel(any(), any(String.class), any(), any())
     );

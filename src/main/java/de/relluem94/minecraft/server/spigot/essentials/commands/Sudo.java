@@ -2,12 +2,10 @@ package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
@@ -16,13 +14,14 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.rellulib.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
+import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation for the {@code /sudo} command.
@@ -123,7 +122,8 @@ public class Sudo implements CommandConstruct {
       return true;
     }
 
-    if (RelluEssentials.getInstance().getCommand(args[0]) != null) {
+    if (serviceContext.getCommandService().getAllCommandNames().stream()
+        .anyMatch((commandString) -> commandString.equals(args[0]))) {
       dispatchCommand(args);
       return true;
     }
@@ -175,10 +175,8 @@ public class Sudo implements CommandConstruct {
   }
 
   private void dispatchCommand(String[] args) {
-    ConsoleCommandSender console = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getConsoleSender();
-    serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .dispatchCommand(console, StringUtils.toString(args));
+    ConsoleCommandSender console = serviceContext.getServerService().getConsoleSender();
+    serviceContext.getServerService().dispatchCommand(console, StringUtils.toString(args));
   }
 
   /**
@@ -219,14 +217,15 @@ public class Sudo implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      tabList.addAll(TabCompleterHelper.getOnlinePlayers());
       tabList.addAll(serviceContext.getCommandService().getAllCommandNames());
+      tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
+          .map(Player::getName).toList());
       return tabList;
     }
 
     if (strings.length == 2) {
-      tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-      return tabList;
+      return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+          .collect(Collectors.toList());
     }
 
     return tabList;

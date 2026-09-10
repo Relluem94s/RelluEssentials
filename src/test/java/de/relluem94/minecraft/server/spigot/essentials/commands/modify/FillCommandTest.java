@@ -14,16 +14,15 @@ import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,10 +31,8 @@ class FillCommandTest {
     private Player player;
     private UndoHistoryService undoHistoryService;
     private ProtectionService protectionService;
-    private SchedulerService schedulerService;
     private FillCommand fillCommand;
     private FillCommand fillrCommand;
-    private Server server;
 
     private static final int BLOCKS_PER_TICK = 2;
     private static final int MAX_RADIUS = 10;
@@ -46,28 +43,27 @@ class FillCommandTest {
         player = mock(Player.class);
         undoHistoryService = mock(UndoHistoryService.class);
         protectionService = mock(ProtectionService.class);
-        schedulerService = mock(SchedulerService.class);
-        server = mock(Server.class);
 
         fillCommand = new FillCommand(buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
         fillrCommand = new FillCommand(buildServiceContext(), true, BLOCKS_PER_TICK, MAX_RADIUS, MAX_ITERATIONS);
     }
 
     private ServiceContext buildServiceContext() {
-        TranslationService translationServiceMock = mock(TranslationService.class);
-        when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
-        when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
+        TranslationService translationService = mock(TranslationService.class);
+        when(translationService.getWithPrefix(any())).thenReturn("msg");
+        when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
+
+        SchedulerService schedulerService = mock(SchedulerService.class);
+        ServerService serverService = mock(ServerService.class);
 
         PluginMetadataService pluginMetadataService = mock(PluginMetadataService.class);
-        Plugin plugin = mock(Plugin.class);
-        when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-        when(plugin.getServer()).thenReturn(server);
 
         ServiceContext serviceContext = mock(ServiceContext.class);
-        when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
+        when(serviceContext.getTranslationService()).thenReturn(translationService);
         when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
         when(serviceContext.getProtectionService()).thenReturn(protectionService);
         when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+        when(serviceContext.getServerService()).thenReturn(serverService);
         when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
 
         return serviceContext;

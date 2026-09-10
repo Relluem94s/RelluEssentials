@@ -6,11 +6,11 @@ import de.relluem94.minecraft.server.spigot.essentials.registries.ItemRegistry;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.NonNull;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Service for managing and accessing registered items.
@@ -78,7 +78,7 @@ public class ItemService {
    * @param type the type to filter by
    * @return a list of items matching the type
    */
-  public List<CustomItem> getAllByType(@NonNull CustomItem.Type type) {
+  public List<CustomItem> getAllByType(CustomItem.@NonNull Type type) {
     return itemRegistry.getAllByType(type);
   }
 
@@ -89,7 +89,7 @@ public class ItemService {
    * @param namespace the namespace to filter by
    * @return a list of items matching the type and namespace
    */
-  public List<CustomItem> getAllByTypeAndNamespace(@NonNull CustomItem.Type type,
+  public List<CustomItem> getAllByTypeAndNamespace(CustomItem.@NonNull Type type,
       @NonNull String namespace) {
     return itemRegistry.getAllByTypeAndNamespace(type, namespace);
   }

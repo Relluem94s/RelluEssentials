@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import lombok.NonNull;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -31,6 +30,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation for broadcasting formatted messages to all players on the server.
@@ -129,8 +129,7 @@ public class Print implements CommandConstruct {
           Objects.requireNonNull(targetedPlayerBySelector.getCustomName()));
     }
 
-    serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + message);
+    serviceContext.getServerService().broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + message);
     return true;
   }
 

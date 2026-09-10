@@ -63,7 +63,7 @@ public class PlayerService {
         playerEntry -> playerRegistry.putPlayerEntry(UUID.fromString(playerEntry.getUuid()),
             playerEntry));
 
-    serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers()
+    serviceContext.getServerService().getOnlinePlayers()
         .forEach(player -> {
           PlayerEntry playerEntry = playerRegistry.getPlayerEntry(player.getUniqueId());
           setGroup(player, playerEntry.getGroup());
@@ -143,8 +143,7 @@ public class PlayerService {
     PlayerEntry pe = playerRegistry.getPlayerEntry(p.getUniqueId());
 
     if (p.isOnline()) {
-      Player player = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(p.getUniqueId());
+      Player player = serviceContext.getServerService().getPlayer(p.getUniqueId());
       if (player != null) {
         player.setCustomName(g.getPrefix() + getCustomName(player));
         player.setPlayerListName(g.getPrefix() + getCustomName(player));
@@ -204,7 +203,7 @@ public class PlayerService {
     }
 
     if (!join) {
-      serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
+      serviceContext.getServerService().broadcastMessage(
           serviceContext.getTranslationService().getWithPrefix(
               !isAfk ? MessageKey.COMMAND_AFK_ACTIVATED : MessageKey.COMMAND_AFK_DEACTIVATED,
               p.getLocale(), p.getCustomName() + "§f", !isAfk ? "§c" : "§a"));
@@ -279,8 +278,7 @@ public class PlayerService {
   public void savePlayersInv(GroupEntry adminGroup) {
     int updatedPlayers = 0;
 
-    for (Player p : serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getOnlinePlayers()) {
+    for (Player p : serviceContext.getServerService().getOnlinePlayers()) {
       updatedPlayers +=
           serviceContext.getWorldGroupService().saveWorldGroupInventoryForPlayer(p, false) ? 1 : 0;
     }

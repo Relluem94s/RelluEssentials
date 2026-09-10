@@ -40,14 +40,14 @@ public class InventoryClickBags implements ListenerConstruct {
         Optional<BagTypeEntry> bte = context.getBagService()
             .findBagTypeByPartialName(e.getView().getTitle());
 
-        if (!bte.isPresent()) {
+        if (bte.isEmpty()) {
           return;
         }
 
         Optional<BagEntry> bagEntryOptional = context.getBagService()
             .findBag(pe.getId(), bte.get().getId());
 
-        if (!bagEntryOptional.isPresent()) {
+        if (bagEntryOptional.isEmpty()) {
           return;
         }
 

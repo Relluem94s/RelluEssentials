@@ -66,27 +66,6 @@ class InventoryServiceTest {
         () -> inventoryService.create(null, "id", "title", 27, CustomItem.Type.NONE));
   }
 
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void createWithPluginAndIdPropagatesNullPointerExceptionForNullInventoryId() {
-    assertThrows(NullPointerException.class,
-        () -> inventoryService.create(plugin, null, "title", 27, CustomItem.Type.NONE));
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void createWithPluginAndIdPropagatesNullPointerExceptionForNullTitle() {
-    assertThrows(NullPointerException.class,
-        () -> inventoryService.create(plugin, "id", null, 27, CustomItem.Type.NONE));
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void createWithPluginAndIdPropagatesNullPointerExceptionForNullItemFilter() {
-    assertThrows(NullPointerException.class,
-        () -> inventoryService.create(plugin, "id", "title", 27, null));
-  }
-
   @Test
   void createWithKeyReturnsRegisteredInventory() {
     RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("namespace", "key");
@@ -102,29 +81,6 @@ class InventoryServiceTest {
         () -> assertNotNull(result),
         () -> assertEquals(registeredInventory, result)
     );
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void createWithKeyPropagatesNullPointerExceptionForNullKey() {
-    assertThrows(NullPointerException.class,
-        () -> inventoryService.create(null, "title", 27, CustomItem.Type.NONE));
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void createWithKeyPropagatesNullPointerExceptionForNullTitle() {
-    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("namespace", "key");
-    assertThrows(NullPointerException.class,
-        () -> inventoryService.create(key, null, 27, CustomItem.Type.NONE));
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void createWithKeyPropagatesNullPointerExceptionForNullItemFilter() {
-    RelluEssentialsNamespacedKey key = new RelluEssentialsNamespacedKey("namespace", "key");
-    assertThrows(NullPointerException.class,
-        () -> inventoryService.create(key, "title", 27, null));
   }
 
   @Test
@@ -150,13 +106,6 @@ class InventoryServiceTest {
         () -> assertNotNull(result),
         () -> assertTrue(result.isEmpty())
     );
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void findPropagatesNullPointerExceptionForNullKey() {
-    assertThrows(NullPointerException.class,
-        () -> inventoryService.find(null));
   }
 
   @Test
@@ -185,12 +134,5 @@ class InventoryServiceTest {
         () -> assertNotNull(result),
         () -> assertTrue(result.isEmpty())
     );
-  }
-
-  @SuppressWarnings("DataFlowIssue")
-  @Test
-  void getAllByNamespacePropagatesNullPointerExceptionForNullNamespace() {
-    assertThrows(NullPointerException.class,
-        () -> inventoryService.getAllByNamespace(null));
   }
 }

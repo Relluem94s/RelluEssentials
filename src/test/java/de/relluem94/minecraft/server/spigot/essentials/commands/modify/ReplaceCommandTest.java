@@ -20,6 +20,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataSe
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockService;
@@ -55,13 +56,14 @@ class ReplaceCommandTest {
     server = mock(Server.class);
 
     SchedulerService schedulerService = mock(SchedulerService.class);
-    TranslationService translationServiceMock = mock(TranslationService.class);
-    ProtectionService protectionServiceMock = mock(ProtectionService.class);
+    TranslationService translationService = mock(TranslationService.class);
+    ProtectionService protectionService = mock(ProtectionService.class);
     PluginMetadataService pluginMetadataService = mock(PluginMetadataService.class);
+    ServerService serverService = mock(ServerService.class);
     Plugin plugin = mock(Plugin.class);
 
-    when(translationServiceMock.getWithPrefix(any(), any())).thenReturn("msg");
-    when(translationServiceMock.getWithPrefix(any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any())).thenReturn("msg");
     when(pluginMetadataService.getPlugin()).thenReturn(plugin);
     when(plugin.getServer()).thenReturn(server);
 
@@ -69,9 +71,10 @@ class ReplaceCommandTest {
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
-    when(serviceContext.getTranslationService()).thenReturn(translationServiceMock);
-    when(serviceContext.getProtectionService()).thenReturn(protectionServiceMock);
+    when(serviceContext.getTranslationService()).thenReturn(translationService);
+    when(serviceContext.getProtectionService()).thenReturn(protectionService);
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
 
     replaceCommand = new ReplaceCommand(serviceContext, 2) {
       @Override
@@ -166,7 +169,7 @@ class ReplaceCommandTest {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
-    Block nonMatchingBlock = buildBlock(Material.GRASS_BLOCK, 0);
+    Block nonMatchingBlock = buildBlock(Material.GRASS_BLOCK, 1);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
@@ -284,6 +287,7 @@ class ReplaceCommandTest {
     };
 
     BlockData sharedBlockData = mock(BlockData.class);
+    when(serviceContext.getServerService().createBlockData(anyString())).thenReturn(sharedBlockData);
     when(server.createBlockData(any(Material.class))).thenReturn(sharedBlockData);
 
     assert command.shareBlockDataType(Material.STONE, Material.COBBLESTONE);
@@ -301,7 +305,8 @@ class ReplaceCommandTest {
     BlockData stoneBlockData = mock(BlockData.class);
     org.bukkit.block.data.Orientable dirtBlockData = mock(org.bukkit.block.data.Orientable.class);
 
-    when(server.createBlockData(Material.STONE)).thenReturn(stoneBlockData);
+    when(serviceContext.getServerService().createBlockData("STONE")).thenReturn(stoneBlockData);
+    when(serviceContext.getServerService().createBlockData("DIRT")).thenReturn(dirtBlockData);
     when(server.createBlockData(Material.DIRT)).thenReturn(dirtBlockData);
 
     assert !command.shareBlockDataType(Material.STONE, Material.DIRT);

@@ -36,8 +36,7 @@ public class CloneWorldCommand implements SubCommand {
       Logger.getLogger(CloneWorldCommand.class.getName()).log(Level.SEVERE, null, ex);
     }
 
-    World world2 = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getWorld("world2");
+    World world2 = serviceContext.getServerService().getWorld("world2");
     if (world2 == null) {
       return;
     }

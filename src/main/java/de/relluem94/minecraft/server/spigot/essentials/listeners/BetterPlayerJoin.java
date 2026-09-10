@@ -86,7 +86,7 @@ public class BetterPlayerJoin implements ListenerConstruct {
 
     serviceContext.getPlayerService().setFlying(p);
     serviceContext.getPlayerService().setAfk(p, true);
-    serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
+    serviceContext.getServerService().broadcastMessage(
         serviceContext.getTranslationService()
             .get(MessageKey.PLUGIN_EVENT_JOIN_MESSAGE, p.getCustomName()));
 
@@ -114,10 +114,8 @@ public class BetterPlayerJoin implements ListenerConstruct {
    */
   @EventHandler
   public void login(PlayerLoginEvent e) {
-    int maxPlayers = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getMaxPlayers();
-    int onlinePlayers = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getOnlinePlayers().size();
+    int maxPlayers = serviceContext.getServerService().getMaxPlayers();
+    int onlinePlayers = serviceContext.getServerService().getOnlinePlayers().size();
 
     if (onlinePlayers >= maxPlayers) {
       e.disallow(PlayerLoginEvent.Result.KICK_FULL, serviceContext.getTranslationService()

@@ -6,10 +6,10 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEnt
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import lombok.NonNull;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Service responsible for cleaning up outdated or invalid protection entries.

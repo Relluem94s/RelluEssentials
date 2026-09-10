@@ -15,13 +15,14 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.NonNull;
+import java.util.stream.Collectors;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command implementation for assigning a permission group to a player.
@@ -146,7 +147,8 @@ public class PermissionsGroup implements CommandConstruct {
     }
 
     if (strings.length == 1) {
-      return TabCompleterHelper.getOnlinePlayers();
+      return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+          .collect(Collectors.toList());
     }
 
     return TabCompleterHelper.getGroups(serviceContext.getGroupService().findAllGroups());
@@ -159,8 +161,7 @@ public class PermissionsGroup implements CommandConstruct {
         .getWithPrefix(MessageKey.COMMAND_SETGROUP, groupDisplayName, target.getName()));
 
     if (target.isOnline()) {
-      Player onlineTarget = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(target.getUniqueId());
+      Player onlineTarget = serviceContext.getServerService().getPlayer(target.getUniqueId());
       if (onlineTarget != null) {
         onlineTarget.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_SETGROUP, groupDisplayName, target.getName()));

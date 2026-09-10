@@ -26,11 +26,11 @@ import de.relluem94.minecraft.server.spigot.essentials.services.PlayerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginInformationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
+import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
 import java.util.List;
 import java.util.UUID;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -77,6 +77,9 @@ class BetterPlayerJoinTest {
   private SchedulerService schedulerService;
 
   @Mock
+  private ServerService serverService;
+
+  @Mock
   private PlayerJoinEvent playerJoinEvent;
 
   @Mock
@@ -89,13 +92,7 @@ class BetterPlayerJoinTest {
   private Player player;
 
   @Mock
-  private Server server;
-
-  @Mock
   private PluginInformationEntry pluginInformationEntry;
-
-  @Mock
-  private org.bukkit.plugin.Plugin plugin;
 
   private BetterPlayerJoin betterPlayerJoin;
 
@@ -115,8 +112,8 @@ class BetterPlayerJoinTest {
     when(serviceContext.getPluginInformationService()).thenReturn(pluginInformationService);
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
     when(serviceContext.getBankService()).thenReturn(bankService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
 
     when(playerJoinEvent.getPlayer()).thenReturn(player);
     when(player.getUniqueId()).thenReturn(playerUuid);
@@ -133,9 +130,6 @@ class BetterPlayerJoinTest {
     when(pluginInformationEntry.getTabHeader()).thenReturn("header");
     when(pluginInformationEntry.getTabFooter()).thenReturn("footer");
 
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldHelperMock.when(() -> WorldHelper.isInWorld(player, Constants.PLUGIN_WORLD_LOBBY)).thenReturn(false);
 
@@ -150,7 +144,7 @@ class BetterPlayerJoinTest {
     verify(player).setPlayerListFooter("footer");
     verify(playerService).setFlying(player);
     verify(playerService).setAfk(player, true);
-    verify(server).broadcastMessage("joined!");
+    verify(serverService).broadcastMessage("joined!");
     verify(worldGroupService).loadWorldGroupInventoryForPlayer(player);
     verify(bankService).payInterestToPlayer(player);
     verify(schedulerService).runTaskLater(any(), eq(10L));
@@ -163,8 +157,8 @@ class BetterPlayerJoinTest {
     when(serviceContext.getPluginInformationService()).thenReturn(pluginInformationService);
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
     when(serviceContext.getBankService()).thenReturn(bankService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
 
     PlayerEntry existingEntry = new PlayerEntry();
     existingEntry.setName(null);
@@ -187,9 +181,6 @@ class BetterPlayerJoinTest {
     when(pluginInformationEntry.getTabHeader()).thenReturn("header");
     when(pluginInformationEntry.getTabFooter()).thenReturn("footer");
 
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldHelperMock.when(() -> WorldHelper.isInWorld(player, Constants.PLUGIN_WORLD_LOBBY)).thenReturn(false);
 
@@ -207,8 +198,8 @@ class BetterPlayerJoinTest {
     when(serviceContext.getPluginInformationService()).thenReturn(pluginInformationService);
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
     when(serviceContext.getBankService()).thenReturn(bankService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
 
     PlayerEntry existingEntry = new PlayerEntry();
     existingEntry.setName("TestPlayer");
@@ -223,9 +214,6 @@ class BetterPlayerJoinTest {
     when(pluginInformationService.getPluginInformation()).thenReturn(pluginInformationEntry);
     when(pluginInformationEntry.getTabHeader()).thenReturn("header");
     when(pluginInformationEntry.getTabFooter()).thenReturn("footer");
-
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldHelperMock.when(() -> WorldHelper.isInWorld(player, Constants.PLUGIN_WORLD_LOBBY)).thenReturn(false);
@@ -247,6 +235,7 @@ class BetterPlayerJoinTest {
     when(serviceContext.getItemService()).thenReturn(itemService);
     when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
 
     PlayerEntry existingEntry = new PlayerEntry();
     existingEntry.setName("TestPlayer");
@@ -260,9 +249,6 @@ class BetterPlayerJoinTest {
     when(pluginInformationService.getPluginInformation()).thenReturn(pluginInformationEntry);
     when(pluginInformationEntry.getTabHeader()).thenReturn("header");
     when(pluginInformationEntry.getTabFooter()).thenReturn("footer");
-
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
 
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class);
         MockedStatic<PlayerHelper> playerHelperMock = mockStatic(PlayerHelper.class)) {
@@ -282,8 +268,8 @@ class BetterPlayerJoinTest {
     when(serviceContext.getPluginInformationService()).thenReturn(pluginInformationService);
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
     when(serviceContext.getBankService()).thenReturn(bankService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
 
     PlayerEntry existingEntry = new PlayerEntry();
     existingEntry.setName("TestPlayer");
@@ -299,9 +285,6 @@ class BetterPlayerJoinTest {
     when(pluginInformationEntry.getTabHeader()).thenReturn("header");
     when(pluginInformationEntry.getTabFooter()).thenReturn("footer");
 
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-
     try (MockedStatic<WorldHelper> worldHelperMock = mockStatic(WorldHelper.class)) {
       worldHelperMock.when(() -> WorldHelper.isInWorld(player, Constants.PLUGIN_WORLD_LOBBY)).thenReturn(false);
 
@@ -313,11 +296,9 @@ class BetterPlayerJoinTest {
 
   @Test
   void loginAllowsPlayerWhenBelowMaxCapacity() {
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getMaxPlayers()).thenReturn(20);
-    doReturn(List.of()).when(server).getOnlinePlayers();
+    when(serviceContext.getServerService()).thenReturn(serverService);
+    when(serverService.getMaxPlayers()).thenReturn(20);
+    doReturn(List.of()).when(serverService).getOnlinePlayers();
 
     betterPlayerJoin.login(playerLoginEvent);
 
@@ -326,14 +307,12 @@ class BetterPlayerJoinTest {
 
   @Test
   void loginDeniesPlayerWhenAtMaxCapacity() {
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getMaxPlayers()).thenReturn(1);
+    when(serverService.getMaxPlayers()).thenReturn(1);
 
     Player onlinePlayer = mock(Player.class);
-    doReturn(List.of(onlinePlayer)).when(server).getOnlinePlayers();
+    doReturn(List.of(onlinePlayer)).when(serverService).getOnlinePlayers();
     when(translationService.get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN)).thenReturn("Server is full!");
 
     betterPlayerJoin.login(playerLoginEvent);
@@ -343,15 +322,13 @@ class BetterPlayerJoinTest {
 
   @Test
   void loginDeniesPlayerWhenExceedingMaxCapacity() {
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getMaxPlayers()).thenReturn(1);
+    when(serverService.getMaxPlayers()).thenReturn(1);
 
     Player onlinePlayer1 = mock(Player.class);
     Player onlinePlayer2 = mock(Player.class);
-    doReturn(List.of(onlinePlayer1, onlinePlayer2)).when(server).getOnlinePlayers();
+    doReturn(List.of(onlinePlayer1, onlinePlayer2)).when(serverService).getOnlinePlayers();
     when(translationService.get(MessageKey.PLUGIN_EVENT_TO_MANY_PLAYERS_CANT_JOIN)).thenReturn("Server is full!");
 
     betterPlayerJoin.login(playerLoginEvent);
@@ -375,18 +352,16 @@ class BetterPlayerJoinTest {
     betterPlayerJoin.injectContext(newContext);
 
     when(newContext.getBankService()).thenReturn(bankService);
-    when(newContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
-    when(server.getMaxPlayers()).thenReturn(20);
-    doReturn(List.of()).when(server).getOnlinePlayers();
+    when(newContext.getServerService()).thenReturn(serverService);
+    when(serverService.getMaxPlayers()).thenReturn(20);
+    doReturn(List.of()).when(serverService).getOnlinePlayers();
     when(asyncPlayerPreLoginEvent.getUniqueId()).thenReturn(playerUuid);
 
     betterPlayerJoin.checkInterest(asyncPlayerPreLoginEvent);
     betterPlayerJoin.login(playerLoginEvent);
 
     verify(newContext, atLeastOnce()).getBankService();
-    verify(newContext, atLeastOnce()).getPluginMetadataService();
+    verify(newContext, atLeastOnce()).getServerService();
   }
 
   @Test
@@ -396,8 +371,8 @@ class BetterPlayerJoinTest {
     when(serviceContext.getPluginInformationService()).thenReturn(pluginInformationService);
     when(serviceContext.getWorldGroupService()).thenReturn(worldGroupService);
     when(serviceContext.getBankService()).thenReturn(bankService);
-    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
     when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
+    when(serviceContext.getServerService()).thenReturn(serverService);
 
     PlayerEntry existingEntry = new PlayerEntry();
     existingEntry.setName("TestPlayer");
@@ -412,9 +387,6 @@ class BetterPlayerJoinTest {
     when(pluginInformationService.getPluginInformation()).thenReturn(pluginInformationEntry);
     when(pluginInformationEntry.getTabHeader()).thenReturn("header");
     when(pluginInformationEntry.getTabFooter()).thenReturn("footer");
-
-    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
-    when(plugin.getServer()).thenReturn(server);
 
     ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
 

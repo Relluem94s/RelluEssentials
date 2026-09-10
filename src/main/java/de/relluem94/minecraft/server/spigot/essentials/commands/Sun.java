@@ -5,18 +5,18 @@ import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
+import java.util.stream.Collectors;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Command to set sunny weather in a specific world or the player's current world.
@@ -61,8 +61,7 @@ public class Sun implements CommandConstruct {
       return true;
     }
 
-    World world = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getWorld(args[0]);
+    World world = serviceContext.getServerService().getWorld(args[0]);
 
     if (world == null) {
       p.sendMessage(serviceContext.getTranslationService()
@@ -94,6 +93,7 @@ public class Sun implements CommandConstruct {
       return new ArrayList<>();
     }
 
-    return TabCompleterHelper.getWorlds();
+    return serviceContext.getServerService().getWorlds().stream().map(World::getName)
+        .collect(Collectors.toList());
   }
 }

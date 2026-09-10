@@ -23,7 +23,7 @@ public class BagDao {
   }
 
   public Optional<BagTypeEntry> findBagTypeById(int bagTypeId) {
-    return Optional.ofNullable(
+    return Optional.of(
         queryExecutor.querySingle("getBagTypeById.sql",
             ps -> ps.setInt(1, bagTypeId),
             BagMapper::mapBagType
