@@ -69,7 +69,7 @@ public class PlantCommand implements SubCommand {
     }
 
     BlockService blockService = new BlockService(serviceContext.getSchedulerService(), material,
-        serviceContext.getPluginMetadataService().getPlugin().getServer());
+        serviceContext.getServerService());
     List<ModifyHistoryEntry> history = new ArrayList<>();
 
     final long[] currentDelay = {0};
