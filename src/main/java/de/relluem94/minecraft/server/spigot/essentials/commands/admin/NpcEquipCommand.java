@@ -6,14 +6,11 @@ import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcEquipmentInventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.SubCommand;
+import de.relluem94.minecraft.server.spigot.essentials.listeners.npc.NpcEquipmentInventoryCloseListener;
 import de.relluem94.minecraft.server.spigot.essentials.models.Npc;
 import java.util.Optional;
 import java.util.UUID;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.jspecify.annotations.NonNull;
 
@@ -77,7 +74,7 @@ public class NpcEquipCommand implements SubCommand {
   }
 
   private void openNpcInventoryForPlayer(Player player, @NonNull Npc npc) {
-    Inventory equipmentInventory = serviceContext.getPluginMetadataService().getPlugin().getServer()
+    Inventory equipmentInventory = serviceContext.getServerService()
         .createInventory(null, NPC_EQUIPMENT_INVENTORY_SIZE,
             NPC_EQUIPMENT_INVENTORY_TITLE_PREFIX + npc.getId());
 
@@ -91,31 +88,10 @@ public class NpcEquipCommand implements SubCommand {
     }
 
     player.openInventory(equipmentInventory);
-    registerInventoryCloseListener(player, npc, equipmentInventory);
-  }
 
-  private void registerInventoryCloseListener(Player player, Npc npc,
-      Inventory equipmentInventory) {
-    Listener closeListener = new Listener() {
-      @EventHandler
-      public void onInventoryClose(InventoryCloseEvent event) {
-        if (!event.getPlayer().equals(player)) {
-          return;
-        }
-        if (!event.getInventory().equals(equipmentInventory)) {
-          return;
-        }
-        HandlerList.unregisterAll(this);
-
-        serviceContext.getNpcService().saveNpcInventory(npc, event.getInventory());
-
-        if (npc.getEntityUUID() != null) {
-          NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(event.getInventory(),
-              npc.getEntityUUID());
-        }
-      }
-    };
-    serviceContext.getPluginManagerService().registerEvents(closeListener);
+    serviceContext.getPluginManagerService().registerEvents(
+        new NpcEquipmentInventoryCloseListener(serviceContext, player, npc, equipmentInventory)
+    );
   }
 
   @Override
