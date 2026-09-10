@@ -33,8 +33,7 @@ public class PingCommand implements SubCommand {
       return;
     }
 
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(args[1]);
+    Player target = serviceContext.getServerService().getPlayer(args[1]);
     if (target == null) {
       player.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_ADMIN_PING_OTHER_NOT_FOUND, args[1]));
