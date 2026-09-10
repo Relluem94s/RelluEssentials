@@ -13,7 +13,6 @@ import de.relluem94.minecraft.server.spigot.essentials.services.tasks.BlockServi
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
 /**
@@ -103,9 +102,8 @@ public class ReplaceCommand implements SubCommand {
    *         {@code false} otherwise
    */
   protected boolean shareBlockDataType(Material fromMaterial, Material toMaterial) {
-    Server server = serviceContext.getPluginMetadataService().getPlugin().getServer();
-    return server.createBlockData(fromMaterial).getClass()
-        .equals(server.createBlockData(toMaterial).getClass());
+    return serviceContext.getServerService().createBlockData(fromMaterial.name()).getClass()
+        .equals(serviceContext.getServerService().createBlockData(toMaterial.name()).getClass());
   }
 
   /**

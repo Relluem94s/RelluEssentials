@@ -287,6 +287,7 @@ class ReplaceCommandTest {
     };
 
     BlockData sharedBlockData = mock(BlockData.class);
+    when(serviceContext.getServerService().createBlockData(anyString())).thenReturn(sharedBlockData);
     when(server.createBlockData(any(Material.class))).thenReturn(sharedBlockData);
 
     assert command.shareBlockDataType(Material.STONE, Material.COBBLESTONE);
@@ -304,7 +305,8 @@ class ReplaceCommandTest {
     BlockData stoneBlockData = mock(BlockData.class);
     org.bukkit.block.data.Orientable dirtBlockData = mock(org.bukkit.block.data.Orientable.class);
 
-    when(server.createBlockData(Material.STONE)).thenReturn(stoneBlockData);
+    when(serviceContext.getServerService().createBlockData("STONE")).thenReturn(stoneBlockData);
+    when(serviceContext.getServerService().createBlockData("DIRT")).thenReturn(dirtBlockData);
     when(server.createBlockData(Material.DIRT)).thenReturn(dirtBlockData);
 
     assert !command.shareBlockDataType(Material.STONE, Material.DIRT);
