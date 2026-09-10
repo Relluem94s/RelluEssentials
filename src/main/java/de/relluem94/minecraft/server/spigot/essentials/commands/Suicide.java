@@ -66,8 +66,7 @@ public class Suicide implements CommandConstruct {
         return true;
       }
 
-      Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-          .getPlayer(args[0]);
+      Player target = serviceContext.getServerService().getPlayer(args[0]);
       if (target == null) {
         sender.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
@@ -97,8 +96,7 @@ public class Suicide implements CommandConstruct {
       return true;
     }
 
-    Player target = serviceContext.getPluginMetadataService().getPlugin().getServer()
-        .getPlayer(args[0]);
+    Player target = serviceContext.getServerService().getPlayer(args[0]);
     if (target == null) {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER, args[0]));
@@ -117,7 +115,7 @@ public class Suicide implements CommandConstruct {
 
   private void suicide(@NotNull Player p) {
     p.setHealth(0);
-    serviceContext.getPluginMetadataService().getPlugin().getServer().broadcastMessage(
+    serviceContext.getServerService().broadcastMessage(
         serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_SUICIDE, p.getCustomName()));
   }
