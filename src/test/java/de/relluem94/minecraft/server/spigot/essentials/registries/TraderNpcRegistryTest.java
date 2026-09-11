@@ -322,16 +322,18 @@ class TraderNpcRegistryTest {
     when(entry.getSlotName(0)).thenReturn("STONE");
     Inventory inventory = mock(Inventory.class);
     PersistentDataContainer persistentDataContainer = mock(PersistentDataContainer.class);
+    ItemMeta slotItemMeta = mock(ItemMeta.class);
 
     mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
         .thenReturn(inventory);
-    when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+    when(slotItemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+    when(itemFactory.getItemMeta(eq(Material.STONE))).thenReturn(slotItemMeta);
     lenient().when(translationService.get(any(MessageKey.class), any(String.class), any(String.class), any(String.class), any(String.class))).thenReturn("price line");
 
     traderNpcRegistry.init(List.of(entry));
     traderNpcRegistry.getNpc(0).getMainGUI();
 
-    verify(itemMeta).setLore(any(List.class));
+    verify(slotItemMeta).setLore(any(List.class));
   }
 
   @Test
