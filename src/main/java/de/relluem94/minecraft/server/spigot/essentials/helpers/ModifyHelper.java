@@ -21,17 +21,38 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Utility class providing helper methods for block modification operations,
+ * including clipboard management, selection handling, rotation, undo functionality,
+ * and protection checks.
+ *
+ * @author rellu
+ */
 public class ModifyHelper {
 
   private ModifyHelper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
+  /**
+   * Normalizes a yaw angle to the nearest cardinal direction (0, 90, 180, 270 degrees).
+   *
+   * @param yaw the raw yaw angle to normalize
+   * @return the normalized yaw angle rounded to the nearest 90-degree step
+   */
   public static float normalizeYaw(float yaw) {
     yaw = ((yaw % 360) + 360) % 360;
     return Math.round(yaw / 90.0f) * 90.0f % 360.0f;
   }
 
+  /**
+   * Converts world-relative coordinates to local coordinates based on the given yaw rotation.
+   *
+   * @param dx the world-relative X offset
+   * @param dz the world-relative Z offset
+   * @param yaw the yaw angle used to determine the rotation
+   * @return an array containing the local X and Z coordinates after applying the rotation
+   */
   @Contract(pure = true)
   public static int @NonNull [] worldToLocal(int dx, int dz, float yaw) {
     int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
@@ -43,6 +64,14 @@ public class ModifyHelper {
     };
   }
 
+  /**
+   * Converts local relative coordinates back to world coordinates based on the given yaw rotation.
+   *
+   * @param relX the local relative X coordinate
+   * @param relZ the local relative Z coordinate
+   * @param yaw the yaw angle used to determine the rotation
+   * @return an array containing the world X and Z coordinates after applying the rotation
+   */
   @Contract(pure = true)
   public static int @NonNull [] relativeToWorld(int relX, int relZ, float yaw) {
     int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
@@ -54,6 +83,13 @@ public class ModifyHelper {
     };
   }
 
+  /**
+   * Rotates the given {@link BlockData} by the specified yaw angle.
+   *
+   * @param original the original {@link BlockData} to rotate
+   * @param yaw the yaw angle determining the rotation amount
+   * @return a new {@link BlockData} instance rotated according to the given yaw
+   */
   public static BlockData rotateBlockData(BlockData original, float yaw) {
     int roundedYaw = ((Math.round(yaw) % 360) + 360) % 360;
     BlockData rotated = original.clone();
@@ -66,6 +102,15 @@ public class ModifyHelper {
     return rotated;
   }
 
+  /**
+   * Resolves the world {@link Block} corresponding to a clipboard entry,
+   * applying the given yaw rotation relative to the player's target location.
+   *
+   * @param entry the {@link ModifyClipboardEntry} containing relative position and block data
+   * @param yaw the yaw angle used to rotate the relative position into world space
+   * @param playerTargetLoc the world location used as the paste origin
+   * @return the {@link Block} at the resolved world position
+   */
   public static @NonNull Block getBlock(@NonNull ModifyClipboardEntry entry, float yaw,
       @NonNull Location playerTargetLoc) {
     int relX = entry.getLocation().getBlockX();
@@ -83,6 +128,14 @@ public class ModifyHelper {
     return newLoc.getBlock();
   }
 
+  /**
+   * Computes a selection with positions relative to the given player target location,
+   * preserving the yaw and pitch of the target location on both positions.
+   *
+   * @param selection the original absolute {@link Selection}
+   * @param playerTargetLoc the location used as the reference origin for relativization
+   * @return a new {@link Selection} with positions relative to the player target location
+   */
   public static @NotNull Selection getRelativeCopySelection(@NotNull Selection selection,
       Location playerTargetLoc) {
     Location pos1 = selection.getPos1().clone().subtract(playerTargetLoc);
@@ -94,7 +147,15 @@ public class ModifyHelper {
     return new Selection(pos1, pos2);
   }
 
-
+  /**
+   * Determines whether the given {@link Material} represents a plant.
+   *
+   * <p>Recognized plant materials include flowers, saplings, crops, bamboo, sugar cane,
+   * cactus, sweet berry bushes, kelp, sea pickles, and lily pads.</p>
+   *
+   * @param material the {@link Material} to check
+   * @return {@code true} if the material is a plant, {@code false} otherwise
+   */
   public static boolean isPlantMaterial(Material material) {
     return Tag.FLOWERS.isTagged(material)
         || Tag.SAPLINGS.isTagged(material)
@@ -109,6 +170,16 @@ public class ModifyHelper {
         || material == Material.LILY_PAD;
   }
 
+  /**
+   * Creates a {@link ModifyClipboardEntry} for the given block by computing its position
+   * relative to the player's target location and transforming it into local coordinates
+   * based on the player's current yaw.
+   *
+   * @param block the {@link Block} to create a clipboard entry for
+   * @param p the {@link Player} whose yaw is used for coordinate transformation
+   * @param playerTargetLoc the location used as the copy origin reference point
+   * @return a {@link ModifyClipboardEntry} containing the local position and block data
+   */
   public static @NonNull ModifyClipboardEntry getModifyClipboardEntry(@NonNull Block block,
       @NonNull Player p, @NonNull Location playerTargetLoc) {
     float yaw = normalizeYaw(p.getLocation().getYaw());
@@ -125,7 +196,18 @@ public class ModifyHelper {
     return new ModifyClipboardEntry(localLoc, block.getType(), block.getBlockData());
   }
 
-
+  /**
+   * Rotates the given list of {@link ModifyClipboardEntry} elements 90 degrees clockwise
+   * and computes a new {@link Selection} that fits the rotated entries.
+   *
+   * <p>The rotated entries are normalized so that their minimum X and Z coordinates
+   * start at zero.</p>
+   *
+   * @param entries the list of {@link ModifyClipboardEntry} elements to rotate
+   * @param selection the original {@link Selection} used to preserve Y bounds and world reference
+   * @return a {@link DoubleStore} containing the new rotated {@link Selection}
+   *         and the list of rotated and normalized {@link ModifyClipboardEntry} elements
+   */
   public static @NonNull DoubleStore<Selection, List<ModifyClipboardEntry>> rotate(
       @NotNull List<ModifyClipboardEntry> entries, @NotNull Selection selection) {
     List<ModifyClipboardEntry> rotatedEntries = entries.stream()
@@ -172,11 +254,23 @@ public class ModifyHelper {
     return new DoubleStore<>(rotatedSelection, normalizedEntries);
   }
 
+  /**
+   * Reverts a block to its previous state as recorded in the given {@link ModifyHistoryEntry}.
+   *
+   * @param entry the {@link ModifyHistoryEntry} containing the location, material,
+   *              and block data to restore
+   */
   public static void undo(@NotNull ModifyHistoryEntry entry) {
     entry.getLocation().getBlock().setType(entry.getMaterial());
     entry.getLocation().getBlock().setBlockData(entry.getData());
   }
 
+  /**
+   * Checks whether the given {@link Block} has an associated protection entry and removes it
+   * from both the registry and the protection store if present.
+   *
+   * @param block the {@link Block} whose protection should be checked and potentially removed
+   */
   public static void checkAndRemoveProtection(Block block) {
     if (RelluEssentials.getInstance().getServiceContext().getProtectionService()
         .isProtectableMaterial(block.getType())) {
@@ -193,6 +287,13 @@ public class ModifyHelper {
     }
   }
 
+  /**
+   * Iterates over every {@link Block} within the given {@link Selection} and applies
+   * the provided action to each block.
+   *
+   * @param selection the {@link Selection} defining the bounds of blocks to iterate over
+   * @param action the {@link Consumer} action to apply to each {@link Block}
+   */
   public static void forEachBlock(@NotNull Selection selection, Consumer<Block> action) {
     for (int y = selection.getMinY(); y <= selection.getMaxY(); y++) {
       for (int x = selection.getMinX(); x <= selection.getMaxX(); x++) {
