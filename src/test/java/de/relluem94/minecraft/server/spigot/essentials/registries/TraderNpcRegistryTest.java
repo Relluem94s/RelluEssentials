@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
+import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
@@ -325,6 +326,7 @@ class TraderNpcRegistryTest {
     mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
         .thenReturn(inventory);
     when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+    lenient().when(translationService.get(any(MessageKey.class), any(String.class), any(String.class), any(String.class), any(String.class))).thenReturn("price line");
 
     traderNpcRegistry.init(List.of(entry));
     traderNpcRegistry.getNpc(0).getMainGUI();
@@ -342,6 +344,7 @@ class TraderNpcRegistryTest {
     mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
         .thenReturn(inventory);
     when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+    lenient().when(translationService.get(any(MessageKey.class), any(String.class), any(String.class), any(String.class), any(String.class))).thenReturn("price line");
 
     traderNpcRegistry.init(List.of(entry));
     traderNpcRegistry.getNpc(0).getMainGUI();
