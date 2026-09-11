@@ -1,9 +1,13 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
-
 import java.util.UUID;
 
+/**
+ * Utility class for converting between dashed and undashed UUID formats.
+ *
+ * @author rellu
+ */
 public class UuidHelper {
 
   private UuidHelper() {
@@ -11,10 +15,10 @@ public class UuidHelper {
   }
 
   /**
-   * converts unDashed UUID (short) to dashed UUID (long)
+   * Converts an undashed UUID string to a {@link UUID} with dashes.
    *
-   * @param id String
-   * @return UUID
+   * @param id the undashed UUID string to convert
+   * @return the corresponding {@link UUID} with dashes
    */
   public static UUID dashed(String id) {
     return UUID.fromString(
@@ -28,10 +32,10 @@ public class UuidHelper {
   }
 
   /**
-   * converts dashed UUID (long) to unDashed UUID (short)
+   * Converts a {@link UUID} to an undashed UUID string.
    *
-   * @param id UUID
-   * @return String
+   * @param id the {@link UUID} to convert
+   * @return the UUID as a string without dashes
    */
   public static String unDashed(UUID id) {
     return id.toString().replace("-", "");
