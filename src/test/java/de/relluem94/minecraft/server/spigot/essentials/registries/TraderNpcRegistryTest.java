@@ -308,6 +308,7 @@ class TraderNpcRegistryTest {
 
     mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
         .thenReturn(inventory);
+    when(inventory.getSize()).thenReturn(NpcHelper.INV_SIZE);
     lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
 
     traderNpcRegistry.init(List.of(entry));
@@ -315,6 +316,7 @@ class TraderNpcRegistryTest {
 
     verify(inventory, times(NpcHelper.INV_SIZE)).setItem(any(Integer.class), eq(disabledItemStack));
   }
+
 
   @Test
   void getMainGuiWithNonAirSlotSetsLoreWithPrices() {
