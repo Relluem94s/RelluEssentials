@@ -1,16 +1,24 @@
 package de.relluem94.minecraft.server.spigot.essentials.registries;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemBuyPrice;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyConstants.itemSellPrice;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
+import de.relluem94.minecraft.server.spigot.essentials.enums.ItemPrice;
+import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
@@ -22,9 +30,13 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import java.util.List;
 import java.util.Optional;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,10 +84,18 @@ class TraderNpcRegistryTest {
 
   private TraderNpcRegistry traderNpcRegistry;
 
+  @Mock
+  private RelluEssentials relluEssentials;
+
+  private MockedStatic<RelluEssentials> mockedRelluEssentials;
+
   @BeforeEach
   void setUp() {
     mockedBukkit = mockStatic(Bukkit.class);
+    mockedRelluEssentials = mockStatic(RelluEssentials.class);
+    mockedRelluEssentials.when(RelluEssentials::getInstance).thenReturn(relluEssentials);
     mockedBukkit.when(Bukkit::getItemFactory).thenReturn(itemFactory);
+    lenient().when(relluEssentials.getName()).thenReturn("relluessentials");
     lenient().when(itemFactory.getItemMeta(any())).thenReturn(itemMeta);
     lenient().when(itemFactory.equals(any(), any())).thenReturn(false);
     lenient().when(itemFactory.isApplicable(any(), any(ItemStack.class))).thenReturn(true);
@@ -97,7 +117,9 @@ class TraderNpcRegistryTest {
   @AfterEach
   void tearDown() {
     mockedBukkit.close();
+    mockedRelluEssentials.close();
   }
+
 
   @Test
   void constructorThrowsNoSuchElementExceptionWhenDisabledItemNotFound() {
@@ -259,6 +281,109 @@ class TraderNpcRegistryTest {
     traderNpcRegistry.init(List.of(entry));
 
     assertEquals("§8Rellu§cEssentials§r§f§7 >> §fNpcName", traderNpcRegistry.getNpc(0).getTitle());
+  }
+
+  @Test
+  void getMainGuiSetsCloseItemOnSlot53() {
+    TraderNpcEntry entry = buildTraderNpcEntryMock("NpcName", Type.TRADER, new String[0]);
+    Inventory inventory = mock(Inventory.class);
+    PersistentDataContainer persistentDataContainer = mock(PersistentDataContainer.class);
+
+    mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
+        .thenReturn(inventory);
+    lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+
+    traderNpcRegistry.init(List.of(entry));
+    traderNpcRegistry.getNpc(0).getMainGUI();
+
+    verify(inventory).setItem(53, closeItemStack);
+  }
+
+  @Test
+  void getMainGuiSetsDisabledItemsAsFiller() {
+    TraderNpcEntry entry = buildTraderNpcEntryMock("NpcName", Type.TRADER, new String[0]);
+    Inventory inventory = mock(Inventory.class);
+    PersistentDataContainer persistentDataContainer = mock(PersistentDataContainer.class);
+
+    mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
+        .thenReturn(inventory);
+    lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+
+    traderNpcRegistry.init(List.of(entry));
+    traderNpcRegistry.getNpc(0).getMainGUI();
+
+    verify(inventory, times(NpcHelper.INV_SIZE)).setItem(any(Integer.class), eq(disabledItemStack));
+  }
+
+  @Test
+  void getMainGuiWithNonAirSlotSetsLoreWithPrices() {
+    TraderNpcEntry entry = buildTraderNpcEntryMock("NpcName", Type.TRADER, new String[]{"STONE"});
+    when(entry.getSlotName(0)).thenReturn("STONE");
+    Inventory inventory = mock(Inventory.class);
+    PersistentDataContainer persistentDataContainer = mock(PersistentDataContainer.class);
+
+    mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
+        .thenReturn(inventory);
+    when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+
+    traderNpcRegistry.init(List.of(entry));
+    traderNpcRegistry.getNpc(0).getMainGUI();
+
+    verify(itemMeta).setLore(any(List.class));
+  }
+
+  @Test
+  void getMainGuiWithNonAirSlotSetsBuyAndSellPriceInPersistentData() {
+    TraderNpcEntry entry = buildTraderNpcEntryMock("NpcName", Type.TRADER, new String[]{"STONE"});
+    when(entry.getSlotName(0)).thenReturn("STONE");
+    Inventory inventory = mock(Inventory.class);
+    PersistentDataContainer persistentDataContainer = mock(PersistentDataContainer.class);
+
+    mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
+        .thenReturn(inventory);
+    when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+
+    traderNpcRegistry.init(List.of(entry));
+    traderNpcRegistry.getNpc(0).getMainGUI();
+
+    verify(persistentDataContainer).set(eq(itemSellPrice()), eq(PersistentDataType.INTEGER),
+        eq(ItemPrice.from(Material.STONE).getSellPrice()));
+    verify(persistentDataContainer).set(eq(itemBuyPrice()), eq(PersistentDataType.INTEGER),
+        eq(ItemPrice.from(Material.STONE).getBuyPrice()));
+  }
+
+  @Test
+  void getMainGuiWithAirSlotDoesNotSetItemForThatSlot() {
+    TraderNpcEntry entry = buildTraderNpcEntryMock("NpcName", Type.TRADER, new String[]{"AIR"});
+    when(entry.getSlotName(0)).thenReturn("AIR");
+    Inventory inventory = mock(Inventory.class);
+    PersistentDataContainer persistentDataContainer = mock(PersistentDataContainer.class);
+
+    mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
+        .thenReturn(inventory);
+    lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+
+    traderNpcRegistry.init(List.of(entry));
+    traderNpcRegistry.getNpc(0).getMainGUI();
+
+    verify(inventory, times(NpcHelper.INV_SIZE)).setItem(any(Integer.class), eq(disabledItemStack));
+  }
+
+  @Test
+  void getMainGuiReturnsInventory() {
+    TraderNpcEntry entry = buildTraderNpcEntryMock("NpcName", Type.TRADER, new String[0]);
+    Inventory inventory = mock(Inventory.class);
+    PersistentDataContainer persistentDataContainer = mock(PersistentDataContainer.class);
+
+    mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
+        .thenReturn(inventory);
+    lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
+
+    traderNpcRegistry.init(List.of(entry));
+    Inventory result = traderNpcRegistry.getNpc(0).getMainGUI();
+
+    assertNotNull(result);
+    assertEquals(inventory, result);
   }
 
   private TraderNpc buildTraderNpcMock(Type type, String name, String title) {
