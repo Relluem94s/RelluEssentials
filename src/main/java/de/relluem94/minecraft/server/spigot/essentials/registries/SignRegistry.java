@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.registries;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.SignAction;
 import java.util.Collection;
@@ -20,6 +21,7 @@ public class SignRegistry {
   private static final Map<String, SignAction> registeredActions = new LinkedHashMap<>();
 
   private SignRegistry() {
+    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
   /**
@@ -58,7 +60,8 @@ public class SignRegistry {
    */
   public static Optional<SignAction> findByLine(@NonNull String signLine) {
     return registeredActions.values().stream().filter(
-            action -> action.getShorthandBracket().equalsIgnoreCase(signLine) || action.getNameBracket()
+            action -> action.getShorthandBracket().equalsIgnoreCase(signLine)
+                || action.getNameBracket()
                 .equalsIgnoreCase(signLine) || action.getDisplayName().equalsIgnoreCase(signLine))
         .findFirst();
   }
@@ -69,7 +72,7 @@ public class SignRegistry {
    *
    * @param signLine The string content of the sign line to match.
    * @return An Optional containing a Map Entry of the RegistryKey and SignAction, or empty if no
-   * match is found.
+   *     match is found.
    */
   public static Optional<Map.Entry<RelluEssentialsNamespacedKey, SignAction>> findEntryByLine(
       @NonNull String signLine) {

@@ -277,7 +277,7 @@ class RelluEssentialsTest {
       assertEquals(spyPlugin, RelluEssentials.getInstance());
 
       registry.verify(() -> RelluEssentialsRegistry.initialize(
-          spyPlugin.getServiceContext().getTranslationService()));
+          spyPlugin.getServiceContext()));
     }
   }
 

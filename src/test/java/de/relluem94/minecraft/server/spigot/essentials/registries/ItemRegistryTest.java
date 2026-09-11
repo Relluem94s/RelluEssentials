@@ -140,4 +140,44 @@ class ItemRegistryTest {
 
     assertTrue(result.isEmpty());
   }
+
+  @Test
+  void getAllByTypeAndNamespace_ShouldFilterItemsByTypeAndNamespace() {
+    CustomItem matchingItem = mock(CustomItem.class);
+    CustomItem wrongTypeItem = mock(CustomItem.class);
+    CustomItem wrongNamespaceItem = mock(CustomItem.class);
+
+    RelluEssentialsNamespacedKey matchingKey = mock(RelluEssentialsNamespacedKey.class);
+    RelluEssentialsNamespacedKey wrongTypeKey = mock(RelluEssentialsNamespacedKey.class);
+    RelluEssentialsNamespacedKey wrongNamespaceKey = mock(RelluEssentialsNamespacedKey.class);
+
+    RelluEssentialsNamespacedKey matchingItemKey = mock(RelluEssentialsNamespacedKey.class);
+    RelluEssentialsNamespacedKey wrongTypeItemKey = mock(RelluEssentialsNamespacedKey.class);
+    RelluEssentialsNamespacedKey wrongNamespaceItemKey = mock(RelluEssentialsNamespacedKey.class);
+
+    when(matchingKey.toString()).thenReturn("namespace_a:gadget_item");
+    when(wrongTypeKey.toString()).thenReturn("namespace_a:tool_item");
+    when(wrongNamespaceKey.toString()).thenReturn("namespace_b:gadget_item");
+
+    when(matchingItem.type()).thenReturn(CustomItem.Type.GADGET);
+    when(matchingItem.relluEssentialsNamespacedKey()).thenReturn(matchingItemKey);
+    when(matchingItemKey.getNamespace()).thenReturn("namespace_a");
+
+    when(wrongTypeItem.type()).thenReturn(CustomItem.Type.TOOL);
+    when(wrongTypeItem.relluEssentialsNamespacedKey()).thenReturn(wrongTypeItemKey);
+    when(wrongTypeItemKey.getNamespace()).thenReturn("namespace_a");
+
+    when(wrongNamespaceItem.type()).thenReturn(CustomItem.Type.GADGET);
+    when(wrongNamespaceItem.relluEssentialsNamespacedKey()).thenReturn(wrongNamespaceItemKey);
+    when(wrongNamespaceItemKey.getNamespace()).thenReturn("namespace_b");
+
+    itemRegistry.register(matchingKey, matchingItem);
+    itemRegistry.register(wrongTypeKey, wrongTypeItem);
+    itemRegistry.register(wrongNamespaceKey, wrongNamespaceItem);
+
+    var results = itemRegistry.getAllByTypeAndNamespace(CustomItem.Type.GADGET, "namespace_a");
+
+    assertEquals(1, results.size());
+    assertEquals(matchingItem, results.getFirst());
+  }
 }

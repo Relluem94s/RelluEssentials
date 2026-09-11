@@ -90,7 +90,7 @@ public class RelluEssentials extends JavaPlugin {
         serviceContext.getTranslationService().get(MessageKey.PLUGIN_MANAGER_START_MESSAGE));
     sender.sendMessage(PLUGIN_NAME_CONSOLE, "");
 
-    RelluEssentialsRegistry.initialize(getServiceContext().getTranslationService());
+    RelluEssentialsRegistry.initialize(getServiceContext());
 
     configManager = new ConfigManager();
     configManager.enable(this);
