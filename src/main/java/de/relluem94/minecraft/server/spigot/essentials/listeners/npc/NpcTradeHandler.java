@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -34,6 +33,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.jspecify.annotations.NonNull;
 
 public class NpcTradeHandler {
 

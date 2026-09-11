@@ -7,19 +7,23 @@ import static de.relluem94.rellulib.utils.StringUtils.implode;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.NonNull;
-import org.bukkit.Bukkit;
+import java.util.stream.Collectors;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for sending title messages to players.
+ * Requires the sender to have at least moderator permissions.
+ * Usage: /title <player> <title> [subtitle]
+ */
 @CommandName("title")
 public class Title implements CommandConstruct {
 
@@ -34,12 +38,14 @@ public class Title implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String @NotNull [] args) {
     if (args.length < 2) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));
       return true;
     }
 
     if (!serviceContext.getGroupService().isSenderAuthorized(sender, "mod")) {
-      sender.sendMessage(serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
+      sender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_PERMISSION_MISSING));
       return true;
     }
 
@@ -48,10 +54,10 @@ public class Title implements CommandConstruct {
   }
 
   private void title(String @NotNull [] args, CommandSender commandSender) {
-    Player target = Bukkit.getPlayer(args[0]);
+    Player target = serviceContext.getServerService().getPlayer(args[0]);
     if (target == null) {
-      commandSender.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER));
+      commandSender.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.COMMAND_TARGET_NOT_A_PLAYER));
       return;
     }
 
@@ -80,8 +86,7 @@ public class Title implements CommandConstruct {
       return tabList;
     }
 
-    tabList.addAll(TabCompleterHelper.getOnlinePlayers());
-
-    return tabList;
+    return serviceContext.getServerService().getOnlinePlayers().stream().map(Player::getName)
+        .collect(Collectors.toList());
   }
 }

@@ -15,10 +15,13 @@ import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
 import de.relluem94.minecraft.server.spigot.essentials.models.recipe.Shaped;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import java.util.Map;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Manages the registration of custom crafting recipes for the plugin.
+ * Registers all custom recipes with the server during the plugin enable phase.
+ */
 public class RecipeManager implements Enable {
 
   @Override
@@ -30,7 +33,7 @@ public class RecipeManager implements Enable {
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_REGISTER_RECIPE));
     int recipeCount = 0;
-    Bukkit.addRecipe(buildCloudBootsRecipe(relluEssentialsPlugin).getRecipe());
+    plugin.getServer().addRecipe(buildCloudBootsRecipe(relluEssentialsPlugin).getRecipe());
     recipeCount++;
     consoleSendMessage(PLUGIN_NAME_CONSOLE,
         translationService.get(MessageKey.PLUGIN_MANAGER_RECIPE_REGISTERED, recipeCount));
@@ -46,7 +49,7 @@ public class RecipeManager implements Enable {
             PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS)).orElseThrow();
 
     return new RecipeHelper(PLUGIN_ITEM_NAMESPACE_CLOUD_BOOTS,
-        new Shaped(new String[]{"F F", "F F",}, Map.of('F', cloudSailorItem.material())),
+        new Shaped(new String[]{"F F", "F F", }, Map.of('F', cloudSailorItem.material())),
         cloudBootsItem.toItemStack());
   }
 }

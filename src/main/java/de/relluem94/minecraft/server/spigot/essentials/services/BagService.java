@@ -6,15 +6,16 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper.BAG_SIZE;
 import static de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat.ADMIN_CHANNEL;
 
+import de.relluem94.minecraft.server.spigot.essentials.builders.CustomItemBuilder;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Rarity;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Type;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
@@ -32,7 +33,6 @@ import java.util.ListIterator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -45,8 +45,8 @@ import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Service responsible for managing bags, including their creation, retrieval,
- * inventory representation, and item collection logic.
+ * Service responsible for managing bags, including their creation, retrieval, inventory
+ * representation, and item collection logic.
  */
 public class BagService {
 
@@ -65,13 +65,9 @@ public class BagService {
    * @param bagTypeRegistry   the registry for bag types
    * @param bagTypeRepository the repository for bag types
    */
-  public BagService(
-      ServiceContext serviceContext,
-      BagRegistry bagRegistry,
-      BagRepository bagRepository,
-      BagTypeRegistry bagTypeRegistry,
-      BagTypeRepository bagTypeRepository
-  ) {
+  public BagService(ServiceContext serviceContext, BagRegistry bagRegistry,
+      BagRepository bagRepository, BagTypeRegistry bagTypeRegistry,
+      BagTypeRepository bagTypeRepository) {
     this.serviceContext = serviceContext;
     this.bagRegistry = bagRegistry;
     this.bagRepository = bagRepository;
@@ -158,8 +154,8 @@ public class BagService {
   }
 
   /**
-   * Inserts a new bag for the given player and bag type, persists it to the database,
-   * and registers it in the in-memory registry.
+   * Inserts a new bag for the given player and bag type, persists it to the database, and registers
+   * it in the in-memory registry.
    *
    * @param playerId  the player id to insert for
    * @param bagTypeId the bag type id to insert
@@ -194,17 +190,7 @@ public class BagService {
     List<ItemStack> slotItemStacks = Arrays.asList(getItemStacks(bagEntry.getBagType()));
     ItemStack itemStackWithoutAmount = ItemHelper.getCleanItemStack(itemStack);
 
-    if (!slotItemStacks.contains(itemStackWithoutAmount)) {
-      return -1;
-    }
-
-    for (int slotIndex = 0; slotIndex < BAG_SIZE; slotIndex++) {
-      if (slotItemStacks.get(slotIndex).equals(itemStackWithoutAmount)) {
-        return slotIndex;
-      }
-    }
-
-    return -1;
+    return slotItemStacks.indexOf(itemStackWithoutAmount);
   }
 
   /**
@@ -215,11 +201,8 @@ public class BagService {
    * @param playerEntry  the {@link PlayerEntry} of the collecting player
    * @return a {@link List} of {@link Item} entities that were collected
    */
-  public @NotNull List<Item> collectItems(
-      @NotNull List<Item> droppedItems,
-      Player player,
-      PlayerEntry playerEntry
-  ) {
+  public @NotNull List<Item> collectItems(@NotNull List<Item> droppedItems, Player player,
+      PlayerEntry playerEntry) {
     List<Item> collectedItems = new ArrayList<>();
 
     for (Item droppedItem : droppedItems) {
@@ -241,9 +224,10 @@ public class BagService {
             bagEntry.getSlotValue(slot) + droppedItem.getItemStack().getAmount());
         bagEntry.setHasToBeUpdated(true);
         serviceContext.getChatService().sendMessageInActionBar(player,
-            serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
-                droppedItem.getItemStack().getAmount(), droppedItem.getName()));
-        player.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, droppedItem.getItemStack().getAmount(),
+                    droppedItem.getName()));
+        player.playSound(player, "entity.item.pickup", SoundCategory.PLAYERS, 0.5F, 1);
         collectedItems.add(droppedItem);
       }
     }
@@ -259,11 +243,8 @@ public class BagService {
    * @param playerEntry the {@link PlayerEntry} of the collecting player
    * @return a {@link List} of {@link ItemStack} instances that were collected
    */
-  public @NotNull List<ItemStack> collectItemStacks(
-      @NotNull List<ItemStack> itemStacks,
-      Player player,
-      PlayerEntry playerEntry
-  ) {
+  public @NotNull List<ItemStack> collectItemStacks(@NotNull List<ItemStack> itemStacks,
+      Player player, PlayerEntry playerEntry) {
     List<ItemStack> collectedStacks = new ArrayList<>();
 
     for (ItemStack itemStack : itemStacks) {
@@ -284,10 +265,10 @@ public class BagService {
         bagEntry.setSlotValue(slot, bagEntry.getSlotValue(slot) + itemStack.getAmount());
         bagEntry.setHasToBeUpdated(true);
         serviceContext.getChatService().sendMessageInActionBar(player,
-            serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
-                itemStack.getAmount(),
-                itemStack.getType().name().replace("_", " ").toLowerCase()));
-        player.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
+            serviceContext.getTranslationService()
+                .get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, itemStack.getAmount(),
+                    itemStack.getType().name().replace("_", " ").toLowerCase()));
+        player.playSound(player, "entity.item.pickup", SoundCategory.PLAYERS, 0.5F, 1);
         collectedStacks.add(itemStack);
       }
     }
@@ -303,11 +284,7 @@ public class BagService {
    * @param playerEntry the {@link PlayerEntry} of the collecting player
    * @return {@code true} if the item was collected, {@code false} otherwise
    */
-  public boolean collectItem(
-      @NotNull Item droppedItem,
-      Player player,
-      PlayerEntry playerEntry
-  ) {
+  public boolean collectItem(@NotNull Item droppedItem, Player player, PlayerEntry playerEntry) {
     ItemStack itemWithoutAmount = droppedItem.getItemStack().clone();
     itemWithoutAmount.setAmount(1);
 
@@ -326,9 +303,10 @@ public class BagService {
           bagEntry.getSlotValue(slot) + droppedItem.getItemStack().getAmount());
       bagEntry.setHasToBeUpdated(true);
       serviceContext.getChatService().sendMessageInActionBar(player,
-          serviceContext.getTranslationService().get(MessageKey.PLUGIN_EVENT_BAG_COLLECT,
-              droppedItem.getItemStack().getAmount(), droppedItem.getName()));
-      player.playSound(player, Sound.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.5F, 1);
+          serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_EVENT_BAG_COLLECT, droppedItem.getItemStack().getAmount(),
+                  droppedItem.getName()));
+      player.playSound(player, "entity.item.pickup", SoundCategory.PLAYERS, 0.5F, 1);
       droppedItem.getItemStack().setAmount(0);
       return true;
     }
@@ -357,10 +335,7 @@ public class BagService {
     if (updatedBagCount != 0) {
       serviceContext.getChatService().sendMessageInChannel(
           serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAGS_SAVED, updatedBagCount),
-          PLUGIN_NAME_CHAT_CONSOLE,
-          ADMIN_CHANNEL,
-          adminGroup
-      );
+          PLUGIN_NAME_CHAT_CONSOLE, ADMIN_CHANNEL, adminGroup);
     }
   }
 
@@ -376,23 +351,23 @@ public class BagService {
   }
 
   /**
-   * Builds and returns the bag overview {@link Inventory} for the given player,
-   * showing only bags the player owns.
+   * Builds and returns the bag overview {@link Inventory} for the given player, showing only bags
+   * the player owns.
    *
    * @param playerEntry the {@link PlayerEntry} of the player
    * @return the populated bag overview {@link Inventory}
    */
   public Inventory getBagsInventory(PlayerEntry playerEntry) {
     String title = serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_GUI_TITLE);
-    Inventory inv = InventoryHelper.fillInventory(
-        InventoryHelper.createInventory(54, title), resolveDisabledItem());
+    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title),
+        resolveDisabledItem());
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = bagTypeRegistry.getAll().listIterator();
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
       slot = InventoryHelper.getNextSlot(slot);
       BagTypeEntry bte = bagTypeEntryListIterator.next();
       if (hasBag(playerEntry.getId(), bte.getId())) {
-        inv.setItem(slot, getItem(bte, false).getCustomItem());
+        inv.setItem(slot, getItem(bte, false));
         slot++;
       }
     }
@@ -400,22 +375,22 @@ public class BagService {
   }
 
   /**
-   * Builds and returns a bag overview {@link Inventory} showing all bag types,
-   * optionally in NPC context.
+   * Builds and returns a bag overview {@link Inventory} showing all bag types, optionally in NPC
+   * context.
    *
    * @param npc   {@code true} if displayed in NPC context, {@code false} otherwise
    * @param title the title of the inventory
    * @return the populated bag overview {@link Inventory}
    */
   public Inventory getBagsInventory(boolean npc, String title) {
-    Inventory inv = InventoryHelper.fillInventory(
-        InventoryHelper.createInventory(54, title), resolveDisabledItem());
+    Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, title),
+        resolveDisabledItem());
     ListIterator<BagTypeEntry> bagTypeEntryListIterator = bagTypeRegistry.getAll().listIterator();
     int slot = 0;
     while (bagTypeEntryListIterator.hasNext()) {
       slot = InventoryHelper.getNextSlot(slot);
       BagTypeEntry bte = bagTypeEntryListIterator.next();
-      inv.setItem(slot, getItem(bte, npc).getCustomItem());
+      inv.setItem(slot, getItem(bte, npc));
       slot++;
     }
     return inv;
@@ -477,18 +452,15 @@ public class BagService {
   }
 
   /**
-   * Purchases a bag of the given type for the given player, deducting the cost,
-   * persisting the new bag to the database, and registering it in the in-memory registry.
+   * Purchases a bag of the given type for the given player, deducting the cost, persisting the new
+   * bag to the database, and registering it in the in-memory registry.
    *
    * @param bagType     the {@link BagTypeEntry} to purchase
    * @param player      the {@link Player} purchasing the bag
    * @param playerEntry the {@link PlayerEntry} of the purchasing player
    */
-  public void purchaseBag(
-      @NonNull BagTypeEntry bagType,
-      @NonNull Player player,
-      @NonNull PlayerEntry playerEntry
-  ) {
+  public void purchaseBag(@NonNull BagTypeEntry bagType, @NonNull Player player,
+      @NonNull PlayerEntry playerEntry) {
     playerEntry.setPurse(playerEntry.getPurse() - bagType.getCost());
     playerEntry.setUpdatedBy(playerEntry.getId());
     playerEntry.setHasToBeUpdated(true);
@@ -501,29 +473,27 @@ public class BagService {
 
   private ItemStack resolveDisabledItem() {
     return serviceContext.getItemService().find(
-        new RelluEssentialsNamespacedKey(
-            serviceContext.getPluginMetadataService().getName(),
-            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)
-        )
-        .orElseThrow()
-        .toItemStack();
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow().toItemStack();
   }
 
   @Contract("_, _ -> new")
-  private @NotNull ItemHelper getItem(BagTypeEntry bte, boolean npc) {
-    String[] lore;
+  private @NotNull ItemStack getItem(BagTypeEntry bte, boolean npc) {
+    List<String> lore;
     if (npc) {
-      lore = new String[]{
-          serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_CLICK_TO_BUY),
-          serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_COST_TO_BUY,
-              bte.getCost())
-      };
+      lore = List.of(serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_CLICK_TO_BUY),
+          serviceContext.getTranslationService()
+              .get(MessageKey.PLUGIN_BAG_COST_TO_BUY, bte.getCost()));
     } else {
-      lore = new String[]{
-          serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_CLICK_TO_OPEN)};
+      lore = List.of(
+          serviceContext.getTranslationService().get(MessageKey.PLUGIN_BAG_CLICK_TO_OPEN));
     }
-    return new ItemHelper(PlayerHeadHelper.getCustomSkull(CustomHeads.BAG), bte.getDisplayName(),
-        Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore));
+
+    return new CustomItemBuilder(
+        new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+            bte.getName()), Material.PLAYER_HEAD).metaModifier(
+            PlayerHeadHelper.customHeadModifier(CustomHeads.BAG)).displayName(bte.getDisplayName())
+        .type(Type.NPC_GUI).rarity(Rarity.NONE).lore(lore).build().toItemStack();
   }
 
   /**
@@ -599,9 +569,7 @@ public class BagService {
    * @return a {@link List} of {@link String} containing the bag type names
    */
   public List<String> getBagTypeNamesForPlayer(int playerId) {
-    return findBags(playerId)
-        .stream()
-        .map(bag -> bag.getBagType().getName().toLowerCase())
+    return findBags(playerId).stream().map(bag -> bag.getBagType().getName().toLowerCase())
         .collect(Collectors.toList());
   }
 

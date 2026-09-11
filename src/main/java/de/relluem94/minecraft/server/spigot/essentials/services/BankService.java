@@ -2,12 +2,10 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_MONEY;
 
+import de.relluem94.minecraft.server.spigot.essentials.builders.CustomItemBuilder;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Type;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
@@ -27,11 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -46,6 +42,7 @@ import org.jspecify.annotations.Nullable;
  * upgrades and interest calculations.
  */
 public class BankService {
+
   public static final Material UPGRADE_MATERIAL = Material.AMETHYST_SHARD;
 
   private final ServiceContext serviceContext;
@@ -96,7 +93,7 @@ public class BankService {
     }
 
     List<String> lore = im.getLore() != null ? new ArrayList<>(im.getLore()) : new ArrayList<>();
-    if (lore.size() == 1) {
+    if (lore.size() <= 1) {
       lore.add(line);
     } else {
       lore.set(1, line);
@@ -108,12 +105,12 @@ public class BankService {
   }
 
   /**
-   * Builds the list of upgrade item helpers from all registered bank tiers.
+   * Builds the list of upgrade items from all registered bank tiers.
    *
-   * @return list of {@link ItemHelper} representing each available bank tier upgrade
+   * @return list of {@link CustomItem} representing each available bank tier upgrade
    */
-  public @NonNull List<ItemHelper> getBankTiers() {
-    List<ItemHelper> bankTierItems = new ArrayList<>();
+  public @NonNull List<CustomItem> getBankTiers() {
+    List<CustomItem> bankTierItems = new ArrayList<>();
     for (BankTierEntry bte : bankTierRegistry.getBankTiers()) {
       String lore1 = serviceContext.getTranslationService()
           .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_COST_LORE, bte.getCost());
@@ -122,10 +119,15 @@ public class BankService {
       String lore3 = serviceContext.getTranslationService()
           .get(MessageKey.PLUGIN_EVENT_NPC_BANKER_LIMIT_LORE, bte.getLimit());
 
-      ItemHelper itemHelper = new ItemHelper(new ItemStack(UPGRADE_MATERIAL, 1), bte.getName(),
-          Type.NPC_GUI, Rarity.NONE, Arrays.asList(lore1, lore2, lore3));
-      itemHelper.setData(new NamespacedKey(plugin, "cost"), "" + bte.getCost());
-      bankTierItems.add(itemHelper);
+      CustomItem customItem = new CustomItemBuilder(
+          new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+              bte.getName()), UPGRADE_MATERIAL).displayName(bte.getName())
+          .type(CustomItem.Type.NPC_GUI).rarity(CustomItem.Rarity.NONE)
+          .lore(Arrays.asList(lore1, lore2, lore3))
+          .addPersistentData(new NamespacedKey(plugin, "cost").toString(),
+              String.valueOf(bte.getCost())).build();
+
+      bankTierItems.add(customItem);
     }
     return bankTierItems;
   }
@@ -157,7 +159,7 @@ public class BankService {
         pe.setUpdatedBy(pe.getId());
         pe.setHasToBeUpdated(true);
 
-        p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+        p.playSound(p, "item.armor.equip_gold", SoundCategory.MASTER, 1f, 1f);
         p.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
                 StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
@@ -175,7 +177,7 @@ public class BankService {
           pe.setUpdatedBy(pe.getId());
           pe.setHasToBeUpdated(true);
 
-          p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+          p.playSound(p, "item.armor.equip_gold", SoundCategory.MASTER, 1f, 1f);
           p.sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_MESSAGE,
                   StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY));
@@ -193,7 +195,7 @@ public class BankService {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_DEPOSIT_NO_COINS_MESSAGE,
               PLUGIN_NAME_MONEY));
-      p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
+      p.playSound(p, "entity.villager.no", SoundCategory.MASTER, 1f, 1f);
       InventoryHelper.closeInventory(p);
     }
   }
@@ -224,7 +226,7 @@ public class BankService {
       pe.setUpdatedBy(pe.getId());
       pe.setHasToBeUpdated(true);
 
-      p.playSound(p, Sound.ITEM_ARMOR_EQUIP_GOLD, SoundCategory.MASTER, 1f, 1f);
+      p.playSound(p, "item.armor.equip_gold", SoundCategory.MASTER, 1f, 1f);
       p.sendMessage(String.format(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_WITHDRAW_MESSAGE,
               StringHelper.formatDouble(transactionValue), PLUGIN_NAME_MONEY)));
@@ -235,7 +237,7 @@ public class BankService {
     } else {
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.PLUGIN_EVENT_NPC_BANKER_NOT_ENOUGH_COINS, PLUGIN_NAME_MONEY));
-      p.playSound(p, Sound.ENTITY_VILLAGER_NO, SoundCategory.MASTER, 1f, 1f);
+      p.playSound(p, "entity.villager.no", SoundCategory.MASTER, 1f, 1f);
       InventoryHelper.closeInventory(p);
     }
   }
@@ -250,16 +252,18 @@ public class BankService {
    * @param bae       the player's current bank account
    */
   public void upgradeAccount(ItemStack itemStack, Player p, PlayerEntry pe, BankAccountEntry bae) {
-    for (ItemHelper ih : getBankTiers()) {
-      if (!ih.getCustomItem().equals(itemStack)) {
+    for (CustomItem customItem : getBankTiers()) {
+      if (!customItem.toItemStack().isSimilar(itemStack)) {
         continue;
       }
 
-      long costs = 0;
-      if (ih.hasData(new NamespacedKey(plugin, "cost"))) {
-        costs = Long.parseLong(ih.getData(new NamespacedKey(plugin, "cost")));
+      String costString = (String) customItem.persistentData()
+          .get(new NamespacedKey(plugin, "cost").toString());
+      if (costString == null) {
+        continue;
       }
 
+      long costs = Long.parseLong(costString);
       BankTierEntry bt = getBankTierEntryByCost(costs);
 
       if (!isValidUpgrade(p, bae, bt, costs)) {
@@ -309,8 +313,10 @@ public class BankService {
    * Triggers interest calculation and payment for all currently online players.
    */
   public void triggerInterestForAllOnlinePlayers() {
-    if (!Bukkit.getOnlinePlayers().isEmpty()) {
-      for (Player p : Bukkit.getOnlinePlayers()) {
+    if (!serviceContext.getPluginMetadataService().getPlugin().getServer().getOnlinePlayers()
+        .isEmpty()) {
+      for (Player p : serviceContext.getPluginMetadataService().getPlugin().getServer()
+          .getOnlinePlayers()) {
         checkInterest(p.getUniqueId(), true);
         payInterestToPlayer(p);
       }
@@ -347,7 +353,7 @@ public class BankService {
    *                 check based on last played date
    */
   public void checkInterest(UUID uuid, boolean midnight) {
-    OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+    OfflinePlayer op = resolveOfflinePlayer(uuid);
 
     if (!op.hasPlayedBefore()) {
       return;
@@ -379,6 +385,16 @@ public class BankService {
     if (lastPlayedDate.before(todayDate)) {
       bankInterestMap.put(uuid, bae);
     }
+  }
+
+  /**
+   * Resolves an {@link OfflinePlayer} by their {@link UUID}.
+   *
+   * @param uuid the unique identifier of the player to resolve
+   * @return the resolved {@link OfflinePlayer}
+   */
+  protected OfflinePlayer resolveOfflinePlayer(UUID uuid) {
+    return serviceContext.getPluginMetadataService().getPlugin().getServer().getOfflinePlayer(uuid);
   }
 
   /**

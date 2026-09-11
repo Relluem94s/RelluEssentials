@@ -94,7 +94,7 @@ class SettingPlayerRegistryTest {
     registry.loadAllForPlayer(100, List.of(newEntry));
 
     assertEquals(1, registry.findAllByPlayerId(100).size());
-    assertEquals(3, registry.findAllByPlayerId(100).get(0).getId());
+    assertEquals(3, registry.findAllByPlayerId(100).getFirst().getId());
     assertTrue(registry.findById(2).isPresent());
     assertFalse(registry.findById(1).isPresent());
   }

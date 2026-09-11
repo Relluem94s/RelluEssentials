@@ -87,9 +87,7 @@ public class TranslationService {
     String value = props.getProperty(key.getKey());
     if (value == null) {
       Properties defaultProps = languages.get(defaultLanguage);
-      if (defaultProps != null) {
-        value = defaultProps.getProperty(key.getKey());
-      }
+      value = defaultProps.getProperty(key.getKey());
     }
 
     return value != null ? applyColors(value) : "§c[MISSING: " + key.getKey() + "]";

@@ -8,11 +8,9 @@ import org.bukkit.Material;
 
 public class DropRuleRepository {
 
-  private final DropDao dropDao;
   private final Map<Material, DoubleStore<Integer, Integer>> dropRuleMap = new EnumMap<>(Material.class);
 
   public DropRuleRepository(DropDao dropDao) {
-    this.dropDao = dropDao;
     dropDao.findAll().forEach(de -> dropRuleMap.put(de.getMaterial(), new DoubleStore<>(de.getMin(), de.getMax())));
   }
 

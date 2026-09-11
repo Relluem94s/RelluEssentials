@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.services.migration;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mockStatic;
@@ -14,12 +15,14 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.services.GroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,20 +40,27 @@ class ConfigMigrationServiceTest {
   private GroupService groupService;
 
   @Mock
+  private PluginMetadataService pluginMetadataService;
+
+  @Mock
+  private Plugin plugin;
+
+  @Mock
   private Server server;
 
   @Mock
   private World world;
 
   private ConfigMigrationService configMigrationService;
-  private File testResourceFolder;
 
   @BeforeEach
   void setUp() {
     URL resourceUrl = getClass().getClassLoader().getResource("test-players.yml");
-    testResourceFolder = new File(resourceUrl.getPath()).getParentFile();
+    assertNotNull(resourceUrl, "Test resource 'test-players.yml' not found in classpath");
+    File testResourceFolder = new File(resourceUrl.getPath()).getParentFile();
     configMigrationService = new ConfigMigrationService(testResourceFolder, serviceContext);
   }
+
 
   @Test
   void getPlayersReturnsCorrectPlayerEntry() {
@@ -61,13 +71,13 @@ class ConfigMigrationServiceTest {
     when(groupService.resolveGroupWithFallback("admin")).thenReturn(adminGroup);
 
     try (MockedStatic<ChatHelper> chatHelper = mockStatic(ChatHelper.class)) {
-      chatHelper.when(() -> consoleSendMessage(anyString(), anyString())).thenAnswer(inv -> null);
+      chatHelper.when(() -> consoleSendMessage(anyString(), anyString())).thenAnswer(_ -> null);
 
       List<PlayerEntry> players = configMigrationService.getPlayers("test-players");
 
       assertEquals(1, players.size());
 
-      PlayerEntry player = players.get(0);
+      PlayerEntry player = players.getFirst();
       assertEquals("550e8400-e29b-41d4-a716-446655440000", player.getUuid());
       assertEquals("TestPlayer", player.getCustomName());
       assertTrue(player.isFlying());
@@ -77,7 +87,6 @@ class ConfigMigrationServiceTest {
     }
   }
 
-
   @Test
   void getHomesReturnsCorrectLocationEntries() {
     PlayerEntry player = new PlayerEntry();
@@ -85,11 +94,13 @@ class ConfigMigrationServiceTest {
     player.setId(1);
 
     try (MockedStatic<ChatHelper> chatHelper = mockStatic(ChatHelper.class);
-        MockedStatic<Bukkit> bukkitMock = mockStatic(Bukkit.class)) {
-
-      chatHelper.when(() -> consoleSendMessage(anyString(), anyString())).thenAnswer(inv -> null);
-      bukkitMock.when(Bukkit::getServer).thenReturn(server);
+        MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+      chatHelper.when(() -> consoleSendMessage(anyString(), anyString())).thenAnswer(_ -> null);
+      when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+      when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+      when(plugin.getServer()).thenReturn(server);
       when(server.getWorld("world")).thenReturn(world);
+      bukkit.when(() -> Bukkit.getWorld("world")).thenReturn(world);
 
       List<LocationEntry> homes = configMigrationService.getHomes("test-homes", player);
 
@@ -115,7 +126,6 @@ class ConfigMigrationServiceTest {
     }
   }
 
-
   @Test
   void getHomesSkipsNullConfigurationSections() {
     PlayerEntry player = new PlayerEntry();
@@ -123,11 +133,13 @@ class ConfigMigrationServiceTest {
     player.setId(1);
 
     try (MockedStatic<ChatHelper> chatHelper = mockStatic(ChatHelper.class);
-        MockedStatic<Bukkit> bukkitMock = mockStatic(Bukkit.class)) {
-
-      chatHelper.when(() -> consoleSendMessage(anyString(), anyString())).thenAnswer(inv -> null);
-      bukkitMock.when(Bukkit::getServer).thenReturn(server);
+        MockedStatic<Bukkit> bukkit = mockStatic(Bukkit.class)) {
+      chatHelper.when(() -> consoleSendMessage(anyString(), anyString())).thenAnswer(_ -> null);
+      when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
+      when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+      when(plugin.getServer()).thenReturn(server);
       when(server.getWorld("world")).thenReturn(world);
+      bukkit.when(() -> Bukkit.getWorld("world")).thenReturn(world);
 
       List<LocationEntry> homes = configMigrationService.getHomes("test-homes", player);
 
@@ -141,11 +153,8 @@ class ConfigMigrationServiceTest {
     player.setUuid("550e8400-e29b-41d4-a716-446655440002");
     player.setId(1);
 
-    try (MockedStatic<ChatHelper> chatHelper = mockStatic(ChatHelper.class);
-        MockedStatic<Bukkit> bukkitMock = mockStatic(Bukkit.class)) {
-
-      chatHelper.when(() -> consoleSendMessage(anyString(), anyString())).thenAnswer(inv -> null);
-      bukkitMock.when(Bukkit::getServer).thenReturn(server);
+    try (MockedStatic<ChatHelper> chatHelper = mockStatic(ChatHelper.class)) {
+      chatHelper.when(() -> consoleSendMessage(anyString(), anyString())).thenAnswer(_ -> null);
 
       List<LocationEntry> homes = configMigrationService.getHomes("test-homes", player);
 

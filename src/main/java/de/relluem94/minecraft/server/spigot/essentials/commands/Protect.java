@@ -17,11 +17,11 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
-import lombok.NonNull;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 @CommandName("protect")
 public class Protect implements CommandConstruct {
@@ -220,7 +220,8 @@ public class Protect implements CommandConstruct {
         } else if (strings[0].equalsIgnoreCase(Commands.RIGHT.getName()) && (
             strings[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[0])
                 || strings[1].equalsIgnoreCase(Commands.RIGHT.getSubCommands()[1]))) {
-          tabList.addAll(TabCompleterHelper.getOnlinePlayers());
+          tabList.addAll(serviceContext.getServerService().getOnlinePlayers().stream()
+              .map(Player::getName).toList());
         }
         break;
       default:

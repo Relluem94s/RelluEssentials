@@ -2,7 +2,6 @@ package de.relluem94.minecraft.server.spigot.essentials.managers;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_COMMAND;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import com.google.common.collect.Multimap;
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
@@ -16,29 +15,30 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEnt
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.plugin.Plugin;
 
-
+/**
+ * Manages the lifecycle of Minecraft worlds defined in the world group configuration. Handles
+ * creation, loading, and unloading of worlds during plugin enable and disable phases.
+ */
 public class WorldManager implements Enable, Disable {
 
-  private final Random r = new Random();
+  private final Random random = new Random();
   private ServiceContext serviceContext;
 
   @Override
   public void enable(Plugin plugin) {
     RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    if (relluEssentialsPlugin.isUnitTest()) {
-      return;
-    }
     serviceContext = relluEssentialsPlugin.getServiceContext();
 
-    Multimap<WorldGroupEntry, WorldEntry> worldsMap = serviceContext.getWorldGroupService().getWorldsMap();
-    consoleSendMessage(PLUGIN_NAME_CONSOLE,
-        PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
+    Multimap<WorldGroupEntry, WorldEntry> worldsMap = serviceContext.getWorldGroupService()
+        .getWorldsMap();
+    serviceContext.getPluginMetadataService().getPlugin().getServer().getConsoleSender()
+        .sendMessage(PLUGIN_NAME_CONSOLE,
+            PLUGIN_COLOR_COMMAND + "Worlds Size: " + worldsMap.size());
 
     for (WorldGroupEntry wge : worldsMap.keySet()) {
       if (wge == null) {
@@ -50,9 +50,13 @@ public class WorldManager implements Enable, Disable {
           continue;
         }
 
+        if (we == null) {
+          continue;
+        }
+
         if (!WorldHelper.worldExists(we.getName())) {
           createWorld(we);
-        } else if (Bukkit.getWorld(we.getName()) == null) {
+        } else if (plugin.getServer().getWorld(we.getName()) == null) {
           WorldHelper.loadWorld(we.getName());
           setStandardGameRules(we.getName());
         }
@@ -62,12 +66,8 @@ public class WorldManager implements Enable, Disable {
 
   @Override
   public void disable(Plugin plugin) {
-    RelluEssentials relluEssentialsPlugin = (RelluEssentials) plugin;
-    if (relluEssentialsPlugin.isUnitTest()) {
-      return;
-    }
-
-    Multimap<WorldGroupEntry, WorldEntry> worldsMap = serviceContext.getWorldGroupService().getWorldsMap();
+    Multimap<WorldGroupEntry, WorldEntry> worldsMap = serviceContext.getWorldGroupService()
+        .getWorldsMap();
     for (WorldGroupEntry wge : worldsMap.keySet()) {
       if (wge == null) {
         continue;
@@ -117,8 +117,8 @@ public class WorldManager implements Enable, Disable {
   }
 
   private void setLobbySpawnLocation(String name) {
-    World world = Bukkit.getWorld(name);
-    int random = r.nextInt(9 + 1 - 1) + 1;
+    World world = serviceContext.getPluginMetadataService().getPlugin().getServer().getWorld(name);
+    int random = this.random.nextInt(9 + 1 - 1) + 1;
     if (world == null) {
       return;
     }
@@ -143,7 +143,8 @@ public class WorldManager implements Enable, Disable {
   }
 
   private void setStandardGameRules(String name) {
-    World lobbyWorld = Bukkit.getWorld(name);
+    World lobbyWorld = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getWorld(name);
 
     if (lobbyWorld == null) {
       return;

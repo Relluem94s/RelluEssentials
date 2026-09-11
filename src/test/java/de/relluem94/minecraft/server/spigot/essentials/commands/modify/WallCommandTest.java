@@ -13,10 +13,11 @@ import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.commands.modify.shared.BlockProcessor;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BlockHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
+import de.relluem94.minecraft.server.spigot.essentials.services.SchedulerService;
 import de.relluem94.minecraft.server.spigot.essentials.services.SelectionService;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
@@ -24,9 +25,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -38,7 +41,6 @@ class WallCommandTest {
   private Player player;
   private SelectionService selectionService;
   private UndoHistoryService undoHistoryService;
-  private ProtectionService protectionService;
   private WallCommand wallCommand;
 
   @BeforeEach
@@ -46,18 +48,27 @@ class WallCommandTest {
     player = mock(Player.class);
     selectionService = mock(SelectionService.class);
     undoHistoryService = mock(UndoHistoryService.class);
-    protectionService = mock(ProtectionService.class);
+    Server server = mock(Server.class);
 
+    SchedulerService schedulerService = mock(SchedulerService.class);
     TranslationService translationService = mock(TranslationService.class);
-    when(translationService.getWithPrefix(any())).thenReturn("msg");
+    ProtectionService protectionService = mock(ProtectionService.class);
+    PluginMetadataService pluginMetadataService = mock(PluginMetadataService.class);
+    Plugin plugin = mock(Plugin.class);
+
     when(translationService.getWithPrefix(any(), any())).thenReturn("msg");
     when(translationService.getWithPrefix(any(), any(), any())).thenReturn("msg");
+    when(translationService.getWithPrefix(any())).thenReturn("msg");
+    when(pluginMetadataService.getPlugin()).thenReturn(plugin);
+    when(plugin.getServer()).thenReturn(server);
 
     ServiceContext serviceContext = mock(ServiceContext.class);
     when(serviceContext.getSelectionService()).thenReturn(selectionService);
     when(serviceContext.getUndoHistoryService()).thenReturn(undoHistoryService);
+    when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
     when(serviceContext.getTranslationService()).thenReturn(translationService);
     when(serviceContext.getProtectionService()).thenReturn(protectionService);
+    when(serviceContext.getPluginMetadataService()).thenReturn(pluginMetadataService);
 
     wallCommand = new WallCommand(serviceContext, 2);
   }
@@ -82,7 +93,7 @@ class WallCommandTest {
 
   @Test
   void execute_withValidMaterialAndSelection_onlyProcessesWallBlocks() {
-    Selection selection = buildSelection(0, 64, 0, 2, 66, 2);
+    Selection selection = buildSelection(2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Block wallBlock = buildBlock(Material.AIR, 0, 64, 0);
@@ -90,7 +101,6 @@ class WallCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
       modifyHelper.when(() ->
@@ -112,7 +122,7 @@ class WallCommandTest {
 
   @Test
   void execute_withValidMaterialAndSelection_savesOriginalBlockStateInHistory() {
-    Selection selection = buildSelection(0, 64, 0, 2, 66, 2);
+    Selection selection = buildSelection(2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Material originalMaterial = Material.DIRT;
@@ -120,7 +130,6 @@ class WallCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
       modifyHelper.when(() ->
@@ -142,7 +151,7 @@ class WallCommandTest {
 
   @Test
   void execute_withAllWallBlocks_addsAllToHistory() {
-    Selection selection = buildSelection(0, 64, 0, 2, 66, 2);
+    Selection selection = buildSelection(2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Block firstWallBlock = buildBlock(Material.AIR, 0, 64, 0);
@@ -151,7 +160,6 @@ class WallCommandTest {
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
       modifyHelper.when(() ->
@@ -172,12 +180,11 @@ class WallCommandTest {
 
   @Test
   void execute_withValidMaterialAndSelection_sendsStartedMessage() {
-    Selection selection = buildSelection(0, 64, 0, 2, 66, 2);
+    Selection selection = buildSelection(2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
       modifyHelper.when(() ->
@@ -192,14 +199,13 @@ class WallCommandTest {
 
   @Test
   void execute_withInnerBlockOnly_addsNothingToHistory() {
-    Selection selection = buildSelection(0, 64, 0, 4, 66, 4);
+    Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Block innerBlock = buildBlock(Material.AIR, 2, 65, 2);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
       modifyHelper.when(() ->
@@ -218,14 +224,13 @@ class WallCommandTest {
 
   @Test
   void execute_withBlockOnMinZWall_addsToHistory() {
-    Selection selection = buildSelection(0, 64, 0, 4, 66, 4);
+    Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Block minZWallBlock = buildBlock(Material.AIR, 2, 65, 0);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
       modifyHelper.when(() ->
@@ -244,14 +249,13 @@ class WallCommandTest {
 
   @Test
   void execute_withBlockOnMaxZWall_addsToHistory() {
-    Selection selection = buildSelection(0, 64, 0, 4, 66, 4);
+    Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
     Block maxZWallBlock = buildBlock(Material.AIR, 2, 65, 4);
 
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
-        MockedConstruction<BlockHelper> ignoredBlockHelper = mockConstruction(BlockHelper.class);
         MockedConstruction<BlockProcessor> ignoredBlockProcessor = mockConstruction(BlockProcessor.class)) {
 
       modifyHelper.when(() ->
@@ -293,13 +297,13 @@ class WallCommandTest {
     assert !wallCommand.matches(new String[]{});
   }
 
-  private Selection buildSelection(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+  private Selection buildSelection(int maxX, int maxZ) {
     Selection selection = mock(Selection.class);
-    when(selection.getMinX()).thenReturn(minX);
-    when(selection.getMinY()).thenReturn(minY);
-    when(selection.getMinZ()).thenReturn(minZ);
+    when(selection.getMinX()).thenReturn(0);
+    when(selection.getMinY()).thenReturn(64);
+    when(selection.getMinZ()).thenReturn(0);
     when(selection.getMaxX()).thenReturn(maxX);
-    when(selection.getMaxY()).thenReturn(maxY);
+    when(selection.getMaxY()).thenReturn(66);
     when(selection.getMaxZ()).thenReturn(maxZ);
     return selection;
   }

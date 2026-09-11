@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.registries;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.eq;
@@ -100,7 +101,8 @@ class EnchantmentRegistryTest {
   @Test
   void testFindByBookItemStack_Success() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
-    NamespacedKey enchantmentKey = new NamespacedKey("test", "magic");
+    NamespacedKey enchantmentKey = NamespacedKey.fromString("test:magic");
+    assertNotNull(enchantmentKey);
     when(mockEnchantment.getKey()).thenReturn(enchantmentKey);
 
     registry.register(mockPlugin, "magic", mockEnchantment);
@@ -127,7 +129,10 @@ class EnchantmentRegistryTest {
   @Test
   void testFindByBookItemStack_NoDataInPdc() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
-    when(mockEnchantment.getKey()).thenReturn(new NamespacedKey("test", "magic"));
+    NamespacedKey enchantmentKey = NamespacedKey.fromString("test:magic");
+    assertNotNull(enchantmentKey);
+    when(mockEnchantment.getKey()).thenReturn(enchantmentKey);
+
     registry.register(mockPlugin, "magic", mockEnchantment);
 
     when(mockItemStack.getItemMeta()).thenReturn(mockMeta);
@@ -137,5 +142,17 @@ class EnchantmentRegistryTest {
     Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
 
     assertFalse(result.isPresent());
+  }
+
+  @Test
+  void testClear() {
+    when(mockPlugin.getName()).thenReturn("test_plugin");
+    registry.register(mockPlugin, "clear_test", mockEnchantment);
+    assertEquals(1, registry.count());
+
+    registry.clear();
+
+    assertEquals(0, registry.count());
+    assertFalse(registry.find(new RelluEssentialsNamespacedKey("test_plugin", "clear_test")).isPresent());
   }
 }

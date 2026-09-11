@@ -13,7 +13,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.NpcHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.TraderNpc.Type;
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
@@ -64,8 +64,8 @@ public class TraderNpcRegistry {
    *
    * @param traderNpcEntryList the list of entries used to create NPCs
    */
-  public void init(List<TraderNPCEntry> traderNpcEntryList) {
-    for (TraderNPCEntry ne : traderNpcEntryList) {
+  public void init(List<TraderNpcEntry> traderNpcEntryList) {
+    for (TraderNpcEntry ne : traderNpcEntryList) {
       TraderNpc traderNpc = new TraderNpc(ne) {
         @Override
         public Inventory getMainGUI() {

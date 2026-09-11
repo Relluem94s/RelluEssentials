@@ -8,7 +8,7 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.npc.Trader;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Villager.Profession;
@@ -22,7 +22,7 @@ public class TraderNpc implements Trader {
   private final Profession profession;
   private final Type type;
 
-  public TraderNpc(@NonNull TraderNPCEntry traderNpcEntry) {
+  public TraderNpc(@NonNull TraderNpcEntry traderNpcEntry) {
     this(traderNpcEntry.getName(), traderNpcEntry.getProfession(), traderNpcEntry.getType());
   }
 

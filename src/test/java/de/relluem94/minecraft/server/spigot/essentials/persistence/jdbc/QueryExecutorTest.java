@@ -107,7 +107,7 @@ class QueryExecutorTest {
 
     assertAll(
         () -> assertEquals(2, results.size()),
-        () -> assertEquals("row1", results.get(0)),
+        () -> assertEquals("row1", results.getFirst()),
         () -> assertEquals("row2", results.get(1))
     );
   }

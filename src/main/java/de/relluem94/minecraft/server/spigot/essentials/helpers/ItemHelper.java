@@ -8,20 +8,13 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Exceptio
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
-import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.Contract;
@@ -29,145 +22,36 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 /**
- * A utility class for creating and managing custom Minecraft ItemStack objects with extended
- * metadata support.
+ * A utility class providing static helper methods for creating, converting, and managing
+ * Minecraft {@link ItemStack} objects, including Base64 serialization and smelting result lookup.
  *
  * @author rellu
  */
 public class ItemHelper {
 
-  @Getter
-  private final ItemStack is;
-
-  @Getter
-  private final Material material;
-
-  @Getter
-  private final int amount;
-
-  @Getter
-  private final String displayName;
-  @Getter
-  private final Type itemType;
-  @Getter
-  private final Rarity rarity;
-
-  @Getter
-  private List<String> lore;
-
-  @Getter
-  private Integer cost;
-
   /**
-   * Constructs a new ItemHelper.
+   * Creates a new {@link ItemStack} of the same material as the given stack with a quantity of one,
+   * stripping all metadata such as enchantments, display names, and lore.
    *
-   * @param material    Bukkit Material
-   * @param amount      Integer
-   * @param displayName String
-   * @param itemType    ItemType
-   * @param itemRarity  ItemRarity
+   * @param is the source {@link ItemStack} whose material type is used; must not be {@code null}
+   * @return a new clean {@link ItemStack} with amount 1 and no metadata
    */
-  public ItemHelper(Material material, int amount, String displayName, Type itemType,
-      Rarity itemRarity) {
-    this(material, amount, displayName, itemType, itemRarity, new ArrayList<>());
-  }
-
-  public ItemHelper(Material material, int amount, String displayName, Type itemType,
-      Rarity itemRarity, int cost) {
-    this(material, amount, displayName, itemType, itemRarity, new ArrayList<>());
-    this.cost = cost;
-  }
-
-  /**
-   * Constructs a new ItemHelper.
-   *
-   * @param material    Bukkit Material
-   * @param amount      Integer
-   * @param displayName String
-   * @param itemType    ItemType
-   * @param itemRarity  ItemRarity
-   * @param lore        List String
-   */
-  public ItemHelper(Material material, int amount, String displayName, Type itemType,
-      Rarity itemRarity, List<String> lore) {
-    this.amount = amount;
-    this.material = material;
-    this.displayName = displayName;
-    this.lore = lore;
-    this.itemType = itemType;
-    this.rarity = itemRarity;
-
-    is = new ItemStack(this.material, this.amount);
-
-    ItemMeta im = is.getItemMeta();
-    if (im == null) {
-      return;
-    }
-
-    im.setDisplayName(this.displayName);
-    im.setLore(this.lore);
-    is.setItemMeta(im);
-  }
-
-  /**
-   * Constructs a new ItemHelper.
-   *
-   * @param is          ItemStack
-   * @param displayName String
-   * @param itemType    ItemType
-   * @param itemRarity  ItemRarity
-   */
-  public ItemHelper(ItemStack is, String displayName, Type itemType, Rarity itemRarity) {
-    this(is, displayName, itemType, itemRarity, new ArrayList<>());
-  }
-
-  public ItemHelper(Material material, int amount, String displayName, Type itemType,
-      Rarity itemRarity, List<String> lore, int cost) {
-    this(material, amount, displayName, itemType, itemRarity, lore);
-    this.cost = cost;
-  }
-
-  /**
-   * Constructs a new ItemHelper.
-   *
-   * @param is          ItemStack
-   * @param displayName String
-   * @param itemType    ItemType
-   * @param itemRarity  ItemRarity
-   * @param lore        List String
-   */
-  public ItemHelper(@NonNull ItemStack is, String displayName, Type itemType, Rarity itemRarity,
-      List<String> lore) {
-    this.amount = is.getAmount();
-    this.material = is.getType();
-    this.displayName = displayName;
-    this.lore = lore;
-    this.itemType = itemType;
-    this.rarity = itemRarity;
-
-    this.is = is;
-
-    ItemMeta im = is.getItemMeta();
-    if (im == null) {
-      return;
-    }
-
-    im.setDisplayName(this.displayName);
-    im.setLore(this.lore);
-    is.setItemMeta(im);
-  }
-
-  public ItemHelper(@NotNull ItemStack itemStack, String displayName, Type type, Rarity rarity, int cost) {
-    this(itemStack, displayName, type, rarity, new ArrayList<>());
-    this.cost = cost;
-  }
-
   @Contract("_ -> new")
   public static @NotNull ItemStack getCleanItemStack(@NotNull ItemStack is) {
     return new ItemStack(is.getType(), 1);
   }
 
-
+  /**
+   * Retrieves the display name of the given {@link ItemStack}
+   * if one is set in its {@link ItemMeta}.
+   *
+   * <p>Returns the display name when present, a fallback constant defined in
+   * {@code ExceptionConstants} when the meta exists but no display name is set,
+   * or an empty string when the item has no meta at all.
+   *
+   * @param is the {@link ItemStack} whose display name is retrieved; must not be {@code null}
+   * @return the display name, a not-found placeholder, or an empty string
+   */
   public static String getItemName(@NotNull ItemStack is) {
     String name = "";
     if (is.hasItemMeta()) {
@@ -182,9 +66,20 @@ public class ItemHelper {
     return name;
   }
 
-  public static ItemStack getSmeltedItemStack(ItemStack is) {
+  /**
+   * Searches the provided recipe iterator for a {@link FurnaceRecipe} that accepts the given
+   * {@link ItemStack}'s material as input and returns a result of a different material.
+   *
+   * <p>When a matching recipe is found, the result's amount is set to match the amount of the
+   * input stack before it is returned.
+   *
+   * @param is       the {@link ItemStack} to find a smelting result for
+   * @param iterator an {@link Iterator} over all available {@link Recipe} instances to search
+   * @return the smelted result {@link ItemStack} with its amount adjusted to match {@code is},
+   *         or {@code null} if no matching furnace recipe is found
+   */
+  public static ItemStack getSmeltedItemStack(ItemStack is, Iterator<Recipe> iterator) {
     ItemStack result = null;
-    Iterator<Recipe> iterator = Bukkit.recipeIterator();
     while (iterator.hasNext()) {
       Recipe recipe = iterator.next();
       if (!(recipe instanceof FurnaceRecipe)) {
@@ -208,6 +103,14 @@ public class ItemHelper {
     return result;
   }
 
+  /**
+   * Serializes the given {@link ItemStack} into a Base64-encoded string using
+   * {@link BukkitObjectOutputStream}.
+   *
+   * @param stack the {@link ItemStack} to serialize
+   * @return a Base64-encoded string representing the serialized {@link ItemStack}
+   * @throws IllegalStateException if the {@link ItemStack} cannot be serialized
+   */
   public static String itemTo64(ItemStack stack) throws IllegalStateException {
     try {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -220,6 +123,18 @@ public class ItemHelper {
     }
   }
 
+  /**
+   * Deserializes a {@link ItemStack} from the given Base64-encoded string produced by
+   * {@link #itemTo64(ItemStack)}.
+   *
+   * <p>Whitespace characters are stripped from {@code data} before decoding to tolerate
+   * line-wrapped or formatted Base64 input.
+   *
+   * @param data the Base64-encoded string representing a serialized {@link ItemStack};
+   *             must not be {@code null}
+   * @return the deserialized {@link ItemStack}
+   * @throws IOException if the Base64 data is invalid or the contained class cannot be resolved
+   */
   public static ItemStack itemFrom64(@NonNull String data) throws IOException {
     try {
       String cleaned = data.replaceAll("\\s+", "");
@@ -235,134 +150,5 @@ public class ItemHelper {
       throw new IOException(
           String.format(PLUGIN_EXCEPTION_ITEMHELPER_INVALID_BASE64_DATA, e.getMessage()), e);
     }
-  }
-
-  /**
-   *
-   * @return ItemStack of ItemHelper
-   */
-  public ItemStack getCustomItem() {
-    return is;
-  }
-
-  /**
-   *
-   * @return ItemMeta of ItemStack
-   */
-  public ItemMeta getItemMeta() {
-    return is.getItemMeta();
-  }
-
-  /**
-   *
-   * @param itemMeta ItemMeta sets ItemMeta of ItemStack
-   */
-  public void setItemMeta(ItemMeta itemMeta) {
-    is.setItemMeta(itemMeta);
-  }
-
-  public void setData(NamespacedKey key, String value) {
-    ItemMeta itemMeta = is.getItemMeta();
-      if (itemMeta == null) {
-          return;
-      }
-    itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, value);
-    is.setItemMeta(itemMeta);
-  }
-
-  public String getData(NamespacedKey key) {
-    ItemMeta itemMeta = is.getItemMeta();
-      if (itemMeta == null) {
-          return null;
-      }
-    return itemMeta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
-  }
-
-  public boolean hasData(NamespacedKey key) {
-    ItemMeta itemMeta = is.getItemMeta();
-      if (itemMeta == null) {
-          return false;
-      }
-    return itemMeta.getPersistentDataContainer().has(key, PersistentDataType.STRING);
-  }
-
-  /**
-   *
-   * @param compare ItemStack
-   * @return boolean
-   */
-  public boolean equalsExact(ItemStack compare) {
-    ItemStack item = this.getCustomItem();
-    if (item == null || compare == null) {
-      return false;
-    }
-
-    return item.isSimilar(compare);
-  }
-
-  /**
-   *
-   * @param compare ItemStack
-   * @return boolean
-   */
-  public boolean equalsName(ItemStack compare) {
-    ItemStack item = this.getCustomItem();
-    if (item == null || compare == null) {
-      return false;
-    }
-
-    if (item.getType() != compare.getType()) {
-      return false;
-    }
-
-    if (item.hasItemMeta() != compare.hasItemMeta()) {
-      return false;
-    }
-    ItemMeta itemMeta = item.getItemMeta();
-    ItemMeta compareMeta = compare.getItemMeta();
-
-    if (itemMeta == null || compareMeta == null) {
-      return false;
-    }
-
-    return itemMeta.getDisplayName().equals(compareMeta.getDisplayName());
-  }
-
-  @Getter
-  public enum Rarity {
-    NONE("", "", -1),
-    COMMON("Common", "§f§l", 0),
-    UNCOMMON("Uncommon", "§a§l", 1),
-    RARE("Rare", "§9§l", 2),
-    EPIC("Epic", "§5§l", 3),
-    LEGENDARY("Legendary", "§6§l", 4);
-
-
-    private final String displayName;
-    private final String prefix;
-    private final int level;
-
-    Rarity(String displayName, String prefix, int level) {
-      this.displayName = displayName;
-      this.prefix = prefix;
-      this.level = level;
-    }
-  }
-
-  public enum Type {
-    TOOL,
-    INGREDIENT,
-    GADGET,
-    ARMOR,
-    WEAPON,
-    HUB,
-    DECORATION,
-    BUILDING,
-    NPC,
-    NPC_GUI,
-    ENCHANTMENT,
-    MONEY,
-    ADMIN_TOOL,
-    NONE
   }
 }

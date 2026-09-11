@@ -153,4 +153,52 @@ class RegisteredInventoryTest {
           () -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
     }
   }
+
+
+  @Test
+  void testOpenForWithTypeAndNamespaceFilterWithExtraItems() {
+    RegisteredInventory registeredInventory = new RegisteredInventory(
+        registryKey, "Test GUI", 9, CustomItem.Type.TOOL);
+
+    CustomItem extraItem = mock(CustomItem.class);
+    Inventory mockInventory = mock(Inventory.class);
+
+    try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
+      when(mockItemService.getAllByTypeAndNamespace(CustomItem.Type.TOOL, "test"))
+          .thenReturn(Collections.emptyList());
+      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(
+              any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class),
+              any()))
+          .thenReturn(mockInventory);
+
+      assertDoesNotThrow(() -> registeredInventory.openForWithTypeAndNamespaceFilter(
+          mockItemService, "test", mockPlayer, extraItem));
+
+      mockedInventoryHelper.verify(
+          () -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
+    }
+  }
+
+  @Test
+  void testOpenForWithTypeAndNamespaceFilterWithoutExtraItems() {
+    RegisteredInventory registeredInventory = new RegisteredInventory(
+        registryKey, "Test GUI", 9, CustomItem.Type.TOOL);
+
+    Inventory mockInventory = mock(Inventory.class);
+
+    try (MockedStatic<InventoryHelper> mockedInventoryHelper = mockStatic(InventoryHelper.class)) {
+      when(mockItemService.getAllByTypeAndNamespace(CustomItem.Type.TOOL, "test"))
+          .thenReturn(Collections.emptyList());
+      mockedInventoryHelper.when(() -> InventoryHelper.getCustomItemInventory(
+              any(de.relluem94.minecraft.server.spigot.essentials.models.CustomInventory.class),
+              any(CustomItem.Type.class)))
+          .thenReturn(mockInventory);
+
+      assertDoesNotThrow(() -> registeredInventory.openForWithTypeAndNamespaceFilter(
+          mockItemService, "test", mockPlayer));
+
+      mockedInventoryHelper.verify(
+          () -> InventoryHelper.openInventory(eq(mockPlayer), eq(mockInventory)));
+    }
+  }
 }

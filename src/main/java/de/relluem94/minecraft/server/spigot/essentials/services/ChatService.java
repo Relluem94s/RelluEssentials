@@ -15,15 +15,14 @@ import de.relluem94.minecraft.server.spigot.essentials.models.pojo.GroupEntry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.ReplyRegistry;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Service responsible for handling various types of chat communication,
- * including player messages, console output, channel messages, and private messaging.
+ * Service responsible for handling various types of chat communication, including player messages,
+ * console output, channel messages, and private messaging.
  */
 public class ChatService {
 
@@ -42,8 +41,8 @@ public class ChatService {
   }
 
   /**
-   * Sends a message to the sender. If the sender is a player, it sends it to them;
-   * otherwise, it sends it to the console.
+   * Sends a message to the sender. If the sender is a player, it sends it to them; otherwise, it
+   * sends it to the console.
    *
    * @param sender  the sender of the message
    * @param message the message to be sent
@@ -64,7 +63,8 @@ public class ChatService {
    * @param message the message content
    */
   public void consoleSendMessage(String type, String message) {
-    ConsoleCommandSender console = Bukkit.getConsoleSender();
+    ConsoleCommandSender console = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getConsoleSender();
     console.sendMessage(type + " " + message);
   }
 
@@ -76,7 +76,8 @@ public class ChatService {
    * @param repeat  the number of times to repeat the message
    */
   public void consoleSendMessage(String type, String message, int repeat) {
-    ConsoleCommandSender console = Bukkit.getConsoleSender();
+    ConsoleCommandSender console = serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getConsoleSender();
     for (int i = 0; i <= repeat; i++) {
       console.sendMessage(type + " " + message);
     }
@@ -93,10 +94,12 @@ public class ChatService {
   public void sendMessageInChannel(String message, Player sender, String channel,
       GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
-    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+    for (Player onlinePlayer : serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getOnlinePlayers()) {
       if (serviceContext.getGroupService().isSenderAuthorized(onlinePlayer, group.getName())) {
-        sendMessage(onlinePlayer, sender.getCustomName() + group.getPrefix()
-            + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE + replaceColor(strippedMessage));
+        sendMessage(onlinePlayer,
+            sender.getCustomName() + group.getPrefix() + PLUGIN_FORMS_SPACER_CHANNEL
+                + PLUGIN_COLOR_MESSAGE + replaceColor(strippedMessage));
       }
     }
   }
@@ -112,10 +115,12 @@ public class ChatService {
   public void sendMessageInChannel(String message, String senderName, String channel,
       GroupEntry group) {
     String strippedMessage = message.replaceFirst(channel, "");
-    for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+    for (Player onlinePlayer : serviceContext.getPluginMetadataService().getPlugin().getServer()
+        .getOnlinePlayers()) {
       if (serviceContext.getGroupService().isSenderAuthorized(onlinePlayer, group.getName())) {
-        sendMessage(onlinePlayer, senderName + group.getPrefix()
-            + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE + replaceColor(strippedMessage));
+        sendMessage(onlinePlayer,
+            senderName + group.getPrefix() + PLUGIN_FORMS_SPACER_CHANNEL + PLUGIN_COLOR_MESSAGE
+                + replaceColor(strippedMessage));
       }
     }
   }
@@ -176,9 +181,8 @@ public class ChatService {
     }
 
     Player senderPlayer = (Player) sender;
-    String message = buildMessage(senderPlayer, args, start);
-
     if (serviceContext.getGroupService().isSenderAuthorized(senderPlayer, "user")) {
+      String message = buildMessage(senderPlayer, args, start);
       target.sendMessage(senderPlayer.getCustomName() + PLUGIN_FORMS_MSG_SPACER_IN + message);
       senderPlayer.sendMessage(target.getCustomName() + PLUGIN_FORMS_MSG_SPACER_OUT + message);
     } else {

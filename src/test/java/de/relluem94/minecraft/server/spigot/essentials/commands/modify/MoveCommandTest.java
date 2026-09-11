@@ -84,13 +84,14 @@ class MoveCommandTest {
     verify(undoHistoryService, never()).addHistory(any(), any());
   }
 
+  @SuppressWarnings("DataFlowIssue")
   @Test
   void execute_withValidOffsetAndSelection_movesBlocksAndSavesHistory() {
-    Selection selection = buildSelection(0, 0, 0, 2, 2, 2);
+    Selection selection = buildSelection(2, 2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
-    Block sourceBlock = buildBlock(Material.STONE, 1, 1, 1);
-    Block targetBlock = buildBlock(Material.AIR, 2, 1, 1);
+    Block sourceBlock = buildBlock(Material.STONE, 1);
+    Block targetBlock = buildBlock(Material.AIR, 2);
     wireTargetBlock(sourceBlock, targetBlock);
 
     try (var modifyHelper = org.mockito.Mockito.mockStatic(
@@ -119,18 +120,19 @@ class MoveCommandTest {
     }
   }
 
+  @SuppressWarnings("DataFlowIssue")
   @Test
   void execute_withMultipleBlocksExceedingBlocksPerTick_savesHistoryForAllBlocks() {
-    Selection selection = buildSelection(0, 0, 0, 4, 4, 4);
+    Selection selection = buildSelection(4, 4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
-    Block firstBlock = buildBlock(Material.STONE, 1, 1, 1);
-    Block secondBlock = buildBlock(Material.STONE, 2, 1, 1);
-    Block thirdBlock = buildBlock(Material.STONE, 3, 1, 1);
+    Block firstBlock = buildBlock(Material.STONE, 1);
+    Block secondBlock = buildBlock(Material.STONE, 2);
+    Block thirdBlock = buildBlock(Material.STONE, 3);
 
-    Block firstTarget = buildBlock(Material.AIR, 2, 1, 1);
-    Block secondTarget = buildBlock(Material.AIR, 3, 1, 1);
-    Block thirdTarget = buildBlock(Material.AIR, 4, 1, 1);
+    Block firstTarget = buildBlock(Material.AIR, 2);
+    Block secondTarget = buildBlock(Material.AIR, 3);
+    Block thirdTarget = buildBlock(Material.AIR, 4);
 
     wireTargetBlock(firstBlock, firstTarget);
     wireTargetBlock(secondBlock, secondTarget);
@@ -164,11 +166,11 @@ class MoveCommandTest {
 
   @Test
   void execute_withValidOffsetAndSelection_schedulesOneTaskPerBlock() {
-    Selection selection = buildSelection(0, 0, 0, 2, 2, 2);
+    Selection selection = buildSelection(2, 2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
-    Block sourceBlock = buildBlock(Material.STONE, 1, 1, 1);
-    Block targetBlock = buildBlock(Material.AIR, 2, 1, 1);
+    Block sourceBlock = buildBlock(Material.STONE, 1);
+    Block targetBlock = buildBlock(Material.AIR, 2);
     wireTargetBlock(sourceBlock, targetBlock);
 
     try (var modifyHelper = org.mockito.Mockito.mockStatic(
@@ -196,16 +198,16 @@ class MoveCommandTest {
 
   @Test
   void execute_withMultipleBlocksExceedingBlocksPerTick_schedulesOneTaskPerBlock() {
-    Selection selection = buildSelection(0, 0, 0, 4, 4, 4);
+    Selection selection = buildSelection(4, 4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
-    Block firstBlock = buildBlock(Material.STONE, 1, 1, 1);
-    Block secondBlock = buildBlock(Material.STONE, 2, 1, 1);
-    Block thirdBlock = buildBlock(Material.STONE, 3, 1, 1);
+    Block firstBlock = buildBlock(Material.STONE, 1);
+    Block secondBlock = buildBlock(Material.STONE, 2);
+    Block thirdBlock = buildBlock(Material.STONE, 3);
 
-    Block firstTarget = buildBlock(Material.AIR, 2, 1, 1);
-    Block secondTarget = buildBlock(Material.AIR, 3, 1, 1);
-    Block thirdTarget = buildBlock(Material.AIR, 4, 1, 1);
+    Block firstTarget = buildBlock(Material.AIR, 2);
+    Block secondTarget = buildBlock(Material.AIR, 3);
+    Block thirdTarget = buildBlock(Material.AIR, 4);
 
     wireTargetBlock(firstBlock, firstTarget);
     wireTargetBlock(secondBlock, secondTarget);
@@ -256,22 +258,22 @@ class MoveCommandTest {
     assert !moveCommand.matches(new String[]{"move", "3", "extra"});
   }
 
-  private Selection buildSelection(int x1, int y1, int z1, int x2, int y2, int z2) {
+  private Selection buildSelection(int x2, int y2, int z2) {
     World world = mock(World.class);
     Location pos1 = mock(Location.class);
     Location pos2 = mock(Location.class);
     when(pos1.getWorld()).thenReturn(world);
     when(pos2.getWorld()).thenReturn(world);
-    when(pos1.getBlockX()).thenReturn(x1);
-    when(pos1.getBlockY()).thenReturn(y1);
-    when(pos1.getBlockZ()).thenReturn(z1);
+    when(pos1.getBlockX()).thenReturn(0);
+    when(pos1.getBlockY()).thenReturn(0);
+    when(pos1.getBlockZ()).thenReturn(0);
     when(pos2.getBlockX()).thenReturn(x2);
     when(pos2.getBlockY()).thenReturn(y2);
     when(pos2.getBlockZ()).thenReturn(z2);
     return new Selection(pos1, pos2);
   }
 
-  private Block buildBlock(Material material, int x, int y, int z) {
+  private Block buildBlock(Material material, int x) {
     Block block = mock(Block.class);
     Location location = mock(Location.class);
     BlockData blockData = mock(BlockData.class);
@@ -279,8 +281,8 @@ class MoveCommandTest {
     when(block.getLocation()).thenReturn(location);
     when(block.getBlockData()).thenReturn(blockData);
     when(block.getX()).thenReturn(x);
-    when(block.getY()).thenReturn(y);
-    when(block.getZ()).thenReturn(z);
+    when(block.getY()).thenReturn(1);
+    when(block.getZ()).thenReturn(1);
     return block;
   }
 

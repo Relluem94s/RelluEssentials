@@ -2,8 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ItemHelper.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
+import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Rarity;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -14,6 +14,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * Listener that assigns rarity lore to crafted and smithed tools and armor.
+ *
+ * <p>Handles {@link PrepareItemCraftEvent} and
+ * {@link PrepareSmithingEvent} to apply the appropriate
+ * {@link Rarity}
+ * label to the resulting item's lore based on its material tier.</p>
  *
  * @author rellu
  */
@@ -51,6 +57,16 @@ public class ToolCrafting implements ListenerConstruct {
       Material.WOODEN_SWORD, Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
       Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.LEATHER_HORSE_ARMOR};
 
+  /**
+   * Upgrades the rarity lore of a netherite smithing result from
+   * {@link Rarity#RARE} to {@link Rarity#EPIC}.
+   *
+   * <p>Replaces the existing RARE rarity entry in the item lore with an EPIC rarity entry
+   * when the smithing result matches a netherite material.</p>
+   *
+   * @param e the {@link org.bukkit.event.inventory.PrepareSmithingEvent} fired when a smithing
+   *          table result is prepared
+   */
   @EventHandler
   public void addRarityToTools(@NotNull PrepareSmithingEvent e) {
     if (e.getResult() != null) {
@@ -71,16 +87,22 @@ public class ToolCrafting implements ListenerConstruct {
     }
   }
 
-  private void addRarity(Material @NotNull [] mats, @NotNull ItemStack is, Rarity rarity) {
-    ItemMeta im = is.getItemMeta();
-    for (Material m : mats) {
-      if (is.getType().equals(m) && im != null) {
-        im.setLore(List.of(rarity.getPrefix() + rarity.getDisplayName()));
-        is.setItemMeta(im);
-      }
-    }
-  }
-
+  /**
+   * Assigns a rarity lore entry to the result of a crafting recipe based on its material tier.
+   *
+   * <p>Maps each material tier to its corresponding
+   * {@link Rarity}:
+   * <ul>
+   *   <li>Netherite → {@link Rarity#EPIC}</li>
+   *   <li>Diamond → {@link Rarity#RARE}</li>
+   *   <li>Iron, Chainmail → {@link Rarity#UNCOMMON}</li>
+   *   <li>Gold, Leather → {@link Rarity#COMMON}</li>
+   * </ul>
+   * </p>
+   *
+   * @param e the {@link org.bukkit.event.inventory.PrepareItemCraftEvent} fired when a crafting
+   *          table result is prepared
+   */
   @EventHandler
   public void addRarityToTools(@NotNull PrepareItemCraftEvent e) {
     if (e.getRecipe() != null) {
@@ -90,6 +112,16 @@ public class ToolCrafting implements ListenerConstruct {
       addRarity(gold, e.getRecipe().getResult(), Rarity.COMMON);
       addRarity(chainmail, e.getRecipe().getResult(), Rarity.UNCOMMON);
       addRarity(leather, e.getRecipe().getResult(), Rarity.COMMON);
+    }
+  }
+
+  private void addRarity(Material @NotNull [] mats, @NotNull ItemStack is, Rarity rarity) {
+    ItemMeta im = is.getItemMeta();
+    for (Material m : mats) {
+      if (is.getType().equals(m) && im != null) {
+        im.setLore(List.of(rarity.getPrefix() + rarity.getDisplayName()));
+        is.setItemMeta(im);
+      }
     }
   }
 }

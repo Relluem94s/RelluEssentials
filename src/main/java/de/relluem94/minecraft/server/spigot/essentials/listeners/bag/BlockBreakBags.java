@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -42,17 +41,17 @@ public class BlockBreakBags implements ListenerConstruct {
   private final Set<Block> processingBlocks = new HashSet<>();
   private EnchantmentHelper delicate;
   private EnchantmentHelper telekinesis;
+  private ServiceContext serviceContext;
 
   @Override
   public void injectContext(ServiceContext context) {
+    this.serviceContext = context;
     this.delicate = context.getEnchantmentService().find(
-            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE))
-        .orElse(null);
+        new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_DELICATE)).orElse(null);
     this.telekinesis = context.getEnchantmentService().find(
-            new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
-                EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS))
-        .orElse(null);
+        new RelluEssentialsNamespacedKey(context.getPluginMetadataService().getName(),
+            EnchantmentConstants.PLUGIN_ENCHANTMENT_TELEKINESIS)).orElse(null);
   }
 
   /**
@@ -98,14 +97,13 @@ public class BlockBreakBags implements ListenerConstruct {
       }
     }
 
-    if (telekinesis != null && EnchantmentHelper.hasEnchant(
-        p.getInventory().getItemInMainHand(),
+    if (telekinesis != null && EnchantmentHelper.hasEnchant(p.getInventory().getItemInMainHand(),
         telekinesis)) {
       int dropCount = 0;
 
       if (isChorusPlant(b) && b.getRelative(BlockFace.DOWN).getType().equals(Material.END_STONE)) {
 
-        List<Block> blocks = new ArrayList<>(getChorusBlocks(b, 0, null));
+        List<Block> blocks = new ArrayList<>(getChorusBlocks(b, null));
 
         if (blocks.size() <= 50) {
           e.setCancelled(true);
@@ -116,7 +114,7 @@ public class BlockBreakBags implements ListenerConstruct {
               new ItemStack(Material.CHORUS_FRUIT, blocks.size() + 1));
           EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item,
               blocks.size() + 1);
-          Bukkit.getPluginManager().callEvent(entityPickupItemEvent);
+          serviceContext.getPluginManagerService().callEvent(entityPickupItemEvent);
         }
       }
 
@@ -125,13 +123,12 @@ public class BlockBreakBags implements ListenerConstruct {
           return;
         }
 
-        Block originalBlock = b;
         while (isSugarCaneOrIsBamboo(b.getRelative(BlockFace.UP))) {
           Block blockAbove = b.getRelative(BlockFace.UP);
 
           processingBlocks.add(blockAbove);
           BlockBreakEvent fakeBreakEvent = new BlockBreakEvent(blockAbove, p);
-          Bukkit.getPluginManager().callEvent(fakeBreakEvent);
+          serviceContext.getPluginManagerService().callEvent(fakeBreakEvent);
           processingBlocks.remove(blockAbove);
 
           dropCount++;
@@ -142,21 +139,21 @@ public class BlockBreakBags implements ListenerConstruct {
         if (isSugarCaneOrIsBamboo(b)) {
           processingBlocks.add(b);
           BlockBreakEvent fakeBreakEvent = new BlockBreakEvent(b, p);
-          Bukkit.getPluginManager().callEvent(fakeBreakEvent);
+          serviceContext.getPluginManagerService().callEvent(fakeBreakEvent);
           processingBlocks.remove(b);
 
           b.setType(Material.AIR);
           dropCount++;
         }
 
-        if (!m.equals(Material.AIR) && dropCount > 0) {
-          e.setCancelled(true);
-          Item item = originalBlock.getWorld()
-              .dropItem(originalBlock.getLocation(), new ItemStack(m, dropCount));
-          EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item,
-              dropCount);
-          Bukkit.getPluginManager().callEvent(entityPickupItemEvent);
-        }
+        // TODO: TEST IF THIS IS OKAY TO REMOVE!
+        //  if (!m.equals(Material.AIR) && dropCount > 0) {
+        e.setCancelled(true);
+        Item item = e.getBlock().getWorld()
+            .dropItem(e.getBlock().getLocation(), new ItemStack(m, dropCount));
+        EntityPickupItemEvent entityPickupItemEvent = new EntityPickupItemEvent(p, item, dropCount);
+        serviceContext.getPluginManagerService().callEvent(entityPickupItemEvent);
+        // }
       }
     }
   }
@@ -169,13 +166,8 @@ public class BlockBreakBags implements ListenerConstruct {
     return b.getType().equals(Material.SUGAR_CANE) || b.getType().equals(Material.BAMBOO);
   }
 
-  private @NotNull Set<Block> getChorusBlocks(Block b, int count, BlockFace prevBlockFace) {
+  private @NotNull Set<Block> getChorusBlocks(Block b, BlockFace prevBlockFace) {
     Set<Block> blocks = new LinkedHashSet<>();
-
-    count++;
-    if (count == 30) {
-      return blocks;
-    }
 
     if (isChorusPlant(b)) {
       if (b.getBlockData() instanceof MultipleFacing bdf) {
@@ -188,7 +180,7 @@ public class BlockBreakBags implements ListenerConstruct {
             continue;
           }
           if (blocks.add(block)) {
-            blocks.addAll(getChorusBlocks(block, 28, bf.getOppositeFace()));
+            blocks.addAll(getChorusBlocks(block, bf.getOppositeFace()));
           }
         }
       }

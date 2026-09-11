@@ -1,17 +1,16 @@
 package de.relluem94.minecraft.server.spigot.essentials.models;
 
+import lombok.Getter;
+
 public class SignAction {
 
+  @Getter
   private final String name;
   private final boolean requiresCustomInput;
 
   public SignAction(String name, boolean requiresCustomInput) {
     this.name = name;
     this.requiresCustomInput = requiresCustomInput;
-  }
-
-  public String getName() {
-    return name;
   }
 
   public boolean requiresCustomInput() {

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNPCEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.TraderNpcDao;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -26,10 +26,10 @@ class TraderNpcRepositoryTest {
 
   @Test
   void loadAllReturnsAllEntriesFromDao() {
-    List<TraderNPCEntry> expectedEntries = List.of(new TraderNPCEntry(), new TraderNPCEntry());
+    List<TraderNpcEntry> expectedEntries = List.of(new TraderNpcEntry(), new TraderNpcEntry());
     when(traderNpcDao.findAll()).thenReturn(expectedEntries);
 
-    List<TraderNPCEntry> actualEntries = traderNpcRepository.loadAll();
+    List<TraderNpcEntry> actualEntries = traderNpcRepository.loadAll();
 
     assertAll(
         () -> assertEquals(expectedEntries.size(), actualEntries.size()),
@@ -42,7 +42,7 @@ class TraderNpcRepositoryTest {
   void loadAllReturnsEmptyListWhenDaoReturnsNoEntries() {
     when(traderNpcDao.findAll()).thenReturn(List.of());
 
-    List<TraderNPCEntry> actualEntries = traderNpcRepository.loadAll();
+    List<TraderNpcEntry> actualEntries = traderNpcRepository.loadAll();
 
     assertAll(
         () -> assertEquals(0, actualEntries.size()),

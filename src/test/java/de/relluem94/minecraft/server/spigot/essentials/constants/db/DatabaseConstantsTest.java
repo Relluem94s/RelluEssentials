@@ -14,7 +14,7 @@ public class DatabaseConstantsTest {
 
     InvocationTargetException thrown = Assertions.assertThrows(
         InvocationTargetException.class,
-        () -> constructor.newInstance()
+        constructor::newInstance
     );
 
     Assertions.assertInstanceOf(IllegalStateException.class, thrown.getCause());

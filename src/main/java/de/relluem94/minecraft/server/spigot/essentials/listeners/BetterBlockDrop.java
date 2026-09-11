@@ -1,16 +1,20 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
-import org.bukkit.Bukkit;
+import java.util.Arrays;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 
+/**
+ * Listener that handles ore regeneration after a block break event.
+ * When a player breaks an ore block in a world with the {@link WorldSetting#ORE_RESPAWN}
+ * setting active, the broken ore block is restored to its original state after a delay.
+ */
 @ListenerName("BetterBlockDrop")
 public class BetterBlockDrop implements ListenerConstruct {
 
@@ -21,30 +25,45 @@ public class BetterBlockDrop implements ListenerConstruct {
 
   ServiceContext serviceContext;
 
+  /**
+   * Injects the {@link ServiceContext} into this listener, providing access to required services.
+   *
+   * @param context the service context to inject
+   */
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
   }
 
-  public void runLater(Runnable r, long d) {
-    Bukkit.getScheduler().runTaskLater(RelluEssentials.getInstance(), r, d);
-  }
-
+  /**
+   * Handles the {@link BlockBreakEvent} to restore broken ore blocks.
+   * If the broken block is an ore and the world has the
+   * {@link WorldSetting#ORE_RESPAWN} setting active,
+   * the block is scheduled to be restored to its original material after a delay of 10000 ticks.
+   *
+   * @param event the block break event
+   */
   @EventHandler
-  public void onBreak(BlockBreakEvent e) {
-    World world = e.getBlock().getLocation().getWorld();
+  public void onBreak(BlockBreakEvent event) {
+    World world = event.getBlock().getLocation().getWorld();
     if (world == null) {
       return;
     }
 
-    Material m = e.getBlock().getBlockData().getMaterial();
-    for (Material ore : ores) {
-      boolean oreRespawnActive = serviceContext.getWorldGroupService()
-          .isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, world.getName());
-      if (m == ore && oreRespawnActive) {
-        runLater(() -> e.getBlock().setType(m), 10000L);
-        break;
-      }
+    boolean oreRespawnActive = serviceContext.getWorldGroupService()
+        .isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, world.getName());
+
+    if (!oreRespawnActive) {
+      return;
+    }
+
+    Material m = event.getBlock().getBlockData().getMaterial();
+
+    Material blockMaterial = event.getBlock().getBlockData().getMaterial();
+    boolean isOre = Arrays.stream(ores).anyMatch(ore -> ore == blockMaterial);
+
+    if (isOre) {
+      serviceContext.getSchedulerService().runTaskLater(() -> event.getBlock().setType(m), 10000L);
     }
   }
 }

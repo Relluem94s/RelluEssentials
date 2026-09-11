@@ -2,7 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.WorldSetting;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.ExperienceHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
@@ -35,15 +35,18 @@ public class WorldGroupService {
   private final WorldGroupRepository worldGroupRepository;
   @Getter
   private final Multimap<WorldGroupEntry, WorldEntry> worldsMap = ArrayListMultimap.create();
+  private final ServiceContext serviceContext;
 
   /**
    * Constructs a new WorldGroupService.
    *
-   * @param worldGroupRegistry the registry used to manage active settings for worlds
+   * @param serviceContext       serviceContext to get PlayerService
+   * @param worldGroupRegistry   the registry used to manage active settings for worlds
    * @param worldGroupRepository the repository used for data persistence
    */
-  public WorldGroupService(WorldGroupRegistry worldGroupRegistry,
+  public WorldGroupService(ServiceContext serviceContext, WorldGroupRegistry worldGroupRegistry,
       WorldGroupRepository worldGroupRepository) {
+    this.serviceContext = serviceContext;
     this.worldGroupRegistry = worldGroupRegistry;
     this.worldGroupRepository = worldGroupRepository;
   }
@@ -99,7 +102,6 @@ public class WorldGroupService {
   public @Nullable WorldEntry findWorldEntryForPlayer(Player player) {
     String worldName = player.getWorld().getName();
     return worldsMap.entries().stream()
-        .filter(entry -> entry.getKey() != null && entry.getValue() != null)
         .filter(entry -> worldName.equals(entry.getValue().getName()))
         .map(Map.Entry::getValue)
         .findFirst()
@@ -114,9 +116,13 @@ public class WorldGroupService {
   public void loadWorldGroupInventoryForPlayer(Player player) {
     PlayerEntry playerEntry = resolvePlayerEntry(player);
     findWorldGroupEntryByWorldName(player.getWorld().getName()).ifPresent(worldGroupEntry -> {
-      WorldGroupInventoryEntry inventoryEntry = resolveOrCreateInventoryEntry(player, playerEntry,
-          worldGroupEntry);
-      applyInventoryEntryToPlayer(player, inventoryEntry);
+      WorldGroupInventoryEntry existingEntry = resolveExistingInventoryEntry(playerEntry, worldGroupEntry);
+      if (existingEntry == null) {
+        WorldGroupInventoryEntry newEntry = buildNewInventoryEntry(player, playerEntry, worldGroupEntry);
+        worldGroupRepository.saveInventory(newEntry);
+        return;
+      }
+      applyInventoryEntryToPlayer(player, existingEntry);
     });
   }
 
@@ -165,29 +171,16 @@ public class WorldGroupService {
 
   private Optional<WorldGroupEntry> findWorldGroupEntryByWorldName(String worldName) {
     return worldsMap.entries().stream()
-        .filter(entry -> entry.getKey() != null && entry.getValue() != null)
         .filter(entry -> worldName.equals(entry.getValue().getName()))
         .map(Map.Entry::getKey)
         .findFirst();
   }
 
-  private WorldGroupInventoryEntry resolveOrCreateInventoryEntry(Player player,
-      PlayerEntry playerEntry, WorldGroupEntry worldGroupEntry) {
-    WorldGroupInventoryEntry existingEntry = resolveExistingInventoryEntry(playerEntry,
-        worldGroupEntry);
-    if (existingEntry != null) {
-      return existingEntry;
-    }
-
-    WorldGroupInventoryEntry newEntry =
-        buildNewInventoryEntry(player, playerEntry, worldGroupEntry);
-    worldGroupRepository.saveInventory(newEntry);
-    return newEntry;
-  }
-
   private void applyInventoryEntryToPlayer(Player player,
       WorldGroupInventoryEntry inventoryEntry) {
-    InventoryHelper.createInventory(inventoryEntry.getInventory().toString(), player);
+    if (inventoryEntry.getInventory() != null) {
+      InventoryHelper.createInventory(inventoryEntry.getInventory().toString(), player);
+    }
     player.setFoodLevel(inventoryEntry.getFoodLevel());
     player.setHealth(inventoryEntry.getHealth());
     ExperienceHelper.setTotalExperience(player, inventoryEntry.getTotalExperience());
@@ -250,8 +243,7 @@ public class WorldGroupService {
   }
 
   private PlayerEntry resolvePlayerEntry(Player player) {
-    return RelluEssentials.getInstance().getServiceContext().getPlayerService()
-        .getPlayerEntry(player);
+    return serviceContext.getPlayerService().getPlayerEntry(player);
   }
 
   private Map<WorldSetting, Set<String>> buildEmptySettingMap() {
@@ -379,6 +371,11 @@ public class WorldGroupService {
     worldGroupRepository.saveWorldGroup(worldGroupEntry);
   }
 
+  private boolean isWorldGroupRegisteredInMemory(String worldGroupName) {
+    return worldsMap.keySet().stream()
+        .anyMatch(entry -> worldGroupName.equals(entry.getName()));
+  }
+
   /**
    * Creates a new world group and immediately initializes it with a world.
    *
@@ -390,7 +387,7 @@ public class WorldGroupService {
   @SuppressWarnings("unused")
   public void initializeWorldGroupWithWorld(String worldGroupName, String worldName,
       GroupEntry groupEntry, int createdBy) {
-    if (findWorldGroupByName(worldGroupName).isPresent()) {
+    if (isWorldGroupRegisteredInMemory(worldGroupName)) {
       return;
     }
 

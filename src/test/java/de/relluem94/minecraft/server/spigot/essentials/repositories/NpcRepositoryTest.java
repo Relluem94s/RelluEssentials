@@ -71,7 +71,7 @@ class NpcRepositoryTest {
       assertAll(
           () -> assertNotNull(result),
           () -> assertEquals(1, result.size()),
-          () -> assertEquals(npc, result.get(0))
+          () -> assertEquals(npc, result.getFirst())
       );
 
       mapperMock.verify(() -> NpcMapper.toDomain(npcEntry, dialogues));
@@ -110,10 +110,8 @@ class NpcRepositoryTest {
 
       Optional<Npc> result = npcRepository.loadById(npcUuid);
 
-      assertAll(
-          () -> assertTrue(result.isPresent()),
-          () -> assertEquals(npc, result.get())
-      );
+      assertTrue(result.isPresent());
+      assertEquals(npc, result.get());
 
       mapperMock.verify(() -> NpcMapper.toDomain(npcEntry, dialogues));
     }
@@ -213,7 +211,7 @@ class NpcRepositoryTest {
     assertAll(
         () -> assertNotNull(result),
         () -> assertEquals(1, result.size()),
-        () -> assertEquals(npcDialogueEntry, result.get(0))
+        () -> assertEquals(npcDialogueEntry, result.getFirst())
     );
   }
 
