@@ -29,6 +29,8 @@ import org.jspecify.annotations.NonNull;
 /**
  * Represents the Enchanter NPC trader, which provides a GUI for purchasing custom enchantments,
  * magic water buckets and autosell hoppers. The NPC appears as a librarian villager.
+ *
+ * @author rellu
  */
 public class EnchanterNpc extends TraderNpc {
 
@@ -63,7 +65,7 @@ public class EnchanterNpc extends TraderNpc {
    * @return the fully populated {@link Inventory} representing the enchanter shop GUI
    */
   @Override
-  public Inventory getMainGUI() {
+  public Inventory getMainGui() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, getTitle()),
         resolveDisabledItem().toItemStack());
 

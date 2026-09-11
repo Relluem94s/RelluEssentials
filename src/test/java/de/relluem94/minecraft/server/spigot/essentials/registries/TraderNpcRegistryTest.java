@@ -295,7 +295,7 @@ class TraderNpcRegistryTest {
     lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
 
     traderNpcRegistry.init(List.of(entry));
-    traderNpcRegistry.getNpc(0).getMainGUI();
+    traderNpcRegistry.getNpc(0).getMainGui();
 
     verify(inventory).setItem(53, closeItemStack);
   }
@@ -312,7 +312,7 @@ class TraderNpcRegistryTest {
     lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
 
     traderNpcRegistry.init(List.of(entry));
-    traderNpcRegistry.getNpc(0).getMainGUI();
+    traderNpcRegistry.getNpc(0).getMainGui();
 
     verify(inventory, times(NpcHelper.INV_SIZE)).setItem(any(Integer.class), eq(disabledItemStack));
   }
@@ -332,7 +332,7 @@ class TraderNpcRegistryTest {
     lenient().when(translationService.get(any(MessageKey.class), any(String.class), any(String.class), any(String.class), any(String.class))).thenReturn("price line");
 
     traderNpcRegistry.init(List.of(entry));
-    traderNpcRegistry.getNpc(0).getMainGUI();
+    traderNpcRegistry.getNpc(0).getMainGui();
 
     verify(slotItemMeta).setLore(any());
   }
@@ -350,7 +350,7 @@ class TraderNpcRegistryTest {
     lenient().when(translationService.get(any(MessageKey.class), any(String.class), any(String.class), any(String.class), any(String.class))).thenReturn("price line");
 
     traderNpcRegistry.init(List.of(entry));
-    traderNpcRegistry.getNpc(0).getMainGUI();
+    traderNpcRegistry.getNpc(0).getMainGui();
 
     verify(persistentDataContainer).set(eq(itemSellPrice()), eq(PersistentDataType.INTEGER),
         eq(ItemPrice.from(Material.STONE).getSellPrice()));
@@ -371,7 +371,7 @@ class TraderNpcRegistryTest {
     lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
 
     traderNpcRegistry.init(List.of(entry));
-    traderNpcRegistry.getNpc(0).getMainGUI();
+    traderNpcRegistry.getNpc(0).getMainGui();
 
     verify(inventory, times(NpcHelper.INV_SIZE)).setItem(any(Integer.class), eq(disabledItemStack));
     verify(inventory).setItem(53, closeItemStack);
@@ -388,7 +388,7 @@ class TraderNpcRegistryTest {
     lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
 
     traderNpcRegistry.init(List.of(entry));
-    Inventory result = traderNpcRegistry.getNpc(0).getMainGUI();
+    Inventory result = traderNpcRegistry.getNpc(0).getMainGui();
 
     assertNotNull(result);
     assertEquals(inventory, result);

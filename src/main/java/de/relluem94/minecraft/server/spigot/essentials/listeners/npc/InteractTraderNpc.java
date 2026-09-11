@@ -18,6 +18,17 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
+/**
+ * Listener that handles player interactions with trader NPCs.
+ *
+ * <p>Processes right-click interactions on villager entities that are registered
+ * as trader NPCs, opening the appropriate GUI for the player.</p>
+ *
+ * <p>Handles the special case of the banker NPC, including bank account creation
+ * and validation of sufficient funds before opening the banking interface.</p>
+ *
+ * @author rellu
+ */
 @ListenerName("InteractTraderNpc")
 public class InteractTraderNpc implements ListenerConstruct {
 
@@ -29,10 +40,23 @@ public class InteractTraderNpc implements ListenerConstruct {
     this.serviceContext = context;
     this.buyBackSlotResolver = new BuyBackSlotResolver(
         serviceContext.getBuyBackService(), serviceContext.getItemService().find(
-            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(), PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
+            new RelluEssentialsNamespacedKey(serviceContext.getPluginMetadataService().getName(),
+                PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED))
         .orElseThrow().toItemStack());
   }
 
+  /**
+   * Handles the {@link org.bukkit.event.player.PlayerInteractEntityEvent} for trader NPCs.
+   *
+   * <p>Checks whether the clicked entity is a registered trader villager NPC and
+   * opens the corresponding GUI for the interacting player.</p>
+   *
+   * <p>If the NPC is the banker, it either opens the existing bank account GUI or
+   * attempts to create a new bank account by deducting the required cost from the
+   * player's purse.</p>
+   *
+   * @param e the event triggered when a player right-clicks an entity
+   */
   @EventHandler
   public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
     Player p = e.getPlayer();
@@ -49,9 +73,13 @@ public class InteractTraderNpc implements ListenerConstruct {
               BankAccountEntry bae = serviceContext.getBankService()
                   .findBankAccountByPlayerId(pe.getId());
               if (bae != null) {
-                InventoryHelper.openInventory(p, serviceContext.getTraderNpcService().getBankerNpc().getMainGUI());
+                InventoryHelper.openInventory(p, serviceContext.getTraderNpcService()
+                    .getBankerNpc().getMainGui());
               } else {
                 BankTierEntry bte = serviceContext.getBankService().getBankTierEntryById(1);
+                if (bte == null) {
+                  return;
+                }
                 if (pe.getPurse() > bte.getCost()) {
                   pe.setPurse(pe.getPurse() - bte.getCost());
                   pe.setUpdatedBy(pe.getId());
@@ -74,7 +102,7 @@ public class InteractTraderNpc implements ListenerConstruct {
               e.setCancelled(true);
             } else {
               org.bukkit.inventory.Inventory gui =
-                  serviceContext.getTraderNpcService().getNpc(i).getMainGUI();
+                  serviceContext.getTraderNpcService().getNpc(i).getMainGui();
 
               gui.setItem(49, buyBackSlotResolver.resolveForPlayer(p));
               InventoryHelper.openInventory(p, gui);

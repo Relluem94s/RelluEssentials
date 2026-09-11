@@ -30,6 +30,8 @@ import org.bukkit.inventory.Inventory;
 
 /**
  * Represents a Banker NPC that provides access to banking-related GUIs.
+ *
+ * @author rellu
  */
 public class BankerNpc extends TraderNpc implements BankerGui {
 
@@ -58,7 +60,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getMainGUI() {
+  public Inventory getMainGui() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 

@@ -68,7 +68,7 @@ public class TraderNpcRegistry {
     for (TraderNpcEntry ne : traderNpcEntryList) {
       TraderNpc traderNpc = new TraderNpc(ne) {
         @Override
-        public Inventory getMainGUI() {
+        public Inventory getMainGui() {
           Inventory inv = InventoryHelper.fillInventory(
               InventoryHelper.createInventory(NpcHelper.INV_SIZE, getTitle()),
               disabledItem.toItemStack());

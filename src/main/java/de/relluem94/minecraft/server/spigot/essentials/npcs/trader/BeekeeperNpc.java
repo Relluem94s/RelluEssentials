@@ -23,10 +23,24 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+/**
+ * Represents the Beekeeper NPC trader that offers bee-related items
+ * and decorative candle heads for purchase and sale.
+ *
+ * <p>This NPC provides a GUI-based shop with standard Minecraft bee
+ * materials as well as custom player head candles in various colors.</p>
+ *
+ * @author rellu
+ */
 public class BeekeeperNpc extends TraderNpc {
 
   private final ServiceContext serviceContext;
 
+  /**
+   * Creates a new BeekeeperNpc with the given service context.
+   *
+   * @param serviceContext the context providing access to required services
+   */
   public BeekeeperNpc(ServiceContext serviceContext) {
     super("§dBeekeeper", Profession.NONE, Type.BEEKEEPER);
     this.serviceContext = serviceContext;
@@ -45,7 +59,7 @@ public class BeekeeperNpc extends TraderNpc {
   }
 
   @Override
-  public Inventory getMainGUI() {
+  public Inventory getMainGui() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(54, getTitle()),
         resolveDisabledItem().toItemStack());
 
