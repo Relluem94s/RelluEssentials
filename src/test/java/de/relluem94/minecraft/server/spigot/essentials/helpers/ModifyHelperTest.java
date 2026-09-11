@@ -4,14 +4,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
+import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
+import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.rellulib.stores.DoubleStore;
+import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -167,8 +174,7 @@ class ModifyHelperTest {
         "270, 5, 10, 3,  13, 7",
     })
     void getBlock_resolvesCorrectWorldPosition(float yaw,
-        int originX, int originY, int originZ,
-        int expectedX, int expectedZ) {
+        int originX, int originY, int originZ) {
         World world = mock(World.class);
         Block expectedBlock = mock(Block.class);
 
@@ -521,5 +527,171 @@ class ModifyHelperTest {
                 throw e.getCause();
             }
         });
+    }
+
+    // -------------------------------------------------------------------------
+    // checkAndRemoveProtection
+    // -------------------------------------------------------------------------
+
+    @Test
+    void checkAndRemoveProtection_withProtectableMaterialAndExistingProtection_deletesAndRemovesProtection() {
+        World world = mock(World.class);
+        Block block = mock(Block.class);
+        Location location = new Location(world, 1, 2, 3);
+
+        when(block.getType()).thenReturn(Material.CHEST);
+        when(block.getLocation()).thenReturn(location);
+
+        ProtectionEntry protection = mock(ProtectionEntry.class);
+        ProtectionService protectionService = mock(ProtectionService.class);
+        ServiceContext serviceContext = mock(ServiceContext.class);
+        RelluEssentials plugin = mock(RelluEssentials.class);
+
+        when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
+        when(protectionService.getProtectionEntry(location)).thenReturn(protection);
+        when(serviceContext.getProtectionService()).thenReturn(protectionService);
+        when(plugin.getServiceContext()).thenReturn(serviceContext);
+
+        try (var mockedStatic = org.mockito.Mockito.mockStatic(RelluEssentials.class)) {
+            mockedStatic.when(RelluEssentials::getInstance).thenReturn(plugin);
+
+            ModifyHelper.checkAndRemoveProtection(block);
+
+            verify(protectionService).deleteProtectionAndRemoveFromRegistry(protection);
+            verify(protectionService).removeProtectionEntry(location);
+        }
+    }
+
+    @Test
+    void checkAndRemoveProtection_withProtectableMaterialButNoProtectionEntry_doesNotDeleteOrRemove() {
+        World world = mock(World.class);
+        Block block = mock(Block.class);
+        Location location = new Location(world, 1, 2, 3);
+
+        when(block.getType()).thenReturn(Material.CHEST);
+        when(block.getLocation()).thenReturn(location);
+
+        ProtectionService protectionService = mock(ProtectionService.class);
+        ServiceContext serviceContext = mock(ServiceContext.class);
+        RelluEssentials plugin = mock(RelluEssentials.class);
+
+        when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
+        when(protectionService.getProtectionEntry(location)).thenReturn(null);
+        when(serviceContext.getProtectionService()).thenReturn(protectionService);
+        when(plugin.getServiceContext()).thenReturn(serviceContext);
+
+        try (var mockedStatic = org.mockito.Mockito.mockStatic(RelluEssentials.class)) {
+            mockedStatic.when(RelluEssentials::getInstance).thenReturn(plugin);
+
+            ModifyHelper.checkAndRemoveProtection(block);
+
+            verify(protectionService, never()).deleteProtectionAndRemoveFromRegistry(any());
+            verify(protectionService, never()).removeProtectionEntry(any());
+        }
+    }
+
+    @Test
+    void checkAndRemoveProtection_withNonProtectableMaterial_doesNotQueryProtectionEntry() {
+        World world = mock(World.class);
+        Block block = mock(Block.class);
+        Location location = new Location(world, 1, 2, 3);
+
+        when(block.getType()).thenReturn(Material.STONE);
+        when(block.getLocation()).thenReturn(location);
+
+        ProtectionService protectionService = mock(ProtectionService.class);
+        ServiceContext serviceContext = mock(ServiceContext.class);
+        RelluEssentials plugin = mock(RelluEssentials.class);
+
+        when(protectionService.isProtectableMaterial(Material.STONE)).thenReturn(false);
+        when(serviceContext.getProtectionService()).thenReturn(protectionService);
+        when(plugin.getServiceContext()).thenReturn(serviceContext);
+
+        try (var mockedStatic = org.mockito.Mockito.mockStatic(RelluEssentials.class)) {
+            mockedStatic.when(RelluEssentials::getInstance).thenReturn(plugin);
+
+            ModifyHelper.checkAndRemoveProtection(block);
+
+            verify(protectionService, never()).getProtectionEntry(any());
+            verify(protectionService, never()).deleteProtectionAndRemoveFromRegistry(any());
+            verify(protectionService, never()).removeProtectionEntry(any());
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // forEachBlock
+    // -------------------------------------------------------------------------
+
+    @Test
+    void forEachBlock_callsActionForEveryBlockInSelection() {
+        World world = mock(World.class);
+        Block block = mock(Block.class);
+        when(world.getBlockAt(any(Location.class))).thenReturn(block);
+
+        Location pos1 = new Location(world, 0, 0, 0);
+        Location pos2 = new Location(world, 1, 1, 1);
+        Selection selection = new Selection(pos1, pos2);
+
+        List<Block> visitedBlocks = new ArrayList<>();
+        ModifyHelper.forEachBlock(selection, visitedBlocks::add);
+
+        int expectedBlockCount = 2 * 2 * 2;
+        assertEquals(expectedBlockCount, visitedBlocks.size());
+    }
+
+    @Test
+    void forEachBlock_withSingleBlockSelection_callsActionOnce() {
+        World world = mock(World.class);
+        Block block = mock(Block.class);
+        when(world.getBlockAt(any(Location.class))).thenReturn(block);
+
+        Location pos1 = new Location(world, 5, 10, 5);
+        Location pos2 = new Location(world, 5, 10, 5);
+        Selection selection = new Selection(pos1, pos2);
+
+        List<Block> visitedBlocks = new ArrayList<>();
+        ModifyHelper.forEachBlock(selection, visitedBlocks::add);
+
+        assertEquals(1, visitedBlocks.size());
+    }
+
+    @Test
+    void forEachBlock_iteratesAllXYZCombinationsWithinBounds() {
+        World world = mock(World.class);
+        when(world.getBlockAt(any(Location.class))).thenAnswer(invocation -> {
+            Location loc = invocation.getArgument(0);
+            Block b = mock(Block.class);
+            when(b.getLocation()).thenReturn(loc);
+            return b;
+        });
+
+        Location pos1 = new Location(world, 2, 3, 4);
+        Location pos2 = new Location(world, 4, 5, 6);
+        Selection selection = new Selection(pos1, pos2);
+
+        List<Block> visitedBlocks = new ArrayList<>();
+        ModifyHelper.forEachBlock(selection, visitedBlocks::add);
+
+        int expectedX = selection.getMaxX() - selection.getMinX() + 1;
+        int expectedY = selection.getMaxY() - selection.getMinY() + 1;
+        int expectedZ = selection.getMaxZ() - selection.getMinZ() + 1;
+        assertEquals(expectedX * expectedY * expectedZ, visitedBlocks.size());
+    }
+
+    @Test
+    void forEachBlock_passesCorrectBlocksFromWorld() {
+        World world = mock(World.class);
+        Block expectedBlock = mock(Block.class);
+        when(world.getBlockAt(any(Location.class))).thenReturn(expectedBlock);
+
+        Location pos1 = new Location(world, 0, 0, 0);
+        Location pos2 = new Location(world, 0, 0, 0);
+        Selection selection = new Selection(pos1, pos2);
+
+        List<Block> visitedBlocks = new ArrayList<>();
+        ModifyHelper.forEachBlock(selection, visitedBlocks::add);
+
+        assertEquals(1, visitedBlocks.size());
+        assertEquals(expectedBlock, visitedBlocks.getFirst());
     }
 }

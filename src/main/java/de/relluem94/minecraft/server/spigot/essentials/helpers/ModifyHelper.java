@@ -1,6 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
 import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
+import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
@@ -155,7 +156,9 @@ public class ModifyHelper {
    *
    * @param material the {@link Material} to check
    * @return {@code true} if the material is a plant, {@code false} otherwise
+   *
    */
+  @Generated // This cant be Tested due to Static Bukkit Calls
   public static boolean isPlantMaterial(Material material) {
     return Tag.FLOWERS.isTagged(material)
         || Tag.SAPLINGS.isTagged(material)
