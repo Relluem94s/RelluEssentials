@@ -107,10 +107,10 @@ public class DevPlattformCommand implements SubCommand {
     if (yaw >= 315 || yaw < 45) {
       fx = 0;
       fz = 1;
-    } else if (yaw >= 45 && yaw < 135) {
+    } else if (yaw < 135) {
       fx = -1;
       fz = 0;
-    } else if (yaw >= 135 && yaw < 225) {
+    } else if (yaw < 225) {
       fx = 0;
       fz = -1;
     } else {
