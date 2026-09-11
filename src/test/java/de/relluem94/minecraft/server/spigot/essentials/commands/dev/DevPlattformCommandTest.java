@@ -42,7 +42,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 
 @ExtendWith(MockitoExtension.class)
 class DevPlattformCommandTest {
@@ -358,10 +360,18 @@ class DevPlattformCommandTest {
     when(block.getLocation()).thenReturn(new Location(world, 0, 64, 0));
     when(block.getState()).thenReturn(stateIsCommandBlock ? commandBlock : mock(org.bukkit.block.BlockState.class));
 
-    doAnswer(invocation -> {
-      Runnable task = invocation.getArgument(0);
-      task.run();
-      return null;
+    doAnswer(new Answer<Void>() {
+      private boolean alreadyExecuted = false;
+
+      @Override
+      public Void answer(InvocationOnMock invocation) {
+        if (!alreadyExecuted) {
+          alreadyExecuted = true;
+          Runnable task = invocation.getArgument(0);
+          task.run();
+        }
+        return null;
+      }
     }).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
 
     devPlattformCommand.execute(player, new String[]{});
