@@ -10,8 +10,10 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,6 +40,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -387,5 +390,38 @@ class DevPlattformCommandTest {
 
     verify(schedulerService, atLeastOnce()).runTaskLater(any(Runnable.class), anyLong());
     verify(undoHistoryService).addHistory(eq(player), anyList());
+  }
+
+
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  void executeCommandBlockLambdaSetsTypeAndConfiguresCommandOnlyWhenStateIsCommandBlock(boolean stateIsCommandBlock) {
+    setupPlayerLocation(180f);
+    when(traderNpcService.getAllNpcs()).thenReturn(Collections.emptyList());
+
+    CommandBlock commandBlock = mock(CommandBlock.class);
+    when(world.getBlockAt(anyInt(), anyInt(), anyInt())).thenReturn(block);
+    when(world.getBlockAt(any(Location.class))).thenReturn(block);
+    when(block.getType()).thenReturn(Material.AIR);
+    when(block.getBlockData()).thenReturn(blockData);
+    when(block.getLocation()).thenReturn(new Location(world, 0, 64, 0));
+    when(block.getState()).thenReturn(stateIsCommandBlock ? commandBlock : mock(org.bukkit.block.BlockState.class));
+
+    doAnswer(invocation -> {
+      Runnable task = invocation.getArgument(0);
+      task.run();
+      return null;
+    }).when(schedulerService).runTaskLater(any(Runnable.class), anyLong());
+
+    devPlattformCommand.execute(player, new String[]{});
+
+    verify(block, atLeastOnce()).setType(eq(Material.REPEATING_COMMAND_BLOCK), eq(true));
+    if (stateIsCommandBlock) {
+      verify(commandBlock, atLeastOnce()).setCommand(any(String.class));
+      verify(commandBlock, atLeastOnce()).update(true);
+    } else {
+      verify(commandBlock, never()).setCommand(any(String.class));
+      verify(commandBlock, never()).update(true);
+    }
   }
 }
