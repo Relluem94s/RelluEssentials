@@ -333,7 +333,7 @@ class TraderNpcRegistryTest {
     traderNpcRegistry.init(List.of(entry));
     traderNpcRegistry.getNpc(0).getMainGUI();
 
-    verify(slotItemMeta).setLore(any(List.class));
+    verify(slotItemMeta).setLore(any());
   }
 
   @Test
@@ -366,12 +366,14 @@ class TraderNpcRegistryTest {
 
     mockedBukkit.when(() -> Bukkit.createInventory(any(), eq(NpcHelper.INV_SIZE), any(String.class)))
         .thenReturn(inventory);
+    when(inventory.getSize()).thenReturn(NpcHelper.INV_SIZE);
     lenient().when(itemMeta.getPersistentDataContainer()).thenReturn(persistentDataContainer);
 
     traderNpcRegistry.init(List.of(entry));
     traderNpcRegistry.getNpc(0).getMainGUI();
 
     verify(inventory, times(NpcHelper.INV_SIZE)).setItem(any(Integer.class), eq(disabledItemStack));
+    verify(inventory).setItem(53, closeItemStack);
   }
 
   @Test
