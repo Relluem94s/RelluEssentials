@@ -122,7 +122,6 @@ class TraderNpcRegistryTest {
     mockedRelluEssentials.close();
   }
 
-
   @Test
   void constructorThrowsNoSuchElementExceptionWhenDisabledItemNotFound() {
     when(itemService.find(any(RelluEssentialsNamespacedKey.class))).thenReturn(Optional.empty());
@@ -317,7 +316,6 @@ class TraderNpcRegistryTest {
 
     verify(inventory, times(NpcHelper.INV_SIZE)).setItem(any(Integer.class), eq(disabledItemStack));
   }
-
 
   @Test
   void getMainGuiWithNonAirSlotSetsLoreWithPrices() {
