@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.services;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper.BAG_SIZE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.BAG_SIZE;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

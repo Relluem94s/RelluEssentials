@@ -2,8 +2,8 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_COMMAND_PREFIX;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CHAT_CONSOLE;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.BAG_SIZE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper.BAG_SIZE;
 import static de.relluem94.minecraft.server.spigot.essentials.listeners.BetterChatFormat.ADMIN_CHANNEL;
 
 import de.relluem94.minecraft.server.spigot.essentials.builders.CustomItemBuilder;
@@ -47,6 +47,8 @@ import org.jspecify.annotations.NonNull;
 /**
  * Service responsible for managing bags, including their creation, retrieval, inventory
  * representation, and item collection logic.
+ *
+ * @author rellu
  */
 public class BagService {
 

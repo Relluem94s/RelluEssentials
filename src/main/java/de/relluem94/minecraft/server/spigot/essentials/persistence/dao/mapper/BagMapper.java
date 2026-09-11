@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.InventoryConstants.BAG_SIZE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_BAG_TYPE_FK;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_COST;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings.FIELD_CREATED;
@@ -15,19 +16,31 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.db.Datab
 
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.constants.db.DatabaseMappings;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.BagHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.BagTypeEntry;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Utility class providing static mapping methods to convert {@link java.sql.ResultSet} rows
+ * into bag-related POJO instances.
+ *
+ * @author rellu
+ */
 public class BagMapper {
 
   private BagMapper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
+  /**
+   * Maps a single {@link java.sql.ResultSet} row to a {@link BagEntry}.
+   *
+   * @param rs the result set positioned at the row to map
+   * @return a fully populated {@link BagEntry} instance
+   * @throws java.sql.SQLException if a database access error occurs or a column label is invalid
+   */
   public static @NonNull BagEntry mapBag(@NonNull ResultSet rs) throws SQLException {
     BagEntry bagEntry = new BagEntry();
     bagEntry.setId(rs.getInt(FIELD_ID));
@@ -39,20 +52,27 @@ public class BagMapper {
     bagEntry.setDeletedBy(rs.getInt(FIELD_DELETEDBY));
     bagEntry.setPlayerId(rs.getInt(FIELD_PLAYER_FK));
     bagEntry.setBagTypeId(rs.getInt(FIELD_BAG_TYPE_FK));
-    for (int i = 0; i <= BagHelper.BAG_SIZE - 1; i++) {
+    for (int i = 0; i <= BAG_SIZE - 1; i++) {
       bagEntry.setSlotValue(i,
           rs.getInt(String.format(DatabaseMappings.FIELD_SLOT_VAR_VALUE, i + 1)));
     }
     return bagEntry;
   }
 
+  /**
+   * Maps a single {@link java.sql.ResultSet} row to a {@link BagTypeEntry}.
+   *
+   * @param rs the result set positioned at the row to map
+   * @return a fully populated {@link BagTypeEntry} instance
+   * @throws java.sql.SQLException if a database access error occurs or a column label is invalid
+   */
   public static @NonNull BagTypeEntry mapBagType(@NonNull ResultSet rs) throws SQLException {
     BagTypeEntry bagTypeEntry = new BagTypeEntry();
     bagTypeEntry.setId(rs.getInt(FIELD_ID));
     bagTypeEntry.setDisplayName(rs.getString(FIELD_DISPLAY_NAME));
     bagTypeEntry.setName(rs.getString(FIELD_NAME));
     bagTypeEntry.setCost(rs.getInt(FIELD_COST));
-    for (int i = 0; i <= BagHelper.BAG_SIZE - 1; i++) {
+    for (int i = 0; i <= BAG_SIZE - 1; i++) {
       bagTypeEntry.setSlotName(i,
           rs.getString(String.format(DatabaseMappings.FIELD_SLOT_VAR_NAME, i + 1)));
     }
