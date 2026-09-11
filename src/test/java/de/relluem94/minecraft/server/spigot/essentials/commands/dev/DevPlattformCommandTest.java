@@ -140,54 +140,6 @@ class DevPlattformCommandTest {
     verify(undoHistoryService).addHistory(eq(player), anyList());
   }
 
-  @ParameterizedTest
-  @CsvSource({"315f", "359f", "0f", "44f"})
-  void executeYawInSouthFacingRangeAppliesCorrectDirectionVectors(float yaw) {
-    setupPlayerLocation(yaw);
-    setupWorldBlock();
-    when(traderNpcService.getAllNpcs()).thenReturn(Collections.emptyList());
-
-    assertDoesNotThrow(() -> devPlattformCommand.execute(player, new String[]{}));
-
-    verify(undoHistoryService).addHistory(eq(player), anyList());
-  }
-
-  @ParameterizedTest
-  @CsvSource({"45f", "90f", "134f"})
-  void executeYawInWestFacingRangeAppliesCorrectDirectionVectors(float yaw) {
-    setupPlayerLocation(yaw);
-    setupWorldBlock();
-    when(traderNpcService.getAllNpcs()).thenReturn(Collections.emptyList());
-
-    assertDoesNotThrow(() -> devPlattformCommand.execute(player, new String[]{}));
-
-    verify(undoHistoryService).addHistory(eq(player), anyList());
-  }
-
-  @ParameterizedTest
-  @CsvSource({"135f", "180f", "224f"})
-  void executeYawInNorthFacingRangeAppliesCorrectDirectionVectors(float yaw) {
-    setupPlayerLocation(yaw);
-    setupWorldBlock();
-    when(traderNpcService.getAllNpcs()).thenReturn(Collections.emptyList());
-
-    assertDoesNotThrow(() -> devPlattformCommand.execute(player, new String[]{}));
-
-    verify(undoHistoryService).addHistory(eq(player), anyList());
-  }
-
-  @ParameterizedTest
-  @CsvSource({"225f", "270f", "314f"})
-  void executeYawInEastFacingRangeAppliesCorrectDirectionVectors(float yaw) {
-    setupPlayerLocation(yaw);
-    setupWorldBlock();
-    when(traderNpcService.getAllNpcs()).thenReturn(Collections.emptyList());
-
-    assertDoesNotThrow(() -> devPlattformCommand.execute(player, new String[]{}));
-
-    verify(undoHistoryService).addHistory(eq(player), anyList());
-  }
-
   @Test
   void executeWithNegativeYawNormalizesCorrectly() {
     setupPlayerLocation(-90f);
@@ -392,7 +344,6 @@ class DevPlattformCommandTest {
     verify(undoHistoryService).addHistory(eq(player), anyList());
   }
 
-
   @ParameterizedTest
   @ValueSource(booleans = {true, false})
   void executeCommandBlockLambdaSetsTypeAndConfiguresCommandOnlyWhenStateIsCommandBlock(boolean stateIsCommandBlock) {
@@ -423,5 +374,29 @@ class DevPlattformCommandTest {
       verify(commandBlock, never()).setCommand(any(String.class));
       verify(commandBlock, never()).update(true);
     }
+  }
+
+  @ParameterizedTest
+  @CsvSource({"315f", "359f", "0f", "44f", "225f", "270f", "314f"})
+  void executeYawInSouthOrEastFacingRangeAppliesCorrectDirectionVectors(float yaw) {
+    setupPlayerLocation(yaw);
+    setupWorldBlock();
+    when(traderNpcService.getAllNpcs()).thenReturn(Collections.emptyList());
+
+    assertDoesNotThrow(() -> devPlattformCommand.execute(player, new String[]{}));
+
+    verify(undoHistoryService).addHistory(eq(player), anyList());
+  }
+
+  @ParameterizedTest
+  @CsvSource({"45f", "90f", "134f", "135f", "180f", "224f"})
+  void executeYawInWestOrNorthFacingRangeAppliesCorrectDirectionVectors(float yaw) {
+    setupPlayerLocation(yaw);
+    setupWorldBlock();
+    when(traderNpcService.getAllNpcs()).thenReturn(Collections.emptyList());
+
+    assertDoesNotThrow(() -> devPlattformCommand.execute(player, new String[]{}));
+
+    verify(undoHistoryService).addHistory(eq(player), anyList());
   }
 }
