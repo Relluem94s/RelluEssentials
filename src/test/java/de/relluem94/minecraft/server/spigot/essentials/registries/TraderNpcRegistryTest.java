@@ -91,6 +91,7 @@ class TraderNpcRegistryTest {
   private MockedStatic<RelluEssentials> mockedRelluEssentials;
 
   @BeforeEach
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   void setUp() {
     mockedBukkit = mockStatic(Bukkit.class);
     mockedRelluEssentials = mockStatic(RelluEssentials.class);
