@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCmdBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -70,7 +70,7 @@ public class God implements CommandConstruct {
   public boolean onCommand(@NonNull CommandSender sender, @NotNull Command command,
       @NonNull String label, String[] args) {
 
-    if (isCMDBlock(sender) || isConsole(sender)) {
+    if (isCmdBlock(sender) || isConsole(sender)) {
       if (args.length < 1) {
         sender.sendMessage(serviceContext.getTranslationService()
             .getWithPrefix(MessageKey.COMMAND_TO_LESS_ARGUMENTS));

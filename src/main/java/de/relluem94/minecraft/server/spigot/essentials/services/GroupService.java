@@ -152,7 +152,7 @@ public class GroupService {
    * @return {@code true} if authorized, {@code false} otherwise
    */
   public boolean isSenderAuthorized(CommandSender sender, String requiredGroupName) {
-    if (TypeHelper.isConsole(sender) || TypeHelper.isCMDBlock(sender)) {
+    if (TypeHelper.isConsole(sender) || TypeHelper.isCmdBlock(sender)) {
       return true;
     }
     if (TypeHelper.isPlayer(sender)) {

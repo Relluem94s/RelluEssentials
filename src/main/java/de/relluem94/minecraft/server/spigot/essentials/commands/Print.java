@@ -5,7 +5,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.Constant
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_COLOR_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_FORMS_SPACER_MESSAGE;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.StringHelper.replaceColor;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCmdBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 import static de.relluem94.rellulib.utils.StringUtils.implode;
@@ -80,7 +80,7 @@ public class Print implements CommandConstruct {
 
     String name = null;
 
-    if (isCMDBlock(sender)) {
+    if (isCmdBlock(sender)) {
       BlockCommandSender bcs = (BlockCommandSender) sender;
       name = PLUGIN_COLOR_COMMAND_BLOCK + bcs.getName();
 

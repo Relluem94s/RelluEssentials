@@ -1,6 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCMDBlock;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCmdBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isConsole;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
@@ -103,7 +103,7 @@ public class PermissionsGroup implements CommandConstruct {
       serviceContext.getPlayerService().updateGroup(target, groupEntry.get());
       notifySenderAndTarget(sender, groupEntry.get(), target);
       return true;
-    } else if (isCMDBlock(sender) || isConsole(sender)) {
+    } else if (isCmdBlock(sender) || isConsole(sender)) {
       GroupEntry g = serviceContext.getGroupService().resolveGroupWithFallback(args[1]);
       serviceContext.getPlayerService().updateGroup(target, g);
       notifySenderAndTarget(sender, g, target);

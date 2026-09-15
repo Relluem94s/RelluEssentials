@@ -350,7 +350,7 @@ class GroupServiceTest {
   void isSenderAuthorizedReturnsTrueForCommandBlock() {
     try (MockedStatic<TypeHelper> typeHelper = mockStatic(TypeHelper.class)) {
       typeHelper.when(() -> TypeHelper.isConsole(commandSender)).thenReturn(false);
-      typeHelper.when(() -> TypeHelper.isCMDBlock(commandSender)).thenReturn(true);
+      typeHelper.when(() -> TypeHelper.isCmdBlock(commandSender)).thenReturn(true);
 
       boolean result = groupService.isSenderAuthorized(commandSender, "mod");
 
@@ -365,7 +365,7 @@ class GroupServiceTest {
 
     try (MockedStatic<TypeHelper> typeHelper = mockStatic(TypeHelper.class)) {
       typeHelper.when(() -> TypeHelper.isConsole(player)).thenReturn(false);
-      typeHelper.when(() -> TypeHelper.isCMDBlock(player)).thenReturn(false);
+      typeHelper.when(() -> TypeHelper.isCmdBlock(player)).thenReturn(false);
       typeHelper.when(() -> TypeHelper.isPlayer(player)).thenReturn(true);
 
       when(groupRegistry.findByName("mod")).thenReturn(Optional.of(modGroup));
@@ -385,7 +385,7 @@ class GroupServiceTest {
 
     try (MockedStatic<TypeHelper> typeHelper = mockStatic(TypeHelper.class)) {
       typeHelper.when(() -> TypeHelper.isConsole(player)).thenReturn(false);
-      typeHelper.when(() -> TypeHelper.isCMDBlock(player)).thenReturn(false);
+      typeHelper.when(() -> TypeHelper.isCmdBlock(player)).thenReturn(false);
       typeHelper.when(() -> TypeHelper.isPlayer(player)).thenReturn(true);
 
       when(groupRegistry.findByName("mod")).thenReturn(Optional.of(modGroup));
@@ -402,7 +402,7 @@ class GroupServiceTest {
   void isSenderAuthorizedReturnsFalseForUnknownSenderType() {
     try (MockedStatic<TypeHelper> typeHelper = mockStatic(TypeHelper.class)) {
       typeHelper.when(() -> TypeHelper.isConsole(commandSender)).thenReturn(false);
-      typeHelper.when(() -> TypeHelper.isCMDBlock(commandSender)).thenReturn(false);
+      typeHelper.when(() -> TypeHelper.isCmdBlock(commandSender)).thenReturn(false);
       typeHelper.when(() -> TypeHelper.isPlayer(commandSender)).thenReturn(false);
 
       boolean result = groupService.isSenderAuthorized(commandSender, "mod");
