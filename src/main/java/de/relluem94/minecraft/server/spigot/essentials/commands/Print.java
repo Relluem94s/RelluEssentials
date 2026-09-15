@@ -122,14 +122,15 @@ public class Print implements CommandConstruct {
     }
 
     String message = implode(0, args);
-    message = replaceSymbols(replaceColor(message));
+    message = replaceSymbols(replaceColor(message)).trim();
 
     if (targetedPlayerBySelector != null) {
       message = message.replace("@p",
           Objects.requireNonNull(targetedPlayerBySelector.getCustomName()));
     }
 
-    serviceContext.getServerService().broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + message);
+    serviceContext.getServerService()
+        .broadcastMessage(name + PLUGIN_FORMS_SPACER_MESSAGE + PLUGIN_COLOR_MESSAGE + message);
     return true;
   }
 
