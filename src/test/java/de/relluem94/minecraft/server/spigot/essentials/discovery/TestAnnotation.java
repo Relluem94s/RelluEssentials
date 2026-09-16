@@ -1,0 +1,11 @@
+package de.relluem94.minecraft.server.spigot.essentials.discovery;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface TestAnnotation {
+}

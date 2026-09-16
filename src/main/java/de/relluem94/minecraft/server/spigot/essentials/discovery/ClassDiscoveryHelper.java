@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.discovery;
 
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +24,10 @@ import java.util.jar.JarInputStream;
  * @author relluem94
  */
 public class ClassDiscoveryHelper {
+
+  private ClassDiscoveryHelper() {
+    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  }
 
   /**
    * Scans the given package for classes that carry the specified annotation and are assignable to
