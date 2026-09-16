@@ -1,29 +1,33 @@
 package de.relluem94.minecraft.server.spigot.essentials.discovery;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_NAME_CONSOLE;
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ChatHelper.consoleSendMessage;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
+import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Utility class for discovering and instantiating annotated classes from a given package.
  *
  * <p>Provides static factory methods to load {@link ListenerConstruct} and
- * {@link CommandConstruct} implementations by scanning a package for classes
- * annotated with {@link ListenerName} or {@link CommandName} respectively.
+ * {@link CommandConstruct} implementations by scanning a package for classes annotated with
+ * {@link ListenerName} or {@link CommandName} respectively.
  * </p>
  *
  * @author relluem94
  */
 public class AnnotatedClassLoader {
 
-  private AnnotatedClassLoader() {}
+  private AnnotatedClassLoader() {
+    throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
+  }
 
   /**
    * Loads all {@link ListenerConstruct} implementations from the given package.
@@ -55,21 +59,10 @@ public class AnnotatedClassLoader {
     return load(packageName, CommandName.class, CommandConstruct.class, classLoader);
   }
 
-  private static <T> List<T> load(
-      String packageName,
-      Class<? extends Annotation> annotation,
-      Class<T> targetType,
-      ClassLoader classLoader
-  ) {
-    return ClassDiscoveryHelper.findAnnotatedClasses(
-            packageName,
-            annotation,
-            targetType,
-            classLoader
-        )
-        .stream()
-        .map(clazz -> instantiate(clazz, targetType))
-        .flatMap(Optional::stream)
+  private static <T> List<T> load(String packageName, Class<? extends Annotation> annotation,
+      Class<T> targetType, ClassLoader classLoader) {
+    return ClassDiscoveryHelper.findAnnotatedClasses(packageName, annotation, targetType,
+            classLoader).stream().map(clazz -> instantiate(clazz, targetType)).flatMap(Optional::stream)
         .toList();
   }
 
@@ -77,8 +70,9 @@ public class AnnotatedClassLoader {
     try {
       return Optional.of(clazz.getDeclaredConstructor().newInstance());
     } catch (Exception e) {
-      consoleSendMessage(PLUGIN_NAME_CONSOLE,
-          "Failed to instantiate " + targetType.getSimpleName() + ": " + clazz.getSimpleName());
+      Logger.getLogger(AnnotatedClassLoader.class.getName()).log(Level.SEVERE,
+          PLUGIN_NAME_CONSOLE + "Failed to instantiate " + targetType.getSimpleName() + ": "
+              + clazz.getSimpleName());
       return Optional.empty();
     }
   }
