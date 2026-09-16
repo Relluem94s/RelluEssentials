@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
@@ -90,7 +91,7 @@ class AnnotatedClassLoaderTest {
     List<ListenerConstruct> result = AnnotatedClassLoader.loadListeners(LISTENER_FIXTURES_PACKAGE, classLoader);
 
     assertFalse(result.isEmpty());
-    assertTrue(result.stream().allMatch(l -> l instanceof ListenerConstruct));
+    assertTrue(result.stream().allMatch(Objects::nonNull));
   }
 
   @Test
@@ -103,7 +104,7 @@ class AnnotatedClassLoaderTest {
     List<CommandConstruct> result = AnnotatedClassLoader.loadCommands(COMMAND_FIXTURES_PACKAGE, classLoader);
 
     assertFalse(result.isEmpty());
-    assertTrue(result.stream().allMatch(c -> c instanceof CommandConstruct));
+    assertTrue(result.stream().allMatch(Objects::nonNull));
   }
 
   @Test
