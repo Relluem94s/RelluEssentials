@@ -83,8 +83,7 @@ public class ClassDiscoveryHelper {
 
     while ((entry = jarInputStream.getNextJarEntry()) != null) {
       String entryName = entry.getName();
-      if (entryName.startsWith(packagePath) && entryName.endsWith(".class")
-          && !entry.isDirectory()) {
+      if (entryName.startsWith(packagePath) && entryName.endsWith(".class")) {
         String className = entryName.replace('/', '.').replace(".class", "");
         resolveAnnotatedClass(className, annotation, targetType, classLoader).ifPresent(
             result::add);

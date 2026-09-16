@@ -278,6 +278,48 @@ class ClassDiscoveryHelperTest {
     assertTrue(result.isEmpty());
   }
 
+  @Test
+  void findAnnotatedClassesFromJarSkipsJarEntriesEndingWithClassSuffixThatAreDirectories() throws Exception {
+    File temporaryJarFile = buildTemporaryJarContainingTestFixturesWithDirectoryClassEntry();
+
+    URLClassLoader jarClassLoader = new URLClassLoader(
+        new URL[]{temporaryJarFile.toURI().toURL()},
+        ClassDiscoveryHelperTest.class.getClassLoader()
+    ) {
+      @Override
+      public URL getResource(String name) {
+        return findResource(name);
+      }
+    };
+
+    List<Class<? extends Annotation>> result = ClassDiscoveryHelper.findAnnotatedClasses(
+        "de.relluem94.minecraft.server.spigot.essentials.discovery.testfixtures",
+        TestAnnotation.class,
+        Annotation.class,
+        jarClassLoader
+    );
+
+    jarClassLoader.close();
+    assertTrue(temporaryJarFile.delete());
+
+    assertTrue(result.isEmpty());
+  }
+
+  private File buildTemporaryJarContainingTestFixturesWithDirectoryClassEntry() throws Exception {
+    File temporaryJarFile = Files.createTempFile("testfixtures-dirclass", ".jar").toFile();
+
+    try (FileOutputStream fileOutputStream = new FileOutputStream(temporaryJarFile);
+        JarOutputStream jarOutputStream = new JarOutputStream(fileOutputStream)) {
+
+      String directoryEntryName =
+          "de/relluem94/minecraft/server/spigot/essentials/discovery/testfixtures/Fake.class/";
+      jarOutputStream.putNextEntry(new JarEntry(directoryEntryName));
+      jarOutputStream.closeEntry();
+    }
+
+    return temporaryJarFile;
+  }
+
   private File buildTemporaryJarContainingTestFixtures() throws Exception {
     File temporaryJarFile = Files.createTempFile("testfixtures", ".jar").toFile();
 
