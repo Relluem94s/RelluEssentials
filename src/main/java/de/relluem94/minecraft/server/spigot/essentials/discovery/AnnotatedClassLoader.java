@@ -62,8 +62,8 @@ public class AnnotatedClassLoader {
   private static <T> List<T> load(String packageName, Class<? extends Annotation> annotation,
       Class<T> targetType, ClassLoader classLoader) {
     return ClassDiscoveryHelper.findAnnotatedClasses(packageName, annotation, targetType,
-            classLoader).stream().map(clazz -> instantiate(clazz, targetType)).flatMap(Optional::stream)
-        .toList();
+            classLoader).stream().map(clazz -> instantiate(clazz, targetType))
+        .flatMap(Optional::stream).toList();
   }
 
   private static <T> Optional<T> instantiate(Class<? extends T> clazz, Class<T> targetType) {

@@ -10,8 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+@SuppressWarnings("unused")
 @CommandName("UninstantiableCommandFixture")
-
 public class UninstantiableCommandFixture implements CommandConstruct {
 
   private UninstantiableCommandFixture() {

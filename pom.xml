@@ -28,7 +28,7 @@
     <plexus.utils.version>4.0.3</plexus.utils.version>
     <entity.check.plugin.version>1.2.3-SNAPSHOT</entity.check.plugin.version>
     <item.check.plugin.version>1.0.3-SNAPSHOT</item.check.plugin.version>
-    <surefireArgLine></surefireArgLine>
+    <surefireArgLine/>
   </properties>
   <distributionManagement>
     <repository>

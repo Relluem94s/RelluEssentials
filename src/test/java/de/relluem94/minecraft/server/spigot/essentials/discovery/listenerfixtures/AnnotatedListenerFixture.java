@@ -4,6 +4,7 @@ import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 
+@SuppressWarnings("unused")
 @ListenerName("AnnotatedListenerFixture")
 public class AnnotatedListenerFixture implements ListenerConstruct {
 
