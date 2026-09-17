@@ -824,9 +824,7 @@ class InventoryClickNpcTest {
     InventoryClickEvent event = buildClickEvent(player, npcTitle, clickedItem);
 
     CustomItem disabledItem = mock(CustomItem.class);
-    ItemStack disabledItemStack = mock(ItemStack.class);
-    when(disabledItem.toItemStack()).thenReturn(disabledItemStack);
-    when(disabledItemStack.equals(clickedItem)).thenReturn(true);
+    when(disabledItem.toItemStack()).thenReturn(clickedItem);
     when(itemService.find(any())).thenReturn(Optional.of(disabledItem));
 
     listener.onInventoryClickItem(event);
