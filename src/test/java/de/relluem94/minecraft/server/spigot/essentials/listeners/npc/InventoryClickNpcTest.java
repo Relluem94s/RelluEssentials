@@ -14,6 +14,7 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -745,8 +746,8 @@ class InventoryClickNpcTest {
 
     CustomItem withdrawPercentItem = mock(CustomItem.class);
     ItemStack withdrawPercentItemStack = mock(ItemStack.class);
-    when(withdrawPercentItem.toItemStack()).thenReturn(withdrawPercentItemStack);
-    when(withdrawPercentItemStack.getType()).thenReturn(Material.COBBLESTONE);
+    lenient().when(withdrawPercentItem.toItemStack()).thenReturn(withdrawPercentItemStack);
+    lenient().when(withdrawPercentItemStack.getType()).thenReturn(Material.COBBLESTONE);
     when(withdrawPercentItem.displayName()).thenReturn("Withdraw5");
     RelluEssentialsNamespacedKey withdraw5Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT);
     when(withdrawPercentItem.relluEssentialsNamespacedKey()).thenReturn(withdraw5Key);
@@ -788,8 +789,8 @@ class InventoryClickNpcTest {
 
     CustomItem someOtherItem = mock(CustomItem.class);
     ItemStack someOtherItemStack = mock(ItemStack.class);
-    when(someOtherItem.toItemStack()).thenReturn(someOtherItemStack);
-    when(someOtherItemStack.getType()).thenReturn(Material.COBBLESTONE);
+    lenient().when(someOtherItem.toItemStack()).thenReturn(someOtherItemStack);
+    lenient().when(someOtherItemStack.getType()).thenReturn(Material.COBBLESTONE);
     when(someOtherItem.displayName()).thenReturn("SomethingElse");
     RelluEssentialsNamespacedKey someKey = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT);
 
@@ -807,8 +808,8 @@ class InventoryClickNpcTest {
 
     listener.onInventoryClickItem(event);
 
-    verify(bankService, never()).deposit(any(), any(), any(), any());
-    verify(bankService, never()).withdraw(any(), any(), any(), any());
+    verify(bankService, never()).deposit(any(), any(), any(), anyFloat());
+    verify(bankService, never()).withdraw(any(), any(), any(), anyFloat());
   }
 
   @Test
