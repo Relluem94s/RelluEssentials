@@ -353,7 +353,7 @@ class InventoryClickNpcTest {
     listener.onInventoryClickItem(event);
 
     verify(event).setCancelled(true);
-    verify(itemService, never()).find(any());
+    verify(bankService, never()).getBankItem(anyString());
   }
 
   @Test
