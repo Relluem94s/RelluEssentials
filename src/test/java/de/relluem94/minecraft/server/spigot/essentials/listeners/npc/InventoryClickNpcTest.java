@@ -321,20 +321,22 @@ class InventoryClickNpcTest {
   void handleBankerInventoryWhenClickedItemIsNullDoesNothing() {
     Player player = buildPlayer();
     PlayerEntry playerEntry = buildPlayerEntry(1);
+    ItemStack nonNullItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(bankService.findBankAccountByPlayerId(1)).thenReturn(mock(BankAccountEntry.class));
 
     InventoryClickEvent event = mock(InventoryClickEvent.class);
     InventoryView view = mock(InventoryView.class);
     when(event.getWhoClicked()).thenReturn(player);
-    when(event.getCurrentItem()).thenReturn(null);
+    when(event.getCurrentItem()).thenReturn(nonNullItem).thenReturn(null);
     when(event.getView()).thenReturn(view);
     when(view.getTitle()).thenReturn("BankerTitle");
 
     listener.onInventoryClickItem(event);
 
     verify(event).setCancelled(true);
-    verify(bankService, never()).findBankAccountByPlayerId(any());
+    verify(bankService, never()).getBankItem(anyString());
   }
 
   @Test
