@@ -88,7 +88,7 @@ class InventoryClickNpcTest {
 
   @BeforeEach
   void setUp() {
-    when(serviceContext.getTraderNpcService()).thenReturn(traderNpcService);
+    lenient().when(serviceContext.getTraderNpcService()).thenReturn(traderNpcService);
     when(serviceContext.getBankService()).thenReturn(bankService);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     lenient().when(serviceContext.getItemService()).thenReturn(itemService);
@@ -174,9 +174,9 @@ class InventoryClickNpcTest {
     InventoryView view = mock(InventoryView.class);
     when(event.getWhoClicked()).thenReturn(player);
     when(event.getCurrentItem()).thenReturn(null);
-    when(event.getView()).thenReturn(view);
-    when(view.getTitle()).thenReturn("SomeUnknownTitle");
-    when(playerService.getPlayerEntry(player)).thenReturn(mock(PlayerEntry.class));
+    lenient().when(event.getView()).thenReturn(view);
+    lenient().when(view.getTitle()).thenReturn("SomeUnknownTitle");
+    lenient().when(playerService.getPlayerEntry(player)).thenReturn(mock(PlayerEntry.class));
 
     listener.onInventoryClickItem(event);
 
@@ -382,7 +382,7 @@ class InventoryClickNpcTest {
 
     CustomItem closeItem = mock(CustomItem.class);
     ItemStack closeItemStack = mock(ItemStack.class);
-    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    lenient().when(closeItem.toItemStack()).thenReturn(closeItemStack);
     when(itemService.find(any())).thenReturn(Optional.of(closeItem));
 
     CustomItem depositItem = buildCustomItem(Material.EMERALD);
@@ -413,7 +413,7 @@ class InventoryClickNpcTest {
 
     CustomItem closeItem = mock(CustomItem.class);
     ItemStack closeItemStack = mock(ItemStack.class);
-    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    lenient().when(closeItem.toItemStack()).thenReturn(closeItemStack);
     when(itemService.find(any())).thenReturn(Optional.of(closeItem));
 
     CustomItem depositItem = buildCustomItem(Material.EMERALD);
@@ -449,7 +449,7 @@ class InventoryClickNpcTest {
 
     CustomItem closeItem = mock(CustomItem.class);
     ItemStack closeItemStack = mock(ItemStack.class);
-    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    lenient().when(closeItem.toItemStack()).thenReturn(closeItemStack);
     when(itemService.find(any())).thenReturn(Optional.of(closeItem));
 
     CustomItem depositItem = buildCustomItem(Material.EMERALD);
@@ -484,7 +484,7 @@ class InventoryClickNpcTest {
 
     CustomItem closeItem = mock(CustomItem.class);
     ItemStack closeItemStack = mock(ItemStack.class);
-    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    lenient().when(closeItem.toItemStack()).thenReturn(closeItemStack);
     when(itemService.find(any())).thenReturn(Optional.of(closeItem));
 
     CustomItem depositItem = buildCustomItem(Material.EMERALD);
@@ -521,7 +521,7 @@ class InventoryClickNpcTest {
 
     CustomItem closeItem = mock(CustomItem.class);
     ItemStack closeItemStack = mock(ItemStack.class);
-    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    lenient().when(closeItem.toItemStack()).thenReturn(closeItemStack);
     when(itemService.find(any())).thenReturn(Optional.of(closeItem));
 
     CustomItem depositItem = buildCustomItem(Material.EMERALD);
@@ -554,7 +554,7 @@ class InventoryClickNpcTest {
 
     CustomItem closeItem = mock(CustomItem.class);
     ItemStack closeItemStack = mock(ItemStack.class);
-    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    lenient().when(closeItem.toItemStack()).thenReturn(closeItemStack);
     when(itemService.find(any())).thenReturn(Optional.of(closeItem));
 
     CustomItem depositItem = buildCustomItem(Material.EMERALD);
@@ -613,7 +613,7 @@ class InventoryClickNpcTest {
 
     CustomItem closeItem = mock(CustomItem.class);
     ItemStack closeItemStack = mock(ItemStack.class);
-    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    lenient().when(closeItem.toItemStack()).thenReturn(closeItemStack);
     when(itemService.find(any())).thenReturn(Optional.of(closeItem));
 
     CustomItem depositItem = buildCustomItem(Material.EMERALD);
@@ -702,8 +702,8 @@ class InventoryClickNpcTest {
 
     CustomItem depositPercentItem = mock(CustomItem.class);
     ItemStack depositPercentItemStack = mock(ItemStack.class);
-    when(depositPercentItem.toItemStack()).thenReturn(depositPercentItemStack);
-    when(depositPercentItemStack.getType()).thenReturn(Material.COBBLESTONE);
+    lenient().when(depositPercentItem.toItemStack()).thenReturn(depositPercentItemStack);
+    lenient().when(depositPercentItemStack.getType()).thenReturn(Material.COBBLESTONE);
     when(depositPercentItem.displayName()).thenReturn("Deposit5");
     RelluEssentialsNamespacedKey deposit5Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT);
     when(depositPercentItem.relluEssentialsNamespacedKey()).thenReturn(deposit5Key);
