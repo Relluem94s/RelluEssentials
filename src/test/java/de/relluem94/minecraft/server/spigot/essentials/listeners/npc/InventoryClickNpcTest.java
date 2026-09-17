@@ -238,6 +238,7 @@ class InventoryClickNpcTest {
   @Test
   void onInventoryClickItemWhenTitleMatchesNpcInventoryHandlesNpcInventory() {
     Player player = buildPlayer();
+    PlayerInventory playerInventory = player.getInventory();
     PlayerEntry playerEntry = buildPlayerEntry(1);
     ItemStack clickedItem = mock(ItemStack.class);
 
@@ -247,9 +248,8 @@ class InventoryClickNpcTest {
     InventoryClickEvent event = buildClickEvent(player, npcTitle, clickedItem);
 
     CustomItem disabledItem = mock(CustomItem.class);
-    ItemStack disabledItemStack = mock(ItemStack.class);
-    when(disabledItem.toItemStack()).thenReturn(disabledItemStack);
-    when(disabledItemStack.equals(clickedItem)).thenReturn(false);
+    ItemStack differentItemStack = mock(ItemStack.class);
+    when(disabledItem.toItemStack()).thenReturn(differentItemStack);
     when(itemService.find(any())).thenReturn(Optional.of(disabledItem));
 
     ItemStack clonedItem = mock(ItemStack.class);
@@ -258,7 +258,7 @@ class InventoryClickNpcTest {
     listener.onInventoryClickItem(event);
 
     verify(event).setCancelled(true);
-    verify(player.getInventory()).addItem(clonedItem);
+    verify(playerInventory).addItem(clonedItem);
   }
 
   @Test
