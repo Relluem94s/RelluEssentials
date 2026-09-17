@@ -82,8 +82,6 @@ class InventoryClickNpcTest {
   private TeleportService teleportService;
   @Mock
   private BankerNpc bankerNpc;
-  @Mock
-  private NpcTradeHandler npcTradeHandler;
 
   private InventoryClickNpc listener;
 
@@ -127,17 +125,17 @@ class InventoryClickNpcTest {
     return player;
   }
 
-  private PlayerEntry buildPlayerEntry(int id) {
+  private PlayerEntry buildPlayerEntry() {
     PlayerEntry playerEntry = mock(PlayerEntry.class);
-    lenient().when(playerEntry.getId()).thenReturn(id);
+    lenient().when(playerEntry.getId()).thenReturn(1);
     lenient().when(playerEntry.getPurse()).thenReturn(500.0);
     return playerEntry;
   }
 
-  private BankAccountEntry buildBankAccount(int id, double value) {
+  private BankAccountEntry buildBankAccount() {
     BankAccountEntry bankAccount = mock(BankAccountEntry.class);
-    lenient().when(bankAccount.getId()).thenReturn(id);
-    lenient().when(bankAccount.getValue()).thenReturn(value);
+    lenient().when(bankAccount.getId()).thenReturn(10);
+    lenient().when(bankAccount.getValue()).thenReturn(1000.0);
     return bankAccount;
   }
 
@@ -146,14 +144,6 @@ class InventoryClickNpcTest {
     ItemStack itemStack = mock(ItemStack.class);
     when(customItem.toItemStack()).thenReturn(itemStack);
     when(itemStack.getType()).thenReturn(material);
-    return customItem;
-  }
-
-  private CustomItem buildCustomItemWithSimilar(boolean similar, ItemStack clickedItem) {
-    CustomItem customItem = mock(CustomItem.class);
-    ItemStack itemStack = mock(ItemStack.class);
-    when(customItem.toItemStack()).thenReturn(itemStack);
-    when(itemStack.isSimilar(clickedItem)).thenReturn(similar);
     return customItem;
   }
 
@@ -187,8 +177,8 @@ class InventoryClickNpcTest {
   @Test
   void onInventoryClickItemWhenTitleMatchesBankerNpcCallsHandleBankerInventory() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -219,7 +209,7 @@ class InventoryClickNpcTest {
   @Test
   void onInventoryClickItemWhenTitleMatchesTraderNpcDelegatesToTradeHandler() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
     Inventory clickedInventory = mock(Inventory.class);
 
@@ -239,7 +229,7 @@ class InventoryClickNpcTest {
   void onInventoryClickItemWhenTitleMatchesNpcInventoryHandlesNpcInventory() {
     Player player = buildPlayer();
     PlayerInventory playerInventory = player.getInventory();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -264,7 +254,7 @@ class InventoryClickNpcTest {
   @Test
   void onInventoryClickItemWhenTitleMatchesWorldsInventoryHandlesWorldsInventory() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
     org.bukkit.inventory.meta.ItemMeta meta = mock(org.bukkit.inventory.meta.ItemMeta.class);
 
@@ -285,7 +275,7 @@ class InventoryClickNpcTest {
   @Test
   void onInventoryClickItemWhenTitleMatchesWorldsAndItemIsDisabledDoesNotTeleport() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -302,7 +292,7 @@ class InventoryClickNpcTest {
   @Test
   void onInventoryClickItemWhenTitleMatchesWorldsAndItemMetaIsNullDoesNotTeleport() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -320,7 +310,7 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemIsNullDoesNothing() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack nonNullItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -342,7 +332,7 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenBankAccountIsNullDoesNothing() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -359,9 +349,9 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenCloseItemNotFoundDoesNothing() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    BankAccountEntry bankAccount = buildBankAccount();
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
@@ -377,8 +367,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesDepositOpensDepositGUI() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     when(clickedItem.getType()).thenReturn(Material.EMERALD);
@@ -408,8 +398,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesTotalBalanceSendsMessage() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     when(clickedItem.getType()).thenReturn(Material.GOLD_INGOT);
@@ -444,8 +434,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesBalanceOpensBalanceGUI() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     when(clickedItem.getType()).thenReturn(Material.DIAMOND);
@@ -479,8 +469,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesWithdrawOpensWithdrawGUI() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     when(clickedItem.getType()).thenReturn(Material.IRON_INGOT);
@@ -516,8 +506,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesUpgradeMaterialCallsUpgradeAccount() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     when(clickedItem.getType()).thenReturn(BankService.UPGRADE_MATERIAL);
@@ -549,8 +539,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesTransactionsSendsTransactionHistory() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     when(clickedItem.getType()).thenReturn(Material.PAPER);
@@ -608,8 +598,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesUpgradeItemOpensUpgradeGUI() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     when(clickedItem.getType()).thenReturn(Material.NETHER_STAR);
@@ -649,8 +639,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesCloseItemClosesInventory() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     when(clickedItem.getType()).thenReturn(Material.BARRIER);
@@ -688,8 +678,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesDepositPercentActionExecutesDeposit() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
@@ -731,8 +721,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemMatchesWithdrawPercentActionExecutesWithdraw() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
@@ -774,8 +764,8 @@ class InventoryClickNpcTest {
   @Test
   void handleBankerInventoryWhenClickedItemDisplayNameMatchesNoActionDoesNothing() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
-    BankAccountEntry bankAccount = buildBankAccount(10, 1000.0);
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
 
     ItemStack clickedItem = mock(ItemStack.class);
     org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
@@ -817,7 +807,7 @@ class InventoryClickNpcTest {
   @Test
   void handleNpcInventoryWhenDisabledItemMatchesClickedItemDoesNotAddToPlayerInventory() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -837,7 +827,7 @@ class InventoryClickNpcTest {
   @Test
   void handleNpcInventoryWhenDisabledItemNotFoundDoesNothing() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
@@ -855,7 +845,7 @@ class InventoryClickNpcTest {
   @Test
   void handleNpcInventoryWhenCurrentItemIsNullDoesNothing() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
 
     lenient().when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
@@ -875,7 +865,7 @@ class InventoryClickNpcTest {
   @Test
   void handleCustomHeadsInventoryWhenDisabledItemMatchesClickedItemDoesNotAddToPlayerInventory() {
     Player player = buildPlayer();
-    PlayerEntry playerEntry = buildPlayerEntry(1);
+    PlayerEntry playerEntry = buildPlayerEntry();
     ItemStack clickedItem = mock(ItemStack.class);
 
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
