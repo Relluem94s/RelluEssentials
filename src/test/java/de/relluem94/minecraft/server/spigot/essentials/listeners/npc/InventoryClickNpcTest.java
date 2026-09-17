@@ -857,19 +857,19 @@ class InventoryClickNpcTest {
     Player player = buildPlayer();
     PlayerEntry playerEntry = buildPlayerEntry(1);
 
-    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    lenient().when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
 
     String npcTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
     InventoryClickEvent event = mock(InventoryClickEvent.class);
     InventoryView view = mock(InventoryView.class);
     when(event.getWhoClicked()).thenReturn(player);
     when(event.getCurrentItem()).thenReturn(null);
-    when(event.getView()).thenReturn(view);
-    when(view.getTitle()).thenReturn(npcTitle);
+    lenient().when(event.getView()).thenReturn(view);
+    lenient().when(view.getTitle()).thenReturn(npcTitle);
 
     listener.onInventoryClickItem(event);
 
-    verify(itemService, never()).find(any());
+    verify(player.getInventory(), never()).addItem(any());
   }
 
   @Test
