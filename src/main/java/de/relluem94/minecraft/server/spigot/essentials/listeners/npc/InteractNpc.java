@@ -19,6 +19,16 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Listener that handles player interactions with NPC mannequin entities.
+ *
+ * <p>When a player right-clicks a mannequin that is registered as an NPC,
+ * this listener advances the player's dialogue progress and displays the
+ * next dialogue line. A cooldown prevents repeated interactions within
+ * a short time window.
+ *
+ * @author rellu
+ */
 @ListenerName("InteractNpc")
 public class InteractNpc implements ListenerConstruct {
 
@@ -26,11 +36,25 @@ public class InteractNpc implements ListenerConstruct {
   private final Map<UUID, Long> lastInteractionTimestamp = new HashMap<>();
   private ServiceContext serviceContext;
 
+  /**
+   * Injects the service context required to access NPC and dialogue progress services.
+   *
+   * @param context the service context providing access to application services
+   */
   @Override
   public void injectContext(ServiceContext context) {
     this.serviceContext = context;
   }
 
+  /**
+   * Handles the player interact entity event to trigger NPC dialogue.
+   *
+   * <p>Processes right-click interactions on mannequin entities registered as NPCs.
+   * Applies an interaction cooldown per player to prevent rapid repeated triggers.
+   * Advances the player's dialogue progress and sends the next dialogue line to the player.
+   *
+   * @param event the event fired when a player interacts with an entity
+   */
   @EventHandler
   public void onPlayerInteractEntity(@NonNull PlayerInteractEntityEvent event) {
     if (!(event.getRightClicked() instanceof Mannequin clickedMannequin)) {
@@ -66,8 +90,11 @@ public class InteractNpc implements ListenerConstruct {
       return;
     }
 
-    int lineIndex = serviceContext.getNpcDialogueProgressService().getNextLineIndexAndAdvance(npc.getId(),
-        player.getUniqueId(), dialogueLines.size());
+    int lineIndex = serviceContext.getNpcDialogueProgressService().getNextLineIndexAndAdvance(
+        npc.getId(),
+        player.getUniqueId(),
+        dialogueLines.size()
+    );
     player.sendMessage(
         "§e" + npc.getProfileName() + PLUGIN_FORMS_MSG_SPACER_IN + dialogueLines.get(lineIndex)
             .getText());
