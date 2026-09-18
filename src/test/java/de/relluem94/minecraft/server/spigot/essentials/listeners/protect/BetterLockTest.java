@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
 import static org.mockito.Mockito.anyString;
@@ -8,6 +9,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -86,6 +88,11 @@ class BetterLockTest {
     lenient().when(serviceContext.getGroupService()).thenReturn(groupService);
     lenient().when(serviceContext.getSchedulerService()).thenReturn(schedulerService);
     lenient().when(serviceContext.getSettingPlayerService()).thenReturn(settingPlayerService);
+    lenient().doAnswer(invocation -> {
+      Runnable task = invocation.getArgument(0);
+      task.run();
+      return null;
+    }).when(schedulerService).runTaskLater(any(), anyLong());
   }
 
   @Test
@@ -420,6 +427,10 @@ class BetterLockTest {
       betterLock.onInteract(event);
 
       verify(schedulerService).runTaskLater(any(), eq(50L));
+      verify(door).setOpen(false);
+      verify(clickedBlock).setBlockData(door);
+      verify(player).sendMessage(
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
     }
   }
 
@@ -554,6 +565,12 @@ class BetterLockTest {
 
       verify(door2).setOpen(true);
       verify(schedulerService).runTaskLater(any(), eq(50L));
+      verify(door).setOpen(false);
+      verify(door2).setOpen(false);
+      verify(clickedBlock).setBlockData(door);
+      verify(secondDoorBlock, times(2)).setBlockData(door2);
+      verify(player).sendMessage(
+          translationService.getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
     }
   }
 
