@@ -94,96 +94,101 @@ public class BetterLock implements ListenerConstruct {
       handleProtectionInteract(e, pe, protection);
       return;
     }
+
     if (Arrays.stream(protectionPlayerStates)
-        .noneMatch(playerState -> pe.getPlayerState() == playerState)) {
-      if (!ProtectionHelper.hasRights(protection, pe.getId())) {
-        evaluateAccessAndNotify(e, protection);
-        return;
-      }
+        .anyMatch(playerState -> pe.getPlayerState() == playerState)) {
+      return;
+    }
 
-      if (notify(protection, pe.getId(), e.getPlayer())) {
-        e.getPlayer().sendMessage(serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
-      }
+    if (!ProtectionHelper.hasRights(protection, pe.getId())) {
+      evaluateAccessAndNotify(e, protection);
+      return;
+    }
 
-      Openable openable = (Openable) b.getBlockData();
+    if (notify(protection, pe.getId(), e.getPlayer())) {
+      e.getPlayer().sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+    }
 
-      switch (openable) {
-        case Door door -> {
-          Block b2 = ProtectionHelper.getOtherPart(door, b);
-          if (b2 != null) {
-            if (!(b2.getBlockData() instanceof Door door2)) {
-              return;
-            }
-            if (door2.getHinge() == door.getHinge()) {
-              return;
-            }
+    Openable openable = (Openable) b.getBlockData();
 
-            if (door2.isOpen()) {
-              door2.setOpen(false);
-              return;
-            }
+    switch (openable) {
+      case Door door -> {
+        Block b2 = ProtectionHelper.getOtherPart(door, b);
+        if (b2 != null) {
+          if (!(b2.getBlockData() instanceof Door door2)) {
+            return;
+          }
+          if (door2.getHinge() == door.getHinge()) {
+            return;
+          }
 
-            door2.setOpen(true);
+          if (door2.isOpen()) {
+            door2.setOpen(false);
+            return;
+          }
 
-            if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-              return;
-            }
+          door2.setOpen(true);
 
-            serviceContext.getSchedulerService().runTaskLater(() -> {
-              door.setOpen(false);
-              door2.setOpen(false);
+          if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+            return;
+          }
 
-              b.setBlockData(door);
-              b2.setBlockData(door2);
-              e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-            }, 50);
+          serviceContext.getSchedulerService().runTaskLater(() -> {
+            door.setOpen(false);
+            door2.setOpen(false);
 
+            b.setBlockData(door);
             b2.setBlockData(door2);
-          } else {
-            if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-              return;
-            }
+            e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+          }, 50);
 
-            serviceContext.getSchedulerService().runTaskLater(() -> {
-              door.setOpen(false);
-
-              b.setBlockData(door);
-              e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-            }, 50);
-          }
-        }
-        case TrapDoor trapDoor -> {
+          b2.setBlockData(door2);
+        } else {
           if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
             return;
           }
 
           serviceContext.getSchedulerService().runTaskLater(() -> {
-            trapDoor.setOpen(false);
+            door.setOpen(false);
 
-            b.setBlockData(trapDoor);
+            b.setBlockData(door);
             e.getPlayer().sendMessage(serviceContext.getTranslationService()
                 .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
           }, 50);
         }
-        case Gate gate -> {
-          if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-            return;
-          }
-
-          serviceContext.getSchedulerService().runTaskLater(() -> {
-            gate.setOpen(false);
-
-            b.setBlockData(gate);
-            e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-          }, 50);
+      }
+      case TrapDoor trapDoor -> {
+        if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+          return;
         }
-        default -> {}
+
+        serviceContext.getSchedulerService().runTaskLater(() -> {
+          trapDoor.setOpen(false);
+
+          b.setBlockData(trapDoor);
+          e.getPlayer().sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+        }, 50);
+      }
+      case Gate gate -> {
+        if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+          return;
+        }
+
+        serviceContext.getSchedulerService().runTaskLater(() -> {
+          gate.setOpen(false);
+
+          b.setBlockData(gate);
+          e.getPlayer().sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+        }, 50);
+      }
+      default -> {
       }
     }
+
   }
 
   private void handleProtectionInteract(PlayerInteractEvent e, PlayerEntry pe,
