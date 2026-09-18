@@ -31,6 +31,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.Gate;
 import org.bukkit.block.data.type.TrapDoor;
@@ -719,6 +720,30 @@ class BetterLockTest {
 
       verify(door2).setOpen(true);
       verify(secondDoorBlock, never()).setBlockData(door2);
+      verifyNoInteractions(schedulerService);
+    }
+  }
+
+  @Test
+  void onInteractOpenableWithRightsAndUnknownOpenableTypeDoesNotSchedule() {
+    Openable unknownOpenable = mock(Openable.class);
+    when(event.getClickedBlock()).thenReturn(clickedBlock);
+    when(event.getPlayer()).thenReturn(player);
+    when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
+    when(playerEntry.getId()).thenReturn(1);
+    when(clickedBlock.getBlockData()).thenReturn(unknownOpenable);
+    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+
+    try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
+      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
+      when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+      protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
+
+      betterLock.onInteract(event);
+
       verifyNoInteractions(schedulerService);
     }
   }
