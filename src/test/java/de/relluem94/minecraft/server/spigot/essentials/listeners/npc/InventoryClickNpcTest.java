@@ -1183,4 +1183,83 @@ class InventoryClickNpcTest {
 
     verify(teleportService, never()).teleportWorld(any(), anyString());
   }
+
+  @Test
+  void handleBankerInventoryWhenClickedItemMetaIsNullUsesEmptyDisplayNameAndDoesNothing() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
+
+    ItemStack clickedItem = mock(ItemStack.class);
+    when(clickedItem.getType()).thenReturn(Material.STONE);
+    when(clickedItem.getItemMeta()).thenReturn(null);
+
+    CustomItem closeItem = mock(CustomItem.class);
+    ItemStack closeItemStack = mock(ItemStack.class);
+    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    when(closeItemStack.isSimilar(clickedItem)).thenReturn(false);
+    when(itemService.find(any())).thenReturn(Optional.of(closeItem));
+
+    CustomItem someItem = mock(CustomItem.class);
+    when(someItem.displayName()).thenReturn("SomeDisplayName");
+    RelluEssentialsNamespacedKey someKey = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(null);
+    when(itemService.getAll()).thenReturn(Map.of(someKey.toString(), someItem));
+
+    InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
+
+    listener.onInventoryClickItem(event);
+
+    verify(bankService, never()).deposit(any(), any(), any(), anyFloat());
+    verify(bankService, never()).withdraw(any(), any(), any(), anyFloat());
+  }
+
+  @Test
+  void handleBankerInventoryWhenMatchedItemKeyIsNotInDepositActionsDoesNothing() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
+
+    ItemStack clickedItem = mock(ItemStack.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    when(clickedItem.getType()).thenReturn(Material.STONE);
+    when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
+    when(clickedItemMeta.getDisplayName()).thenReturn("MatchedDisplayName");
+
+    CustomItem closeItem = mock(CustomItem.class);
+    ItemStack closeItemStack = mock(ItemStack.class);
+    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    when(closeItemStack.isSimilar(clickedItem)).thenReturn(false);
+    when(itemService.find(any())).thenReturn(Optional.of(closeItem));
+
+    RelluEssentialsNamespacedKey unknownKey = new RelluEssentialsNamespacedKey("relluessentials", "bank_unknown_action");
+    CustomItem matchedItem = mock(CustomItem.class);
+    when(matchedItem.displayName()).thenReturn("MatchedDisplayName");
+    when(matchedItem.relluEssentialsNamespacedKey()).thenReturn(unknownKey);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(null);
+    when(itemService.getAll()).thenReturn(Map.of(unknownKey.toString(), matchedItem));
+
+    InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
+
+    listener.onInventoryClickItem(event);
+
+    verify(bankService, never()).deposit(any(), any(), any(), anyFloat());
+    verify(bankService, never()).withdraw(any(), any(), any(), anyFloat());
+  }
 }
