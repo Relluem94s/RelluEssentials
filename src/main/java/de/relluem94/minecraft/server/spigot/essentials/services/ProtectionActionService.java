@@ -2,12 +2,12 @@ package de.relluem94.minecraft.server.spigot.essentials.services;
 
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_RIGHTS;
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.getLocationFromBlockAlternateForDoor;
 
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.LocationType;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.LocationEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
@@ -57,7 +57,7 @@ public class ProtectionActionService {
   public boolean removeProtectionFromBlock(Player p, Block b) {
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
     if (serviceContext.getProtectionService().isProtectableMaterial(b.getType())) {
-      Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+      Location l = getLocationFromBlockAlternateForDoor(b);
       ProtectionEntry bpe = serviceContext.getProtectionService().getProtectionEntry(l);
       if (bpe != null && bpe.getLocationEntry() != null) {
         if (bpe.getLocationEntry().getPlayerId() != pe.getId()) {
@@ -208,7 +208,7 @@ public class ProtectionActionService {
   private boolean isNeighbourChestProtectedByOther(Block neighbour, Chest originalChest, Player p) {
     if (neighbour.getBlockData() instanceof Chest neighbourChest) {
       if (neighbourChest.getFacing().equals(originalChest.getFacing())) {
-        return ProtectionHelper.hasPermission(neighbour, p);
+        return hasPermission(neighbour, p);
       }
     }
     return false;
@@ -347,5 +347,23 @@ public class ProtectionActionService {
       case Door _ -> attachedBlock.getRelative(BlockFace.DOWN).equals(b);
       default -> false;
     };
+  }
+
+  /**
+   * Use this Method to check if Player has Permission for that Block.
+   *
+   * @param b Block
+   * @param p Player
+   * @return boolean
+   */
+  private boolean hasPermission(Block b, Player p) {
+    Location l = getLocationFromBlockAlternateForDoor(b);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(p);
+    ProtectionEntry pre = serviceContext.getProtectionService().getProtectionEntry(l);
+    if (pre != null) {
+      return pre.getLocationEntry().getPlayerId() != pe.getId();
+    } else {
+      return false;
+    }
   }
 }

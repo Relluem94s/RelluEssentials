@@ -3,10 +3,8 @@ package de.relluem94.minecraft.server.spigot.essentials.helpers;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_FLAGS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.Constants.PLUGIN_EVENT_PROTECT_RIGHTS;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.enums.ProtectionFlags;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -15,10 +13,16 @@ import org.bukkit.block.data.Bisected.Half;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.Door.Hinge;
-import org.bukkit.entity.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * Utility class providing helper methods for block protection logic,
+ * including flag checks, rights validation, ownership verification,
+ * and door-specific location resolution.
+ *
+ * @author rellu
+ */
 public class ProtectionHelper {
 
   private ProtectionHelper() {
@@ -26,59 +30,41 @@ public class ProtectionHelper {
   }
 
   /**
-   * Use this Method to check if a Block is an instance of OpenAble.
+   * Checks whether the given block implements the {@link Openable} interface.
    *
-   * @param b Block
-   * @return boolean
+   * @param b the block to check
+   * @return {@code true} if the block is openable, {@code false} otherwise
    */
   public static boolean isOpenAble(Block b) {
     return b.getBlockData() instanceof Openable;
   }
 
   /**
-   * Use this Method to check if Player has Permission for that Block.
+   * Checks whether the given protection entry has the specified flag set.
+   * Supports both {@link JSONArray} and {@link String} flag storage formats.
    *
-   * @param b Block
-   * @param p Player
-   * @return boolean
-   */
-  public static boolean hasPermission(Block b, Player p) {
-    Location l = getLocationFromBlockAlternateForDoor(b);
-    PlayerEntry pe = RelluEssentials.getInstance().getServiceContext().getPlayerService()
-        .getPlayerEntry(p);
-    ProtectionEntry pre = RelluEssentials.getInstance().getServiceContext().getProtectionService()
-        .getProtectionEntry(l);
-    if (pre != null) {
-      return pre.getLocationEntry().getPlayerId() != pe.getId();
-    } else {
-      return false;
-    }
-  }
-
-  /**
-   * Use this with an ProtectionEntry to check ifa Protection has a Specific Flag
-   *
-   * @param protection ProtectionEntry
-   * @param flag       ProtectionFlags
-   * @return boolean
+   * @param protection the protection entry to inspect
+   * @param flag       the flag to check for
+   * @return {@code true} if the flag is present, {@code false} otherwise
    */
   public static boolean hasFlag(ProtectionEntry protection, ProtectionFlags flag) {
     JSONObject flags = protection.getFlags();
     return !flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(
         PLUGIN_EVENT_PROTECT_FLAGS) instanceof JSONArray && flags.getJSONArray(
-        PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(flag.name()) ||
-        !flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(
+        PLUGIN_EVENT_PROTECT_FLAGS).toList().contains(flag.name())
+        || !flags.isEmpty() && flags.has(PLUGIN_EVENT_PROTECT_FLAGS) && flags.get(
             PLUGIN_EVENT_PROTECT_FLAGS) instanceof String && flags.get(PLUGIN_EVENT_PROTECT_FLAGS)
             .equals(flag.name()
             );
   }
 
   /**
-   * Use this Method to check if Player has Rights to the ProtectionEntry.
+   * Checks whether the player with the given ID has access rights to the protection entry.
+   * Returns {@code true} if no rights restrictions are defined.
    *
-   * @param protection ProtectionEntry
-   * @param playerId   int
-   * @return boolean
+   * @param protection the protection entry to inspect
+   * @param playerId   the internal ID of the player
+   * @return {@code true} if the player has rights or no restrictions exist, {@code false} otherwise
    */
   public static boolean hasRights(ProtectionEntry protection, int playerId) {
     JSONObject rights = protection.getRights();
@@ -89,20 +75,22 @@ public class ProtectionHelper {
   }
 
   /**
-   * Use this Method to check if Player is the Owner of the ProtectionEntry.
+   * Checks whether the player with the given ID is the owner of the protection entry.
    *
-   * @param protection ProtectionEntry
-   * @param playerId   int
-   * @return boolean
+   * @param protection the protection entry to inspect
+   * @param playerId   the internal ID of the player
+   * @return {@code true} if the player is the owner, {@code false} otherwise
    */
   public static boolean isOwner(ProtectionEntry protection, int playerId) {
     return playerId == protection.getCreatedBy();
   }
 
   /**
+   * Resolves the base location of a block, adjusting for the lower half of a door
+   * when the given block represents the top half.
    *
-   * @param b Block
-   * @return Location
+   * @param b the block to resolve the location for
+   * @return the adjusted {@link org.bukkit.Location}, or {@code null} if the block is {@code null}
    */
   public static Location getLocationFromBlockAlternateForDoor(Block b) {
     if (b != null) {
@@ -122,10 +110,12 @@ public class ProtectionHelper {
   }
 
   /**
+   * Resolves the adjacent door block that forms the other half of a double door,
+   * based on the facing direction and hinge side of the given door.
    *
-   * @param door  Door
-   * @param block Block
-   * @return Block
+   * @param door  the door block data used to determine facing and hinge
+   * @param block the reference block from which to calculate the adjacent position
+   * @return the adjacent openable {@link org.bukkit.block.Block}, or {@code null} if not found
    */
   public static Block getOtherPart(Door door, Block block) {
     Location l = block.getLocation().clone();
