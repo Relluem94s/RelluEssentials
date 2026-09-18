@@ -747,4 +747,27 @@ class BetterLockTest {
       verifyNoInteractions(schedulerService);
     }
   }
+
+  @Test
+  void onInteractNonOpenableProtectableMaterialWithDefaultStateAndRightsAsOwnerWithNotifySelfEnabledDoesNotSendAllowMessage() {
+    when(event.getClickedBlock()).thenReturn(clickedBlock);
+    when(event.getPlayer()).thenReturn(player);
+    when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
+    when(playerEntry.getId()).thenReturn(1);
+    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+
+    try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
+      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
+      when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+      protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(false);
+      when(protectionService.isProtectableMaterial(any())).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
+
+      betterLock.onInteract(event);
+
+      verify(player, never()).sendMessage(anyString());
+    }
+  }
 }
