@@ -9,10 +9,15 @@ import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemCons
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_5_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT;
 import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_5_PERCENT;
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -897,5 +902,245 @@ class InventoryClickNpcTest {
     verify(event, never()).setCancelled(true);
     verify(bankService, never()).findBankAccountByPlayerId(anyInt());
     verify(teleportService, never()).teleportWorld(any(), anyString());
+  }
+
+  @Test
+  void handleBankerInventoryWhenClickedItemMatchesDeposit20PercentActionExecutesDeposit() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
+
+    ItemStack clickedItem = mock(ItemStack.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    when(clickedItem.getType()).thenReturn(Material.STONE);
+    when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
+    when(clickedItemMeta.getDisplayName()).thenReturn("Deposit20");
+
+    CustomItem closeItem = mock(CustomItem.class);
+    ItemStack closeItemStack = mock(ItemStack.class);
+    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    when(closeItemStack.isSimilar(clickedItem)).thenReturn(false);
+    when(itemService.find(any())).thenReturn(Optional.of(closeItem));
+
+    CustomItem depositPercentItem = mock(CustomItem.class);
+    when(depositPercentItem.displayName()).thenReturn("Deposit20");
+    RelluEssentialsNamespacedKey deposit20Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_20_PERCENT);
+    when(depositPercentItem.relluEssentialsNamespacedKey()).thenReturn(deposit20Key);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(null);
+    when(itemService.getAll()).thenReturn(Map.of(deposit20Key.toString(), depositPercentItem));
+
+    InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
+
+    listener.onInventoryClickItem(event);
+
+    verify(bankService).deposit(playerEntry, player, bankAccount, 20f);
+  }
+
+  @Test
+  void handleBankerInventoryWhenClickedItemMatchesDeposit50PercentActionExecutesDeposit() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
+
+    ItemStack clickedItem = mock(ItemStack.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    when(clickedItem.getType()).thenReturn(Material.STONE);
+    when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
+    when(clickedItemMeta.getDisplayName()).thenReturn("Deposit50");
+
+    CustomItem closeItem = mock(CustomItem.class);
+    ItemStack closeItemStack = mock(ItemStack.class);
+    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    when(closeItemStack.isSimilar(clickedItem)).thenReturn(false);
+    when(itemService.find(any())).thenReturn(Optional.of(closeItem));
+
+    CustomItem depositPercentItem = mock(CustomItem.class);
+    when(depositPercentItem.displayName()).thenReturn("Deposit50");
+    RelluEssentialsNamespacedKey deposit50Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_50_PERCENT);
+    when(depositPercentItem.relluEssentialsNamespacedKey()).thenReturn(deposit50Key);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(null);
+    when(itemService.getAll()).thenReturn(Map.of(deposit50Key.toString(), depositPercentItem));
+
+    InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
+
+    listener.onInventoryClickItem(event);
+
+    verify(bankService).deposit(playerEntry, player, bankAccount, 50f);
+  }
+
+  @Test
+  void handleBankerInventoryWhenClickedItemMatchesDepositAllActionExecutesDeposit() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
+
+    ItemStack clickedItem = mock(ItemStack.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    when(clickedItem.getType()).thenReturn(Material.STONE);
+    when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
+    when(clickedItemMeta.getDisplayName()).thenReturn("DepositAll");
+
+    CustomItem closeItem = mock(CustomItem.class);
+    ItemStack closeItemStack = mock(ItemStack.class);
+    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    when(closeItemStack.isSimilar(clickedItem)).thenReturn(false);
+    when(itemService.find(any())).thenReturn(Optional.of(closeItem));
+
+    CustomItem depositPercentItem = mock(CustomItem.class);
+    when(depositPercentItem.displayName()).thenReturn("DepositAll");
+    RelluEssentialsNamespacedKey depositAllKey = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT_ALL);
+    when(depositPercentItem.relluEssentialsNamespacedKey()).thenReturn(depositAllKey);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(null);
+    when(itemService.getAll()).thenReturn(Map.of(depositAllKey.toString(), depositPercentItem));
+
+    InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
+
+    listener.onInventoryClickItem(event);
+
+    verify(bankService).deposit(playerEntry, player, bankAccount, 100f);
+  }
+
+  @Test
+  void handleBankerInventoryWhenClickedItemMatchesWithdraw20PercentActionExecutesWithdraw() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
+
+    ItemStack clickedItem = mock(ItemStack.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    when(clickedItem.getType()).thenReturn(Material.STONE);
+    when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
+    when(clickedItemMeta.getDisplayName()).thenReturn("Withdraw20");
+
+    CustomItem closeItem = mock(CustomItem.class);
+    ItemStack closeItemStack = mock(ItemStack.class);
+    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    when(closeItemStack.isSimilar(clickedItem)).thenReturn(false);
+    when(itemService.find(any())).thenReturn(Optional.of(closeItem));
+
+    CustomItem withdrawPercentItem = mock(CustomItem.class);
+    when(withdrawPercentItem.displayName()).thenReturn("Withdraw20");
+    RelluEssentialsNamespacedKey withdraw20Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_20_PERCENT);
+    when(withdrawPercentItem.relluEssentialsNamespacedKey()).thenReturn(withdraw20Key);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(null);
+    when(itemService.getAll()).thenReturn(Map.of(withdraw20Key.toString(), withdrawPercentItem));
+
+    InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
+
+    listener.onInventoryClickItem(event);
+
+    verify(bankService).withdraw(playerEntry, player, bankAccount, 20f);
+  }
+
+  @Test
+  void handleBankerInventoryWhenClickedItemMatchesWithdraw50PercentActionExecutesWithdraw() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
+
+    ItemStack clickedItem = mock(ItemStack.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    when(clickedItem.getType()).thenReturn(Material.STONE);
+    when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
+    when(clickedItemMeta.getDisplayName()).thenReturn("Withdraw50");
+
+    CustomItem closeItem = mock(CustomItem.class);
+    ItemStack closeItemStack = mock(ItemStack.class);
+    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    when(closeItemStack.isSimilar(clickedItem)).thenReturn(false);
+    when(itemService.find(any())).thenReturn(Optional.of(closeItem));
+
+    CustomItem withdrawPercentItem = mock(CustomItem.class);
+    when(withdrawPercentItem.displayName()).thenReturn("Withdraw50");
+    RelluEssentialsNamespacedKey withdraw50Key = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_50_PERCENT);
+    when(withdrawPercentItem.relluEssentialsNamespacedKey()).thenReturn(withdraw50Key);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(null);
+    when(itemService.getAll()).thenReturn(Map.of(withdraw50Key.toString(), withdrawPercentItem));
+
+    InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
+
+    listener.onInventoryClickItem(event);
+
+    verify(bankService).withdraw(playerEntry, player, bankAccount, 50f);
+  }
+
+  @Test
+  void handleBankerInventoryWhenClickedItemMatchesWithdrawAllActionExecutesWithdraw() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+    BankAccountEntry bankAccount = buildBankAccount();
+
+    ItemStack clickedItem = mock(ItemStack.class);
+    org.bukkit.inventory.meta.ItemMeta clickedItemMeta = mock(org.bukkit.inventory.meta.ItemMeta.class);
+    when(clickedItem.getType()).thenReturn(Material.STONE);
+    when(clickedItem.getItemMeta()).thenReturn(clickedItemMeta);
+    when(clickedItemMeta.getDisplayName()).thenReturn("WithdrawAll");
+
+    CustomItem closeItem = mock(CustomItem.class);
+    ItemStack closeItemStack = mock(ItemStack.class);
+    when(closeItem.toItemStack()).thenReturn(closeItemStack);
+    when(closeItemStack.isSimilar(clickedItem)).thenReturn(false);
+    when(itemService.find(any())).thenReturn(Optional.of(closeItem));
+
+    CustomItem withdrawPercentItem = mock(CustomItem.class);
+    when(withdrawPercentItem.displayName()).thenReturn("WithdrawAll");
+    RelluEssentialsNamespacedKey withdrawAllKey = new RelluEssentialsNamespacedKey("relluessentials", PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW_ALL);
+    when(withdrawPercentItem.relluEssentialsNamespacedKey()).thenReturn(withdrawAllKey);
+
+    when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+    when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(null);
+    when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(null);
+    when(itemService.getAll()).thenReturn(Map.of(withdrawAllKey.toString(), withdrawPercentItem));
+
+    InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
+
+    listener.onInventoryClickItem(event);
+
+    verify(bankService).withdraw(playerEntry, player, bankAccount, 100f);
   }
 }
