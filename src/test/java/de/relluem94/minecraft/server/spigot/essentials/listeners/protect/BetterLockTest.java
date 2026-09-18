@@ -687,4 +687,39 @@ class BetterLockTest {
       verify(player, never()).sendMessage(anyString());
     }
   }
+
+  @Test
+  void onInteractOpenableDoorWithRightsAndDoubleDoorWithDifferentHingeAndNoAutoCloseFlagOpensSecondDoorWithoutScheduling() {
+    Door door = mock(Door.class);
+    Block secondDoorBlock = mock(Block.class);
+    Door door2 = mock(Door.class);
+
+    when(event.getClickedBlock()).thenReturn(clickedBlock);
+    when(event.getPlayer()).thenReturn(player);
+    when(playerEntry.getPlayerState()).thenReturn(PlayerState.DEFAULT);
+    when(playerEntry.getId()).thenReturn(1);
+    when(clickedBlock.getBlockData()).thenReturn(door);
+    when(secondDoorBlock.getBlockData()).thenReturn(door2);
+    when(door.getHinge()).thenReturn(Door.Hinge.LEFT);
+    when(door2.getHinge()).thenReturn(Door.Hinge.RIGHT);
+    when(door2.isOpen()).thenReturn(false);
+    when(settingPlayerService.isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF)).thenReturn(true);
+
+    try (MockedStatic<ProtectionHelper> protectionHelperMock = mockStatic(ProtectionHelper.class)) {
+      protectionHelperMock.when(() -> ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock)).thenReturn(location);
+      when(protectionService.getProtectionEntry(location)).thenReturn(protectionEntry);
+      when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+      protectionHelperMock.when(() -> ProtectionHelper.isOpenAble(clickedBlock)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.hasRights(protectionEntry, 1)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.isOwner(protectionEntry, 1)).thenReturn(true);
+      protectionHelperMock.when(() -> ProtectionHelper.getOtherPart(door, clickedBlock)).thenReturn(secondDoorBlock);
+      protectionHelperMock.when(() -> ProtectionHelper.hasFlag(protectionEntry, ProtectionFlags.AUTO_CLOSE)).thenReturn(false);
+
+      betterLock.onInteract(event);
+
+      verify(door2).setOpen(true);
+      verify(secondDoorBlock, never()).setBlockData(door2);
+      verifyNoInteractions(schedulerService);
+    }
+  }
 }
