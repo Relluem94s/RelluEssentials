@@ -105,8 +105,7 @@ public class BetterLock implements ListenerConstruct {
         Openable openable = (Openable) b.getBlockData();
 
         switch (openable) {
-          case Door _ -> {
-            Door door = (Door) b.getBlockData();
+          case Door door -> {
             Block b2 = ProtectionHelper.getOtherPart(door, b);
             if (b2 != null) {
               if (b2.getBlockData() instanceof Door door2) {
@@ -143,25 +142,23 @@ public class BetterLock implements ListenerConstruct {
               }
             }
           }
-          case TrapDoor _ -> {
-            TrapDoor door = (TrapDoor) b.getBlockData();
+          case TrapDoor trapDoor -> {
             if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
               serviceContext.getSchedulerService().runTaskLater(() -> {
-                door.setOpen(false);
+                trapDoor.setOpen(false);
 
-                b.setBlockData(door);
+                b.setBlockData(trapDoor);
                 e.getPlayer().sendMessage(serviceContext.getTranslationService()
                     .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
               }, 50);
             }
           }
-          case Gate _ -> {
-            Gate door = (Gate) b.getBlockData();
+          case Gate gate -> {
             if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
               serviceContext.getSchedulerService().runTaskLater(() -> {
-                door.setOpen(false);
+                gate.setOpen(false);
 
-                b.setBlockData(door);
+                b.setBlockData(gate);
                 e.getPlayer().sendMessage(serviceContext.getTranslationService()
                     .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
               }, 50);
