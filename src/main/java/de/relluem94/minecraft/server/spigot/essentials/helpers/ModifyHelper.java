@@ -1,12 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
 import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.List;
 import java.util.function.Consumer;
@@ -266,28 +264,6 @@ public class ModifyHelper {
   public static void undo(@NotNull ModifyHistoryEntry entry) {
     entry.getLocation().getBlock().setType(entry.getMaterial());
     entry.getLocation().getBlock().setBlockData(entry.getData());
-  }
-
-  /**
-   * Checks whether the given {@link Block} has an associated protection entry and removes it
-   * from both the registry and the protection store if present.
-   *
-   * @param block the {@link Block} whose protection should be checked and potentially removed
-   */
-  public static void checkAndRemoveProtection(Block block) {
-    if (RelluEssentials.getInstance().getServiceContext().getProtectionService()
-        .isProtectableMaterial(block.getType())) {
-      ProtectionEntry protection = RelluEssentials.getInstance().getServiceContext()
-          .getProtectionService()
-          .getProtectionEntry(block.getLocation());
-
-      if (protection != null) {
-        RelluEssentials.getInstance().getServiceContext().getProtectionService()
-            .deleteProtectionAndRemoveFromRegistry(protection);
-        RelluEssentials.getInstance().getServiceContext().getProtectionService()
-            .removeProtectionEntry(block.getLocation());
-      }
-    }
   }
 
   /**

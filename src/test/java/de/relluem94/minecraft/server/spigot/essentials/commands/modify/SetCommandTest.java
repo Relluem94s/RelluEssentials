@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
@@ -120,7 +119,6 @@ class SetCommandTest {
             return null;
           });
 
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
       setCommand.execute(player, new String[]{"set", "STONE"});
 
       verify(undoHistoryService).addHistory(eq(player), argThat(list -> list.size() == 2));

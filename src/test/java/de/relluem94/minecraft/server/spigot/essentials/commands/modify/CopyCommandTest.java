@@ -1,6 +1,5 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands.modify;
 
-import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.checkAndRemoveProtection;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.forEachBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getModifyClipboardEntry;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.getRelativeCopySelection;
@@ -169,7 +168,6 @@ class CopyCommandTest {
       modifyHelper.when(() -> getRelativeCopySelection(any(), any())).thenReturn(selection);
       modifyHelper.when(() -> getModifyClipboardEntry(any(), any(), any()))
           .thenReturn(mock(ModifyClipboardEntry.class));
-      modifyHelper.when(() -> checkAndRemoveProtection(any())).thenAnswer(_ -> null);
 
       cutCommand.execute(player, new String[]{"cut"});
 
