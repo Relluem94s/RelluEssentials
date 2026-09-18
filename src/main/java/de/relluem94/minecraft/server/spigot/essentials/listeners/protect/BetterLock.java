@@ -1,5 +1,7 @@
 package de.relluem94.minecraft.server.spigot.essentials.listeners.protect;
 
+import static de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper.isOwner;
+
 import de.relluem94.minecraft.server.spigot.essentials.annotations.ListenerName;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
@@ -16,6 +18,7 @@ import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.block.data.type.Gate;
 import org.bukkit.block.data.type.TrapDoor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -73,7 +76,6 @@ public class BetterLock implements ListenerConstruct {
       return;
     }
 
-
     if (pe == null) {
       return;
     }
@@ -87,14 +89,13 @@ public class BetterLock implements ListenerConstruct {
       return;
     }
 
-    if (!(
-        pe.getPlayerState().equals(PlayerState.PROTECTION_INFO) || pe.getPlayerState()
-            .equals(PlayerState.PROTECTION_ADD) || pe.getPlayerState()
-            .equals(PlayerState.PROTECTION_REMOVE) || pe.getPlayerState()
-            .equals(PlayerState.PROTECTION_FLAG_ADD) || pe.getPlayerState()
-            .equals(PlayerState.PROTECTION_FLAG_REMOVE) || pe.getPlayerState()
-            .equals(PlayerState.PROTECTION_RIGHT_ADD) || pe.getPlayerState()
-            .equals(PlayerState.PROTECTION_RIGHT_REMOVE))) {
+    if (!(pe.getPlayerState().equals(PlayerState.PROTECTION_INFO) || pe.getPlayerState()
+        .equals(PlayerState.PROTECTION_ADD) || pe.getPlayerState()
+        .equals(PlayerState.PROTECTION_REMOVE) || pe.getPlayerState()
+        .equals(PlayerState.PROTECTION_FLAG_ADD) || pe.getPlayerState()
+        .equals(PlayerState.PROTECTION_FLAG_REMOVE) || pe.getPlayerState()
+        .equals(PlayerState.PROTECTION_RIGHT_ADD) || pe.getPlayerState()
+        .equals(PlayerState.PROTECTION_RIGHT_REMOVE))) {
       if (ProtectionHelper.hasRights(protection, pe.getId())) {
         if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
           e.getPlayer().sendMessage(serviceContext.getTranslationService()
@@ -112,9 +113,7 @@ public class BetterLock implements ListenerConstruct {
 
         }
       } else {
-        boolean isNotifySelfSettingActive = serviceContext.getSettingPlayerService()
-            .isSettingActiveForPlayer(e.getPlayer(), PlayerSetting.PROTECTION_NOTIFY_SELF);
-        if (isNotifySelfSettingActive) {
+        if (notify(protection, pe.getId(), e.getPlayer())) {
           e.getPlayer().sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
         }
@@ -194,30 +193,42 @@ public class BetterLock implements ListenerConstruct {
   }
 
   private void handleProtect(PlayerInteractEvent e, PlayerEntry pe, ProtectionEntry protection) {
-    if (pe.getPlayerState().equals(PlayerState.DEFAULT)) {
-      if (ProtectionHelper.hasRights(protection, pe.getId())) {
-        if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
-          e.getPlayer().sendMessage(serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
-        } else {
-          if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
-            e.setCancelled(false);
-            e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
-          } else {
-            e.setCancelled(true);
-            e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-          }
-        }
-      } else {
-        boolean isNotifySelfSettingActive = serviceContext.getSettingPlayerService()
-            .isSettingActiveForPlayer(e.getPlayer(), PlayerSetting.PROTECTION_NOTIFY_SELF);
-        if (isNotifySelfSettingActive) {
-          e.getPlayer().sendMessage(serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
-        }
-      }
+    if (!pe.getPlayerState().equals(PlayerState.DEFAULT)) {
+      return;
     }
+
+    if (ProtectionHelper.hasRights(protection, pe.getId())) {
+      if (notify(protection, pe.getId(), e.getPlayer())) {
+        e.getPlayer().sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+      }
+      return;
+    }
+
+    if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
+      e.setCancelled(false);
+      e.getPlayer().sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
+      return;
+    }
+
+    if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
+      e.getPlayer().sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+      return;
+    }
+
+    e.setCancelled(true);
+    e.getPlayer().sendMessage(serviceContext.getTranslationService()
+        .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+  }
+
+  private boolean notify(ProtectionEntry protection, int playerId, Player player) {
+    boolean notify = true;
+    if (isOwner(protection, playerId)) {
+      notify = !serviceContext.getSettingPlayerService()
+          .isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF);
+    }
+    return notify;
   }
 }

@@ -89,6 +89,17 @@ public class ProtectionHelper {
   }
 
   /**
+   * Use this Method to check if Player is the Owner of the ProtectionEntry.
+   *
+   * @param protection ProtectionEntry
+   * @param playerId   int
+   * @return boolean
+   */
+  public static boolean isOwner(ProtectionEntry protection, int playerId) {
+    return playerId == protection.getCreatedBy();
+  }
+
+  /**
    *
    * @param b Block
    * @return Location
