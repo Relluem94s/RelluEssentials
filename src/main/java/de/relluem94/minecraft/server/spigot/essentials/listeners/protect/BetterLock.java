@@ -22,13 +22,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Listener that handles interaction with protected openable blocks such as doors,
- * trapdoors, and gates.
+ * Listener that handles interaction with protected openable blocks such as doors, trapdoors, and
+ * gates.
  *
  * <p>Enforces access control by checking whether the interacting player
- * has rights to the protection
- * associated with the clicked block. Supports flags such as {@code ALLOW_PUBLIC} and
- * {@code AUTO_CLOSE}, and grants moderators the ability to bypass restrictions with a notification.
+ * has rights to the protection associated with the clicked block. Supports flags such as
+ * {@code ALLOW_PUBLIC} and {@code AUTO_CLOSE}, and grants moderators the ability to bypass
+ * restrictions with a notification.
  * </p>
  *
  * @author rellu
@@ -47,10 +47,9 @@ public class BetterLock implements ListenerConstruct {
    * Handles player interaction with blocks to enforce protection rules.
    *
    * <p>When a player interacts with an openable block, the associated
-   * protection entry is evaluated.
-   * If the player lacks rights, access is denied unless the player holds a moderator rank.
-   * For authorized owners, additional logic handles double-door synchronization and auto-close
-   * scheduling based on active protection flags.
+   * protection entry is evaluated. If the player lacks rights, access is denied unless the player
+   * holds a moderator rank. For authorized owners, additional logic handles double-door
+   * synchronization and auto-close scheduling based on active protection flags.
    * </p>
    *
    * <p>For non-openable but protectable blocks, access is similarly restricted
@@ -63,153 +62,160 @@ public class BetterLock implements ListenerConstruct {
   public void onInteract(@NotNull PlayerInteractEvent e) {
     Block b = e.getClickedBlock();
 
-    if (b != null) {
-      Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
-      if (ProtectionHelper.isOpenAble(b)) {
-        ProtectionEntry protection = serviceContext.getProtectionService()
-            .getProtectionEntry(l);
-        PlayerEntry pe = serviceContext.getPlayerService()
-            .getPlayerEntry(e.getPlayer());
-        if (protection != null && pe != null && !(
-            pe.getPlayerState().equals(PlayerState.PROTECTION_INFO) || pe.getPlayerState()
-                .equals(PlayerState.PROTECTION_ADD) || pe.getPlayerState()
-                .equals(PlayerState.PROTECTION_REMOVE) || pe.getPlayerState()
-                .equals(PlayerState.PROTECTION_FLAG_ADD) || pe.getPlayerState()
-                .equals(PlayerState.PROTECTION_FLAG_REMOVE) || pe.getPlayerState()
-                .equals(PlayerState.PROTECTION_RIGHT_ADD) || pe.getPlayerState()
-                .equals(PlayerState.PROTECTION_RIGHT_REMOVE))) {
-          if (ProtectionHelper.hasRights(protection, pe.getId())) {
-            if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
-              e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
-            } else {
-              if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
-                e.setCancelled(false);
-                e.getPlayer().sendMessage(serviceContext.getTranslationService().getWithPrefix(
-                    MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
-              } else {
-                e.setCancelled(true);
-                e.getPlayer().sendMessage(
-                    serviceContext.getTranslationService().getWithPrefix(
-                        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-              }
+    if (b == null) {
+      return;
+    }
+    Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+    ProtectionEntry protection = serviceContext.getProtectionService().getProtectionEntry(l);
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(e.getPlayer());
 
-            }
+    if (protection == null) {
+      return;
+    }
+
+
+    if (pe == null) {
+      return;
+    }
+
+    if (!ProtectionHelper.isOpenAble(b)) {
+      if (!serviceContext.getProtectionService().isProtectableMaterial(b.getType())) {
+        return;
+      }
+
+      handleProtect(e, pe, protection);
+      return;
+    }
+
+    if (!(
+        pe.getPlayerState().equals(PlayerState.PROTECTION_INFO) || pe.getPlayerState()
+            .equals(PlayerState.PROTECTION_ADD) || pe.getPlayerState()
+            .equals(PlayerState.PROTECTION_REMOVE) || pe.getPlayerState()
+            .equals(PlayerState.PROTECTION_FLAG_ADD) || pe.getPlayerState()
+            .equals(PlayerState.PROTECTION_FLAG_REMOVE) || pe.getPlayerState()
+            .equals(PlayerState.PROTECTION_RIGHT_ADD) || pe.getPlayerState()
+            .equals(PlayerState.PROTECTION_RIGHT_REMOVE))) {
+      if (ProtectionHelper.hasRights(protection, pe.getId())) {
+        if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
+          e.getPlayer().sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+        } else {
+          if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
+            e.setCancelled(false);
+            e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
           } else {
-            boolean isNotifySelfSettingActive = serviceContext.getSettingPlayerService()
-                .isSettingActiveForPlayer(e.getPlayer(), PlayerSetting.PROTECTION_NOTIFY_SELF);
-            if (isNotifySelfSettingActive) {
-              e.getPlayer().sendMessage(
-                  serviceContext.getTranslationService()
-                      .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
-            }
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+          }
 
-            Openable openable = (Openable) b.getBlockData();
+        }
+      } else {
+        boolean isNotifySelfSettingActive = serviceContext.getSettingPlayerService()
+            .isSettingActiveForPlayer(e.getPlayer(), PlayerSetting.PROTECTION_NOTIFY_SELF);
+        if (isNotifySelfSettingActive) {
+          e.getPlayer().sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+        }
 
-            switch (openable) {
-              case Door _ -> {
-                Door door = (Door) b.getBlockData();
-                Block b2 = ProtectionHelper.getOtherPart(door, b);
-                if (b2 != null) {
-                  if (b2.getBlockData() instanceof Door door2) {
-                    if (door2.getHinge() != door.getHinge()) {
-                      if (door2.isOpen()) {
+        Openable openable = (Openable) b.getBlockData();
+
+        switch (openable) {
+          case Door _ -> {
+            Door door = (Door) b.getBlockData();
+            Block b2 = ProtectionHelper.getOtherPart(door, b);
+            if (b2 != null) {
+              if (b2.getBlockData() instanceof Door door2) {
+                if (door2.getHinge() != door.getHinge()) {
+                  if (door2.isOpen()) {
+                    door2.setOpen(false);
+                  } else {
+                    door2.setOpen(true);
+
+                    if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                      serviceContext.getSchedulerService().runTaskLater(() -> {
+                        door.setOpen(false);
                         door2.setOpen(false);
-                      } else {
-                        door2.setOpen(true);
 
-                        if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                          serviceContext.getSchedulerService().runTaskLater(() -> {
-                            door.setOpen(false);
-                            door2.setOpen(false);
-
-                            b.setBlockData(door);
-                            b2.setBlockData(door2);
-                            e.getPlayer().sendMessage(
-                                serviceContext.getTranslationService().getWithPrefix(
-                                    MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-                          }, 50);
-                        }
-                      }
-                      b2.setBlockData(door2);
+                        b.setBlockData(door);
+                        b2.setBlockData(door2);
+                        e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+                      }, 50);
                     }
                   }
-                } else {
-                  if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                    serviceContext.getSchedulerService().runTaskLater(() -> {
-                      door.setOpen(false);
-
-                      b.setBlockData(door);
-                      e.getPlayer().sendMessage(
-                          serviceContext.getTranslationService().getWithPrefix(
-                              MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-                    }, 50);
-                  }
+                  b2.setBlockData(door2);
                 }
               }
-              case TrapDoor _ -> {
-                TrapDoor door = (TrapDoor) b.getBlockData();
-                if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                  serviceContext.getSchedulerService().runTaskLater(() -> {
-                    door.setOpen(false);
+            } else {
+              if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                serviceContext.getSchedulerService().runTaskLater(() -> {
+                  door.setOpen(false);
 
-                    b.setBlockData(door);
-                    e.getPlayer().sendMessage(serviceContext.getTranslationService().getWithPrefix(
-                        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-                  }, 50);
-                }
-              }
-              case Gate _ -> {
-                Gate door = (Gate) b.getBlockData();
-                if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                  serviceContext.getSchedulerService().runTaskLater(() -> {
-                    door.setOpen(false);
-
-                    b.setBlockData(door);
-                    e.getPlayer().sendMessage(serviceContext.getTranslationService().getWithPrefix(
-                        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-                  }, 50);
-                }
-              }
-              default -> {
+                  b.setBlockData(door);
+                  e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                      .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+                }, 50);
               }
             }
-            // ELSE Other Openable Objects (Future Implementations)
+          }
+          case TrapDoor _ -> {
+            TrapDoor door = (TrapDoor) b.getBlockData();
+            if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+              serviceContext.getSchedulerService().runTaskLater(() -> {
+                door.setOpen(false);
+
+                b.setBlockData(door);
+                e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+              }, 50);
+            }
+          }
+          case Gate _ -> {
+            Gate door = (Gate) b.getBlockData();
+            if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+              serviceContext.getSchedulerService().runTaskLater(() -> {
+                door.setOpen(false);
+
+                b.setBlockData(door);
+                e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+              }, 50);
+            }
+          }
+          default -> {
           }
         }
-      } else if (serviceContext.getProtectionService()
-          .isProtectableMaterial(b.getType())) {
-        ProtectionEntry protection = serviceContext.getProtectionService()
-            .getProtectionEntry(l);
-        PlayerEntry pe = serviceContext.getPlayerService()
-            .getPlayerEntry(e.getPlayer());
-        if (protection != null && pe != null && pe.getPlayerState().equals(PlayerState.DEFAULT)) {
-          if (ProtectionHelper.hasRights(protection, pe.getId())) {
-            if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
-              e.getPlayer().sendMessage(
-                  serviceContext.getTranslationService()
-                      .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
-            } else {
-              if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
-                e.setCancelled(false);
-                e.getPlayer().sendMessage(serviceContext.getTranslationService().getWithPrefix(
-                    MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
-              } else {
-                e.setCancelled(true);
-                e.getPlayer().sendMessage(
-                    serviceContext.getTranslationService().getWithPrefix(
-                        MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-              }
-            }
+        // ELSE Other Openable Objects (Future Implementations)
+
+      }
+    }
+  }
+
+  private void handleProtect(PlayerInteractEvent e, PlayerEntry pe, ProtectionEntry protection) {
+    if (pe.getPlayerState().equals(PlayerState.DEFAULT)) {
+      if (ProtectionHelper.hasRights(protection, pe.getId())) {
+        if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
+          e.getPlayer().sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+        } else {
+          if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
+            e.setCancelled(false);
+            e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
           } else {
-            boolean isNotifySelfSettingActive = serviceContext.getSettingPlayerService()
-                .isSettingActiveForPlayer(e.getPlayer(), PlayerSetting.PROTECTION_NOTIFY_SELF);
-            if (isNotifySelfSettingActive) {
-              e.getPlayer().sendMessage(
-                  serviceContext.getTranslationService()
-                      .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
-            }
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
           }
+        }
+      } else {
+        boolean isNotifySelfSettingActive = serviceContext.getSettingPlayerService()
+            .isSettingActiveForPlayer(e.getPlayer(), PlayerSetting.PROTECTION_NOTIFY_SELF);
+        if (isNotifySelfSettingActive) {
+          e.getPlayer().sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
         }
       }
     }
