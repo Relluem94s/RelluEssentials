@@ -24,6 +24,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Listener that handles interaction with protected openable blocks such as doors, trapdoors, and
@@ -69,12 +70,12 @@ public class BetterLock implements ListenerConstruct {
    */
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onInteract(@NotNull PlayerInteractEvent e) {
-    Block b = e.getClickedBlock();
+    Block clickedBlock = e.getClickedBlock();
 
-    if (b == null) {
+    if (clickedBlock == null) {
       return;
     }
-    Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(b);
+    Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock);
     ProtectionEntry protection = serviceContext.getProtectionService().getProtectionEntry(l);
     PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(e.getPlayer());
 
@@ -86,8 +87,8 @@ public class BetterLock implements ListenerConstruct {
       return;
     }
 
-    if (!ProtectionHelper.isOpenAble(b)) {
-      if (!serviceContext.getProtectionService().isProtectableMaterial(b.getType())) {
+    if (!ProtectionHelper.isOpenAble(clickedBlock)) {
+      if (!serviceContext.getProtectionService().isProtectableMaterial(clickedBlock.getType())) {
         return;
       }
 
@@ -110,88 +111,62 @@ public class BetterLock implements ListenerConstruct {
           .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
     }
 
-    Openable openable = (Openable) b.getBlockData();
+    Openable openable = (Openable) clickedBlock.getBlockData();
 
     switch (openable) {
       case Door door -> {
-        Block b2 = ProtectionHelper.getOtherPart(door, b);
-        if (b2 != null) {
-          if (!(b2.getBlockData() instanceof Door door2)) {
-            return;
-          }
-          if (door2.getHinge() == door.getHinge()) {
-            return;
-          }
-
-          if (door2.isOpen()) {
-            door2.setOpen(false);
-            return;
-          }
-
-          door2.setOpen(true);
-
-          if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-            return;
-          }
-
-          serviceContext.getSchedulerService().runTaskLater(() -> {
-            door.setOpen(false);
-            door2.setOpen(false);
-
-            b.setBlockData(door);
-            b2.setBlockData(door2);
-            e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-          }, 50);
-
-          b2.setBlockData(door2);
-        } else {
-          if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-            return;
-          }
-
-          serviceContext.getSchedulerService().runTaskLater(() -> {
-            door.setOpen(false);
-
-            b.setBlockData(door);
-            e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-          }, 50);
-        }
-      }
-      case TrapDoor trapDoor -> {
-        if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+        Block b2 = ProtectionHelper.getOtherPart(door, clickedBlock);
+        if (b2 == null) {
+          scheduleAutoCloseIfEnabled(protection, door, clickedBlock, e.getPlayer());
           return;
         }
 
-        serviceContext.getSchedulerService().runTaskLater(() -> {
-          trapDoor.setOpen(false);
-
-          b.setBlockData(trapDoor);
-          e.getPlayer().sendMessage(serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-        }, 50);
+        scheduleAutoCloseIfEnabledForDoubleDoor(e, door, b2, protection, clickedBlock);
       }
-      case Gate gate -> {
-        if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-          return;
-        }
-
-        serviceContext.getSchedulerService().runTaskLater(() -> {
-          gate.setOpen(false);
-
-          b.setBlockData(gate);
-          e.getPlayer().sendMessage(serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-        }, 50);
-      }
+      case TrapDoor trapDoor ->
+          scheduleAutoCloseIfEnabled(protection, trapDoor, clickedBlock, e.getPlayer());
+      case Gate gate ->
+          scheduleAutoCloseIfEnabled(protection, gate, clickedBlock, e.getPlayer());
       default -> {
       }
     }
-
   }
 
-  private void handleProtectionInteract(PlayerInteractEvent e, PlayerEntry pe,
+  private void scheduleAutoCloseIfEnabledForDoubleDoor(@NonNull PlayerInteractEvent e, Door door,
+      Block b2, ProtectionEntry protection, Block clickedBlock) {
+    if (!(b2.getBlockData() instanceof Door door2)) {
+      return;
+    }
+
+    if (door2.getHinge() == door.getHinge()) {
+      return;
+    }
+
+    if (door2.isOpen()) {
+      door2.setOpen(false);
+      return;
+    }
+
+    door2.setOpen(true);
+
+    if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+      return;
+    }
+
+    serviceContext.getSchedulerService().runTaskLater(() -> {
+      door.setOpen(false);
+      door2.setOpen(false);
+
+      clickedBlock.setBlockData(door);
+      b2.setBlockData(door2);
+      e.getPlayer().sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+    }, 50);
+
+    b2.setBlockData(door2);
+  }
+
+  private void handleProtectionInteract(PlayerInteractEvent e, @NonNull PlayerEntry pe,
       ProtectionEntry protection) {
     if (!pe.getPlayerState().equals(PlayerState.DEFAULT)) {
       return;
@@ -208,7 +183,7 @@ public class BetterLock implements ListenerConstruct {
     evaluateAccessAndNotify(e, protection);
   }
 
-  private void evaluateAccessAndNotify(PlayerInteractEvent e, ProtectionEntry protection) {
+  private void evaluateAccessAndNotify(@NonNull PlayerInteractEvent e, ProtectionEntry protection) {
     if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
       e.setCancelled(false);
       e.getPlayer().sendMessage(serviceContext.getTranslationService()
@@ -234,5 +209,19 @@ public class BetterLock implements ListenerConstruct {
           .isSettingActiveForPlayer(player, PlayerSetting.PROTECTION_NOTIFY_SELF);
     }
     return notify;
+  }
+
+  private void scheduleAutoCloseIfEnabled(ProtectionEntry protection, Openable openable,
+      Block block, Player player) {
+    if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+      return;
+    }
+
+    serviceContext.getSchedulerService().runTaskLater(() -> {
+      openable.setOpen(false);
+      block.setBlockData(openable);
+      player.sendMessage(serviceContext.getTranslationService()
+          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+    }, 50);
   }
 }
