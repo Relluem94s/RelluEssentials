@@ -91,7 +91,7 @@ public class BetterLock implements ListenerConstruct {
         return;
       }
 
-      handleProtect(e, pe, protection);
+      handleProtectionInteract(e, pe, protection);
       return;
     }
     if (Arrays.stream(protectionPlayerStates)
@@ -173,25 +173,11 @@ public class BetterLock implements ListenerConstruct {
         return;
       }
 
-      if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
-        e.getPlayer().sendMessage(serviceContext.getTranslationService()
-            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
-      } else {
-        if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
-          e.setCancelled(false);
-          e.getPlayer().sendMessage(serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
-        } else {
-          e.setCancelled(true);
-          e.getPlayer().sendMessage(serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-        }
-
-      }
+      evaluateAccessAndNotify(e, protection);
     }
   }
 
-  private void handleProtect(PlayerInteractEvent e, PlayerEntry pe, ProtectionEntry protection) {
+  private void handleProtectionInteract(PlayerInteractEvent e, PlayerEntry pe, ProtectionEntry protection) {
     if (!pe.getPlayerState().equals(PlayerState.DEFAULT)) {
       return;
     }
@@ -204,6 +190,10 @@ public class BetterLock implements ListenerConstruct {
       return;
     }
 
+    evaluateAccessAndNotify(e, protection);
+  }
+
+  private void evaluateAccessAndNotify(PlayerInteractEvent e, ProtectionEntry protection){
     if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
       e.setCancelled(false);
       e.getPlayer().sendMessage(serviceContext.getTranslationService()
