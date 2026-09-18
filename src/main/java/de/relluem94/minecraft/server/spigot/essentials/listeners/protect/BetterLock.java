@@ -22,6 +22,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * Listener that handles interaction with protected openable blocks such as doors,
+ * trapdoors, and gates.
+ *
+ * <p>Enforces access control by checking whether the interacting player
+ * has rights to the protection
+ * associated with the clicked block. Supports flags such as {@code ALLOW_PUBLIC} and
+ * {@code AUTO_CLOSE}, and grants moderators the ability to bypass restrictions with a notification.
+ * </p>
+ *
  * @author rellu
  */
 @ListenerName("BetterLock")
@@ -34,6 +43,22 @@ public class BetterLock implements ListenerConstruct {
     this.serviceContext = context;
   }
 
+  /**
+   * Handles player interaction with blocks to enforce protection rules.
+   *
+   * <p>When a player interacts with an openable block, the associated
+   * protection entry is evaluated.
+   * If the player lacks rights, access is denied unless the player holds a moderator rank.
+   * For authorized owners, additional logic handles double-door synchronization and auto-close
+   * scheduling based on active protection flags.
+   * </p>
+   *
+   * <p>For non-openable but protectable blocks, access is similarly restricted
+   * based on the player's rights and the active protection flags.
+   * </p>
+   *
+   * @param e the {@link PlayerInteractEvent} triggered when a player interacts with a block
+   */
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onInteract(@NotNull PlayerInteractEvent e) {
     Block b = e.getClickedBlock();
@@ -55,8 +80,8 @@ public class BetterLock implements ListenerConstruct {
                 .equals(PlayerState.PROTECTION_RIGHT_REMOVE))) {
           if (ProtectionHelper.hasRights(protection, pe.getId())) {
             if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
-              e.getPlayer().sendMessage(serviceContext.getTranslationService().
-                  getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+              e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                  .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
             } else {
               if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
                 e.setCancelled(false);
