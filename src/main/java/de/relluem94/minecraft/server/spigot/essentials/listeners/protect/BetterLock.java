@@ -12,6 +12,7 @@ import de.relluem94.minecraft.server.spigot.essentials.helpers.ProtectionHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.ListenerConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.PlayerEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
+import java.util.Arrays;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Openable;
@@ -38,6 +39,11 @@ import org.jetbrains.annotations.NotNull;
  */
 @ListenerName("BetterLock")
 public class BetterLock implements ListenerConstruct {
+
+  private final PlayerState[] protectionPlayerStates = {PlayerState.PROTECTION_INFO,
+      PlayerState.PROTECTION_ADD, PlayerState.PROTECTION_REMOVE, PlayerState.PROTECTION_FLAG_ADD,
+      PlayerState.PROTECTION_FLAG_REMOVE, PlayerState.PROTECTION_RIGHT_ADD,
+      PlayerState.PROTECTION_RIGHT_REMOVE};
 
   private ServiceContext serviceContext;
 
@@ -88,31 +94,9 @@ public class BetterLock implements ListenerConstruct {
       handleProtect(e, pe, protection);
       return;
     }
-
-    if (!(pe.getPlayerState().equals(PlayerState.PROTECTION_INFO) || pe.getPlayerState()
-        .equals(PlayerState.PROTECTION_ADD) || pe.getPlayerState()
-        .equals(PlayerState.PROTECTION_REMOVE) || pe.getPlayerState()
-        .equals(PlayerState.PROTECTION_FLAG_ADD) || pe.getPlayerState()
-        .equals(PlayerState.PROTECTION_FLAG_REMOVE) || pe.getPlayerState()
-        .equals(PlayerState.PROTECTION_RIGHT_ADD) || pe.getPlayerState()
-        .equals(PlayerState.PROTECTION_RIGHT_REMOVE))) {
+    if (Arrays.stream(protectionPlayerStates)
+        .noneMatch(playerState -> pe.getPlayerState() == playerState)) {
       if (ProtectionHelper.hasRights(protection, pe.getId())) {
-        if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
-          e.getPlayer().sendMessage(serviceContext.getTranslationService()
-              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
-        } else {
-          if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
-            e.setCancelled(false);
-            e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
-          } else {
-            e.setCancelled(true);
-            e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
-          }
-
-        }
-      } else {
         if (notify(protection, pe.getId(), e.getPlayer())) {
           e.getPlayer().sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
@@ -186,7 +170,22 @@ public class BetterLock implements ListenerConstruct {
           default -> {
           }
         }
-        // ELSE Other Openable Objects (Future Implementations)
+        return;
+      }
+
+      if (ProtectionHelper.hasFlag(protection, ProtectionFlags.ALLOW_PUBLIC)) {
+        e.getPlayer().sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_ALLOW));
+      } else {
+        if (serviceContext.getGroupService().isSenderAuthorized(e.getPlayer(), "mod")) {
+          e.setCancelled(false);
+          e.getPlayer().sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW_ADMIN_OVERWRITE));
+        } else {
+          e.setCancelled(true);
+          e.getPlayer().sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_DISALLOW));
+        }
 
       }
     }
