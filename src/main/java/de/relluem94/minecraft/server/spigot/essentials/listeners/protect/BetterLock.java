@@ -75,14 +75,14 @@ public class BetterLock implements ListenerConstruct {
     if (clickedBlock == null) {
       return;
     }
+
     Location l = ProtectionHelper.getLocationFromBlockAlternateForDoor(clickedBlock);
     ProtectionEntry protection = serviceContext.getProtectionService().getProtectionEntry(l);
-    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(e.getPlayer());
-
     if (protection == null) {
       return;
     }
 
+    PlayerEntry pe = serviceContext.getPlayerService().getPlayerEntry(e.getPlayer());
     if (pe == null) {
       return;
     }
