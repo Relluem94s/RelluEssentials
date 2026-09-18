@@ -115,54 +115,59 @@ public class BetterLock implements ListenerConstruct {
                   } else {
                     door2.setOpen(true);
 
-                    if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                      serviceContext.getSchedulerService().runTaskLater(() -> {
-                        door.setOpen(false);
-                        door2.setOpen(false);
-
-                        b.setBlockData(door);
-                        b2.setBlockData(door2);
-                        e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                            .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-                      }, 50);
+                    if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                      return;
                     }
+                    serviceContext.getSchedulerService().runTaskLater(() -> {
+                      door.setOpen(false);
+                      door2.setOpen(false);
+
+                      b.setBlockData(door);
+                      b2.setBlockData(door2);
+                      e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                          .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+                    }, 50);
                   }
                   b2.setBlockData(door2);
                 }
               }
             } else {
-              if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-                serviceContext.getSchedulerService().runTaskLater(() -> {
-                  door.setOpen(false);
-
-                  b.setBlockData(door);
-                  e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                      .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-                }, 50);
+              if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+                return;
               }
+              serviceContext.getSchedulerService().runTaskLater(() -> {
+                door.setOpen(false);
+
+                b.setBlockData(door);
+                e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                    .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+              }, 50);
             }
           }
           case TrapDoor trapDoor -> {
-            if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-              serviceContext.getSchedulerService().runTaskLater(() -> {
-                trapDoor.setOpen(false);
-
-                b.setBlockData(trapDoor);
-                e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-              }, 50);
+            if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+              return;
             }
+
+            serviceContext.getSchedulerService().runTaskLater(() -> {
+              trapDoor.setOpen(false);
+
+              b.setBlockData(trapDoor);
+              e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                  .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+            }, 50);
           }
           case Gate gate -> {
-            if (ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
-              serviceContext.getSchedulerService().runTaskLater(() -> {
-                gate.setOpen(false);
-
-                b.setBlockData(gate);
-                e.getPlayer().sendMessage(serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
-              }, 50);
+            if (!ProtectionHelper.hasFlag(protection, ProtectionFlags.AUTO_CLOSE)) {
+              return;
             }
+            serviceContext.getSchedulerService().runTaskLater(() -> {
+              gate.setOpen(false);
+
+              b.setBlockData(gate);
+              e.getPlayer().sendMessage(serviceContext.getTranslationService()
+                  .getWithPrefix(MessageKey.PLUGIN_EVENT_PROTECT_BLOCK_AUTOCLOSE));
+            }, 50);
           }
           default -> {
           }
