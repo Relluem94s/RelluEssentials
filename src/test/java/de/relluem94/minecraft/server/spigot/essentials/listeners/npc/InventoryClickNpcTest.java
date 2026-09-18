@@ -1143,4 +1143,44 @@ class InventoryClickNpcTest {
 
     verify(bankService).withdraw(playerEntry, player, bankAccount, 100f);
   }
+
+  @Test
+  void handleNpcInventoryWhenCurrentItemIsNullOnSecondCallDoesNothing() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+
+    lenient().when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    String npcTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dNPCs";
+    InventoryClickEvent event = mock(InventoryClickEvent.class);
+    InventoryView view = mock(InventoryView.class);
+    when(event.getWhoClicked()).thenReturn(player);
+    when(event.getCurrentItem()).thenReturn(mock(ItemStack.class)).thenReturn(null);
+    when(event.getView()).thenReturn(view);
+    when(view.getTitle()).thenReturn(npcTitle);
+
+    listener.onInventoryClickItem(event);
+
+    verify(player.getInventory(), never()).addItem(any());
+  }
+
+  @Test
+  void handleWorldsInventoryWhenCurrentItemIsNullDoesNothing() {
+    Player player = buildPlayer();
+    PlayerEntry playerEntry = buildPlayerEntry();
+
+    lenient().when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
+
+    String worldsTitle = Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds";
+    InventoryClickEvent event = mock(InventoryClickEvent.class);
+    InventoryView view = mock(InventoryView.class);
+    when(event.getWhoClicked()).thenReturn(player);
+    when(event.getCurrentItem()).thenReturn(mock(ItemStack.class)).thenReturn(null);
+    when(event.getView()).thenReturn(view);
+    when(view.getTitle()).thenReturn(worldsTitle);
+
+    listener.onInventoryClickItem(event);
+
+    verify(teleportService, never()).teleportWorld(any(), anyString());
+  }
 }
