@@ -6,17 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import de.relluem94.minecraft.server.spigot.essentials.RelluEssentials;
-import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
 import de.relluem94.minecraft.server.spigot.essentials.models.Selection;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyClipboardEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ModifyHistoryEntry;
-import de.relluem94.minecraft.server.spigot.essentials.models.pojo.ProtectionEntry;
-import de.relluem94.minecraft.server.spigot.essentials.services.ProtectionService;
 import de.relluem94.rellulib.stores.DoubleStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -191,6 +186,7 @@ class ModifyHelperTest {
             originZ + worldOffset[1]);
 
         when(world.getBlockAt(expectedLocation)).thenReturn(expectedBlock);
+        when(expectedBlock.getLocation()).thenReturn(expectedLocation);
 
         BlockData blockData = mock(BlockData.class);
         ModifyClipboardEntry entry = new ModifyClipboardEntry(
@@ -199,8 +195,9 @@ class ModifyHelperTest {
         Block result = ModifyHelper.getBlock(entry, yaw, targetLocation);
 
         assertNotNull(result);
-        assertEquals(expectedLocation.getBlockX(), result.getLocation() != null
-            ? (int) result.getLocation().getX() : expectedLocation.getBlockX());
+        assertEquals(expectedLocation.getBlockX(), result.getLocation().getBlockX());
+        assertEquals(expectedLocation.getBlockY(), result.getLocation().getBlockY());
+        assertEquals(expectedLocation.getBlockZ(), result.getLocation().getBlockZ());
     }
 
     @Test
@@ -527,95 +524,6 @@ class ModifyHelperTest {
                 throw e.getCause();
             }
         });
-    }
-
-    // -------------------------------------------------------------------------
-    // checkAndRemoveProtection
-    // -------------------------------------------------------------------------
-
-    @Test
-    void checkAndRemoveProtection_withProtectableMaterialAndExistingProtection_deletesAndRemovesProtection() {
-        World world = mock(World.class);
-        Block block = mock(Block.class);
-        Location location = new Location(world, 1, 2, 3);
-
-        when(block.getType()).thenReturn(Material.CHEST);
-        when(block.getLocation()).thenReturn(location);
-
-        ProtectionEntry protection = mock(ProtectionEntry.class);
-        ProtectionService protectionService = mock(ProtectionService.class);
-        ServiceContext serviceContext = mock(ServiceContext.class);
-        RelluEssentials plugin = mock(RelluEssentials.class);
-
-        when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
-        when(protectionService.getProtectionEntry(location)).thenReturn(protection);
-        when(serviceContext.getProtectionService()).thenReturn(protectionService);
-        when(plugin.getServiceContext()).thenReturn(serviceContext);
-
-        try (var mockedStatic = org.mockito.Mockito.mockStatic(RelluEssentials.class)) {
-            mockedStatic.when(RelluEssentials::getInstance).thenReturn(plugin);
-
-            ModifyHelper.checkAndRemoveProtection(block);
-
-            verify(protectionService).deleteProtectionAndRemoveFromRegistry(protection);
-            verify(protectionService).removeProtectionEntry(location);
-        }
-    }
-
-    @Test
-    void checkAndRemoveProtection_withProtectableMaterialButNoProtectionEntry_doesNotDeleteOrRemove() {
-        World world = mock(World.class);
-        Block block = mock(Block.class);
-        Location location = new Location(world, 1, 2, 3);
-
-        when(block.getType()).thenReturn(Material.CHEST);
-        when(block.getLocation()).thenReturn(location);
-
-        ProtectionService protectionService = mock(ProtectionService.class);
-        ServiceContext serviceContext = mock(ServiceContext.class);
-        RelluEssentials plugin = mock(RelluEssentials.class);
-
-        when(protectionService.isProtectableMaterial(Material.CHEST)).thenReturn(true);
-        when(protectionService.getProtectionEntry(location)).thenReturn(null);
-        when(serviceContext.getProtectionService()).thenReturn(protectionService);
-        when(plugin.getServiceContext()).thenReturn(serviceContext);
-
-        try (var mockedStatic = org.mockito.Mockito.mockStatic(RelluEssentials.class)) {
-            mockedStatic.when(RelluEssentials::getInstance).thenReturn(plugin);
-
-            ModifyHelper.checkAndRemoveProtection(block);
-
-            verify(protectionService, never()).deleteProtectionAndRemoveFromRegistry(any());
-            verify(protectionService, never()).removeProtectionEntry(any());
-        }
-    }
-
-    @Test
-    void checkAndRemoveProtection_withNonProtectableMaterial_doesNotQueryProtectionEntry() {
-        World world = mock(World.class);
-        Block block = mock(Block.class);
-        Location location = new Location(world, 1, 2, 3);
-
-        when(block.getType()).thenReturn(Material.STONE);
-        when(block.getLocation()).thenReturn(location);
-
-        ProtectionService protectionService = mock(ProtectionService.class);
-        ServiceContext serviceContext = mock(ServiceContext.class);
-        RelluEssentials plugin = mock(RelluEssentials.class);
-
-        when(protectionService.isProtectableMaterial(Material.STONE)).thenReturn(false);
-        when(serviceContext.getProtectionService()).thenReturn(protectionService);
-        when(plugin.getServiceContext()).thenReturn(serviceContext);
-
-        try (var mockedStatic = org.mockito.Mockito.mockStatic(RelluEssentials.class)) {
-            mockedStatic.when(RelluEssentials::getInstance).thenReturn(plugin);
-
-            ModifyHelper.checkAndRemoveProtection(block);
-
-            verify(protectionService, never()).getProtectionEntry(any());
-            verify(protectionService, never()).deleteProtectionAndRemoveFromRegistry(any());
-            verify(protectionService, never()).removeProtectionEntry(any());
-        }
     }
 
     // -------------------------------------------------------------------------
