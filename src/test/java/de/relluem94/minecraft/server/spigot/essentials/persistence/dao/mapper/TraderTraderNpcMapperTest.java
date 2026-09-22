@@ -60,7 +60,7 @@ class TraderTraderNpcMapperTest {
     }
 
     @Test
-    void mapNPCReturnsFullyPopulatedEntry() throws SQLException {
+    void mapNpcReturnsFullyPopulatedEntry() throws SQLException {
         when(resultSet.getInt(FIELD_ID)).thenReturn(1);
         when(resultSet.getString(FIELD_CREATED)).thenReturn("2024-01-01");
         when(resultSet.getInt(FIELD_CREATEDBY)).thenReturn(2);
@@ -76,7 +76,7 @@ class TraderTraderNpcMapperTest {
             when(resultSet.getString(String.format(FIELD_SLOT_VAR_NAME, (i + 1)))).thenReturn("slot_" + i);
         }
 
-        TraderNpcEntry result = TraderNpcMapper.mapNPC(resultSet, PROFESSION_RESOLVER);
+        TraderNpcEntry result = TraderNpcMapper.mapNpc(resultSet, PROFESSION_RESOLVER);
 
         assertAll(
                 () -> assertEquals(1, result.getId()),
@@ -98,9 +98,9 @@ class TraderTraderNpcMapperTest {
     }
 
     @Test
-    void mapNPCPropagatesSQLException() throws SQLException {
+    void mapNpcPropagatesSQLException() throws SQLException {
         when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("DB error"));
 
-        assertThrows(SQLException.class, () -> TraderNpcMapper.mapNPC(resultSet, PROFESSION_RESOLVER));
+        assertThrows(SQLException.class, () -> TraderNpcMapper.mapNpc(resultSet, PROFESSION_RESOLVER));
     }
 }

@@ -21,13 +21,34 @@ import java.util.function.Function;
 import org.bukkit.entity.Villager;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Utility class providing mapping functionality for trader NPC database records.
+ *
+ * <p>Maps {@link java.sql.ResultSet} rows to {@link TraderNpcEntry} instances,
+ * resolving professions and slot configurations from the database fields.
+ */
 public class TraderNpcMapper {
 
   private TraderNpcMapper() {
     throw new IllegalStateException(Constants.PLUGIN_INTERNAL_UTILITY_CLASS);
   }
 
-  public static @NonNull TraderNpcEntry mapNPC(@NonNull ResultSet rs,
+  /**
+   * Maps a single database row from the given {@link java.sql.ResultSet}
+   * to a {@link TraderNpcEntry}.
+   *
+   * <p>Reads all standard audit fields, NPC-specific fields, and up to 28 slot name entries.
+   * The profession string is resolved to a {@link Villager.Profession} using the
+   * provided resolver function.
+   *
+   * @param rs                 the {@link java.sql.ResultSet} positioned at the row to map
+   * @param professionResolver a {@link Function} that resolves a lowercase profession string
+   *                           to the corresponding {@link Villager.Profession}
+   * @return a fully populated {@link TraderNpcEntry} representing the current row
+   * @throws SQLException if a database access error occurs while reading
+   *     the {@link java.sql.ResultSet}
+   */
+  public static @NonNull TraderNpcEntry mapNpc(@NonNull ResultSet rs,
       @NonNull Function<String, Villager.Profession> professionResolver) throws SQLException {
     TraderNpcEntry traderNpcEntry = new TraderNpcEntry();
 

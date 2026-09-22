@@ -1,18 +1,10 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.dao;
 
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.TraderNpcEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import de.relluem94.minecraft.server.spigot.essentials.persistence.dao.mapper.TraderNpcMapper;
-import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.loader.SqlResourceLoader;
-import java.io.FileNotFoundException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.jdbc.QueryExecutor;
 import java.util.List;
-import javax.sql.DataSource;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 
 /**
  * Data Access Object for {@link TraderNpcEntry} persistence operations.
@@ -22,12 +14,19 @@ import org.bukkit.Registry;
  */
 public class TraderNpcDao {
 
-  private final DataSource dataSource;
-  private final SqlResourceLoader sqlResourceLoader;
+  private final QueryExecutor queryExecutor;
+  private final BukkitRegistryAdapter registryAdapter;
 
-  public TraderNpcDao(DataSource dataSource, SqlResourceLoader sqlResourceLoader) {
-    this.dataSource = dataSource;
-    this.sqlResourceLoader = sqlResourceLoader;
+  /**
+   * Creates a new {@link TraderNpcDao} with the given {@link QueryExecutor}
+   * and {@link BukkitRegistryAdapter}.
+   *
+   * @param queryExecutor  the executor used to run SQL queries against the database
+   * @param registryAdapter the adapter used to resolve Bukkit registry entries
+   */
+  public TraderNpcDao(QueryExecutor queryExecutor, BukkitRegistryAdapter registryAdapter) {
+    this.queryExecutor = queryExecutor;
+    this.registryAdapter = registryAdapter;
   }
 
   /**
@@ -36,18 +35,8 @@ public class TraderNpcDao {
    * @return a list of all trader NPC entries; never {@code null}, may be empty
    */
   public List<TraderNpcEntry> findAll() {
-    List<TraderNpcEntry> results = new ArrayList<>();
-    try (Connection connection = dataSource.getConnection();
-        PreparedStatement ps = connection.prepareStatement(
-            sqlResourceLoader.load("sqls/getNPCs.sql"))) {
-      ps.execute();
-      try (ResultSet rs = ps.getResultSet()) {
-        while (rs.next()) {
-          results.add(TraderNpcMapper.mapNPC(rs,
-              key -> Registry.VILLAGER_PROFESSION.get(NamespacedKey.minecraft(key))));
-        }
-      }
-    } catch (SQLException | FileNotFoundException ex) {}
-    return results;
+    return queryExecutor.queryList("getNPCs.sql",
+        _ -> {},
+        rs -> TraderNpcMapper.mapNpc(rs, registryAdapter::resolveProfession));
   }
 }
