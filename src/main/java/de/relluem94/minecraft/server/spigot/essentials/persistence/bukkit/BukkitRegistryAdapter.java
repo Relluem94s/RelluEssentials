@@ -1,5 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit;
 
+import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.NamespacedKey;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Villager.Profession;
  * <p>All access to Bukkit registries should go through this class
  * so that tests can mock it without triggering Bukkit server initialization.</p>
  */
+@Generated
 public class BukkitRegistryAdapter {
 
   /**
