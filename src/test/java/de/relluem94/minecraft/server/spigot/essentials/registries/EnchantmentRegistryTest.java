@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import de.relluem94.minecraft.server.spigot.essentials.helpers.EnchantmentHelper;
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.List;
 import java.util.Optional;
 import org.bukkit.NamespacedKey;
@@ -43,11 +44,14 @@ class EnchantmentRegistryTest {
   @Mock
   private PersistentDataContainer mockPdc;
 
+  @Mock
+  private BukkitRegistryAdapter mockRegistryAdapter;
+
   private EnchantmentRegistry registry;
 
   @BeforeEach
   void setUp() {
-    registry = new EnchantmentRegistry();
+    registry = new EnchantmentRegistry(mockRegistryAdapter);
   }
 
   @Test
@@ -109,7 +113,6 @@ class EnchantmentRegistryTest {
 
     when(mockItemStack.getItemMeta()).thenReturn(mockMeta);
     when(mockMeta.getPersistentDataContainer()).thenReturn(mockPdc);
-
     when(mockPdc.has(enchantmentKey, PersistentDataType.INTEGER)).thenReturn(true);
     when(mockMeta.getStoredEnchants()).thenReturn(java.util.Collections.emptyMap());
 
@@ -117,6 +120,27 @@ class EnchantmentRegistryTest {
 
     assertTrue(result.isPresent());
     assertEquals(mockEnchantment, result.get());
+  }
+
+  @Test
+  void testFindByBookItemStack_AlreadyStoredEnchant() {
+    when(mockPlugin.getName()).thenReturn("test_plugin");
+    NamespacedKey enchantmentKey = NamespacedKey.fromString("test:magic");
+    assertNotNull(enchantmentKey);
+    when(mockEnchantment.getKey()).thenReturn(enchantmentKey);
+
+    registry.register(mockPlugin, "magic", mockEnchantment);
+
+    when(mockRegistryAdapter.resolveEnchantmentKeys(any())).thenReturn(List.of(enchantmentKey));
+
+    when(mockItemStack.getItemMeta()).thenReturn(mockMeta);
+    when(mockMeta.getPersistentDataContainer()).thenReturn(mockPdc);
+    when(mockPdc.has(enchantmentKey, PersistentDataType.INTEGER)).thenReturn(true);
+    when(mockMeta.getStoredEnchants()).thenReturn(java.util.Collections.emptyMap());
+
+    Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
+
+    assertFalse(result.isPresent());
   }
 
   @Test

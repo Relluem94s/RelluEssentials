@@ -11,13 +11,13 @@ import de.relluem94.minecraft.server.spigot.essentials.constants.NamespacedKeyCo
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Rarity;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem.Type;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Server;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -34,11 +34,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CustomItemTest {
 
   @Mock
-  Server server;
+  BukkitRegistryAdapter registryAdapter;
 
   private CustomItem buildMinimalItem() {
     return new CustomItem(Material.STONE, 1, "Name", List.of(), Type.NONE, Rarity.NONE, null,
-        List.of(), Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), server);
+        List.of(), Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
   }
 
   private ItemMeta mockItemMetaOnItemStack(ItemStack mockedItemStack) {
@@ -66,7 +66,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, "My Sword", List.of(), Type.NONE,
           Rarity.NONE, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -83,7 +83,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.NONE, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -101,8 +101,7 @@ class CustomItemTest {
       List<String> lore = List.of("Line 1", "Line 2");
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, lore, Type.NONE, Rarity.NONE,
-          null, List.of(), Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"),
-          server);
+          null, List.of(), Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -122,7 +121,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.RARE, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -143,7 +142,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.EPIC, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -166,7 +165,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.NONE, 250, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -186,7 +185,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.NONE, null, List.of(), Map.of(), List.of(modifier),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -203,7 +202,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, "", List.of(), Type.NONE,
           Rarity.NONE, null, List.of(), Map.of(), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -254,7 +253,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.NONE, null, List.of(), Map.of("test:mykey", "hello"), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -275,7 +274,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.NONE, null, List.of(), Map.of("test:mykey", 42), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -296,7 +295,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.NONE, null, List.of(), Map.of("test:mykey", true), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -317,7 +316,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.NONE, null, List.of(), Map.of("test:mykey", 3.14), List.of(),
-          new RelluEssentialsNamespacedKey("test", "stone"), server);
+          new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 
@@ -341,7 +340,7 @@ class CustomItemTest {
 
       CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
           Rarity.NONE, null, List.of(new CustomItem.EnchantmentData("not a valid key!!", 1)),
-          Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), server);
+          Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
 
       customItem.toItemStack();
 

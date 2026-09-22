@@ -9,12 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class CustomItemBuilderTest {
   private RelluEssentialsNamespacedKey relluEssentialsNamespacedKey;
 
   @Mock
-  private Server server;
+  BukkitRegistryAdapter registryAdapter;
 
   private CustomItemBuilder builder;
 
@@ -64,7 +64,7 @@ class CustomItemBuilderTest {
 
     CustomItem result = builder.amount(3).displayName("Test Item").lore(lore)
         .type(CustomItem.Type.WEAPON).rarity(CustomItem.Rarity.LEGENDARY).cost(100)
-        .enchantments(enchantments, server).persistentData(persistentData).metaModifier(modifier)
+        .enchantments(enchantments, registryAdapter).persistentData(persistentData).metaModifier(modifier)
         .build();
 
     assertAll(() -> assertEquals(Material.DIAMOND, result.material()),
@@ -133,7 +133,7 @@ class CustomItemBuilderTest {
     List<CustomItem.EnchantmentData> enchantments = List.of(
         new CustomItem.EnchantmentData("minecraft:sharpness", 3),
         new CustomItem.EnchantmentData("minecraft:unbreaking", 2));
-    CustomItem result = builder.enchantments(enchantments, server).build();
+    CustomItem result = builder.enchantments(enchantments, registryAdapter).build();
 
     assertAll(() -> assertEquals(2, result.enchantments().size()),
         () -> assertEquals("minecraft:sharpness", result.enchantments().getFirst().key()),
@@ -144,9 +144,8 @@ class CustomItemBuilderTest {
 
   @Test
   void enchantmentsAccumulatesAcrossMultipleCalls() {
-    builder.enchantments(List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 1)), server);
-    builder.enchantments(List.of(new CustomItem.EnchantmentData("minecraft:unbreaking", 1)),
-        server);
+    builder.enchantments(List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 1)), registryAdapter);
+    builder.enchantments(List.of(new CustomItem.EnchantmentData("minecraft:unbreaking", 1)), registryAdapter);
     CustomItem result = builder.build();
     assertEquals(2, result.enchantments().size());
   }
@@ -219,7 +218,7 @@ class CustomItemBuilderTest {
 
   @Test
   void buildReturnedEnchantmentsIsUnmodifiable() {
-    builder.enchantments(List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 1)), server);
+    builder.enchantments(List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 1)), registryAdapter);
     CustomItem result = builder.build();
     assertThrows(UnsupportedOperationException.class,
         () -> result.enchantments().add(new CustomItem.EnchantmentData("minecraft:unbreaking", 1)));
@@ -265,7 +264,7 @@ class CustomItemBuilderTest {
         () -> assertSame(builder, builder.type(CustomItem.Type.NONE)),
         () -> assertSame(builder, builder.rarity(CustomItem.Rarity.NONE)),
         () -> assertSame(builder, builder.cost(0)),
-        () -> assertSame(builder, builder.enchantments(List.of(), server)),
+        () -> assertSame(builder, builder.enchantments(List.of(), registryAdapter)),
         () -> assertSame(builder, builder.persistentData(Map.of())),
         () -> assertSame(builder, builder.addPersistentData("k", "v")),
         () -> assertSame(builder, builder.metaModifier(modifier)));

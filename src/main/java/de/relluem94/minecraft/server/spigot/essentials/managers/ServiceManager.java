@@ -11,6 +11,7 @@ import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BagSalesmanNp
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BankerNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.BeekeeperNpc;
 import de.relluem94.minecraft.server.spigot.essentials.npcs.trader.EnchanterNpc;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BagTypeRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.registries.BankTierRegistry;
@@ -99,17 +100,13 @@ public class ServiceManager implements Enable {
     ProtectionRepository protectionRepository = new ProtectionRepository(
         persistenceContext.getProtectionDao(), persistenceContext.getLocationDao());
 
-    ProtectionService protectionService = new ProtectionService(
-        protectionRepository.loadAllLocks(),
-        protectionRepository.loadAll(),
-        protectionRepository,
-        serviceContext);
+    ProtectionService protectionService = new ProtectionService(protectionRepository.loadAllLocks(),
+        protectionRepository.loadAll(), protectionRepository, serviceContext);
     serviceContext.setProtectionService(protectionService);
 
     TraderNpcRepository traderNpcRepository = new TraderNpcRepository(
         persistenceContext.getTraderNpcDao());
-    TraderNpcRegistry traderNpcRegistry = new TraderNpcRegistry(
-        serviceContext);
+    TraderNpcRegistry traderNpcRegistry = new TraderNpcRegistry(serviceContext);
     BankerNpc bankerNpc = new BankerNpc(serviceContext);
     traderNpcRegistry.addNpc(new BagSalesmanNpc(serviceContext));
     traderNpcRegistry.addNpc(bankerNpc);
@@ -155,13 +152,8 @@ public class ServiceManager implements Enable {
 
     BagRegistry bagRegistry = new BagRegistry();
 
-    BagService bagService = new BagService(
-        serviceContext,
-        bagRegistry,
-        bagRepository,
-        bagTypeRegistry,
-        bagTypeRepository
-    );
+    BagService bagService = new BagService(serviceContext, bagRegistry, bagRepository,
+        bagTypeRegistry, bagTypeRepository);
     serviceContext.setBagService(bagService);
     BuyBackRepository buyBackRepository = new BuyBackRepository();
     BuyBackService buyBackService = new BuyBackService(buyBackRepository, serviceContext);
@@ -202,21 +194,18 @@ public class ServiceManager implements Enable {
         new NamespacedKey(relluEssentials, "npc_id"),
         new NpcMannequinAttributeApplier(serviceContext));
     NpcValidator npcValidator = new NpcValidator();
-    NpcService npcService = new NpcService(npcRepository, npcSpawner,
-        npcValidator, npcDialogueProgressService);
+    NpcService npcService = new NpcService(npcRepository, npcSpawner, npcValidator,
+        npcDialogueProgressService);
     serviceContext.setNpcService(npcService);
 
     PositionRegistry positionRegistry = new PositionRegistry();
     PositionService positionService = new PositionService(positionRegistry,
         serviceContext.getTranslationService());
-    serviceContext.getSchedulerService()
-        .runTaskTimer(positionService::tickHighlights, 0L, 20L);
+    serviceContext.getSchedulerService().runTaskTimer(positionService::tickHighlights, 0L, 20L);
     serviceContext.setPositionService(positionService);
 
     LocationCleanUpService locationCleanUpService = new LocationCleanUpService(
-        serviceContext.getTranslationService(),
-        locationRepository
-    );
+        serviceContext.getTranslationService(), locationRepository);
     serviceContext.setLocationCleanUpService(locationCleanUpService);
 
     ProtectionCleanUpService protectionCleanUpService = new ProtectionCleanUpService(
@@ -251,6 +240,7 @@ public class ServiceManager implements Enable {
     serviceContext.setPluginMetadataService(new PluginMetadataService(relluEssentials));
     serviceContext.setItemService(new ItemService(new ItemRegistry()));
     serviceContext.setInventoryService(new InventoryService(new InventoryRegistry()));
-    serviceContext.setEnchantmentService(new EnchantmentService(new EnchantmentRegistry()));
+    serviceContext.setEnchantmentService(
+        new EnchantmentService(new EnchantmentRegistry(new BukkitRegistryAdapter())));
   }
 }

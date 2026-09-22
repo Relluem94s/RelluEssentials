@@ -2,6 +2,7 @@ package de.relluem94.minecraft.server.spigot.essentials.builders;
 
 import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
 import de.relluem94.minecraft.server.spigot.essentials.models.items.CustomItem;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
@@ -32,7 +32,7 @@ public class CustomItemBuilder {
   private CustomItem.Type type = CustomItem.Type.NONE;
   private CustomItem.Rarity rarity = CustomItem.Rarity.NONE;
   private Integer cost = null;
-  private Server server = null;
+  private BukkitRegistryAdapter registryAdapter = null;
 
   /**
    * Builder for creating {@link CustomItem} instances with a fluent API.
@@ -117,14 +117,14 @@ public class CustomItemBuilder {
    * Adds a list of enchantments to the item, appending to any previously added enchantments.
    *
    * @param enchantments the list of {@link CustomItem.EnchantmentData} to apply to the item
-   * @param server       the Bukkit {@link Server} instance used to resolve enchantments from the
+   * @param registryAdapter the {@link BukkitRegistryAdapter} used to resolve enchantments
    *                     registry
    * @return this builder instance
    */
   public CustomItemBuilder enchantments(List<CustomItem.EnchantmentData> enchantments,
-      Server server) {
+      BukkitRegistryAdapter registryAdapter) {
     this.enchantments.addAll(enchantments);
-    this.server = server;
+    this.registryAdapter = registryAdapter;
     return this;
   }
 
@@ -176,6 +176,6 @@ public class CustomItemBuilder {
     return new CustomItem(material, amount, displayName, Collections.unmodifiableList(lore), type,
         rarity, cost, Collections.unmodifiableList(enchantments),
         Collections.unmodifiableMap(persistentData), Collections.unmodifiableList(metaModifiers),
-        relluEssentialsNamespacedKey, server);
+        relluEssentialsNamespacedKey, registryAdapter);
   }
 }
