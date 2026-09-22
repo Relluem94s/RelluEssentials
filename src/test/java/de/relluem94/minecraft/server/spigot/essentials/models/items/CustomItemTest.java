@@ -348,4 +348,51 @@ class CustomItemTest {
           Mockito.anyBoolean());
     }
   }
+
+  @Test
+  void toItemStackSkipsAddEnchantWhenResolvedEnchantmentIsNull() {
+    ItemMeta[] capturedMeta = new ItemMeta[1];
+
+    try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
+        (mock, _) -> capturedMeta[0] = mockItemMetaOnItemStack(mock));
+        MockedStatic<NamespacedKey> mockedNamespacedKey = Mockito.mockStatic(NamespacedKey.class)) {
+
+      NamespacedKey resolvedKey = mock(NamespacedKey.class);
+      mockedNamespacedKey.when(() -> NamespacedKey.fromString("minecraft:sharpness"))
+          .thenReturn(resolvedKey);
+
+      when(registryAdapter.resolveEnchantment(resolvedKey)).thenReturn(null);
+
+      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
+          Rarity.NONE, null, List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 1)),
+          Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+
+      customItem.toItemStack();
+
+      verify(capturedMeta[0], never()).addEnchant(Mockito.any(), Mockito.anyInt(),
+          Mockito.anyBoolean());
+    }
+  }
+
+  @Test
+  void toItemStackResolvesEnchantmentViaRegistryAdapter() {
+    try (MockedConstruction<ItemStack> ignored = Mockito.mockConstruction(ItemStack.class,
+        (mock, _) -> mockItemMetaOnItemStack(mock));
+        MockedStatic<NamespacedKey> mockedNamespacedKey = Mockito.mockStatic(NamespacedKey.class)) {
+
+      NamespacedKey resolvedKey = mock(NamespacedKey.class);
+      mockedNamespacedKey.when(() -> NamespacedKey.fromString("minecraft:sharpness"))
+          .thenReturn(resolvedKey);
+
+      when(registryAdapter.resolveEnchantment(resolvedKey)).thenReturn(null);
+
+      CustomItem customItem = new CustomItem(Material.STONE, 1, null, List.of(), Type.NONE,
+          Rarity.NONE, null, List.of(new CustomItem.EnchantmentData("minecraft:sharpness", 5)),
+          Map.of(), List.of(), new RelluEssentialsNamespacedKey("test", "stone"), registryAdapter);
+
+      customItem.toItemStack();
+
+      verify(registryAdapter).resolveEnchantment(resolvedKey);
+    }
+  }
 }
