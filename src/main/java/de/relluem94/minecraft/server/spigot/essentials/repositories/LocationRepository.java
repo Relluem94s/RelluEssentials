@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Repository responsible for managing the persistence and retrieval of location entries.
+ *
+ * @author rellu
  */
 public class LocationRepository {
 
