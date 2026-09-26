@@ -94,7 +94,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getDepositGUI(double total) {
+  public Inventory getDepositGui(double total) {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
@@ -142,7 +142,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getWithdrawGUI(double total) {
+  public Inventory getWithdrawGui(double total) {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
@@ -193,7 +193,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getBalanceGUI() {
+  public Inventory getBalanceGui() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 
@@ -227,7 +227,7 @@ public class BankerNpc extends TraderNpc implements BankerGui {
   }
 
   @Override
-  public Inventory getUpgradeGUI() {
+  public Inventory getUpgradeGui() {
     Inventory inv = InventoryHelper.fillInventory(InventoryHelper.createInventory(27, getTitle()),
         resolveDisabledItem().toItemStack());
 

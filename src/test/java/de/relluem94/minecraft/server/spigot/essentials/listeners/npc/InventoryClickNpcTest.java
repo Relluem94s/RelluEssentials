@@ -389,7 +389,7 @@ class InventoryClickNpcTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(bankService.findBankAccountByPlayerId(1)).thenReturn(bankAccount);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(depositItem);
-    when(bankerNpc.getDepositGUI(500.0)).thenReturn(depositGui);
+    when(bankerNpc.getDepositGui(500.0)).thenReturn(depositGui);
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
@@ -460,7 +460,7 @@ class InventoryClickNpcTest {
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_DEPOSIT)).thenReturn(depositItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(totalBalanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(balanceItem);
-    when(bankerNpc.getBalanceGUI()).thenReturn(balanceGui);
+    when(bankerNpc.getBalanceGui()).thenReturn(balanceGui);
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
@@ -497,7 +497,7 @@ class InventoryClickNpcTest {
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TOTAL)).thenReturn(totalBalanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE)).thenReturn(balanceItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(withdrawItem);
-    when(bankerNpc.getWithdrawGUI(1000.0)).thenReturn(withdrawGui);
+    when(bankerNpc.getWithdrawGui(1000.0)).thenReturn(withdrawGui);
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 
@@ -630,7 +630,7 @@ class InventoryClickNpcTest {
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_WITHDRAW)).thenReturn(withdrawItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_BALANCE_TRANSACTIONS)).thenReturn(transactionsItem);
     when(bankService.getBankItem(PLUGIN_ITEM_NAMESPACE_BANK_UPGRADE)).thenReturn(upgradeItem);
-    when(bankerNpc.getUpgradeGUI()).thenReturn(upgradeGui);
+    when(bankerNpc.getUpgradeGui()).thenReturn(upgradeGui);
 
     InventoryClickEvent event = buildClickEvent(player, "BankerTitle", clickedItem);
 

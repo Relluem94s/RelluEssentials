@@ -164,7 +164,7 @@ public class InventoryClickNpc implements ListenerConstruct {
     if (depositItem != null && depositItem.toItemStack().getType().equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player, serviceContext.getTraderNpcService().getBankerNpc()
-          .getDepositGUI(playerEntry.getPurse()));
+          .getDepositGui(playerEntry.getPurse()));
     } else if (totalBalanceItem != null && totalBalanceItem.toItemStack().getType()
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
@@ -175,12 +175,12 @@ public class InventoryClickNpc implements ListenerConstruct {
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          serviceContext.getTraderNpcService().getBankerNpc().getBalanceGUI());
+          serviceContext.getTraderNpcService().getBankerNpc().getBalanceGui());
     } else if (withdrawItem != null && withdrawItem.toItemStack().getType()
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player, serviceContext.getTraderNpcService().getBankerNpc()
-          .getWithdrawGUI(bankAccount.getValue()));
+          .getWithdrawGui(bankAccount.getValue()));
     } else if (BankService.UPGRADE_MATERIAL.equals(clickedItem.getType())) {
       serviceContext.getBankService().upgradeAccount(clickedItem, player, playerEntry, bankAccount);
     } else if (transactionsItem != null && transactionsItem.toItemStack().getType()
@@ -190,7 +190,7 @@ public class InventoryClickNpc implements ListenerConstruct {
         .equals(clickedItem.getType())) {
       InventoryHelper.closeInventory(player);
       InventoryHelper.openInventory(player,
-          serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGUI());
+          serviceContext.getTraderNpcService().getBankerNpc().getUpgradeGui());
     } else if (customItemClose.toItemStack().isSimilar(clickedItem)) {
       InventoryHelper.closeInventory(player);
     } else {
