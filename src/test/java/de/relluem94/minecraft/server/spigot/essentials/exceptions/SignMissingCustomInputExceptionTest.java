@@ -1,21 +1,25 @@
 package de.relluem94.minecraft.server.spigot.essentials.exceptions;
 
+import static de.relluem94.minecraft.server.spigot.essentials.constants.ExceptionConstants.PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class SignMissingCustomInputExceptionTest {
 
     @Test
     void constructorStoresMessageCorrectly() {
-        String expectedMessage = "Sign is missing required custom input";
-        SignMissingCustomInputException exception = new SignMissingCustomInputException(expectedMessage);
+        SignMissingCustomInputException exception = new SignMissingCustomInputException(PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT);
 
         assertAll(
-                () -> assertEquals(expectedMessage, exception.getMessage()),
+                () -> assertEquals(PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT, exception.getMessage()),
                 () -> assertNull(exception.getCause()),
                 () -> assertInstanceOf(Exception.class, exception)
         );
@@ -46,15 +50,13 @@ class SignMissingCustomInputExceptionTest {
 
     @Test
     void exceptionCanBeThrown() {
-        String expectedMessage = "Missing custom input on sign";
-
         SignMissingCustomInputException thrown = assertThrows(
                 SignMissingCustomInputException.class,
-                () -> { throw new SignMissingCustomInputException(expectedMessage); }
+                () -> { throw new SignMissingCustomInputException(PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT); }
         );
 
         assertAll(
-                () -> assertEquals(expectedMessage, thrown.getMessage()),
+                () -> assertEquals(PLUGIN_EXCEPTION_SIGNHELPER_SIGN_MISSING_CUSTOM_INPUT, thrown.getMessage()),
                 () -> assertInstanceOf(SignMissingCustomInputException.class, thrown)
         );
     }
