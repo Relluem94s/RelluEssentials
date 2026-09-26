@@ -31,8 +31,6 @@ public class BagEntry {
 
   /**
    * Creates a new BagEntry and initializes the slot values array with the default bag size.
-   *
-   * @author rellu
    */
   public BagEntry() {
     slotValues = new int[BAG_SIZE];

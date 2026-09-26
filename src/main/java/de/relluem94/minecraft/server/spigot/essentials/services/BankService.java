@@ -43,6 +43,9 @@ import org.jspecify.annotations.Nullable;
  */
 public class BankService {
 
+  /**
+   * GUI Material to buy Upgrades for the Bank Account.
+   */
   public static final Material UPGRADE_MATERIAL = Material.AMETHYST_SHARD;
 
   private final ServiceContext serviceContext;

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * Represents a bank account entry with its associated metadata and financial information.
  *
  * @author rellu
  */

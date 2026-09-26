@@ -39,9 +39,11 @@ public class BagDao {
   }
 
   /**
-   * Retrieves all available bag types from the database.
+   * Retrieves a specific bag type by its unique identifier.
    *
-   * @return a list of all {@link BagTypeEntry} records
+   * @param bagTypeId the unique identifier of the bag type
+   * @return an {@link Optional} containing the matching {@link BagTypeEntry},
+   *     or empty if none exists
    */
   public Optional<BagTypeEntry> findBagTypeById(int bagTypeId) {
     return Optional.of(
