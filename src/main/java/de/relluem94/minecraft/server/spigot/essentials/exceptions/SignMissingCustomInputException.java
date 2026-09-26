@@ -2,10 +2,9 @@ package de.relluem94.minecraft.server.spigot.essentials.exceptions;
 
 /**
  * Exception thrown when a sign is missing required custom input.
- * <p>
- * This exception is used to indicate that a sign interaction or creation failed because expected
- * custom input was not provided or found.
- * </p>
+ *
+ * <p>This exception is used to indicate that a sign interaction or creation failed because expected
+ * custom input was not provided or found.</p>
  *
  * @author rellu
  */
