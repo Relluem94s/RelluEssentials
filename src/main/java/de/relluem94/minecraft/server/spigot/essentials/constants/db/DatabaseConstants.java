@@ -3,6 +3,7 @@ package de.relluem94.minecraft.server.spigot.essentials.constants.db;
 import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 
 /**
+ * Holds constant values related to the database configuration used by the plugin.
  *
  * @author rellu
  */
