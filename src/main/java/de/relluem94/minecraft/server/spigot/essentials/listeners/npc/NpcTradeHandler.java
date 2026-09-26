@@ -98,7 +98,7 @@ public class NpcTradeHandler {
     }
     UUID profileUuid = skullMeta.getOwnerProfile().getUniqueId();
     return Arrays.stream(CustomHeads.values()).filter(ch -> !ch.equals(CustomHeads.BAG))
-        .anyMatch(ch -> ch.getUUID().equals(profileUuid));
+        .anyMatch(ch -> ch.getUuid().equals(profileUuid));
   }
 
   private void handleCustomHeadTrade(@NonNull ItemStack clickedItem, Inventory clickedInventory,
@@ -147,7 +147,7 @@ public class NpcTradeHandler {
     if (skullMeta.getOwnerProfile() == null) {
       return false;
     }
-    return CustomHeads.BAG.getUUID().equals(skullMeta.getOwnerProfile().getUniqueId());
+    return CustomHeads.BAG.getUuid().equals(skullMeta.getOwnerProfile().getUniqueId());
   }
 
   private void handleBagPurchase(@NonNull ItemStack clickedItem, Player player,

@@ -47,7 +47,7 @@ public class PlayerHeadHelper {
         String skinUrl = extractSkinUrlFromBase64(jsonString);
 
         if (skinUrl != null) {
-          PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
+          PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUuid());
           PlayerTextures textures = profile.getTextures();
           textures.setSkin(URI.create(skinUrl).toURL());
           profile.setTextures(textures);
@@ -104,7 +104,7 @@ public class PlayerHeadHelper {
       String skinUrl = extractSkinUrlFromBase64(jsonString);
 
       if (skinUrl != null) {
-        PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUUID());
+        PlayerProfile profile = Bukkit.createPlayerProfile(ch.getUuid());
         PlayerTextures textures = profile.getTextures();
         textures.setSkin(URI.create(skinUrl).toURL());
         profile.setTextures(textures);

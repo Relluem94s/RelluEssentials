@@ -3,7 +3,10 @@ package de.relluem94.minecraft.server.spigot.essentials.enums;
 import java.util.UUID;
 import lombok.Getter;
 
-@SuppressWarnings({"unused", "SpellCheckingInspection"})
+/**
+ * Holds Custom Heads.
+ */
+@SuppressWarnings({"unused", "SpellCheckingInspection", "CheckStyle"})
 public enum CustomHeads {
 
   BOOKS1("GoodBook1", "2565e12a-e70b-4f64-9398-7d0f108eb53a",
@@ -144,7 +147,7 @@ public enum CustomHeads {
     this.base64 = base64;
   }
 
-  public UUID getUUID() {
+  public UUID getUuid() {
     return UUID.fromString(uuid);
   }
 

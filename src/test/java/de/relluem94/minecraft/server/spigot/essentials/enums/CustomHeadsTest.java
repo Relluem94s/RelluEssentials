@@ -1,15 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.enums;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 class CustomHeadsTest {
 
@@ -35,7 +37,7 @@ class CustomHeadsTest {
     @EnumSource(CustomHeads.class)
     void uuidIsValidUUID(CustomHeads head) {
         assertDoesNotThrow(() -> {
-            UUID uuid = head.getUUID();
+            UUID uuid = head.getUuid();
             assertNotNull(uuid);
         });
     }
@@ -43,7 +45,7 @@ class CustomHeadsTest {
     @ParameterizedTest
     @EnumSource(CustomHeads.class)
     void uuidReturnsSameValueOnMultipleCalls(CustomHeads head) {
-        assertEquals(head.getUUID(), head.getUUID());
+        assertEquals(head.getUuid(), head.getUuid());
     }
 
     @Test
@@ -108,11 +110,11 @@ class CustomHeadsTest {
 
     @Test
     void globeHasCorrectUUID() {
-        assertEquals(UUID.fromString("bd287f02-7b3b-ffd9-c56c-99cb0fafab3b"), CustomHeads.GLOBE.getUUID());
+        assertEquals(UUID.fromString("bd287f02-7b3b-ffd9-c56c-99cb0fafab3b"), CustomHeads.GLOBE.getUuid());
     }
 
     @Test
     void woodenHouseUUIDChangesOnRestart() {
-        assertNotNull(CustomHeads.WOODEN_HOUSE.getUUID());
+        assertNotNull(CustomHeads.WOODEN_HOUSE.getUuid());
     }
 }
