@@ -5,10 +5,9 @@ import org.bukkit.plugin.Plugin;
 /**
  * Defines a contract for components that require an enable lifecycle method.
  *
- * <p>Implementing classes are expected to perform their initialization and registration logic within
- * the {@link #enable(Plugin)} method. This interface is typically used by manager classes that need to be
- * activated during the plugin startup phase.
- * </p>
+ * <p>Implementing classes are expected to perform their initialization and registration logic
+ * within the {@link #enable(Plugin)} method. This interface is typically used by manager classes
+ * that need to be activated during the plugin startup phase.</p>
  *
  * <p>Example usage:</p>
  * <pre>{@code
