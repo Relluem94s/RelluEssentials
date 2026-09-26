@@ -27,9 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class ToolCrafting implements ListenerConstruct {
 
   @Override
-  public void injectContext(ServiceContext context) {
-
-  }
+  public void injectContext(ServiceContext context) {}
 
   private final Material[] netherite = new Material[]{Material.NETHERITE_HOE,
       Material.NETHERITE_AXE, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL,
@@ -90,15 +88,13 @@ public class ToolCrafting implements ListenerConstruct {
   /**
    * Assigns a rarity lore entry to the result of a crafting recipe based on its material tier.
    *
-   * <p>Maps each material tier to its corresponding
-   * {@link Rarity}:
+   * <p>Maps each material tier to its corresponding {@link Rarity}:</p>
    * <ul>
-   *   <li>Netherite → {@link Rarity#EPIC}</li>
-   *   <li>Diamond → {@link Rarity#RARE}</li>
-   *   <li>Iron, Chainmail → {@link Rarity#UNCOMMON}</li>
-   *   <li>Gold, Leather → {@link Rarity#COMMON}</li>
+   *   <li>Netherite {@link Rarity#EPIC}</li>
+   *   <li>Diamond {@link Rarity#RARE}</li>
+   *   <li>Iron, Chainmail {@link Rarity#UNCOMMON}</li>
+   *   <li>Gold, Leather {@link Rarity#COMMON}</li>
    * </ul>
-   * </p>
    *
    * @param e the {@link org.bukkit.event.inventory.PrepareItemCraftEvent} fired when a crafting
    *          table result is prepared
