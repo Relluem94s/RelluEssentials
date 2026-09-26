@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Data Access Object for managing player-related database operations. Handles CRUD operations for
  * players and their partner relationships.
+ *
+ * @author rellu
  */
 @AllArgsConstructor
 public class PlayerDao {

@@ -11,6 +11,8 @@ import java.util.List;
  *
  * <p>Handles all database interactions related to trader NPCs,
  * including loading NPC configurations from the underlying data store.</p>
+ *
+ * @author rellu
  */
 public class TraderNpcDao {
 

@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 
 /**
  * Data Access Object for retrieving location type data from the database.
+ *
+ * @author rellu
  */
 @AllArgsConstructor
 public class LocationTypeDao {

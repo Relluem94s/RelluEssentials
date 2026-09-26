@@ -15,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Data Access Object for managing world groups, their associated worlds,
  * settings, and player inventories within the persistence layer.
+ *
+ * @author rellu
  */
 public class WorldGroupDao {
 

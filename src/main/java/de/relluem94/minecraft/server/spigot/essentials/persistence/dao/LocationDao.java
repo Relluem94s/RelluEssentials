@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * Data Access Object for managing {@link LocationEntry} persistence operations.
  *
  * <p>Provides methods to insert, delete, and query locations from the database,
- * supporting filtering by player, location type, and coordinates.
+ * supporting filtering by player, location type, and coordinates.</p>
  *
  * @author Rellu
  */
