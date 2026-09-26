@@ -116,9 +116,11 @@ public class WorldGroupService {
   public void loadWorldGroupInventoryForPlayer(Player player) {
     PlayerEntry playerEntry = resolvePlayerEntry(player);
     findWorldGroupEntryByWorldName(player.getWorld().getName()).ifPresent(worldGroupEntry -> {
-      WorldGroupInventoryEntry existingEntry = resolveExistingInventoryEntry(playerEntry, worldGroupEntry);
+      WorldGroupInventoryEntry existingEntry =
+          resolveExistingInventoryEntry(playerEntry, worldGroupEntry);
       if (existingEntry == null) {
-        WorldGroupInventoryEntry newEntry = buildNewInventoryEntry(player, playerEntry, worldGroupEntry);
+        WorldGroupInventoryEntry newEntry =
+            buildNewInventoryEntry(player, playerEntry, worldGroupEntry);
         worldGroupRepository.saveInventory(newEntry);
         return;
       }

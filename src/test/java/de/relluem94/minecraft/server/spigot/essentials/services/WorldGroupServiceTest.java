@@ -432,10 +432,8 @@ class WorldGroupServiceTest {
 
     Optional<WorldGroupEntry> result = worldGroupService.findWorldGroupByName("testGroup");
 
-    assertAll(
-        () -> assertTrue(result.isPresent()),
-        () -> assertEquals(worldGroupEntry, result.get())
-    );
+    assertTrue(result.isPresent());
+    assertEquals(worldGroupEntry, result.get());
   }
 
   @Test
@@ -445,10 +443,8 @@ class WorldGroupServiceTest {
 
     Optional<WorldGroupEntry> result = worldGroupService.findWorldGroupByName("testGroup");
 
-    assertAll(
-        () -> assertTrue(result.isPresent()),
-        () -> assertEquals(worldGroupEntry, result.get())
-    );
+    assertTrue(result.isPresent());
+    assertEquals(worldGroupEntry, result.get());
   }
 
   @Test
