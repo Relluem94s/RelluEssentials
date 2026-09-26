@@ -22,7 +22,9 @@ import org.jspecify.annotations.NonNull;
 /**
  * Command implementation for sending title messages to players.
  * Requires the sender to have at least moderator permissions.
- * Usage: /title <player> <title> [subtitle]
+ * Usage: /title {player} {title} [subtitle]
+ *
+ * @author rellu
  */
 @CommandName("title")
 public class Title implements CommandConstruct {
