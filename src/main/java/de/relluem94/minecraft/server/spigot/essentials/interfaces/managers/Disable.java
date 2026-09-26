@@ -6,9 +6,8 @@ import org.bukkit.plugin.Plugin;
  * Defines a contract for components that require a disable lifecycle method.
  *
  * <p>Implementing classes are expected to perform their cleanup and unregistration logic within the
- * {@link #disable(Plugin plugin)} method. This interface is typically used by manager classes that need to be
- * deactivated during the plugin shutdown phase.
- * </p>
+ * {@link #disable(Plugin plugin)} method. This interface is typically used by manager classes that
+ * need to be deactivated during the plugin shutdown phase.</p>
  *
  * <p>Example usage:</p>
  * <pre>{@code
