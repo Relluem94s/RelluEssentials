@@ -59,8 +59,8 @@ public class NpcRepository {
   /**
    * Persists the given {@link Npc}, inserting it if it does not yet exist or updating it otherwise.
    *
-   * <p>After a successful insert, the generated database ID is written back to the
-   * given {@link Npc} via {@link Npc#setDbid(int)}.</p>
+   * <p>After a successful insert, the generated database ID is written back
+   * to the given {@link Npc}.</p>
    *
    * @param npc            the NPC to save
    * @param actorPlayerId  the database ID of the player performing this operation
