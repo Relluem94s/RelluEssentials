@@ -168,7 +168,7 @@ class NpcServiceTest {
         MockedStatic<NpcEquipmentInventoryHelper> equipmentHelper = mockStatic(NpcEquipmentInventoryHelper.class)) {
 
       bukkit.when(() -> Bukkit.createInventory(isNull(), eq(54))).thenReturn(inventory);
-      inventoryHelper.when(() -> InventoryHelper.loadInventoryFromJSON(any(), any())).thenAnswer(_ -> null);
+      inventoryHelper.when(() -> InventoryHelper.loadInventoryFromJson(any(), any())).thenAnswer(_ -> null);
       equipmentHelper.when(() -> NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(any(), any())).thenAnswer(_ -> null);
 
       NpcOperationResult result = npcService.updateNpcProfile(npcId, "NewProfile", 1);
@@ -260,7 +260,7 @@ class NpcServiceTest {
     Npc npc = buildNpc(npcId, null);
 
     try (MockedStatic<InventoryHelper> inventoryHelper = mockStatic(InventoryHelper.class)) {
-      inventoryHelper.when(() -> InventoryHelper.saveInventoryToJSON(inventory)).thenReturn(new JSONObject("{\"items\":[]}"));
+      inventoryHelper.when(() -> InventoryHelper.saveInventoryToJson(inventory)).thenReturn(new JSONObject("{\"items\":[]}"));
 
       npcService.saveNpcInventory(npc, inventory);
 

@@ -79,7 +79,7 @@ public class NpcEquipCommand implements SubCommand {
             NPC_EQUIPMENT_INVENTORY_TITLE_PREFIX + npc.getId());
 
     if (npc.getInventory() != null) {
-      InventoryHelper.loadInventoryFromJSON(equipmentInventory, npc.getInventory());
+      InventoryHelper.loadInventoryFromJson(equipmentInventory, npc.getInventory());
     }
 
     if (npc.getEntityUUID() != null) {

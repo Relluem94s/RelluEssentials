@@ -250,7 +250,7 @@ class WorldGroupServiceTest {
     when(world.getName()).thenReturn("testWorld");
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(null);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJSON(player)).thenReturn(null);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
 
     worldGroupService.loadWorldGroupInventoryForPlayer(player);
@@ -282,7 +282,7 @@ class WorldGroupServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(null);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJSON(player)).thenReturn(null);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
 
     boolean result = worldGroupService.saveWorldGroupInventoryForPlayer(player, false);
 
@@ -306,7 +306,7 @@ class WorldGroupServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(inventoryEntry);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJSON(player)).thenReturn(null);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
 
     boolean result = worldGroupService.saveWorldGroupInventoryForPlayer(player, false);
 
@@ -331,7 +331,7 @@ class WorldGroupServiceTest {
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(inventoryEntry);
     when(player.getInventory()).thenReturn(playerInventory);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJSON(player)).thenReturn(null);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
 
     worldGroupService.saveWorldGroupInventoryForPlayer(player, true);
 
@@ -357,7 +357,7 @@ class WorldGroupServiceTest {
     when(playerService.getPlayerEntry(player)).thenReturn(playerEntry);
     when(serviceContext.getPlayerService()).thenReturn(playerService);
     when(worldGroupRepository.findInventoryByGroupAndPlayer(playerEntry, worldGroupEntry)).thenReturn(inventoryEntry);
-    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJSON(player)).thenReturn(null);
+    inventoryHelperMockedStatic.when(() -> InventoryHelper.saveInventoryToJson(player)).thenReturn(null);
 
     worldGroupService.saveWorldGroupInventoryForPlayer(player, false);
 

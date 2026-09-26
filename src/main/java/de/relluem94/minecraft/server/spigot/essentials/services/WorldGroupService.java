@@ -211,7 +211,7 @@ public class WorldGroupService {
     entry.setCreatedBy(playerEntry.getId());
     entry.setPlayerId(playerEntry.getId());
     entry.setWorldGroupEntry(worldGroupEntry);
-    entry.setInventory(InventoryHelper.saveInventoryToJSON(player));
+    entry.setInventory(InventoryHelper.saveInventoryToJson(player));
     entry.setFoodLevel(player.getFoodLevel());
     entry.setHealth(player.getHealth());
     entry.setTotalExperience(ExperienceHelper.getTotalExperience(player));
@@ -220,7 +220,7 @@ public class WorldGroupService {
 
   private void updateInventoryEntryFromPlayer(WorldGroupInventoryEntry entry, Player player,
       PlayerEntry playerEntry) {
-    entry.setInventory(InventoryHelper.saveInventoryToJSON(player));
+    entry.setInventory(InventoryHelper.saveInventoryToJson(player));
     entry.setFoodLevel(player.getFoodLevel());
     entry.setHealth(player.getHealth());
     entry.setUpdatedBy(playerEntry.getId());

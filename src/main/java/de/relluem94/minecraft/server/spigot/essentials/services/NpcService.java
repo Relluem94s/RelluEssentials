@@ -183,7 +183,7 @@ public class NpcService {
    * @param inventory the inventory containing the equipment
    */
   public void saveNpcInventory(@NonNull Npc npc, Inventory inventory) {
-    npc.setInventory(InventoryHelper.saveInventoryToJSON(inventory));
+    npc.setInventory(InventoryHelper.saveInventoryToJson(inventory));
     npcRepository.save(npc, -1);
   }
 
@@ -216,7 +216,7 @@ public class NpcService {
       return;
     }
     Inventory equipmentInventory = Bukkit.createInventory(null, 54);
-    InventoryHelper.loadInventoryFromJSON(equipmentInventory, npc.getInventory());
+    InventoryHelper.loadInventoryFromJson(equipmentInventory, npc.getInventory());
     NpcEquipmentInventoryHelper.applyInventoryEquipmentToEntity(equipmentInventory,
         npc.getEntityUUID());
   }

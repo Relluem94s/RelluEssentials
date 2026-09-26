@@ -251,7 +251,7 @@ class NpcEquipCommandTest {
     try (var mockedInventoryHelper = org.mockito.Mockito.mockStatic(InventoryHelper.class)) {
       npcEquipCommand.execute(player, new String[]{"npc", "equip", VALID_UUID_STRING});
 
-      mockedInventoryHelper.verify(() -> InventoryHelper.loadInventoryFromJSON(eq(inventoryMock), eq(npc.getInventory())));
+      mockedInventoryHelper.verify(() -> InventoryHelper.loadInventoryFromJson(eq(inventoryMock), eq(npc.getInventory())));
     }
   }
 
