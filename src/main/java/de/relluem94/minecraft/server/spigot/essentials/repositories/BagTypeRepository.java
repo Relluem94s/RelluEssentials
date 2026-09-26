@@ -7,6 +7,8 @@ import java.util.Optional;
 
 /**
  * Repository for persisting and retrieving {@link BagTypeEntry} data via {@link BagDao}.
+ *
+ * @author rellu
  */
 public class BagTypeRepository {
 
