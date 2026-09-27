@@ -19,6 +19,14 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for the /warp command.
+ *
+ * <p>Allows players to teleport to defined warp points within their current world.
+ * Administrators can additionally add and remove warps via sub-commands.</p>
+ *
+ * @author rellu
+ */
 @CommandName("warp")
 public class Warp implements CommandConstruct {
 
@@ -30,8 +38,8 @@ public class Warp implements CommandConstruct {
   }
 
   @Override
-  public List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command,
-      @NotNull String s, @NotNull String[] strings) {
+  public @NonNull List<String> onTabComplete(@NotNull CommandSender commandSender,
+      @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
     if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "user")) {
@@ -61,7 +69,7 @@ public class Warp implements CommandConstruct {
         tabList.addAll(serviceContext.getWarpService().getWarpNamesByWorld(p.getWorld()));
         return tabList;
       default:
-        break;
+        return tabList;
     }
 
     return tabList;
@@ -93,11 +101,9 @@ public class Warp implements CommandConstruct {
     if (args.length == 0) {
       p.sendMessage(
           serviceContext.getTranslationService().getWithPrefix(MessageKey.COMMAND_WARP_LIST_INFO));
-      for (LocationEntry le : serviceContext.getWarpService()
-          .findWarpsByWorld(p.getWorld())) {
-        p.sendMessage(
-            serviceContext.getTranslationService()
-                .getWithPrefix(MessageKey.COMMAND_WARP_LIST, le.getLocationName()));
+      for (LocationEntry le : serviceContext.getWarpService().findWarpsByWorld(p.getWorld())) {
+        p.sendMessage(serviceContext.getTranslationService()
+            .getWithPrefix(MessageKey.COMMAND_WARP_LIST, le.getLocationName()));
       }
       return true;
     } else if (args.length == 1) {
@@ -114,21 +120,19 @@ public class Warp implements CommandConstruct {
         int playerId = serviceContext.getPlayerService().getPlayerEntry(p).getId();
         boolean added = serviceContext.getWarpService().addWarp(args[1], p, playerId);
         if (added) {
-          p.sendMessage(
-              serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.COMMAND_WARP_ADD, args[1]));
+          p.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_WARP_ADD, args[1]));
         } else {
-          p.sendMessage(
-              serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.COMMAND_WARP_ERROR_ALREADY_EXISTS, args[1]));
+          p.sendMessage(serviceContext.getTranslationService()
+              .getWithPrefix(MessageKey.COMMAND_WARP_ERROR_ALREADY_EXISTS, args[1]));
         }
         return true;
       } else if (args[0].equalsIgnoreCase(Commands.REMOVE.getName())) {
         boolean removed = serviceContext.getWarpService().removeWarp(args[1]);
-        if(removed){
+        if (removed) {
           p.sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.COMMAND_WARP_REMOVE, args[1]));
-        } else{
+        } else {
           p.sendMessage(serviceContext.getTranslationService()
               .getWithPrefix(MessageKey.COMMAND_WARP_ERROR_WARP_NOT_DELETED_NOT_FOUND, args[1]));
         }
@@ -170,11 +174,13 @@ public class Warp implements CommandConstruct {
     serviceContext.getTeleportService().teleportWarp(p, le.getLocation());
   }
 
+  /**
+   * Sub-commands available for the /warp command.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 
-    ADD("add"),
-    REMOVE("remove");
+    ADD("add"), REMOVE("remove");
 
     private final String name;
     private final String[] subCommands;
