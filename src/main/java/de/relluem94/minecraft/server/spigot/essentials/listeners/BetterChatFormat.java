@@ -23,8 +23,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 @ListenerName("BetterChatFormat")
 public class BetterChatFormat implements ListenerConstruct {
 
+  /** Channel prefix used to route a message to the VIP-only channel. */
   public static final String VIP_CHANNEL = "#v ";
+
+  /** Channel prefix used to route a message to the moderator-only channel. */
   public static final String MOD_CHANNEL = "#m ";
+
+  /** Channel prefix used to route a message to the admin-only channel. */
   public static final String ADMIN_CHANNEL = "#a ";
   private ServiceContext serviceContext;
 
