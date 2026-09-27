@@ -38,6 +38,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TranslationServi
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WorldGroupService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WorldMenuService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
 import lombok.Getter;
@@ -52,8 +53,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class ServiceContext {
-
-  /* Services */
   private ServerService serverService;
   private TranslationService translationService;
   private GroupService groupService;
@@ -93,4 +92,5 @@ public class ServiceContext {
   private InventoryService inventoryService;
   private EnchantmentService enchantmentService;
   private CoinItemService coinItemService;
+  private WorldMenuService worldMenuService;
 }
