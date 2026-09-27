@@ -29,9 +29,11 @@ jobs:
             category/java/codestyle.xml,
             category/java/multithreading.xml
           analyzeModifiedFilesOnly: false
+          createGitHubAnnotations: false
+          reportFile: pmd.sarif
 
       - name: Upload SARIF results
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: pmd.sarif
 
@@ -42,7 +44,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install SQLFluff
+        run: pip install sqlfluff
+
       - name: Run SQLFluff
-        uses: sqlfluff/sqlfluff-github-actions@v1
-        with:
-          sqlfluffArgs: lint --dialect mysql
+        run: sqlfluff lint --dialect mysql .
