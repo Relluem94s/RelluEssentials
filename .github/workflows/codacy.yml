@@ -54,11 +54,12 @@ jobs:
           # This will hand over control about PR rejection to the GitHub side
           max-allowed-issues: 2147483647
           tool: pmd
+          project-path: .
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
-          category: codacy
+          category: codacy-pmd
         continue-on-error: true
