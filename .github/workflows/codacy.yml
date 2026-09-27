@@ -45,7 +45,6 @@ jobs:
         with:
           # Check https://github.com/codacy/codacy-analysis-cli#project-token to get your project token from your Codacy repository
           # You can also omit the token and run the tools that support default configurations
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           verbose: true
           output: results.sarif
           format: sarif
@@ -54,6 +53,7 @@ jobs:
           # Force 0 exit code to allow SARIF file generation
           # This will hand over control about PR rejection to the GitHub side
           max-allowed-issues: 2147483647
+          tool: spotbugs
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
