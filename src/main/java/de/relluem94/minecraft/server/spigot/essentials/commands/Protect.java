@@ -23,6 +23,14 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for the /protect command.
+ *
+ * <p>Allows players to manage protections by adding or removing them,
+ * configuring protection flags and assigning or revoking rights to other players.</p>
+ *
+ * @author rellu
+ */
 @CommandName("protect")
 public class Protect implements CommandConstruct {
 
@@ -111,31 +119,26 @@ public class Protect implements CommandConstruct {
       if (args[0].equalsIgnoreCase(Commands.FLAG.getName())) {
         if (args[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[0])) {
           try {
-            if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
-              p.sendMessage(serviceContext.getTranslationService()
-                  .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_ADD));
-              pe.setPlayerState(PlayerState.PROTECTION_FLAG_ADD);
-              pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
-            }
+            ProtectionFlags flag = ProtectionFlags.valueOf(args[2].toUpperCase());
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_ADD));
+            pe.setPlayerState(PlayerState.PROTECTION_FLAG_ADD);
+            pe.setPlayerStateParameter(flag.name());
           } catch (IllegalArgumentException ex) {
-            p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
             p.sendMessage(getFlags());
           }
         } else if (args[1].equalsIgnoreCase(Commands.FLAG.getSubCommands()[1])) {
           try {
-            if (ProtectionFlags.valueOf(args[2].toUpperCase()) != null) {
-              p.sendMessage(
-                  serviceContext.getTranslationService()
-                      .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_REMOVE));
-              pe.setPlayerState(PlayerState.PROTECTION_FLAG_REMOVE);
-              pe.setPlayerStateParameter(ProtectionFlags.valueOf(args[2].toUpperCase()).name());
-            }
+            ProtectionFlags flag = ProtectionFlags.valueOf(args[2].toUpperCase());
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_REMOVE));
+            pe.setPlayerState(PlayerState.PROTECTION_FLAG_REMOVE);
+            pe.setPlayerStateParameter(flag.name());
           } catch (IllegalArgumentException ex) {
-            p.sendMessage(
-                serviceContext.getTranslationService()
-                    .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
+            p.sendMessage(serviceContext.getTranslationService()
+                .getWithPrefix(MessageKey.COMMAND_PROTECT_FLAG_NOT_FOUND));
             p.sendMessage(getFlags());
           }
         } else {
