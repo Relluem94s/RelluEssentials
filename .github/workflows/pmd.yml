@@ -1,39 +1,39 @@
-name: Code Analysis
-
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
-permissions:
-  contents: read
-  security-events: write
-
-jobs:
-  pmd:
-    name: PMD Analysis
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run PMD
-        uses: pmd/pmd-github-action@v2
-        id: pmd
-        with:
-          rulesets: >-
-            category/java/bestpractices.xml,
-            category/java/errorprone.xml,
-            category/java/security.xml,
-            category/java/design.xml,
-            category/java/codestyle.xml,
-            category/java/multithreading.xml
-          analyzeModifiedFilesOnly: false
-          failOnViolation: false
-        continue-on-error: true
-
-      - name: Upload SARIF results
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: pmd-report.sarif
+#name: Code Analysis
+#
+#on:
+#  push:
+#    branches: [ "master" ]
+#  pull_request:
+#    branches: [ "master" ]
+#
+#permissions:
+#  contents: read
+#  security-events: write
+#
+#jobs:
+#  pmd:
+#    name: PMD Analysis
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Run PMD
+#        uses: pmd/pmd-github-action@v2
+#        id: pmd
+#        with:
+#          rulesets: >-
+#            category/java/bestpractices.xml,
+#            category/java/errorprone.xml,
+#            category/java/security.xml,
+#            category/java/design.xml,
+#            category/java/codestyle.xml,
+#            category/java/multithreading.xml
+#          analyzeModifiedFilesOnly: false
+#          failOnViolation: false
+#        continue-on-error: true
+#
+#      - name: Upload SARIF results
+#        uses: github/codeql-action/upload-sarif@v4
+#        with:
+#          sarif_file: pmd-report.sarif

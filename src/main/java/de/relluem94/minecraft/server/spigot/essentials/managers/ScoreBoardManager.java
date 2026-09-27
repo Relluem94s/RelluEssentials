@@ -38,7 +38,7 @@ import org.jspecify.annotations.NonNull;
 public class ScoreBoardManager implements Enable {
 
   private static final Map<UUID, Scoreboard> playerBoards = new HashMap<>();
-  private static final Set<UUID> hiddenBoards = new HashSet<>(); // NEU
+  private static final Set<UUID> hiddenBoards = new HashSet<>();
   private static ScoreboardManager sm;
   private static TranslationService translationService;
   private ServiceContext serviceContext;
