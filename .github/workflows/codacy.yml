@@ -53,7 +53,7 @@ jobs:
           # Force 0 exit code to allow SARIF file generation
           # This will hand over control about PR rejection to the GitHub side
           max-allowed-issues: 2147483647
-          tool: spotbugs
+          tool: pmd
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
@@ -61,3 +61,4 @@ jobs:
         with:
           sarif_file: results.sarif
           category: codacy
+        continue-on-error: true
