@@ -60,6 +60,6 @@ public class InventoryHelperTest {
 
   public static class DummyNotItemHelper {
 
-    public String dummyField = "test";
+    public final String dummyField = "test";
   }
 }

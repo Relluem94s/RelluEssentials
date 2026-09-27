@@ -10,6 +10,12 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.jspecify.annotations.NonNull;
 
+/**
+ * Sub-command implementation that handles updating existing NPC entries.
+ * Supports updating the NPC's profile name or its position in the world.
+ *
+ * @author rellu
+ */
 public class NpcUpdateCommand implements SubCommand {
 
   private static final int ARGS_SUBCOMMAND_INDEX = 0;
@@ -27,6 +33,12 @@ public class NpcUpdateCommand implements SubCommand {
 
   private final ServiceContext serviceContext;
 
+  /**
+   * Creates a new NpcUpdateCommand with the given service context.
+   *
+   * @param context the service context providing access to group, translation,
+   *                player and NPC services
+   */
   public NpcUpdateCommand(ServiceContext context) {
     this.serviceContext = context;
   }
@@ -77,8 +89,8 @@ public class NpcUpdateCommand implements SubCommand {
         .getPlayerEntry(player.getUniqueId());
     NpcOperationResult result = serviceContext.getNpcService()
         .updateNpcProfile(npcId, newProfile, playerEntry.getId());
-    sendOperationFeedback(player, result, MessageKey.COMMAND_NPC_UPDATED,
-        MessageKey.COMMAND_NPC_OPERATION_FAILED);
+    sendOperationFeedback(player, result
+    );
   }
 
   private void handlePositionUpdate(Player player, UUID npcId, String[] args) {
@@ -109,19 +121,18 @@ public class NpcUpdateCommand implements SubCommand {
         .getPlayerEntry(player.getUniqueId());
     NpcOperationResult result = serviceContext.getNpcService()
         .updateNpcPosition(npcId, x, y, z, yaw, pitch, playerEntry.getId());
-    sendOperationFeedback(player, result, MessageKey.COMMAND_NPC_UPDATED,
-        MessageKey.COMMAND_NPC_OPERATION_FAILED);
+    sendOperationFeedback(player, result);
   }
 
-  private void sendOperationFeedback(Player player, NpcOperationResult result,
-      MessageKey successKey, MessageKey failureKey) {
+  private void sendOperationFeedback(Player player, NpcOperationResult result) {
     if (!result.isSuccessful()) {
       player.sendMessage(
-          serviceContext.getTranslationService().getWithPrefix(failureKey) + " "
-              + result.getErrorMessage());
+          serviceContext.getTranslationService().getWithPrefix(
+              MessageKey.COMMAND_NPC_OPERATION_FAILED) + " " + result.getErrorMessage());
       return;
     }
-    player.sendMessage(serviceContext.getTranslationService().getWithPrefix(successKey));
+    player.sendMessage(serviceContext.getTranslationService().getWithPrefix(
+        MessageKey.COMMAND_NPC_UPDATED));
   }
 
   @Override

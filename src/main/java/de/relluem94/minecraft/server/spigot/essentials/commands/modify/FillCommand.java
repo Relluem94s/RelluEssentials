@@ -24,14 +24,14 @@ import org.jspecify.annotations.NonNull;
  * SubCommand implementation that fills empty blocks in a given radius around the player
  * with a specified material, using a breadth-first search traversal.
  *
- * <p>Supports two modes:
+ * <p>Supports two modes:</p>
  * <ul>
  *   <li><b>Horizontal fill:</b> Spreads only in the four horizontal directions.</li>
  *   <li><b>Recursive fill:</b> Spreads in all directions including downward.</li>
  * </ul>
  *
  * <p>Block placement is distributed across multiple ticks to avoid server lag.
- * All modified blocks are recorded in the undo history.
+ * All modified blocks are recorded in the undo history.</p>
  */
 public class FillCommand implements SubCommand {
 
@@ -69,12 +69,12 @@ public class FillCommand implements SubCommand {
    * Executes the fill operation for the given player using the provided arguments.
    *
    * <p>Expects {@code args[1]} to be a valid {@link Material} name and
-   * {@code args[2]} to be a positive integer representing the fill radius.
+   * {@code args[2]} to be a positive integer representing the fill radius.</p>
    *
    * <p>Performs a breadth-first search from the player's current position,
    * collecting all adjacent empty blocks within the specified radius up to
    * the configured maximum iterations. Collected blocks are scheduled for
-   * placement and saved to the player's undo history.
+   * placement and saved to the player's undo history.</p>
    *
    * @param player the player executing the command
    * @param args   the command arguments where {@code args[1]} is the material
@@ -179,7 +179,7 @@ public class FillCommand implements SubCommand {
    *
    * <p>Requires exactly three arguments. The first argument must match either
    * {@link Modify.Commands#FILL} or {@link Modify.Commands#FILLR}
-   * depending on whether this instance is configured as recursive.
+   * depending on whether this instance is configured as recursive.</p>
    *
    * @param args the command arguments to evaluate
    * @return {@code true} if the arguments match this subcommand, {@code false} otherwise
