@@ -18,10 +18,17 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
+/**
+ * Command implementation for managing world positions used in region-based operations.
+ *
+ * <p>Allows authorized players to set, remove, shift, expand, decrease, and clear
+ * two positions that define a region in the world.
+ *
+ * @author rellu
+ */
 @CommandName("position")
 public class Position implements CommandConstruct {
 
@@ -164,7 +171,6 @@ public class Position implements CommandConstruct {
       return true;
     }
 
-    Vector direction = getPlayerDirection(p);
     if (cmd.equals(Commands.SHIFT.getName())) {
       DoubleStore<Location, Location> positions = serviceContext.getPositionService()
           .getPositions(p);
@@ -174,7 +180,7 @@ public class Position implements CommandConstruct {
         return true;
       }
 
-      serviceContext.getPositionService().shiftPositions(p, direction, amount);
+      serviceContext.getPositionService().shiftPositions(p, getPlayerDirection(p), amount);
       p.sendMessage(serviceContext.getTranslationService()
           .getWithPrefix(MessageKey.COMMAND_POSITION_SHIFT, amount));
       return true;
@@ -190,8 +196,8 @@ public class Position implements CommandConstruct {
         return true;
       }
 
-      serviceContext.getPositionService().expandOrDecreasePositions(p, direction, amount,
-          cmd.equals(Commands.EXPAND.getName()));
+      serviceContext.getPositionService().expandOrDecreasePositions(p, getPlayerDirection(p),
+          amount, cmd.equals(Commands.EXPAND.getName()));
 
       MessageKey actionKey =
           cmd.equals(Commands.EXPAND.getName()) ? MessageKey.COMMAND_POSITION_EXPAND
@@ -206,7 +212,7 @@ public class Position implements CommandConstruct {
   }
 
   @Override
-  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
+  public @NonNull List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     List<String> tabList = new ArrayList<>();
 
@@ -231,6 +237,9 @@ public class Position implements CommandConstruct {
     return tabList;
   }
 
+  /**
+   * Defines the available sub-commands and their respective sub-options for the position command.
+   */
   @Getter
   public enum Commands implements CommandsEnum {
 
