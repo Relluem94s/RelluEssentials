@@ -47,6 +47,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFactory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -113,6 +114,13 @@ class BagServiceTest {
         bagTypeRegistry,
         bagTypeRepository
     );
+  }
+
+  @AfterEach
+  void tearDown() throws ReflectiveOperationException {
+    Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, null);
   }
 
   @Test

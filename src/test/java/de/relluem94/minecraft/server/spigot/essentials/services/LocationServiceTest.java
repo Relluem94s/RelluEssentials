@@ -24,6 +24,7 @@ import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,6 +74,13 @@ class LocationServiceTest {
     lenient().when(world.getName()).thenReturn("world");
 
     locationService = new LocationService(locationRepository, locationTypeService);
+  }
+
+  @AfterEach
+  void tearDown() throws ReflectiveOperationException {
+    Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, null);
   }
 
   @Test

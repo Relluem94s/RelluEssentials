@@ -4,13 +4,13 @@ import java.lang.reflect.Field;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.inventory.ItemFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 public class InventoryHelperTest {
-
 
   @BeforeEach
   protected void setUp() throws NoSuchFieldException, IllegalAccessException {
@@ -22,6 +22,13 @@ public class InventoryHelperTest {
     Field serverField = Bukkit.class.getDeclaredField("server");
     serverField.setAccessible(true);
     serverField.set(null, server);
+  }
+
+  @AfterEach
+  void tearDown() throws ReflectiveOperationException {
+    Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, null);
   }
 
   @Test

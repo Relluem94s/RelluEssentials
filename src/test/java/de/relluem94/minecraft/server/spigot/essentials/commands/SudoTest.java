@@ -91,7 +91,7 @@ class SudoTest {
 
   @AfterEach
   void tearDown() {
-    SudoManager.sudoers.remove(PLAYER_UUID);
+    SudoManager.sudoers.clear();
   }
 
   @Test

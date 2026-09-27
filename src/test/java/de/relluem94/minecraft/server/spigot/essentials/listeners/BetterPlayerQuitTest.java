@@ -100,6 +100,7 @@ class BetterPlayerQuitTest {
   @AfterEach
   void tearDown() {
     scoreBoardManagerMock.close();
+    SudoManager.sudoers.clear();
   }
 
   @Test

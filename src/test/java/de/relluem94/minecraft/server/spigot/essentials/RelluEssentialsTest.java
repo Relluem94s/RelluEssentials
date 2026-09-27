@@ -85,6 +85,10 @@ class RelluEssentialsTest {
   void tearDown() throws Exception {
     plugin = null;
     resetStaticInstance();
+
+    Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, null);
   }
 
   private void resetStaticInstance() throws Exception {

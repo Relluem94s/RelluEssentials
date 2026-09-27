@@ -29,6 +29,7 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -88,6 +89,13 @@ class ProtectionServiceTest {
     Map<Location, ProtectionEntry> entries = new HashMap<>();
 
     protectionService = new ProtectionService(locks, entries, protectionRepository, serviceContext);
+  }
+
+  @AfterEach
+  void tearDown() throws ReflectiveOperationException {
+    Field serverField = Bukkit.class.getDeclaredField("server");
+    serverField.setAccessible(true);
+    serverField.set(null, null);
   }
 
   @Test
