@@ -43,7 +43,7 @@ class ProtectionMapperTest {
     }
 
     @Test
-    void mapProtection_withNullFlagsAndNullRights_returnsEmptyJsonObjects() throws SQLException {
+    void mapProtectionWithNullFlagsAndNullRightsReturnsEmptyJsonObjects() throws SQLException {
         ResultSet rs = mock(ResultSet.class);
         when(rs.getInt(FIELD_ID)).thenReturn(1);
         when(rs.getString(FIELD_CREATED)).thenReturn("2024-01-01");
@@ -65,7 +65,7 @@ class ProtectionMapperTest {
     }
 
     @Test
-    void mapProtection_withNonNullFlags_returnsParsedFlagsJson() throws SQLException {
+    void mapProtectionWithNonNullFlagsReturnsParsedFlagsJson() throws SQLException {
         ResultSet rs = mock(ResultSet.class);
         when(rs.getInt(FIELD_ID)).thenReturn(1);
         when(rs.getString(FIELD_CREATED)).thenReturn("2024-01-01");
@@ -86,7 +86,7 @@ class ProtectionMapperTest {
     }
 
     @Test
-    void mapProtection_withNonNullRights_returnsParsedRightsJson() throws SQLException {
+    void mapProtectionWithNonNullRightsReturnsParsedRightsJson() throws SQLException {
         ResultSet rs = mock(ResultSet.class);
         when(rs.getInt(FIELD_ID)).thenReturn(1);
         when(rs.getString(FIELD_CREATED)).thenReturn("2024-01-01");
@@ -107,7 +107,7 @@ class ProtectionMapperTest {
     }
 
     @Test
-    void mapProtection_withNonNullFlagsAndNonNullRights_returnsBothParsed() throws SQLException {
+    void mapProtectionWithNonNullFlagsAndNonNullRightsReturnsBothParsed() throws SQLException {
         ResultSet rs = mock(ResultSet.class);
         when(rs.getInt(FIELD_ID)).thenReturn(1);
         when(rs.getString(FIELD_CREATED)).thenReturn("2024-01-01");
@@ -129,7 +129,7 @@ class ProtectionMapperTest {
     }
 
     @Test
-    void mapProtectionLock_withValidMaterial_returnsMappedEntry() throws SQLException {
+    void mapProtectionLockWithValidMaterialReturnsMappedEntry() throws SQLException {
         ResultSet rs = mock(ResultSet.class);
         when(rs.getInt(FIELD_ID)).thenReturn(1);
         when(rs.getString(FIELD_CREATED)).thenReturn("2024-01-01");
@@ -148,7 +148,7 @@ class ProtectionMapperTest {
     }
 
     @Test
-    void mapProtectionLock_withInvalidMaterial_returnsNullMaterial() throws SQLException {
+    void mapProtectionLockWithInvalidMaterialReturnsNullMaterial() throws SQLException {
         ResultSet rs = mock(ResultSet.class);
         when(rs.getInt(FIELD_ID)).thenReturn(2);
         when(rs.getString(FIELD_CREATED)).thenReturn("2024-01-01");
@@ -166,7 +166,7 @@ class ProtectionMapperTest {
     }
 
     @Test
-    void mapProtectionLock_withNullMaterial_returnsNullMaterial() throws SQLException {
+    void mapProtectionLockWithNullMaterialReturnsNullMaterial() throws SQLException {
         ResultSet rs = mock(ResultSet.class);
         when(rs.getInt(FIELD_ID)).thenReturn(3);
         when(rs.getString(FIELD_CREATED)).thenReturn("2024-01-01");

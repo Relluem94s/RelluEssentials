@@ -32,45 +32,45 @@ class BagTypeRegistryTest {
   }
 
   @Test
-  void register_ShouldAddEntry_WhenNotPresent() {
+  void registerShouldAddEntry_WhenNotPresent() {
     registry.register(entry1);
     assertTrue(registry.contains(entry1));
   }
 
   @Test
-  void register_ShouldThrowException_WhenAlreadyRegistered() {
+  void registerShouldThrowExceptionWhenAlreadyRegistered() {
     registry.register(entry1);
     assertThrows(IllegalArgumentException.class, () -> registry.register(entry1));
   }
 
   @Test
-  void registerAll_ShouldAddMultipleEntries() {
+  void registerAllShouldAddMultipleEntries() {
     registry.registerAll(List.of(entry1, entry2));
     assertTrue(registry.contains(entry1));
     assertTrue(registry.contains(entry2));
   }
 
   @Test
-  void unregister_ShouldRemoveEntry_WhenPresent() {
+  void unregisterShouldRemoveEntryWhenPresent() {
     registry.register(entry1);
     registry.unregister(entry1);
     assertFalse(registry.contains(entry1));
   }
 
   @Test
-  void unregister_ShouldThrowException_WhenNotPresent() {
+  void unregisterShouldThrowExceptionWhenNotPresent() {
     assertThrows(IllegalArgumentException.class, () -> registry.unregister(entry1));
   }
 
   @Test
-  void contains_ShouldReturnCorrectBoolean() {
+  void containsShouldReturnCorrectBoolean() {
     assertFalse(registry.contains(entry1));
     registry.register(entry1);
     assertTrue(registry.contains(entry1));
   }
 
   @Test
-  void getAll_ShouldReturnUnmodifiableCopy() {
+  void getAllShouldReturnUnmodifiableCopy() {
     registry.register(entry1);
     List<BagTypeEntry> all = registry.getAll();
     assertEquals(1, all.size());
@@ -78,7 +78,7 @@ class BagTypeRegistryTest {
   }
 
   @Test
-  void findById_ShouldReturnEntry_WhenIdExists() {
+  void findByIdShouldReturnEntryWhenIdExists() {
     registry.register(entry1);
     Optional<BagTypeEntry> found = registry.findById(1);
     assertTrue(found.isPresent());
@@ -86,14 +86,14 @@ class BagTypeRegistryTest {
   }
 
   @Test
-  void findById_ShouldReturnEmpty_WhenIdDoesNotExist() {
+  void findByIdShouldReturnEmptyWhenIdDoesNotExist() {
     registry.register(entry1);
     Optional<BagTypeEntry> found = registry.findById(99);
     assertTrue(found.isEmpty());
   }
 
   @Test
-  void findByName_ShouldReturnEntry_WhenNameExists() {
+  void findByNameShouldReturnEntryWhenNameExists() {
     registry.register(entry1);
     Optional<BagTypeEntry> found = registry.findByName("leather_bag");
     assertTrue(found.isPresent());
@@ -101,14 +101,14 @@ class BagTypeRegistryTest {
   }
 
   @Test
-  void findByName_ShouldReturnEmpty_WhenNameDoesNotExist() {
+  void findByNameShouldReturnEmptyWhenNameDoesNotExist() {
     registry.register(entry1);
     Optional<BagTypeEntry> found = registry.findByName("non_existent");
     assertTrue(found.isEmpty());
   }
 
   @Test
-  void findByPartialName_ShouldCoverAllBranches() {
+  void findByPartialNameShouldCoverAllBranches() {
     registry.register(entry1);
 
     assertTrue(registry.findByPartialName("The Leather Bag is great").isPresent());

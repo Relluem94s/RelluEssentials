@@ -98,7 +98,7 @@ class ModifyHelperTest {
     // -------------------------------------------------------------------------
 
     @Test
-    void rotateBlockData_withYaw0_returnsCloneWithoutRotation() {
+    void rotateBlockDatWwithYaw0ReturnsCloneWithoutRotation() {
         BlockData original = mock(BlockData.class);
         BlockData cloned = mock(BlockData.class);
         when(original.clone()).thenReturn(cloned);
@@ -110,7 +110,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void rotateBlockData_withYaw90_appliesClockwise90Rotation() {
+    void rotateBlockDataWithYaw90AppliesClockwise90Rotation() {
         BlockData original = mock(BlockData.class);
         BlockData cloned = mock(BlockData.class);
         when(original.clone()).thenReturn(cloned);
@@ -122,7 +122,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void rotateBlockData_withYaw180_appliesClockwise180Rotation() {
+    void rotateBlockDataWithYaw180AppliesClockwise180Rotation() {
         BlockData original = mock(BlockData.class);
         BlockData cloned = mock(BlockData.class);
         when(original.clone()).thenReturn(cloned);
@@ -134,7 +134,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void rotateBlockData_withYaw270_appliesCounterclockwise90Rotation() {
+    void rotateBlockDataWithYaw270AppliesCounterclockwise90Rotation() {
         BlockData original = mock(BlockData.class);
         BlockData cloned = mock(BlockData.class);
         when(original.clone()).thenReturn(cloned);
@@ -146,7 +146,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void rotateBlockData_withYaw360_treatedAsYaw0_returnsCloneWithoutRotation() {
+    void rotateBlockDataWithYaw360TreatedAsYaw0ReturnsCloneWithoutRotation() {
         BlockData original = mock(BlockData.class);
         BlockData cloned = mock(BlockData.class);
         when(original.clone()).thenReturn(cloned);
@@ -201,7 +201,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void getBlock_withYaw0_returnsBlockAtDirectOffset() {
+    void getBlockWithYaw0ReturnsBlockAtDirectOffset() {
         World world = mock(World.class);
         Block block = mock(Block.class);
         Location blockLocation = new Location(world, 15, 12, 13);
@@ -223,7 +223,7 @@ class ModifyHelperTest {
     // -------------------------------------------------------------------------
 
     @Test
-    void getRelativeCopySelection_subtractsOriginFromBothPositions() {
+    void getRelativeCopySelectionSubtractsOriginFromBothPositions() {
         World world = mock(World.class);
 
         Location pos1 = new Location(world, 10, 5, 20);
@@ -245,7 +245,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void getRelativeCopySelection_appliesOriginYawAndPitchToBothPositions() {
+    void getRelativeCopySelectionAppliesOriginYawAndPitchToBothPositions() {
         World world = mock(World.class);
 
         Location pos1 = new Location(world, 10, 5, 20, 0f, 0f);
@@ -265,7 +265,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void getRelativeCopySelection_withOriginAtZero_returnsUnchangedPositions() {
+    void getRelativeCopySelectionWithOriginAtZeroReturnsUnchangedPositions() {
         World world = mock(World.class);
 
         Location pos1 = new Location(world, 3, 1, 7);
@@ -296,7 +296,7 @@ class ModifyHelperTest {
         "180",
         "270",
     })
-    void getModifyClipboardEntry_storesCorrectMaterialAndBlockData(float playerYaw) {
+    void getModifyClipboardEntryStoresCorrectMaterialAndBlockData(float playerYaw) {
         World world = mock(World.class);
 
         Block block = mock(Block.class);
@@ -328,7 +328,7 @@ class ModifyHelperTest {
         "180, -3, 2, -3",
         "270, -3, 2, 3",
     })
-    void getModifyClipboardEntry_transformsRelativePositionBasedOnPlayerYaw(
+    void getModifyClipboardEntryTransformsRelativePositionBasedOnPlayerYaw(
         float playerYaw, int expectedLocalX, int expectedLocalY, int expectedLocalZ) {
         World world = mock(World.class);
 
@@ -359,7 +359,7 @@ class ModifyHelperTest {
     // -------------------------------------------------------------------------
 
     @Test
-    void undo_setsBlockTypeFromHistoryEntry() {
+    void undoSetsBlockTypeFromHistoryEntry() {
         World world = mock(World.class);
         Block block = mock(Block.class);
         BlockData blockData = mock(BlockData.class);
@@ -376,7 +376,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void undo_setsBlockDataFromHistoryEntry() {
+    void undoSetsBlockDataFromHistoryEntry() {
         World world = mock(World.class);
         Block block = mock(Block.class);
         BlockData blockData = mock(BlockData.class);
@@ -393,7 +393,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void undo_withDifferentMaterials_setsCorrectType() {
+    void undoWithDifferentMaterialsSetsCorrectType() {
         World world = mock(World.class);
         Block block = mock(Block.class);
         BlockData blockData = mock(BlockData.class);
@@ -415,7 +415,7 @@ class ModifyHelperTest {
     // -------------------------------------------------------------------------
 
     @Test
-    void rotate_returnsRotatedEntriesWithCorrectCoordinates() {
+    void rotateReturnsRotatedEntriesWithCorrectCoordinates() {
         World world = mock(World.class);
 
         BlockData blockData = mock(BlockData.class);
@@ -440,7 +440,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void rotate_preservesYBounds() {
+    void rotatePreservesYBounds() {
         World world = mock(World.class);
         BlockData blockData = mock(BlockData.class);
 
@@ -459,7 +459,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void rotate_rotatesCoordinatesCorrectly() {
+    void rotateRotatesCoordinatesCorrectly() {
         World world = mock(World.class);
         BlockData blockData = mock(BlockData.class);
 
@@ -481,7 +481,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void rotate_preservesMaterialAndBlockData() {
+    void rotatePreservesMaterialAndBlockData() {
         World world = mock(World.class);
         BlockData blockData = mock(BlockData.class);
 
@@ -501,7 +501,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void rotate_withEmptyEntries_returnsEmptyList() {
+    void rotateWithEmptyEntriesReturnsEmptyList() {
         World world = mock(World.class);
 
         Location selectionPos1 = new Location(world, 0, 0, 0);
@@ -514,7 +514,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void constructor_throwsIllegalStateException() {
+    void constructorThrowsIllegalStateException() {
         assertThrows(IllegalStateException.class, () -> {
             var constructor = ModifyHelper.class.getDeclaredConstructor();
             constructor.setAccessible(true);
@@ -531,7 +531,7 @@ class ModifyHelperTest {
     // -------------------------------------------------------------------------
 
     @Test
-    void forEachBlock_callsActionForEveryBlockInSelection() {
+    void forEachBlockCallsActionForEveryBlockInSelection() {
         World world = mock(World.class);
         Block block = mock(Block.class);
         when(world.getBlockAt(any(Location.class))).thenReturn(block);
@@ -548,7 +548,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void forEachBlock_withSingleBlockSelection_callsActionOnce() {
+    void forEachBlockWithSingleBlockSelectionCallsActionOnce() {
         World world = mock(World.class);
         Block block = mock(Block.class);
         when(world.getBlockAt(any(Location.class))).thenReturn(block);
@@ -564,7 +564,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void forEachBlock_iteratesAllXYZCombinationsWithinBounds() {
+    void forEachBlockIteratesAllXYZCombinationsWithinBounds() {
         World world = mock(World.class);
         when(world.getBlockAt(any(Location.class))).thenAnswer(invocation -> {
             Location loc = invocation.getArgument(0);
@@ -587,7 +587,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void forEachBlock_passesCorrectBlocksFromWorld() {
+    void forEachBlockPassesCorrectBlocksFromWorld() {
         World world = mock(World.class);
         Block expectedBlock = mock(Block.class);
         when(world.getBlockAt(any(Location.class))).thenReturn(expectedBlock);

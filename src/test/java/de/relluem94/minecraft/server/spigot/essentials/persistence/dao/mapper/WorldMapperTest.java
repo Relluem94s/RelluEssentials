@@ -49,7 +49,7 @@ class WorldMapperTest {
     }
 
     @Test
-    void mapWorld_shouldMapAllFieldsCorrectly() throws SQLException {
+    void mapWorldShouldMapAllFieldsCorrectly() throws SQLException {
         stubAuditFields();
         when(resultSet.getString(FIELD_NAME)).thenReturn("world");
 
@@ -66,7 +66,7 @@ class WorldMapperTest {
     }
 
     @Test
-    void mapWorld_shouldThrowSQLException_whenResultSetFails() throws SQLException {
+    void mapWorldShouldThrowSQLExceptionWhenResultSetFails() throws SQLException {
         when(resultSet.getInt(FIELD_ID)).thenThrow(new SQLException("db error"));
 
         SQLException exception = assertThrows(SQLException.class, () -> WorldMapper.mapWorld(resultSet));
@@ -74,7 +74,7 @@ class WorldMapperTest {
     }
 
     @Test
-    void mapWorldGroup_shouldMapAllFieldsAndFilterMatchingSettings() throws SQLException {
+    void mapWorldGroupShouldMapAllFieldsAndFilterMatchingSettings() throws SQLException {
         stubAuditFields();
         when(resultSet.getString(FIELD_NAME)).thenReturn("overworld-group");
 
@@ -98,7 +98,7 @@ class WorldMapperTest {
     }
 
     @Test
-    void mapWorldGroup_shouldReturnEmptySettings_whenNoSettingsMatch() throws SQLException {
+    void mapWorldGroupShouldReturnEmptySettingsWhenNoSettingsMatch() throws SQLException {
         stubAuditFields();
         when(resultSet.getString(FIELD_NAME)).thenReturn("nether-group");
 
@@ -111,9 +111,9 @@ class WorldMapperTest {
     }
 
     @Test
-    void mapWorldGroupInventory_shouldMapAllFieldsCorrectly() throws SQLException {
+    void mapWorldGroupInventoryShouldMapAllFieldsCorrectly() throws SQLException {
         stubAuditFields();
-        String inventoryJson = "{\"slot_0\":\"diamond_sword\"}";
+        String inventoryJson = "{\"slot_0\":\"diamondSword\"}";
 
         when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
         when(resultSet.getInt(FIELD_HEALTH)).thenReturn(20);
@@ -134,11 +134,11 @@ class WorldMapperTest {
         assertEquals(20, result.getHealth());
         assertEquals(500, result.getTotalExperience());
         assertEquals(18, result.getFoodLevel());
-        assertEquals("diamond_sword", result.getInventory().getString("slot_0"));
+        assertEquals("diamondSword", result.getInventory().getString("slot_0"));
     }
 
     @Test
-    void mapWorldGroupInventory_shouldThrowException_whenInventoryJsonIsInvalid() throws SQLException {
+    void mapWorldGroupInventoryShouldThrowExceptionWhenInventoryJsonIsInvalid() throws SQLException {
         stubAuditFields();
         when(resultSet.getInt(FIELD_PLAYER_FK)).thenReturn(42);
         when(resultSet.getInt(FIELD_HEALTH)).thenReturn(20);
@@ -150,7 +150,7 @@ class WorldMapperTest {
     }
 
     @Test
-    void constructor_shouldThrowIllegalStateException() throws Exception {
+    void constructorShouldThrowIllegalStateException() throws Exception {
         var constructor = WorldMapper.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         Exception wrapper = assertThrows(Exception.class, constructor::newInstance);

@@ -100,7 +100,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void applyPatch_whenVersionIsMinusOne_appliesAllPatchesInOrder() {
+  void applyPatchWhenVersionIsMinusOneAppliesAllPatchesInOrder() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(-1);
@@ -120,7 +120,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void applyPatch_whenVersionIsZero_appliesAllPatchesInOrder() {
+  void applyPatchWhenVersionIsZeroAppliesAllPatchesInOrder() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(0);
@@ -141,7 +141,7 @@ class DatabaseMigratorTest {
 
 
   @Test
-  void applyPatch_whenVersionIs1_appliesPatchesFrom2To10() {
+  void applyPatchWhenVersionIs1AppliesPatchesFrom2To10() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(1);
@@ -161,7 +161,7 @@ class DatabaseMigratorTest {
 
 
   @Test
-  void applyPatch_whenVersionIs2_appliesPatchesFrom3To10() {
+  void applyPatchWhenVersionIs2AppliesPatchesFrom3To10() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(2);
@@ -179,7 +179,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void applyPatch_whenVersionIs3_appliesPatchesFrom4To10() {
+  void applyPatchWhenVersionIs3AppliesPatchesFrom4To10() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(3);
@@ -196,7 +196,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void applyPatch_whenVersionIs4_appliesPatchesFrom5To10() {
+  void applyPatchWhenVersionIs4AppliesPatchesFrom5To10() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(4);
@@ -212,7 +212,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void applyPatch_whenVersionIs5_appliesPatchesFrom6To10() {
+  void applyPatchWhenVersionIs5AppliesPatchesFrom6To10() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(5);
@@ -227,7 +227,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void applyPatch_whenVersionIs6_appliesPatchesFrom7To10() {
+  void applyPatchWhenVersionIs6AppliesPatchesFrom7To10() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(6);
@@ -241,7 +241,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void applyPatch_whenVersionIs7_appliesPatchesFrom8To10() {
+  void applyPatchWhenVersionIs7AppliesPatchesFrom8To10() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(7);
@@ -254,7 +254,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void applyPatch_whenVersionIs8_appliesPatchesFrom9To10() {
+  void applyPatchWhenVersionIs8AppliesPatchesFrom9To10() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(8);
@@ -266,7 +266,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void applyPatch_whenVersionIs9_appliesOnlyPatch10() {
+  void applyPatchWhenVersionIs9AppliesOnlyPatch10() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(9);
@@ -279,7 +279,7 @@ class DatabaseMigratorTest {
 
   @ParameterizedTest
   @ValueSource(ints = {10, 11, 99, Integer.MAX_VALUE})
-  void applyPatch_whenVersionIsCurrentOrHigher_appliesNoPatchesAndDoesNotCallFinishPatching(
+  void applyPatchWhenVersionIsCurrentOrHigherAppliesNoPatchesAndDoesNotCallFinishPatching(
       int upToDateVersion) {
     databaseMigrator.applyPatch(upToDateVersion);
 
@@ -288,7 +288,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void patch1_whenLegacyConfigExists_insertsPlayersAndTheirHomes() {
+  void patch1WhenLegacyConfigExistsInsertsPlayersAndTheirHomes() {
     UUID playerUuid = UUID.randomUUID();
     PlayerEntry legacyPlayer = buildPlayerEntryWithUuid(playerUuid);
     legacyPlayer.setAfk(true);
@@ -314,7 +314,7 @@ class DatabaseMigratorTest {
 
 
   @Test
-  void applyPatch_whenVersionIs1_doesNotApplyPatch1Scripts() {
+  void applyPatchWhenVersionIs1DoesNotApplyPatch1Scripts() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(1);
@@ -323,7 +323,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void patch1_whenLegacyConfigDoesNotExist_skipsPlayerMigration() {
+  void patch1WhenLegacyConfigDoesNotExistSkipsPlayerMigration() {
     when(configHelperMock.legacyConfigExists("players")).thenReturn(false);
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
@@ -335,7 +335,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void finishPatching_whenPlayersExist_putsEachPlayerIntoPlayerAPI() {
+  void finishPatchingWhenPlayersExistPutsEachPlayerIntoPlayerAPI() {
     PlayerEntry playerEntryOne = buildPlayerEntryWithUuid(UUID.randomUUID());
     PlayerEntry playerEntryTwo = buildPlayerEntryWithUuid(UUID.randomUUID());
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(
@@ -349,7 +349,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void finishPatching_whenNoPlayersExist_completesWithoutError() {
+  void finishPatchingWhenNoPlayersExistCompletesWithoutError() {
     when(persistenceContext.getPlayerDao().findAll()).thenReturn(Collections.emptyList());
 
     databaseMigrator.applyPatch(9);
@@ -510,14 +510,14 @@ class DatabaseMigratorTest {
     inOrder.verify(queryExecutor)
         .executeScript("patches/v10/updateWorldGroupSettings_moveValues.sql");
     inOrder.verify(queryExecutor)
-        .executeScript("patches/v10/updateWorldGroupSettings_removeColumnAndRename.sql");
+        .executeScript("patches/v10/updateWorldGroupSettingsRemoveColumnAndRename.sql");
     inOrder.verify(queryExecutor).executeScript("patches/v10/insertNewDBVersion.sql");
     inOrder.verify(queryExecutor).executeScript("patches/v10/updateOldPluginInformation.sql");
   }
 
 
   @Test
-  void loadPluginInformation_whenQueryReturnsEntry_returnsEntry() {
+  void loadPluginInformationWhenQueryReturnsEntryReturnsEntry() {
     PluginInformationEntry expectedEntry = new PluginInformationEntry();
     expectedEntry.setDbVersion(10);
 
@@ -532,7 +532,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void loadPluginInformation_whenQueryReturnsNull_returnsFallbackWithDefaultDbVersion() {
+  void loadPluginInformationWhenQueryReturnsNullReturnsFallbackWithDefaultDbVersion() {
     when(queryExecutor.querySingle(eq("getPluginInformation.sql"), any(StatementConfigurer.class),
         any(RowMapper.class)))
         .thenReturn(null);
@@ -544,7 +544,7 @@ class DatabaseMigratorTest {
   }
 
   @Test
-  void loadPluginInformation_whenQueryThrowsException_returnsFallbackWithDbVersionMinusOne() {
+  void loadPluginInformationWhenQueryThrowsExceptionReturnsFallbackWithDbVersionMinusOne() {
     when(queryExecutor.querySingle(eq("getPluginInformation.sql"), any(StatementConfigurer.class),
         any(RowMapper.class)))
         .thenThrow(new RuntimeException("DB connection failed"));
@@ -557,7 +557,7 @@ class DatabaseMigratorTest {
 
 
   @Test
-  void loadPluginInformation_whenQueryReturnsEntry_usesMiscMapperToMapPluginInformation() throws Exception {
+  void loadPluginInformationWhenQueryReturnsEntryUsesMiscMapperToMapPluginInformation() throws Exception {
     QueryExecutor realQueryExecutor = new QueryExecutor(dataSource, sqlResourceLoader);
     DatabaseMigrator migratorWithRealExecutor = new DatabaseMigrator(persistenceContext, realQueryExecutor, playerService, _ -> {}, configHelperMock);
 

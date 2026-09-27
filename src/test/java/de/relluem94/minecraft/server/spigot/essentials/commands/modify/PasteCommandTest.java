@@ -79,7 +79,7 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withNullClipboardStore_sendsNoClipboardMessage() {
+  void executeWithNullClipboardStoreSendsNoClipboardMessage() {
     pasteCommand.execute(player, new String[]{"paste"});
 
     verify(player).sendMessage(anyString());
@@ -87,7 +87,7 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withClipboardStoreHavingNullEntries_sendsNoClipboardMessage() {
+  void executeWithClipboardStoreHavingNullEntriesSendsNoClipboardMessage() {
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock();
     when(clipboardStore.getSecondValue()).thenReturn(null);
     clipboardService.setClipboard(player, clipboardStore);
@@ -99,7 +99,7 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withEmptyClipboard_sendsNoClipboardMessage() {
+  void executeWithEmptyClipboardSendsNoClipboardMessage() {
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = mock();
     when(clipboardStore.getSecondValue()).thenReturn(Collections.emptyList());
     clipboardService.setClipboard(player, clipboardStore);
@@ -111,7 +111,7 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withValidClipboard_addsHistoryAndSendsStartedMessage() {
+  void executeWithValidClipboardAddsHistoryAndSendsStartedMessage() {
     ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
@@ -133,7 +133,7 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withMultipleBlocksExceedingBatchSize_incrementsDelayAfterBatchFills() {
+  void executeWithMultipleBlocksExceedingBatchSizeIncrementsDelayAfterBatchFills() {
     ModifyClipboardEntry firstEntry = buildClipboardEntry(Material.STONE, 0);
     ModifyClipboardEntry secondEntry = buildClipboardEntry(Material.DIRT, 1);
     ModifyClipboardEntry thirdEntry = buildClipboardEntry(Material.GRASS_BLOCK, 2);
@@ -162,7 +162,7 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withValidClipboard_savesOriginalBlockStateInHistory() {
+  void executeWithValidClipboardSavesOriginalBlockStateInHistory() {
     ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
@@ -187,7 +187,7 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withValidClipboard_schedulesOneTaskPerBlock() {
+  void executeWithValidClipboardSchedulesOneTaskPerBlock() {
     ModifyClipboardEntry entry = buildClipboardEntry(Material.STONE, 0);
     DoubleStore<Selection, List<ModifyClipboardEntry>> clipboardStore = buildClipboardStore(
         List.of(entry));
@@ -208,7 +208,7 @@ class PasteCommandTest {
   }
 
   @Test
-  void execute_withMultipleBlocksExceedingBatchSize_schedulesOneTaskPerBlock() {
+  void executeWithMultipleBlocksExceedingBatchSizeSchedulesOneTaskPerBlock() {
     ModifyClipboardEntry firstEntry = buildClipboardEntry(Material.STONE, 0);
     ModifyClipboardEntry secondEntry = buildClipboardEntry(Material.DIRT, 1);
     ModifyClipboardEntry thirdEntry = buildClipboardEntry(Material.GRASS_BLOCK, 2);
@@ -236,22 +236,22 @@ class PasteCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert pasteCommand.matches(new String[]{"paste"});
   }
 
   @Test
-  void matches_withWrongSubCommand_returnsFalse() {
+  void matchesWithWrongSubCommandReturnsFalse() {
     assert !pasteCommand.matches(new String[]{"set"});
   }
 
   @Test
-  void matches_withTooManyArgs_returnsFalse() {
+  void matchesWithTooManyArgsReturnsFalse() {
     assert !pasteCommand.matches(new String[]{"paste", "extra"});
   }
 
   @Test
-  void matches_withNoArgs_returnsFalse() {
+  void matchesWithNoArgsReturnsFalse() {
     assert !pasteCommand.matches(new String[]{});
   }
 

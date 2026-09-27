@@ -78,7 +78,7 @@ class CylinderCommandTest {
   }
 
   @Test
-  void execute_withInvalidMaterial_sendsInvalidMaterialMessage() {
+  void executeWithInvalidMaterialSendsInvalidMaterialMessage() {
     cylinderCommand.execute(player, new String[]{"cylinder", "NOT_A_REAL_MATERIAL_XYZ"});
 
     verify(player).sendMessage(anyString());
@@ -86,7 +86,7 @@ class CylinderCommandTest {
   }
 
   @Test
-  void execute_withNoSelection_abortsEarly() {
+  void executeWithNoSelectionAbortsEarly() {
     when(selectionService.resolve(player)).thenReturn(null);
 
     cylinderCommand.execute(player, new String[]{"cylinder", "STONE"});
@@ -96,7 +96,7 @@ class CylinderCommandTest {
 
   @SuppressWarnings("DataFlowIssue")
   @Test
-  void execute_withValidMaterialAndSelection_processesBlocksInsideCylinder() {
+  void executeWithValidMaterialAndSelectionProcessesBlocksInsideCylinder() {
     Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -124,7 +124,7 @@ class CylinderCommandTest {
   }
 
   @Test
-  void execute_skipsBlocksOutsideCylinderEllipse() {
+  void executeSkipsBlocksOutsideCylinderEllipse() {
     Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -148,7 +148,7 @@ class CylinderCommandTest {
   }
 
   @Test
-  void execute_skipsBlocksInsideInnerEllipseHollowCenter() {
+  void executeSkipsBlocksInsideInnerEllipseHollowCenter() {
     Selection selection = buildSelection(10, 10);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -172,7 +172,7 @@ class CylinderCommandTest {
   }
 
   @Test
-  void execute_withRadiusXEqualToOne_skipsInnerEllipseCheck() {
+  void executeWithRadiusXEqualToOneSkipsInnerEllipseCheck() {
     Selection selection = buildSelection(2, 10);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -196,7 +196,7 @@ class CylinderCommandTest {
   }
 
   @Test
-  void execute_withRadiusZEqualToOne_skipsInnerEllipseCheck() {
+  void executeWithRadiusZEqualToOneSkipsInnerEllipseCheck() {
     Selection selection = buildSelection(10, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -220,22 +220,22 @@ class CylinderCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert cylinderCommand.matches(new String[]{"cylinder", "STONE"});
   }
 
   @Test
-  void matches_withWrongSubCommand_returnsFalse() {
+  void matchesWithWrongSubCommandReturnsFalse() {
     assert !cylinderCommand.matches(new String[]{"set", "STONE"});
   }
 
   @Test
-  void matches_withTooFewArgs_returnsFalse() {
+  void matchesWithTooFewArgsReturnsFalse() {
     assert !cylinderCommand.matches(new String[]{"cylinder"});
   }
 
   @Test
-  void matches_withTooManyArgs_returnsFalse() {
+  void matchesWithTooManyArgsReturnsFalse() {
     assert !cylinderCommand.matches(new String[]{"cylinder", "STONE", "extra"});
   }
 

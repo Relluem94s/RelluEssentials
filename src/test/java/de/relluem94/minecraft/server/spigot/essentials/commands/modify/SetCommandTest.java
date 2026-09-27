@@ -74,7 +74,7 @@ class SetCommandTest {
   }
 
   @Test
-  void execute_withInvalidMaterial_sendsWrongMaterialMessage() {
+  void executeWithInvalidMaterialSendsWrongMaterialMessage() {
     String[] args = {"set", "NOT_A_REAL_MATERIAL_XYZ"};
 
     setCommand.execute(player, args);
@@ -84,7 +84,7 @@ class SetCommandTest {
   }
 
   @Test
-  void execute_withNoSelection_abortsEarly() {
+  void executeWithNoSelectionAbortsEarly() {
     when(selectionService.resolve(player)).thenReturn(null);
     String[] args = {"set", "STONE"};
 
@@ -95,7 +95,7 @@ class SetCommandTest {
 
   @SuppressWarnings("DataFlowIssue")
   @Test
-  void execute_withValidMaterialAndSelection_processesBlocks() {
+  void executeWithValidMaterialAndSelectionProcessesBlocks() {
     Selection selection = buildSelection(1, 1, 1);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -127,7 +127,7 @@ class SetCommandTest {
   }
 
   @Test
-  void execute_skipsBlocksAlreadyMatchingTargetMaterial() {
+  void executeSkipsBlocksAlreadyMatchingTargetMaterial() {
     Selection selection = buildSelection(0, 0, 0);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -151,17 +151,17 @@ class SetCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert setCommand.matches(new String[]{"set", "STONE"});
   }
 
   @Test
-  void matches_withWrongSubCommand_returnsFalse() {
+  void matchesWithWrongSubCommandReturnsFalse() {
     assert !setCommand.matches(new String[]{"wall", "STONE"});
   }
 
   @Test
-  void matches_withTooFewArgs_returnsFalse() {
+  void matchesWithTooFewArgsReturnsFalse() {
     assert !setCommand.matches(new String[]{"set"});
   }
 

@@ -85,7 +85,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void execute_withInvalidFromMaterial_sendsWrongMaterialMessage() {
+  void executeWithInvalidFromMaterialSendsWrongMaterialMessage() {
     replaceCommand.execute(player, new String[]{"replace", "INVALID_MATERIAL", "STONE"});
 
     verify(player).sendMessage(anyString());
@@ -93,7 +93,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void execute_withInvalidToMaterial_sendsWrongMaterialMessage() {
+  void executeWithInvalidToMaterialSendsWrongMaterialMessage() {
     replaceCommand.execute(player, new String[]{"replace", "STONE", "INVALID_MATERIAL"});
 
     verify(player).sendMessage(anyString());
@@ -101,7 +101,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void execute_withBothMaterialsInvalid_sendsWrongMaterialMessage() {
+  void executeWithBothMaterialsInvalidSendsWrongMaterialMessage() {
     replaceCommand.execute(player, new String[]{"replace", "INVALID_FROM", "INVALID_TO"});
 
     verify(player).sendMessage(anyString());
@@ -109,7 +109,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void execute_withNullSelection_doesNotAddHistory() {
+  void executeWithNullSelectionDoesNotAddHistory() {
     when(selectionService.resolve(player)).thenReturn(null);
 
     replaceCommand.execute(player, new String[]{"replace", "DIRT", "STONE"});
@@ -119,7 +119,7 @@ class ReplaceCommandTest {
 
   @SuppressWarnings("DataFlowIssue")
   @Test
-  void execute_withValidMaterialsAndSelection_addsHistoryAndSendsStartedMessage() {
+  void executeWithValidMaterialsAndSelectionAddsHistoryAndSendsStartedMessage() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -142,7 +142,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void execute_withBlockAlreadyBeingToMaterial_skipsBlock() {
+  void executeWithBlockAlreadyBeingToMaterialSkipsBlock() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -165,7 +165,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void execute_withBlockNotMatchingFromMaterial_skipsBlock() {
+  void executeWithBlockNotMatchingFromMaterialSkipsBlock() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -188,7 +188,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void execute_withMultipleBlocks_savesOriginalBlockStateInHistory() {
+  void executeWithMultipleBlocksSavesOriginalBlockStateInHistory() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -219,7 +219,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void execute_withMixedBlocks_onlyReplacesMatchingFromMaterialBlocks() {
+  void executeWithMixedBlocksOnlyReplacesMatchingFromMaterialBlocks() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -246,7 +246,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void execute_whenBlockDataTypeIsShared_callsApplyMaterial() {
+  void executeWhenBlockDataTypeIsSharedCallsApplyMaterial() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -278,7 +278,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void shareBlockDataType_returnsTrueForSameBlockDataTypeClasses() {
+  void shareBlockDataTypeReturnsTrueForSameBlockDataTypeClasses() {
     ReplaceCommand command = new ReplaceCommand(serviceContext, 1) {
       @Override
       protected boolean shareBlockDataType(Material fromMaterial, Material toMaterial) {
@@ -294,7 +294,7 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void shareBlockDataType_returnsFalseForDifferentBlockDataTypeClasses() {
+  void shareBlockDataTypeReturnsFalseForDifferentBlockDataTypeClasses() {
     ReplaceCommand command = new ReplaceCommand(serviceContext, 1) {
       @Override
       protected boolean shareBlockDataType(Material fromMaterial, Material toMaterial) {
@@ -313,27 +313,27 @@ class ReplaceCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert replaceCommand.matches(new String[]{"replace", "DIRT", "STONE"});
   }
 
   @Test
-  void matches_withWrongSubCommand_returnsFalse() {
+  void matchesWithWrongSubCommandReturnsFalse() {
     assert !replaceCommand.matches(new String[]{"set", "DIRT", "STONE"});
   }
 
   @Test
-  void matches_withTooFewArgs_returnsFalse() {
+  void matchesWithTooFewArgsReturnsFalse() {
     assert !replaceCommand.matches(new String[]{"replace", "DIRT"});
   }
 
   @Test
-  void matches_withTooManyArgs_returnsFalse() {
+  void matchesWithTooManyArgsReturnsFalse() {
     assert !replaceCommand.matches(new String[]{"replace", "DIRT", "STONE", "extra"});
   }
 
   @Test
-  void matches_withNoArgs_returnsFalse() {
+  void matchesWithNoArgsReturnsFalse() {
     assert !replaceCommand.matches(new String[]{});
   }
 

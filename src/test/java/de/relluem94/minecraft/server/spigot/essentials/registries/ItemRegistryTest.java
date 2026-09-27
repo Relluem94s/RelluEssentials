@@ -53,7 +53,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void register_ShouldThrowException_WhenKeyAlreadyExists() {
+  void registerShouldThrowExceptionWhenKeyAlreadyExists() {
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     assertThrows(IllegalArgumentException.class,
@@ -61,7 +61,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void find_ShouldReturnEmpty_WhenKeyDoesNotExist() {
+  void findShouldReturnEmptyWhenKeyDoesNotExist() {
     RelluEssentialsNamespacedKey unknownKey = mock(RelluEssentialsNamespacedKey.class);
     when(unknownKey.toString()).thenReturn("unknown");
 
@@ -81,7 +81,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void getAll_ShouldReturnAllRegisteredItems() {
+  void getAllShouldReturnAllRegisteredItems() {
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     assertEquals(1, itemRegistry.getAll().size());
@@ -89,7 +89,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void getAllByType_ShouldFilterItemsCorrectly() {
+  void getAllByTypeShouldFilterItemsCorrectly() {
     CustomItem typeAItem = mock(CustomItem.class);
     CustomItem typeBItem = mock(CustomItem.class);
     RelluEssentialsNamespacedKey keyA = mock(RelluEssentialsNamespacedKey.class);
@@ -110,7 +110,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void findByItemStack_ShouldReturnItem_WhenMatchFound() {
+  void findByItemStackShouldReturnItemWhenMatchFound() {
     ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
     ItemStack itemStackFromCustomItem = mock(org.bukkit.inventory.ItemStack.class);
 
@@ -126,7 +126,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void findByItemStack_ShouldReturnEmpty_WhenNoMatchFound() {
+  void findByItemStackShouldReturnEmptyWhenNoMatchFound() {
     org.bukkit.inventory.ItemStack mockItemStack = mock(org.bukkit.inventory.ItemStack.class);
     org.bukkit.inventory.ItemStack itemStackFromCustomItem = mock(
         org.bukkit.inventory.ItemStack.class);

@@ -72,7 +72,7 @@ class PlantCommandTest {
   }
 
   @Test
-  void execute_withInvalidMaterialName_sendsWrongMaterialMessage() {
+  void executeWithInvalidMaterialNameSendsWrongMaterialMessage() {
     plantCommand.execute(player, new String[]{"plant", "INVALID_MATERIAL_XYZ"});
 
     verify(player).sendMessage(anyString());
@@ -80,7 +80,7 @@ class PlantCommandTest {
   }
 
   @Test
-  void execute_withNonPlantMaterial_sendsWrongMaterialMessage() {
+  void executeWithNonPlantMaterialSendsWrongMaterialMessage() {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class)) {
 
@@ -94,7 +94,7 @@ class PlantCommandTest {
   }
 
   @Test
-  void execute_withValidPlantMaterialAndNullSelection_doesNotAddHistory() {
+  void executeWithValidPlantMaterialAndNullSelectionDoesNotAddHistory() {
     try (MockedStatic<de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper> modifyHelper =
         mockStatic(de.relluem94.minecraft.server.spigot.essentials.helpers.ModifyHelper.class);
         MockedConstruction<BlockService> ignored = mockConstruction(BlockService.class)) {
@@ -113,7 +113,7 @@ class PlantCommandTest {
 
   @SuppressWarnings("DataFlowIssue")
   @Test
-  void execute_withValidPlantMaterialAndValidSelection_addsHistoryAndSendsStartedMessage() {
+  void executeWithValidPlantMaterialAndValidSelectionAddsHistoryAndSendsStartedMessage() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -138,7 +138,7 @@ class PlantCommandTest {
   }
 
   @Test
-  void execute_withBlockBelowNotSolid_skipsBlock() {
+  void executeWithBlockBelowNotSolidSkipsBlock() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -165,7 +165,7 @@ class PlantCommandTest {
   }
 
   @Test
-  void execute_withBlockNotEmpty_skipsBlock() {
+  void executeWithBlockNotEmptySkipsBlock() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -192,7 +192,7 @@ class PlantCommandTest {
   }
 
   @Test
-  void execute_withBlockAlreadyHasTargetMaterial_skipsBlock() {
+  void executeWithBlockAlreadyHasTargetMaterialSkipsBlock() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -219,7 +219,7 @@ class PlantCommandTest {
   }
 
   @Test
-  void execute_withValidClipboard_savesOriginalBlockStateInHistory() {
+  void executeWithValidClipboardSavesOriginalBlockStateInHistory() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -247,7 +247,7 @@ class PlantCommandTest {
   }
 
   @Test
-  void execute_withMultipleBlocksExceedingBatchSize_incrementsDelayAfterBatchFills() {
+  void executeWithMultipleBlocksExceedingBatchSizeIncrementsDelayAfterBatchFills() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -279,7 +279,7 @@ class PlantCommandTest {
   }
 
   @Test
-  void execute_withValidSelection_callsApplyBlocksOnBlockService() {
+  void executeWithValidSelectionCallsApplyBlocksOnBlockService() {
     Selection selection = mock(Selection.class);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -298,32 +298,32 @@ class PlantCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert plantCommand.matches(new String[]{"plant", "DANDELION"});
   }
 
   @Test
-  void matches_withWrongSubCommand_returnsFalse() {
+  void matchesWithWrongSubCommandReturnsFalse() {
     assert !plantCommand.matches(new String[]{"set", "DANDELION"});
   }
 
   @Test
-  void matches_withTooManyArgs_returnsFalse() {
+  void matchesWithTooManyArgsReturnsFalse() {
     assert !plantCommand.matches(new String[]{"plant", "DANDELION", "extra"});
   }
 
   @Test
-  void matches_withTooFewArgs_returnsFalse() {
+  void matchesWithTooFewArgsReturnsFalse() {
     assert !plantCommand.matches(new String[]{"plant"});
   }
 
   @Test
-  void matches_withNoArgs_returnsFalse() {
+  void matchesWithNoArgsReturnsFalse() {
     assert !plantCommand.matches(new String[]{});
   }
 
   @Test
-  void matches_withCaseInsensitiveSubCommand_returnsTrue() {
+  void matchesWithCaseInsensitiveSubCommandReturnsTrue() {
     assert plantCommand.matches(new String[]{"PLANT", "DANDELION"});
   }
 

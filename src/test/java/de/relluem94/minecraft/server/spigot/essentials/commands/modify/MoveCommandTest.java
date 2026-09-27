@@ -68,7 +68,7 @@ class MoveCommandTest {
   }
 
   @Test
-  void execute_withNonIntegerOffset_sendsInvalidCommandMessage() {
+  void executeWithNonIntegerOffsetsendsInvalidCommandMessage() {
     moveCommand.execute(player, new String[]{"move", "notANumber"});
 
     verify(player).sendMessage(anyString());
@@ -76,7 +76,7 @@ class MoveCommandTest {
   }
 
   @Test
-  void execute_withNoSelection_abortsEarly() {
+  void executeWithNoSelectionAbortsEarly() {
     when(selectionService.resolve(player)).thenReturn(null);
 
     moveCommand.execute(player, new String[]{"move", "3"});
@@ -86,7 +86,7 @@ class MoveCommandTest {
 
   @SuppressWarnings("DataFlowIssue")
   @Test
-  void execute_withValidOffsetAndSelection_movesBlocksAndSavesHistory() {
+  void executeWithValidOffsetAndSelectionMovesBlocksAndSavesHistory() {
     Selection selection = buildSelection(2, 2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -122,7 +122,7 @@ class MoveCommandTest {
 
   @SuppressWarnings("DataFlowIssue")
   @Test
-  void execute_withMultipleBlocksExceedingBlocksPerTick_savesHistoryForAllBlocks() {
+  void executeWithMultipleBlocksExceedingBlocksPerTicksavesHistoryForAllBlocks() {
     Selection selection = buildSelection(4, 4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -165,7 +165,7 @@ class MoveCommandTest {
   }
 
   @Test
-  void execute_withValidOffsetAndSelection_schedulesOneTaskPerBlock() {
+  void executeWithValidOffsetAndSelectionschedulesOneTaskPerBlock() {
     Selection selection = buildSelection(2, 2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -197,7 +197,7 @@ class MoveCommandTest {
   }
 
   @Test
-  void execute_withMultipleBlocksExceedingBlocksPerTick_schedulesOneTaskPerBlock() {
+  void executeWithMultipleBlocksExceedingBlocksPerTickschedulesOneTaskPerBlock() {
     Selection selection = buildSelection(4, 4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -239,22 +239,22 @@ class MoveCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert moveCommand.matches(new String[]{"move", "3"});
   }
 
   @Test
-  void matches_withWrongSubCommand_returnsFalse() {
+  void matchesWithWrongSubCommandReturnsFalse() {
     assert !moveCommand.matches(new String[]{"set", "3"});
   }
 
   @Test
-  void matches_withTooFewArgs_returnsFalse() {
+  void matchesWithTooFewArgsReturnsFalse() {
     assert !moveCommand.matches(new String[]{"move"});
   }
 
   @Test
-  void matches_withTooManyArgs_returnsFalse() {
+  void matchesWithTooManyArgsReturnsFalse() {
     assert !moveCommand.matches(new String[]{"move", "3", "extra"});
   }
 

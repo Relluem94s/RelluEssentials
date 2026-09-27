@@ -34,6 +34,5 @@ jobs:
 
       - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v4
-        continue-on-error: true
         with:
           sarif_file: pmd-report.sarif
