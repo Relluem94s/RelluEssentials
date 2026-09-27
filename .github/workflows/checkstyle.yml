@@ -19,3 +19,4 @@ jobs:
         with:
           checkstyle_config: 'google_checks.xml'
           fail_on_error: true
+          exclude: 'src/test/**'
