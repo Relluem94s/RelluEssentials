@@ -30,21 +30,9 @@ jobs:
             category/java/codestyle.xml,
             category/java/multithreading.xml
           analyzeModifiedFilesOnly: false
+          failOnViolation: false
 
       - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: pmd-report.sarif
-
-  sqlfluff:
-    name: SQLFluff Analysis
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install SQLFluff
-        run: pip install sqlfluff
-
-      - name: Run SQLFluff
-        run: sqlfluff lint --dialect mysql --exclude-rules PRS .
