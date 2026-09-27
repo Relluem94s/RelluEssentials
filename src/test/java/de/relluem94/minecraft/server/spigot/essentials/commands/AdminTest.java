@@ -726,4 +726,198 @@ class AdminTest {
     assertNotNull(result);
     assertTrue(result.isEmpty());
   }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenFiveArgsAndNpcUnknownSubCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"npc", "unknown", "some-id", "profile", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenSixArgsAndNpcUnknownSubCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"npc", "unknown", "some-id", "profile", "value", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenSixArgsAndNpcDialogueDeleteAction() {
+    UUID npcId = UUID.randomUUID();
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"npc", "dialogue", "delete", npcId.toString(), "1", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenSevenArgsAndNonNpcCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"ping", "arg1", "arg2", "arg3", "arg4", "arg5", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenEightArgsAndNonNpcCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"ping", "arg1", "arg2", "arg3", "arg4", "arg5", "arg6", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenNineArgsAndNonNpcCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"ping", "arg1", "arg2", "arg3", "arg4", "arg5", "arg6", "arg7", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenSevenArgsAndNpcButNotCreateOrUpdatePosition() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"npc", "dialogue", "add", "some-id", "1", "text", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenSixArgsAndNpcDialogueUnknownAction() {
+    UUID npcId = UUID.randomUUID();
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"npc", "dialogue", "unknown", npcId.toString(), "1", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenFiveArgsAndNpcUpdateUnknownUpdateType() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"npc", "update", "some-id", "unknown", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenEightArgsAndNpcDialogue() {
+    UUID npcId = UUID.randomUUID();
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"npc", "dialogue", "add", npcId.toString(), "1", "text", "extra", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenFiveArgsAndNonNpcCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"ping", "arg1", "arg2", "arg3", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenSixArgsAndNonNpcCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"ping", "arg1", "arg2", "arg3", "arg4", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenNineArgsAndNpcButNotUpdateSubCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"npc", "create", "profileName", "position", "10", "64", "20", "0", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenThreeArgsAndNonNpcCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"ping", "somePlayer", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenFourArgsAndNonNpcCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"ping", "arg1", "arg2", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onTabCompleteReturnsEmptyWhenFourArgsAndNpcButUnknownSubCommand() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    List<String> result = admin.onTabComplete(player, command, "admin",
+        new String[]{"npc", "unknown", "some-id", "partial"});
+
+    assertNotNull(result);
+    assertTrue(result.isEmpty());
+  }
+
+  @Test
+  void onCommandExecutesSubCommandWhenValidSubCommandProvided() {
+    when(groupService.isSenderAuthorized(player, "mod")).thenReturn(true);
+
+    boolean result = admin.onCommand(player, command, "admin", new String[]{"ping"});
+
+    assertTrue(result);
+  }
+
+  @Test
+  void resolvePlayerCoordinateReturnsPlaceholderForUnknownAxis() {
+    String result = admin.resolvePlayerCoordinate(player, "unknown");
+    assertEquals("<unknown>", result);
+  }
 }

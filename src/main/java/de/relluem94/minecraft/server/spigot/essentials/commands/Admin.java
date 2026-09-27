@@ -253,7 +253,7 @@ public class Admin implements CommandConstruct {
     }
   }
 
-  private @NonNull String resolvePlayerCoordinate(Player player, String axis) {
+  @NonNull String resolvePlayerCoordinate(Player player, String axis) {
     return switch (axis) {
       case "x" -> String.valueOf((int) player.getLocation().getX());
       case "y" -> String.valueOf((int) player.getLocation().getY());
