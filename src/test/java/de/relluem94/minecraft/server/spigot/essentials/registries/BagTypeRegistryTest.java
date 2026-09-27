@@ -32,7 +32,7 @@ class BagTypeRegistryTest {
   }
 
   @Test
-  void registerShouldAddEntry_WhenNotPresent() {
+  void registerShouldAddEntryWhenNotPresent() {
     registry.register(entry1);
     assertTrue(registry.contains(entry1));
   }

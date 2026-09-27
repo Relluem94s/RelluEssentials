@@ -36,14 +36,14 @@ class NpcMannequinAttributeApplierTest {
   }
 
   @Test
-  void applyAttributes_schedulesTaskWithDelayOf20Ticks() {
+  void applyAttributesSchedulesTaskWithDelayOf20Ticks() {
     applier.applyAttributes(mannequin);
 
     verify(schedulerService).runTaskLater(any(Runnable.class), eq(20L));
   }
 
   @Test
-  void applyAttributes_whenTaskRuns_setsMannequinInvulnerable() {
+  void applyAttributesWhenTaskRunsSetsMannequinInvulnerable() {
     ArgumentCaptor<Runnable> taskCaptor = ArgumentCaptor.forClass(Runnable.class);
 
     applier.applyAttributes(mannequin);
@@ -54,7 +54,7 @@ class NpcMannequinAttributeApplierTest {
   }
 
   @Test
-  void applyAttributes_whenTaskRuns_setsMannequinNotCollidable() {
+  void applyAttributesWhenTaskRunsSetsMannequinNotCollidable() {
     ArgumentCaptor<Runnable> taskCaptor = ArgumentCaptor.forClass(Runnable.class);
 
     applier.applyAttributes(mannequin);
@@ -65,7 +65,7 @@ class NpcMannequinAttributeApplierTest {
   }
 
   @Test
-  void applyAttributes_whenTaskRuns_preventsMannequinFromPickingUpItems() {
+  void applyAttributesWhenTaskRunsPreventsMannequinFromPickingUpItems() {
     ArgumentCaptor<Runnable> taskCaptor = ArgumentCaptor.forClass(Runnable.class);
 
     applier.applyAttributes(mannequin);
@@ -76,7 +76,7 @@ class NpcMannequinAttributeApplierTest {
   }
 
   @Test
-  void applyAttributes_whenTaskRuns_setsMannequinImmovable() {
+  void applyAttributesWhenTaskRunsSetsMannequinImmovable() {
     ArgumentCaptor<Runnable> taskCaptor = ArgumentCaptor.forClass(Runnable.class);
 
     applier.applyAttributes(mannequin);

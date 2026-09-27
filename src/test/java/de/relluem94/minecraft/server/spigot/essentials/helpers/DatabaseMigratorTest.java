@@ -510,7 +510,7 @@ class DatabaseMigratorTest {
     inOrder.verify(queryExecutor)
         .executeScript("patches/v10/updateWorldGroupSettings_moveValues.sql");
     inOrder.verify(queryExecutor)
-        .executeScript("patches/v10/updateWorldGroupSettingsRemoveColumnAndRename.sql");
+        .executeScript("patches/v10/updateWorldGroupSettings_removeColumnAndRename.sql");
     inOrder.verify(queryExecutor).executeScript("patches/v10/insertNewDBVersion.sql");
     inOrder.verify(queryExecutor).executeScript("patches/v10/updateOldPluginInformation.sql");
   }

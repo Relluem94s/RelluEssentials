@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 class ProtectionMapperTest {
 
     @Test
-    void constructor_throwsIllegalStateException() {
+    void constructorThrowsIllegalStateException() {
         assertThrows(IllegalStateException.class, () -> {
             var constructor = ProtectionMapper.class.getDeclaredConstructor();
             constructor.setAccessible(true);

@@ -20,7 +20,7 @@ class WorldGroupRegistryTest {
   }
 
   @Test
-  void loadWorldsForSetting_ShouldOverwriteExistingWorlds() {
+  void loadWorldsForSettingShouldOverwriteExistingWorlds() {
     registry.loadWorldsForSetting(WorldSetting.NPC_BANKER, Set.of("world1"));
     registry.loadWorldsForSetting(WorldSetting.NPC_BANKER, Set.of("world2", "world3"));
 
@@ -33,14 +33,14 @@ class WorldGroupRegistryTest {
   }
 
   @Test
-  void isSettingActiveForWorld_ShouldReturnTrueIfWorldIsPresent() {
+  void isSettingActiveForWorldShouldReturnTrueIfWorldIsPresent() {
     registry.addWorldToSetting(WorldSetting.ORE_RESPAWN, "mining_world");
 
     assertTrue(registry.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "mining_world"));
   }
 
   @Test
-  void isSettingActiveForWorld_ShouldReturnFalseIfWorldIsNotPresent() {
+  void isSettingActiveForWorldShouldReturnFalseIfWorldIsNotPresent() {
     registry.addWorldToSetting(WorldSetting.ORE_RESPAWN, "mining_world");
 
     assertFalse(registry.isSettingActiveForWorld(WorldSetting.ORE_RESPAWN, "other_world"));
@@ -48,12 +48,12 @@ class WorldGroupRegistryTest {
   }
 
   @Test
-  void isSettingActiveForWorld_ShouldReturnFalseForEmptyRegistry() {
+  void isSettingActiveForWorldShouldReturnFalseForEmptyRegistry() {
     assertFalse(registry.isSettingActiveForWorld(WorldSetting.NPC_BEEKEEPER, "any_world"));
   }
 
   @Test
-  void getWorldsWithActiveSetting_ShouldReturnUnmodifiableSet() {
+  void getWorldsWithActiveSettingShouldReturnUnmodifiableSet() {
     registry.addWorldToSetting(WorldSetting.DEATH_LOSE_COINS, "death_world");
     Set<String> worlds = registry.getWorldsWithActiveSetting(WorldSetting.DEATH_LOSE_COINS);
 
@@ -61,13 +61,13 @@ class WorldGroupRegistryTest {
   }
 
   @Test
-  void getWorldsWithActiveSetting_ShouldReturnEmptySetIfNoWorldsRegistered() {
+  void getWorldsWithActiveSettingShouldReturnEmptySetIfNoWorldsRegistered() {
     Set<String> worlds = registry.getWorldsWithActiveSetting(WorldSetting.SCOREBOARD_SHOW);
     assertTrue(worlds.isEmpty());
   }
 
   @Test
-  void addWorldToSetting_ShouldAddWorldToExistingOrNewSetting() {
+  void addWorldToSettingShouldAddWorldToExistingOrNewSetting() {
     registry.addWorldToSetting(WorldSetting.USE_CLOUDSAILOR, "cloud_world");
     registry.addWorldToSetting(WorldSetting.USE_CLOUDSAILOR, "sky_world");
 
@@ -78,7 +78,7 @@ class WorldGroupRegistryTest {
   }
 
   @Test
-  void removeWorldFromSetting_ShouldRemoveOnlySpecifiedWorld() {
+  void removeWorldFromSettingShouldRemoveOnlySpecifiedWorld() {
     registry.addWorldToSetting(WorldSetting.PROTECTION_NOTIFY_SELF, "world1");
     registry.addWorldToSetting(WorldSetting.PROTECTION_NOTIFY_SELF, "world2");
 
@@ -91,7 +91,7 @@ class WorldGroupRegistryTest {
   }
 
   @Test
-  void removeWorldFromAllSettings_ShouldRemoveWorldFromEverySetting() {
+  void removeWorldFromAllSettingsShouldRemoveWorldFromEverySetting() {
     registry.addWorldToSetting(WorldSetting.NPC_ENCHANTER, "target_world");
     registry.addWorldToSetting(WorldSetting.NPC_BAGSALESMAN, "target_world");
     registry.addWorldToSetting(WorldSetting.NPC_ENCHANTER, "other_world");
@@ -104,7 +104,7 @@ class WorldGroupRegistryTest {
   }
 
   @Test
-  void removeWorldFromAllSettings_ShouldNotAffectOtherWorlds() {
+  void removeWorldFromAllSettingsShouldNotAffectOtherWorlds() {
     registry.addWorldToSetting(WorldSetting.ENTITIES_DROP_COINS, "world1");
 
     registry.removeWorldFromAllSettings("non_existent_world");

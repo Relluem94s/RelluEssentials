@@ -1,5 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.helpers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -8,11 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PlayerHelperTest {
@@ -34,43 +38,43 @@ class PlayerHelperTest {
     }
 
     @Test
-    void getLocationDirection_whenFacingSouth_returnsPositiveZ() {
+    void getLocationDirectionWhenFacingSouthReturnsPositiveZ() {
         Location location = locationWithDirection(0, 0, 1);
         assertEquals(new Vector(0, 0, 1), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenFacingNorth_returnsNegativeZ() {
+    void getLocationDirectionWhenFacingNorthReturnsNegativeZ() {
         Location location = locationWithDirection(0, 0, -1);
         assertEquals(new Vector(0, 0, -1), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenFacingWest_returnsNegativeX() {
+    void getLocationDirectionWhenFacingWestReturnsNegativeX() {
         Location location = locationWithDirection(-1, 0, 0);
         assertEquals(new Vector(-1, 0, 0), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenFacingEast_returnsPositiveX() {
+    void getLocationDirectionWhenFacingEastReturnsPositiveX() {
         Location location = locationWithDirection(1, 0, 0);
         assertEquals(new Vector(1, 0, 0), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenLookingSteeplyUp_returnsUpwardVector() {
+    void getLocationDirectionWhenLookingSteeplyUpReturnsUpwardVector() {
         Location location = locationWithDirection(0, 1, 0);
         assertEquals(new Vector(0, 1, 0), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenLookingSteeplyDown_returnsDownwardVector() {
+    void getLocationDirectionWhenLookingSteeplyDownReturnsDownwardVector() {
         Location location = locationWithDirection(0, -1, 0);
         assertEquals(new Vector(0, -1, 0), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenVerticalComponentExactlyAtThreshold_treatsAsHorizontal() {
+    void getLocationDirectionWhenVerticalComponentExactlyAtThresholdTreatsAsHorizontal() {
         Location location = locationWithDirection(0, 0.5, 1);
         Vector result = PlayerHelper.getLocationDirection(location);
         assertNotEquals(new Vector(0, 1, 0), result);
@@ -78,37 +82,37 @@ class PlayerHelperTest {
     }
 
     @Test
-    void getLocationDirection_whenVerticalComponentJustAboveThreshold_returnsVerticalVector() {
+    void getLocationDirectionWhenVerticalComponentJustAboveThresholdReturnsVerticalVector() {
         Location location = locationWithDirection(0, 0.51, 0.1);
         assertEquals(new Vector(0, 1, 0), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenYawAtNorthEastBoundary_returnsSouth() {
+    void getLocationDirectionWhenYawAtNorthEastBoundaryReturnsSouth() {
         Location location = locationWithDirection(0.707, 0, 0.707);
         assertEquals(new Vector(0, 0, 1), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenYawAtSouthWestBoundary_returnsWest() {
+    void getLocationDirectionWhenYawAtSouthWestBoundaryReturnsWest() {
         Location location = locationWithDirection(-0.707, 0, 0.707);
         assertEquals(new Vector(-1, 0, 0), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenYawAtSouthEastBoundary_returnsEast() {
+    void getLocationDirectionWhenYawAtSouthEastBoundaryReturnsEast() {
         Location location = locationWithDirection(0.707, 0, -0.707);
         assertEquals(new Vector(1, 0, 0), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getLocationDirection_whenYawAtNorthWestBoundary_returnsNorth() {
+    void getLocationDirectionWhenYawAtNorthWestBoundaryReturnsNorth() {
         Location location = locationWithDirection(-0.707, 0, -0.707);
         assertEquals(new Vector(0, 0, -1), PlayerHelper.getLocationDirection(location));
     }
 
     @Test
-    void getPlayerDirection_delegatesToPlayerLocation() {
+    void getPlayerDirectionDelegatesToPlayerLocation() {
         Location southLocation = locationWithDirection(0, 0, 1);
         when(playerOne.getLocation()).thenReturn(southLocation);
 
@@ -119,7 +123,7 @@ class PlayerHelperTest {
     }
 
     @Test
-    void getPlayerDirection_whenPlayerFacingNorth_returnsNegativeZ() {
+    void getPlayerDirectionWhenPlayerFacingNorthReturnsNegativeZ() {
         Location northLocation = locationWithDirection(0, 0, -1);
         when(playerOne.getLocation()).thenReturn(northLocation);
 
@@ -127,7 +131,7 @@ class PlayerHelperTest {
     }
 
     @Test
-    void getPlayerDirection_whenPlayerFacingUp_returnsUpwardVector() {
+    void getPlayerDirectionWhenPlayerFacingUpReturnsUpwardVector() {
         Location upLocation = locationWithDirection(0, 1, 0);
         when(playerOne.getLocation()).thenReturn(upLocation);
 
@@ -135,7 +139,7 @@ class PlayerHelperTest {
     }
 
     @Test
-    void getTargetedPlayer_whenWorldIsNull_returnsNull() {
+    void getTargetedPlayerWhenWorldIsNullReturnsNull() {
         Location location = mock(Location.class);
         when(location.getWorld()).thenReturn(null);
 
@@ -143,7 +147,7 @@ class PlayerHelperTest {
     }
 
     @Test
-    void getTargetedPlayer_whenOnePlayerInWorld_returnsThatPlayer() {
+    void getTargetedPlayerWhenOnePlayerInWorldReturnsThatPlayer() {
         Location sourceLocation = mock(Location.class);
         Location playerLocation = mock(Location.class);
 
@@ -156,7 +160,7 @@ class PlayerHelperTest {
     }
 
     @Test
-    void getTargetedPlayer_whenMultiplePlayers_returnsNearestPlayer() {
+    void getTargetedPlayerWhenMultiplePlayersReturnsNearestPlayer() {
         Location sourceLocation = mock(Location.class);
         Location nearLocation = mock(Location.class);
         Location farLocation = mock(Location.class);
@@ -172,7 +176,7 @@ class PlayerHelperTest {
     }
 
     @Test
-    void getTargetedPlayer_whenNoPlayersInWorld_returnsNull() {
+    void getTargetedPlayerWhenNoPlayersInWorldReturnsNull() {
         Location location = mock(Location.class);
         when(location.getWorld()).thenReturn(world);
         when(world.getPlayers()).thenReturn(List.of());
@@ -181,7 +185,7 @@ class PlayerHelperTest {
     }
 
     @Test
-    void constructor_throwsIllegalStateException() {
+    void constructorThrowsIllegalStateException() {
         assertThrows(IllegalStateException.class, () -> {
             var constructor = PlayerHelper.class.getDeclaredConstructor();
             constructor.setAccessible(true);

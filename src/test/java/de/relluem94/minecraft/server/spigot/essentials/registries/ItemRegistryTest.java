@@ -44,7 +44,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void register_ShouldAddItemsToMap() {
+  void registerShouldAddItemsToMap() {
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     Optional<CustomItem> found = itemRegistry.findByIdentifier("test_key");
@@ -71,7 +71,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void findByIdentifier_ShouldReturnCorrectItem() {
+  void findByIdentifierShouldReturnCorrectItem() {
     itemRegistry.register(mockRegistryKey, mockCustomItem);
 
     Optional<CustomItem> result = itemRegistry.findByIdentifier("test_key");
@@ -142,7 +142,7 @@ class ItemRegistryTest {
   }
 
   @Test
-  void getAllByTypeAndNamespace_ShouldFilterItemsByTypeAndNamespace() {
+  void getAllByTypeAndNamespaceShouldFilterItemsByTypeAndNamespace() {
     CustomItem matchingItem = mock(CustomItem.class);
     CustomItem wrongTypeItem = mock(CustomItem.class);
     CustomItem wrongNamespaceItem = mock(CustomItem.class);

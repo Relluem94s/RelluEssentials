@@ -78,7 +78,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void spawnMannequin_whenWorldDoesNotExist_returnsEmptyOptional() {
+  void spawnMannequinWhenWorldDoesNotExistReturnsEmptyOptional() {
     when(npc.getWorldName()).thenReturn(WORLD_NAME);
     when(server.getWorld(WORLD_NAME)).thenReturn(null);
 
@@ -88,7 +88,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void spawnMannequin_whenMannequinAlreadyExists_returnsExistingMannequinUuid() {
+  void spawnMannequinWhenMannequinAlreadyExistsReturnsExistingMannequinUuid() {
     when(npc.getId()).thenReturn(NPC_UUID);
     when(npc.getWorldName()).thenReturn(WORLD_NAME);
     when(mannequin.getType()).thenReturn(EntityType.MANNEQUIN);
@@ -107,7 +107,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void spawnMannequin_whenMannequinAlreadyExists_appliesAttributesToExistingMannequin() {
+  void spawnMannequinWhenMannequinAlreadyExistsAppliesAttributesToExistingMannequin() {
     when(npc.getId()).thenReturn(NPC_UUID);
     when(npc.getWorldName()).thenReturn(WORLD_NAME);
     when(mannequin.getType()).thenReturn(EntityType.MANNEQUIN);
@@ -125,7 +125,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void spawnMannequin_whenNoExistingMannequin_spawnsNewMannequinAndReturnsUuid() {
+  void spawnMannequinWhenNoExistingMannequinSpawnsNewMannequinAndReturnsUuid() {
     when(npc.getId()).thenReturn(NPC_UUID);
     when(npc.getWorldName()).thenReturn(WORLD_NAME);
     when(npc.getX()).thenReturn(NPC_X);
@@ -148,7 +148,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void spawnMannequin_whenNoExistingMannequin_tagsNewMannequinWithNpcId() {
+  void spawnMannequinWhenNoExistingMannequinTagsNewMannequinWithNpcId() {
     when(npc.getId()).thenReturn(NPC_UUID);
     when(npc.getWorldName()).thenReturn(WORLD_NAME);
     when(npc.getX()).thenReturn(NPC_X);
@@ -171,7 +171,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void spawnMannequin_whenNoExistingMannequin_setsPlayerProfileOnMannequin() {
+  void spawnMannequinWhenNoExistingMannequinSetsPlayerProfileOnMannequin() {
     when(npc.getId()).thenReturn(NPC_UUID);
     when(npc.getWorldName()).thenReturn(WORLD_NAME);
     when(npc.getX()).thenReturn(NPC_X);
@@ -193,7 +193,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void spawnMannequin_whenNoExistingMannequin_appliesAttributesToNewMannequin() {
+  void spawnMannequinWhenNoExistingMannequinAppliesAttributesToNewMannequin() {
     when(npc.getId()).thenReturn(NPC_UUID);
     when(npc.getWorldName()).thenReturn(WORLD_NAME);
     when(npc.getX()).thenReturn(NPC_X);
@@ -215,7 +215,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void spawnMannequin_whenSpawnedEntityIsNotMannequin_returnsEmptyOptional() {
+  void spawnMannequinWhenSpawnedEntityIsNotMannequinReturnsEmptyOptional() {
     Entity nonMannequinEntity = mock(Entity.class);
     when(npc.getId()).thenReturn(NPC_UUID);
     when(npc.getWorldName()).thenReturn(WORLD_NAME);
@@ -235,7 +235,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void despawnMannequin_whenEntityExists_removesEntity() {
+  void despawnMannequinWhenEntityExistsRemovesEntity() {
     when(server.getEntity(MANNEQUIN_UUID)).thenReturn(mannequin);
 
     npcSpawner.despawnMannequin(MANNEQUIN_UUID);
@@ -244,7 +244,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void despawnMannequin_whenEntityDoesNotExist_doesNotThrow() {
+  void despawnMannequinWhenEntityDoesNotExistDoesNotThrow() {
     when(server.getEntity(MANNEQUIN_UUID)).thenReturn(null);
 
     npcSpawner.despawnMannequin(MANNEQUIN_UUID);
@@ -253,7 +253,7 @@ class NpcSpawnerTest {
   }
 
   @Test
-  void spawnMannequin_whenExistingEntityIsNotMannequin_returnsEmptyOptional() {
+  void spawnMannequinWhenExistingEntityIsNotMannequinReturnsEmptyOptional() {
     Entity nonMannequinEntity = mock(Entity.class);
     when(npc.getId()).thenReturn(NPC_UUID);
     when(npc.getWorldName()).thenReturn(WORLD_NAME);

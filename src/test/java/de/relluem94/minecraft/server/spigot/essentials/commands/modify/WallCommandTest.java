@@ -74,15 +74,15 @@ class WallCommandTest {
   }
 
   @Test
-  void execute_withInvalidMaterial_sendsWrongMaterialMessage() {
-    wallCommand.execute(player, new String[]{"wall", "NOT_A_MATERIAL"});
+  void executeWithInvalidMaterialSendsWrongMaterialMessage() {
+    wallCommand.execute(player, new String[]{"wall", "NOTA_MATERIAL"});
 
     verify(player).sendMessage(anyString());
     verify(undoHistoryService, never()).addHistory(any(), any());
   }
 
   @Test
-  void execute_withNullSelection_doesNothing() {
+  void executeWithNullSelectionDoesNothing() {
     when(selectionService.resolve(player)).thenReturn(null);
 
     wallCommand.execute(player, new String[]{"wall", "STONE"});
@@ -92,7 +92,7 @@ class WallCommandTest {
   }
 
   @Test
-  void execute_withValidMaterialAndSelection_onlyProcessesWallBlocks() {
+  void executeWithValidMaterialAndSelectionOnlyProcessesWallBlocks() {
     Selection selection = buildSelection(2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -121,7 +121,7 @@ class WallCommandTest {
   }
 
   @Test
-  void execute_withValidMaterialAndSelection_savesOriginalBlockStateInHistory() {
+  void executeWithValidMaterialAndSelectionSavesOriginalBlockStateInHistory() {
     Selection selection = buildSelection(2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -150,7 +150,7 @@ class WallCommandTest {
   }
 
   @Test
-  void execute_withAllWallBlocks_addsAllToHistory() {
+  void executeWithAllWallBlocksAddsAllToHistory() {
     Selection selection = buildSelection(2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -179,7 +179,7 @@ class WallCommandTest {
   }
 
   @Test
-  void execute_withValidMaterialAndSelection_sendsStartedMessage() {
+  void executeWithValidMaterialAndSelectionSendsStartedMessage() {
     Selection selection = buildSelection(2, 2);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -198,7 +198,7 @@ class WallCommandTest {
   }
 
   @Test
-  void execute_withInnerBlockOnly_addsNothingToHistory() {
+  void executeWithInnerBlockOnlyAddsNothingToHistory() {
     Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -223,7 +223,7 @@ class WallCommandTest {
   }
 
   @Test
-  void execute_withBlockOnMinZWall_addsToHistory() {
+  void executeWithBlockOnMinZWallAddsToHistory() {
     Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -248,7 +248,7 @@ class WallCommandTest {
   }
 
   @Test
-  void execute_withBlockOnMaxZWall_addsToHistory() {
+  void executeWithBlockOnMaxZWallAddsToHistory() {
     Selection selection = buildSelection(4, 4);
     when(selectionService.resolve(player)).thenReturn(selection);
 
@@ -273,27 +273,27 @@ class WallCommandTest {
   }
 
   @Test
-  void matches_withCorrectArgs_returnsTrue() {
+  void matchesWithCorrectArgsReturnsTrue() {
     assert wallCommand.matches(new String[]{"wall", "STONE"});
   }
 
   @Test
-  void matches_withWrongSubCommand_returnsFalse() {
+  void matchesWithWrongSubCommandReturnsFalse() {
     assert !wallCommand.matches(new String[]{"set", "STONE"});
   }
 
   @Test
-  void matches_withTooManyArgs_returnsFalse() {
+  void matchesWithTooManyArgsReturnsFalse() {
     assert !wallCommand.matches(new String[]{"wall", "STONE", "extra"});
   }
 
   @Test
-  void matches_withTooFewArgs_returnsFalse() {
+  void matchesWithTooFewArgsReturnsFalse() {
     assert !wallCommand.matches(new String[]{"wall"});
   }
 
   @Test
-  void matches_withNoArgs_returnsFalse() {
+  void matchesWithNoArgsReturnsFalse() {
     assert !wallCommand.matches(new String[]{});
   }
 

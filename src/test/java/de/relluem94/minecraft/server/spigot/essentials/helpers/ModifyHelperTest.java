@@ -41,7 +41,7 @@ class ModifyHelperTest {
         "450.0, 90.0",
         "720.0, 0.0",
     })
-    void normalizeYaw_returnsNearestCardinalDirection(float input, float expected) {
+    void normalizeYawReturnsNearestCardinalDirection(float input, float expected) {
         assertEquals(expected, ModifyHelper.normalizeYaw(input));
     }
 
@@ -56,7 +56,7 @@ class ModifyHelperTest {
         "0, 1, 180, 0, -1",
         "0, -1, 270, 1,  0",
     })
-    void worldToLocal_transformsCoordinatesBasedOnYaw(int dx, int dz, float yaw, int expectedX, int expectedZ) {
+    void worldToLocalTransformsCoordinatesBasedOnYaw(int dx, int dz, float yaw, int expectedX, int expectedZ) {
         int[] result = ModifyHelper.worldToLocal(dx, dz, yaw);
 
         assertEquals(expectedX, result[0]);
@@ -64,7 +64,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void worldToLocal_returnsArrayOfLengthTwo() {
+    void worldToLocalReturnsArrayOfLengthTwo() {
         int[] result = ModifyHelper.worldToLocal(1, 1, 0);
         assertEquals(2, result.length);
     }
@@ -80,7 +80,7 @@ class ModifyHelperTest {
         "0, 1, 180, 0, -1",
         "0, 1, 270, 1,  0",
     })
-    void relativeToWorld_transformsCoordinatesBasedOnYaw(int relX, int relZ, float yaw, int expectedX, int expectedZ) {
+    void relativeToWorldTransformsCoordinatesBasedOnYaw(int relX, int relZ, float yaw, int expectedX, int expectedZ) {
         int[] result = ModifyHelper.relativeToWorld(relX, relZ, yaw);
 
         assertEquals(expectedX, result[0]);
@@ -88,7 +88,7 @@ class ModifyHelperTest {
     }
 
     @Test
-    void relativeToWorld_returnsArrayOfLengthTwo() {
+    void relativeToWorldReturnsArrayOfLengthTwo() {
         int[] result = ModifyHelper.relativeToWorld(1, 1, 0);
         assertEquals(2, result.length);
     }
@@ -168,7 +168,7 @@ class ModifyHelperTest {
         "180, 5, 10, 3,  5,  7",
         "270, 5, 10, 3,  13, 7",
     })
-    void getBlock_resolvesCorrectWorldPosition(float yaw,
+    void getBlockResolvesCorrectWorldPosition(float yaw,
         int originX, int originY, int originZ) {
         World world = mock(World.class);
         Block expectedBlock = mock(Block.class);

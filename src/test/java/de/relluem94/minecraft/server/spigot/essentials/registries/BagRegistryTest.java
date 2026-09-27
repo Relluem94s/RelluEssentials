@@ -24,7 +24,7 @@ class BagRegistryTest {
   }
 
   @Test
-  void register_ShouldStoreBagEntry() {
+  void registerShouldStoreBagEntry() {
     BagEntry entry = createEntry(1, 100, 1);
     bagRegistry.register(entry);
 
@@ -33,7 +33,7 @@ class BagRegistryTest {
   }
 
   @Test
-  void registerAll_ShouldStoreMultipleBagEntries() {
+  void registerAllShouldStoreMultipleBagEntries() {
     BagEntry entry1 = createEntry(1, 100, 1);
     BagEntry entry2 = createEntry(2, 100, 2);
     BagEntry entry3 = createEntry(3, 200, 1);
@@ -46,7 +46,7 @@ class BagRegistryTest {
   }
 
   @Test
-  void unregister_ShouldRemoveSpecificEntry() {
+  void unregisterShouldRemoveSpecificEntry() {
     BagEntry entry1 = createEntry(1, 100, 1);
     BagEntry entry2 = createEntry(2, 100, 2);
     bagRegistry.registerAll(List.of(entry1, entry2));
@@ -58,7 +58,7 @@ class BagRegistryTest {
   }
 
   @Test
-  void findByPlayerIdAndBagTypeId_ShouldReturnCorrectEntry() {
+  void findByPlayerIdAndBagTypeIdShouldReturnCorrectEntry() {
     BagTypeEntry type1 = mock(BagTypeEntry.class);
     when(type1.getId()).thenReturn(1);
 
@@ -74,7 +74,7 @@ class BagRegistryTest {
   }
 
   @Test
-  void findByPlayerIdAndBagTypeId_ShouldReturnEmptyIfNotFound() {
+  void findByPlayerIdAndBagTypeIdShouldReturnEmptyIfNotFound() {
     bagRegistry.register(createEntry(1, 100, 1));
 
     Optional<BagEntry> found = bagRegistry.findByPlayerIdAndBagTypeId(100, 99);
@@ -83,7 +83,7 @@ class BagRegistryTest {
   }
 
   @Test
-  void existsByPlayerIdAndBagTypeId_ShouldReturnBoolean() {
+  void existsByPlayerIdAndBagTypeIdShouldReturnBoolean() {
     BagTypeEntry type1 = mock(BagTypeEntry.class);
     when(type1.getId()).thenReturn(1);
 
@@ -96,7 +96,7 @@ class BagRegistryTest {
   }
 
   @Test
-  void existsByPlayerId_ShouldReturnTrueIfPlayerHasBags() {
+  void existsByPlayerIdShouldReturnTrueIfPlayerHasBags() {
     bagRegistry.register(createEntry(1, 100, 1));
 
     assertTrue(bagRegistry.existsByPlayerId(100));
@@ -104,7 +104,7 @@ class BagRegistryTest {
   }
 
   @Test
-  void findAll_ShouldReturnAllEntries() {
+  void findAllShouldReturnAllEntries() {
     bagRegistry.register(createEntry(1, 100, 1));
     bagRegistry.register(createEntry(2, 200, 1));
 

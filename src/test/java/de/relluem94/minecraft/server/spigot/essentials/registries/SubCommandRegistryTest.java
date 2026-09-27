@@ -23,7 +23,7 @@ class SubCommandRegistryTest {
         }
 
     @Test
-    void find_returnsFirstMatchingSubCommand() {
+    void findReturnsFirstMatchingSubCommand() {
         SubCommand nonMatching = new FixedMatchSubCommand(false);
         SubCommand matching = new FixedMatchSubCommand(true);
         SubCommandRegistry<SubCommand> registry = new SubCommandRegistry<>(List.of(nonMatching, matching));
@@ -34,7 +34,7 @@ class SubCommandRegistryTest {
     }
 
     @Test
-    void find_returnsNullWhenNoSubCommandMatches() {
+    void findReturnsNullWhenNoSubCommandMatches() {
         SubCommand nonMatching = new FixedMatchSubCommand(false);
         SubCommandRegistry<SubCommand> registry = new SubCommandRegistry<>(List.of(nonMatching));
 
@@ -44,7 +44,7 @@ class SubCommandRegistryTest {
     }
 
     @Test
-    void find_returnsNullForEmptyRegistry() {
+    void findReturnsNullForEmptyRegistry() {
         SubCommandRegistry<SubCommand> registry = new SubCommandRegistry<>(List.of());
 
         SubCommand result = registry.find(new String[]{"anything"});
@@ -53,7 +53,7 @@ class SubCommandRegistryTest {
     }
 
     @Test
-    void find_returnsFirstWhenMultipleSubCommandsMatch() {
+    void findReturnsFirstWhenMultipleSubCommandsMatch() {
         SubCommand firstMatch = new FixedMatchSubCommand(true);
         SubCommand secondMatch = new FixedMatchSubCommand(true);
         SubCommandRegistry<SubCommand> registry = new SubCommandRegistry<>(List.of(firstMatch, secondMatch));

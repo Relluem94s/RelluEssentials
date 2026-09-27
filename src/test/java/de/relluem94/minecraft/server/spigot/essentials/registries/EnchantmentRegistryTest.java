@@ -103,7 +103,7 @@ class EnchantmentRegistryTest {
   }
 
   @Test
-  void testFindByBookItemStack_Success() {
+  void testFindByBookItemStackSuccess() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
     NamespacedKey enchantmentKey = NamespacedKey.fromString("test:magic");
     assertNotNull(enchantmentKey);
@@ -123,7 +123,7 @@ class EnchantmentRegistryTest {
   }
 
   @Test
-  void testFindByBookItemStack_AlreadyStoredEnchant() {
+  void testFindByBookItemStackAlreadyStoredEnchant() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
     NamespacedKey enchantmentKey = NamespacedKey.fromString("test:magic");
     assertNotNull(enchantmentKey);
@@ -144,14 +144,14 @@ class EnchantmentRegistryTest {
   }
 
   @Test
-  void testFindByBookItemStack_NotABook() {
+  void testFindByBookItemStackNotABook() {
     when(mockItemStack.getItemMeta()).thenReturn(mock(org.bukkit.inventory.meta.ItemMeta.class));
     Optional<EnchantmentHelper> result = registry.findByBookItemStack(mockItemStack);
     assertFalse(result.isPresent());
   }
 
   @Test
-  void testFindByBookItemStack_NoDataInPdc() {
+  void testFindByBookItemStackNoDataInPdc() {
     when(mockPlugin.getName()).thenReturn("test_plugin");
     NamespacedKey enchantmentKey = NamespacedKey.fromString("test:magic");
     assertNotNull(enchantmentKey);
