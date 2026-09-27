@@ -54,7 +54,7 @@ jobs:
           # This will hand over control about PR rejection to the GitHub side
           max-allowed-issues: 2147483647
           tool: pmd
-          directory: .
+          directory: ${{ github.workspace }}
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
