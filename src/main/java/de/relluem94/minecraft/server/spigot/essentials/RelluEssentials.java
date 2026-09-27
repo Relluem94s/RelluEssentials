@@ -22,6 +22,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SignManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import de.relluem94.minecraft.server.spigot.essentials.services.ServerService;
 import java.io.File;
@@ -127,7 +128,9 @@ public class RelluEssentials extends JavaPlugin {
     sender.sendMessage(PLUGIN_NAME_CONSOLE, "");
     sender.sendMessage(PLUGIN_COLOR_COMMAND + PLUGIN_FORMS_BORDER, "");
 
-    worldManager = new WorldManager();
+    BukkitRegistryAdapter bukkitRegistryAdapter = new BukkitRegistryAdapter();
+    bukkitRegistryAdapter.initializeGameRuleCache(this.getServer());
+    worldManager = new WorldManager(bukkitRegistryAdapter);
     worldManager.enable(this);
     getServiceContext().getSchedulerService()
         .runTaskLater(() -> getServiceContext().getNpcService().loadAndSpawnNpcsInLoadedChunks(),

@@ -12,22 +12,37 @@ import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Disab
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.managers.Enable;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldEntry;
 import de.relluem94.minecraft.server.spigot.essentials.models.pojo.WorldGroupEntry;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Manages the lifecycle of Minecraft worlds defined in the world group configuration. Handles
- * creation, loading, and unloading of worlds during plugin enable and disable phases.
+ * Manages the lifecycle of Minecraft worlds defined in the world group configuration.
+ * Handles creation, loading, and unloading of worlds during plugin enable and disable phases.
+ * Worlds are created with environment-specific settings derived from their name suffix,
+ * and standard game rules are applied upon initialization.
+ *
+ * @author rellu
  */
+
 public class WorldManager implements Enable, Disable {
 
   private final Random random = new Random();
+  private final BukkitRegistryAdapter bukkitRegistryAdapter;
   private ServiceContext serviceContext;
+
+  /**
+   * Creates a new WorldManager with the given registry adapter used to apply game rules to worlds.
+   *
+   * @param bukkitRegistryAdapter the adapter used to interact with the Bukkit game rule registry
+   */
+  public WorldManager(BukkitRegistryAdapter bukkitRegistryAdapter) {
+    this.bukkitRegistryAdapter = bukkitRegistryAdapter;
+  }
 
   @Override
   public void enable(Plugin plugin) {
@@ -45,11 +60,6 @@ public class WorldManager implements Enable, Disable {
         continue;
       }
       for (WorldEntry we : worldsMap.get(wge)) {
-        if (we != null && !WorldHelper.worldExists(we.getName())) {
-          createWorld(we);
-          continue;
-        }
-
         if (we == null) {
           continue;
         }
@@ -150,9 +160,10 @@ public class WorldManager implements Enable, Disable {
       return;
     }
 
-    lobbyWorld.setGameRule(GameRule.FIRE_DAMAGE, false);
-    lobbyWorld.setGameRule(GameRule.SPAWN_MOBS, false);
-    lobbyWorld.setGameRule(GameRule.MOB_GRIEFING, false);
-    lobbyWorld.setGameRule(GameRule.ADVANCE_WEATHER, false);
+    bukkitRegistryAdapter.applyGameRule(lobbyWorld, "fireDamage", false);
+    bukkitRegistryAdapter.applyGameRule(lobbyWorld, "doMobSpawning", false);
+    bukkitRegistryAdapter.applyGameRule(lobbyWorld, "mobGriefing", false);
+    bukkitRegistryAdapter.applyGameRule(lobbyWorld, "doWeatherCycle", false);
+
   }
 }

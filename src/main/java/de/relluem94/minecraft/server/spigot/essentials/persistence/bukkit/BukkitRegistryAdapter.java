@@ -1,10 +1,14 @@
 package de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.Generated;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.GameRule;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Villager.Profession;
 
@@ -48,5 +52,40 @@ public class BukkitRegistryAdapter {
     return enchantments.keySet().stream()
         .map(Enchantment::getKeyOrThrow)
         .toList();
+  }
+
+  private static final Map<String, GameRule<?>> GAME_RULE_CACHE = new HashMap<>();
+
+  /**
+   * Resolves and caches all available {@link GameRule}s from the Bukkit registry.
+   * Must be called once after the Bukkit server is fully initialized.
+   *
+   * @param server the {@link Server} instance used to access the game rule registry
+   */
+  @SuppressWarnings("rawtypes")
+  public void initializeGameRuleCache(Server server) {
+    Registry<GameRule> registry = server.getRegistry(GameRule.class);
+    if (registry == null) {
+      return;
+    }
+    for (GameRule<?> rule : registry) {
+      GAME_RULE_CACHE.put(rule.getKeyOrThrow().getKey(), rule);
+    }
+  }
+
+  /**
+   * Applies a game rule by its string key with the given boolean value to the provided world.
+   *
+   * @param world the {@link World} to apply the game rule to
+   * @param key   the string key of the game rule (e.g. {@code "fireDamage"})
+   * @param value the boolean value to set
+   */
+  @SuppressWarnings("unchecked")
+  public void applyGameRule(World world, String key, boolean value) {
+    GameRule<Boolean> gameRule = (GameRule<Boolean>) GAME_RULE_CACHE.get(key);
+    if (gameRule == null) {
+      return;
+    }
+    world.setGameRule(gameRule, value);
   }
 }

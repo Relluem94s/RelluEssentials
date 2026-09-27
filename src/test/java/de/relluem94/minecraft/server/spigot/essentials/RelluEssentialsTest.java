@@ -23,6 +23,7 @@ import de.relluem94.minecraft.server.spigot.essentials.managers.SignManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SkillManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.SudoManager;
 import de.relluem94.minecraft.server.spigot.essentials.managers.WorldManager;
+import de.relluem94.minecraft.server.spigot.essentials.persistence.bukkit.BukkitRegistryAdapter;
 import de.relluem94.minecraft.server.spigot.essentials.registries.RelluEssentialsRegistry;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -138,7 +139,8 @@ class RelluEssentialsTest {
         BankManager.class); MockedConstruction<ListenerManager> listenerManager = Mockito.mockConstruction(
         ListenerManager.class); MockedConstruction<AutoSaveManager> autoSaveManager = Mockito.mockConstruction(
         AutoSaveManager.class); MockedConstruction<ScoreBoardManager> scoreBoardManager = Mockito.mockConstruction(
-        ScoreBoardManager.class); MockedConstruction<WorldManager> worldManager = Mockito.mockConstruction(
+        ScoreBoardManager.class); MockedConstruction<BukkitRegistryAdapter> _ = Mockito.mockConstruction(
+        BukkitRegistryAdapter.class); MockedConstruction<WorldManager> worldManager = Mockito.mockConstruction(
         WorldManager.class)) {
       bukkit.when(Bukkit::getServer).thenReturn(server);
 
@@ -270,7 +272,8 @@ class RelluEssentialsTest {
         BankManager.class); MockedConstruction<ListenerManager> _ = Mockito.mockConstruction(
         ListenerManager.class); MockedConstruction<AutoSaveManager> _ = Mockito.mockConstruction(
         AutoSaveManager.class); MockedConstruction<ScoreBoardManager> _ = Mockito.mockConstruction(
-        ScoreBoardManager.class); MockedConstruction<WorldManager> _ = Mockito.mockConstruction(
+        ScoreBoardManager.class); MockedConstruction<BukkitRegistryAdapter> _ = Mockito.mockConstruction(
+        BukkitRegistryAdapter.class); MockedConstruction<WorldManager> _ = Mockito.mockConstruction(
         WorldManager.class)) {
       spyPlugin.onEnable();
 
@@ -333,7 +336,8 @@ class RelluEssentialsTest {
         BankManager.class); MockedConstruction<ListenerManager> _ = Mockito.mockConstruction(
         ListenerManager.class); MockedConstruction<AutoSaveManager> _ = Mockito.mockConstruction(
         AutoSaveManager.class); MockedConstruction<ScoreBoardManager> _ = Mockito.mockConstruction(
-        ScoreBoardManager.class); MockedConstruction<WorldManager> _ = Mockito.mockConstruction(
+        ScoreBoardManager.class); MockedConstruction<BukkitRegistryAdapter> _ = Mockito.mockConstruction(
+        BukkitRegistryAdapter.class); MockedConstruction<WorldManager> _ = Mockito.mockConstruction(
         WorldManager.class)) {
       bukkit.when(Bukkit::getServer).thenReturn(server);
 
