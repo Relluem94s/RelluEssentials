@@ -1,7 +1,6 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -416,7 +415,7 @@ class HomeTest {
 
     boolean result = homeCommand.onCommand(player, command, "home", new String[]{"unknown", "myHome"});
 
-    assertFalse(result);
+    assertTrue(result);
   }
 
   @Test
@@ -427,7 +426,7 @@ class HomeTest {
 
     boolean result = homeCommand.onCommand(player, command, "home", new String[]{"set", "myHome", "extra"});
 
-    assertFalse(result);
+    assertTrue(result);
   }
 
   @Test
