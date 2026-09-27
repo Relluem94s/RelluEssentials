@@ -1,25 +1,17 @@
 package de.relluem94.minecraft.server.spigot.essentials.commands;
 
-import static de.relluem94.minecraft.server.spigot.essentials.constants.ItemConstants.PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isCmdBlock;
 import static de.relluem94.minecraft.server.spigot.essentials.helpers.TypeHelper.isPlayer;
 
 import de.relluem94.minecraft.server.spigot.essentials.annotations.CommandName;
-import de.relluem94.minecraft.server.spigot.essentials.constants.Constants;
 import de.relluem94.minecraft.server.spigot.essentials.contexts.ServiceContext;
-import de.relluem94.minecraft.server.spigot.essentials.enums.CustomHeads;
 import de.relluem94.minecraft.server.spigot.essentials.enums.MessageKey;
 import de.relluem94.minecraft.server.spigot.essentials.exceptions.WorldNotLoadedException;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.InventoryHelper;
-import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHeadHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.PlayerHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.TabCompleterHelper;
 import de.relluem94.minecraft.server.spigot.essentials.helpers.WorldHelper;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandConstruct;
 import de.relluem94.minecraft.server.spigot.essentials.interfaces.CommandsEnum;
-import de.relluem94.minecraft.server.spigot.essentials.models.RelluEssentialsNamespacedKey;
-import de.relluem94.minecraft.server.spigot.essentials.services.ItemService;
-import de.relluem94.minecraft.server.spigot.essentials.services.PluginMetadataService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,58 +26,20 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 /**
  * Command handler for world management operations.
  *
  * <p>Provides functionality to teleport between worlds, list loaded worlds,
- * load, unload and create worlds. Also supports command block execution
- * targeting the nearest player.</p>
+ * load, unload and create worlds. Also supports command block execution targeting the nearest
+ * player.</p>
  */
 @CommandName("world")
 public class Worlds implements CommandConstruct {
 
   private ServiceContext serviceContext;
-
-  /**
-   * Opens a graphical world selection inventory for the given player.
-   *
-   * <p>Displays all currently loaded worlds as clickable globe heads
-   * inside an {@link org.bukkit.inventory.Inventory}.</p>
-   *
-   * @param p                     the player who receives the inventory
-   * @param itemService            the service used to retrieve disabled-slot items
-   * @param pluginMetadataService  the service used to access plugin and server metadata
-   */
-  public static void openWorldMenu(Player p, ItemService itemService,
-      PluginMetadataService pluginMetadataService) {
-    org.bukkit.inventory.Inventory inv = InventoryHelper.fillInventory(
-        InventoryHelper.createInventory(18,
-            Constants.PLUGIN_NAME_PREFIX + Constants.PLUGIN_FORMS_SPACER_MESSAGE + "§dWorlds"),
-        itemService.find(new RelluEssentialsNamespacedKey(pluginMetadataService.getName(),
-            PLUGIN_ITEM_NAMESPACE_NPC_GUI_DISABLED)).orElseThrow().toItemStack());
-
-    for (int i = 0; i < pluginMetadataService.getPlugin().getServer().getWorlds().size(); i++) {
-      ItemStack is = PlayerHeadHelper.getCustomSkull(CustomHeads.GLOBE);
-      ItemMeta im = is.getItemMeta();
-
-      if (im == null) {
-        return;
-      }
-
-      im.setDisplayName(pluginMetadataService.getPlugin().getServer().getWorlds().get(i).getName());
-
-      is.setItemMeta(im);
-      inv.setItem(i, is);
-    }
-
-    InventoryHelper.openInventory(p, inv);
-  }
 
   @Override
   public void injectContext(ServiceContext context) {
@@ -129,7 +83,7 @@ public class Worlds implements CommandConstruct {
           .getWithPrefix(MessageKey.COMMAND_WORLD_INFO, Commands.LIST.getName(),
               Commands.LOAD.getName(), Commands.UNLOAD.getName(), Commands.UNLOAD_NO_SAVE.getName(),
               Commands.CREATE.getName()));
-      openWorldMenu(p, serviceContext.getItemService(), serviceContext.getPluginMetadataService());
+      serviceContext.getWorldMenuService().openWorldMenu(p);
       return true;
     }
 
@@ -237,7 +191,7 @@ public class Worlds implements CommandConstruct {
   }
 
   @Override
-  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender,
+  public @NonNull List<String> onTabComplete(@NotNull CommandSender commandSender,
       @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
     if (!serviceContext.getGroupService().isSenderAuthorized(commandSender, "mod")) {
       return new ArrayList<>();
@@ -250,8 +204,8 @@ public class Worlds implements CommandConstruct {
     if (strings.length == 1) {
       List<String> tabList = new ArrayList<>();
       tabList.addAll(TabCompleterHelper.getCommands(Commands.values()));
-      tabList.addAll(serviceContext.getServerService().getWorlds().stream()
-          .map(World::getName).toList());
+      tabList.addAll(
+          serviceContext.getServerService().getWorlds().stream().map(World::getName).toList());
       return tabList;
 
     }

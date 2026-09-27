@@ -71,6 +71,7 @@ import de.relluem94.minecraft.server.spigot.essentials.services.TraderNpcService
 import de.relluem94.minecraft.server.spigot.essentials.services.TranslationService;
 import de.relluem94.minecraft.server.spigot.essentials.services.UndoHistoryService;
 import de.relluem94.minecraft.server.spigot.essentials.services.WarpService;
+import de.relluem94.minecraft.server.spigot.essentials.services.WorldMenuService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.LocationCleanUpService;
 import de.relluem94.minecraft.server.spigot.essentials.services.cleanup.ProtectionCleanUpService;
 import org.bukkit.NamespacedKey;
@@ -218,7 +219,8 @@ public class ServiceManager implements Enable {
         persistenceContext.getSettingPlayerDao());
     serviceContext.setSettingPlayerService(
         new SettingPlayerService(settingPlayerRegistry, settingPlayerRepository, serviceContext));
-
+    serviceContext.setWorldMenuService(new WorldMenuService(serviceContext.getItemService(),
+        serviceContext.getPluginMetadataService()));
   }
 
   /**
