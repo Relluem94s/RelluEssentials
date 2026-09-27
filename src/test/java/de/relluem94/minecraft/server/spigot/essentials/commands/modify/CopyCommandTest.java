@@ -85,7 +85,7 @@ class CopyCommandTest {
   }
 
   @Test
-  void execute_copy_withNoSelection_abortsEarly() {
+  void executeCopyWithNoSelectionAbortsEarly() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     when(selectionService.resolve(player)).thenReturn(null);
 
@@ -95,7 +95,7 @@ class CopyCommandTest {
   }
 
   @Test
-  void execute_cut_withNoSelection_abortsEarly() {
+  void executeCutWithNoSelectionAbortsEarly() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     when(selectionService.resolve(player)).thenReturn(null);
 
@@ -105,7 +105,7 @@ class CopyCommandTest {
   }
 
   @Test
-  void execute_copy_withValidSelection_storesClipboardAndSendsMessage() {
+  void executeCopyWithValidSelectionStoresClipboardAndSendsMessage() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
@@ -141,7 +141,7 @@ class CopyCommandTest {
   }
 
   @Test
-  void execute_cut_withValidSelection_clearsBlocksAndAddsHistory() {
+  void executeCutWithValidSelectionClearsBlocksAndAddsHistory() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     Selection selectionMock = mock(Selection.class);
     ModifyClipboardEntry entryMock = mock(ModifyClipboardEntry.class);
@@ -177,37 +177,37 @@ class CopyCommandTest {
   }
 
   @Test
-  void matches_copy_withCorrectArgs_returnsTrue() {
+  void matchesCopyWithCorrectArgsReturnsTrue() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     assert copyCommand.matches(new String[]{"copy"});
   }
 
   @Test
-  void matches_cut_withCorrectArgs_returnsTrue() {
+  void matchesCutWithCorrectArgsReturnsTrue() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     assert cutCommand.matches(new String[]{"cut"});
   }
 
   @Test
-  void matches_copy_withWrongCommand_returnsFalse() {
+  void matchesCopyWithWrongCommandReturnsFalse() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     assert !copyCommand.matches(new String[]{"cut"});
   }
 
   @Test
-  void matches_cut_withWrongCommand_returnsFalse() {
+  void matchesCutWithWrongCommandReturnsFalse() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     assert !cutCommand.matches(new String[]{"copy"});
   }
 
   @Test
-  void matches_copy_withTooManyArgs_returnsFalse() {
+  void matchesCopyWithTooManyArgsReturnsFalse() {
     CopyCommand copyCommand = new CopyCommand(false, 2, serviceContext);
     assert !copyCommand.matches(new String[]{"copy", "extra"});
   }
 
   @Test
-  void matches_cut_withTooManyArgs_returnsFalse() {
+  void matchesCutWithTooManyArgsReturnsFalse() {
     CopyCommand cutCommand = new CopyCommand(true, 2, serviceContext);
     assert !cutCommand.matches(new String[]{"cut", "extra"});
   }

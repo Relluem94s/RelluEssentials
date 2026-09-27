@@ -70,7 +70,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_withInvalidMaterial_sendsWrongMaterialMessage() {
+    void executeFillWithInvalidMaterialSendsWrongMaterialMessage() {
         fillCommand.execute(player, new String[]{"fill", "NOT_A_REAL_MATERIAL_XYZ", "5"});
 
         verify(player).sendMessage(any(String.class));
@@ -78,7 +78,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_withNonIntegerRadius_sendsInvalidMessage() {
+    void executeFillWithNonIntegerRadiusSendsInvalidMessage() {
         fillCommand.execute(player, new String[]{"fill", "STONE", "notANumber"});
 
         verify(player).sendMessage(any(String.class));
@@ -86,7 +86,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_withZeroRadius_sendsInvalidMessage() {
+    void executeFillWithZeroRadiusSendsInvalidMessage() {
         fillCommand.execute(player, new String[]{"fill", "STONE", "0"});
 
         verify(player).sendMessage(any(String.class));
@@ -94,7 +94,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_withNegativeRadius_sendsInvalidMessage() {
+    void executeFillWithNegativeRadiusSendsInvalidMessage() {
         fillCommand.execute(player, new String[]{"fill", "STONE", "-3"});
 
         verify(player).sendMessage(any(String.class));
@@ -102,7 +102,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_withRadiusExceedingMax_sendsRadiusTooHighMessage() {
+    void executeFillWithRadiusExceedingMaxSendsRadiusTooHighMessage() {
         World world = mock(World.class);
         Block startBlock = buildSolidBlock(world);
         Location playerLocation = buildLocation(world);
@@ -117,7 +117,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_withNonEmptyStartBlock_addsEmptyHistory() {
+    void executeFillWithNonEmptyStartBlockAddsEmptyHistory() {
         World world = mock(World.class);
         Block startBlock = buildSolidBlock(world);
         Location playerLocation = buildLocation(world);
@@ -131,7 +131,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_withEmptyStartBlock_fillsAdjacentAirAndAddsHistory() {
+    void executeFillWithEmptyStartBlockFillsAdjacentAirAndAddsHistory() {
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0);
         Block solidNeighbor = buildSolidBlock(world);
@@ -148,7 +148,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fillr_withEmptyStartBlockAndEmptyBelow_spreadsBothDirections() {
+    void executeFillrWithEmptyStartBlockAndEmptyBelowSpreadsBothDirections() {
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0);
         Block belowBlock = buildEmptyBlock(world, 0, -1);
@@ -168,37 +168,37 @@ class FillCommandTest {
     }
 
     @Test
-    void matches_fill_withCorrectArgs_returnsTrue() {
+    void matchesFillWithCorrectArgsReturnsTrue() {
         assert fillCommand.matches(new String[]{"fill", "STONE", "5"});
     }
 
     @Test
-    void matches_fillr_withCorrectArgs_returnsTrue() {
+    void matchesFillrWithCorrectArgsReturnsTrue() {
         assert fillrCommand.matches(new String[]{"fillr", "STONE", "5"});
     }
 
     @Test
-    void matches_fill_withWrongCommand_returnsFalse() {
+    void matchesFillWithWrongCommandReturnsFalse() {
         assert !fillCommand.matches(new String[]{"fillr", "STONE", "5"});
     }
 
     @Test
-    void matches_fillr_withWrongCommand_returnsFalse() {
+    void matchesFillrWithWrongCommandReturnsFalse() {
         assert !fillrCommand.matches(new String[]{"fill", "STONE", "5"});
     }
 
     @Test
-    void matches_fill_withTooFewArgs_returnsFalse() {
+    void matchesFillWithTooFewArgsReturnsFalse() {
         assert !fillCommand.matches(new String[]{"fill", "STONE"});
     }
 
     @Test
-    void matches_fill_withTooManyArgs_returnsFalse() {
+    void matchesFillWithTooManyArgsReturnsFalse() {
         assert !fillCommand.matches(new String[]{"fill", "STONE", "5", "extra"});
     }
 
     @Test
-    void execute_fill_whenMaxIterationsReached_stopsProcessingAndAddsPartialHistory() {
+    void executeFillWhenMaxIterationsReachedStopsProcessingAndAddsPartialHistory() {
         FillCommand limitedFillCommand = new FillCommand(
             buildServiceContext(), false, BLOCKS_PER_TICK, MAX_RADIUS, 2);
 
@@ -223,7 +223,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_whenBlockExceedsRadius_skipsBlockAndDoesNotAddToHistory() {
+    void executeFillWhenBlockExceedsRadiusSkipsBlockAndDoesNotAddToHistory() {
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0);
         Block farEmptyBlock = buildEmptyBlock(world, 10, 0);
@@ -243,7 +243,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_whenNeighborAlreadyVisited_doesNotProcessNeighborTwice() {
+    void executeFillWhenNeighborAlreadyVisited_doesNotProcessNeighborTwice() {
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0);
         Block leftNeighbor = buildEmptyBlock(world, -1, 0);
@@ -266,7 +266,7 @@ class FillCommandTest {
     }
 
     @Test
-    void execute_fill_whenNeighborExceedsRadius_skipsNeighborAndDoesNotAddToHistory() {
+    void executeFillWhenNeighborExceedsRadiusSkipsNeighborAndDoesNotAddToHistory() {
         World world = mock(World.class);
         Block startBlock = buildEmptyBlock(world, 0, 0);
         Block outOfRadiusNeighbor = buildEmptyBlock(world, 1, 0);
