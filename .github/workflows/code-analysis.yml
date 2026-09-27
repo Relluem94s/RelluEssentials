@@ -1,0 +1,48 @@
+name: Code Analysis
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  pmd:
+    name: PMD Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run PMD
+        uses: pmd/pmd-github-action@v2
+        with:
+          rulesets: >-
+            category/java/bestpractices.xml,
+            category/java/errorprone.xml,
+            category/java/security.xml,
+            category/java/design.xml,
+            category/java/codestyle.xml,
+            category/java/multithreading.xml
+          analyzeModifiedFilesOnly: false
+
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: pmd.sarif
+
+  sqlfluff:
+    name: SQLFluff Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run SQLFluff
+        uses: sqlfluff/sqlfluff-github-actions@v1
+        with:
+          sqlfluffArgs: lint --dialect mysql
