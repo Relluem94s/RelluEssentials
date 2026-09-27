@@ -288,27 +288,6 @@
               </execution>
             </executions>
           </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.6.0</version>
-            <executions>
-              <execution>
-                <id>checkstyle-validation</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-                <configuration>
-                  <configLocation>google_checks.xml</configLocation>
-                  <failsOnError>false</failsOnError>
-                  <failOnViolation>false</failOnViolation>
-                  <consoleOutput>true</consoleOutput>
-                  <logViolationsToConsole>true</logViolationsToConsole>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
         </plugins>
       </build>
       <reporting>
